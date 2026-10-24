@@ -1785,6 +1785,41 @@
   flex-direction: column;
   gap: 10px;
 }
+.vocab-memory-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.vocab-memory-stats > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--shell-line);
+  border-radius: 12px;
+}
+.vocab-memory-stats dt {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--shell-text-mute);
+}
+.vocab-memory-stats dd {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--shell-text);
+  font-variant-numeric: tabular-nums;
+}
+.vocab-memory-stats > div[data-today] {
+  border-color: color-mix(in srgb, var(--vocab-accent) 45%, transparent);
+  background: color-mix(in srgb, var(--vocab-accent) 10%, transparent);
+}
+.vocab-memory-stats > div[data-today] dd {
+  color: var(--vocab-accent);
+}
 .vocab-memory-clear {
   align-self: flex-start;
   min-height: 44px;
@@ -2580,47 +2615,36 @@
   line-height: 1.5;
   color: var(--shell-text-mute);
 }
-/* Two tabs over one list each. Each tab is named after the reaction that puts a word in
-   it, so the count inside the tab is the size of that list, not of the reader's taps.
-   The row IS the switcher, drawn as a real tab strip: two rounded-rectangle tabs, each
-   carrying its own outline, separated by a small column gap. The open tab is marked by an
-   accent bar ALONG ITS TOP and loses its bottom edge so it fuses with the container box
-   below — the tab and the box read as one shape. The strip keeps the container's side insets
-   so no horizontal gap opens between those two surfaces. (The gap between the TABS is wanted;
-   only the tiny unoutlined segment it leaves in the container's TOP edge is bridged — see
-   .vocab-saved-tabs::after.) */
+/* Three tabs: the two word lists, each named after the reaction that puts a word in it (so
+   its count is the size of that list, not of the reader's taps), and the earned medals.
+   The row IS the switcher, drawn as a real tab strip: rounded-rectangle tabs, each carrying
+   its own outline, separated by a small gap. The open tab is marked by an accent bar ALONG
+   ITS TOP, is 2.5x as wide as a closed one, and loses its bottom edge so it fuses with the
+   container box below — the tab and the box read as one shape. Closed tabs are their icon
+   alone. The strip keeps the container's side insets so no horizontal gap opens between
+   those two surfaces; the gaps between TABS are bridged by .vocab-saved-tab-gap. */
 .vocab-saved-tabs {
   /* position:relative hosts the seam connector below as a positioned pseudo. An absolutely
      positioned ::after is out of flow, so it does NOT become a third grid item. */
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 8px;
+  display: flex;
   margin: 0 max(18px, env(safe-area-inset-right)) 0 max(18px, env(safe-area-inset-left));
 }
-/* The container's TOP edge is drawn in three collinear parts, and if they are not exactly on
-   one row the outline reads broken. Under the OPEN tab it is deliberately absent (the tab
-   fuses into the box), under the CLOSED tab its own bottom border draws that edge, and only
-   the 8px GAP between the tabs is blank — this 1px hairline is that missing span. It is hung
-   on the STRIP's `bottom:0`, which is the exact row the tabs' bottom borders occupy. (The
-   first attempt hung it on the panelbox `top:0`, but a bottom border sits in the row ABOVE
-   its edge while the panelbox top is one row BELOW that — so that patch was visibly 1px low.)
-   Width is EXACTLY the 8px gap: centred on it, its two ends meet the facing rails edge-to-
-   edge and stop there — any wider and each tip rides 1px over the vertical border it is meant
-   to join. Same --shell-line, so the three pieces read as one continuous stroke. */
-.vocab-saved-tabs::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 8px;
-  height: 1px;
-  transform: translateX(-50%);
-  background: var(--shell-line);
+/* The gaps between tabs. Each is a spacer of its own rather than a flex `gap`, so its 1px
+   bottom edge can carry the container's top line across the gap: under the OPEN tab that
+   line is deliberately absent (the tab fuses into the box), under a CLOSED tab its own
+   bottom border draws it, and these fill the spans between. Stretched to the strip's height,
+   their bottom border sits on the same row as the tabs' bottom borders. */
+.vocab-saved-tab-gap {
+  flex: 0 0 8px;
+  border-bottom: 1px solid var(--shell-line);
 }
 .vocab-saved-tab-slot {
   position: relative;
   display: flex;
+  /* The open tab takes 2.5 shares and the closed ones one each, which is room for their
+     icon alone; the grow animates so the strip slides rather than snapping. */
+  flex: 1 1 0;
   min-width: 0;
   /* The outline lives on the slot (the whole segment: label + any fused density cell),
      so a tab with only a couple of words still fills the strip's full height instead of
@@ -2633,6 +2657,7 @@
   background: transparent;
   overflow: hidden;
   transition:
+    flex-grow 280ms var(--ease-out),
     border-color var(--dur-quick) var(--ease-out),
     background var(--dur-quick) var(--ease-out);
 }
@@ -2656,6 +2681,7 @@
      --shell-line in both states, so there is nothing to animate and no flash; the width still
      snaps, which is exactly the instant, seamless fusion we want. */
   border-bottom-width: 0;
+  flex-grow: 2.5;
   background: color-mix(in srgb, var(--shell-hover) 24%, transparent);
 }
 /* The highlighted bar, now on TOP of the open tab (it used to underline it). On the slot,
@@ -2674,10 +2700,10 @@
   flex: 1 1 auto;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
   min-width: 0;
   min-height: 42px;
-  padding: 4px 10px 5px;
+  padding: 4px 6px 5px;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -2695,6 +2721,16 @@
   overflow: hidden;
   text-align: center;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* A closed tab is its icon alone. The label and count leave the layout but not the
+   accessibility tree, so the tab is still announced by name. */
+.vocab-saved-tab:not([data-on]) :is(.vocab-saved-tab-label, .vocab-saved-tab-count) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
   white-space: nowrap;
 }
 .vocab-saved-tab:hover {
@@ -2739,7 +2775,7 @@
   flex: 0 0 auto;
   width: 30px;
   height: 26px;
-  margin: 0 9px;
+  margin: 0 7px 0 0;
   padding: 0;
   border: 1px solid var(--shell-line-strong);
   border-radius: 9px;
@@ -2842,12 +2878,22 @@
   font-weight: 600;
   color: var(--shell-text-mute);
 }
+/* The day's word count: a quiet pill, its number in full ink and the unit muted. */
 .vocab-saved-group-count {
   margin-left: auto;
+  align-self: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--shell-hover) 70%, transparent);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--shell-text-mute);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.vocab-saved-group-count b {
+  font-weight: 800;
+  color: var(--shell-text);
 }
 .vocab-saved-folder {
   display: flex;
@@ -8549,114 +8595,675 @@ body:has(.vocab-intro) .vocab-resume {
 }
 
 /* ── Streak milestone ────────────────────────────────────────────────────────────────────
-   The badge that lands when a run of days reaches a milestone, and the row of the ones
-   already earned inside the saved drawer. Nothing here renders before the first milestone:
-   the badge mounts only on the moment it is earned, and the row returns null while empty.
+   The celebration that lands when a run of days reaches a milestone, and the row of the
+   ones already earned inside the saved drawer. Nothing here renders before the first
+   milestone: the celebration mounts only on the moment it is earned, and the row returns
+   null while empty.
 
-   Decorative and CSS-driven, like .vocab-reveal-burst — no framer-motion. The lifetime
-   comes in as --vocab-streak-dur from the component that also sets the retirement timer,
-   so the animation and the timer cannot drift apart.
+   Decorative and CSS-driven, like .vocab-reveal-burst — no framer-motion. Every animated
+   layer's RESTING style is its final frame (or hidden, for confetti and sparks), because
+   the blanket reduced-motion rule strips every animation under the shell and the picture
+   must still be whole without them. The auto-close length comes in as --vocab-streak-dur
+   from the component that also owns the timer, so the countdown bar cannot drift.
+
+   Metals are tokens on [data-tier], shared by the celebration and the drawer chips, so a
+   20-day badge is the same silver in both. The ribbon takes the live card's lifted accent.
 
    Stem is `vocab-streak-` because `.vocab-saved-badge(s)` is already the level/POS chips on
    a saved row and `.vocab-intro-badge` is the showcase opening card. */
+[data-tier="bronze"] {
+  --m-hi: #ffe2c4;
+  --m-mid: #e0965a;
+  --m-lo: #a35a2a;
+  --m-deep: #5b2a10;
+  --m-disc-hi: #f2a76a;
+  --m-disc: #b86630;
+  --m-glow: #ff9d52;
+  --m-ink: #2a1206;
+}
+[data-tier="silver"] {
+  --m-hi: #ffffff;
+  --m-mid: #d6dee9;
+  --m-lo: #8b98ab;
+  --m-deep: #3e4757;
+  --m-disc-hi: #eef3f9;
+  --m-disc: #9eabbd;
+  --m-glow: #bfe4ff;
+  --m-ink: #1a2230;
+}
+[data-tier="gold"] {
+  --m-hi: #fff6c2;
+  --m-mid: #ffd447;
+  --m-lo: #d99400;
+  --m-deep: #6e4300;
+  --m-disc-hi: #ffe27a;
+  --m-disc: #e8a50c;
+  --m-glow: #ffd23d;
+  --m-ink: #2b1a00;
+}
+[data-tier="diamond"] {
+  --m-hi: #ffffff;
+  --m-mid: #b8f1ff;
+  --m-lo: #7c8cff;
+  --m-deep: #3a1f9e;
+  --m-disc-hi: #d4f7ff;
+  --m-disc: #7fb2ff;
+  --m-glow: #9fe2ff;
+  --m-ink: #12093a;
+}
+
 .vocab-streak-flash {
+  --stage: min(74vw, 300px, 46dvh);
+  --r-hi: color-mix(
+    in srgb,
+    var(--popup-accent, var(--vocab-accent)) 88%,
+    #fff
+  );
+  --r-lo: color-mix(
+    in srgb,
+    var(--popup-accent, var(--vocab-accent)) 70%,
+    #000
+  );
+  --r-shade: color-mix(
+    in srgb,
+    var(--popup-accent, var(--vocab-accent)) 45%,
+    #000
+  );
+  --medal-ribbon: var(--popup-accent, var(--vocab-accent));
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 220;
   display: grid;
   place-items: center;
-  align-content: center;
-  gap: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  /* Its own spotlight in either theme: the moment is staged on a dark, blurred feed. */
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      color-mix(in srgb, var(--m-glow) 34%, transparent) 0%,
+      color-mix(
+          in srgb,
+          var(--popup-accent, var(--vocab-accent)) 18%,
+          transparent
+        )
+        34%,
+      transparent 70%
+    ),
+    #07050fec;
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  outline: none;
+  animation: vocab-streak-fade-in 320ms ease-out both;
+}
+.vocab-streak-flash[data-leaving] {
   pointer-events: none;
+  animation: vocab-streak-leave 420ms ease-in forwards;
+}
+
+.vocab-streak-flash-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 2.6dvh, 22px);
+  padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+  text-align: center;
+}
+.vocab-streak-flash-stage {
+  position: relative;
+  width: var(--stage);
+  height: var(--stage);
+}
+
+/* Slow-turning rays behind the medal. */
+.vocab-streak-flash-rays {
+  position: absolute;
+  inset: -42%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    color-mix(in srgb, var(--m-glow) 55%, transparent) 0deg 5deg,
+    transparent 5deg 15deg
+  );
+  -webkit-mask: radial-gradient(circle, #000 14%, transparent 64%);
+  mask: radial-gradient(circle, #000 14%, transparent 64%);
+  opacity: 0.55;
   animation:
-    vocab-streak-flash-in 360ms var(--ease-spring, cubic-bezier(0.17, 0.89, 0.28, 1.08)) both,
-    vocab-streak-flash-out 420ms ease-in calc(var(--vocab-streak-dur, 2200ms) - 420ms) forwards;
+    vocab-streak-rays-in 900ms cubic-bezier(0.2, 0.9, 0.3, 1) 80ms both,
+    vocab-streak-spin 28s linear infinite;
 }
-.vocab-streak-flash-disc {
-  display: grid;
-  place-items: center;
-  align-content: center;
-  width: 132px;
-  height: 132px;
-  border-radius: 999px;
-  /* Accent fill with the palette's own on-accent ink: never white on accent. The lifted
-     --popup-accent is the live card's, so the badge matches the word it celebrates. */
-  background: var(--popup-accent, var(--vocab-accent));
-  color: var(--popup-accent-ink, var(--vocab-button-ink));
+.vocab-streak-flash-glow {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--m-glow) 70%, transparent),
+    transparent 68%
+  );
+  filter: blur(18px);
+  animation: vocab-streak-pulse 2.6s ease-in-out 600ms infinite;
+}
+
+/* The landing: a shockwave ring and sparks thrown outward. Hidden at rest. */
+.vocab-streak-flash-shock {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  border: 3px solid var(--m-hi);
   box-shadow:
-    0 20px 60px color-mix(in srgb, #000 42%, transparent),
-    0 0 0 10px color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 20%, transparent);
+    0 0 24px var(--m-glow),
+    inset 0 0 18px var(--m-glow);
+  opacity: 0;
+  animation: vocab-streak-shock 900ms cubic-bezier(0.1, 0.7, 0.3, 1) 360ms both;
 }
-.vocab-streak-flash-days {
-  font-family: "Inter", sans-serif;
-  font-size: 50px;
+.vocab-streak-flash-shock[data-late] {
+  border-width: 2px;
+  animation-delay: 520ms;
+  animation-duration: 1100ms;
+}
+.vocab-streak-flash-spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--s);
+  height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  border-radius: 50%;
+  background: var(--confetti, var(--m-hi));
+  box-shadow: 0 0 10px var(--confetti, var(--m-glow));
+  opacity: 0;
+  animation: vocab-streak-spark 820ms cubic-bezier(0.15, 0.8, 0.3, 1) 380ms both;
+}
+.vocab-streak-flash-twinkle {
+  position: absolute;
+  translate: -50% -50%;
+  color: var(--m-hi);
+  filter: drop-shadow(0 0 6px var(--m-glow));
+  opacity: 0;
+  animation: vocab-streak-twinkle 2.2s ease-in-out var(--d) infinite;
+}
+.vocab-streak-flash-twinkle svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* The medal: a gentle float on the outer wrapper, the drop-in on the medal itself, so the
+   two transforms never fight over the same element. Centred with `translate`, which is a
+   separate property from the `transform` the drop animates. */
+.vocab-streak-flash-float {
+  position: absolute;
+  inset: 0;
+  animation: vocab-streak-float 3.8s ease-in-out 1.2s infinite;
+}
+.vocab-streak-flash-medal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 72%;
+  translate: -50% -46%;
+  filter: drop-shadow(0 18px 28px #0009)
+    drop-shadow(0 0 22px color-mix(in srgb, var(--m-glow) 50%, transparent));
+  animation: vocab-streak-drop 820ms cubic-bezier(0.2, 1.4, 0.35, 1) 60ms both;
+}
+.vocab-streak-flash-medal .vocab-medal-ribbon {
+  transform-origin: 100px 140px;
+  animation: vocab-streak-ribbon 700ms cubic-bezier(0.2, 1.3, 0.4, 1) 420ms both;
+}
+/* On the big medal only: a specular band sweeps the coin now and then, and diamond's
+   iridescent wash turns. In the drawer both hold still — a grid of sweeping coins is noise. */
+.vocab-streak-flash-medal .vocab-medal-shine::before {
+  animation: vocab-streak-sheen 3.4s ease-in-out 1.1s infinite;
+}
+.vocab-streak-flash-medal[data-tier="diamond"] .vocab-medal-shine::after {
+  animation: vocab-streak-spin 7s linear infinite;
+}
+
+/* The copy under the medal. */
+.vocab-streak-flash-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 340px;
+  animation: vocab-streak-rise 600ms cubic-bezier(0.2, 0.9, 0.3, 1) 620ms both;
+}
+.vocab-streak-flash-tier {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--m-hi) 60%, transparent);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--m-mid) 34%, transparent),
+    color-mix(in srgb, var(--m-lo) 22%, transparent)
+  );
+  color: var(--m-hi);
+  font-size: 11px;
   font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-.vocab-streak-flash-unit {
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  opacity: 0.82;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--m-glow) 35%, transparent);
+}
+.vocab-streak-flash-title {
+  margin: 0;
+  text-wrap: balance;
+  font-size: clamp(24px, 7vw, 32px);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, #fff 30%, var(--m-hi) 60%, var(--m-mid));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(
+    0 2px 12px color-mix(in srgb, var(--m-glow) 45%, transparent)
+  );
 }
 .vocab-streak-flash-caption {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  text-wrap: balance;
   font-size: 15px;
-  font-weight: 700;
-  color: var(--chrome-ink);
-  text-shadow: 0 1px 10px color-mix(in srgb, #000 55%, transparent);
+  font-weight: 600;
+  line-height: 1.45;
+  color: #ffffffd9;
 }
-@keyframes vocab-streak-flash-in {
+.vocab-streak-flash-go {
+  position: relative;
+  margin-top: 8px;
+  min-width: 180px;
+  padding: 13px 28px 15px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    var(--m-hi),
+    var(--m-mid) 55%,
+    var(--m-lo)
+  );
+  color: var(--m-ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--m-glow) 40%, transparent),
+    inset 0 1px 0 #ffffffb0,
+    inset 0 -2px 0 color-mix(in srgb, var(--m-deep) 45%, transparent);
+  transition: transform 140ms ease;
+}
+.vocab-streak-flash-go:active {
+  transform: scale(0.96);
+}
+.vocab-streak-flash-go:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+/* The auto-close countdown, drained along the button's bottom edge. */
+.vocab-streak-flash-timer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: color-mix(in srgb, var(--m-deep) 55%, transparent);
+  transform-origin: left center;
+  animation: vocab-streak-drain var(--vocab-streak-dur, 7000ms) linear both;
+}
+
+/* Confetti over everything. Hidden at rest, so reduced motion simply has none. */
+.vocab-streak-flash-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.vocab-streak-flash-confetti i {
+  position: absolute;
+  top: -4%;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--confetti);
+  opacity: 0;
+  animation: vocab-streak-fall var(--t) cubic-bezier(0.35, 0.1, 0.65, 0.9)
+    var(--d) infinite;
+}
+.vocab-streak-flash-confetti i[data-shape="square"] {
+  width: 10px;
+  height: 10px;
+}
+.vocab-streak-flash-confetti i[data-shape="dot"] {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.vocab-streak-flash [data-hue="0"] {
+  --confetti: var(--m-glow);
+}
+.vocab-streak-flash [data-hue="1"] {
+  --confetti: var(--popup-accent, var(--vocab-accent));
+}
+.vocab-streak-flash [data-hue="2"] {
+  --confetti: #ff5d8f;
+}
+.vocab-streak-flash [data-hue="3"] {
+  --confetti: #4dabff;
+}
+.vocab-streak-flash [data-hue="4"] {
+  --confetti: #3ddc97;
+}
+.vocab-streak-flash [data-hue="5"] {
+  --confetti: #b47cff;
+}
+
+@keyframes vocab-streak-fade-in {
   from {
     opacity: 0;
-    transform: scale(0.72);
-  }
-  60% {
-    opacity: 1;
-    transform: scale(1.06);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
-@keyframes vocab-streak-flash-out {
+@keyframes vocab-streak-leave {
   to {
     opacity: 0;
-    transform: scale(0.94);
+    transform: scale(1.04);
+    filter: blur(4px);
+  }
+}
+@keyframes vocab-streak-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes vocab-streak-rays-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+@keyframes vocab-streak-pulse {
+  50% {
+    opacity: 0.6;
+    transform: scale(1.08);
+  }
+}
+@keyframes vocab-streak-shock {
+  0% {
+    opacity: 0.95;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+@keyframes vocab-streak-spark {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(0) scale(1);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a))
+      translateY(calc(var(--stage) * var(--dist) * -1)) scale(0.3);
+  }
+}
+@keyframes vocab-streak-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+  70% {
+    opacity: 0.2;
+    transform: scale(0.5) rotate(70deg);
+  }
+}
+@keyframes vocab-streak-float {
+  50% {
+    transform: translateY(-7px) rotate(-1.2deg);
+  }
+}
+@keyframes vocab-streak-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-38%) scale(0.35) rotate(-28deg);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(2%) scale(1.12) rotate(6deg);
+  }
+  78% {
+    transform: translateY(0) scale(0.97) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes vocab-streak-ribbon {
+  from {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+}
+@keyframes vocab-streak-sheen {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  45%,
+  100% {
+    transform: translateX(420%) skewX(-12deg);
+  }
+}
+@keyframes vocab-streak-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@keyframes vocab-streak-drain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+@keyframes vocab-streak-fall {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate3d(1, 0.4, 0.2, 0deg);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--sway), 110dvh, 0)
+      rotate3d(1, 0.4, 0.2, var(--spin));
   }
 }
 
-/* The earned row in the saved drawer. Static chips, no gesture: the drawer already owns
-   three (open pull, close drag, per-row un-save swipe) and does not need a fourth. */
-.vocab-streak-row {
+/* Short landscape: medal and copy side by side so neither is squeezed. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .vocab-streak-flash {
+    --stage: min(64dvh, 260px);
+  }
+  .vocab-streak-flash-body {
+    flex-direction: row;
+    gap: 36px;
+    text-align: left;
+  }
+  .vocab-streak-flash-copy {
+    align-items: flex-start;
+  }
+  .vocab-streak-flash-title {
+    font-size: clamp(22px, 4vw, 28px);
+  }
+}
+
+/* ── The medal (StreakMedal) ──
+   One coin for every size. It is a size container, so the face is set in cqw and the
+   caller only gives it a width. The face circle is r=65 at (100,96) in a 200x224 box,
+   and the coin r=80: the overlays below are those circles as percentages. */
+.vocab-medal {
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 200 / 224;
+}
+.vocab-medal-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.vocab-medal-shine {
+  position: absolute;
+  left: 10%;
+  top: 7.14%;
+  width: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.vocab-medal-shine::before {
+  content: "";
+  position: absolute;
+  inset: -20% auto -20% -60%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, #ffffffb0 50%, transparent);
+  transform: translateX(-120%) skewX(-12deg);
+  mix-blend-mode: overlay;
+}
+/* Diamond catches the light: an iridescent wash over its own icy metal, rather than
+   hue-rotating the whole coin (which turned it rose gold). */
+.vocab-medal[data-tier="diamond"] .vocab-medal-shine::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: conic-gradient(
+    from 30deg,
+    #ff9ce655,
+    #9cf3ff55,
+    #b6a1ff55,
+    #a8ffcf55,
+    #ffe9a055,
+    #ff9ce655
+  );
+  mix-blend-mode: overlay;
+}
+.vocab-medal-face {
+  position: absolute;
+  left: 17.5%;
+  top: 13.84%;
+  width: 65%;
+  aspect-ratio: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding: 0 18px 14px;
-}
-.vocab-streak-badge {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 4px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--vocab-accent) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--vocab-accent) 34%, transparent);
-  color: var(--shell-text);
+  justify-content: center;
+  color: var(--m-ink);
   font-family: "Inter", sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--m-hi) 65%, transparent);
 }
-.vocab-streak-badge small {
+.vocab-medal-face strong {
+  font-size: 27cqw;
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+.vocab-medal-face[data-digits="3"] strong {
+  font-size: 20cqw;
+}
+.vocab-medal-face span {
+  margin-top: 1.5cqw;
+  font-size: 5.6cqw;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.68;
+}
+
+/* ── The milestones tab in the saved drawer ──
+   A grid of earned medals, newest first. Static: no gesture, no animation — the drawer
+   already owns three gestures and the celebration was the moment for movement. */
+.vocab-medal-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 16px 8px;
+  padding: 18px 12px 28px;
+  margin: 0;
+  list-style: none;
+}
+.vocab-medal-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+.vocab-medal-tile .vocab-medal {
+  width: 64px;
+  filter: drop-shadow(0 6px 10px color-mix(in srgb, #000 30%, transparent))
+    drop-shadow(0 0 10px color-mix(in srgb, var(--m-glow) 22%, transparent));
+}
+.vocab-medal-tile .vocab-medal-face span {
+  display: none;
+}
+.vocab-medal-tile-days {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--shell-text);
+}
+.vocab-medal-tile-tier {
+  margin-top: -4px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  opacity: 0.7;
+  color: var(--shell-text-mute);
+}
+.vocab-medal-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 24px;
+  text-align: center;
+}
+.vocab-medal-empty .vocab-medal-face span {
+  display: none;
+}
+.vocab-medal-empty .vocab-medal {
+  width: 92px;
+  opacity: 0.32;
+  filter: grayscale(1);
+}
+.vocab-medal-empty h2 {
+  margin: 6px 0 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--shell-text);
+}
+.vocab-medal-empty p {
+  margin: 0;
+  max-width: 260px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--shell-text-mute);
+  text-wrap: balance;
 }

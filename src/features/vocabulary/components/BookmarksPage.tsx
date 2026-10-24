@@ -13,9 +13,12 @@
  */
 
 import { useStreakBadges } from "../hooks/useStreakBadges";
+import { STREAK_TIER_LABEL, streakTier } from "../lib/streak-tiers";
+import { StreakMedal } from "./StreakMedal";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Bookmark, ChevronDown, Heart, Undo2, X } from "lucide-react";
+import { ArrowLeft, Bookmark, ChevronDown, Heart, Medal, Undo2, X } from "lucide-react";
 import {
+  Fragment,
   useEffect,
   useId,
   useMemo,
@@ -34,14 +37,25 @@ import { FilledUsage, MarkedText } from "./MarkedText";
 import "../vocabulary.css";
 
 /** Which reaction defines the list on screen. */
-type TabKind = "bookmark" | "heart";
+/** The two word lists; the milestones tab sits beside them but holds no words. */
+type WordTabKind = "bookmark" | "heart";
+type TabKind = WordTabKind | "medal";
 
-const TABS: { kind: TabKind; label: string }[] = [
+const WORD_TABS: { kind: WordTabKind; label: string }[] = [
   { kind: "bookmark", label: "Đã lưu" },
   { kind: "heart", label: "Yêu thích" },
 ];
+const TABS: { kind: TabKind; label: string }[] = [
+  ...WORD_TABS,
+  { kind: "medal", label: "Huy hiệu" },
+];
+const TAB_ICON: Record<TabKind, typeof Bookmark> = {
+  bookmark: Bookmark,
+  heart: Heart,
+  medal: Medal,
+};
 
-const EMPTY_COPY: Record<TabKind, { title: string; body: string; short: string }> = {
+const EMPTY_COPY: Record<WordTabKind, { title: string; body: string; short: string }> = {
   bookmark: {
     title: "Kho từ đang trống",
     body: "Chạm nút dấu trang dưới mỗi từ để cất vào kho — kể cả lúc chưa lộ đáp án. Trái tim ngay bên cạnh sẽ xếp từ vào mục Yêu thích.",
@@ -55,7 +69,7 @@ const EMPTY_COPY: Record<TabKind, { title: string; body: string; short: string }
 };
 
 /** One short, chatty line per key, shown in the empty vault's two tooltips. */
-const TIP_COPY: Record<TabKind, string> = {
+const TIP_COPY: Record<WordTabKind, string> = {
   bookmark: "lưu từ chưa biết nha",
   heart: "giữ từ iu thích nà",
 };
@@ -65,7 +79,7 @@ const TIP_COPY: Record<TabKind, string> = {
  * Keep them to two characters: the chip is a 34×22 block, and a longer word
  * shrinks the glyph past the point where it reads as a word at all.
  */
-const CHIP_WORDS: Record<TabKind, string> = {
+const CHIP_WORDS: Record<WordTabKind, string> = {
   bookmark: "收藏",
   heart: "喜爱",
 };
@@ -82,7 +96,7 @@ const CHIP_WORDS: Record<TabKind, string> = {
  * @param kind - Which key this bubble points at
  * @param active - Whether that key's tab is the one on screen
  */
-function VaultTip({ kind }: { kind: TabKind }): React.ReactElement {
+function VaultTip({ kind }: { kind: WordTabKind }): React.ReactElement {
   return (
     <span className="vocab-vault-tip" data-tip={kind}>
       <span className="vocab-vault-tip-shape" />
@@ -103,7 +117,7 @@ function VaultTip({ kind }: { kind: TabKind }): React.ReactElement {
  * What the gesture is called on each tab. The two lists are removed differently in words
  * as well as in data: leaving a bookmark is "bỏ lưu", leaving a heart is "bỏ yêu thích".
  */
-const REMOVE_COPY: Record<TabKind, { flag: string; undo: string }> = {
+const REMOVE_COPY: Record<WordTabKind, { flag: string; undo: string }> = {
   bookmark: { flag: "Bỏ lưu", undo: "Đã bỏ lưu" },
   heart: { flag: "Bỏ yêu thích", undo: "Đã bỏ yêu thích" },
 };
@@ -381,7 +395,9 @@ function SavedFolders({
           <h2 className="vocab-saved-group-title">
             <span>{group.label}</span>
             {group.hint && <span className="vocab-saved-group-hint">{group.hint}</span>}
-            <span className="vocab-saved-group-count">{group.count} từ</span>
+            <span className="vocab-saved-group-count">
+              <b>{group.count}</b> từ
+            </span>
           </h2>
           {group.folders.length === 1 ? (
             <ul className="vocab-saved-list">
@@ -400,7 +416,9 @@ function SavedFolders({
               <details className="vocab-saved-folder" key={folder.id} open={index === 0}>
                 <summary className="vocab-saved-folder-summary">
                   <span>{folder.label}</span>
-                  <span className="vocab-saved-group-count">{folder.words.length} từ</span>
+                  <span className="vocab-saved-group-count">
+                    <b>{folder.words.length}</b> từ
+                  </span>
                 </summary>
                 <ul className="vocab-saved-list">
                   {folder.words.map((entry) => (
@@ -423,28 +441,43 @@ function SavedFolders({
 }
 
 /**
+ * The milestones tab: every medal this device has earned, newest first.
+ *
+ * Before the first one it says what the tab is for and nothing more — no "3 more days", no
+ * progress bar. The streak never shows a reader a number they have not reached yet.
+ */
+function MedalShelf({ badges }: { badges: number[] }) {
+  if (!badges.length) {
+    return (
+      <div className="vocab-medal-empty">
+        <StreakMedal days={5} value="?" />
+        <h2>Chưa có huy hiệu nào</h2>
+        <p>Học vài từ mỗi ngày, liền nhiều ngày — huy hiệu sẽ tự xuất hiện ở đây.</p>
+      </div>
+    );
+  }
+  return (
+    <ul className="vocab-medal-shelf" aria-label="Mốc chuỗi ngày đã đạt">
+      {[...badges].reverse().map((days) => (
+        <li className="vocab-medal-tile" key={days}>
+          <StreakMedal days={days} />
+          <span className="vocab-medal-tile-days">{days} ngày</span>
+          <span className="vocab-medal-tile-tier">
+            {STREAK_TIER_LABEL[streakTier(days)].replace("Huy hiệu ", "")}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
  * Show this device's saved words as folders, with a swipe/hold gesture to un-save.
  * @param onClose Present when the list is embedded in the feed's saved drawer
  *   rather than standing as its own route: the shell drops to a plain div (a
  *   second <main> inside the feed's would be invalid) and the leading control
  *   becomes a close button instead of a link back to the feed.
  */
-/** The milestones this device has earned. Renders nothing until there is one. */
-function StreakBadges() {
-  const badges = useStreakBadges();
-  if (!badges.length) return null;
-  return (
-    <div className="vocab-streak-row" aria-label="Mốc chuỗi ngày đã đạt">
-      {badges.map((days) => (
-        <span className="vocab-streak-badge" key={days}>
-          {days}
-          <small>ngày</small>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
   const { saved, favorites, remove, restore } = useSavedWords();
   const [tab, setTab] = useState<TabKind>("bookmark");
@@ -454,7 +487,7 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
   const [undo, setUndo] = useState<{
     word: string;
     id: string;
-    kind: TabKind;
+    kind: WordTabKind;
     /** The day the row was filed under, so undo can put it back in the same group. */
     at?: number;
   } | null>(null);
@@ -466,7 +499,12 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
     [],
   );
 
-  const counts: Record<TabKind, number> = { bookmark: saved.length, heart: favorites.length };
+  const badges = useStreakBadges();
+  const counts: Record<TabKind, number> = {
+    bookmark: saved.length,
+    heart: favorites.length,
+    medal: badges.length,
+  };
 
   useEffect(() => {
     if (!undo) return;
@@ -486,7 +524,7 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
     setTab(TABS[(at + step + TABS.length) % TABS.length].kind);
   }
 
-  function handleRemove(entry: SavedWord, kind: TabKind) {
+  function handleRemove(entry: SavedWord, kind: WordTabKind) {
     setUndo({ word: entry.word.word, id: entry.word.id, kind, at: entry.savedAt });
     remove(entry.word.id, kind);
   }
@@ -521,72 +559,83 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
         </div>
       </header>
 
-      {/* Hidden until the first milestone is earned — that early return is the whole rule.
-          No progress affordance anywhere: the first thing a reader ever sees is a badge they
-          already hold. Shared by both tabs, because it is the device's streak rather than a
-          property of either list, and it sits under a header that already says the storage
-          is local. */}
-      <StreakBadges />
-
       <div
         className="vocab-saved-tabs"
         role="tablist"
         aria-label="Danh sách từ vựng đã lưu"
         onKeyDown={onTabKeyDown}
       >
-        {TABS.map((item) => {
+        {TABS.map((item, index) => {
           // The density control belongs to the list that is open, so it rides on the active
           // tab itself rather than standing in a switch row of its own. It is withheld until
           // there is something to expand.
-          const fused = tab === item.kind && counts[item.kind] > 0;
+          const fused = tab === item.kind && item.kind !== "medal" && counts[item.kind] > 0;
+          const Icon = TAB_ICON[item.kind];
           return (
-            // One slot per half of the strip. The slot, not the tab, carries the active
-            // underline, so the indicator spans the whole segment — fused control included.
-            <div
-              className="vocab-saved-tab-slot"
-              role="presentation"
-              key={item.kind}
-              data-on={tab === item.kind || undefined}
-            >
-              <button
-                type="button"
-                role="tab"
-                id={`${groupId}-tab-${item.kind}`}
-                aria-selected={tab === item.kind}
-                aria-controls={`${groupId}-panel-${item.kind}`}
-                tabIndex={tab === item.kind ? 0 : -1}
-                className="vocab-saved-tab"
+            // One slot per tab. The slot, not the tab, carries the active bar, so the
+            // indicator spans the whole segment — fused control included. The open slot
+            // takes 2.5 shares of the strip and the closed ones shrink to their icon.
+            <Fragment key={item.kind}>
+              {/* The gap between two slots is a spacer of its own, so its 1px bottom edge
+                  continues the container's top line wherever the gap happens to fall. */}
+              {index > 0 && <span className="vocab-saved-tab-gap" aria-hidden="true" />}
+              <div
+                className="vocab-saved-tab-slot"
+                role="presentation"
                 data-on={tab === item.kind || undefined}
-                onClick={() => setTab(item.kind)}
               >
-                {item.kind === "bookmark" ? <Bookmark size={15} /> : <Heart size={15} />}
-                <span className="vocab-saved-tab-label">{item.label}</span>
-                <span className="vocab-saved-tab-count">{counts[item.kind]}</span>
-              </button>
-              {fused && (
                 <button
                   type="button"
-                  className="vocab-saved-density"
-                  aria-pressed={!compact}
-                  aria-label={compact ? "Mở rộng nghĩa" : "Thu gọn danh sách"}
-                  title={compact ? "Mở rộng nghĩa" : "Thu gọn danh sách"}
-                  onClick={() => setCompact((value) => !value)}
+                  role="tab"
+                  id={`${groupId}-tab-${item.kind}`}
+                  aria-selected={tab === item.kind}
+                  aria-controls={`${groupId}-panel-${item.kind}`}
+                  tabIndex={tab === item.kind ? 0 : -1}
+                  className="vocab-saved-tab"
+                  data-on={tab === item.kind || undefined}
+                  onClick={() => setTab(item.kind)}
+                  title={tab === item.kind ? undefined : item.label}
                 >
-                  {/* Peek-a-boo reads as tappable where a chevron didn't: the meanings are
+                  <Icon size={15} />
+                  {/* Closed tabs show only the icon; the label stays in the accessibility tree. */}
+                  <span className="vocab-saved-tab-label">{item.label}</span>
+                  <span className="vocab-saved-tab-count">{counts[item.kind]}</span>
+                </button>
+                {fused && (
+                  <button
+                    type="button"
+                    className="vocab-saved-density"
+                    aria-pressed={!compact}
+                    aria-label={compact ? "Mở rộng nghĩa" : "Thu gọn danh sách"}
+                    title={compact ? "Mở rộng nghĩa" : "Thu gọn danh sách"}
+                    onClick={() => setCompact((value) => !value)}
+                  >
+                    {/* Peek-a-boo reads as tappable where a chevron didn't: the meanings are
                       tucked behind two palms (faint = there is something to uncover), and a
                       tap parts them into a wide-eyed stare (solid = the list is open). Color
                       emoji, never a mono glyph. */}
-                  <span className="vocab-saved-density-emoji" aria-hidden="true">
-                    {compact ? "🫣" : "😳"}
-                  </span>
-                </button>
-              )}
-            </div>
+                    <span className="vocab-saved-density-emoji" aria-hidden="true">
+                      {compact ? "🫣" : "😳"}
+                    </span>
+                  </button>
+                )}
+              </div>
+            </Fragment>
           );
         })}
       </div>
 
-      {TABS.map((item) => {
+      <div
+        id={`${groupId}-panel-medal`}
+        role="tabpanel"
+        aria-labelledby={`${groupId}-tab-medal`}
+        className="vocab-saved-panelbox"
+        hidden={tab !== "medal" || undefined}
+      >
+        <MedalShelf badges={badges} />
+      </div>
+
+      {WORD_TABS.map((item) => {
         // Filed by day, always. Grouping by level was a second switch for something the
         // reader never changed, so the list keeps the one order that matches how it was
         // collected. Each tab owns its container: list and empty scene alike live inside

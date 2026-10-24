@@ -16,7 +16,7 @@ import { getActiveVocabWording } from "@/features/admin/api/wording.functions";
 import { FeedControls } from "./FeedControls";
 import { VocabularyStream } from "./VocabularyStream";
 import { SavedDrawer } from "./SavedDrawer";
-import { StreakBadgeFlash } from "./StreakBadgeFlash";
+import { StreakCelebration } from "./StreakCelebration";
 import { DifficultyOnboarding } from "./DifficultyOnboarding";
 import { fetchVocabularyPage } from "../api/feed";
 import { readDifficultyChoice, writeDifficultyChoice } from "../lib/difficulty-choice";
@@ -220,11 +220,13 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
       <SavedDrawer open={savedOpen} onOpenChange={setSavedOpen} />
       {/* Beside the drawer rather than inside the card: the word is finished at the moment
           the stream starts scrolling to the next one, so a card-level badge would ride out
-          of frame half-played. Keyed on the milestone so each one replays from its start. */}
+          of frame half-played. Keyed on the milestone so each one replays from its start.
+          It covers the screen, so it suspends the stream below like any other overlay. */}
       {streak.celebrating !== null && (
-        <StreakBadgeFlash
+        <StreakCelebration
           key={streak.celebrating}
           days={streak.celebrating}
+          reducedMotion={reducedMotion}
           onDone={streak.dismiss}
         />
       )}
@@ -234,7 +236,9 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
         filters={filters}
         presentation={presentation}
         reducedMotion={reducedMotion}
-        suspended={optionsOpen || savedOpen || !fontsReady || exportOpen}
+        suspended={
+          optionsOpen || savedOpen || !fontsReady || exportOpen || streak.celebrating !== null
+        }
         exportOpen={isAdmin && exportOpen}
         onCloseExport={closeExport}
         history={viewHistory.history}

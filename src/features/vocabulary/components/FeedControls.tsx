@@ -1145,10 +1145,25 @@ export function FeedControls({
           )}
           <div className="vocab-memory" aria-label="Bộ nhớ lượt xem trên thiết bị">
             <span className="vocab-group-label">Bộ nhớ trên thiết bị</span>
+            {/* Distinct words seen, per window. Three plain cells: the number leads, the
+                window names it, and today is the one that carries the accent. */}
+            <dl className="vocab-memory-stats">
+              <div data-today>
+                <dt>Hôm nay</dt>
+                <dd>{historyStats.distinctToday}</dd>
+              </div>
+              <div>
+                <dt>3 ngày qua</dt>
+                <dd>{historyStats.distinct3d}</dd>
+              </div>
+              <div>
+                <dt>Tuần này</dt>
+                <dd>{historyStats.distinct7d}</dd>
+              </div>
+            </dl>
             <p className="vocab-options-summary">
-              Hôm nay đã xem {historyStats.distinctToday} từ · 3 ngày qua {historyStats.distinct3d}{" "}
-              · tuần này {historyStats.distinct7d}. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày, hai
-              lần trong ba ngày và ba lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
+              Số từ đã xem. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày, hai lần trong ba ngày và ba
+              lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
             </p>
             <button type="button" className="vocab-memory-clear" onClick={onClearHistory}>
               Quên lịch sử đã xem
