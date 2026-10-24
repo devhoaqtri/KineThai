@@ -40,7 +40,9 @@ export const COMMUNITY_AVAILABLE = false;
 /**
  * The ecosystem store page lists every sibling app with screenshots and copy,
  * but those apps are not public yet, so the tile that opens it is hidden and the
- * app panel shows a Settings tile in its place.
+ * app panel ends with a "more are coming" footer instead. (The Settings tile
+ * that once stood in for it is gone for good: the options sheet has its own
+ * permanent corner button on the toolbar.)
  *
  * Only the tile is gated. The `/store` route stays mounted, so a direct link
  * still resolves and the page can be reviewed before it is announced.

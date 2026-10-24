@@ -924,15 +924,9 @@ export function FeedControls({
     <header className="vocab-toolbar" ref={toolbar}>
       <div className="vocab-toolbar-row">
         {/* Far left: the app family. Rendered unconditionally — ECOSYSTEM_STORE_AVAILABLE
-            gates the STORE TILE inside the panel, not the panel itself, and the panel
-            already falls back to a Settings tile in its place while the siblings are
-            unannounced. */}
-        <EcosystemMenu
-          open={ecoOpen}
-          onOpenChange={toggleEco}
-          reducedMotion={reducedMotion}
-          onOpenSettings={() => onOpen(true)}
-        />
+            gates only the STORE TILE inside the panel, not the panel itself; with the
+            store gated the grid is just the sibling apps over a "more coming" footer. */}
+        <EcosystemMenu open={ecoOpen} onOpenChange={toggleEco} reducedMotion={reducedMotion} />
         {/* Then the title, which is the difficulty trigger. Settings holds the top-right
             corner — see the right column. */}
         <div className="vocab-toolbar-left">
