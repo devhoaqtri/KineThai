@@ -17,6 +17,7 @@ import { Check, X } from "lucide-react";
 import {
   MAX_REPORT_REASONS,
   REPORT_REASONS,
+  isSevereReason,
   toReportStage,
   type ReportReasonId,
 } from "../lib/word-report";
@@ -189,6 +190,7 @@ export function WordReportPanel({
                   key={reason.id}
                   type="button"
                   className="vocab-report-reason"
+                  data-severe={isSevereReason(reason.id) || undefined}
                   aria-pressed={selected.includes(reason.id)}
                   onClick={() => toggle(reason.id)}
                 >

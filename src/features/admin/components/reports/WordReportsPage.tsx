@@ -10,8 +10,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Pencil, RotateCcw } from "lucide-react";
-import { getReportReason } from "@/features/vocabulary/lib/word-report";
+import { Check, Pencil, RotateCcw, TriangleAlert } from "lucide-react";
+import { getReportReason, isSevereReason } from "@/features/vocabulary/lib/word-report";
 import { adminKeys } from "../../api/keys";
 import { adminWordReportsQueryOptions } from "../../api/queries";
 import { updateWordReports, type WordReportGroup } from "../../api/word-report.functions";
@@ -136,8 +136,14 @@ function ReportCard({
   onReopen: () => void;
 }): React.ReactElement {
   const isOpen = group.openCount > 0;
+  // Flagged "nhạy cảm" / "không ổn": the queue already puts these first; the card says why.
+  const severe = isOpen && group.severeCount > 0;
   return (
-    <li className={`rounded-lg border border-border p-4 ${isOpen ? "bg-muted/20" : "opacity-70"}`}>
+    <li
+      className={`rounded-lg border p-4 ${
+        severe ? "border-red-500/50 bg-red-500/5" : "border-border"
+      } ${isOpen ? (severe ? "" : "bg-muted/20") : "opacity-70"}`}
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -154,6 +160,12 @@ function ReportCard({
             >
               {isOpen ? `${group.openCount} open` : `${group.resolvedCount} resolved`}
             </span>
+            {severe && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-red-500/15 px-2 py-0.5 text-[11px] font-semibold text-red-500">
+                <TriangleAlert size={11} aria-hidden="true" /> Priority · {group.severeCount}{" "}
+                flagged
+              </span>
+            )}
           </div>
           <p className="mt-0.5 text-xs text-muted-foreground">
             Latest {formatWhen(group.latestAt)}
@@ -195,7 +207,11 @@ function ReportCard({
           {group.reasons.map((reason) => (
             <span
               key={reason.id}
-              className="rounded-full border border-border bg-background px-2.5 py-1 text-xs"
+              className={`rounded-full border px-2.5 py-1 text-xs ${
+                isSevereReason(reason.id)
+                  ? "border-red-500/50 bg-red-500/10 font-medium text-red-500"
+                  : "border-border bg-background"
+              }`}
             >
               {getReportReason(reason.id)?.en ?? reason.id}
               <strong className="ml-1.5 tabular-nums">×{reason.count}</strong>

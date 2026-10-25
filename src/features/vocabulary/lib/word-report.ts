@@ -6,9 +6,13 @@
  * of the card the reader was on. There is deliberately no free text and no reader
  * identifier, so a report cannot carry anything personal.
  *
+ * Two reasons are SEVERE: "nhạy cảm" (sensitive) and "không ổn" (not okay). They are not
+ * about a mistake in the card but about whether it should be shown at all, so they are
+ * tinted red where a reader picks them and go to the top of the admin's queue.
+ *
  * Exports: REPORT_REASONS, ReportReasonId, REPORT_REASON_IDS, getReportReason,
- *   toReportStage, wordReportSchema, WordReportInput, WordReport, WordReportStatus,
- *   MAX_REPORT_REASONS
+ *   SEVERE_REPORT_REASONS, isSevereReason, byReportPriority, toReportStage,
+ *   wordReportSchema, WordReportInput, WordReport, WordReportStatus, MAX_REPORT_REASONS
  * Depends on: zod
  */
 
@@ -28,6 +32,8 @@ export const REPORT_REASONS = [
     en: "Pronunciation or word class wrong",
   },
   { id: "level-mismatch", vi: "Sai độ khó", en: "Wrong difficulty level" },
+  { id: "sensitive", vi: "Nhạy cảm", en: "Sensitive content" },
+  { id: "not-ok", vi: "Không ổn", en: "Not okay to show" },
 ] as const;
 
 export type ReportReasonId = (typeof REPORT_REASONS)[number]["id"];
@@ -40,6 +46,25 @@ export const REPORT_REASON_IDS = REPORT_REASONS.map((reason) => reason.id) as [
 /** Look a reason up by id. @returns undefined for an id no longer offered. @pure true */
 export function getReportReason(id: string) {
   return REPORT_REASONS.find((reason) => reason.id === id);
+}
+
+/** Reasons that say a card may hurt or offend rather than that it is wrong. */
+export const SEVERE_REPORT_REASONS: readonly ReportReasonId[] = ["sensitive", "not-ok"];
+
+/** @returns Whether a reason id is one of the severe ones. @pure true */
+export function isSevereReason(id: string): boolean {
+  return (SEVERE_REPORT_REASONS as readonly string[]).includes(id);
+}
+
+/**
+ * Order for a tally of reasons: severe ones first, then the most-named.
+ * @pure true
+ */
+export function byReportPriority(
+  a: { id: string; count: number },
+  b: { id: string; count: number },
+): number {
+  return Number(isSevereReason(b.id)) - Number(isSevereReason(a.id)) || b.count - a.count;
 }
 
 /** A reader may pick several, but not the whole list as a way of saying nothing. */

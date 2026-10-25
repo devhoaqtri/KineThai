@@ -11,7 +11,7 @@
  */
 
 import { AlertTriangle } from "lucide-react";
-import { getReportReason } from "@/features/vocabulary/lib/word-report";
+import { getReportReason, isSevereReason } from "@/features/vocabulary/lib/word-report";
 
 /**
  * Open-report badge plus the top reason.
@@ -43,7 +43,14 @@ export function WorkbenchReportCell({
         <span className="text-xs text-muted-foreground/50">—</span>
       )}
       {topReasons[0] && (
-        <p className="mt-0.5 max-w-[9rem] text-[10px] leading-tight text-muted-foreground">
+        <p
+          className={`mt-0.5 max-w-[9rem] text-[10px] leading-tight ${
+            // Severe reasons sort first, so a flagged word names its flag here.
+            isSevereReason(topReasons[0].id)
+              ? "font-semibold text-red-500"
+              : "text-muted-foreground"
+          }`}
+        >
           {label(topReasons[0])}
         </p>
       )}

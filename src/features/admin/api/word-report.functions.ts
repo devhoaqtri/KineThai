@@ -12,10 +12,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { z } from "zod";
-import type {
-  ReportReasonId,
-  ReportStage,
-  WordReportStatus,
+import {
+  byReportPriority,
+  isSevereReason,
+  type ReportReasonId,
+  type ReportStage,
+  type WordReportStatus,
 } from "@/features/vocabulary/lib/word-report";
 import { requireAdminAccess } from "../lib/admin-access";
 import { requireAdminContext } from "../lib/require-admin";
@@ -36,8 +38,10 @@ export type WordReportGroup = {
     level: string | null;
   } | null;
   openCount: number;
+  /** Open reports naming a severe reason ("nhạy cảm", "không ổn"): these lead the queue. */
+  severeCount: number;
   resolvedCount: number;
-  /** How many OPEN reports named each reason, most-named first. */
+  /** How many OPEN reports named each reason: severe ones first, then most-named. */
   reasons: { id: ReportReasonId; count: number }[];
   /** How many OPEN reports were filed from each page of the card. */
   stages: { id: ReportStage; count: number }[];
@@ -78,12 +82,13 @@ async function readCatalogWords(): Promise<Map<string, CatalogWord>> {
 function tally<T extends string>(values: T[]): { id: T; count: number }[] {
   const counts = new Map<T, number>();
   for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
-  return [...counts].map(([id, count]) => ({ id, count })).sort((a, b) => b.count - a.count);
+  return [...counts].map(([id, count]) => ({ id, count })).sort(byReportPriority);
 }
 
 /**
- * Every reported word, with its open reports summarised. Words with open reports
- * come first, most-reported at the top; fully resolved words follow.
+ * Every reported word, with its open reports summarised. Words with open reports come
+ * first: those flagged with a severe reason at the top, then the most-reported; fully
+ * resolved words follow.
  */
 export const listWordReportGroups = createServerFn({ method: "GET" })
   .middleware([requireAdminAccess])
@@ -116,6 +121,7 @@ export const listWordReportGroups = createServerFn({ method: "GET" })
             }
           : null,
         openCount: open.length,
+        severeCount: open.filter((item) => item.reasons.some(isSevereReason)).length,
         resolvedCount: resolved.length,
         reasons: tally(open.flatMap((item) => item.reasons)),
         stages: tally(open.flatMap((item) => (item.stage ? [item.stage] : []))),
@@ -130,6 +136,7 @@ export const listWordReportGroups = createServerFn({ method: "GET" })
     groups.sort(
       (a, b) =>
         Number(b.openCount > 0) - Number(a.openCount > 0) ||
+        b.severeCount - a.severeCount ||
         b.openCount - a.openCount ||
         b.latestAt.localeCompare(a.latestAt),
     );

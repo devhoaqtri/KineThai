@@ -15,6 +15,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { readWorkbench } from "@/features/vocabulary/api/workbench-store.server";
 import { publishedFingerprint } from "@/features/vocabulary/lib/workbench";
+import { byReportPriority } from "@/features/vocabulary/lib/word-report";
 import type { WorkbenchRow } from "../lib/workbench-filter";
 
 const CATALOG_PATH = resolve(process.cwd(), "src/features/vocabulary/data/catalog.json");
@@ -77,7 +78,7 @@ async function reportTallies(): Promise<Map<string, Tally>> {
     }
     byWord.set(report.wordId, tally);
   }
-  for (const tally of byWord.values()) tally.reasons.sort((a, b) => b.count - a.count);
+  for (const tally of byWord.values()) tally.reasons.sort(byReportPriority);
   tallyCache = { at: Date.now(), byWord };
   return byWord;
 }

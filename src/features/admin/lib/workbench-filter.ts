@@ -12,6 +12,7 @@
  */
 
 import { LEVELS } from "@/features/vocabulary/lib/schema";
+import { isSevereReason } from "@/features/vocabulary/lib/word-report";
 import type { WorkbenchWord } from "@/features/vocabulary/lib/workbench";
 
 export type WorkbenchSort = "word" | "level" | "reports" | "updated" | "status";
@@ -35,7 +36,7 @@ export type WorkbenchQuery = {
 /** An authoring record plus everything derived at read time. */
 export type WorkbenchRow = WorkbenchWord & {
   openReports: number;
-  /** Open-report reasons for this word, most-named first. */
+  /** Open-report reasons for this word: severe ones first, then most-named. */
   topReasons: { id: string; count: number }[];
   /** Whether the published catalog carries this word at all. */
   published: boolean;
@@ -163,8 +164,12 @@ function compare(a: WorkbenchRow, b: WorkbenchRow, sort: WorkbenchSort): number 
         (LEVEL_ORDER.get(a.level ?? "") ?? LEVELS.length) -
         (LEVEL_ORDER.get(b.level ?? "") ?? LEVELS.length)
       );
+    // A word flagged "nhạy cảm" or "không ổn" outranks any count of ordinary reports.
     case "reports":
-      return a.openReports - b.openReports;
+      return (
+        Number(isSevereReason(a.topReasons[0]?.id ?? "")) -
+          Number(isSevereReason(b.topReasons[0]?.id ?? "")) || a.openReports - b.openReports
+      );
     case "updated":
       return a.updatedAt.localeCompare(b.updatedAt);
     case "status":
