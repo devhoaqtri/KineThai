@@ -10,6 +10,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "vocab:import": "node --experimental-strip-types scripts/import-vocabulary.ts",
     "check:gradients": "node scripts/check-canvas-gradients.ts",
     "check:ambient": "node scripts/check-ambient-single-stream.ts",
