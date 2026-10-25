@@ -29,6 +29,26 @@ export type PostCanvasBackdropProps = {
 /** How long the old colour takes to fade off a page change too far to glide. */
 const JUMP_FADE_S = 0.45;
 
+/** The glide between neighbouring pages, shared by every backdrop kind. */
+const GLIDE = "1.25s cubic-bezier(0.22,1,0.36,1)";
+
+/**
+ * Where the strip sits for a page, as a background-position.
+ *
+ * The strip is `segments` card-widths wide (pageShift is one segment, in % of the strip),
+ * and a page shows segment `page`. A percentage position p lines up p% of the image with
+ * p% of the box, so with an image N boxes wide the offset is (1 − N)·p% of the box, and
+ * page × one box needs p = page / (N − 1).
+ * @param page - The page shown
+ * @param pageShift - One segment, in % of the strip
+ * @returns The background-position-x value
+ * @pure true
+ */
+function stripPosition(page: number, pageShift: number): string {
+  const segments = 100 / pageShift;
+  return `${((page * 100) / Math.max(1, segments - 1)).toFixed(4)}%`;
+}
+
 /**
  * Paint the post canvas background layer (scene/pattern/gradient).
  * @param props - PostCanvasBackdropProps fields
@@ -81,21 +101,32 @@ export function PostCanvasBackdrop({
           backgroundSize: patternTheme.size,
           backgroundRepeat: "repeat",
           backgroundPosition: getPatternBackgroundPosition(patternTheme, page),
-          transition: instant ? "none" : "background-position 1.25s cubic-bezier(0.22,1,0.36,1)",
+          transition: instant ? "none" : `background-position ${GLIDE}`,
         }}
       />
     ) : slidingCanvasBackground ? (
-      <motion.div
+      // The strip is dozens of card-widths long. It used to be an element that long, slid
+      // by a transform — on a phone a single composited layer ~88,000 device px wide per
+      // card. A mobile GPU cannot keep that rastered, so as the strip moved between words
+      // its tiles arrived late and other stretches of the strip flashed through. Now the
+      // strip is this box's background, sized to its full length and moved by
+      // background-position, so only the box itself is ever painted: no layer is larger
+      // than the card. no-repeat keeps WebKit drawing the gradient straight into the box
+      // rather than building a tile as large as the strip.
+      <div
         aria-hidden
-        className="absolute inset-y-0 left-0"
+        className="absolute inset-0"
         style={{
+          // The same shorthand-then-image order as before: the fallback fills the box,
+          // the strip paints over it.
           background: DEFAULT_CANVAS_BACKGROUND,
           backgroundImage: slidingCanvasBackground.background,
-          width: slidingCanvasBackground.width,
+          backgroundSize: `${((100 / slidingCanvasBackground.pageShift) * 100).toFixed(2)}% 100%`,
+          backgroundRepeat: "no-repeat",
+          backgroundPositionX: stripPosition(page, slidingCanvasBackground.pageShift),
+          backgroundPositionY: "0",
+          transition: instant ? "none" : `background-position ${GLIDE}`,
         }}
-        initial={false}
-        animate={{ x: `-${page * slidingCanvasBackground.pageShift}%` }}
-        transition={instant ? { duration: 0 } : { duration: 1.25, ease: [0.22, 1, 0.36, 1] }}
       />
     ) : (
       <div
