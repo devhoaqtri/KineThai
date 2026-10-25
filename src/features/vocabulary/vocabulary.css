@@ -1483,46 +1483,62 @@
    by side on one track that slides by a transform: a swipe drags it and it settles on the
    nearer page. Each page keeps its own vertical scroll; the track leaves vertical drags to
    it (touch-action: pan-y) and takes only the sideways ones. */
-.vocab-difficulty-pages {
-  display: flex;
-  flex: none;
-  gap: 4px;
-  margin: 2px 2px 8px;
+/* The page switcher, in the foot's right corner where "Xong" appears: a small segmented
+   pill whose thumb slides to the page in view. It exists only once the reader has packs,
+   and gives the corner to "Xong" as soon as a level is picked. Same height as "Xong" and
+   the library button beside it, so the foot stays one even row. */
+.vocab-difficulty-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   padding: 3px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--shell-text) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--pop-accent) 30%, #ffffff33);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--shell-surface) 55%, transparent);
+  animation: vocab-done-in 420ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
-.vocab-difficulty-pages button {
+/* The thumb: half the pill, sliding under the selected segment. */
+.vocab-difficulty-switch::before {
+  content: "";
+  position: absolute;
+  inset: 3px auto 3px 3px;
+  width: calc(50% - 3px);
+  border-radius: 7px;
+  background: var(--shell-text);
+  transition: transform var(--dur-move, 220ms) var(--ease-spring, ease-out);
+}
+.vocab-difficulty-switch[data-page="1"]::before {
+  transform: translateX(100%);
+}
+.vocab-difficulty-switch button {
+  position: relative;
   display: inline-flex;
-  flex: 1;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 32px;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 11px;
   border: 0;
-  border-radius: 999px;
-  background: transparent;
+  background: none;
   color: var(--shell-text-mute);
-  font: inherit;
-  font-size: 13px;
+  font-family: "Inter", sans-serif;
+  font-size: 12.5px;
   font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
-  transition:
-    background var(--dur-quick) var(--ease-out),
-    color var(--dur-quick) var(--ease-out);
+  transition: color var(--dur-move, 220ms) var(--ease-out, ease-out);
 }
-.vocab-difficulty-pages button[aria-selected="true"] {
-  background: var(--shell-text);
+.vocab-difficulty-switch button[aria-selected="true"] {
   color: var(--shell-on-text);
 }
-.vocab-difficulty-pages button span {
-  min-width: 18px;
-  padding: 0 5px;
+.vocab-difficulty-switch button span {
+  min-width: 16px;
+  padding: 0 4px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pop-accent) 80%, transparent);
+  background: var(--pop-accent);
   color: var(--pop-accent-ink);
-  font-size: 11px;
-  line-height: 18px;
+  font-size: 10.5px;
+  line-height: 16px;
   font-variant-numeric: tabular-nums;
 }
 .vocab-difficulty-pager {
@@ -1584,16 +1600,6 @@
 }
 .vocab-pack-picks .vocab-difficulty-option-label {
   min-width: 0;
-}
-.vocab-pack-picks-empty {
-  margin: 14px 14px 0;
-  color: var(--shell-text-mute);
-  font-size: 13px;
-  line-height: 1.55;
-}
-.vocab-pack-picks-empty a {
-  color: var(--shell-text);
-  font-weight: 700;
 }
 /* Floating confirm bar: a gradient fade so the last rows read through it as they
    scroll beneath, with the bar itself click-transparent except on its buttons. */
@@ -7604,7 +7610,9 @@
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklab, var(--shell-text) 25%, transparent) transparent;
 }
+/* Announces the playing pack for a few seconds (VocabularyFeedPage times it), then fades. */
 .vocab-custom-pack-chip {
+  animation: vocab-pack-chip-in 260ms var(--ease-out, ease-out) both;
   position: fixed;
   top: max(58px, calc(env(safe-area-inset-top) + 50px));
   left: 50%;
@@ -7628,6 +7636,22 @@
   text-decoration: none;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.vocab-custom-pack-chip[data-closing] {
+  pointer-events: none;
+  animation: vocab-pack-chip-out 320ms var(--ease-in, ease-in) forwards;
+}
+@keyframes vocab-pack-chip-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+}
+@keyframes vocab-pack-chip-out {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
 }
 .vocab-custom-pack-chip button {
   border: 0;

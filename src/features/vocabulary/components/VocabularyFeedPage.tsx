@@ -14,6 +14,7 @@ import { useFontsReady } from "../hooks/useFontsReady";
 import { useTrackRotation } from "../hooks/useTrackRotation";
 import { useViewHistory } from "../hooks/useViewHistory";
 import { useLevelProgress } from "../hooks/useLevelProgress";
+import { usePresence } from "@/hooks/use-presence";
 import { getActiveVocabWording } from "@/features/admin/api/wording.functions";
 import { FeedControls } from "./FeedControls";
 import { VocabularyStream } from "./VocabularyStream";
@@ -28,6 +29,11 @@ import type { TargetLocale } from "../lib/target-language";
 import { CUSTOM_PACK_EVENT, clearCustomPack, readCustomPack } from "../lib/custom-pack";
 import { Link } from "@tanstack/react-router";
 import "../vocabulary.css";
+
+/** How long the "Gói của bạn" bar stays up after a pack starts playing. */
+const PACK_NOTICE_MS = 4000;
+/** Its fade-out; matches .vocab-custom-pack-chip[data-closing] in vocabulary.css. */
+const PACK_NOTICE_EXIT_MS = 320;
 
 function newSeed(): string {
   const values = new Uint32Array(4);
@@ -74,6 +80,19 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   // Imported pack (browser-only). Its own levels may not match a stored track, so it
   // skips onboarding, plays every word, and keeps theme/style on random mix.
   const [packName, setPackName] = useState<string | null>(null);
+  // The "Gói của bạn" bar announces a pack when it starts, then gets out of the way: the
+  // title's sub-line keeps naming the pack, and the picker is where it is changed.
+  const [packNotice, setPackNotice] = useState(false);
+  useEffect(() => {
+    if (!packName) {
+      setPackNotice(false);
+      return;
+    }
+    setPackNotice(true);
+    const timer = window.setTimeout(() => setPackNotice(false), PACK_NOTICE_MS);
+    return () => window.clearTimeout(timer);
+  }, [packName]);
+  const packNoticePresence = usePresence(packNotice, PACK_NOTICE_EXIT_MS);
   useEffect(() => {
     const sync = () => {
       const pack = readCustomPack();
@@ -207,8 +226,12 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
         onClearHistory={viewHistory.clear}
         onExport={isAdmin ? openExport : undefined}
       />
-      {packName && (
-        <div className="vocab-custom-pack-chip" role="status">
+      {packName && packNoticePresence.mounted && (
+        <div
+          className="vocab-custom-pack-chip"
+          role="status"
+          data-closing={packNoticePresence.closing || undefined}
+        >
           <Link to="/feed/library" className="vocab-custom-pack-name">
             Gói của bạn: {packName}
           </Link>
