@@ -115,8 +115,8 @@ export function DifficultyOnboarding({
   const current = rungs[index]!;
   const ladder = useRef<HTMLOListElement>(null);
   // No background music while a level is being picked: the ladder is a one-time choice,
-  // not a listening session. Whatever is still sounding is silenced here and the stored
-  // preference is left alone, so the feed toolbar starts the music with the first word.
+  // not a listening session. Whatever is still sounding is silenced here; the toggle itself
+  // is left as it is, so music the reader turned on resumes with the first word.
   useEffect(() => {
     getAmbientPlayer().stop();
     getAmbientOwnership().release();

@@ -186,28 +186,34 @@ const ENDING_SLACK_SECONDS = 0.35;
  */
 type PlayerMode = "playing" | "leaving" | "held";
 
-const STORAGE_KEY = "kinetic.vocab.ambient";
+/** Where the music switch used to be remembered between visits; cleared on load. */
+const LEGACY_STORAGE_KEY = "kinetic.vocab.ambient";
 const AMBIENT_EVENT = "kinetic:vocab-ambient";
 
-/** Read the persisted ambient-sound preference. */
-export function getAmbientEnabled(): boolean {
-  if (typeof window === "undefined") return false;
+/**
+ * Music is off on every visit until the reader turns it on, so the switch lives in memory
+ * for this page only. It used to be saved in localStorage: one tap of the toggle meant the
+ * music started by itself on every later visit, which is not a default anyone chose.
+ */
+let enabledThisVisit = false;
+
+if (typeof window !== "undefined") {
   try {
-    return localStorage.getItem(STORAGE_KEY) === "1";
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
   } catch {
-    return false;
+    // storage unavailable — nothing was saved there either
   }
 }
 
-/** Persist and broadcast the ambient-sound preference. */
+/** Whether the reader turned music on during this visit. */
+export function getAmbientEnabled(): boolean {
+  return enabledThisVisit;
+}
+
+/** Turn music on or off for this visit, and tell every listener in the page. */
 export function setAmbientEnabled(enabled: boolean): void {
   if (typeof window === "undefined") return;
-  try {
-    if (enabled) localStorage.setItem(STORAGE_KEY, "1");
-    else localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // quota / privacy mode — proceed anyway
-  }
+  enabledThisVisit = enabled;
   window.dispatchEvent(new Event(AMBIENT_EVENT));
 }
 

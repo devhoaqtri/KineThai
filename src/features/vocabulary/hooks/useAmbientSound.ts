@@ -1,7 +1,7 @@
 /**
  * React hook managing the ambient background music toggle and playback.
- * Persists the on/off preference to localStorage (same-tab reactive via a custom event,
- * cross-tab reactive via the native storage event).
+ * The switch is off on every visit and lives in memory for this page only (see
+ * ../lib/ambient); toggles reach every hook in the page through a custom event.
  *
  * Playback is gated by a three-part policy: enabled (the user turned music on) AND
  * visible (this tab/window is foreground) AND owner (this context holds the cross-
@@ -25,15 +25,12 @@ import {
 } from "../lib/ambient";
 import { AMBIENT_OWNER_KEY, getAmbientOwnership, shouldPlayAmbient } from "../lib/ambientOwnership";
 
-/** The localStorage key the enabled/disabled preference lives under (mirrors ambient.ts). */
-const PREF_KEY = "kinetic.vocab.ambient";
-
 /**
  * Toggle and control ambient background music.
  * @param scope The pool family this context may play from: the Chinese feed passes
  *   "zh" so only traditional Chinese instrumentals sound there, and they can never
  *   surface under the main feed. Re-asserted on every reconcile, before any play
- *   decision, so a persisted preference can never start a track from the wrong pool.
+ *   decision, so a switched-on toggle can never start a track from the wrong pool.
  * @param paused The feed's transport pause. When true the audio stream is stopped even
  *   though the music preference stays on — pausing the words pauses the music too, and
  *   resuming picks it back up. The toolbar's own music icon keeps reflecting `enabled`,
@@ -59,7 +56,7 @@ export function useAmbientSound(
   const reconcile = useCallback(() => {
     const player = getAmbientPlayer();
     // Bind the pool family BEFORE any play decision: the scope is what makes a
-    // persisted "sound on" preference safe to honour on a host whose music differs.
+    // "sound on" toggle safe to honour on a host whose music differs.
     player.setScope(scope);
     const ownership = getAmbientOwnership();
     // A transport pause silences the stream without touching the stored preference.
@@ -79,17 +76,16 @@ export function useAmbientSound(
     }
   }, [scope, paused]);
 
-  // React to the same-tab custom event, cross-tab preference changes, cross-context
-  // ownership changes, and this tab's own visibility flips.
+  // React to the toggle's custom event, cross-context ownership changes, and this tab's
+  // own visibility flips.
   useEffect(() => {
     const onPrefChange = () => {
       setEnabled(getAmbientEnabled());
       reconcile();
     };
     const onStorage = (event: StorageEvent) => {
-      if (event.key === PREF_KEY) onPrefChange();
       // Another context claimed or released the audible lease — re-decide immediately.
-      else if (event.key === AMBIENT_OWNER_KEY) reconcile();
+      if (event.key === AMBIENT_OWNER_KEY) reconcile();
     };
     const onVisibility = () => reconcile();
 
