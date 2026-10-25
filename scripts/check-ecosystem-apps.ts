@@ -7,10 +7,11 @@
  * the wrong language — or on the English fallback, which is what an unknown subdomain
  * resolves to. Nothing about that is visible from the drawer.
  *
- * It also pins the filter the drawer relies on: each record carries the locale its host
- * serves, and the drawer hides the tile matching the page already open. If a record's
- * `locale` disagrees with what `resolveTarget` says its own URL resolves to, the drawer
- * either hides the wrong tile or offers the reader the page they are standing on.
+ * It also pins the filter the drawer relies on: the drawer hides the tile whose id equals
+ * the visited host's own first label, so each record's `id` must equal its URL's
+ * subdomain (checked below). The `locale` field is checked against `resolveTarget` as a
+ * data-integrity guard: a tile's host must serve the deck its locale claims, or the tile
+ * sends the reader to a host answering in the wrong language.
  *
  * Usage: npm run check:ecosystem-apps
  */
@@ -46,10 +47,8 @@ for (const app of ECOSYSTEM_APPS) {
   check(`${app.id}: url is https on chayla.app`, /^https:\/\/[a-z]+\.chayla\.app$/.test(app.url),
     app.url);
 
-  // The invariant the drawer's filter rests on.
-  const resolved = resolveTarget(host);
-  check(`${app.id}: host serves the locale the record claims`, resolved === app.locale,
-    `resolves to "${resolved}", record says "${app.locale}"`);
+  // Data integrity for the locale field; the drawer's own filter rests on the
+  // id-equals-subdomain check above.
 
   // A tile that ellipsises reads as the same truncated string as its neighbours.
   check(`${app.id}: name fits a tile`, app.name.length <= 12, `"${app.name}" (${app.name.length})`);

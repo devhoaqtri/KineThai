@@ -143,14 +143,16 @@ export function EcosystemMenu({
   reducedMotion,
 }: EcosystemMenuProps): React.ReactElement {
   const presence = usePresence(open, ECOSYSTEM_EXIT_MS);
-  // Everything except the host the reader is already on. Which host that is varies now
-  // that each language is its own address, so it is resolved rather than assumed: on
-  // duc.chayla.app the sibling worth offering is Anh, not Đức. Unknown hosts (localhost, a
-  // preview build, an IP) resolve to English, which is also what the feed itself serves
-  // there, so the drawer agrees with the deck beside it.
+  // Everything except the host the reader is already on. The match is on the host's own
+  // label, not the resolved deck locale: on localhost, a preview build or any unknown
+  // address nothing matches, so the whole family — Anh included — shows. resolveTarget
+  // would instead fall back to English there and wrongly hide the Anh tile.
   const apps = useMemo(() => {
-    const here = typeof window === "undefined" ? "" : resolveTarget(window.location.host);
-    return ECOSYSTEM_APPS.filter((app) => app.locale !== here);
+    const label =
+      typeof window === "undefined"
+        ? ""
+        : (window.location.host.trim().toLowerCase().replace(/:\d+$/, "").split(".")[0] ?? "");
+    return ECOSYSTEM_APPS.filter((app) => app.id !== label);
   }, []);
   const anchor = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
