@@ -2,7 +2,12 @@ import { createStart, createMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
 import { RATE_LIMITS, callerKey, checkRateLimit, rateLimitedResponse } from "./lib/rate-limit";
-import { WORD_DATA_PATHS, browserOnlyResponse, isBrowserRequest } from "./lib/bot-gate";
+import {
+  WORD_DATA_PATHS,
+  browserOnlyResponse,
+  isBrowserRequest,
+  isLocalRequest,
+} from "./lib/bot-gate";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 
 /**
@@ -15,6 +20,10 @@ import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
  *
  * Only paths named in RATE_LIMITS are touched: page loads, assets and server functions
  * pass straight through, so this can never throttle a reader looking at the app.
+ *
+ * Local hosts are exempt, as they are from the bot gate. Without a forwarding header every
+ * local caller shares one limiter key, so a developer reloading, the clip recorder and any
+ * test run all spent ONE budget between them, and the feed went dark after a few reloads.
  */
 const rateLimitMiddleware = createMiddleware().server(async ({ next, request }) => {
   const path = new URL(request.url).pathname;
@@ -22,7 +31,7 @@ const rateLimitMiddleware = createMiddleware().server(async ({ next, request }) 
   // out word content only answers the app's own pages (see lib/bot-gate).
   if (WORD_DATA_PATHS.has(path) && !isBrowserRequest(request)) return browserOnlyResponse();
   const budget = RATE_LIMITS[path];
-  if (!budget) return next();
+  if (!budget || isLocalRequest(request)) return next();
   const verdict = checkRateLimit(path, callerKey(request), budget);
   if (!verdict.allowed) return rateLimitedResponse(verdict.retryAfterSeconds);
   return next();

@@ -7,10 +7,11 @@ import { MAX_POSITION, readVocabularyPage, servedCatalogFor } from "./catalog.se
 import { refreshBlockedWordIds } from "./word-block.server";
 import { issueStreamToken, verifyStreamToken } from "./stream-token.server";
 import { resolveTarget } from "../lib/target-language";
+import { isLocalRequest } from "@/lib/bot-gate";
 import {
   NEW_STREAM_BUDGET,
   callerKey,
-  checkRateLimit,
+  checkRateLimitOnce,
   rateLimitedResponse,
 } from "@/lib/rate-limit";
 
@@ -124,8 +125,18 @@ export async function vocabularyResponse(request: Request): Promise<Response> {
     revision,
   };
   if (page.position === 0) {
-    const verdict = checkRateLimit("vocabulary:new-stream", callerKey(request), NEW_STREAM_BUDGET);
-    if (!verdict.allowed) return rateLimitedResponse(verdict.retryAfterSeconds);
+    // Charged per distinct stream: asking for the same first page again is free. Local
+    // hosts are exempt, as they are from the path budgets (see start.ts).
+    if (!isLocalRequest(request)) {
+      const stream = [page.seed, page.topic, page.level, page.difficulty].join("|");
+      const verdict = checkRateLimitOnce(
+        "vocabulary:new-stream",
+        callerKey(request),
+        stream,
+        NEW_STREAM_BUDGET,
+      );
+      if (!verdict.allowed) return rateLimitedResponse(verdict.retryAfterSeconds);
+    }
   } else if (!token || (await verifyStreamToken(token, identity, page.position)) === null) {
     return Response.json(
       { code: "STREAM_EXPIRED", error: "This stream can no longer be resumed. Start a fresh one." },

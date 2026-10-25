@@ -5,10 +5,13 @@ import type { FeedCursor, FeedPage, VocabularyFilters } from "../types";
 
 export class VocabularyRequestError extends Error {
   readonly code: string;
-  constructor(message: string, code: string) {
+  /** From a refusal's Retry-After header: when asking again can succeed. */
+  readonly retryAfterMs: number | null;
+  constructor(message: string, code: string, retryAfterMs: number | null = null) {
     super(message);
     this.name = "VocabularyRequestError";
     this.code = code;
+    this.retryAfterMs = retryAfterMs;
   }
 }
 
@@ -49,9 +52,11 @@ export async function fetchVocabularyPage(input: {
     });
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
+      const retryAfter = Number(response.headers.get("retry-after"));
       throw new VocabularyRequestError(
         body.error || "Could not load more words. Please retry.",
         body.code || "UNAVAILABLE",
+        Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : null,
       );
     }
     return (await response.json()) as FeedPage;

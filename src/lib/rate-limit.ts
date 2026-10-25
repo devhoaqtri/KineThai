@@ -19,8 +19,8 @@
  * a budget you can prove, so anything that must hold exactly — a spend cap, a quota —
  * belongs in Postgres where every instance can see the same counter.
  *
- * Exports: RATE_LIMITS, NEW_STREAM_BUDGET, callerKey, checkRateLimit, rateLimitedResponse,
- *   resetRateLimits
+ * Exports: RATE_LIMITS, NEW_STREAM_BUDGET, callerKey, checkRateLimit, checkRateLimitOnce,
+ *   rateLimitedResponse, resetRateLimits
  * Depends on: none (leaf module)
  */
 
@@ -74,17 +74,28 @@ const SWEEP_AT = 5000;
 /**
  * New streams on the feed. Not a path: the vocabulary handler charges it only for a
  * page 0, because a stream's later pages need its signed cursor while page 0 does not —
- * so fresh seeds are the one way to fan out, and they get the tighter allowance. Every
- * filter change opens a stream too, which is what the ten-minute figure leaves room for.
+ * so fresh seeds are the one way to fan out, and they get their own allowance.
+ *
+ * Sized for real readers, not for one: every reload, level change and shuffle opens a
+ * stream, and the key is an address, which a household, a school network or a mobile
+ * carrier's NAT shares between many people. At 20 per ten minutes a reader who reloaded
+ * a few times was locked out of the feed. Fan-out is still bounded where it matters: a
+ * page 0 is twelve words like any other page, and the path budget in RATE_LIMITS caps
+ * the pages one address can pull, whatever seeds it uses.
  */
 export const NEW_STREAM_BUDGET: RateBudget = [
-  { limit: 20, windowMs: 10 * MINUTE },
-  { limit: 100, windowMs: DAY },
+  { limit: 60, windowMs: 10 * MINUTE },
+  { limit: 300, windowMs: DAY },
 ];
+
+/** How long a charged stream is remembered, so asking for it again costs nothing. */
+const STREAM_HOLD_MS = 10 * MINUTE;
 
 // Each window remembers its own length, so a sweep never judges a day-long window by
 // the minute-long one that happened to trigger it.
 const hits = new Map<string, { windowMs: number; times: number[] }>();
+// Streams already paid for, by caller: entry -> when the hold lapses.
+const charged = new Map<string, number>();
 
 /**
  * The caller, as far as the edge will tell us.
@@ -146,6 +157,39 @@ export function checkRateLimit(
 }
 
 /**
+ * Charge a budget once per distinct item, however often it is asked for.
+ *
+ * Asking for the same feed stream's first page again hands out nothing new — the page is
+ * a pure function of its seed and filters — but each ask used to cost a token: the
+ * request a browser aborts on remount, a retry after a dropped connection, a refetch on
+ * returning to the tab. Two or three tokens per visit is how a few reloads emptied a
+ * budget meant for streams. Only a request that is allowed is remembered, so a refused
+ * one is still free.
+ * @param bucket - what is being limited
+ * @param key - the caller, from callerKey
+ * @param item - what is being paid for, e.g. a stream's seed and filters
+ * @param budget - how many distinct items per window
+ * @returns The verdict, always allowed for an item this caller already paid for
+ */
+export function checkRateLimitOnce(
+  bucket: string,
+  key: string,
+  item: string,
+  budget: RateBudget,
+): { allowed: boolean; retryAfterSeconds: number } {
+  const now = Date.now();
+  const id = `${bucket}|${key}|${item}`;
+  if ((charged.get(id) ?? 0) > now) return { allowed: true, retryAfterSeconds: 0 };
+  const verdict = checkRateLimit(bucket, key, budget);
+  if (!verdict.allowed) return verdict;
+  charged.set(id, now + STREAM_HOLD_MS);
+  if (charged.size > SWEEP_AT) {
+    for (const [entry, until] of charged) if (until <= now) charged.delete(entry);
+  }
+  return verdict;
+}
+
+/**
  * The refusal every limited endpoint returns, so a caller sees one shape everywhere.
  * @param retryAfterSeconds - when the window frees up
  */
@@ -166,4 +210,5 @@ export function rateLimitedResponse(retryAfterSeconds: number): Response {
 /** Drop every window. For tests only. */
 export function resetRateLimits(): void {
   hits.clear();
+  charged.clear();
 }

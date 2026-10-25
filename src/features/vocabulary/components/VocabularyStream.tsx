@@ -279,7 +279,9 @@ export function VocabularyStream({
             <p className="vocab-eyebrow">Mỗi từ là một khởi đầu</p>
             <h1>
               {initialError
-                ? "Thử lại nhé."
+                ? query.retryAt
+                  ? "Chờ một chút nhé."
+                  : "Thử lại nhé."
                 : empty
                   ? "Chưa có từ nào khớp."
                   : allBlocked
@@ -292,7 +294,9 @@ export function VocabularyStream({
             </h1>
             <p>
               {initialError
-                ? "Không tải được dòng từ. Cài đặt của bạn vẫn được giữ nguyên."
+                ? query.retryAt
+                  ? `Mạng của bạn vừa mở quá nhiều dòng từ. Từ sẽ tự tải lại sau ${formatCountdown(query.retryAt, now)}.`
+                  : "Không tải được dòng từ. Cài đặt của bạn vẫn được giữ nguyên."
                 : empty
                   ? "Hãy thử một cấp độ hoặc chủ đề khác."
                   : allBlocked
@@ -303,7 +307,7 @@ export function VocabularyStream({
                       }`
                     : "Gợi ý tiếng Việt, từ mới tiếng Anh. Không cần đăng nhập."}
             </p>
-            {initialError && (
+            {initialError && !query.retryAt && (
               <button
                 type="button"
                 className="vocab-light-button"

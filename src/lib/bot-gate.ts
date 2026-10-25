@@ -15,7 +15,7 @@
  * Local hosts are exempt, so the dev server and the clip recorder (headless Chrome against
  * localhost by default) keep working.
  *
- * Exports: WORD_DATA_PATHS, isBrowserRequest, browserOnlyResponse
+ * Exports: WORD_DATA_PATHS, isLocalRequest, isBrowserRequest, browserOnlyResponse
  * Depends on: none (leaf module)
  */
 
@@ -32,13 +32,22 @@ const TOOL_AGENT =
 const LOCAL_HOST = /^(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)(:\d+)?$/;
 
 /**
+ * Whether the request was routed to a local host: the dev server or the clip recorder.
+ * Judged from the URL the server routed, not a Host header the caller chose.
+ * @param request - the incoming request
+ * @returns True on localhost and loopback addresses
+ */
+export function isLocalRequest(request: Request): boolean {
+  return LOCAL_HOST.test(new URL(request.url).host);
+}
+
+/**
  * Whether a request carries what the app's own pages send.
  * @param request - the incoming request
  * @returns True for a same-origin fetch from a browser (or any request on a local host)
  */
 export function isBrowserRequest(request: Request): boolean {
-  // The URL the server routed, not a Host header the caller chose.
-  if (LOCAL_HOST.test(new URL(request.url).host)) return true;
+  if (isLocalRequest(request)) return true;
   const agent = request.headers.get("user-agent") ?? "";
   if (!/^Mozilla\/5\.0 /.test(agent) || TOOL_AGENT.test(agent)) return false;
   if (request.headers.get("sec-fetch-site") !== "same-origin") return false;
