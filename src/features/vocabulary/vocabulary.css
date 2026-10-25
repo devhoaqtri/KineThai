@@ -2005,6 +2005,15 @@
 .vocab-memory-stats > div[data-today] dd {
   color: var(--vocab-accent);
 }
+/* Nothing seen in that window: the cell steps back to grey, accent and all. */
+.vocab-memory-stats > div[data-empty] {
+  border-color: var(--shell-line);
+  background: none;
+  opacity: 0.45;
+}
+.vocab-memory-stats > div[data-empty] dd {
+  color: var(--shell-text-mute);
+}
 .vocab-memory-clear {
   align-self: flex-start;
   min-height: 44px;

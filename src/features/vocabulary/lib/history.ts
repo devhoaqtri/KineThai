@@ -1,4 +1,5 @@
-/** On-device viewing history with sliding-window repeat caps. Exports: history helpers. Depends on: none (localStorage only). */
+/** On-device viewing history with sliding-window repeat caps. Exports: history helpers. Depends on: ./day (localStorage only). */
+import { previousDay, startOfDay } from "./day";
 export const DAY_MS = 24 * 60 * 60 * 1000;
 export const THREE_DAYS_MS = 3 * DAY_MS;
 export const WEEK_MS = 7 * DAY_MS;
@@ -100,25 +101,34 @@ export function recordView(
 }
 
 export type HistoryStats = {
+  /** Words seen since local midnight. */
   distinctToday: number;
-  distinct3d: number;
+  /** Words seen during the previous calendar day. */
+  distinctYesterday: number;
   distinct7d: number;
   totalViews7d: number;
 };
 
-/** Summarize distinct words seen per window. @param history Map. @param now Reference. @returns Stats. */
+/**
+ * Summarize distinct words seen. Today and yesterday are calendar days (local midnight to
+ * midnight), so the two cells never count the same view; the week is the rolling seven
+ * days the repeat caps use.
+ * @param history Map. @param now Reference. @returns Stats.
+ */
 export function historyStats(history: ViewHistory, now: number = Date.now()): HistoryStats {
+  const today = startOfDay(now);
+  const yesterday = previousDay(today);
   let distinctToday = 0;
-  let distinct3d = 0;
+  let distinctYesterday = 0;
   let distinct7d = 0;
   let totalViews7d = 0;
   for (const times of Object.values(history)) {
-    if (countSince(times, now, DAY_MS) > 0) distinctToday++;
-    if (countSince(times, now, THREE_DAYS_MS) > 0) distinct3d++;
+    if (times.some((t) => t >= today && t <= now + 60_000)) distinctToday++;
+    if (times.some((t) => t >= yesterday && t < today)) distinctYesterday++;
     if (countSince(times, now, WEEK_MS) > 0) distinct7d++;
     totalViews7d += countSince(times, now, WEEK_MS);
   }
-  return { distinctToday, distinct3d, distinct7d, totalViews7d };
+  return { distinctToday, distinctYesterday, distinct7d, totalViews7d };
 }
 
 /** Countdown duration for the Vietnamese “seen every word” scene. @param target Future time. @param now Reference. @returns A bare duration like "5 giờ 12 phút", safe to place after "sau". */

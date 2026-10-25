@@ -1421,18 +1421,19 @@ export function FeedControls({
           )}
           <div className="vocab-memory" aria-label="Bộ nhớ lượt xem trên thiết bị">
             <span className="vocab-group-label">Bộ nhớ trên thiết bị</span>
-            {/* Distinct words seen, per window. Three plain cells: the number leads, the
-                window names it, and today is the one that carries the accent. */}
+            {/* Distinct words seen, per window: yesterday, today in the middle carrying the
+                accent, then the week. The number leads, the window names it, and a window
+                with nothing in it is greyed rather than shouting a zero. */}
             <dl className="vocab-memory-stats">
-              <div data-today>
+              <div data-empty={historyStats.distinctYesterday === 0 || undefined}>
+                <dt>Hôm qua</dt>
+                <dd>{historyStats.distinctYesterday}</dd>
+              </div>
+              <div data-today data-empty={historyStats.distinctToday === 0 || undefined}>
                 <dt>Hôm nay</dt>
                 <dd>{historyStats.distinctToday}</dd>
               </div>
-              <div>
-                <dt>3 ngày qua</dt>
-                <dd>{historyStats.distinct3d}</dd>
-              </div>
-              <div>
+              <div data-empty={historyStats.distinct7d === 0 || undefined}>
                 <dt>Tuần này</dt>
                 <dd>{historyStats.distinct7d}</dd>
               </div>
