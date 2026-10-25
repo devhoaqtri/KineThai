@@ -165,6 +165,8 @@
   --vocab-row-gap: 12px;
   --vocab-eco-gap: 8px;
   --eco-trigger-h: 28px;
+  /* A quarter of the gear's inner padding: (button 44 − glyph 19) / 4. See below. */
+  --vocab-controls-nudge: 6.25px;
   gap: var(--vocab-row-gap);
 }
 /* Side columns are content-sized (auto) and only the middle track stretches (1fr), so
@@ -190,6 +192,12 @@
 }
 .vocab-player-controls {
   justify-self: center;
+  /* The middle track centres the group between the title's box and the gear's, but the
+     eye measures to what is drawn: the title's ink runs to its box edge, while the gear's
+     glyph sits half the button's padding inside it. Centred box-to-box, the gap on the
+     right read wider than the one on the left. Shifting by half that inset (a quarter of
+     the padding) evens the two visible gaps. */
+  translate: var(--vocab-controls-nudge) 0;
 }
 /* The song's name, run once on the SAME line as the difficulty sub-text. A news ticker,
    not a marquee: the text makes a single left-crawl (iteration-count 1, held off-screen
@@ -334,10 +342,15 @@
 .vocab-difficulty-current {
   white-space: nowrap;
 }
-/* The trigger reports the whole selection, so the leading difficulty emoji gets a hair
-   of separation from the label it denotes. */
+/* The sub-text hangs under the pill + title line as two columns of the same grid: the
+   emoji takes a slot exactly as wide as the app pill and centres in it, so it sits
+   squarely under the pill, and the gap after it is the pill-to-title gap, so the label
+   starts on the title's own left edge. */
 .vocab-difficulty-current-emoji {
-  margin-right: 7px;
+  display: inline-block;
+  width: calc(var(--eco-trigger-h) * 3 / 2);
+  margin-right: var(--vocab-eco-gap);
+  text-align: center;
 }
 .vocab-brand:hover small {
   color: var(--chrome-ink);
@@ -532,6 +545,16 @@
   align-self: start;
   /* The app pill is not beside the title here, so its lines hang from the title itself. */
   --vocab-brand-indent: 0px;
+}
+/* With no pill above it, the emoji is just a lead mark with a hair of separation. */
+.vocab-recording .vocab-difficulty-current-emoji {
+  width: auto;
+  margin-right: 7px;
+}
+/* The gear sits on the left in this layout, so the nudge toward it would point the wrong
+   way; the recorded frame keeps the box-centred group. */
+.vocab-recording .vocab-player-controls {
+  translate: none;
 }
 /* The title's own lines follow it to that corner; left-ragged text hung off the right
    edge reads as a mistake rather than as a corner mark. */
@@ -5517,6 +5540,8 @@
     --vocab-row-gap: 8px;
     --vocab-eco-gap: 6px;
     --eco-trigger-h: 22px;
+    /* (34 − 17) / 4 */
+    --vocab-controls-nudge: 4.25px;
   }
   /* Budget at 390px (row = 358): centre = 3×34 + 2×6 = 114, two row gaps = 16, so each
      1fr column is (358 − 114 − 16) / 2 ≈ 114px. Left = title(15px ≈ 72) + gap(6) +
@@ -5590,6 +5615,8 @@
     --vocab-row-gap: 6px;
     --vocab-eco-gap: 5px;
     --eco-trigger-h: 20px;
+    /* (30 − 16) / 4 */
+    --vocab-controls-nudge: 3.5px;
   }
   .vocab-brand {
     font-size: 14px;
