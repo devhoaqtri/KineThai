@@ -1483,42 +1483,50 @@
    by side on one track that slides by a transform: a swipe drags it and it settles on the
    nearer page. Each page keeps its own vertical scroll; the track leaves vertical drags to
    it (touch-action: pan-y) and takes only the sideways ones. */
-/* The page switcher, in the foot's right corner where "Xong" appears: a small segmented
-   pill whose thumb slides to the page in view. It exists only once the reader has packs,
-   and gives the corner to "Xong" as soon as a level is picked. Same height as "Xong" and
-   the library button beside it, so the foot stays one even row. */
+/* The foot's left control, where the library link was: "+" to add a JSON pack (it opens
+   the library), then the two pages as a segmented pair — the built-in deck by its
+   library icon, and "Từ thêm", the reader's own packs. Same height as "Xong" on the
+   right, so the foot stays one even row. */
 .vocab-difficulty-switch {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.vocab-difficulty-switch-add {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  flex: none;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px dashed color-mix(in srgb, var(--pop-accent) 55%, #ffffff40);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--shell-surface) 55%, transparent);
+  color: var(--shell-text);
+  transition:
+    background var(--dur-move) var(--ease-out),
+    border-color var(--dur-move) var(--ease-out);
+}
+.vocab-difficulty-switch-add:hover {
+  border-style: solid;
+  background: color-mix(in srgb, var(--pop-accent) 20%, transparent);
+}
+.vocab-difficulty-switch-tabs {
+  display: flex;
   padding: 3px;
   border: 1px solid color-mix(in srgb, var(--pop-accent) 30%, #ffffff33);
   border-radius: 10px;
   background: color-mix(in srgb, var(--shell-surface) 55%, transparent);
-  animation: vocab-done-in 420ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
-/* The thumb: half the pill, sliding under the selected segment. */
-.vocab-difficulty-switch::before {
-  content: "";
-  position: absolute;
-  inset: 3px auto 3px 3px;
-  width: calc(50% - 3px);
-  border-radius: 7px;
-  background: var(--shell-text);
-  transition: transform var(--dur-move, 220ms) var(--ease-spring, ease-out);
-}
-.vocab-difficulty-switch[data-page="1"]::before {
-  transform: translateX(100%);
-}
-.vocab-difficulty-switch button {
-  position: relative;
+.vocab-difficulty-switch-tabs button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  min-height: 30px;
-  padding: 0 11px;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 10px;
   border: 0;
+  border-radius: 7px;
   background: none;
   color: var(--shell-text-mute);
   font-family: "Inter", sans-serif;
@@ -1526,12 +1534,15 @@
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
-  transition: color var(--dur-move, 220ms) var(--ease-out, ease-out);
+  transition:
+    background var(--dur-move, 220ms) var(--ease-out, ease-out),
+    color var(--dur-move, 220ms) var(--ease-out, ease-out);
 }
-.vocab-difficulty-switch button[aria-selected="true"] {
+.vocab-difficulty-switch-tabs button[aria-selected="true"] {
+  background: var(--shell-text);
   color: var(--shell-on-text);
 }
-.vocab-difficulty-switch button span {
+.vocab-difficulty-switch-tabs button span {
   min-width: 16px;
   padding: 0 4px;
   border-radius: 999px;
@@ -1592,6 +1603,15 @@
 .vocab-pack-pick:hover {
   background: var(--shell-hover);
 }
+.vocab-pack-picks-empty {
+  margin: 14px 14px 0;
+  color: var(--shell-text-mute);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.vocab-pack-picks-empty strong {
+  color: var(--shell-text);
+}
 .vocab-pack-pick-name {
   min-width: 0;
   overflow: hidden;
@@ -1623,27 +1643,6 @@
 }
 .vocab-difficulty-foot > * {
   pointer-events: auto;
-}
-.vocab-difficulty-library {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border: 1px solid color-mix(in srgb, var(--pop-accent) 30%, #ffffff33);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--shell-surface) 55%, transparent);
-  color: var(--shell-text);
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  transition:
-    background var(--dur-move) var(--ease-out),
-    border-color var(--dur-move) var(--ease-out);
-}
-.vocab-difficulty-library:hover {
-  background: color-mix(in srgb, var(--pop-accent) 20%, transparent);
-  border-color: color-mix(in srgb, var(--pop-accent) 55%, transparent);
 }
 .vocab-difficulty-done {
   min-height: 38px;
