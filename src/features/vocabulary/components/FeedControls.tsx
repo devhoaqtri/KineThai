@@ -877,14 +877,15 @@ export function FeedControls({
     },
     [presentation, onPresentation],
   );
-  // The options sheet is notched around whichever control owns the top-right
-  // corner, so it needs that control's real width — .vocab-icon-button is 44px
-  // but shrinks to 34 and then 30 at narrower widths, and a hard-coded half
-  // would leave the cut-out off the button on every small screen.
+  // The options sheet is notched around the gear in the top-right corner, so it
+  // needs that control's real width — .vocab-icon-button is 44px but shrinks to
+  // 34 and then 30 at narrower widths, and a hard-coded half would leave the
+  // cut-out off the button on every small screen. Only the gear: the app pill
+  // comes first in the DOM, so a selector that also matched it measured the pill.
   useEffect(() => {
     const host = toolbar.current;
     if (!host) return;
-    const corner = host.querySelector<HTMLElement>(".vocab-corner-button, .eco-trigger");
+    const corner = host.querySelector<HTMLElement>(".vocab-corner-button");
     const controls = host.querySelector<HTMLElement>(".vocab-player-controls");
     const tagline = host.querySelector<HTMLElement>(".vocab-brand small");
     if (!corner) return;

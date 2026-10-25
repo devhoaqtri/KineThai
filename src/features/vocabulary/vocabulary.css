@@ -159,7 +159,11 @@
      box the grid sized, not one floating inside another flex row. */
   grid-template-columns: auto auto 1fr auto;
   align-items: center;
-  gap: 12px;
+  /* Both read by the title column to hang the difficulty line under the app pill:
+     the gap is the space between the two, the pill height (×5/2) is its width. */
+  --vocab-row-gap: 12px;
+  --eco-trigger-h: 28px;
+  gap: var(--vocab-row-gap);
 }
 /* Side columns are content-sized (auto) and only the middle track stretches (1fr), so
    `justify-self: center` on the controls centres them within the LEFTOVER space between
@@ -178,6 +182,10 @@
      part of the button; this is the difference between two controls and a control
      followed by a title. */
   margin-left: 4px;
+  /* How far this column starts right of the app pill: its width, the row gap and the
+     margin above. The difficulty line and its popup step back by exactly this, so they
+     sit beneath the pill + title line, flush with the pill's left edge. */
+  --vocab-brand-indent: calc(var(--eco-trigger-h) * 5 / 2 + var(--vocab-row-gap) + 4px);
 }
 .vocab-player-controls {
   justify-self: center;
@@ -308,7 +316,7 @@
 .vocab-brand small {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
+  left: calc(-1 * var(--vocab-brand-indent, 0px));
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -521,6 +529,8 @@
      so centring left it sitting 8px below the corner it is supposed to be anchored to.
      Top-aligned here means the title's own top edge IS the safe area's top edge. */
   align-self: start;
+  /* The app pill is not beside the title here, so its lines hang from the title itself. */
+  --vocab-brand-indent: 0px;
 }
 /* The title's own lines follow it to that corner; left-ragged text hung off the right
    edge reads as a mistake rather than as a corner mark. */
@@ -537,8 +547,7 @@
 /* Held back in the recording. They are controls: a viewer cannot press them, so at full
    strength they compete with the word for attention while promising something the video
    cannot do. Dimmed rather than hidden, because the bar still has to read as a real app.
-   The corner pair is the app's own selector for "whichever control holds the corner"
-   (FeedControls queries exactly these two), so this cannot drift from it. */
+   Both are the bar's corner controls: the gear on the right, the app pill on the left. */
 .vocab-recording .vocab-player-controls,
 .vocab-recording .vocab-corner-button,
 .vocab-recording .eco-trigger {
@@ -1237,7 +1246,8 @@
      brand box is only the title's height — the panel must drop far enough to clear the
      floating track label that now starts at +6px. */
   top: calc(100% + 25px);
-  left: 0;
+  /* Opens under the difficulty line it reports, so it shares that line's left edge. */
+  left: calc(-1 * var(--vocab-brand-indent, 0px));
   display: flex;
   flex-direction: column;
   width: min(330px, calc(100vw - 40px));
@@ -5511,8 +5521,10 @@
    centred controls. Breakpoint is 430px (not 380px) because 390–430px covers the common
    modern phones (iPhone 12/13/14/Pro Max and most Androids) that got no help before. */
 @media (max-width: 430px) {
+  /* The app pill is one title-line tall: 20px beside the 15px title, 50px wide. */
   .vocab-toolbar-row {
-    gap: 8px;
+    --vocab-row-gap: 8px;
+    --eco-trigger-h: 20px;
   }
   /* Budget at 390px (row = 358): centre = 3×34 + 2×6 = 114, two row gaps = 16, so each
      1fr column is (358 − 114 − 16) / 2 ≈ 114px. Left = title(15px ≈ 72) + gap(6) +
@@ -5583,7 +5595,8 @@
    100, so the inline title + gear still clears the centred controls. */
 @media (max-width: 360px) {
   .vocab-toolbar-row {
-    gap: 6px;
+    --vocab-row-gap: 6px;
+    --eco-trigger-h: 18px;
   }
   .vocab-brand {
     font-size: 14px;

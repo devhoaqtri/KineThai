@@ -1,6 +1,6 @@
 /**
- * The Chay Lá app family as a rounded panel that unfolds from the top-right
- * corner button and notches around it.
+ * The Chay Lá app family as a rounded panel that unfolds from the pill in
+ * front of the page title and notches around it.
  *
  * A grid rather than the earlier ring: an arc only seats four or five tiles
  * before the labels collide, and the family is meant to reach ten.
@@ -149,15 +149,18 @@ export function EcosystemMenu({
   // scrollbar appearing mid-animation is the artefact this guards against.
   const [settled, setSettled] = useState(false);
 
-  // The trigger is not a fixed 44px — vocabulary.css shrinks .vocab-icon-button
-  // to 34 and then 30 at narrower widths. The notch and the growth origin are
-  // derived from its measured size, because hard-coding half of 44 left the
-  // cut-out several pixels off the button on every small screen.
+  // The trigger is not a fixed size — vocabulary.css shrinks the pill with the
+  // title at narrower widths. The notch and the growth origin are derived from
+  // its measured box, because hard-coding the full-size half left the cut-out
+  // several pixels off the button on every small screen.
   useEffect(() => {
     const button = trigger.current;
     const host = anchor.current;
     if (!button || !host) return;
-    const sync = () => host.style.setProperty("--eco-btn", `${button.offsetWidth}px`);
+    const sync = () => {
+      host.style.setProperty("--eco-btn", `${button.offsetWidth}px`);
+      host.style.setProperty("--eco-btn-h", `${button.offsetHeight}px`);
+    };
     sync();
     const observer = new ResizeObserver(sync);
     observer.observe(button);

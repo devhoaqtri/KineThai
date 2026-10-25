@@ -12,13 +12,35 @@
   position: relative;
   display: inline-grid;
   justify-self: start;
-  /* Replaced at runtime with the trigger's measured width. The fallback is the
-     full-size button; vocabulary.css shrinks it to 34 and 30 at narrow widths. */
-  --eco-btn: 44px;
+  /* Replaced at runtime with the trigger's measured box. The fallback is the
+     full-size pill; vocabulary.css shrinks it with the title at narrow widths. */
+  --eco-btn: 70px;
+  --eco-btn-h: 28px;
 }
 
 /* The corner button is kept OPAQUE, the way the bookmark it replaced was: it is a
-   door out of the app, not one more frosted transport control. */
+   door out of the app, not one more frosted transport control.
+
+   A flat 5:2 pill rather than a disc, one title-line tall, so it sits IN the title's
+   line instead of standing beside a two-line block — the difficulty line then runs
+   beneath both. The height comes from --eco-trigger-h, which the toolbar sets per
+   breakpoint alongside the title's own size. */
+.vocab-icon-button.eco-trigger {
+  width: auto;
+  height: var(--eco-trigger-h, 28px);
+  aspect-ratio: 5 / 2;
+  border-radius: 999px;
+}
+.vocab-icon-button.eco-trigger svg {
+  width: calc(var(--eco-trigger-h, 28px) * 0.6);
+  height: calc(var(--eco-trigger-h, 28px) * 0.6);
+}
+/* A pill a title-line tall is a thin target, so the hit area reaches past it vertically. */
+.eco-trigger::before {
+  content: "";
+  position: absolute;
+  inset: -6px -2px;
+}
 .eco-trigger {
   position: relative;
   /* Above the panel, so the button stays whole inside the notch cut for it. */
@@ -52,8 +74,8 @@
 
 /* Anchored flush to the trigger's own box. The anchor wraps the button exactly,
    so top/left of 0 put the panel's corner on the button's corner and the button
-   centre lands at (half, half) in the panel's own coordinates — at any button
-   size. An earlier -22px offset pushed the panel past the screen edge, which is
+   centre lands at (half width, half height) in the panel's own coordinates — at
+   any button size. An earlier -22px offset pushed the panel past the screen edge, which is
    what flashed a horizontal scrollbar on opening; the same hazard applies on
    this side, so the offset stays at 0. */
 .eco-panel {
@@ -66,6 +88,7 @@
      enough to put a scrollbar on screen for a few frames. */
   overflow: hidden;
   --eco-half: calc(var(--eco-btn) / 2);
+  --eco-half-h: calc(var(--eco-btn-h) / 2);
   /* The head's own height and padding-left are what clear the notch; see below. */
   padding: 16px 12px 14px;
   border-radius: 26px;
@@ -78,18 +101,19 @@
     14px 20px 54px #00000073;
   color: var(--shell-text, #f4f1ff);
 
-  /* The notch: a circle punched out of the corner so the panel wraps the button
-     instead of sliding underneath it. Radius is the button's own plus air. */
-  --eco-notch: calc(var(--eco-half) + 9px);
+  /* The notch: an ellipse punched out of the corner so the panel wraps the pill
+     instead of sliding underneath it. Each radius is the pill's own half plus air;
+     at 5:2 that ellipse clears the pill's rounded ends with room to spare. */
   --eco-notch-mask: radial-gradient(
-    circle var(--eco-notch) at var(--eco-half) var(--eco-half),
-    transparent 0 var(--eco-notch),
-    #000 calc(var(--eco-notch) + 0.5px)
+    ellipse calc(var(--eco-half) + 9px) calc(var(--eco-half-h) + 9px) at var(--eco-half)
+      var(--eco-half-h),
+    transparent 0 100%,
+    #000 calc(100% + 0.5px)
   );
   -webkit-mask-image: var(--eco-notch-mask);
   mask-image: var(--eco-notch-mask);
 
-  transform-origin: var(--eco-half) var(--eco-half);
+  transform-origin: var(--eco-half) var(--eco-half-h);
   animation: eco-panel-in var(--dur-move, 220ms)
     var(--ease-spring, cubic-bezier(0.34, 1.4, 0.64, 1)) both;
 }
@@ -105,9 +129,9 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  /* Clears the notch, which eats a (button + 9px) square out of the corner. */
+  /* Clears the notch, which eats a (pill + 9px) box out of the corner. */
   padding: 0 6px 0 calc(var(--eco-btn) + 16px);
-  min-height: calc(var(--eco-btn) + 10px);
+  min-height: calc(var(--eco-btn-h) + 10px);
 }
 .eco-panel-title {
   margin: 0;
