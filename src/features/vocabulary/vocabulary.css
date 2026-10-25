@@ -159,9 +159,11 @@
      box the grid sized, not one floating inside another flex row. */
   grid-template-columns: auto auto 1fr auto;
   align-items: center;
-  /* Both read by the title column to hang the difficulty line under the app pill:
-     the gap is the space between the two, the pill height (×5/2) is its width. */
+  /* Read by the title column to hang the difficulty line under the app pill: the pill
+     height (×3/2) is its width, and --vocab-eco-gap is the space between it and the
+     title — tighter than the row gap, so the two read as one line. */
   --vocab-row-gap: 12px;
+  --vocab-eco-gap: 8px;
   --eco-trigger-h: 28px;
   gap: var(--vocab-row-gap);
 }
@@ -178,14 +180,13 @@
 .vocab-toolbar-left {
   justify-self: start;
   min-width: 0;
-  /* Off the app grid's shoulder. The row's own 12px gap leaves the wordmark reading as
-     part of the button; this is the difference between two controls and a control
-     followed by a title. */
-  margin-left: 4px;
-  /* How far this column starts right of the app pill: its width, the row gap and the
-     margin above. The difficulty line and its popup step back by exactly this, so they
-     sit beneath the pill + title line, flush with the pill's left edge. */
-  --vocab-brand-indent: calc(var(--eco-trigger-h) * 5 / 2 + var(--vocab-row-gap) + 4px);
+  /* Pulled in from the row gap to --vocab-eco-gap: the pill sits in the title's line,
+     so it reads as the line's leading mark rather than as a separate control. */
+  margin-left: calc(var(--vocab-eco-gap) - var(--vocab-row-gap));
+  /* How far this column starts right of the app pill: its width plus that gap. The
+     difficulty line and its popup step back by exactly this, so they sit beneath the
+     pill + title line, flush with the pill's left edge. */
+  --vocab-brand-indent: calc(var(--eco-trigger-h) * 3 / 2 + var(--vocab-eco-gap));
 }
 .vocab-player-controls {
   justify-self: center;
@@ -5521,10 +5522,11 @@
    centred controls. Breakpoint is 430px (not 380px) because 390–430px covers the common
    modern phones (iPhone 12/13/14/Pro Max and most Androids) that got no help before. */
 @media (max-width: 430px) {
-  /* The app pill is one title-line tall: 20px beside the 15px title, 50px wide. */
+  /* The app pill is a little over one title-line tall: 22px beside the 15px title. */
   .vocab-toolbar-row {
     --vocab-row-gap: 8px;
-    --eco-trigger-h: 20px;
+    --vocab-eco-gap: 6px;
+    --eco-trigger-h: 22px;
   }
   /* Budget at 390px (row = 358): centre = 3×34 + 2×6 = 114, two row gaps = 16, so each
      1fr column is (358 − 114 − 16) / 2 ≈ 114px. Left = title(15px ≈ 72) + gap(6) +
@@ -5596,7 +5598,8 @@
 @media (max-width: 360px) {
   .vocab-toolbar-row {
     --vocab-row-gap: 6px;
-    --eco-trigger-h: 18px;
+    --vocab-eco-gap: 5px;
+    --eco-trigger-h: 20px;
   }
   .vocab-brand {
     font-size: 14px;

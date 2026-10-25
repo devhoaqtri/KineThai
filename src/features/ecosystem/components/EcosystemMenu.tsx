@@ -15,7 +15,7 @@
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { LayoutGrid, Store, X } from "lucide-react";
+import { Store, X } from "lucide-react";
 import { ECOSYSTEM_STORE_AVAILABLE } from "@/lib/feature-flags";
 import { usePresence } from "@/hooks/use-presence";
 import { ECOSYSTEM_APPS, type EcosystemApp } from "../data/apps";
@@ -37,6 +37,21 @@ const ROW_STEP_MS = 90;
 const ROW_LEAD_MS = 170;
 /** Folding back is quicker than unfolding, and needs no lead. */
 const ROW_STEP_OUT_MS = 55;
+
+/**
+ * Six squares, three by two: the app family's mark, drawn to the trigger pill's
+ * own 3:2 proportions rather than lucide's square 2x2 grid. Filled, because at
+ * the pill's size an outlined square is mostly stroke.
+ */
+function AppsGlyph(): React.ReactElement {
+  return (
+    <svg className="eco-trigger-glyph" viewBox="0 0 24 16" fill="currentColor" aria-hidden="true">
+      {[0, 9, 18].flatMap((x) =>
+        [0, 9].map((y) => <rect key={`${x}-${y}`} x={x} y={y} width="6" height="6" rx="1.5" />),
+      )}
+    </svg>
+  );
+}
 
 type EcosystemMenuProps = {
   open: boolean;
@@ -211,7 +226,7 @@ export function EcosystemMenu({
         data-active={open || undefined}
         onClick={() => onOpenChange(!open)}
       >
-        {open ? <X size={19} /> : <LayoutGrid size={19} />}
+        {open ? <X size={19} /> : <AppsGlyph />}
       </button>
 
       {presence.mounted && (

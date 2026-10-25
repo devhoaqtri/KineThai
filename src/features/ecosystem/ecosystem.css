@@ -14,26 +14,32 @@
   justify-self: start;
   /* Replaced at runtime with the trigger's measured box. The fallback is the
      full-size pill; vocabulary.css shrinks it with the title at narrow widths. */
-  --eco-btn: 70px;
+  --eco-btn: 42px;
   --eco-btn-h: 28px;
 }
 
 /* The corner button is kept OPAQUE, the way the bookmark it replaced was: it is a
    door out of the app, not one more frosted transport control.
 
-   A flat 5:2 pill rather than a disc, one title-line tall, so it sits IN the title's
+   A flat 3:2 pill rather than a disc, one title-line tall, so it sits IN the title's
    line instead of standing beside a two-line block — the difficulty line then runs
    beneath both. The height comes from --eco-trigger-h, which the toolbar sets per
    breakpoint alongside the title's own size. */
 .vocab-icon-button.eco-trigger {
   width: auto;
   height: var(--eco-trigger-h, 28px);
-  aspect-ratio: 5 / 2;
+  aspect-ratio: 3 / 2;
   border-radius: 999px;
 }
 .vocab-icon-button.eco-trigger svg {
   width: calc(var(--eco-trigger-h, 28px) * 0.6);
   height: calc(var(--eco-trigger-h, 28px) * 0.6);
+}
+/* The closed-state glyph is six squares, three by two, so it takes the pill's own
+   proportions instead of a square icon's. */
+.vocab-icon-button.eco-trigger svg.eco-trigger-glyph {
+  width: calc(var(--eco-trigger-h, 28px) * 0.69);
+  height: calc(var(--eco-trigger-h, 28px) * 0.46);
 }
 /* A pill a title-line tall is a thin target, so the hit area reaches past it vertically. */
 .eco-trigger::before {
@@ -101,17 +107,56 @@
     14px 20px 54px #00000073;
   color: var(--shell-text, #f4f1ff);
 
-  /* The notch: an ellipse punched out of the corner so the panel wraps the pill
-     instead of sliding underneath it. Each radius is the pill's own half plus air;
-     at 5:2 that ellipse clears the pill's rounded ends with room to spare. */
-  --eco-notch-mask: radial-gradient(
-    ellipse calc(var(--eco-half) + 9px) calc(var(--eco-half-h) + 9px) at var(--eco-half)
-      var(--eco-half-h),
-    transparent 0 100%,
-    #000 calc(100% + 0.5px)
+  /* The notch: the pill's own shape, grown by 9px of air on every side, punched out of
+     the corner so the panel wraps the button instead of sliding underneath it. A pill
+     grown evenly is still a pill — two end circles of (half height + air) joined by a
+     band as tall as their diameter — so the cut-out is built from exactly those three
+     pieces and subtracted from a full layer. One gradient cannot draw it: an ellipse
+     bulges at the middle and pinches at the ends, so the gap never reads as even. */
+  --eco-notch-r: calc(var(--eco-half-h) + 9px);
+  --eco-notch-end: radial-gradient(
+    circle var(--eco-notch-r) at var(--eco-half-h) var(--eco-half-h),
+    #000 0 var(--eco-notch-r),
+    transparent calc(var(--eco-notch-r) + 0.5px)
   );
-  -webkit-mask-image: var(--eco-notch-mask);
-  mask-image: var(--eco-notch-mask);
+  --eco-notch-far-end: radial-gradient(
+    circle var(--eco-notch-r) at calc(var(--eco-btn) - var(--eco-half-h)) var(--eco-half-h),
+    #000 0 var(--eco-notch-r),
+    transparent calc(var(--eco-notch-r) + 0.5px)
+  );
+  -webkit-mask-image:
+    linear-gradient(#000 0 0), var(--eco-notch-end), var(--eco-notch-far-end),
+    linear-gradient(#000 0 0);
+  mask-image:
+    linear-gradient(#000 0 0), var(--eco-notch-end), var(--eco-notch-far-end),
+    linear-gradient(#000 0 0);
+  /* The band runs between the two end centres and from the top edge to the bottom of
+     the air; the circles cover the rest. */
+  -webkit-mask-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    calc(var(--eco-btn) - var(--eco-btn-h)) calc(var(--eco-btn-h) + 9px);
+  mask-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    calc(var(--eco-btn) - var(--eco-btn-h)) calc(var(--eco-btn-h) + 9px);
+  -webkit-mask-position:
+    0 0,
+    0 0,
+    0 0,
+    var(--eco-half-h) 0;
+  mask-position:
+    0 0,
+    0 0,
+    0 0,
+    var(--eco-half-h) 0;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  /* Top layer minus the union of the three below it. */
+  -webkit-mask-composite: source-out, source-over, source-over, source-over;
+  mask-composite: subtract, add, add, add;
 
   transform-origin: var(--eco-half) var(--eco-half-h);
   animation: eco-panel-in var(--dur-move, 220ms)
