@@ -143,16 +143,12 @@ export function EcosystemMenu({
   reducedMotion,
 }: EcosystemMenuProps): React.ReactElement {
   const presence = usePresence(open, ECOSYSTEM_EXIT_MS);
-  // Everything except the host the reader is already on. The match is on the host's own
-  // label, not the resolved deck locale: on localhost, a preview build or any unknown
-  // address nothing matches, so the whole family — Anh included — shows. resolveTarget
-  // would instead fall back to English there and wrongly hide the Anh tile.
+  // Everything except the language the page is showing. Keyed on the resolved deck locale,
+  // the same answer the title and deck use, so an unknown host that falls back to English
+  // hides Anh just as anh.chayla.app does.
   const apps = useMemo(() => {
-    const label =
-      typeof window === "undefined"
-        ? ""
-        : (window.location.host.trim().toLowerCase().replace(/:\d+$/, "").split(".")[0] ?? "");
-    return ECOSYSTEM_APPS.filter((app) => app.id !== label);
+    const current = resolveTarget(typeof window === "undefined" ? null : window.location.host);
+    return ECOSYSTEM_APPS.filter((app) => app.locale !== current);
   }, []);
   const anchor = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);

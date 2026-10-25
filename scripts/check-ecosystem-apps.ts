@@ -7,11 +7,9 @@
  * the wrong language — or on the English fallback, which is what an unknown subdomain
  * resolves to. Nothing about that is visible from the drawer.
  *
- * It also pins the filter the drawer relies on: the drawer hides the tile whose id equals
- * the visited host's own first label, so each record's `id` must equal its URL's
- * subdomain (checked below). The `locale` field is checked against `resolveTarget` as a
- * data-integrity guard: a tile's host must serve the deck its locale claims, or the tile
- * sends the reader to a host answering in the wrong language.
+ * It also pins the filter the drawer relies on: the drawer hides the tile whose `locale`
+ * equals the page's resolved deck, so each tile's host must serve the locale it claims and
+ * no two tiles may share one.
  *
  * Usage: npm run check:ecosystem-apps
  */
@@ -31,6 +29,7 @@ check("the drawer stays glanceable", ECOSYSTEM_APPS.length <= ECOSYSTEM_MAX_APPS
 check("there is more than one app", ECOSYSTEM_APPS.length > 1);
 
 const ids = new Set<string>();
+const locales = new Set<string>();
 for (const app of ECOSYSTEM_APPS) {
   check(`${app.id}: id is unique`, !ids.has(app.id));
   ids.add(app.id);
@@ -47,8 +46,12 @@ for (const app of ECOSYSTEM_APPS) {
   check(`${app.id}: url is https on chayla.app`, /^https:\/\/[a-z]+\.chayla\.app$/.test(app.url),
     app.url);
 
-  // Data integrity for the locale field; the drawer's own filter rests on the
-  // id-equals-subdomain check above.
+  // The drawer hides the tile whose locale is the page's resolved deck, so a wrong locale
+  // hides the wrong tile as well as mislabelling where this one leads.
+  check(`${app.id}: host serves its locale`, resolveTarget(host) === app.locale,
+    `${host} → ${resolveTarget(host)}, tile says ${app.locale}`);
+  check(`${app.id}: locale is unique`, !locales.has(app.locale), app.locale);
+  locales.add(app.locale);
 
   // A tile that ellipsises reads as the same truncated string as its neighbours.
   check(`${app.id}: name fits a tile`, app.name.length <= 12, `"${app.name}" (${app.name.length})`);
@@ -61,7 +64,6 @@ for (const app of ECOSYSTEM_APPS) {
 // Every deck the app can serve should be reachable from the drawer on some other host, or
 // a reader on that deck has no way back to it. "en" is included: anh.chayla.app is a
 // sibling like any other now, and is only absent from the drawer on its own host.
-const locales = new Set(ECOSYSTEM_APPS.map((app) => app.locale));
 for (const locale of ["en", "zh", "ko", "ja", "fr", "de", "es"] as const) {
   check(`a tile exists for the "${locale}" deck`, locales.has(locale));
 }
