@@ -1,56 +1,53 @@
 /**
  * Library panel to import a personal pack from a local JSON file or a direct URL.
- * Validated against the default deck format, stored only in this browser, then the feed
- * plays just that pack with random themes, styles and effects. A second tab offers the
- * AI prompt kit to preview full-screen or download.
+ * Validated against the default deck format and kept only in this browser. A pack lands
+ * in the list right under the import row (./ImportedPackList) rather than playing at once,
+ * so the reader can look through it first; playing it makes the feed play just that pack
+ * with random themes, styles and effects. A second tab offers the AI prompt kit to preview
+ * full-screen or download.
  *
  * Exports: ImportPackPanel
  */
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { Download, Eye, FileJson, FileText, FileUp, Link2, Play, X } from "lucide-react";
+import { useRef, useState, type ClipboardEvent } from "react";
+import { Download, Eye, FileText, FileUp, Link2, Sparkles } from "lucide-react";
 import {
-  CUSTOM_PACK_EVENT,
-  clearCustomPack,
+  addCustomPack,
   loadCustomPackFromUrl,
   parseCustomPack,
-  readCustomPack,
-  writeCustomPack,
   type CustomPack,
 } from "../lib/custom-pack";
+import { useCustomPacks } from "../hooks/useCustomPacks";
 import { PACK_KIT_MD, downloadPackKit } from "../lib/sample-pack";
 import { FullscreenSheet } from "./FullscreenSheet";
+import { ImportedPackList } from "./ImportedPackList";
 import { PackKitDoc } from "./PackKitDoc";
-import { PackPreviewDialog } from "./PackPreviewDialog";
+
+/** Packs shipped in public/sample-packs, for trying the import without a file of one's own. */
+const SAMPLE_PACKS = [
+  { file: "du-lich-a2.json", label: "Du lịch · A1–A2" },
+  { file: "nha-bep-b1.json", label: "Nhà bếp · B1" },
+  { file: "cong-so-nhieu-cap.json", label: "Công sở · A1–C1" },
+] as const;
+
+const looksLikeUrl = (text: string) => /^https?:\/\/\S+$/i.test(text.trim());
 
 export function ImportPackPanel() {
-  const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<"import" | "generate">("import");
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [active, setActive] = useState<CustomPack | null>(null);
-  const [file, setFile] = useState<{ name: string; text: string } | null>(null);
-  const [preview, setPreview] = useState(false);
+  const [fresh, setFresh] = useState<string | null>(null);
   const [kitOpen, setKitOpen] = useState(false);
+  const library = useCustomPacks();
 
-  useEffect(() => {
-    const sync = () => setActive(readCustomPack());
-    sync();
-    window.addEventListener(CUSTOM_PACK_EVENT, sync);
-    return () => window.removeEventListener(CUSTOM_PACK_EVENT, sync);
-  }, []);
-
-  const activate = (pack: CustomPack) => {
-    writeCustomPack(pack);
-    void navigate({ to: "/feed" });
-  };
   const run = async (task: () => Promise<CustomPack>) => {
     setBusy(true);
     setError(null);
     try {
-      activate(await task());
+      const pack = addCustomPack(await task());
+      setFresh(pack.id);
+      setUrl("");
     } catch (e) {
       setError(
         e instanceof Error ? e.message.split("\n").slice(0, 4).join("\n") : "Không nhập được gói.",
@@ -58,6 +55,15 @@ export function ImportPackPanel() {
     } finally {
       setBusy(false);
     }
+  };
+  const fromUrl = (link: string) => void run(() => loadCustomPackFromUrl(link));
+  // A pasted link is the whole intent: load it straight away instead of waiting for a tap.
+  const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
+    const pasted = event.clipboardData.getData("text");
+    if (!looksLikeUrl(pasted) || busy) return;
+    event.preventDefault();
+    setUrl(pasted.trim());
+    fromUrl(pasted);
   };
 
   return (
@@ -69,23 +75,6 @@ export function ImportPackPanel() {
         Muốn học từ của riêng bạn? Tải gói lên hoặc dán liên kết, dòng từ sẽ chỉ phát những từ trong
         gói đó. Gói chỉ lưu trên máy này, không gửi đi đâu.
       </p>
-      {active && (
-        <div className="vocab-import-active">
-          <span>
-            Đang dùng: <strong>{active.catalog.name}</strong> · {active.catalog.count} từ
-          </span>
-          <button
-            type="button"
-            className="vocab-import-btn"
-            onClick={() => navigate({ to: "/feed" })}
-          >
-            <Play size={14} aria-hidden="true" /> Phát
-          </button>
-          <button type="button" className="vocab-import-btn ghost" onClick={clearCustomPack}>
-            <X size={14} aria-hidden="true" /> Bỏ gói
-          </button>
-        </div>
-      )}
       <div className="vocab-import-tabs" role="tablist" aria-label="Cách nhập gói">
         <button
           type="button"
@@ -117,63 +106,30 @@ export function ImportPackPanel() {
               const picked = e.target.files?.[0];
               e.target.value = "";
               if (!picked) return;
-              setError(null);
-              setPreview(false);
-              void picked.text().then((text) => setFile({ name: picked.name, text }));
+              void run(async () => parseCustomPack(await picked.text(), picked.name));
             }}
           />
           <form
             className="vocab-import-row"
             onSubmit={(e) => {
               e.preventDefault();
-              if (file) void run(async () => parseCustomPack(file.text, file.name));
-              else if (url.trim()) void run(() => loadCustomPackFromUrl(url));
+              if (url.trim()) fromUrl(url);
               else fileRef.current?.click();
             }}
           >
-            {file ? (
-              <div className="vocab-import-url vocab-import-file">
-                <button
-                  type="button"
-                  className="vocab-import-file-name"
-                  aria-haspopup="dialog"
-                  title="Xem nội dung tệp"
-                  onClick={() => setPreview(true)}
-                >
-                  <FileJson size={15} aria-hidden="true" />
-                  <span>{file.name}</span>
-                  <Eye size={14} aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  className="vocab-import-file-clear"
-                  aria-label="Bỏ tệp"
-                  onClick={() => {
-                    setFile(null);
-                    setPreview(false);
-                  }}
-                >
-                  <X size={14} aria-hidden="true" />
-                </button>
-              </div>
-            ) : (
-              <input
-                className="vocab-import-url"
-                type="url"
-                inputMode="url"
-                placeholder="Dán liên kết JSON, hoặc tải tệp lên"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                aria-label="Liên kết trực tiếp tới tệp JSON"
-              />
-            )}
+            <input
+              className="vocab-import-url"
+              type="url"
+              inputMode="url"
+              placeholder="Dán liên kết JSON, hoặc tải tệp lên"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onPaste={onPaste}
+              aria-label="Liên kết trực tiếp tới tệp JSON"
+            />
             <button type="submit" className="vocab-import-btn" disabled={busy}>
               {busy ? (
                 "Đang tải…"
-              ) : file ? (
-                <>
-                  <Play size={15} aria-hidden="true" /> Nhập
-                </>
               ) : url.trim() ? (
                 <>
                   <Link2 size={15} aria-hidden="true" /> Liên kết
@@ -185,17 +141,24 @@ export function ImportPackPanel() {
               )}
             </button>
           </form>
-          {file && (
-            <PackPreviewDialog
-              file={file}
-              open={preview}
-              onOpenChange={setPreview}
-              onImport={() => {
-                setPreview(false);
-                void run(async () => parseCustomPack(file.text, file.name));
-              }}
-            />
-          )}
+          <div className="vocab-import-samples">
+            <span>
+              <Sparkles size={13} aria-hidden="true" /> Thử gói mẫu:
+            </span>
+            {SAMPLE_PACKS.map((sample) => (
+              <button
+                key={sample.file}
+                type="button"
+                className="vocab-import-sample"
+                disabled={busy}
+                onClick={() =>
+                  fromUrl(new URL(`/sample-packs/${sample.file}`, window.location.origin).href)
+                }
+              >
+                {sample.label}
+              </button>
+            ))}
+          </div>
         </>
       ) : (
         <div className="vocab-import-generate">
@@ -239,6 +202,7 @@ export function ImportPackPanel() {
           {error}
         </p>
       )}
+      <ImportedPackList packs={library.packs} active={library.active} fresh={fresh} />
     </section>
   );
 }

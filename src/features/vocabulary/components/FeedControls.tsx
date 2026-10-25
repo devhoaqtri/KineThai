@@ -34,6 +34,8 @@ import {
 } from "../lib/difficulty";
 import { scopeProgress, tierProgress, type LevelProgress } from "../lib/level-progress";
 import { levelLadderFor } from "../lib/level-ladder";
+import { activateCustomPack } from "../lib/custom-pack";
+import { useCustomPacks } from "../hooks/useCustomPacks";
 import { CEFR_LEVELS, HSK_LEVELS, type NarrativeStyle } from "../lib/schema";
 import type { HistoryStats } from "../lib/history";
 import { douyinStyleLabelVi, styleLabelVi, themeLabelVi, topicLabelVi } from "../lib/i18n";
@@ -559,7 +561,30 @@ function DifficultyDropdown({
   const tracks = tracksFor(activeLocale);
   const options = useMemo(() => buildDifficultyOptions(activeLocale), [activeLocale]);
   const committed = useMemo(() => parseDifficulty(value, tracks), [value, tracks]);
-  const summary = describeSelection(committed, tracks);
+  const selection = describeSelection(committed, tracks);
+  // The picker's second page: the reader's imported packs. While one is playing, the title's
+  // sub-line names it instead of the difficulty, since the difficulty is not what is playing.
+  const library = useCustomPacks();
+  const playingPack = library.packs.find((pack) => pack.id === library.active);
+  const summary = playingPack
+    ? { emoji: "📦", label: playingPack.catalog.name, band: "" }
+    : selection;
+  const pager = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(0);
+  // Finger offset while a page is being dragged sideways; null when the track is at rest.
+  const [drag, setDrag] = useState<number | null>(null);
+  // True for the frame the popup opens on, so it lands on its page without sliding there.
+  const [instant, setInstant] = useState(false);
+  const gesture = useRef<{
+    id: number;
+    x: number;
+    y: number;
+    sideways: boolean | null;
+  } | null>(null);
+  // A sideways drag can end with a click on whatever row it was released over; a click in
+  // the moment after a drag is swallowed, or every swipe would also pick a level or a pack.
+  // A time window, not a flag: a drag that produces no click must not eat the next real tap.
+  const swallowClickUntil = useRef(0);
   const [draft, setDraft] = useState<Set<string>>(() => new Set(committed));
   const [cursor, setCursor] = useState(0);
   // "Done" stays hidden until the reader picks a row this session, then fades in.
@@ -631,10 +656,78 @@ function DifficultyDropdown({
     onOpenChange(true);
   };
 
-  // Move focus into the list once it mounts so arrow keys work without a tab stop.
-  useEffect(() => {
-    if (open) list.current?.focus();
+  // Opens on the page that is playing: the pack list while a pack plays, the levels
+  // otherwise — in place, not sliding there — and focus goes into that page so the
+  // keyboard works without a tab stop.
+  useLayoutEffect(() => {
+    if (!open) return;
+    const start = playingPack ? 1 : 0;
+    setPage(start);
+    setDrag(null);
+    setInstant(true);
+    const frame = requestAnimationFrame(() => {
+      setInstant(false);
+      if (start === 0) list.current?.focus({ preventScroll: true });
+      else
+        pager.current
+          ?.querySelector<HTMLButtonElement>(".vocab-pack-pick[data-active]")
+          ?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+    // Only on opening: the page is the reader's to swipe after that.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+  const goToPage = (next: number) => setPage(Math.max(0, Math.min(1, next)));
+  // The two pages sit on one track moved by a transform, not in a scroller: what is
+  // painted is then exactly the page in state. A finger dragging sideways moves the track
+  // with it (with resistance past either end) and a release a fifth of the way across
+  // turns the page. Vertical drags are left to each page's own scrolling (touch-action).
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, sideways: null };
+  };
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const g = gesture.current;
+    if (!g || g.id !== event.pointerId) return;
+    const dx = event.clientX - g.x;
+    const dy = event.clientY - g.y;
+    if (g.sideways === null) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      g.sideways = Math.abs(dx) > Math.abs(dy);
+      if (g.sideways) event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    if (!g.sideways) return;
+    const pastEdge = (page === 0 && dx > 0) || (page === 1 && dx < 0);
+    setDrag(pastEdge ? dx / 3 : dx);
+  };
+  const onPointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+    const g = gesture.current;
+    gesture.current = null;
+    if (!g || g.id !== event.pointerId || !g.sideways) return;
+    swallowClickUntil.current = Date.now() + 250;
+    const dx = event.clientX - g.x;
+    const width = pager.current?.clientWidth ?? 1;
+    if (dx < -width / 5) goToPage(page + 1);
+    else if (dx > width / 5) goToPage(page - 1);
+    setDrag(null);
+  };
+  // A trackpad's sideways two-finger swipe turns the page too, once per gesture.
+  const wheelLock = useRef(0);
+  const onWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (Math.abs(event.deltaX) < 24 || Math.abs(event.deltaX) < Math.abs(event.deltaY) * 1.5)
+      return;
+    if (Date.now() < wheelLock.current) return;
+    wheelLock.current = Date.now() + 450;
+    goToPage(page + (event.deltaX > 0 ? 1 : -1));
+  };
+  const pickPack = (id: string | null) => {
+    activateCustomPack(id);
+    close(true);
+  };
+  const builtInTotal = Object.values(ladder.levelCounts).reduce(
+    (sum, count) => sum + (count ?? 0),
+    0,
+  );
 
   const presence = usePresence(open, POPUP_EXIT_MS);
   // The visible title is the host's brand, never a hardcoded default: the deck and
@@ -681,109 +774,224 @@ function DifficultyDropdown({
           data-closing={presence.closing || undefined}
           inert={presence.closing || undefined}
         >
-          <ul
-            ref={list}
-            id={listId}
-            role="listbox"
-            aria-multiselectable
-            tabIndex={-1}
-            className="vocab-difficulty-options"
-            aria-label="Độ khó"
-            aria-activedescendant={`${listId}-opt-${cursor}`}
+          {/* Two pages, side by side: the levels of the built-in deck, and the reader's
+              own packs. A swipe moves between them; the tabs follow the swipe, and also
+              move it, as do the arrow keys on them. */}
+          <div
+            className="vocab-difficulty-pages"
+            role="tablist"
+            aria-label="Nguồn từ"
             onKeyDown={(event) => {
-              switch (event.key) {
-                case "Escape":
-                  event.preventDefault();
-                  close(true);
-                  break;
-                case "ArrowDown":
-                  event.preventDefault();
-                  setCursor((index) => (index + 1) % options.length);
-                  break;
-                case "ArrowUp":
-                  event.preventDefault();
-                  setCursor((index) => (index - 1 + options.length) % options.length);
-                  break;
-                case "Home":
-                  event.preventDefault();
-                  setCursor(0);
-                  break;
-                case "End":
-                  event.preventDefault();
-                  setCursor(options.length - 1);
-                  break;
-                case "Enter":
-                case " ":
-                  event.preventDefault();
-                  pickRow(options[cursor]!.id);
-                  break;
-                default:
-                  break;
-              }
+              if (event.key === "ArrowRight") goToPage(1);
+              else if (event.key === "ArrowLeft") goToPage(0);
             }}
           >
-            {options.map((option, index) => {
-              const isSelected =
-                option.id === DIFFICULTY_ALL ? draft.size === 0 : draft.has(option.id);
-              const count = countFor(option.id);
-              const progress = progressOf(option.id);
-              // A track the catalog cannot serve yet (its defining level has no words) shows
-              // 0 and is greyed: it stays on the ladder as a promise, but cannot be picked.
-              const unavailable = count === 0 && option.id !== DIFFICULTY_ALL;
-              return (
-                <li
-                  key={option.id}
-                  id={`${listId}-opt-${index}`}
-                  role="option"
-                  aria-selected={isSelected}
-                  data-active={isSelected || undefined}
-                  data-cursor={index === cursor || undefined}
-                  aria-disabled={unavailable || undefined}
-                  className="vocab-difficulty-option"
-                  onClick={() => {
-                    pickRow(option.id);
-                    setCursor(index);
-                  }}
-                  onMouseEnter={() => setCursor(index)}
-                >
-                  <span className="vocab-difficulty-check" aria-hidden="true">
-                    {isSelected ? "✓" : ""}
-                  </span>
-                  <span className="vocab-difficulty-option-label">
-                    {/* The chip slot always renders, and every chip carries the same width
+            <button type="button" role="tab" aria-selected={page === 0} onClick={() => goToPage(0)}>
+              Trình độ
+            </button>
+            <button type="button" role="tab" aria-selected={page === 1} onClick={() => goToPage(1)}>
+              Gói của bạn
+              {library.packs.length > 0 && <span>{library.packs.length}</span>}
+            </button>
+          </div>
+          <div
+            className="vocab-difficulty-pager"
+            ref={pager}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerEnd}
+            onPointerCancel={onPointerEnd}
+            onWheel={onWheel}
+            onClickCapture={(event) => {
+              if (Date.now() > swallowClickUntil.current) return;
+              event.stopPropagation();
+              event.preventDefault();
+            }}
+          >
+            <div
+              className="vocab-difficulty-track"
+              data-dragging={drag !== null || undefined}
+              data-instant={instant || undefined}
+              style={{ transform: `translateX(calc(${-page * 100}% + ${drag ?? 0}px))` }}
+            >
+              <ul
+                inert={page !== 0 && drag === null ? true : undefined}
+                ref={list}
+                id={listId}
+                role="listbox"
+                aria-multiselectable
+                tabIndex={-1}
+                className="vocab-difficulty-options vocab-difficulty-page"
+                aria-label="Độ khó"
+                aria-activedescendant={`${listId}-opt-${cursor}`}
+                onKeyDown={(event) => {
+                  switch (event.key) {
+                    case "Escape":
+                      event.preventDefault();
+                      close(true);
+                      break;
+                    case "ArrowDown":
+                      event.preventDefault();
+                      setCursor((index) => (index + 1) % options.length);
+                      break;
+                    case "ArrowUp":
+                      event.preventDefault();
+                      setCursor((index) => (index - 1 + options.length) % options.length);
+                      break;
+                    case "Home":
+                      event.preventDefault();
+                      setCursor(0);
+                      break;
+                    case "End":
+                      event.preventDefault();
+                      setCursor(options.length - 1);
+                      break;
+                    case "Enter":
+                    case " ":
+                      event.preventDefault();
+                      pickRow(options[cursor]!.id);
+                      break;
+                    default:
+                      break;
+                  }
+                }}
+              >
+                {options.map((option, index) => {
+                  const isSelected =
+                    option.id === DIFFICULTY_ALL ? draft.size === 0 : draft.has(option.id);
+                  const count = countFor(option.id);
+                  const progress = progressOf(option.id);
+                  // A track the catalog cannot serve yet (its defining level has no words) shows
+                  // 0 and is greyed: it stays on the ladder as a promise, but cannot be picked.
+                  const unavailable = count === 0 && option.id !== DIFFICULTY_ALL;
+                  return (
+                    <li
+                      key={option.id}
+                      id={`${listId}-opt-${index}`}
+                      role="option"
+                      aria-selected={isSelected}
+                      data-active={isSelected || undefined}
+                      data-cursor={index === cursor || undefined}
+                      aria-disabled={unavailable || undefined}
+                      className="vocab-difficulty-option"
+                      onClick={() => {
+                        pickRow(option.id);
+                        setCursor(index);
+                      }}
+                      onMouseEnter={() => setCursor(index)}
+                    >
+                      <span className="vocab-difficulty-check" aria-hidden="true">
+                        {isSelected ? "✓" : ""}
+                      </span>
+                      <span className="vocab-difficulty-option-label">
+                        {/* The chip slot always renders, and every chip carries the same width
                         whether it holds "A2" or "A1–A2", so all the level names after it
                         begin on one vertical line. */}
-                    <span
-                      className="vocab-difficulty-band"
-                      data-empty={option.band ? undefined : true}
-                      aria-hidden={option.band ? undefined : true}
-                      data-complete={(progress && progress.seen >= progress.total) || undefined}
-                      style={
-                        progress
-                          ? ({ "--progress": `${progress.ratio * 100}%` } as React.CSSProperties)
-                          : undefined
-                      }
-                    >
-                      {option.band}
-                      {progress && (
-                        <span className="sr-only">
-                          {progress.seen >= progress.total
-                            ? `, đã xem trọn ${progress.total} từ`
-                            : `, đã xem ${progress.seen}/${progress.target} từ`}
+                        <span
+                          className="vocab-difficulty-band"
+                          data-empty={option.band ? undefined : true}
+                          aria-hidden={option.band ? undefined : true}
+                          data-complete={(progress && progress.seen >= progress.total) || undefined}
+                          style={
+                            progress
+                              ? ({
+                                  "--progress": `${progress.ratio * 100}%`,
+                                } as React.CSSProperties)
+                              : undefined
+                          }
+                        >
+                          {option.band}
+                          {progress && (
+                            <span className="sr-only">
+                              {progress.seen >= progress.total
+                                ? `, đã xem trọn ${progress.total} từ`
+                                : `, đã xem ${progress.seen}/${progress.target} từ`}
+                            </span>
+                          )}
                         </span>
-                      )}
-                    </span>
-                    {option.label}
-                  </span>
-                  {/* key=count re-mounts the figure whenever the sum moves, which is what
+                        {option.label}
+                      </span>
+                      {/* key=count re-mounts the figure whenever the sum moves, which is what
                       (re)triggers the spring-and-flash CSS entrance on it. */}
-                  <span className="vocab-difficulty-count" aria-hidden="true" key={count}>
-                    {count === undefined ? "–" : count.toLocaleString("vi-VN")}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
+                      <span className="vocab-difficulty-count" aria-hidden="true" key={count}>
+                        {count === undefined ? "–" : count.toLocaleString("vi-VN")}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div
+                className="vocab-difficulty-page vocab-pack-picks"
+                aria-label="Gói của bạn"
+                inert={page !== 1 && drag === null ? true : undefined}
+              >
+                <ul>
+                  <li>
+                    <button
+                      type="button"
+                      className="vocab-difficulty-option vocab-pack-pick"
+                      data-active={!library.active || undefined}
+                      aria-pressed={!library.active}
+                      onClick={() => pickPack(null)}
+                    >
+                      <span className="vocab-difficulty-check" aria-hidden="true">
+                        {library.active ? "" : "✓"}
+                      </span>
+                      <span className="vocab-difficulty-option-label">
+                        <span className="vocab-difficulty-band">Mặc định</span>
+                        Bộ từ {brand.lead}
+                        {brand.accent}
+                      </span>
+                      <span className="vocab-difficulty-count">
+                        {builtInTotal.toLocaleString("vi-VN")}
+                      </span>
+                    </button>
+                  </li>
+                  {library.packs.map((pack) => {
+                    const playing = pack.id === library.active;
+                    return (
+                      <li key={pack.id}>
+                        <button
+                          type="button"
+                          className="vocab-difficulty-option vocab-pack-pick"
+                          data-active={playing || undefined}
+                          aria-pressed={playing}
+                          onClick={() => pickPack(pack.id)}
+                        >
+                          <span className="vocab-difficulty-check" aria-hidden="true">
+                            {playing ? "✓" : ""}
+                          </span>
+                          <span className="vocab-difficulty-option-label">
+                            <span
+                              className="vocab-difficulty-band"
+                              data-empty={pack.catalog.levels.length ? undefined : true}
+                            >
+                              {pack.catalog.levels.length
+                                ? formatLevelBand(pack.catalog.levels)
+                                : "Gói"}
+                            </span>
+                            <span className="vocab-pack-pick-name">{pack.catalog.name}</span>
+                          </span>
+                          <span className="vocab-difficulty-count">
+                            {pack.catalog.count.toLocaleString("vi-VN")}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+                {library.packs.length === 0 && (
+                  <p className="vocab-pack-picks-empty">
+                    Chưa có gói nào. Nhập tệp hoặc dán liên kết ở{" "}
+                    <Link to="/feed/library" onClick={() => close(false)}>
+                      Thư viện
+                    </Link>
+                    , gói sẽ hiện ở đây để chọn.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
           {/* Floating confirm bar: a gradient fade lets the last rows read through it as
               they scroll beneath, while Library and Done stay clickable above. */}
           <div className="vocab-difficulty-foot">
@@ -795,7 +1003,7 @@ function DifficultyDropdown({
               <Library size={16} aria-hidden="true" />
               Thêm từ mới
             </Link>
-            {touched && (
+            {touched && page === 0 && (
               <button type="button" className="vocab-difficulty-done" onClick={commit}>
                 Xong
               </button>

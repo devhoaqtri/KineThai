@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "name": "Công sở nhiều cấp độ (mẫu)"
+  },
+  "revision": "sample",
+  "words": [
+    {
+      "id": "deadline",
+      "word": "deadline",
+      "pos": "noun",
+      "ipa": "/ˈded.laɪn/",
+      "level": "B1",
+      "topic": "work",
+      "meaningVi": "hạn chót",
+      "defVi": "Thời điểm cuối | phải xong việc.",
+      "usage": [
+        {
+          "en": "The _____ for the report is Friday.",
+          "vi": "Hạn nộp báo_cáo là thứ Sáu."
+        }
+      ]
+    },
+    {
+      "id": "meeting",
+      "word": "meeting",
+      "pos": "noun",
+      "ipa": "/ˈmiː.tɪŋ/",
+      "level": "A2",
+      "topic": "work",
+      "meaningVi": "cuộc họp",
+      "defVi": "Lúc mọi người | ngồi lại bàn việc.",
+      "usage": [
+        {
+          "en": "The _____ starts at nine.",
+          "vi": "Cuộc họp bắt_đầu lúc chín giờ."
+        }
+      ]
+    },
+    {
+      "id": "colleague",
+      "word": "colleague",
+      "pos": "noun",
+      "ipa": "/ˈkɒl.iːɡ/",
+      "level": "B1",
+      "topic": "work",
+      "meaningVi": "đồng_nghiệp",
+      "defVi": "Người làm cùng | một nơi với bạn.",
+      "usage": [
+        {
+          "en": "My _____ helped me with the project.",
+          "vi": "Đồng_nghiệp đã giúp tôi làm dự_án."
+        }
+      ]
+    },
+    {
+      "id": "salary",
+      "word": "salary",
+      "pos": "noun",
+      "ipa": "/ˈsæl.ər.i/",
+      "level": "B1",
+      "topic": "work",
+      "meaningVi": "tiền lương",
+      "defVi": "Khoản tiền | bạn nhận mỗi tháng khi đi làm.",
+      "usage": [
+        {
+          "en": "He asked for a higher _____.",
+          "vi": "Anh ấy xin tăng lương."
+        }
+      ]
+    },
+    {
+      "id": "promotion",
+      "word": "promotion",
+      "pos": "noun",
+      "ipa": "/prəˈməʊ.ʃən/",
+      "level": "B2",
+      "topic": "work",
+      "meaningVi": "sự thăng_chức",
+      "defVi": "Khi bạn được | lên vị_trí cao hơn.",
+      "usage": [
+        {
+          "en": "She got a _____ after two years.",
+          "vi": "Cô ấy được thăng_chức sau hai năm."
+        }
+      ]
+    },
+    {
+      "id": "negotiate",
+      "word": "negotiate",
+      "pos": "verb",
+      "ipa": "/nəˈɡəʊ.ʃi.eɪt/",
+      "level": "B2",
+      "topic": "work",
+      "meaningVi": "đàm_phán",
+      "defVi": "Bàn bạc qua lại | để hai bên cùng đồng_ý.",
+      "usage": [
+        {
+          "en": "We need to _____ a better price.",
+          "vi": "Chúng_ta cần đàm_phán một giá tốt hơn."
+        }
+      ]
+    },
+    {
+      "id": "workload",
+      "word": "workload",
+      "pos": "noun",
+      "ipa": "/ˈwɜːk.ləʊd/",
+      "level": "B2",
+      "topic": "work",
+      "meaningVi": "khối_lượng công_việc",
+      "defVi": "Lượng việc | bạn phải gánh trong một lúc.",
+      "usage": [
+        {
+          "en": "My _____ is too heavy this month.",
+          "vi": "Tháng này khối_lượng công_việc của tôi quá nặng."
+        }
+      ]
+    },
+    {
+      "id": "delegate",
+      "word": "delegate",
+      "pos": "verb",
+      "ipa": "/ˈdel.ɪ.ɡeɪt/",
+      "level": "C1",
+      "topic": "work",
+      "meaningVi": "giao việc, ủy_quyền",
+      "defVi": "Trao bớt việc | cho người khác làm thay.",
+      "usage": [
+        {
+          "en": "A good manager knows how to _____.",
+          "vi": "Một người quản_lý giỏi biết cách giao việc."
+        }
+      ]
+    },
+    {
+      "id": "feedback",
+      "word": "feedback",
+      "pos": "noun",
+      "ipa": "/ˈfiːd.bæk/",
+      "level": "B1",
+      "topic": "work",
+      "meaningVi": "góp_ý",
+      "defVi": "Lời nhận_xét | để bạn làm tốt hơn.",
+      "usage": [
+        {
+          "en": "Thanks for the useful _____.",
+          "vi": "Cảm_ơn bạn vì những góp_ý hữu_ích."
+        }
+      ]
+    },
+    {
+      "id": "resign",
+      "word": "resign",
+      "pos": "verb",
+      "ipa": "/rɪˈzaɪn/",
+      "level": "B2",
+      "topic": "work",
+      "meaningVi": "từ_chức, nghỉ việc",
+      "defVi": "Tự rời bỏ | công_việc của mình.",
+      "usage": [
+        {
+          "en": "He decided to _____ last week.",
+          "vi": "Tuần trước anh ấy quyết_định nghỉ việc."
+        }
+      ]
+    },
+    {
+      "id": "office",
+      "word": "office",
+      "pos": "noun",
+      "ipa": "/ˈɒf.ɪs/",
+      "level": "A1",
+      "topic": "work",
+      "meaningVi": "văn_phòng",
+      "defVi": "Căn phòng | nơi người ta ngồi làm việc.",
+      "usage": [
+        {
+          "en": "I work in a small _____.",
+          "vi": "Tôi làm việc trong một văn_phòng nhỏ."
+        }
+      ]
+    },
+    {
+      "id": "leverage",
+      "word": "leverage",
+      "pos": "verb",
+      "ipa": "/ˈliː.vər.ɪdʒ/",
+      "level": "C1",
+      "topic": "work",
+      "meaningVi": "tận_dụng",
+      "defVi": "Dùng thứ mình có | để đạt kết_quả lớn hơn.",
+      "usage": [
+        {
+          "en": "We can _____ our experience in Asia.",
+          "vi": "Chúng_ta có_thể tận_dụng kinh_nghiệm ở châu_Á."
+        }
+      ]
+    }
+  ]
+}

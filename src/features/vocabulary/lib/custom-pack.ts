@@ -1,9 +1,19 @@
 /**
- * Reader-imported vocabulary pack, kept only in this browser (localStorage) — never uploaded.
- * While a pack is active the feed pages through it locally instead of the server deck.
+ * Reader-imported vocabulary packs, kept only in this browser (localStorage) — never uploaded.
  *
- * Exports: CustomPack, parseCustomPack, loadCustomPackFromUrl, readCustomPack, writeCustomPack,
- *   clearCustomPack, readCustomPage, CUSTOM_PACK_EVENT
+ * A reader can keep several packs; at most one is ACTIVE, and while one is the feed pages
+ * through it locally instead of the server deck. The library is one localStorage entry
+ * holding the packs and the active id. It replaced a single-pack key, which is migrated on
+ * first read.
+ *
+ * Two change signals, because they ask different things of a listener: CUSTOM_PACK_EVENT
+ * fires when the ACTIVE pack changes (the feed restarts its stream on it), and
+ * CUSTOM_PACKS_EVENT whenever the list does (a pack added or removed, or the active one
+ * switching), for lists that only need to redraw.
+ *
+ * Exports: CustomPack, PackLibrary, parseCustomPack, loadCustomPackFromUrl, readPackLibrary,
+ *   readCustomPack, addCustomPack, activateCustomPack, writeCustomPack, clearCustomPack,
+ *   removeCustomPack, readCustomPage, packLevelCounts, CUSTOM_PACK_EVENT, CUSTOM_PACKS_EVENT
  * Depends on: ./schema (normalizeDeck), ./word-joiner, ./paging
  */
 import { normalizeDeck, type Catalog } from "./schema";
@@ -11,12 +21,19 @@ import { withWordJoiners } from "./word-joiner";
 import { readCatalogPage } from "./paging";
 import type { FeedPage, FeedRequest } from "../types";
 
-const KEY = "vocab.customPack.v1";
+/** The single active pack, before packs were kept as a library. Migrated, then removed. */
+const LEGACY_KEY = "vocab.customPack.v1";
+const LIBRARY_KEY = "vocab.customPacks.v2";
+/** The active pack changed (a pack was played, stopped, or the active one removed). */
 export const CUSTOM_PACK_EVENT = "vocab-custom-pack-change";
+/** The list of packs changed in any way, the active one included. */
+export const CUSTOM_PACKS_EVENT = "vocab-custom-packs-change";
 /** Same ceiling as the CLI importer would choke on in localStorage. */
 const MAX_BYTES = 4 * 1024 * 1024;
 
-export type CustomPack = { catalog: Catalog; source: string; importedAt: number };
+/** `id` is the catalog's content hash, so importing the same pack twice keeps one copy. */
+export type CustomPack = { id: string; catalog: Catalog; source: string; importedAt: number };
+export type PackLibrary = { packs: CustomPack[]; active: string | null };
 
 function hash(text: string): string {
   let h = 0x811c9dc5;
@@ -118,8 +135,10 @@ export function parseCustomPack(text: string, source: string): CustomPack {
   }
   const deck = normalizeDeck(toDeck(json, source));
   if (!deck.count) throw new Error("Gói không có từ nào.");
+  const revision = hash(JSON.stringify(deck));
   return {
-    catalog: { revision: hash(JSON.stringify(deck)), ...deck },
+    id: revision,
+    catalog: { revision, ...deck },
     source,
     importedAt: Date.now(),
   };
@@ -144,40 +163,146 @@ export async function loadCustomPackFromUrl(url: string): Promise<CustomPack> {
   return parseCustomPack(await response.text(), parsed.toString());
 }
 
-let cache: { raw: string | null; pack: CustomPack | null } | null = null;
+const EMPTY: PackLibrary = { packs: [], active: null };
 
-/** @returns The active imported pack, or null. Browser-only. */
-export function readCustomPack(): CustomPack | null {
-  if (typeof window === "undefined") return null;
-  const raw = window.localStorage.getItem(KEY);
-  if (cache && cache.raw === raw) return cache.pack;
-  let pack: CustomPack | null = null;
+function isPack(value: unknown): value is CustomPack {
+  const pack = value as Partial<CustomPack> | null;
+  return (
+    !!pack &&
+    typeof pack.source === "string" &&
+    typeof pack.importedAt === "number" &&
+    Array.isArray(pack.catalog?.words)
+  );
+}
+
+/** Give a stored pack its id: packs saved before ids existed use their catalog revision. */
+function withId(pack: CustomPack): CustomPack {
+  return pack.id ? pack : { ...pack, id: pack.catalog.revision };
+}
+
+let libraryCache: { raw: string | null; library: PackLibrary } | null = null;
+
+/** The library as stored, migrating the single-pack key the first time. Browser-only. */
+export function readPackLibrary(): PackLibrary {
+  if (typeof window === "undefined") return EMPTY;
+  let raw: string | null;
   try {
-    if (raw) {
-      const stored = JSON.parse(raw) as CustomPack;
-      pack = { ...stored, catalog: withWordJoiners(stored.catalog) };
+    raw = window.localStorage.getItem(LIBRARY_KEY);
+    if (raw === null) {
+      const legacy = window.localStorage.getItem(LEGACY_KEY);
+      if (legacy) {
+        const pack: unknown = JSON.parse(legacy);
+        if (isPack(pack)) {
+          const migrated = withId(pack);
+          storeLibrary({ packs: [migrated], active: migrated.id });
+          raw = window.localStorage.getItem(LIBRARY_KEY);
+        }
+        window.localStorage.removeItem(LEGACY_KEY);
+      }
     }
   } catch {
-    pack = null;
+    return EMPTY;
   }
-  cache = { raw, pack };
-  return pack;
-}
-
-/** Make a pack the active feed source. */
-export function writeCustomPack(pack: CustomPack) {
+  if (libraryCache && libraryCache.raw === raw) return libraryCache.library;
+  let library = EMPTY;
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(pack));
+    const parsed = raw ? (JSON.parse(raw) as Partial<PackLibrary>) : null;
+    const packs = Array.isArray(parsed?.packs) ? parsed.packs.filter(isPack).map(withId) : [];
+    const active = packs.some((pack) => pack.id === parsed?.active) ? parsed!.active! : null;
+    library = { packs, active };
   } catch {
-    throw new Error("Trình duyệt không đủ chỗ lưu gói này.");
+    library = EMPTY;
   }
-  window.dispatchEvent(new Event(CUSTOM_PACK_EVENT));
+  libraryCache = { raw, library };
+  return library;
 }
 
-/** Return the feed to the built-in deck. */
-export function clearCustomPack() {
-  window.localStorage.removeItem(KEY);
-  window.dispatchEvent(new Event(CUSTOM_PACK_EVENT));
+function storeLibrary(library: PackLibrary): void {
+  try {
+    window.localStorage.setItem(LIBRARY_KEY, JSON.stringify(library));
+  } catch {
+    throw new Error("Trình duyệt không đủ chỗ lưu gói này. Hãy xóa bớt gói cũ rồi thử lại.");
+  }
+}
+
+/** Write the library and tell listeners; the feed hears about it only if the active pack moved. */
+function commit(next: PackLibrary, previousActive: string | null): void {
+  storeLibrary(next);
+  window.dispatchEvent(new Event(CUSTOM_PACKS_EVENT));
+  if (next.active !== previousActive) window.dispatchEvent(new Event(CUSTOM_PACK_EVENT));
+}
+
+let activeCache: { pack: CustomPack; ready: CustomPack } | null = null;
+
+/** @returns The active imported pack, ready to page (word joiners applied), or null. Browser-only. */
+export function readCustomPack(): CustomPack | null {
+  const library = readPackLibrary();
+  const pack = library.packs.find((entry) => entry.id === library.active);
+  if (!pack) return null;
+  if (activeCache?.pack !== pack) {
+    activeCache = { pack, ready: { ...pack, catalog: withWordJoiners(pack.catalog) } };
+  }
+  return activeCache.ready;
+}
+
+/**
+ * Keep a pack in the library without playing it. Importing the same content again moves it
+ * to the top instead of keeping a second copy.
+ * @returns The stored pack
+ */
+export function addCustomPack(pack: CustomPack): CustomPack {
+  const library = readPackLibrary();
+  const stored = withId(pack);
+  commit(
+    {
+      packs: [stored, ...library.packs.filter((entry) => entry.id !== stored.id)],
+      active: library.active,
+    },
+    library.active,
+  );
+  return stored;
+}
+
+/** Play a kept pack, or return the feed to the built-in deck with null. */
+export function activateCustomPack(id: string | null): void {
+  const library = readPackLibrary();
+  const active = id && library.packs.some((pack) => pack.id === id) ? id : null;
+  if (active === library.active) return;
+  commit({ ...library, active }, library.active);
+}
+
+/** Keep a pack and make it the active feed source. */
+export function writeCustomPack(pack: CustomPack): void {
+  activateCustomPack(addCustomPack(pack).id);
+}
+
+/** Return the feed to the built-in deck; the pack stays in the library. */
+export function clearCustomPack(): void {
+  activateCustomPack(null);
+}
+
+/** Delete a pack from this browser, stopping it first if it is the one playing. */
+export function removeCustomPack(id: string): void {
+  const library = readPackLibrary();
+  commit(
+    {
+      packs: library.packs.filter((pack) => pack.id !== id),
+      active: library.active === id ? null : library.active,
+    },
+    library.active,
+  );
+}
+
+/** @returns Words per level in a pack, in the catalog's level order; unlevelled words under "". */
+export function packLevelCounts(pack: CustomPack): { level: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const word of pack.catalog.words) {
+    const level = word.level ?? "";
+    counts.set(level, (counts.get(level) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort(([a], [b]) => (a === "" ? 1 : b === "" ? -1 : a.localeCompare(b)))
+    .map(([level, count]) => ({ level, count }));
 }
 
 /** Page the active pack locally, or null when none is active. */

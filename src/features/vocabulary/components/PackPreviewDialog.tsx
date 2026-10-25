@@ -214,11 +214,14 @@ export function PackPreviewDialog({
   open,
   onOpenChange,
   onImport,
+  importLabel = "Nhập gói này",
 }: {
   file: { name: string; text: string };
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onImport: () => void;
+  /** The footer button's words: importing a picked file, or playing a pack already kept. */
+  importLabel?: string;
 }) {
   const parsed = useMemo(() => {
     try {
@@ -256,7 +259,7 @@ export function PackPreviewDialog({
       footer={
         parsed.pack && (
           <button type="button" className="vocab-import-btn" onClick={onImport}>
-            <Play size={15} aria-hidden="true" /> Nhập gói này
+            <Play size={15} aria-hidden="true" /> {importLabel}
           </button>
         )
       }

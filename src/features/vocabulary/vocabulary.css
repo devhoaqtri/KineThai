@@ -1479,6 +1479,122 @@
 .vocab-difficulty-count {
   animation: vocab-count-pop 540ms var(--ease-spring) both;
 }
+/* The picker's two pages — the built-in deck's levels, and the reader's own packs — side
+   by side on one track that slides by a transform: a swipe drags it and it settles on the
+   nearer page. Each page keeps its own vertical scroll; the track leaves vertical drags to
+   it (touch-action: pan-y) and takes only the sideways ones. */
+.vocab-difficulty-pages {
+  display: flex;
+  flex: none;
+  gap: 4px;
+  margin: 2px 2px 8px;
+  padding: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--shell-text) 7%, transparent);
+}
+.vocab-difficulty-pages button {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--shell-text-mute);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--dur-quick) var(--ease-out),
+    color var(--dur-quick) var(--ease-out);
+}
+.vocab-difficulty-pages button[aria-selected="true"] {
+  background: var(--shell-text);
+  color: var(--shell-on-text);
+}
+.vocab-difficulty-pages button span {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pop-accent) 80%, transparent);
+  color: var(--pop-accent-ink);
+  font-size: 11px;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.vocab-difficulty-pager {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.vocab-difficulty-track {
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  touch-action: pan-y;
+  transition: transform var(--dur-move, 220ms) var(--ease-out, ease-out);
+}
+.vocab-difficulty-track[data-dragging],
+.vocab-difficulty-track[data-instant] {
+  transition: none;
+}
+.vocab-difficulty-page {
+  flex: 0 0 100%;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Each page scrolls, so it is where the browser decides who owns a touch. Left at auto
+     it claims a sideways pan too (and cancels the pointer the track is following); pan-y
+     keeps vertical scrolling native and hands sideways drags to the track. */
+  touch-action: pan-y;
+}
+.vocab-pack-picks {
+  /* Room to scroll the last row up above the floating Library bar, like the levels. */
+  padding: 0 0 64px;
+}
+.vocab-pack-picks ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* A pack row wears the level rows' grid and highlight; only the button reset is new. */
+.vocab-pack-pick {
+  width: 100%;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+.vocab-pack-pick:hover {
+  background: var(--shell-hover);
+}
+.vocab-pack-pick-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vocab-pack-picks .vocab-difficulty-option-label {
+  min-width: 0;
+}
+.vocab-pack-picks-empty {
+  margin: 14px 14px 0;
+  color: var(--shell-text-mute);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.vocab-pack-picks-empty a {
+  color: var(--shell-text);
+  font-weight: 700;
+}
 /* Floating confirm bar: a gradient fade so the last rows read through it as they
    scroll beneath, with the bar itself click-transparent except on its buttons. */
 .vocab-difficulty-foot {
@@ -6261,62 +6377,6 @@
   border-color: color-mix(in oklab, var(--shell-text) 38%, transparent);
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--shell-text) 8%, transparent);
 }
-.vocab-import-file {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0 4px 0 6px;
-  background: color-mix(in oklab, var(--shell-text) 4%, transparent);
-}
-.vocab-import-file-name {
-  display: inline-flex;
-  flex: 1;
-  min-width: 0;
-  align-items: center;
-  gap: 7px;
-  height: 30px;
-  padding: 0 8px;
-  border: none;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--shell-text);
-  font-size: 13px;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.18s ease;
-}
-.vocab-import-file-name > span {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.vocab-import-file-name > svg:last-child {
-  color: color-mix(in oklab, var(--shell-text) 45%, transparent);
-}
-.vocab-import-file-name:hover {
-  background: color-mix(in oklab, var(--shell-text) 8%, transparent);
-}
-.vocab-import-file-clear {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  color: color-mix(in oklab, var(--shell-text) 60%, transparent);
-  cursor: pointer;
-  transition:
-    background 0.18s ease,
-    color 0.18s ease;
-}
-.vocab-import-file-clear:hover {
-  background: color-mix(in oklab, var(--shell-text) 10%, transparent);
-  color: var(--shell-text);
-}
 .vocab-import-btn {
   display: inline-flex;
   align-items: center;
@@ -6355,21 +6415,6 @@
   cursor: default;
   transform: none;
 }
-.vocab-import-active {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border: 1px solid color-mix(in oklab, var(--shell-text) 10%, transparent);
-  border-radius: 10px;
-  background: color-mix(in oklab, var(--shell-text) 4%, transparent);
-  color: var(--shell-text);
-  font-size: 12.5px;
-}
-.vocab-import-active > span {
-  flex: 1 1 100%;
-}
 .vocab-import-error {
   margin: 0;
   color: var(--destructive, #f87171);
@@ -6405,6 +6450,236 @@
 .vocab-import-tab.on {
   background: color-mix(in oklab, var(--shell-text) 12%, transparent);
   color: var(--shell-text);
+}
+/* "Thử gói mẫu": the shipped sample packs, one tap each, loaded through the link path. */
+.vocab-import-samples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: -4px;
+  font-size: 12px;
+  color: color-mix(in oklab, var(--shell-text) 55%, transparent);
+}
+.vocab-import-samples > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 2px;
+}
+.vocab-import-sample {
+  height: 28px;
+  padding: 0 11px;
+  border: 1px dashed color-mix(in oklab, var(--shell-text) 22%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--shell-text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.vocab-import-sample:hover {
+  background: color-mix(in oklab, var(--shell-text) 8%, transparent);
+}
+.vocab-import-sample:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+/* Imported packs, right under the import row: one card per pack. */
+.vocab-pack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+.vocab-pack-list-title {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--shell-text) 55%, transparent);
+}
+.vocab-pack-list > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vocab-pack-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid color-mix(in oklab, var(--shell-text) 12%, transparent);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--shell-text) 4%, transparent);
+  scroll-margin: 16px;
+}
+.vocab-pack-card[data-active] {
+  border-color: color-mix(in oklab, var(--vocab-accent, #6ee7a0) 60%, transparent);
+  background: color-mix(in oklab, var(--vocab-accent, #6ee7a0) 8%, transparent);
+}
+/* Just added: a brief glow, so the eye finds where the pack landed. */
+.vocab-pack-card[data-fresh] {
+  animation: vocab-pack-card-in 1.6s var(--ease-out, ease-out) both;
+}
+@keyframes vocab-pack-card-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--shell-text) 0%, transparent);
+  }
+  20% {
+    opacity: 1;
+    transform: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--shell-text) 22%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--shell-text) 0%, transparent);
+  }
+}
+.vocab-pack-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.vocab-pack-card-head > svg {
+  flex: none;
+  color: color-mix(in oklab, var(--shell-text) 55%, transparent);
+}
+.vocab-pack-card-head h3 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vocab-pack-card-badge {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--vocab-accent, #6ee7a0);
+  color: #0a0014;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+.vocab-pack-card-badge[data-fresh] {
+  background: color-mix(in oklab, var(--shell-text) 14%, transparent);
+  color: var(--shell-text);
+}
+.vocab-pack-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: -4px 0 0;
+  font-size: 12px;
+  color: color-mix(in oklab, var(--shell-text) 58%, transparent);
+}
+.vocab-pack-card-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vocab-pack-card-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vocab-pack-card-levels li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px 2px 3px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--shell-text) 7%, transparent);
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.vocab-pack-card-levels li span {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--shell-text) 14%, transparent);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+/* The peek: the first few words with their meaning, a glance before playing. */
+.vocab-pack-card-peek {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vocab-pack-card-peek li {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: color-mix(in oklab, var(--shell-text) 5%, transparent);
+}
+.vocab-pack-card-peek strong {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.vocab-pack-card-peek li > span {
+  overflow: hidden;
+  font-size: 12px;
+  color: color-mix(in oklab, var(--shell-text) 60%, transparent);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vocab-pack-card-peek .vocab-pack-card-more {
+  justify-content: center;
+  padding: 0;
+  background: none;
+}
+.vocab-pack-card-more button {
+  height: 100%;
+  min-height: 40px;
+  border: 1px dashed color-mix(in oklab, var(--shell-text) 20%, transparent);
+  border-radius: 9px;
+  background: transparent;
+  color: color-mix(in oklab, var(--shell-text) 70%, transparent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.vocab-pack-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.vocab-pack-card-actions .vocab-import-btn {
+  height: 34px;
+  padding: 0 12px;
+}
+.vocab-pack-card-delete {
+  margin-left: auto;
+}
+.vocab-pack-card-delete[data-confirming] {
+  border-color: #f87171;
+  background: color-mix(in oklab, #ef4444 18%, transparent);
+  color: #fecaca;
 }
 .vocab-import-generate {
   display: flex;
@@ -7239,20 +7514,14 @@
     border-radius: 11px;
     font-size: 16px;
   }
-  .vocab-import-file-name {
-    height: 36px;
-    font-size: 14px;
-  }
-  .vocab-import-file-clear {
-    width: 36px;
-    height: 36px;
-  }
   .vocab-import-tab {
     height: 38px;
     font-size: 13.5px;
   }
-  .vocab-import-active > .vocab-import-btn {
-    flex: 1 1 0;
+  /* Card buttons stay a step smaller than the import row's, so four fit on a phone. */
+  .vocab-pack-card-actions .vocab-import-btn {
+    height: 40px;
+    font-size: 13px;
   }
   .vocab-preview-tabs {
     align-self: stretch;
