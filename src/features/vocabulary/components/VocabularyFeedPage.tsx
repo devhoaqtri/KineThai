@@ -18,7 +18,7 @@ import { VocabularyStream } from "./VocabularyStream";
 import { SavedDrawer } from "./SavedDrawer";
 import { StreakCelebration } from "./StreakCelebration";
 import { DifficultyOnboarding } from "./DifficultyOnboarding";
-import { fetchVocabularyPage } from "../api/feed";
+import { levelLadderFor } from "../lib/level-ladder";
 import { readDifficultyChoice, writeDifficultyChoice } from "../lib/difficulty-choice";
 import { readDialectChoice, writeDialectChoice } from "../lib/dialect-choice";
 import type { TargetLocale } from "../lib/target-language";
@@ -100,20 +100,6 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     setFilters((current) => ({ ...current, difficulty: stored }));
     setStage("feed");
   }, []);
-  // The picker needs the catalog's level counts and sample words before any stream exists.
-  // They ride on every feed page, so one small, unfiltered request supplies them.
-  const { data: ladder } = useQuery({
-    queryKey: ["vocab-level-ladder"],
-    queryFn: ({ signal }) =>
-      fetchVocabularyPage({
-        seed: "level-ladder",
-        filters: ALL_FILTERS,
-        cursor: { position: 0 },
-        signal,
-      }),
-    enabled: stage === "onboarding",
-    staleTime: Infinity,
-  });
   const pickDifficulty = useCallback((difficulty: string) => {
     writeDifficultyChoice(difficulty);
     setFilters((current) => ({ ...current, difficulty }));
@@ -171,7 +157,11 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     return (
       <main className="vocabulary-shell" ref={shell}>
         {stage === "onboarding" && (
-          <DifficultyOnboarding metadata={ladder} locale={locale ?? "en"} onPick={pickDifficulty} />
+          <DifficultyOnboarding
+            metadata={levelLadderFor(locale ?? "en")}
+            locale={locale ?? "en"}
+            onPick={pickDifficulty}
+          />
         )}
       </main>
     );

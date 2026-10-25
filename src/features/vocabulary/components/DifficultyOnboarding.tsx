@@ -9,7 +9,7 @@
  * climb in intensity is visible before a single label is read.
  *
  * Exports: DifficultyOnboarding
- * Depends on: difficulty tracks, feed metadata types, the ambient player, vocabulary.css
+ * Depends on: difficulty tracks, the bundled level ladder, the ambient player, vocabulary.css
  */
 
 import {
@@ -31,7 +31,7 @@ import {
 import { getAmbientPlayer } from "../lib/ambient";
 import { getAmbientOwnership } from "../lib/ambientOwnership";
 import type { TargetLocale } from "../lib/target-language";
-import type { FeedPage } from "../types";
+import type { LevelLadder } from "../lib/level-ladder";
 
 /**
  * One colour per rung, easiest to hardest: cool mint through lime and amber to red, then
@@ -67,7 +67,7 @@ function nearestAvailable(target: number, available: readonly boolean[]): number
 
 /**
  * Full-screen level picker shown before the very first word.
- * @param props.metadata Counts, populated levels and sample words; undefined while loading
+ * @param props.metadata Counts, populated levels and sample words, bundled per locale
  * @param props.onPick Called with the chosen track id, or "" for every level
  * @returns The picker
  */
@@ -76,7 +76,7 @@ export function DifficultyOnboarding({
   locale,
   onPick,
 }: {
-  metadata: Pick<FeedPage, "levelCounts" | "levels" | "levelSamples"> | undefined;
+  metadata: LevelLadder;
   /**
    * Deck locale. Resolves which track set to render: CEFR for en/ko/ja, HSK for
    * zh. Without this the picker would hardcode CEFR and every rung would show
@@ -89,11 +89,11 @@ export function DifficultyOnboarding({
   // no two rungs are illustrated by the same word.
   const taken = new Map<string, number>();
   const rungs = tracksFor(locale).map((track, index) => {
-    const available = metadata ? isTrackAvailable(track, metadata.levels) : false;
+    const available = isTrackAvailable(track, metadata.levels);
     // Honour sampleLevel override so vỡ lòng can show an A1 word instead of the
     // A2 business term that happens to be first in the base catalog for that level.
     const ceiling = track.sampleLevel ?? trackCeiling(track);
-    const pool = (available && metadata?.levelSamples[ceiling]) || [];
+    const pool = (available && metadata.levelSamples[ceiling]) || [];
     const turn = taken.get(ceiling) ?? 0;
     if (pool.length) taken.set(ceiling, turn + 1);
     return {
@@ -101,16 +101,15 @@ export function DifficultyOnboarding({
       color: RUNG_COLORS[index % RUNG_COLORS.length]!,
       band: formatLevelBand(track.levels),
       available,
-      count: metadata ? countTrackWords([track.id], metadata.levelCounts, metadata.levels) : null,
+      count: countTrackWords([track.id], metadata.levelCounts, metadata.levels),
       // The word comes from the track's hardest level: that is the level that sets it apart
       // from the rung below, so it is the honest picture of what choosing it adds.
       sample: pool.length ? pool[turn % pool.length] : undefined,
     };
   });
-  const availability = rungs.map((rung) => rung.available && (rung.count ?? 0) > 0);
+  const availability = rungs.map((rung) => rung.available && rung.count > 0);
   const [picked, setPicked] = useState(0);
-  // Until the counts arrive nothing is available; once they do, rest on the nearest rung
-  // that is (normally the first).
+  // Rest on the nearest rung that is available (normally the first).
   const resolved = nearestAvailable(picked, availability);
   const index = resolved < 0 ? 0 : resolved;
   const current = rungs[index]!;
@@ -221,7 +220,7 @@ export function DifficultyOnboarding({
                 </span>
                 <span className="vocab-onboard-meta">
                   <span className="vocab-onboard-band">{rung.band}</span>
-                  {rung.count === null ? "–" : `${rung.count.toLocaleString("vi-VN")} từ`}
+                  {`${rung.count.toLocaleString("vi-VN")} từ`}
                 </span>
               </span>
               <span className="vocab-onboard-tick" aria-hidden="true" />
@@ -236,7 +235,7 @@ export function DifficultyOnboarding({
                     </span>
                   </>
                 ) : (
-                  <span className="vocab-onboard-soon">{metadata ? "Sắp có" : ""}</span>
+                  <span className="vocab-onboard-soon">Sắp có</span>
                 )}
               </span>
             </li>
