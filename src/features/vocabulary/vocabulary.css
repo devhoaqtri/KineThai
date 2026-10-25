@@ -537,8 +537,10 @@
   margin-right: 7px;
 }
 /* The gear sits on the left in this layout, so the nudge toward it would point the wrong
-   way; the recorded frame keeps the box-centred group. */
+   way, and so would the phone tier's docking against it; the recorded frame keeps the
+   box-centred group at every width. */
 .vocab-recording .vocab-player-controls {
+  justify-self: center;
   translate: none;
 }
 /* The title's own lines follow it to that corner; left-ragged text hung off the right
@@ -5555,6 +5557,14 @@
     --eco-trigger-h: 22px;
     /* (34 − 17) / 4 */
     --vocab-controls-nudge: 4.25px;
+  }
+  /* A phone has no room to spare between the title and the gear, so the transport group
+     docks against the gear instead of floating centred between them: it reads as one
+     cluster of controls on the right, and the space it frees goes to the title side.
+     The optical nudge has nothing to balance once the group sits at the end. */
+  .vocab-player-controls {
+    justify-self: end;
+    translate: none;
   }
   /* Budget at 390px (row = 358): centre = 3×34 + 2×6 = 114, two row gaps = 16, so each
      1fr column is (358 − 114 − 16) / 2 ≈ 114px. Left = title(15px ≈ 72) + gap(6) +
