@@ -32,7 +32,8 @@ import {
   difficultyLevels,
   tracksFor,
 } from "../lib/difficulty";
-import { progressFor, type LevelProgress } from "../lib/level-progress";
+import { scopeProgress, tierProgress, type LevelProgress } from "../lib/level-progress";
+import { levelLadderFor } from "../lib/level-ladder";
 import { CEFR_LEVELS, HSK_LEVELS, type NarrativeStyle } from "../lib/schema";
 import type { HistoryStats } from "../lib/history";
 import { douyinStyleLabelVi, styleLabelVi, themeLabelVi, topicLabelVi } from "../lib/i18n";
@@ -589,19 +590,23 @@ function DifficultyDropdown({
     if (id !== DIFFICULTY_ALL) return countTrackWords([id], levelCounts, catalogLevels);
     return draft.size > 0 ? countTrackWords(draft, levelCounts, catalogLevels) : total;
   };
-  // A row's bar covers the same levels as its count: its own track's, or for "tất cả" the
-  // union picked so far (every catalog level once nothing is picked). null = no figures yet.
+  // A row's chip fills with the reader's progress through the row's levels: its own
+  // track's, or for "tất cả" the union picked so far (every level once nothing is picked).
+  // Sized from the bundled catalog counts rather than the topic-filtered ones above, so a
+  // chip — and the badge it leads to — means the same thing whatever topic is on. It fills
+  // towards the next target, 100 words apart, and starts over towards the one after.
+  const ladder = useMemo(() => levelLadderFor(activeLocale), [activeLocale]);
   const progressOf = (id: string) => {
-    if (!levelCounts || !catalogLevels || !levelProgress) return null;
+    if (!levelProgress) return null;
     const levels =
       id === DIFFICULTY_ALL
         ? draft.size > 0
-          ? difficultyLevels([...draft].join(","), catalogLevels)
-          : catalogLevels
-        : difficultyLevels(id, catalogLevels);
+          ? difficultyLevels([...draft].join(","), ladder.levels)
+          : ladder.levels
+        : difficultyLevels(id, ladder.levels);
     if (!levels?.length) return null;
-    const result = progressFor(levels, levelProgress, levelCounts);
-    return result.goal > 0 ? result : null;
+    const { seen, total } = scopeProgress(levels, levelProgress, ladder.levelCounts);
+    return total > 0 ? { seen, total, ...tierProgress(seen, total) } : null;
   };
   const pickRow = (id: string) => {
     // Shared by tap and keyboard: an empty track cannot be chosen by either.
@@ -722,7 +727,6 @@ function DifficultyDropdown({
                 option.id === DIFFICULTY_ALL ? draft.size === 0 : draft.has(option.id);
               const count = countFor(option.id);
               const progress = progressOf(option.id);
-              const percent = progress ? Math.floor(progress.ratio * 100) : 0;
               // A track the catalog cannot serve yet (its defining level has no words) shows
               // 0 and is greyed: it stays on the ladder as a promise, but cannot be picked.
               const unavailable = count === 0 && option.id !== DIFFICULTY_ALL;
@@ -753,8 +757,21 @@ function DifficultyDropdown({
                       className="vocab-difficulty-band"
                       data-empty={option.band ? undefined : true}
                       aria-hidden={option.band ? undefined : true}
+                      data-complete={(progress && progress.seen >= progress.total) || undefined}
+                      style={
+                        progress
+                          ? ({ "--progress": `${progress.ratio * 100}%` } as React.CSSProperties)
+                          : undefined
+                      }
                     >
                       {option.band}
+                      {progress && (
+                        <span className="sr-only">
+                          {progress.seen >= progress.total
+                            ? `, đã xem trọn ${progress.total} từ`
+                            : `, đã xem ${progress.seen}/${progress.target} từ`}
+                        </span>
+                      )}
                     </span>
                     {option.label}
                   </span>
@@ -763,24 +780,6 @@ function DifficultyDropdown({
                   <span className="vocab-difficulty-count" aria-hidden="true" key={count}>
                     {count === undefined ? "–" : count.toLocaleString("vi-VN")}
                   </span>
-                  {/* How far into the row's levels the reader has got: the first hundred
-                      words of each level, so the bar is a goal that can actually be met. */}
-                  {progress && (
-                    <span
-                      className="vocab-difficulty-progress"
-                      data-complete={progress.seen >= progress.goal || undefined}
-                      style={{ "--progress": `${progress.ratio * 100}%` } as React.CSSProperties}
-                    >
-                      <span className="vocab-difficulty-progress-track" aria-hidden="true">
-                        <span className="vocab-difficulty-progress-fill" />
-                      </span>
-                      <span className="vocab-difficulty-progress-label">
-                        <span className="sr-only">Đã xem </span>
-                        {percent}%
-                        <span className="sr-only">{` (${progress.seen}/${progress.goal} từ)`}</span>
-                      </span>
-                    </span>
-                  )}
                 </li>
               );
             })}

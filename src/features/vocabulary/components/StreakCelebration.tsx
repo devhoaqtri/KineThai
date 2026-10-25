@@ -25,13 +25,19 @@
  * into CSS as a custom property for the countdown bar, so the bar and the timer cannot
  * drift apart.
  *
- * Exports: StreakCelebration, STREAK_CELEBRATION_MS
+ * Word milestones (lib/level-progress) reuse it whole: they pass `badge`, which swaps the
+ * metal, the unit on the medal and the words, and keeps every bit of the choreography.
+ *
+ * Exports: StreakCelebration, STREAK_CELEBRATION_MS, CelebrationBadge
  * Depends on: React, ./StreakMedal, ../lib/streak-tiers, vocabulary.css
  */
 
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from "react";
-import { STREAK_TIER_LABEL, streakBlurb, streakTier } from "../lib/streak-tiers";
+import { STREAK_TIER_LABEL, streakBlurb, streakTier, type StreakTier } from "../lib/streak-tiers";
 import { StreakMedal } from "./StreakMedal";
+
+/** What a non-streak milestone shows in place of the streak's metal, unit and words. */
+export type CelebrationBadge = { tier: StreakTier; unit: string; title: string; blurb: string };
 
 /** How long the celebration holds the screen before closing on its own. */
 export const STREAK_CELEBRATION_MS = 7000;
@@ -90,20 +96,23 @@ function Twinkle() {
 }
 
 /**
- * @param days - The milestone being celebrated, in days
+ * @param days - The milestone's number: days for a streak, words for a word badge
  * @param reducedMotion - Skip the count-up and the closing fade
  * @param onDone - Called once the celebration has fully left the screen
+ * @param badge - A word milestone's metal, unit and words; absent for a streak
  */
 export function StreakCelebration({
   days,
   reducedMotion,
   onDone,
+  badge,
 }: {
   days: number;
   reducedMotion: boolean;
   onDone: () => void;
+  badge?: CelebrationBadge;
 }) {
-  const tier = streakTier(days);
+  const tier = badge?.tier ?? streakTier(days);
   const uid = useId().replace(/:/g, "");
   const [leaving, setLeaving] = useState(false);
   const [shown, setShown] = useState(reducedMotion ? days : 0);
@@ -236,17 +245,23 @@ export function StreakCelebration({
           ))}
 
           <div className="vocab-streak-flash-float">
-            <StreakMedal days={days} value={shown} className="vocab-streak-flash-medal" />
+            <StreakMedal
+              days={days}
+              value={shown}
+              tier={tier}
+              unit={badge?.unit}
+              className="vocab-streak-flash-medal"
+            />
           </div>
         </div>
 
         <div className="vocab-streak-flash-copy">
           <span className="vocab-streak-flash-tier">{STREAK_TIER_LABEL[tier]}</span>
           <h2 className="vocab-streak-flash-title" id={`${uid}-title`}>
-            Chuỗi {days} ngày liên tiếp!
+            {badge?.title ?? `Chuỗi ${days} ngày liên tiếp!`}
           </h2>
           <p className="vocab-streak-flash-caption" id={`${uid}-blurb`}>
-            {streakBlurb(days)}
+            {badge?.blurb ?? streakBlurb(days)}
           </p>
           <button
             type="button"

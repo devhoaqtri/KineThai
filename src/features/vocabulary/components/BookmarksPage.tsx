@@ -13,6 +13,9 @@
  */
 
 import { useStreakBadges } from "../hooks/useStreakBadges";
+import { useWordBadges, type EarnedWordBadge } from "../hooks/useWordBadges";
+import { progressScopes, scopeLabel, wordTier } from "../lib/word-badges";
+import type { TargetLocale } from "../lib/target-language";
 import { STREAK_TIER_LABEL, streakTier } from "../lib/streak-tiers";
 import { StreakMedal } from "./StreakMedal";
 import { Link } from "@tanstack/react-router";
@@ -441,33 +444,87 @@ function SavedFolders({
 }
 
 /**
- * The milestones tab: every medal this device has earned, newest first.
+ * The milestones tab: every medal this device has earned, newest first — word milestones
+ * (every 100 words overall and per level) above the streak's days.
  *
  * Before the first one it says what the tab is for and nothing more — no "3 more days", no
- * progress bar. The streak never shows a reader a number they have not reached yet.
+ * progress bar. The shelf never shows a reader a number they have not reached yet; the
+ * difficulty picker's chips are where progress towards the next one lives.
  */
-function MedalShelf({ badges }: { badges: number[] }) {
-  if (!badges.length) {
+function MedalShelf({
+  badges,
+  wordBadges,
+  locale,
+}: {
+  badges: number[];
+  wordBadges: EarnedWordBadge[];
+  locale: TargetLocale;
+}) {
+  // A word badge is diamond when it finished its scope, so each scope's size is needed.
+  const totals = useMemo(() => {
+    const { scopes, levelCounts } = progressScopes(locale);
+    return new Map(
+      scopes.map((scope) => [
+        scope.id,
+        scope.levels.reduce((sum, level) => sum + (levelCounts[level] ?? 0), 0),
+      ]),
+    );
+  }, [locale]);
+  if (!badges.length && !wordBadges.length) {
     return (
       <div className="vocab-medal-empty">
         <StreakMedal days={5} value="?" />
         <h2>Chưa có huy hiệu nào</h2>
-        <p>Học vài từ mỗi ngày, liền nhiều ngày — huy hiệu sẽ tự xuất hiện ở đây.</p>
+        <p>
+          Mỗi 100 từ đã học, hay vài từ mỗi ngày liền nhiều ngày — huy hiệu sẽ tự xuất hiện ở đây.
+        </p>
       </div>
     );
   }
   return (
-    <ul className="vocab-medal-shelf" aria-label="Mốc chuỗi ngày đã đạt">
-      {[...badges].reverse().map((days) => (
-        <li className="vocab-medal-tile" key={days}>
-          <StreakMedal days={days} />
-          <span className="vocab-medal-tile-days">{days} ngày</span>
-          <span className="vocab-medal-tile-tier">
-            {STREAK_TIER_LABEL[streakTier(days)].replace("Huy hiệu ", "")}
-          </span>
-        </li>
-      ))}
-    </ul>
+    <>
+      {wordBadges.length > 0 && (
+        <section className="vocab-medal-group" aria-label="Mốc số từ đã học">
+          <h3 className="vocab-medal-group-title">Từ đã học</h3>
+          <ul className="vocab-medal-shelf">
+            {[...wordBadges].reverse().map((badge) => {
+              const complete = badge.words === totals.get(badge.scope);
+              return (
+                <li className="vocab-medal-tile" key={badge.key}>
+                  <StreakMedal
+                    days={badge.words}
+                    tier={wordTier({ words: badge.words, complete })}
+                    unit="từ"
+                  />
+                  <span className="vocab-medal-tile-days">
+                    {complete ? "Trọn bộ" : `${badge.words} từ`}
+                  </span>
+                  <span className="vocab-medal-tile-tier" data-scope>
+                    {scopeLabel(badge.scope, locale)}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+      {badges.length > 0 && (
+        <section className="vocab-medal-group" aria-label="Mốc chuỗi ngày đã đạt">
+          {wordBadges.length > 0 && <h3 className="vocab-medal-group-title">Chuỗi ngày</h3>}
+          <ul className="vocab-medal-shelf">
+            {[...badges].reverse().map((days) => (
+              <li className="vocab-medal-tile" key={days}>
+                <StreakMedal days={days} />
+                <span className="vocab-medal-tile-days">{days} ngày</span>
+                <span className="vocab-medal-tile-tier">
+                  {STREAK_TIER_LABEL[streakTier(days)].replace("Huy hiệu ", "")}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </>
   );
 }
 
@@ -494,16 +551,18 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
   const groupId = useId();
   // The visited address decides the deck: only the Chinese host labels the vault's
   // falling chips with a Han word; every other host keeps them bare blocks.
-  const isZhHost = useMemo(
-    () => typeof window !== "undefined" && resolveTarget(window.location.host) === "zh",
+  const locale = useMemo<TargetLocale>(
+    () => (typeof window === "undefined" ? "en" : resolveTarget(window.location.host)),
     [],
   );
+  const isZhHost = locale === "zh";
 
   const badges = useStreakBadges();
+  const wordBadges = useWordBadges();
   const counts: Record<TabKind, number> = {
     bookmark: saved.length,
     heart: favorites.length,
-    medal: badges.length,
+    medal: badges.length + wordBadges.length,
   };
 
   useEffect(() => {
@@ -632,7 +691,7 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
         className="vocab-saved-panelbox"
         hidden={tab !== "medal" || undefined}
       >
-        <MedalShelf badges={badges} />
+        <MedalShelf badges={badges} wordBadges={wordBadges} locale={locale} />
       </div>
 
       {WORD_TABS.map((item) => {

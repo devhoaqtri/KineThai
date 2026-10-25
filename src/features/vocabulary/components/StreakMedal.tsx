@@ -15,21 +15,27 @@
  */
 
 import { useId, type ReactNode } from "react";
-import { streakTier } from "../lib/streak-tiers";
+import { streakTier, type StreakTier } from "../lib/streak-tiers";
 
 /**
- * @param days - The milestone, in days
+ * @param days - The milestone: days for a streak, words for a word badge
  * @param className - Extra class for the caller's sizing and animation
  * @param value - What to print on the face; defaults to `days` (the celebration counts up)
+ * @param tier - The metal; defaults to the streak tier for `days`
+ * @param unit - The word under the number; "ngày" for a streak, "từ" for a word badge
  */
 export function StreakMedal({
   days,
   className,
   value = days,
+  tier = streakTier(days),
+  unit = "ngày",
 }: {
   days: number;
   className?: string;
   value?: ReactNode;
+  tier?: StreakTier;
+  unit?: string;
 }) {
   const uid = useId().replace(/:/g, "");
   const face = `mf-${uid}`;
@@ -38,7 +44,7 @@ export function StreakMedal({
   return (
     <div
       className={className ? `vocab-medal ${className}` : "vocab-medal"}
-      data-tier={streakTier(days)}
+      data-tier={tier}
       aria-hidden="true"
     >
       <svg viewBox="0 0 200 224" className="vocab-medal-svg">
@@ -91,7 +97,7 @@ export function StreakMedal({
       <div className="vocab-medal-shine" />
       <div className="vocab-medal-face" data-digits={String(days).length}>
         <strong>{value}</strong>
-        <span>ngày</span>
+        <span>{unit}</span>
       </div>
     </div>
   );

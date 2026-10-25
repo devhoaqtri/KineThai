@@ -1236,6 +1236,30 @@
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.06em;
+  /* The chip is also its row's progress loader: the fill below runs underneath the level
+     name, clipped to the chip's own pill. */
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* The loader: the card's accent, filling from the left towards the next 100-word target
+   (--progress, set per row). Under the text (z-index -1 inside the isolated chip), and
+   softened so the name stays legible over a bright accent. */
+.vocab-difficulty-band::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: -1;
+  width: var(--progress, 0%);
+  background: color-mix(in srgb, var(--pop-accent, var(--vocab-accent)) 62%, transparent);
+  transition: width var(--dur-move) var(--ease-out);
+}
+/* A finished scope: the whole chip in the accent, with dark ink for contrast. */
+.vocab-difficulty-band[data-complete] {
+  color: var(--pop-accent-ink, #10140f);
+}
+.vocab-difficulty-band[data-complete]::before {
+  background: var(--pop-accent, var(--vocab-accent));
 }
 /* The "tất cả" row carries no band, but it still holds the chip's slot so its name
    lines up with the ten tracks below it — invisible spacer, not a missing column. */
@@ -1343,9 +1367,7 @@
 .vocab-difficulty-option {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas:
-    "check label count"
-    ". progress progress";
+  grid-template-areas: "check label count";
   align-items: center;
   gap: 2px 10px;
   min-height: 46px;
@@ -1411,43 +1433,6 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-/* Progress through the row's levels: a hairline track under the name, filled in the card's
-   accent, with the share at its end. It sits in the label's own column, so it starts on
-   the same vertical line as the band chips and runs to the counts' right edge. */
-.vocab-difficulty-progress {
-  grid-area: progress;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  line-height: 1;
-}
-.vocab-difficulty-progress-track {
-  position: relative;
-  flex: 1;
-  height: 4px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--shell-text) 12%, transparent);
-}
-.vocab-difficulty-progress-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: var(--progress, 0%);
-  border-radius: inherit;
-  background: var(--pop-accent);
-  transition: width var(--dur-move) var(--ease-out);
-}
-.vocab-difficulty-progress-label {
-  min-width: 3.2em;
-  color: var(--shell-text-mute);
-  font-size: 11px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-}
-.vocab-difficulty-progress[data-complete] .vocab-difficulty-progress-label {
-  color: var(--pop-accent);
 }
 /* The "tất cả" sum re-mounts on every change (key={count}), so this runs exactly when
    the figure moves: it springs up from below, overshoots while flashing the card's
@@ -9269,6 +9254,23 @@ body:has(.vocab-intro) .vocab-resume {
   padding: 18px 12px 28px;
   margin: 0;
   list-style: none;
+}
+.vocab-medal-group + .vocab-medal-group {
+  border-top: 1px solid var(--shell-line, #ffffff1a);
+}
+.vocab-medal-group-title {
+  margin: 0;
+  padding: 16px 16px 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--shell-text-mute);
+}
+/* A word badge's scope ("🐣 vỡ lòng") is a name, not a metal: keep its own case. */
+.vocab-medal-tile-tier[data-scope] {
+  text-transform: none;
+  letter-spacing: 0;
 }
 .vocab-medal-tile {
   display: flex;

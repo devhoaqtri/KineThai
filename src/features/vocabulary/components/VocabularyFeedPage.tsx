@@ -19,6 +19,7 @@ import { FeedControls } from "./FeedControls";
 import { VocabularyStream } from "./VocabularyStream";
 import { SavedDrawer } from "./SavedDrawer";
 import { StreakCelebration } from "./StreakCelebration";
+import { wordBadgeBlurb, wordBadgeTitle, wordTier } from "../lib/word-badges";
 import { DifficultyOnboarding } from "./DifficultyOnboarding";
 import { levelLadderFor } from "../lib/level-ladder";
 import { readDifficultyChoice, writeDifficultyChoice } from "../lib/difficulty-choice";
@@ -126,7 +127,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   const closeExport = useCallback(() => setExportOpen(false), []);
   const viewHistory = useViewHistory();
   // How far into each level the reader has got: lasts beyond the week the history keeps.
-  const levelProgress = useLevelProgress();
+  const levelProgress = useLevelProgress(locale ?? "en");
   const reducedMotion = !!useReducedMotion();
   // On-device only, like the saved words beside it: no account, no table, nothing leaves.
   const streak = useStreak();
@@ -147,6 +148,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     staleTime: 60_000, // Cache for 1 minute
   });
   const recordLevel = levelProgress.record;
+  const wordCelebration = levelProgress.celebrating;
   const handleRecordView = useCallback(
     (wordId: string, level?: VocabularyLevel) => {
       recordView(wordId);
@@ -177,7 +179,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     <main className="vocabulary-shell" ref={shell}>
       <FeedControls
         metadata={metadata}
-        levelProgress={levelProgress.progress}
+        levelProgress={levelProgress.seen}
         filters={filters}
         locale={locale}
         presentation={presentation}
@@ -220,13 +222,29 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           the stream starts scrolling to the next one, so a card-level badge would ride out
           of frame half-played. Keyed on the milestone so each one replays from its start.
           It covers the screen, so it suspends the stream below like any other overlay. */}
-      {streak.celebrating !== null && (
+      {streak.celebrating !== null ? (
         <StreakCelebration
           key={streak.celebrating}
           days={streak.celebrating}
           reducedMotion={reducedMotion}
           onDone={streak.dismiss}
         />
+      ) : (
+        // A word milestone waits its turn behind a streak one rather than stacking on it.
+        wordCelebration && (
+          <StreakCelebration
+            key={`${wordCelebration.scope}:${wordCelebration.words}`}
+            days={wordCelebration.words}
+            reducedMotion={reducedMotion}
+            onDone={levelProgress.dismiss}
+            badge={{
+              tier: wordTier(wordCelebration),
+              unit: "từ",
+              title: wordBadgeTitle(wordCelebration, locale ?? "en"),
+              blurb: wordBadgeBlurb(wordCelebration, locale ?? "en"),
+            }}
+          />
+        )
       )}
       <VocabularyStream
         key={`${packName ?? ""}:${seed}:${filters.topic}:${filters.level}:${filters.difficulty}`}
@@ -235,7 +253,12 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
         presentation={presentation}
         reducedMotion={reducedMotion}
         suspended={
-          optionsOpen || savedOpen || !fontsReady || exportOpen || streak.celebrating !== null
+          optionsOpen ||
+          savedOpen ||
+          !fontsReady ||
+          exportOpen ||
+          streak.celebrating !== null ||
+          wordCelebration !== null
         }
         exportOpen={isAdmin && exportOpen}
         onCloseExport={closeExport}
