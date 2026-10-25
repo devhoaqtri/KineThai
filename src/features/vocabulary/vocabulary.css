@@ -9277,7 +9277,122 @@ body:has(.vocab-intro) .vocab-resume {
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  width: 100%;
+  /* A button, so every medal can open its criteria: stripped back to the tile. */
+  margin: 0;
+  padding: 6px 2px;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+  color: inherit;
+  font: inherit;
   text-align: center;
+  cursor: pointer;
+  transition: background var(--dur-quick) var(--ease-out);
+}
+.vocab-medal-tile:hover {
+  background: var(--shell-hover, #ffffff0f);
+}
+.vocab-medal-tile:active .vocab-medal {
+  transform: scale(0.94);
+}
+/* Not earned yet: the same medal, drained of colour and set back, so the shelf shows what
+   to aim for without passing it off as won. */
+.vocab-medal-tile[data-locked] .vocab-medal,
+.vocab-medal-locked {
+  filter: grayscale(1);
+  opacity: 0.38;
+}
+.vocab-medal-tile[data-locked] .vocab-medal-tile-days {
+  color: var(--shell-text-mute);
+}
+
+/* The criteria behind one badge. A native modal <dialog>, so it renders in the top layer
+   above the saved drawer; it still inherits the shell's tokens from where it sits. */
+.vocab-badge-dialog {
+  width: min(340px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--shell-line-strong, #ffffff33);
+  border-radius: 24px;
+  background: var(--shell-surface, #15102a);
+  color: var(--shell-text, #f4f1ff);
+  box-shadow: 0 24px 60px #000a;
+}
+.vocab-badge-dialog::backdrop {
+  background: #05010ea8;
+  backdrop-filter: blur(4px);
+}
+.vocab-badge-dialog[open] {
+  animation: vocab-badge-dialog-in var(--dur-move, 220ms) var(--ease-spring, ease-out) both;
+}
+@keyframes vocab-badge-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+.vocab-badge-dialog-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 26px 22px 20px;
+  text-align: center;
+}
+.vocab-badge-dialog-body .vocab-medal {
+  width: 96px;
+  margin-bottom: 4px;
+}
+.vocab-badge-dialog-tier {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--shell-text-mute);
+}
+.vocab-badge-dialog h2 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.vocab-badge-dialog p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--shell-text-soft, #d8d4ea);
+}
+.vocab-badge-dialog-status {
+  margin-top: 4px !important;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--shell-text) 10%, transparent);
+  font-size: 12px !important;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--shell-text) !important;
+}
+.vocab-badge-dialog-status[data-earned] {
+  background: color-mix(in srgb, var(--vocab-accent, #6ee7a0) 22%, transparent);
+}
+.vocab-badge-dialog form {
+  align-self: stretch;
+  margin-top: 10px;
+}
+.vocab-badge-dialog-close {
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--shell-text, #f4f1ff);
+  color: var(--shell-on-text, #15102a);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
 }
 .vocab-medal-tile .vocab-medal {
   width: 64px;
@@ -9305,7 +9420,8 @@ body:has(.vocab-intro) .vocab-resume {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 40px 24px;
+  /* Only a heading and a line now: the grey goals below are the picture. */
+  padding: 28px 24px 4px;
   text-align: center;
 }
 .vocab-medal-empty .vocab-medal-face span {

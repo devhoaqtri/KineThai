@@ -15,6 +15,14 @@
 import { useStreakBadges } from "../hooks/useStreakBadges";
 import { useWordBadges, type EarnedWordBadge } from "../hooks/useWordBadges";
 import { progressScopes, scopeLabel, wordTier } from "../lib/word-badges";
+import {
+  badgeGoalCriteria,
+  badgeGoalProgress,
+  nextBadgeGoals,
+  type BadgeGoal,
+} from "../lib/badge-goals";
+import { readProgress } from "../lib/level-progress";
+import { currentStreak, readStreak } from "../lib/streak";
 import type { TargetLocale } from "../lib/target-language";
 import { STREAK_TIER_LABEL, streakTier } from "../lib/streak-tiers";
 import { StreakMedal } from "./StreakMedal";
@@ -444,12 +452,120 @@ function SavedFolders({
 }
 
 /**
+ * The criteria behind one badge, earned or not: what it asks, where the reader stands on
+ * it, and its metal. A native <dialog> opened modal, so it sits in the top layer above
+ * the saved drawer, and Escape and focus come from the browser; a tap on the backdrop
+ * closes it too.
+ */
+function BadgeDialog({
+  goal,
+  earned,
+  locale,
+  onClose,
+}: {
+  goal: BadgeGoal;
+  earned: boolean;
+  locale: TargetLocale;
+  onClose: () => void;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  useEffect(() => {
+    const node = dialog.current;
+    if (node && !node.open) node.showModal();
+  }, []);
+  const tier =
+    goal.kind === "streak"
+      ? streakTier(goal.days)
+      : wordTier({ words: goal.words, complete: goal.complete });
+  const title =
+    goal.kind === "streak"
+      ? `Chuỗi ${goal.days} ngày`
+      : `${goal.complete ? "Trọn bộ" : `${goal.words} từ`} · ${scopeLabel(goal.scope, locale)}`;
+  return (
+    <dialog
+      ref={dialog}
+      className="vocab-badge-dialog"
+      aria-labelledby={titleId}
+      onClose={onClose}
+      onClick={(event) => {
+        // The dialog box fills its own padding, so a click on the element itself is a
+        // click on the backdrop around it.
+        if (event.target === event.currentTarget) event.currentTarget.close();
+      }}
+    >
+      <div className="vocab-badge-dialog-body">
+        <StreakMedal
+          days={goal.kind === "streak" ? goal.days : goal.words}
+          tier={tier}
+          unit={goal.kind === "streak" ? "ngày" : "từ"}
+          className={earned ? undefined : "vocab-medal-locked"}
+        />
+        <span className="vocab-badge-dialog-tier">{STREAK_TIER_LABEL[tier]}</span>
+        <h2 id={titleId}>{title}</h2>
+        <p>{badgeGoalCriteria(goal, locale)}</p>
+        <p className="vocab-badge-dialog-status" data-earned={earned || undefined}>
+          {earned ? "Đã đạt" : badgeGoalProgress(goal)}
+        </p>
+        <form method="dialog">
+          <button type="submit" className="vocab-badge-dialog-close">
+            Đã hiểu
+          </button>
+        </form>
+      </div>
+    </dialog>
+  );
+}
+
+/** One medal on the shelf, as a button that opens its criteria. */
+function MedalTile({
+  goal,
+  earned,
+  caption,
+  note,
+  onOpen,
+}: {
+  goal: BadgeGoal;
+  earned: boolean;
+  caption: string;
+  note: string;
+  onOpen: (goal: BadgeGoal, earned: boolean) => void;
+}) {
+  const isStreak = goal.kind === "streak";
+  return (
+    <li>
+      <button
+        type="button"
+        className="vocab-medal-tile"
+        data-locked={earned ? undefined : true}
+        onClick={() => onOpen(goal, earned)}
+        aria-label={`${caption}, ${note}${earned ? "" : " — chưa đạt"}. Xem điều kiện`}
+      >
+        <StreakMedal
+          days={isStreak ? goal.days : goal.words}
+          tier={
+            isStreak
+              ? streakTier(goal.days)
+              : wordTier({ words: goal.words, complete: goal.complete })
+          }
+          unit={isStreak ? "ngày" : "từ"}
+        />
+        <span className="vocab-medal-tile-days">{caption}</span>
+        {/* Uppercase only for a metal ("ĐỒNG"); a name — a scope, or "Chuỗi ngày" on a
+            goal — keeps its own case. */}
+        <span className="vocab-medal-tile-tier" data-scope={isStreak && earned ? undefined : true}>
+          {note}
+        </span>
+      </button>
+    </li>
+  );
+}
+
+/**
  * The milestones tab: every medal this device has earned, newest first — word milestones
- * (every 100 words overall and per level) above the streak's days.
- *
- * Before the first one it says what the tab is for and nothing more — no "3 more days", no
- * progress bar. The shelf never shows a reader a number they have not reached yet; the
- * difficulty picker's chips are where progress towards the next one lives.
+ * (every 100 words overall and per level) above the streak's days — then the five
+ * closest ones not earned yet, in grey, so the shelf always shows what to aim for. Every
+ * medal opens its criteria on tap.
  */
 function MedalShelf({
   badges,
@@ -460,49 +576,69 @@ function MedalShelf({
   wordBadges: EarnedWordBadge[];
   locale: TargetLocale;
 }) {
+  const [open, setOpen] = useState<{ goal: BadgeGoal; earned: boolean } | null>(null);
+  const { scopes, levelCounts } = useMemo(() => progressScopes(locale), [locale]);
   // A word badge is diamond when it finished its scope, so each scope's size is needed.
-  const totals = useMemo(() => {
-    const { scopes, levelCounts } = progressScopes(locale);
-    return new Map(
-      scopes.map((scope) => [
-        scope.id,
-        scope.levels.reduce((sum, level) => sum + (levelCounts[level] ?? 0), 0),
-      ]),
-    );
-  }, [locale]);
-  if (!badges.length && !wordBadges.length) {
-    return (
-      <div className="vocab-medal-empty">
-        <StreakMedal days={5} value="?" />
-        <h2>Chưa có huy hiệu nào</h2>
-        <p>
-          Mỗi 100 từ đã học, hay vài từ mỗi ngày liền nhiều ngày — huy hiệu sẽ tự xuất hiện ở đây.
-        </p>
-      </div>
-    );
-  }
+  const totals = useMemo(
+    () =>
+      new Map(
+        scopes.map((scope) => [
+          scope.id,
+          scope.levels.reduce((sum, level) => sum + (levelCounts[level] ?? 0), 0),
+        ]),
+      ),
+    [scopes, levelCounts],
+  );
+  // Read fresh on every change to the earned lists: those are what move the next goals.
+  const progress = useMemo(() => {
+    const store = readProgress();
+    const streak = readStreak();
+    return { seen: store.seen, streakNow: currentStreak(streak) };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [badges, wordBadges]);
+  const goals = useMemo(
+    () =>
+      nextBadgeGoals({
+        streakEarned: badges,
+        streakNow: progress.streakNow,
+        wordEarned: new Set(wordBadges.map((badge) => badge.key)),
+        scopes,
+        seen: progress.seen,
+        levelCounts,
+      }),
+    [badges, wordBadges, progress, scopes, levelCounts],
+  );
+  const wordGoal = (badge: EarnedWordBadge): BadgeGoal => ({
+    kind: "words",
+    scope: badge.scope,
+    words: badge.words,
+    complete: badge.words === totals.get(badge.scope),
+    seen: badge.words,
+  });
+  const nothingYet = !badges.length && !wordBadges.length;
   return (
     <>
+      {nothingYet && (
+        <div className="vocab-medal-empty">
+          <h2>Chưa có huy hiệu nào</h2>
+          <p>Chạm vào một huy hiệu bên dưới để xem cách mở khóa.</p>
+        </div>
+      )}
       {wordBadges.length > 0 && (
         <section className="vocab-medal-group" aria-label="Mốc số từ đã học">
           <h3 className="vocab-medal-group-title">Từ đã học</h3>
           <ul className="vocab-medal-shelf">
             {[...wordBadges].reverse().map((badge) => {
-              const complete = badge.words === totals.get(badge.scope);
+              const goal = wordGoal(badge);
               return (
-                <li className="vocab-medal-tile" key={badge.key}>
-                  <StreakMedal
-                    days={badge.words}
-                    tier={wordTier({ words: badge.words, complete })}
-                    unit="từ"
-                  />
-                  <span className="vocab-medal-tile-days">
-                    {complete ? "Trọn bộ" : `${badge.words} từ`}
-                  </span>
-                  <span className="vocab-medal-tile-tier" data-scope>
-                    {scopeLabel(badge.scope, locale)}
-                  </span>
-                </li>
+                <MedalTile
+                  key={badge.key}
+                  goal={goal}
+                  earned
+                  caption={goal.kind === "words" && goal.complete ? "Trọn bộ" : `${badge.words} từ`}
+                  note={scopeLabel(badge.scope, locale)}
+                  onOpen={(g, e) => setOpen({ goal: g, earned: e })}
+                />
               );
             })}
           </ul>
@@ -513,16 +649,53 @@ function MedalShelf({
           {wordBadges.length > 0 && <h3 className="vocab-medal-group-title">Chuỗi ngày</h3>}
           <ul className="vocab-medal-shelf">
             {[...badges].reverse().map((days) => (
-              <li className="vocab-medal-tile" key={days}>
-                <StreakMedal days={days} />
-                <span className="vocab-medal-tile-days">{days} ngày</span>
-                <span className="vocab-medal-tile-tier">
-                  {STREAK_TIER_LABEL[streakTier(days)].replace("Huy hiệu ", "")}
-                </span>
-              </li>
+              <MedalTile
+                key={days}
+                goal={{ kind: "streak", days, current: days }}
+                earned
+                caption={`${days} ngày`}
+                note={STREAK_TIER_LABEL[streakTier(days)].replace("Huy hiệu ", "")}
+                onOpen={(g, e) => setOpen({ goal: g, earned: e })}
+              />
             ))}
           </ul>
         </section>
+      )}
+      {goals.length > 0 && (
+        <section className="vocab-medal-group" aria-label="Huy hiệu sắp đạt">
+          <h3 className="vocab-medal-group-title">Sắp đạt</h3>
+          <ul className="vocab-medal-shelf">
+            {goals.map((goal) =>
+              goal.kind === "streak" ? (
+                <MedalTile
+                  key={`streak:${goal.days}`}
+                  goal={goal}
+                  earned={false}
+                  caption={`${goal.days} ngày`}
+                  note="Chuỗi ngày"
+                  onOpen={(g, e) => setOpen({ goal: g, earned: e })}
+                />
+              ) : (
+                <MedalTile
+                  key={`${goal.scope}:${goal.words}`}
+                  goal={goal}
+                  earned={false}
+                  caption={goal.complete ? "Trọn bộ" : `${goal.words} từ`}
+                  note={scopeLabel(goal.scope, locale)}
+                  onOpen={(g, e) => setOpen({ goal: g, earned: e })}
+                />
+              ),
+            )}
+          </ul>
+        </section>
+      )}
+      {open && (
+        <BadgeDialog
+          goal={open.goal}
+          earned={open.earned}
+          locale={locale}
+          onClose={() => setOpen(null)}
+        />
       )}
     </>
   );
