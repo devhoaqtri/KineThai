@@ -9,6 +9,7 @@ import {
 } from "react";
 import { defaultRangeExtractor, useVirtualizer, type Range } from "@tanstack/react-virtual";
 import type { FeedEntry } from "../types";
+import { feedLog } from "../lib/feed-log";
 
 /** Fraction of one card the scroll must pass beyond a boundary before the active index may switch. */
 const ACTIVE_HYSTERESIS = 0.08;
@@ -203,6 +204,8 @@ export function useVocabularyWindow(
     const top = index * heightRef.current;
     // Anything still short of the destination is finished here, once, now that nothing
     // else is moving the scroll — then the feed is handed back to native scrolling.
+    const short = Math.round(element.scrollTop - top);
+    feedLog("settle", { to: index, offBy: short });
     if (Math.abs(element.scrollTop - top) > 1) element.scrollTo({ top, behavior: "auto" });
     release(element);
   }, []);
@@ -233,20 +236,29 @@ export function useVocabularyWindow(
   }, [armIdle]);
 
   /** Jump straight to a row. The one programmatic way the stream changes word. */
-  const moveTo = useCallback((index: number) => {
+  const moveTo = useCallback((index: number, cause = "jump") => {
     const run = () => {
       const element = viewport.current;
       const list = entriesRef.current;
       if (!element || !list.length) return;
       const target = Math.max(0, Math.min(list.length - 1, index));
       direction.current = target < activeIndexRef.current ? "previous" : "next";
+      feedLog("move", {
+        cause,
+        from: activeIndexRef.current,
+        to: target,
+        deferred: adjusting.current,
+      });
       element.scrollTo({ top: target * heightRef.current, behavior: "auto" });
     };
     // Never stack an advance on top of an in-flight scroll rebase; defer one frame.
     if (adjusting.current) requestAnimationFrame(run);
     else run();
   }, []);
-  const move = useCallback((delta: number) => moveTo(activeIndexRef.current + delta), [moveTo]);
+  const move = useCallback(
+    (delta: number, cause = "step") => moveTo(activeIndexRef.current + delta, cause),
+    [moveTo],
+  );
 
   /**
    * Move on from one specific word. A card finishing its answer asks to advance past
@@ -258,8 +270,12 @@ export function useVocabularyWindow(
     (occurrenceId: string) => {
       const list = entriesRef.current;
       const index = list.findIndex((entry) => entry.occurrenceId === occurrenceId);
-      if (index < 0 || index !== activeIndexRef.current) return;
-      moveTo(index + 1);
+      if (index < 0 || index !== activeIndexRef.current) {
+        // A word finished after the reader had already moved on: logged, not followed.
+        feedLog("advance-skipped", { finished: index, onScreen: activeIndexRef.current });
+        return;
+      }
+      moveTo(index + 1, "auto");
     },
     [moveTo],
   );
@@ -286,6 +302,13 @@ export function useVocabularyWindow(
       const target = Math.max(0, Math.min(list.length - 1, from + delta));
       pending.current = target;
       direction.current = delta < 0 ? "previous" : "next";
+      feedLog("move", {
+        cause: "swipe",
+        from,
+        to: target,
+        onScreen: activeIndexRef.current,
+        glide: activeIndexRef.current !== target && smooth,
+      });
       // The drag itself already carried the feed onto the destination: the browser's own
       // snap is gliding there, so leave it alone and only check the result at rest.
       if (activeIndexRef.current === target) {
@@ -310,8 +333,11 @@ export function useVocabularyWindow(
     clearTimeout(idleTimer.current);
     const element = viewport.current;
     if (!element) return activeIndexRef.current;
-    if (pending.current !== null) settle();
-    else release(element);
+    if (pending.current !== null) {
+      // A new touch landed while a swipe was still gliding: the glide is committed here.
+      feedLog("touch-during-glide", { to: pending.current });
+      settle();
+    } else release(element);
     const count = entriesRef.current.length;
     return Math.max(0, Math.min(count - 1, Math.round(element.scrollTop / heightRef.current)));
   }, [settle]);
@@ -324,7 +350,7 @@ export function useVocabularyWindow(
       return;
     if (["ArrowDown", "PageDown", "ArrowUp", "PageUp"].includes(event.key)) {
       event.preventDefault();
-      move(event.key === "ArrowDown" || event.key === "PageDown" ? 1 : -1);
+      move(event.key === "ArrowDown" || event.key === "PageDown" ? 1 : -1, "keyboard");
     }
   };
   return {

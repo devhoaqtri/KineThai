@@ -60,6 +60,7 @@ import { EmojiBurst } from "./EmojiBurst";
 import { SpellingAnimation } from "./SpellingAnimation";
 import { VocabularyStage } from "./VocabularyStage";
 import { WordReportButton, WordReportPanel } from "./WordReportControl";
+import { feedLog } from "../lib/feed-log";
 
 /**
  * The CJK stroke coda is lazy: Hanzi Writer plus the vendored stroke dataset load only
@@ -487,6 +488,64 @@ export function VocabularyCard({
           // middle of the card, matching the static `theme.paint` on idle cards.
           blendOklch,
         );
+  // Diagnostic log (dev builds only, see lib/feed-log): what this card showed while it was
+  // the word on screen, how long it stayed, and each page it turned to.
+  const loggedPage = useRef({ page: playback.page, stage: "" });
+  loggedPage.current = { page: playback.page, stage: isSpelling ? "spelling" : stage.id };
+  const backdropKind = sceneTheme
+    ? "scene"
+    : patternTheme
+      ? "pattern"
+      : sliding
+        ? "strip"
+        : "static";
+  useEffect(() => {
+    if (!current || exportLayout) return;
+    const shownAt = performance.now();
+    // Logged a tick late: development mounts every effect twice, and an arrival that is
+    // cancelled before it is logged must not leave a phantom 0ms "word … leave" pair in
+    // the log — those would read as exactly the flashes the log exists to find.
+    let logged = false;
+    const arrive = window.setTimeout(() => {
+      logged = true;
+      feedLog("word", {
+        word: entry.word.word,
+        id: entry.occurrenceId,
+        level: entry.word.level ?? null,
+        theme: theme.id,
+        tone: theme.tone,
+        backdrop: backdropKind,
+        pages: pageCount,
+      });
+    }, 0);
+    return () => {
+      window.clearTimeout(arrive);
+      if (!logged) return;
+      feedLog("leave", {
+        word: entry.word.word,
+        shownMs: Math.round(performance.now() - shownAt),
+        lastPage: loggedPage.current.page,
+        lastStage: loggedPage.current.stage,
+      });
+    };
+    // Once per spell on screen; the details are read as they were when it arrived.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current, entry.occurrenceId]);
+  const lastLoggedPage = useRef("");
+  useEffect(() => {
+    if (!current || exportLayout) return;
+    // Development runs effects twice; the same page turn is logged once.
+    const key = `${entry.occurrenceId}:${playback.replay}:${playback.page}`;
+    if (lastLoggedPage.current === key) return;
+    lastLoggedPage.current = key;
+    feedLog("page", {
+      word: entry.word.word,
+      page: playback.page,
+      stage: loggedPage.current.stage,
+      replay: playback.replay,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current, playback.page, playback.replay]);
   // Only the single active card animates the sweeping transition backdrop. Inactive
   // neighbours keep a static gradient, so a transient active-index flip can never make
   // every visible background strobe at once.

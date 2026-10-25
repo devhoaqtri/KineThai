@@ -44,6 +44,7 @@ import { Route as FeedSavedRouteImport } from './routes/feed/saved'
 import { Route as WCodeRouteImport } from './routes/w.$code'
 import { Route as AuthenticatedPPostIdRouteImport } from './routes/_authenticated/p.$postId'
 import { Route as AuthenticatedUUsernameRouteImport } from './routes/_authenticated/u.$username'
+import { Route as ApiDevFeedLogRouteImport } from './routes/api/dev/feed-log'
 import { Route as ApiPublicEngagementRouteImport } from './routes/api/public/engagement'
 import { Route as ApiPublicTelemetryRouteImport } from './routes/api/public/telemetry'
 import { Route as ApiPublicVocabularyRouteImport } from './routes/api/public/vocabulary'
@@ -227,6 +228,11 @@ const AuthenticatedUUsernameRoute = AuthenticatedUUsernameRouteImport.update({
   path: '/u/$username',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiDevFeedLogRoute = ApiDevFeedLogRouteImport.update({
+  id: '/api/dev/feed-log',
+  path: '/api/dev/feed-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicEngagementRoute = ApiPublicEngagementRouteImport.update({
   id: '/api/public/engagement',
   path: '/api/public/engagement',
@@ -294,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/feed/': typeof FeedIndexRoute
   '/p/$postId': typeof AuthenticatedPPostIdRoute
   '/u/$username': typeof AuthenticatedUUsernameRoute
+  '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
@@ -335,6 +342,7 @@ export interface FileRoutesByTo {
   '/feed': typeof FeedIndexRoute
   '/p/$postId': typeof AuthenticatedPPostIdRoute
   '/u/$username': typeof AuthenticatedUUsernameRoute
+  '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
@@ -379,6 +387,7 @@ export interface FileRoutesById {
   '/feed/': typeof FeedIndexRoute
   '/_authenticated/p/$postId': typeof AuthenticatedPPostIdRoute
   '/_authenticated/u/$username': typeof AuthenticatedUUsernameRoute
+  '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
@@ -423,6 +432,7 @@ export interface FileRouteTypes {
     | '/feed/'
     | '/p/$postId'
     | '/u/$username'
+    | '/api/dev/feed-log'
     | '/api/public/engagement'
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
@@ -464,6 +474,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/p/$postId'
     | '/u/$username'
+    | '/api/dev/feed-log'
     | '/api/public/engagement'
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
@@ -507,6 +518,7 @@ export interface FileRouteTypes {
     | '/feed/'
     | '/_authenticated/p/$postId'
     | '/_authenticated/u/$username'
+    | '/api/dev/feed-log'
     | '/api/public/engagement'
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
@@ -528,6 +540,7 @@ export interface RootRouteChildren {
   FeedSavedRoute: typeof FeedSavedRoute
   WCodeRoute: typeof WCodeRoute
   FeedIndexRoute: typeof FeedIndexRoute
+  ApiDevFeedLogRoute: typeof ApiDevFeedLogRoute
   ApiPublicEngagementRoute: typeof ApiPublicEngagementRoute
   ApiPublicTelemetryRoute: typeof ApiPublicTelemetryRoute
   ApiPublicVocabularyRoute: typeof ApiPublicVocabularyRoute
@@ -783,6 +796,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUUsernameRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/dev/feed-log': {
+      id: '/api/dev/feed-log'
+      path: '/api/dev/feed-log'
+      fullPath: '/api/dev/feed-log'
+      preLoaderRoute: typeof ApiDevFeedLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/engagement': {
       id: '/api/public/engagement'
       path: '/api/public/engagement'
@@ -906,6 +926,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedSavedRoute: FeedSavedRoute,
   WCodeRoute: WCodeRoute,
   FeedIndexRoute: FeedIndexRoute,
+  ApiDevFeedLogRoute: ApiDevFeedLogRoute,
   ApiPublicEngagementRoute: ApiPublicEngagementRoute,
   ApiPublicTelemetryRoute: ApiPublicTelemetryRoute,
   ApiPublicVocabularyRoute: ApiPublicVocabularyRoute,
