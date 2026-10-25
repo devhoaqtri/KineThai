@@ -9,7 +9,7 @@
  * climb in intensity is visible before a single label is read.
  *
  * Exports: DifficultyOnboarding
- * Depends on: difficulty tracks, feed metadata types, vocabulary.css
+ * Depends on: difficulty tracks, feed metadata types, the ambient player, vocabulary.css
  */
 
 import {
@@ -20,7 +20,6 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from "react";
-import { Volume2, VolumeX } from "lucide-react";
 import {
   DIFFICULTY_ALL,
   countTrackWords,
@@ -29,7 +28,8 @@ import {
   trackCeiling,
   tracksFor,
 } from "../lib/difficulty";
-import { useAmbientSound } from "../hooks/useAmbientSound";
+import { getAmbientPlayer } from "../lib/ambient";
+import { getAmbientOwnership } from "../lib/ambientOwnership";
 import type { TargetLocale } from "../lib/target-language";
 import type { FeedPage } from "../types";
 
@@ -115,10 +115,13 @@ export function DifficultyOnboarding({
   const index = resolved < 0 ? 0 : resolved;
   const current = rungs[index]!;
   const ladder = useRef<HTMLOListElement>(null);
-  // The toolbar that carries the music toggle only exists once a difficulty is picked,
-  // so the ladder docks its own: same persisted preference and the same per-host pool
-  // scope, so the Chinese host plays the traditional pool even before the first word.
-  const ambient = useAmbientSound(locale === "zh" ? "zh" : "default");
+  // No background music while a level is being picked: the ladder is a one-time choice,
+  // not a listening session. Whatever is still sounding is silenced here and the stored
+  // preference is left alone, so the feed toolbar starts the music with the first word.
+  useEffect(() => {
+    getAmbientPlayer().stop();
+    getAmbientOwnership().release();
+  }, []);
 
   // Landscape detection: drives both pointer-axis mapping in JS and a data-landscape
   // attribute that CSS uses to switch the gauge to a horizontal layout with alternating
@@ -199,17 +202,6 @@ export function DifficultyOnboarding({
         <h1 id="vocab-onboard-title">Chọn trình độ của bạn</h1>
         <p>Kéo nút trượt để xem mỗi mức trông thế nào. Đổi lại lúc nào cũng được.</p>
       </header>
-
-      <button
-        type="button"
-        className="vocab-icon-button vocab-onboard-ambient"
-        onClick={ambient.toggle}
-        aria-label={ambient.enabled ? "Tắt nhạc nền" : "Bật nhạc nền"}
-        aria-pressed={ambient.enabled}
-        data-active={ambient.enabled || undefined}
-      >
-        {ambient.enabled ? <Volume2 size={19} fill="currentColor" /> : <VolumeX size={19} />}
-      </button>
 
       <div className="vocab-onboard-gauge">
         <ol className="vocab-onboard-ladder" ref={ladder}>
