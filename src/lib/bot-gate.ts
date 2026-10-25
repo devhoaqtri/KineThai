@@ -13,7 +13,8 @@
  * signed stream cursor are what bound a client that does forge them.
  *
  * Local hosts are exempt, so the dev server and the clip recorder (headless Chrome against
- * localhost by default) keep working.
+ * localhost by default) keep working. Plain-http requests without Fetch Metadata fall back to
+ * a same-origin Referer, because browsers only send Fetch Metadata on secure origins.
  *
  * Exports: WORD_DATA_PATHS, isLocalRequest, isBrowserRequest, browserOnlyResponse
  * Depends on: none (leaf module)
@@ -50,11 +51,26 @@ export function isBrowserRequest(request: Request): boolean {
   if (isLocalRequest(request)) return true;
   const agent = request.headers.get("user-agent") ?? "";
   if (!/^Mozilla\/5\.0 /.test(agent) || TOOL_AGENT.test(agent)) return false;
-  if (request.headers.get("sec-fetch-site") !== "same-origin") return false;
-  const mode = request.headers.get("sec-fetch-mode");
-  if (mode !== "cors" && mode !== "same-origin") return false;
   if (!request.headers.get("accept-language")) return false;
-  return true;
+  const url = new URL(request.url);
+  const site = request.headers.get("sec-fetch-site");
+  // Browsers attach Fetch Metadata only on secure origins, so a page opened over plain
+  // http on a LAN address (a phone testing the dev server) sends none. There, a fetch from
+  // our own page still carries its Referer; an address-bar navigation or a bare tool does not.
+  if (site === null && url.protocol === "http:") return sameOriginReferer(request, url);
+  if (site !== "same-origin") return false;
+  const mode = request.headers.get("sec-fetch-mode");
+  return mode === "cors" || mode === "same-origin";
+}
+
+function sameOriginReferer(request: Request, url: URL): boolean {
+  const referer = request.headers.get("referer");
+  if (!referer) return false;
+  try {
+    return new URL(referer).origin === url.origin;
+  } catch {
+    return false;
+  }
 }
 
 /** The refusal a gated request gets: the same JSON shape as every other API error. */

@@ -76,21 +76,6 @@
   --chrome-icon-shadow: 0 0 0 transparent;
   --chrome-accent: oklch(0.45 0.16 150);
 }
-/* The app-drawer trigger is deliberately OPAQUE — it is a door out of the app, not another
-   frosted transport control — but it paints itself from --shell-text, which is a neutral
-   and does NOT flip with the tone above. On a light card that made a white disc on a pale
-   backdrop: the glyph stayed readable and the button stopped existing. It had never shown
-   up before, because the trigger was gated off until it moved in front of the title, and
-   half the palettes are light. Inverted here rather than in ecosystem.css, because the tone
-   it answers to is a property of the card behind it and only this feature has cards. */
-.vocabulary-shell:has(.vocab-slot[data-current] .vocab-card[data-tone="light"]) .eco-trigger {
-  background: #14101f;
-  color: #fbfaff;
-}
-.vocabulary-shell:has(.vocab-slot[data-current] .vocab-card[data-tone="light"])
-  .vocab-icon-button.eco-trigger:hover:not(:disabled) {
-  background: #000;
-}
 .vocabulary-shell :is(button, a, select, input):focus-visible {
   outline: 3px solid currentColor;
   outline-offset: 4px;

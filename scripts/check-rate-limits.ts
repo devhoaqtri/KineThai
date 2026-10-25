@@ -174,6 +174,17 @@ for (const path of Object.keys(RATE_LIMITS)) {
   check("a cross-site fetch is refused", !at({ ...browser, "sec-fetch-site": "cross-site" }));
   check("an address-bar navigation is refused", !at({ ...browser, "sec-fetch-mode": "navigate" }));
   check("the dev server and recorder on localhost pass", at({}, "localhost:5195"));
+  const lan = (headers: Record<string, string>) =>
+    isBrowserRequest(new Request("http://192.168.1.87:8080/api/public/vocabulary", { headers }));
+  check(
+    "a phone on the LAN dev server (no Fetch Metadata over http) passes with its Referer",
+    lan({ ...noFetchMetadata, referer: "http://192.168.1.87:8080/" }),
+  );
+  check(
+    "over http, a request without a same-origin Referer is refused",
+    !lan(noFetchMetadata) &&
+      !lan({ ...noFetchMetadata, referer: "http://evil.example/" }),
+  );
   check(
     "both word endpoints are gated",
     WORD_DATA_PATHS.has("/api/public/vocabulary") && WORD_DATA_PATHS.has("/api/public/word"),

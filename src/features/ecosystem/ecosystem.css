@@ -18,8 +18,13 @@
   --eco-btn-h: 28px;
 }
 
-/* The corner button is kept OPAQUE, the way the bookmark it replaced was: it is a
-   door out of the app, not one more frosted transport control.
+/* The app-drawer trigger wears the same frosted glass as the Settings gear across the
+   bar, so the title line is bracketed by one material at both ends: a translucent fill,
+   backdrop blur, and a hairline inset ring over a soft drop shadow. It paints from the
+   feed's --chrome-* tokens, which flip with the tone of the card behind the bar, so it
+   reads on light and deep palettes alike (fallbacks are the deep-card values). The ring
+   is a box-shadow, never a border — a semi-transparent border paints a visible dark edge
+   across the translucent fill on light backgrounds.
 
    A flat 3:2 pill rather than a disc, one title-line tall, so it sits IN the title's
    line instead of standing beside a two-line block — the difficulty line then runs
@@ -47,23 +52,29 @@
   position: absolute;
   inset: -6px -2px;
 }
-.eco-trigger {
+.vocab-icon-button.eco-trigger {
   position: relative;
   /* Above the panel, so the button stays whole inside the notch cut for it. */
   z-index: 2;
-  background: var(--shell-text);
-  border-color: transparent;
-  color: var(--shell-on-text);
-  backdrop-filter: none;
+  border: none;
+  background: var(--chrome-fill, #12101d40);
+  color: var(--chrome-ink, #fff);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--chrome-ink, #fff) 18%, transparent),
+    0 8px 24px rgb(0 0 0 / 28%);
 }
 .vocab-icon-button.eco-trigger:hover:not(:disabled) {
-  background: #fff;
-  color: #000;
+  background: color-mix(in srgb, var(--chrome-ink, #fff) 14%, var(--chrome-fill, #12101d40));
+  color: var(--chrome-ink, #fff);
 }
 .vocab-icon-button.eco-trigger[data-active] {
   background: var(--chrome-accent, #a78bfa);
-  border-color: transparent;
   color: #0a0014;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #000 12%, transparent),
+    0 8px 24px rgb(0 0 0 / 28%);
 }
 
 .eco-scrim {
