@@ -101,6 +101,15 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
         setFilters(ALL_FILTERS);
         setPresentation((p) => ({ ...p, theme: "mix", style: "mix" }));
         setStage("feed");
+      } else {
+        // Back to the built-in deck on the reader's own level, not on "every level": a
+        // pack plays all of its words, but that was never a choice to keep afterwards.
+        // The saved choice is the right source — it is what a fresh visit opens on, and a
+        // level confirmed while the pack played has already been written to it.
+        setFilters((current) => ({
+          ...current,
+          difficulty: readDifficultyChoice() ?? DIFFICULTY_ALL,
+        }));
       }
       setSeed(newSeed());
     };
