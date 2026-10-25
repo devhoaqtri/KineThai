@@ -5530,7 +5530,15 @@
      it from the row instead of hardcoding it is what keeps the panel out of the toolbar
      once the chrome is compressed against a short screen's bottom edge. */
   max-height: calc(100% - var(--vocab-chrome-inset) - var(--vocab-chrome-bar) - 102px);
-  overflow-y: auto;
+  /* A column: heading and note on top, the reasons in the middle — the one part that
+     scrolls when there are more than fit — and the send button at the foot as an
+     ordinary item. It used to be position: sticky inside a panel that scrolled as a
+     whole, and a sticky element inside a container that is being transformed (the
+     entrance below) is painted unreliably: WebKit draws it off its place and corrects it
+     after, which reads as the button landing and then dropping. */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   padding: 16px;
   border: 1px solid var(--shell-line-strong);
   border-radius: 22px;
@@ -5539,7 +5547,13 @@
   box-shadow: 0 20px 60px #000a;
   font-family: "Inter", sans-serif;
   transform-origin: bottom left;
-  animation: vocab-report-in var(--dur-move) var(--ease-spring) both;
+  /* Settles without overshoot. With the shared spring curve the panel grew past its size
+     and shrank back, which lifted everything in it ~1.5px above its place and then let
+     it sink — on the big send button, a visible bounce. */
+  animation: vocab-report-in var(--dur-move) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.vocab-report-panel > * {
+  flex: none;
 }
 @keyframes vocab-report-in {
   from {
@@ -5616,6 +5630,13 @@
   gap: 8px;
   margin-top: 14px;
 }
+/* The scrolling middle of the panel's column (see .vocab-report-panel). */
+.vocab-report-panel > .vocab-report-reasons {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 .vocab-report-reason {
   min-height: 42px;
   padding: 0 15px;
@@ -5643,6 +5664,20 @@
   background: var(--shell-text);
   color: var(--shell-on-text);
 }
+/* "Nhạy cảm" and "Không ổn" say a card should perhaps not be shown at all, not that it has
+   a mistake: a soft red sets them apart from the rest, and a full red when picked. */
+.vocab-report-reason[data-severe] {
+  border-color: color-mix(in srgb, #f87171 55%, transparent);
+  color: color-mix(in srgb, #fca5a5 80%, var(--shell-text));
+}
+.vocab-report-reason[data-severe]:hover {
+  background: color-mix(in srgb, #ef4444 14%, transparent);
+}
+.vocab-report-reason[data-severe][aria-pressed="true"] {
+  border-color: #ef4444;
+  background: #ef4444;
+  color: #fff;
+}
 .vocab-report-error {
   margin-top: 12px;
   font-size: 13px;
@@ -5660,13 +5695,8 @@
   transition: transform var(--dur-move) var(--ease-spring);
 }
 /* On a short or narrow card the reasons wrap into more rows than the panel can show
-   at once. The send button then stays pinned to the panel's foot while the reasons
-   scroll behind it, so it is never out of sight, and the reasons tighten up. */
-.vocab-report-send {
-  position: sticky;
-  bottom: 0;
-  box-shadow: 0 0 0 16px var(--shell-surface);
-}
+   at once. They scroll in their own area while the send button keeps its place at the
+   panel's foot, so it is never out of sight, and the reasons tighten up. */
 @media (max-width: 360px), (max-height: 700px) {
   .vocab-report-reasons {
     gap: 6px;
