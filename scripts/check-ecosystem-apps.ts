@@ -7,10 +7,11 @@
  * the wrong language — or on the English fallback, which is what an unknown subdomain
  * resolves to. Nothing about that is visible from the drawer.
  *
- * It also pins the filter the drawer relies on: each record carries the locale its host
- * serves, and the drawer hides the tile matching the page already open. If a record's
- * `locale` disagrees with what `resolveTarget` says its own URL resolves to, the drawer
- * either hides the wrong tile or offers the reader the page they are standing on.
+ * It also pins the filter the drawer relies on: the drawer hides the tile whose id equals
+ * the visited host's own first label, so each record's `id` must equal its URL's
+ * subdomain (checked below). The `locale` field is checked against `resolveTarget` as a
+ * data-integrity guard: a tile's host must serve the deck its locale claims, or the tile
+ * sends the reader to a host answering in the wrong language.
  *
  * Usage: npm run check:ecosystem-apps
  */
