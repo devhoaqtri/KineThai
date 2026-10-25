@@ -25,6 +25,7 @@ import {
 } from "./level-progress";
 import type { VocabularyLevel } from "./schema";
 import { DAY_MIN_WORDS, MILESTONES } from "./streak";
+import { DAILY_GOALS, type DailyGoal } from "./daily-goal";
 import type { TargetLocale } from "./target-language";
 import { ALL_SCOPE, scopeLabel } from "./word-badges";
 
@@ -34,7 +35,9 @@ export const ASSUMED_DAILY_WORDS = 20;
 /** A badge, earned or not, with where the reader stands on it. */
 export type BadgeGoal =
   | { kind: "streak"; days: number; current: number }
-  | { kind: "words"; scope: string; words: number; complete: boolean; seen: number };
+  | { kind: "words"; scope: string; words: number; complete: boolean; seen: number }
+  /** A daily goal: `times` days met so far, `today` words finished today. */
+  | { kind: "daily"; goal: DailyGoal; times: number; today: number };
 
 /** The next unearned rung of every scope's ladder, words passed included as "earned". */
 function nextWordGoals(
@@ -74,10 +77,23 @@ export function nextBadgeGoals(
     scopes: readonly ProgressScope[];
     seen: LevelProgress;
     levelCounts: Partial<Record<VocabularyLevel, number>>;
+    /** The daily goals: days each has been met, and words finished today. */
+    daily?: { times: Record<DailyGoal, number>; today: number };
   },
   limit = 5,
 ): BadgeGoal[] {
   const ranked: { goal: BadgeGoal; days: number; order: number }[] = [];
+  // The first badges there are to earn: one good day. Each daily goal is offered until it
+  // is first met — the smallest one not yet met, so 25 appears once 10 has been and 50
+  // after that — and then counts up on the shelf instead of holding a slot here for good.
+  const nextDaily = input.daily && DAILY_GOALS.find((goal) => input.daily!.times[goal] === 0);
+  if (input.daily && nextDaily) {
+    ranked.push({
+      goal: { kind: "daily", goal: nextDaily, times: 0, today: input.daily.today },
+      days: 1,
+      order: -1,
+    });
+  }
   const streakDays = MILESTONES.find((days) => !input.streakEarned.includes(days));
   if (streakDays !== undefined) {
     ranked.push({
@@ -104,6 +120,9 @@ export function nextBadgeGoals(
 
 /** @returns What a badge asks of the reader, in one or two sentences. */
 export function badgeGoalCriteria(goal: BadgeGoal, locale: TargetLocale): string {
+  if (goal.kind === "daily") {
+    return `Học xong ${goal.goal} từ khác nhau trong một ngày. Mỗi ngày đạt được, huy hiệu đếm thêm một lần — không cần liền nhau.`;
+  }
   if (goal.kind === "streak") {
     return `Học ít nhất ${DAY_MIN_WORDS} từ mỗi ngày, ${goal.days} ngày liền nhau. Bỏ một ngày, chuỗi sẽ bắt đầu lại từ đầu.`;
   }
@@ -123,6 +142,10 @@ export function badgeGoalCriteria(goal: BadgeGoal, locale: TargetLocale): string
 
 /** @returns Where the reader stands on a badge: "Chuỗi hiện tại: 2 ngày", "Đã xem: 37/100 từ". */
 export function badgeGoalProgress(goal: BadgeGoal): string {
+  if (goal.kind === "daily") {
+    const today = `Hôm nay: ${Math.min(goal.today, goal.goal)}/${goal.goal} từ`;
+    return goal.times > 0 ? `Đã đạt ${goal.times} lần · ${today}` : today;
+  }
   if (goal.kind === "streak")
     return `Chuỗi hiện tại: ${Math.min(goal.current, goal.days)}/${goal.days} ngày`;
   return `Đã xem: ${Math.min(goal.seen, goal.words)}/${goal.words} từ`;

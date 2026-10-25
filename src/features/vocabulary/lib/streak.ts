@@ -59,8 +59,16 @@ export const DAY_LIMIT = 400;
 /**
  * The ladder, in days. A list and not a formula on purpose: a formula hides where the
  * rungs are and where they stop, and this is the one place either should be changed.
+ * Starts at three days and a week, so the first two medals come within a reader's first
+ * week rather than one at five.
  */
-export const MILESTONES = [5, 10, 20, 30, 50, 75, 100, 150, 200, 300, 365] as const;
+export const MILESTONES = [3, 7, 10, 20, 30, 50, 75, 100, 150, 200, 300, 365] as const;
+
+/**
+ * Rungs that were on the ladder once and no longer are. Nobody can earn them now, but a
+ * reader who did keeps the medal: parsing must not quietly drop it.
+ */
+const RETIRED_MILESTONES: readonly number[] = [5];
 
 export type StreakStore = {
   /** Local midnights of qualifying days, newest first, unique, at most DAY_LIMIT. */
@@ -226,7 +234,8 @@ export function parseStreak(raw: string | null, now: number = Date.now()): Strea
   const earned = Array.isArray(source.earned)
     ? source.earned.filter(
         (value): value is number =>
-          typeof value === "number" && (MILESTONES as readonly number[]).includes(value),
+          typeof value === "number" &&
+          ((MILESTONES as readonly number[]).includes(value) || RETIRED_MILESTONES.includes(value)),
       )
     : null;
   store.earned = (earned ?? milestonesReached(currentStreak(store, now))).sort((a, b) => a - b);

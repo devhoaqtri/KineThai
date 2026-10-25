@@ -95,10 +95,7 @@ check("recordFinishedWord does not mutate its input", JSON.stringify(base) === f
 
   const full = finishDay(emptyStreak(), day).store;
   check(`${DAY_MIN_WORDS} words qualifies the day`, full.days[0] === startOfDay(day));
-  check(
-    "a qualified day keeps no word list — the bound is the shape",
-    full.pending === undefined,
-  );
+  check("a qualified day keeps no word list — the bound is the shape", full.pending === undefined);
 
   // Further finishes on a qualified day are a no-op, so loop mode cannot inflate anything.
   const more = recordFinishedWord(full, "another", day);
@@ -137,7 +134,11 @@ check("recordFinishedWord does not mutate its input", JSON.stringify(base) === f
 
   let run = emptyStreak();
   for (let back = 6; back >= 0; back -= 1) run = finishDay(run, noon(2026, 3, 10 - back)).store;
-  check("seven consecutive days read 7", currentStreak(run, today) === 7, `${currentStreak(run, today)}`);
+  check(
+    "seven consecutive days read 7",
+    currentStreak(run, today) === 7,
+    `${currentStreak(run, today)}`,
+  );
 
   // A gap, then today: the run behind the gap must not be counted.
   let gapped = emptyStreak();
@@ -188,10 +189,14 @@ check("recordFinishedWord does not mutate its input", JSON.stringify(base) === f
 {
   const ascending = MILESTONES.every((at, i) => i === 0 || at > MILESTONES[i - 1]!);
   check("MILESTONES is strictly ascending", ascending);
-  check("the ladder starts at 5", MILESTONES[0] === 5);
-  check("4 days has reached nothing", milestonesReached(4).length === 0);
-  check("5 days has reached exactly [5]", JSON.stringify(milestonesReached(5)) === "[5]");
-  check("21 days has reached [5,10,20]", JSON.stringify(milestonesReached(21)) === "[5,10,20]");
+  check("the ladder starts at 3, then a week", MILESTONES[0] === 3 && MILESTONES[1] === 7);
+  check("2 days has reached nothing", milestonesReached(2).length === 0);
+  check("3 days has reached exactly [3]", JSON.stringify(milestonesReached(3)) === "[3]");
+  check("21 days has reached [3,7,10,20]", JSON.stringify(milestonesReached(21)) === "[3,7,10,20]");
+  check(
+    "a 5-day medal earned before the ladder changed survives parsing",
+    parseStreak(JSON.stringify({ days: [], earned: [5] }), Date.now()).earned.includes(5),
+  );
 }
 
 // ── 8. Celebrate exactly once, ever ────────────────────────────────────────────────────
@@ -277,8 +282,8 @@ check("recordFinishedWord does not mutate its input", JSON.stringify(base) === f
   );
   check("a pending day that is no longer today is forgotten", stale.pending === undefined);
 
-  const bogus = parseStreak(JSON.stringify({ days: [startOfDay(now)], earned: [7, 5] }), now);
-  check("an earned value not on the ladder is dropped", JSON.stringify(bogus.earned) === "[5]");
+  const bogus = parseStreak(JSON.stringify({ days: [startOfDay(now)], earned: [7, 4] }), now);
+  check("an earned value not on the ladder is dropped", JSON.stringify(bogus.earned) === "[7]");
 
   // Absent `earned` seeds from the streak lived, so a later release adding a lower rung
   // cannot retro-fire a celebration for days already behind the reader.
@@ -295,7 +300,8 @@ check("recordFinishedWord does not mutate its input", JSON.stringify(base) === f
 
   check(
     "duplicate day stamps collapse",
-    parseStreak(JSON.stringify({ days: [startOfDay(now), startOfDay(now)] }), now).days.length === 1,
+    parseStreak(JSON.stringify({ days: [startOfDay(now), startOfDay(now)] }), now).days.length ===
+      1,
   );
 }
 
@@ -309,10 +315,7 @@ check("recordFinishedWord does not mutate its input", JSON.stringify(base) === f
     ".vocab-streak-flash is hidden while recording",
     /\.vocab-recording\s+\.vocab-streak-flash\s*\{[^}]*display:\s*none/.test(css),
   );
-  const guard = readFileSync(
-    join(import.meta.dirname, "check-chrome-side.ts"),
-    "utf8",
-  );
+  const guard = readFileSync(join(import.meta.dirname, "check-chrome-side.ts"), "utf8");
   check(
     "and is NOT claimed to be edge-anchored — it is centred, so it reads no --vocab-chrome-side",
     !guard.includes("vocab-streak"),
@@ -325,16 +328,15 @@ check("recordFinishedWord does not mutate its input", JSON.stringify(base) === f
     join(import.meta.dirname, "..", "src/features/vocabulary/components/VocabularyCard.tsx"),
     "utf8",
   );
-  check(
-    "VocabularyCard still reports finished words",
-    card.includes("onWordFinished"),
-  );
+  check("VocabularyCard still reports finished words", card.includes("onWordFinished"));
   // useLearningPlayback gates `playing` on !reducedMotion and calls onFinish inside that
   // gate, so a reduced-motion reader can never reach the timer path. If this reference
   // disappears, those readers silently stop earning anything.
   check(
     "and still has a reducedMotion path to finishing",
-    /reducedMotion/.test(card.slice(card.indexOf("markWordFinished"), card.indexOf("markWordFinished") + 1200)),
+    /reducedMotion/.test(
+      card.slice(card.indexOf("markWordFinished"), card.indexOf("markWordFinished") + 1200),
+    ),
   );
 }
 

@@ -6,7 +6,11 @@
  * silver in both places. The colours themselves live in vocabulary.css under
  * `[data-tier]`; this only names the tier.
  *
- * Exports: StreakTier, streakTier, STREAK_TIER_LABEL, streakBlurb
+ * The daily goals (./daily-goal) are drawn here too: each medal shows how many days it has
+ * been earned, and the goal's size picks its metal.
+ *
+ * Exports: StreakTier, streakTier, STREAK_TIER_LABEL, streakBlurb, dailyTier,
+ *   dailyBadgeTitle, dailyBadgeBlurb
  * Depends on: nothing
  */
 
@@ -31,7 +35,9 @@ export const STREAK_TIER_LABEL: Record<StreakTier, string> = {
 };
 
 const BLURBS: Record<number, string> = {
+  3: "Ba ngày liền tay — ngọn lửa đã được thắp.",
   5: "Năm ngày liền tay — ngọn lửa đã được thắp.",
+  7: "Tròn một tuần không bỏ ngày nào!",
   10: "Mười ngày bền bỉ — thói quen đang thành hình.",
   20: "Hai mươi ngày — học mỗi ngày đã thành nếp.",
   30: "Tròn một tháng, không bỏ ngày nào!",
@@ -50,4 +56,28 @@ const BLURBS: Record<number, string> = {
  */
 export function streakBlurb(days: number): string {
   return BLURBS[days] ?? `${days} ngày liên tiếp — giữ lửa nhé!`;
+}
+
+/**
+ * @param goal - Words in a day: 10, 25 or 50
+ * @returns Its metal — the bigger the day, the finer the medal; diamond is kept for the
+ *   streak's long runs and for finishing a whole level
+ */
+export function dailyTier(goal: number): StreakTier {
+  if (goal >= 50) return "gold";
+  if (goal >= 25) return "silver";
+  return "bronze";
+}
+
+/** @param goal - Words in a day @param times - The count just reached @returns The headline */
+export function dailyBadgeTitle(goal: number, times: number): string {
+  return times === 1 ? `${goal} từ trong một ngày!` : `Lần thứ ${times}: ${goal} từ trong ngày!`;
+}
+
+/** @param goal - Words in a day @param times - The count just reached @returns The line under it */
+export function dailyBadgeBlurb(goal: number, times: number): string {
+  if (times === 1) {
+    return `Huy hiệu ${goal} từ/ngày — mỗi ngày học đủ ${goal} từ, nó sẽ đếm thêm một lần.`;
+  }
+  return `Đã ${times} ngày bạn học đủ ${goal} từ. Huy hiệu cứ thế đếm lên.`;
 }

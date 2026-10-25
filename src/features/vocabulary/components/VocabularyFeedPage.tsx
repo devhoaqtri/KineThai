@@ -14,6 +14,8 @@ import { useFontsReady } from "../hooks/useFontsReady";
 import { useTrackRotation } from "../hooks/useTrackRotation";
 import { useViewHistory } from "../hooks/useViewHistory";
 import { useLevelProgress } from "../hooks/useLevelProgress";
+import { useDailyGoal } from "../hooks/useDailyGoal";
+import { dailyBadgeBlurb, dailyBadgeTitle, dailyTier } from "../lib/streak-tiers";
 import { usePresence } from "@/hooks/use-presence";
 import { getActiveVocabWording } from "@/features/admin/api/wording.functions";
 import { FeedControls } from "./FeedControls";
@@ -159,6 +161,17 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   const reducedMotion = !!useReducedMotion();
   // On-device only, like the saved words beside it: no account, no table, nothing leaves.
   const streak = useStreak();
+  // The daily goals count the same finished words as the streak, so one handler feeds both.
+  const daily = useDailyGoal();
+  const finishStreak = streak.finish;
+  const finishDaily = daily.finish;
+  const handleWordFinished = useCallback(
+    (wordId: string) => {
+      finishStreak(wordId);
+      finishDaily(wordId);
+    },
+    [finishStreak, finishDaily],
+  );
   // No rotate-to-portrait gate here: the feed has its own landscape layout (two-column
   // answer page, compact chrome, measured shell height). The post-player surfaces, which
   // only letterbox, keep theirs. Keep the screen lit while the feed is open.
@@ -261,6 +274,20 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           reducedMotion={reducedMotion}
           onDone={streak.dismiss}
         />
+      ) : wordCelebration === null && daily.celebrating !== null ? (
+        // A daily goal waits behind the other two, for the same reason.
+        <StreakCelebration
+          key={`daily:${daily.celebrating.goal}:${daily.celebrating.times}`}
+          days={daily.celebrating.times}
+          reducedMotion={reducedMotion}
+          onDone={daily.dismiss}
+          badge={{
+            tier: dailyTier(daily.celebrating.goal),
+            unit: "lần",
+            title: dailyBadgeTitle(daily.celebrating.goal, daily.celebrating.times),
+            blurb: dailyBadgeBlurb(daily.celebrating.goal, daily.celebrating.times),
+          }}
+        />
       ) : (
         // A word milestone waits its turn behind a streak one rather than stacking on it.
         wordCelebration && (
@@ -290,14 +317,15 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           !fontsReady ||
           exportOpen ||
           streak.celebrating !== null ||
-          wordCelebration !== null
+          wordCelebration !== null ||
+          daily.celebrating !== null
         }
         exportOpen={isAdmin && exportOpen}
         onCloseExport={closeExport}
         history={viewHistory.history}
         onRecordView={handleRecordView}
         onWordEnding={music.wordEnding}
-        onWordFinished={streak.finish}
+        onWordFinished={handleWordFinished}
         onClearHistory={viewHistory.clear}
         onMetadata={setMetadata}
         onRestart={shuffle}

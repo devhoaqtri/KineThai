@@ -11,7 +11,11 @@ const scopes: ProgressScope[] = [
 ];
 const levelCounts = { A1: 150, A2: 125, B1: 83 };
 const describeGoal = (goal: ReturnType<typeof nextBadgeGoals>[number]) =>
-  goal.kind === "streak" ? `streak:${goal.days}` : `${goal.scope}:${goal.words}`;
+  goal.kind === "daily"
+    ? "daily"
+    : goal.kind === "streak"
+      ? `streak:${goal.days}`
+      : `${goal.scope}:${goal.words}`;
 
 describe("nextBadgeGoals", () => {
   it("offers a fresh reader the broadest goals first", () => {
@@ -23,10 +27,10 @@ describe("nextBadgeGoals", () => {
       seen: {},
       levelCounts,
     });
-    // all:100 and streak:5 both take 5 days; overall words win the tie, then the streak.
+    // streak:3 takes 3 days, all:100 takes 5; then the tracks at 5 days, in ladder order.
     expect(goals.map(describeGoal)).toEqual([
+      "streak:3",
       "all:100",
-      "streak:5",
       "vo-long:100",
       "co-ban:100",
       "doc-hieu:83",
@@ -35,7 +39,7 @@ describe("nextBadgeGoals", () => {
 
   it("ranks by distance, and moves past what is earned", () => {
     const goals = nextBadgeGoals({
-      streakEarned: [5],
+      streakEarned: [3],
       streakNow: 6,
       wordEarned: new Set(["all:100", "co-ban:100"]),
       scopes,
@@ -43,14 +47,35 @@ describe("nextBadgeGoals", () => {
       levelCounts,
     });
     // all:200 and vo-long:100 are already reached (200 and 120 seen), 0 days, "all" first;
-    // co-ban: 5 words to its 125 and doc-hieu: 3 to its 83, a day each; streak:10 is 4.
+    // then a day each: streak:7 (a 6-day run) ahead of the tracks on the tie, co-ban with
+    // 5 words to its 125, doc-hieu with 3 to its 83.
     expect(goals.map(describeGoal)).toEqual([
       "all:200",
       "vo-long:100",
+      "streak:7",
       "co-ban:125",
       "doc-hieu:83",
-      "streak:10",
     ]);
+  });
+
+  it("leads with the smallest daily goal not yet met: 10, then 25, then 50", () => {
+    const base = {
+      streakEarned: [],
+      streakNow: 0,
+      wordEarned: new Set<string>(),
+      scopes,
+      seen: {},
+      levelCounts,
+    };
+    const first = (times: { 10: number; 25: number; 50: number }) => {
+      const goal = nextBadgeGoals({ ...base, daily: { times, today: 4 } })[0]!;
+      return goal.kind === "daily" ? goal.goal : describeGoal(goal);
+    };
+    expect(first({ 10: 0, 25: 0, 50: 0 })).toBe(10);
+    expect(first({ 10: 3, 25: 0, 50: 0 })).toBe(25);
+    expect(first({ 10: 3, 25: 1, 50: 0 })).toBe(50);
+    // All met: the daily goals count up on the shelf and leave the goals to the rest.
+    expect(first({ 10: 3, 25: 1, 50: 1 })).toBe("streak:3");
   });
 
   it("returns at most the limit", () => {
