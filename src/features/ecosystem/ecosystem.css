@@ -54,7 +54,8 @@
 }
 .vocab-icon-button.eco-trigger {
   position: relative;
-  /* Above the panel, so the button stays whole inside the notch cut for it. */
+  /* The toolbar's resting control layer; raised above its own panel while that is open,
+     below. The layer list lives by .vocab-popup-scrim in vocabulary.css. */
   z-index: 2;
   border: none;
   background: var(--chrome-fill, #12101d40);
@@ -64,6 +65,11 @@
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--chrome-ink, #fff) 18%, transparent),
     0 8px 24px rgb(0 0 0 / 28%);
+}
+/* Layer 5 while the drawer is mounted, closing fold included: the pill stays whole in
+   the notch cut for it. */
+.eco-anchor:has(.eco-panel) .vocab-icon-button.eco-trigger {
+  z-index: 5;
 }
 .vocab-icon-button.eco-trigger:hover:not(:disabled) {
   background: color-mix(in srgb, var(--chrome-ink, #fff) 14%, var(--chrome-fill, #12101d40));
@@ -80,7 +86,10 @@
 .eco-scrim {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  /* Layer 3 of the toolbar's list (by .vocab-popup-scrim in vocabulary.css): over every
+     other control in the bar, so the gear dims with the page instead of floating above
+     the open drawer. */
+  z-index: 3;
   background: #05010ea8;
   animation: eco-fade var(--dur-move, 220ms) var(--ease-out, ease) both;
 }
@@ -97,7 +106,8 @@
    this side, so the offset stays at 0. */
 .eco-panel {
   position: absolute;
-  z-index: 1;
+  /* Layer 4: nothing in the bar shows through the open drawer. */
+  z-index: 4;
   top: 0;
   left: 0;
   width: min(316px, calc(100vw - 28px));

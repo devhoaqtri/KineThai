@@ -419,7 +419,8 @@
    visible dark edge across the translucent fill on light backgrounds. */
 .vocab-corner-button {
   justify-self: end;
-  /* Above the sheet, so the button is not clipped by the notch cut for it. */
+  /* Above the bar; raised above its own sheet while that is open (see the layer list
+     by .vocab-popup-scrim), so the notch cut for it never clips it. */
   position: relative;
   z-index: 2;
   border: none;
@@ -930,16 +931,30 @@
   animation: vocab-options-out var(--dur-quick) var(--ease-in) forwards;
 }
 /* Transparent catcher behind an open popup (see PopupScrim); the popups stack above it. */
+/* Layers inside the toolbar (it is one stacking context, fixed at z 50), shared with the
+   app drawer in ecosystem.css:
+     2  the bar's controls at rest — the gear, the app pill
+     3  an open popup's scrim: every other control goes under it, and a tap there closes
+        the popup rather than reaching a button the reader cannot see properly
+     4  the open popup itself, so nothing in the bar shows through it
+     5  that popup's own button, held above it so it stays whole in the notch cut for it
+   Both corner popups used to sit at 1 under controls at 2, which is what let the app
+   pill show through the Settings sheet and the gear through the app drawer. */
 .vocab-popup-scrim {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: 3;
 }
 .vocab-popup-scrim[data-closing] {
   pointer-events: none;
 }
 .vocab-options {
-  z-index: 1;
+  z-index: 4;
+}
+/* Keyed on the sheet being mounted, not on the button's open state, so the gear stays on
+   top through the sheet's closing fold as well. */
+.vocab-toolbar:has(.vocab-options) .vocab-corner-button {
+  z-index: 5;
 }
 /* The feed is a tap surface: long-pressing a card or a panel must not select text. */
 .vocabulary-shell:not(.vocab-saved-shell, .vocab-library-shell) {
