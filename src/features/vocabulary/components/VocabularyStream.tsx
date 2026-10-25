@@ -6,6 +6,7 @@ import { useFeedPagination } from "../hooks/useFeedPagination";
 import { canWalkFurther, getWalkedPositions } from "../lib/backfill";
 import { formatCountdown, isWordAllowed, nextAvailableAt, type ViewHistory } from "../lib/history";
 import type { FeedPage, Presentation, VocabularyFilters } from "../types";
+import type { VocabularyLevel } from "../lib/schema";
 import { VocabularyCard } from "./VocabularyCard";
 
 // Admin-only, and only on demand: readers never download the export studio.
@@ -45,7 +46,8 @@ export function VocabularyStream({
   reducedMotion: boolean;
   suspended: boolean;
   history: ViewHistory;
-  onRecordView: (wordId: string) => void;
+  /** A word was read: its id, and its level when it has one (for level progress). */
+  onRecordView: (wordId: string, level?: VocabularyLevel) => void;
   /** The on-screen word reached its final page; ms left before the stream moves on. */
   onWordEnding?: (remainingMs: number) => void;
   /** A word was finished; the feed records it against the reader's daily streak. */
@@ -145,15 +147,16 @@ export function VocabularyStream({
   const activeEntry = visibleEntries[activeIndex];
   const activeOccurrenceId = activeEntry?.occurrenceId;
   const activeWordId = activeEntry?.word.id;
+  const activeWordLevel = activeEntry?.word.level;
   useEffect(() => {
     if (!activeOccurrenceId || !activeWordId || suspended) return;
     if (recorded.current.has(activeOccurrenceId)) return;
     const timer = setTimeout(() => {
       recorded.current.add(activeOccurrenceId);
-      onRecordView(activeWordId);
+      onRecordView(activeWordId, activeWordLevel);
     }, VIEW_DWELL_MS);
     return () => clearTimeout(timer);
-  }, [activeOccurrenceId, activeWordId, suspended, onRecordView]);
+  }, [activeOccurrenceId, activeWordId, activeWordLevel, suspended, onRecordView]);
 
   // The export studio needs a word. Opened with none on screen (empty stream, every
   // word blocked) it would render nothing while still holding the feed suspended, so

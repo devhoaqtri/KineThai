@@ -6,12 +6,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useScreenWakeLock } from "@/hooks/use-screen-wake-lock";
 import { useShellHeightVar } from "@/hooks/use-shell-height-var";
 import type { FeedPage, Presentation, VocabularyFilters } from "../types";
+import type { VocabularyLevel } from "../lib/schema";
 import { DIFFICULTY_ALL } from "../lib/difficulty";
 import { SHORT_VIEWPORT_MAX_H } from "../lib/landscape-geometry";
 import { useIsAdmin } from "@/features/admin/hooks/useIsAdmin";
 import { useFontsReady } from "../hooks/useFontsReady";
 import { useTrackRotation } from "../hooks/useTrackRotation";
 import { useViewHistory } from "../hooks/useViewHistory";
+import { useLevelProgress } from "../hooks/useLevelProgress";
 import { getActiveVocabWording } from "@/features/admin/api/wording.functions";
 import { FeedControls } from "./FeedControls";
 import { VocabularyStream } from "./VocabularyStream";
@@ -123,6 +125,8 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   }, []);
   const closeExport = useCallback(() => setExportOpen(false), []);
   const viewHistory = useViewHistory();
+  // How far into each level the reader has got: lasts beyond the week the history keeps.
+  const levelProgress = useLevelProgress();
   const reducedMotion = !!useReducedMotion();
   // On-device only, like the saved words beside it: no account, no table, nothing leaves.
   const streak = useStreak();
@@ -142,12 +146,15 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     queryFn: getActiveVocabWording,
     staleTime: 60_000, // Cache for 1 minute
   });
+  const recordLevel = levelProgress.record;
   const handleRecordView = useCallback(
-    (wordId: string) => {
+    (wordId: string, level?: VocabularyLevel) => {
       recordView(wordId);
+      // An imported pack's words are not the catalog's, so they do not fill its levels.
+      if (level && !packName) recordLevel(level, wordId);
       music.wordStarted();
     },
-    [recordView, music],
+    [recordView, recordLevel, packName, music],
   );
   const shuffle = () => {
     setSeed(newSeed());
@@ -170,6 +177,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     <main className="vocabulary-shell" ref={shell}>
       <FeedControls
         metadata={metadata}
+        levelProgress={levelProgress.progress}
         filters={filters}
         locale={locale}
         presentation={presentation}

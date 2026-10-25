@@ -25,7 +25,14 @@ import {
 import { COMMUNITY_AVAILABLE } from "@/lib/feature-flags";
 import { EcosystemMenu } from "@/features/ecosystem/components/EcosystemMenu";
 import { stylePool, themePool } from "../lib/presets";
-import { DIFFICULTY_ALL, formatLevelBand, countTrackWords, tracksFor } from "../lib/difficulty";
+import {
+  DIFFICULTY_ALL,
+  formatLevelBand,
+  countTrackWords,
+  difficultyLevels,
+  tracksFor,
+} from "../lib/difficulty";
+import { progressFor, type LevelProgress } from "../lib/level-progress";
 import { CEFR_LEVELS, HSK_LEVELS, type NarrativeStyle } from "../lib/schema";
 import type { HistoryStats } from "../lib/history";
 import { douyinStyleLabelVi, styleLabelVi, themeLabelVi, topicLabelVi } from "../lib/i18n";
@@ -529,11 +536,14 @@ function DifficultyDropdown({
   catalogLevels,
   total,
   locale,
+  levelProgress,
 }: {
   value: string;
   onChange: (next: string) => void;
   open: boolean;
   onOpenChange: (next: boolean) => void;
+  /** Distinct words seen per level, kept on this device; fills each row's bar. */
+  levelProgress?: LevelProgress;
   /** Words per CEFR level from the feed; undefined until the first page has loaded. */
   levelCounts?: FeedPage["levelCounts"];
   /** Levels the catalog has any word for: decides which tracks are on offer at all. */
@@ -578,6 +588,20 @@ function DifficultyDropdown({
     if (!levelCounts || !catalogLevels) return undefined;
     if (id !== DIFFICULTY_ALL) return countTrackWords([id], levelCounts, catalogLevels);
     return draft.size > 0 ? countTrackWords(draft, levelCounts, catalogLevels) : total;
+  };
+  // A row's bar covers the same levels as its count: its own track's, or for "tất cả" the
+  // union picked so far (every catalog level once nothing is picked). null = no figures yet.
+  const progressOf = (id: string) => {
+    if (!levelCounts || !catalogLevels || !levelProgress) return null;
+    const levels =
+      id === DIFFICULTY_ALL
+        ? draft.size > 0
+          ? difficultyLevels([...draft].join(","), catalogLevels)
+          : catalogLevels
+        : difficultyLevels(id, catalogLevels);
+    if (!levels?.length) return null;
+    const result = progressFor(levels, levelProgress, levelCounts);
+    return result.goal > 0 ? result : null;
   };
   const pickRow = (id: string) => {
     // Shared by tap and keyboard: an empty track cannot be chosen by either.
@@ -697,6 +721,8 @@ function DifficultyDropdown({
               const isSelected =
                 option.id === DIFFICULTY_ALL ? draft.size === 0 : draft.has(option.id);
               const count = countFor(option.id);
+              const progress = progressOf(option.id);
+              const percent = progress ? Math.floor(progress.ratio * 100) : 0;
               // A track the catalog cannot serve yet (its defining level has no words) shows
               // 0 and is greyed: it stays on the ladder as a promise, but cannot be picked.
               const unavailable = count === 0 && option.id !== DIFFICULTY_ALL;
@@ -737,6 +763,24 @@ function DifficultyDropdown({
                   <span className="vocab-difficulty-count" aria-hidden="true" key={count}>
                     {count === undefined ? "–" : count.toLocaleString("vi-VN")}
                   </span>
+                  {/* How far into the row's levels the reader has got: the first hundred
+                      words of each level, so the bar is a goal that can actually be met. */}
+                  {progress && (
+                    <span
+                      className="vocab-difficulty-progress"
+                      data-complete={progress.seen >= progress.goal || undefined}
+                      style={{ "--progress": `${progress.ratio * 100}%` } as React.CSSProperties}
+                    >
+                      <span className="vocab-difficulty-progress-track" aria-hidden="true">
+                        <span className="vocab-difficulty-progress-fill" />
+                      </span>
+                      <span className="vocab-difficulty-progress-label">
+                        <span className="sr-only">Đã xem </span>
+                        {percent}%
+                        <span className="sr-only">{` (${progress.seen}/${progress.goal} từ)`}</span>
+                      </span>
+                    </span>
+                  )}
                 </li>
               );
             })}
@@ -767,6 +811,7 @@ function DifficultyDropdown({
 /** Control word selection separately from appearance. @param props Settings and callbacks. @returns Public header and options panel. */
 export function FeedControls({
   metadata,
+  levelProgress,
   filters,
   presentation,
   onFilters,
@@ -780,6 +825,8 @@ export function FeedControls({
   locale,
 }: {
   metadata?: FeedPage;
+  /** Distinct words seen per level on this device, for the difficulty picker's bars. */
+  levelProgress?: LevelProgress;
   filters: VocabularyFilters;
   presentation: Presentation;
   onFilters: (value: VocabularyFilters) => void;
@@ -940,6 +987,7 @@ export function FeedControls({
             catalogLevels={metadata?.levels}
             total={metadata?.topicTotal}
             locale={locale}
+            levelProgress={levelProgress}
           />
         </div>
         {/* Centre: the three transport controls as bare icons split by two hairlines,
