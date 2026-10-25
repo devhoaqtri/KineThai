@@ -50,3 +50,15 @@ export const COMMUNITY_AVAILABLE = false;
  * To bring the tile back: set ECOSYSTEM_STORE_AVAILABLE = true.
  */
 export const ECOSYSTEM_STORE_AVAILABLE = false;
+
+/**
+ * The word library's curated packs are placeholder metadata — every one is marked
+ * "Sắp có" and none can be opened yet — so the shelves are hidden and the page is used
+ * only to upload a reader's own pack (ImportPackPanel).
+ *
+ * Only the shelves are gated. The pack data in `features/vocabulary/lib/library.ts`
+ * and the `/feed/library` route stay as they are.
+ *
+ * To bring the shelves back: set LIBRARY_PACKS_AVAILABLE = true.
+ */
+export const LIBRARY_PACKS_AVAILABLE = false;

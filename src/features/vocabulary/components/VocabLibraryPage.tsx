@@ -1,21 +1,24 @@
 /**
- * Vocabulary Library: a browsable shelf of additional packs, each focused on a field,
- * a need and a proficiency band. Reads static mock metadata from ../lib/library — no
- * account, no network, no feed wiring yet (the page is a discovery surface, so every
- * pack is marked "Sắp có" rather than offered as a working import).
+ * Vocabulary Library: where a reader uploads their own word pack, above a browsable shelf
+ * of additional packs, each focused on a field, a need and a proficiency band. The shelf
+ * reads static mock metadata from ../lib/library — no account, no network, no feed wiring
+ * yet, so every pack is marked "Sắp có" — and is hidden while LIBRARY_PACKS_AVAILABLE is
+ * off, leaving the page to the upload alone.
  *
  * Exports: VocabLibraryPage
- * Depends on: router Link, lucide icons, library data, formatLevelBand, vocabulary.css
+ * Depends on: router Link, lucide icons, library data, formatLevelBand, feature flags,
+ *   vocabulary.css
  */
 
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Library as LibraryIcon, Sparkles } from "lucide-react";
+import { LIBRARY_PACKS_AVAILABLE } from "@/lib/feature-flags";
 import { LIBRARY_GROUPS } from "../lib/library";
 import { formatLevelBand } from "../lib/difficulty";
 import { ImportPackPanel } from "./ImportPackPanel";
 import "../vocabulary.css";
 
-/** Show the curated pack shelves. @returns Public library page. */
+/** Show the pack upload, and the curated shelves when they are on. @returns Public library page. */
 export function VocabLibraryPage() {
   return (
     <main className="vocabulary-shell vocab-library-shell">
@@ -29,15 +32,16 @@ export function VocabLibraryPage() {
             Thư viện từ vựng
           </h1>
           <p className="vocab-library-subtitle">
-            Những gói từ vựng chuyên sâu theo lĩnh vực, nhu cầu và trình độ — bổ sung cho dòng ngẫu
-            nhiên hằng ngày.
+            {LIBRARY_PACKS_AVAILABLE
+              ? "Những gói từ vựng chuyên sâu theo lĩnh vực, nhu cầu và trình độ — bổ sung cho dòng ngẫu nhiên hằng ngày."
+              : "Tải lên bộ từ vựng của riêng bạn."}
           </p>
         </div>
       </header>
 
       <div className="vocab-library-body">
         <ImportPackPanel />
-        {LIBRARY_GROUPS.map((group) => (
+        {(LIBRARY_PACKS_AVAILABLE ? LIBRARY_GROUPS : []).map((group) => (
           <section
             className="vocab-library-group"
             key={group.id}
