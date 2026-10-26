@@ -23,6 +23,8 @@ import { streakTier, type StreakTier } from "../lib/streak-tiers";
  * @param value - What to print on the face; defaults to `days` (the celebration counts up)
  * @param tier - The metal; defaults to the streak tier for `days`
  * @param unit - The word under the number; "ngày" for a streak, "từ" for a word badge
+ * @param count - How many times a repeatable badge has been earned, pinned to the coin's
+ *   top-right as a small counter; absent for a badge earned once
  */
 export function StreakMedal({
   days,
@@ -30,12 +32,14 @@ export function StreakMedal({
   value = days,
   tier = streakTier(days),
   unit = "ngày",
+  count,
 }: {
   days: number;
   className?: string;
   value?: ReactNode;
   tier?: StreakTier;
   unit?: string;
+  count?: number;
 }) {
   const uid = useId().replace(/:/g, "");
   const face = `mf-${uid}`;
@@ -99,6 +103,7 @@ export function StreakMedal({
         <strong>{value}</strong>
         <span>{unit}</span>
       </div>
+      {count !== undefined && <span className="vocab-medal-count">×{count}</span>}
     </div>
   );
 }

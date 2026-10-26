@@ -278,12 +278,13 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
         // A daily goal waits behind the other two, for the same reason.
         <StreakCelebration
           key={`daily:${daily.celebrating.goal}:${daily.celebrating.times}`}
-          days={daily.celebrating.times}
+          days={daily.celebrating.goal}
           reducedMotion={reducedMotion}
           onDone={daily.dismiss}
           badge={{
             tier: dailyTier(daily.celebrating.goal),
-            unit: "lần",
+            unit: "từ",
+            count: daily.celebrating.times,
             title: dailyBadgeTitle(daily.celebrating.goal, daily.celebrating.times),
             blurb: dailyBadgeBlurb(daily.celebrating.goal, daily.celebrating.times),
           }}

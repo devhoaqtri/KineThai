@@ -9670,6 +9670,37 @@ body:has(.vocab-intro) .vocab-resume {
   text-transform: uppercase;
   opacity: 0.68;
 }
+/* A repeatable badge's count: a small enamel pill pinned where the coin's rim meets its
+   top-right diagonal (45 deg on the r=80 circle), struck in the coin's own deepest tone
+   and edged in its highlight so it reads as part of the medal, not a sticker on it. */
+.vocab-medal-count {
+  position: absolute;
+  left: 80%;
+  top: 17%;
+  transform: translate(-50%, -50%);
+  min-width: 1.9em;
+  padding: 0.2em 0.42em 0.22em;
+  box-sizing: border-box;
+  border: max(1.5px, 1.2cqw) solid var(--m-hi);
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--m-deep) 78%, var(--m-mid)),
+    var(--m-deep)
+  );
+  box-shadow:
+    0 max(1px, 1cqw) max(3px, 3cqw) #00000059,
+    inset 0 1px 0 #ffffff40;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  font-size: max(10px, 11cqw);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  white-space: nowrap;
+}
 
 /* ── The milestones tab in the saved drawer ──
    A grid of earned medals, newest first. Static: no gesture, no animation — the drawer

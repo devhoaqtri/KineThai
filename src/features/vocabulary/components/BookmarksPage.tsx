@@ -455,13 +455,13 @@ function SavedFolders({
 
 /**
  * How a badge looks, whatever its kind: the number on its face, its metal, the word under
- * the number, and its name. A daily goal shows how many days it has been met ("lần"); not
- * yet met, it shows the words it asks for.
+ * the number, and its name. A daily goal always shows the words it asks for on its face;
+ * once met, how many days it has been met rides on the coin's corner.
  */
 function medalLook(
   goal: BadgeGoal,
   locale: TargetLocale,
-): { value: number; tier: StreakTier; unit: string; title: string } {
+): { value: number; tier: StreakTier; unit: string; title: string; count?: number } {
   if (goal.kind === "streak") {
     return {
       value: goal.days,
@@ -473,9 +473,13 @@ function medalLook(
   if (goal.kind === "daily") {
     const title = `${goal.goal} từ mỗi ngày`;
     const tier = dailyTier(goal.goal);
-    return goal.times > 0
-      ? { value: goal.times, tier, unit: "lần", title }
-      : { value: goal.goal, tier, unit: "từ", title };
+    return {
+      value: goal.goal,
+      tier,
+      unit: "từ",
+      title,
+      count: goal.times > 0 ? goal.times : undefined,
+    };
   }
   return {
     value: goal.words,
@@ -508,7 +512,7 @@ function BadgeDialog({
     const node = dialog.current;
     if (node && !node.open) node.showModal();
   }, []);
-  const { value, tier, unit, title } = medalLook(goal, locale);
+  const { value, tier, unit, title, count } = medalLook(goal, locale);
   return (
     <dialog
       ref={dialog}
@@ -526,6 +530,7 @@ function BadgeDialog({
           days={value}
           tier={tier}
           unit={unit}
+          count={count}
           className={earned ? undefined : "vocab-medal-locked"}
         />
         <span className="vocab-badge-dialog-tier">{STREAK_TIER_LABEL[tier]}</span>
@@ -571,7 +576,7 @@ function MedalTile({
         onClick={() => onOpen(goal, earned)}
         aria-label={`${caption}, ${note}${earned ? "" : " — chưa đạt"}. Xem điều kiện`}
       >
-        <StreakMedal days={look.value} tier={look.tier} unit={look.unit} />
+        <StreakMedal days={look.value} tier={look.tier} unit={look.unit} count={look.count} />
         <span className="vocab-medal-tile-days">{caption}</span>
         {/* Uppercase only for a metal ("ĐỒNG"); a name — a scope, or "Chuỗi ngày" on a
             goal — keeps its own case. */}

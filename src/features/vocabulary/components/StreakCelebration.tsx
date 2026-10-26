@@ -37,7 +37,14 @@ import { STREAK_TIER_LABEL, streakBlurb, streakTier, type StreakTier } from "../
 import { StreakMedal } from "./StreakMedal";
 
 /** What a non-streak milestone shows in place of the streak's metal, unit and words. */
-export type CelebrationBadge = { tier: StreakTier; unit: string; title: string; blurb: string };
+export type CelebrationBadge = {
+  tier: StreakTier;
+  unit: string;
+  title: string;
+  blurb: string;
+  /** A repeatable badge's count, shown on the medal's corner. */
+  count?: number;
+};
 
 /** How long the celebration holds the screen before closing on its own. */
 export const STREAK_CELEBRATION_MS = 7000;
@@ -250,6 +257,7 @@ export function StreakCelebration({
               value={shown}
               tier={tier}
               unit={badge?.unit}
+              count={badge?.count}
               className="vocab-streak-flash-medal"
             />
           </div>
