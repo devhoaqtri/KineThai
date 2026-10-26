@@ -9988,17 +9988,17 @@ body:has(.vocab-intro) .vocab-resume {
   margin: 0 auto;
   padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
 }
-.vocab-info-section[data-tone="citrus"],
-.vocab-info-badge[data-tone="citrus"] {
+/* On a section, a line (which then overrides its section) or the badge. */
+.vocab-info-shell [data-tone="citrus"] {
   --info-tone: var(--citrus);
 }
-.vocab-info-section[data-tone="mint"] {
+.vocab-info-shell [data-tone="mint"] {
   --info-tone: var(--mint);
 }
-.vocab-info-section[data-tone="cyber"] {
+.vocab-info-shell [data-tone="cyber"] {
   --info-tone: var(--cyber);
 }
-.vocab-info-section[data-tone="magenta"] {
+.vocab-info-shell [data-tone="magenta"] {
   --info-tone: var(--magenta);
 }
 .vocab-info-hero {

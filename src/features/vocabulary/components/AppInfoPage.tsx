@@ -1,8 +1,8 @@
 /**
- * App info: what chayLá is right now — an experiment, filled with AI-written decks in every
- * language, with a roadmap that waits on how it is received and an open door for language
- * professionals. Every statement is its own line, led by an emoji, with the words that carry
- * it highlighted, so the page reads in one glance instead of as a wall of paragraphs.
+ * App info: what chayLá is right now — an experiment, filled with AI-written decks, with new
+ * features waiting on how it is received — and an open door for language professionals.
+ * Every statement is its own line, led by an emoji, with the words that carry it
+ * highlighted, so the page reads in one glance instead of as a wall of paragraphs.
  *
  * Exports: AppInfoPage
  * Depends on: router Link, lucide icons, target-language (brand, locale), vocabulary.css
@@ -25,30 +25,35 @@ const LANGUAGES: { locale: TargetLocale; flag: string; name: string }[] = [
   { locale: "es", flag: "🇪🇸", name: "Tây Ban Nha" },
 ];
 
-/** The highlighted words of a line; the section's tone picks the colour. */
+/** The highlighted words of a line; the line's tone, else its section's, picks the colour. */
 function Hl({ children }: { children: ReactNode }) {
   return <strong className="vocab-info-hl">{children}</strong>;
 }
 
-type Line = { emoji: string; text: ReactNode };
+type Tone = "citrus" | "mint" | "cyber" | "magenta";
+/** A line may carry its own tone, so lines gathered from different topics keep their colour. */
+type Line = { emoji: string; tone?: Tone; text: ReactNode };
 type Section = {
   id: string;
   emoji: string;
   title: string;
-  /** Accent for the section's badge and highlights: one of the shell's named colours. */
-  tone: "citrus" | "mint" | "cyber" | "magenta";
+  /** Accent for the section's top edge and highlights: one of the shell's named colours. */
+  tone: Tone;
   lines: Line[];
 };
 
 const SECTIONS: Section[] = [
   {
-    id: "experimental",
-    emoji: "🧪",
-    title: "Đang thử nghiệm",
-    tone: "citrus",
+    // Experimental status, AI-written decks and the roadmap, in one panel: each topic is
+    // down to a line or two, too little to stand alone, so each line keeps its own colour.
+    id: "about",
+    emoji: "🌿",
+    title: "Đôi điều cần biết",
+    tone: "mint",
     lines: [
       {
         emoji: "🧪",
+        tone: "citrus",
         text: (
           <>
             chayLá vẫn đang trong giai đoạn <Hl>thử nghiệm</Hl>.
@@ -56,15 +61,8 @@ const SECTIONS: Section[] = [
         ),
       },
       {
-        emoji: "🛠️",
-        text: (
-          <>
-            Giao diện và tính năng có thể <Hl>thay đổi</Hl> bất cứ lúc nào.
-          </>
-        ),
-      },
-      {
         emoji: "🐞",
+        tone: "citrus",
         text: (
           <>
             Thỉnh thoảng bạn sẽ gặp <Hl>lỗi nhỏ</Hl> — mong bạn thông cảm nhé.
@@ -72,23 +70,8 @@ const SECTIONS: Section[] = [
         ),
       },
       {
-        emoji: "💾",
-        text: (
-          <>
-            Lịch sử và từ đã lưu chỉ nằm <Hl>trên thiết bị này</Hl>.
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    id: "ai",
-    emoji: "🤖",
-    title: "Nội dung do AI tạo",
-    tone: "cyber",
-    lines: [
-      {
         emoji: "🤖",
+        tone: "cyber",
         text: (
           <>
             Từ vựng, gợi ý và giải nghĩa đều do <Hl>AI tạo ra</Hl>.
@@ -96,58 +79,20 @@ const SECTIONS: Section[] = [
         ),
       },
       {
-        emoji: "🌍",
-        text: (
-          <>
-            Điều này đúng với <Hl>mọi ngôn ngữ</Hl> trên chayLá, không riêng ngôn ngữ nào.
-          </>
-        ),
-      },
-      {
         emoji: "🚩",
+        tone: "cyber",
         text: (
           <>
             Thấy từ nào sai? Bấm <Hl>báo lỗi</Hl> ngay trên thẻ từ đó.
           </>
         ),
       },
-    ],
-  },
-  {
-    id: "roadmap",
-    emoji: "🚀",
-    title: "Lộ trình phía trước",
-    tone: "mint",
-    lines: [
       {
         emoji: "📈",
+        tone: "mint",
         text: (
           <>
             Nếu chayLá được đón nhận <Hl>vượt mong đợi</Hl>, tính năng mới sẽ lần lượt ra mắt.
-          </>
-        ),
-      },
-      {
-        emoji: "📚",
-        text: (
-          <>
-            Sắp tới: <Hl>gói từ vựng chuyên sâu</Hl> theo lĩnh vực và trình độ.
-          </>
-        ),
-      },
-      {
-        emoji: "👥",
-        text: (
-          <>
-            Một <Hl>cộng đồng</Hl> để cùng học và chia sẻ từ vựng.
-          </>
-        ),
-      },
-      {
-        emoji: "🧩",
-        text: (
-          <>
-            Thêm nhiều <Hl>app anh em</Hl> trong hệ sinh thái Chay Lá.
           </>
         ),
       },
@@ -181,14 +126,6 @@ const SECTIONS: Section[] = [
           <>
             <Hl>Giáo viên</Hl>, <Hl>dịch giả</Hl> hay <Hl>người bản xứ</Hl> — ai cũng có thể góp
             sức.
-          </>
-        ),
-      },
-      {
-        emoji: "⚡",
-        text: (
-          <>
-            Mỗi góp ý chuyên môn sẽ được <Hl>cập nhật ngay</Hl> vào bộ từ.
           </>
         ),
       },
@@ -254,7 +191,7 @@ export function AppInfoPage({ locale = "en" }: { locale?: TargetLocale }) {
             </h2>
             <ul className="vocab-info-lines">
               {section.lines.map((line, index) => (
-                <li key={index} style={{ "--i": order++ } as CSSProperties}>
+                <li key={index} data-tone={line.tone} style={{ "--i": order++ } as CSSProperties}>
                   <span className="vocab-info-emoji" aria-hidden="true">
                     {line.emoji}
                   </span>
