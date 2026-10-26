@@ -957,7 +957,7 @@
   z-index: 5;
 }
 /* The feed is a tap surface: long-pressing a card or a panel must not select text. */
-.vocabulary-shell:not(.vocab-saved-shell, .vocab-library-shell) {
+.vocabulary-shell:not(.vocab-saved-shell, .vocab-library-shell, .vocab-info-shell) {
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -9903,4 +9903,222 @@ body:has(.vocab-intro) .vocab-resume {
   line-height: 1.55;
   color: var(--shell-text-mute);
   text-wrap: balance;
+}
+
+/* ── App info: the Settings sheet's top row and the page it opens ── */
+/* The row leads the sheet, so it sits beside the gear's notch. Rather than letting the
+   generic first-child padding push its text in while its fill still runs under the cut,
+   the whole row stops short of the notch (which reaches about one corner width in). */
+.vocab-options > .vocab-info-row:first-child {
+  padding-right: 12px;
+  margin-right: calc(var(--vocab-corner) - 4px);
+}
+.vocab-info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  background: var(--shell-hover);
+  border: 1px solid var(--shell-line);
+  color: var(--shell-text);
+  transition:
+    background var(--dur-quick) var(--ease-out),
+    transform var(--dur-move) var(--ease-spring);
+}
+.vocab-info-row:hover {
+  background: color-mix(in srgb, var(--shell-text) 14%, transparent);
+}
+.vocab-info-row:active {
+  transform: scale(0.97);
+  transition-duration: var(--dur-press);
+}
+.vocab-info-row-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--mint) 22%, transparent);
+  font-size: 18px;
+}
+.vocab-info-row-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.vocab-info-row-text strong {
+  font-size: 14px;
+  font-weight: 800;
+}
+.vocab-info-row-text small {
+  overflow: hidden;
+  color: var(--shell-text-mute);
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.vocab-info-row > svg {
+  flex: none;
+  color: var(--shell-text-mute);
+}
+
+.vocab-info-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+.vocab-info-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: min(100%, 620px);
+  margin: 0 auto;
+  padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
+}
+.vocab-info-section[data-tone="citrus"],
+.vocab-info-badge[data-tone="citrus"] {
+  --info-tone: var(--citrus);
+}
+.vocab-info-section[data-tone="mint"] {
+  --info-tone: var(--mint);
+}
+.vocab-info-section[data-tone="cyber"] {
+  --info-tone: var(--cyber);
+}
+.vocab-info-section[data-tone="magenta"] {
+  --info-tone: var(--magenta);
+}
+.vocab-info-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 16px 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--mint) 18%, transparent), transparent 70%),
+    var(--shell-surface);
+  border: 1px solid var(--shell-line);
+  text-align: center;
+}
+.vocab-info-hero-leaf {
+  font-size: 40px;
+  line-height: 1;
+}
+.vocab-info-hero-brand {
+  margin: 0;
+  color: var(--shell-text);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+.vocab-info-badge {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--info-tone) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--info-tone) 45%, transparent);
+  color: var(--info-tone);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.vocab-info-langs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.vocab-info-langs li {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--shell-hover);
+  color: var(--shell-text-soft);
+  font-size: 12px;
+  font-weight: 600;
+}
+.vocab-info-langs li[data-current] {
+  background: var(--mint);
+  color: var(--shell-on-text);
+}
+.vocab-info-section {
+  padding: 16px 16px 6px;
+  border-radius: 20px;
+  background: var(--shell-surface);
+  border: 1px solid var(--shell-line);
+  border-top: 3px solid color-mix(in srgb, var(--info-tone) 70%, transparent);
+}
+.vocab-info-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px;
+  color: var(--shell-text);
+  font-size: 17px;
+  font-weight: 800;
+}
+.vocab-info-title-emoji {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--info-tone) 20%, transparent);
+  font-size: 18px;
+}
+/* One sentence per row: the emoji in its own column, the sentence beside it. */
+.vocab-info-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vocab-info-lines li {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: start;
+  gap: 8px;
+  padding: 10px 0;
+  color: var(--shell-text-soft);
+  font-size: 15px;
+  line-height: 1.5;
+  animation: vocab-info-line-in var(--dur-move) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+.vocab-info-lines li + li {
+  border-top: 1px solid var(--shell-line);
+}
+.vocab-info-emoji {
+  font-size: 19px;
+  line-height: 1.2;
+  text-align: center;
+}
+.vocab-info-hl {
+  color: var(--info-tone);
+  font-weight: 800;
+  /* A highlight is a word or two; splitting "thử | nghiệm" over a line break would cut
+     the very phrase the colour is there to point at. */
+  white-space: nowrap;
+}
+.vocab-info-thanks {
+  margin: 4px 0 0;
+  color: var(--shell-text-mute);
+  font-size: 14px;
+  text-align: center;
+}
+@keyframes vocab-info-line-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
 }

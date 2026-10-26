@@ -39,6 +39,7 @@ import { Route as AdminVocabularyRouteImport } from './routes/admin/vocabulary'
 import { Route as AdminWordingsRouteImport } from './routes/admin/wordings'
 import { Route as ExportCodeRouteImport } from './routes/export.$code'
 import { Route as FeedIndexRouteImport } from './routes/feed/index'
+import { Route as FeedAboutRouteImport } from './routes/feed/about'
 import { Route as FeedLibraryRouteImport } from './routes/feed/library'
 import { Route as FeedSavedRouteImport } from './routes/feed/saved'
 import { Route as WCodeRouteImport } from './routes/w.$code'
@@ -203,6 +204,11 @@ const FeedIndexRoute = FeedIndexRouteImport.update({
   path: '/feed/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeedAboutRoute = FeedAboutRouteImport.update({
+  id: '/feed/about',
+  path: '/feed/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeedLibraryRoute = FeedLibraryRouteImport.update({
   id: '/feed/library',
   path: '/feed/library',
@@ -293,6 +299,7 @@ export interface FileRoutesByFullPath {
   '/admin/vocabulary': typeof AdminVocabularyRoute
   '/admin/wordings': typeof AdminWordingsRoute
   '/export/$code': typeof ExportCodeRoute
+  '/feed/about': typeof FeedAboutRoute
   '/feed/library': typeof FeedLibraryRoute
   '/feed/saved': typeof FeedSavedRoute
   '/w/$code': typeof WCodeRoute
@@ -335,6 +342,7 @@ export interface FileRoutesByTo {
   '/admin/vocabulary': typeof AdminVocabularyRoute
   '/admin/wordings': typeof AdminWordingsRoute
   '/export/$code': typeof ExportCodeRoute
+  '/feed/about': typeof FeedAboutRoute
   '/feed/library': typeof FeedLibraryRoute
   '/feed/saved': typeof FeedSavedRoute
   '/w/$code': typeof WCodeRoute
@@ -380,6 +388,7 @@ export interface FileRoutesById {
   '/admin/vocabulary': typeof AdminVocabularyRoute
   '/admin/wordings': typeof AdminWordingsRoute
   '/export/$code': typeof ExportCodeRoute
+  '/feed/about': typeof FeedAboutRoute
   '/feed/library': typeof FeedLibraryRoute
   '/feed/saved': typeof FeedSavedRoute
   '/w/$code': typeof WCodeRoute
@@ -425,6 +434,7 @@ export interface FileRouteTypes {
     | '/admin/vocabulary'
     | '/admin/wordings'
     | '/export/$code'
+    | '/feed/about'
     | '/feed/library'
     | '/feed/saved'
     | '/w/$code'
@@ -467,6 +477,7 @@ export interface FileRouteTypes {
     | '/admin/vocabulary'
     | '/admin/wordings'
     | '/export/$code'
+    | '/feed/about'
     | '/feed/library'
     | '/feed/saved'
     | '/w/$code'
@@ -511,6 +522,7 @@ export interface FileRouteTypes {
     | '/admin/vocabulary'
     | '/admin/wordings'
     | '/export/$code'
+    | '/feed/about'
     | '/feed/library'
     | '/feed/saved'
     | '/w/$code'
@@ -536,6 +548,7 @@ export interface RootRouteChildren {
   ShowcaseRoute: typeof ShowcaseRoute
   StoreRoute: typeof StoreRoute
   ExportCodeRoute: typeof ExportCodeRoute
+  FeedAboutRoute: typeof FeedAboutRoute
   FeedLibraryRoute: typeof FeedLibraryRoute
   FeedSavedRoute: typeof FeedSavedRoute
   WCodeRoute: typeof WCodeRoute
@@ -761,6 +774,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FeedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/feed/about': {
+      id: '/feed/about'
+      path: '/feed/about'
+      fullPath: '/feed/about'
+      preLoaderRoute: typeof FeedAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/feed/library': {
       id: '/feed/library'
       path: '/feed/library'
@@ -922,6 +942,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShowcaseRoute: ShowcaseRoute,
   StoreRoute: StoreRoute,
   ExportCodeRoute: ExportCodeRoute,
+  FeedAboutRoute: FeedAboutRoute,
   FeedLibraryRoute: FeedLibraryRoute,
   FeedSavedRoute: FeedSavedRoute,
   WCodeRoute: WCodeRoute,

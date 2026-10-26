@@ -12,6 +12,7 @@ import {
 } from "react";
 import {
   ChevronDown,
+  ChevronRight,
   Clapperboard,
   Library,
   Pause,
@@ -1317,6 +1318,18 @@ export function FeedControls({
             if (event.key === "Escape") close();
           }}
         >
+          {/* App info leads the sheet, beside the gear's notch: what the app is (an
+              experiment, AI-written decks, roadmap, cooperation) before how to tune it. */}
+          <Link to="/feed/about" className="vocab-info-row">
+            <span className="vocab-info-row-icon" aria-hidden="true">
+              🌿
+            </span>
+            <span className="vocab-info-row-text">
+              <strong>Thông tin ứng dụng</strong>
+              <small>🧪 Thử nghiệm · 🤖 AI · 🚀 Lộ trình</small>
+            </span>
+            <ChevronRight size={17} aria-hidden="true" />
+          </Link>
           <p className="vocab-options-summary">
             {metadata
               ? `Danh mục này có ${metadata.total.toLocaleString("vi-VN")} từ khác nhau.`
