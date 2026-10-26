@@ -1318,8 +1318,9 @@ export function FeedControls({
             if (event.key === "Escape") close();
           }}
         >
-          {/* App info leads the sheet, beside the gear's notch: what the app is (an
-              experiment, AI-written decks, roadmap, cooperation) before how to tune it. */}
+          {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
+              boxed: what the app is (an experiment, AI-written decks, roadmap, cooperation)
+              before how to tune it. */}
           <Link to="/feed/about" className="vocab-info-row">
             <span className="vocab-info-row-icon" aria-hidden="true">
               🌿
@@ -1334,12 +1335,6 @@ export function FeedControls({
             </span>
             <ChevronRight size={17} aria-hidden="true" />
           </Link>
-          <p className="vocab-options-summary">
-            {metadata
-              ? `Danh mục này có ${metadata.total.toLocaleString("vi-VN")} từ khác nhau.`
-              : "Luồng từ vựng của bạn đang tải."}{" "}
-            Xem hết mọi từ, bạn có thể xóa lịch sử xem để bắt đầu lại.
-          </p>
           <div className="vocab-options-secondary">
             {/* With only the theme picker left, the picker carries its own label and this
                 heading would just say the same word twice. */}

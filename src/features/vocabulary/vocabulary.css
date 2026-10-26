@@ -9906,11 +9906,11 @@ body:has(.vocab-intro) .vocab-resume {
 }
 
 /* ── App info: the Settings sheet's top row and the page it opens ── */
-/* The row leads the sheet, so it sits beside the gear's notch. Rather than letting the
-   generic first-child padding push its text in while its fill still runs under the cut,
-   the whole row stops short of the notch (which reaches about one corner width in). */
+/* The row leads the sheet, so it sits beside the gear's notch. It is drawn bare — no
+   fill, no border — straight on the sheet; the whole row (chevron included) stops short
+   of the notch, which reaches about one corner width in. */
 .vocab-options > .vocab-info-row:first-child {
-  padding-right: 12px;
+  padding-right: 0;
   margin-right: calc(var(--vocab-corner) - 4px);
 }
 .vocab-info-row {
@@ -9918,18 +9918,14 @@ body:has(.vocab-intro) .vocab-resume {
   align-items: center;
   gap: 12px;
   min-height: 52px;
-  margin-bottom: 14px;
-  padding: 8px 12px;
-  border-radius: 16px;
-  background: var(--shell-hover);
-  border: 1px solid var(--shell-line);
+  margin-bottom: 4px;
   color: var(--shell-text);
   transition:
-    background var(--dur-quick) var(--ease-out),
+    opacity var(--dur-quick) var(--ease-out),
     transform var(--dur-move) var(--ease-spring);
 }
 .vocab-info-row:hover {
-  background: color-mix(in srgb, var(--shell-text) 14%, transparent);
+  opacity: 0.85;
 }
 .vocab-info-row:active {
   transform: scale(0.97);
