@@ -1326,7 +1326,11 @@ export function FeedControls({
             </span>
             <span className="vocab-info-row-text">
               <strong>Thông tin ứng dụng</strong>
-              <small>🧪 Thử nghiệm · 🤖 AI · 🚀 Lộ trình</small>
+              <small>
+                <span>🧪 Thử nghiệm</span>
+                <span>🤖 Nội dung AI</span>
+                <span>🚀 Lộ trình</span>
+              </small>
             </span>
             <ChevronRight size={17} aria-hidden="true" />
           </Link>

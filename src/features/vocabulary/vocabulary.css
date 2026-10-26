@@ -9956,12 +9956,17 @@ body:has(.vocab-intro) .vocab-resume {
   font-size: 14px;
   font-weight: 800;
 }
+/* Three tags that wrap between each other, never inside one: on a narrow phone the row
+   is too short for all three on a line, and an ellipsis would cut the last one off. */
 .vocab-info-row-text small {
-  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px 8px;
   color: var(--shell-text-mute);
   font-size: 11px;
+}
+.vocab-info-row-text small > span {
   white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .vocab-info-row > svg {
   flex: none;
