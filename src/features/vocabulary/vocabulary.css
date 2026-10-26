@@ -7954,6 +7954,64 @@
     transition: none;
   }
 }
+/* TEMPORARY — the quiet share tab. Same seat and the same corner geometry as above,
+   but the face is the panel's own glass rather than the accent: a faint wash of the
+   panel's ink, the panel's hairline along the two drawn edges, and a muted label that
+   only comes up to full ink on hover. Delete this block to bring back the accent tab. */
+.vocab-reveal-details {
+  --vocab-share-h: 32px;
+}
+.vocab-share-dock {
+  padding: 6px 0 0 6px;
+}
+.vocab-share-button {
+  padding: 0 12px 0 11px;
+  color: color-mix(in srgb, var(--vocab-ink) 62%, transparent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  transition:
+    transform var(--dur-move) var(--ease-spring),
+    color var(--dur-quick) var(--ease-out);
+}
+.vocab-share-face {
+  gap: 5px;
+}
+.vocab-share-face svg {
+  width: 13px;
+  height: 13px;
+  opacity: 0.85;
+}
+.vocab-share-face-bg {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--vocab-ink) 9%, transparent),
+    color-mix(in srgb, var(--vocab-ink) 5%, transparent)
+  );
+  /* The panel's own border tone, drawn only on the top and left — the other two
+     edges run off into the panel's border, as before. A one-pixel lift on the top
+     edge keeps the glass from reading flat. */
+  box-shadow:
+    inset 1px 1px 0 color-mix(in srgb, var(--vocab-ink) 14%, transparent),
+    inset 0 2px 0 -1px #ffffff1f;
+}
+.vocab-share-button:hover {
+  color: var(--vocab-ink);
+}
+.vocab-share-button:hover .vocab-share-face-bg {
+  filter: none;
+  background: color-mix(in srgb, var(--vocab-ink) 13%, transparent);
+}
+.vocab-share-button:focus-visible .vocab-share-face-bg {
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--vocab-ink) 70%, transparent);
+}
+/* Confirmed: the label takes the accent, the glass stays glass. */
+.vocab-share-button[data-done] {
+  color: var(--vocab-accent);
+}
+.vocab-share-button[data-done] .vocab-share-face-bg {
+  background: color-mix(in srgb, var(--vocab-accent) 12%, transparent);
+}
 
 /* ── Export frame route ──────────────────────────────────────────────────────
    The page a recorder loads: the stage at the preset's exact aspect, centred on a
