@@ -694,13 +694,20 @@ function DifficultyDropdown({
     // Only on opening: the page is the reader's to swipe after that.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
-  const goToPage = (next: number) => setPage(Math.max(0, Math.min(1, next)));
+  // The pack page, and the switcher to it, exist only once the reader has imported a pack;
+  // until then the foot keeps the plain library link and a swipe does nothing.
+  const hasPacks = library.packs.length > 0;
+  const goToPage = (next: number) => setPage(Math.max(0, Math.min(hasPacks ? 1 : 0, next)));
+  // The last pack deleted (in another tab, say) takes its page with it.
+  useEffect(() => {
+    if (!hasPacks) setPage(0);
+  }, [hasPacks]);
   // The two pages sit on one track moved by a transform, not in a scroller: what is
   // painted is then exactly the page in state. A finger dragging sideways moves the track
   // with it (with resistance past either end) and a release a fifth of the way across
   // turns the page. Vertical drags are left to each page's own scrolling (touch-action).
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (!hasPacks || (event.pointerType === "mouse" && event.button !== 0)) return;
     gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, sideways: null };
   };
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -731,6 +738,7 @@ function DifficultyDropdown({
   // A trackpad's sideways two-finger swipe turns the page too, once per gesture.
   const wheelLock = useRef(0);
   const onWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    if (!hasPacks) return;
     if (Math.abs(event.deltaX) < 24 || Math.abs(event.deltaX) < Math.abs(event.deltaY) * 1.5)
       return;
     if (Date.now() < wheelLock.current) return;
@@ -922,103 +930,110 @@ function DifficultyDropdown({
                   );
                 })}
               </ul>
-              <div
-                className="vocab-difficulty-page vocab-pack-picks"
-                aria-label="Gói của bạn"
-                inert={page !== 1 && drag === null ? true : undefined}
-              >
-                <ul>
-                  {library.packs.map((pack) => {
-                    const marked = pack.id === draftPack;
-                    return (
-                      <li key={pack.id}>
-                        <button
-                          type="button"
-                          className="vocab-difficulty-option vocab-pack-pick"
-                          data-active={marked || undefined}
-                          data-playing={pack.id === library.active || undefined}
-                          aria-pressed={marked}
-                          onClick={() => togglePack(pack.id)}
-                        >
-                          <span className="vocab-difficulty-check" aria-hidden="true">
-                            {marked ? "✓" : ""}
-                          </span>
-                          <span className="vocab-difficulty-option-label">
-                            <span
-                              className="vocab-difficulty-band"
-                              data-empty={pack.catalog.levels.length ? undefined : true}
-                            >
-                              {pack.catalog.levels.length
-                                ? formatLevelBand(pack.catalog.levels)
-                                : "Gói"}
+              {hasPacks && (
+                <div
+                  className="vocab-difficulty-page vocab-pack-picks"
+                  aria-label="Gói của bạn"
+                  inert={page !== 1 && drag === null ? true : undefined}
+                >
+                  <ul>
+                    {library.packs.map((pack) => {
+                      const marked = pack.id === draftPack;
+                      return (
+                        <li key={pack.id}>
+                          <button
+                            type="button"
+                            className="vocab-difficulty-option vocab-pack-pick"
+                            data-active={marked || undefined}
+                            data-playing={pack.id === library.active || undefined}
+                            aria-pressed={marked}
+                            onClick={() => togglePack(pack.id)}
+                          >
+                            <span className="vocab-difficulty-check" aria-hidden="true">
+                              {marked ? "✓" : ""}
                             </span>
-                            <span className="vocab-pack-pick-name">{pack.catalog.name}</span>
-                          </span>
-                          <span className="vocab-difficulty-count">
-                            {pack.catalog.count.toLocaleString("vi-VN")}
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-                {library.packs.length === 0 && (
-                  <p className="vocab-pack-picks-empty">
-                    Chưa có gói từ nào. Bấm <strong>+</strong> để thêm gói JSON của bạn.
-                  </p>
-                )}
-              </div>
+                            <span className="vocab-difficulty-option-label">
+                              <span
+                                className="vocab-difficulty-band"
+                                data-empty={pack.catalog.levels.length ? undefined : true}
+                              >
+                                {pack.catalog.levels.length
+                                  ? formatLevelBand(pack.catalog.levels)
+                                  : "Gói"}
+                              </span>
+                              <span className="vocab-pack-pick-name">{pack.catalog.name}</span>
+                            </span>
+                            <span className="vocab-difficulty-count">
+                              {pack.catalog.count.toLocaleString("vi-VN")}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
           {/* Floating confirm bar: a gradient fade lets the last rows read through it as
               they scroll beneath, while Library and Done stay clickable above. */}
           <div className="vocab-difficulty-foot">
-            {/* Bottom left, where the library link was: add a pack, then the two pages —
-                the built-in deck (its library icon) and the reader's own packs. */}
-            <div className="vocab-difficulty-switch" role="group" aria-label="Nguồn từ">
+            {/* Bottom left: the library link until the reader has packs; then, in its
+                place, "+" to add one and the two pages — the built-in deck (its library
+                icon) and the reader's own packs. */}
+            {!hasPacks ? (
               <Link
                 to="/feed/library"
-                className="vocab-difficulty-switch-add"
-                aria-label="Thêm gói từ JSON"
-                title="Thêm gói từ JSON"
+                className="vocab-difficulty-library"
                 onClick={() => close(false)}
               >
-                <Plus size={17} aria-hidden="true" />
+                <Library size={16} aria-hidden="true" />
+                Thêm từ mới
               </Link>
-              <div
-                className="vocab-difficulty-switch-tabs"
-                role="tablist"
-                aria-label="Trang"
-                onKeyDown={(event) => {
-                  if (event.key === "ArrowRight") goToPage(1);
-                  else if (event.key === "ArrowLeft") goToPage(0);
-                }}
-              >
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={page === 0}
-                  tabIndex={page === 0 ? 0 : -1}
-                  aria-label="Bộ từ có sẵn"
-                  title="Bộ từ có sẵn"
-                  onClick={() => goToPage(0)}
+            ) : (
+              <div className="vocab-difficulty-switch" role="group" aria-label="Nguồn từ">
+                <Link
+                  to="/feed/library"
+                  className="vocab-difficulty-switch-add"
+                  aria-label="Thêm gói từ JSON"
+                  title="Thêm gói từ JSON"
+                  onClick={() => close(false)}
                 >
-                  <Library size={16} aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={page === 1}
-                  tabIndex={page === 1 ? 0 : -1}
-                  onClick={() => goToPage(1)}
+                  <Plus size={17} aria-hidden="true" />
+                </Link>
+                <div
+                  className="vocab-difficulty-switch-tabs"
+                  role="tablist"
+                  aria-label="Trang"
+                  onKeyDown={(event) => {
+                    if (event.key === "ArrowRight") goToPage(1);
+                    else if (event.key === "ArrowLeft") goToPage(0);
+                  }}
                 >
-                  Từ thêm
-                  {library.packs.length > 0 && (
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={page === 0}
+                    tabIndex={page === 0 ? 0 : -1}
+                    aria-label="Bộ từ có sẵn"
+                    title="Bộ từ có sẵn"
+                    onClick={() => goToPage(0)}
+                  >
+                    <Library size={16} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={page === 1}
+                    tabIndex={page === 1 ? 0 : -1}
+                    onClick={() => goToPage(1)}
+                  >
+                    Từ thêm
                     <span aria-label={`${library.packs.length} gói`}>{library.packs.length}</span>
-                  )}
-                </button>
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
             {showDone && (
               <button
                 type="button"

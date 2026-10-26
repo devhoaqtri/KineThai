@@ -1603,15 +1603,6 @@
 .vocab-pack-pick:hover {
   background: var(--shell-hover);
 }
-.vocab-pack-picks-empty {
-  margin: 14px 14px 0;
-  color: var(--shell-text-mute);
-  font-size: 13px;
-  line-height: 1.55;
-}
-.vocab-pack-picks-empty strong {
-  color: var(--shell-text);
-}
 .vocab-pack-pick-name {
   min-width: 0;
   overflow: hidden;
@@ -1643,6 +1634,28 @@
 }
 .vocab-difficulty-foot > * {
   pointer-events: auto;
+}
+/* The foot's left corner before the reader has any packs: the plain library link. */
+.vocab-difficulty-library {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--pop-accent) 30%, #ffffff33);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--shell-surface) 55%, transparent);
+  color: var(--shell-text);
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background var(--dur-move) var(--ease-out),
+    border-color var(--dur-move) var(--ease-out);
+}
+.vocab-difficulty-library:hover {
+  background: color-mix(in srgb, var(--pop-accent) 20%, transparent);
+  border-color: color-mix(in srgb, var(--pop-accent) 55%, transparent);
 }
 .vocab-difficulty-done {
   min-height: 38px;
