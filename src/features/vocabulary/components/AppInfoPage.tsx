@@ -104,14 +104,6 @@ const SECTIONS: Section[] = [
         ),
       },
       {
-        emoji: "🔍",
-        text: (
-          <>
-            Nội dung vẫn có thể <Hl>sai sót</Hl>, hãy tra lại khi cần độ chính xác cao.
-          </>
-        ),
-      },
-      {
         emoji: "🚩",
         text: (
           <>
