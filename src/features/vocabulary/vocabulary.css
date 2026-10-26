@@ -10006,12 +10006,7 @@ body:has(.vocab-intro) .vocab-resume {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 22px 16px 18px;
-  border-radius: 22px;
-  background:
-    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--mint) 18%, transparent), transparent 70%),
-    var(--shell-surface);
-  border: 1px solid var(--shell-line);
+  padding: 10px 0 0;
   text-align: center;
 }
 .vocab-info-hero-leaf {
@@ -10063,6 +10058,13 @@ body:has(.vocab-intro) .vocab-resume {
   background: var(--shell-surface);
   border: 1px solid var(--shell-line);
   border-top: 3px solid color-mix(in srgb, var(--info-tone) 70%, transparent);
+}
+/* The quick-info lines: straight on the page under the app name, no card around them. */
+.vocab-info-section[data-plain] {
+  padding: 0 2px;
+  background: none;
+  border: 0;
+  border-radius: 0;
 }
 .vocab-info-title {
   display: flex;

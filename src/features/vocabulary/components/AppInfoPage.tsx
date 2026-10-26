@@ -39,17 +39,20 @@ type Section = {
   title: string;
   /** Accent for the section's top edge and highlights: one of the shell's named colours. */
   tone: Tone;
+  /** Unboxed: the lines sit straight on the page under the app name, with no panel or heading. */
+  plain?: boolean;
   lines: Line[];
 };
 
 const SECTIONS: Section[] = [
   {
-    // Experimental status, AI-written decks and the roadmap, in one panel: each topic is
-    // down to a line or two, too little to stand alone, so each line keeps its own colour.
+    // Experimental status, AI-written decks and the roadmap, together and unboxed: each topic
+    // is down to a line or two, too little to stand alone, so each line keeps its own colour.
     id: "about",
     emoji: "🌿",
     title: "Đôi điều cần biết",
     tone: "mint",
+    plain: true,
     lines: [
       {
         emoji: "🧪",
@@ -181,14 +184,18 @@ export function AppInfoPage({ locale = "en" }: { locale?: TargetLocale }) {
             key={section.id}
             className="vocab-info-section"
             data-tone={section.tone}
-            aria-labelledby={`info-${section.id}`}
+            data-plain={section.plain || undefined}
+            aria-label={section.plain ? section.title : undefined}
+            aria-labelledby={section.plain ? undefined : `info-${section.id}`}
           >
-            <h2 id={`info-${section.id}`} className="vocab-info-title">
-              <span className="vocab-info-title-emoji" aria-hidden="true">
-                {section.emoji}
-              </span>
-              {section.title}
-            </h2>
+            {!section.plain && (
+              <h2 id={`info-${section.id}`} className="vocab-info-title">
+                <span className="vocab-info-title-emoji" aria-hidden="true">
+                  {section.emoji}
+                </span>
+                {section.title}
+              </h2>
+            )}
             <ul className="vocab-info-lines">
               {section.lines.map((line, index) => (
                 <li key={index} data-tone={line.tone} style={{ "--i": order++ } as CSSProperties}>
