@@ -7988,12 +7988,17 @@
     color-mix(in srgb, var(--vocab-ink) 9%, transparent),
     color-mix(in srgb, var(--vocab-ink) 5%, transparent)
   );
-  /* The panel's own border tone, drawn only on the top and left — the other two
-     edges run off into the panel's border, as before. A one-pixel lift on the top
-     edge keeps the glass from reading flat. */
-  box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--vocab-ink) 14%, transparent),
-    inset 0 2px 0 -1px #ffffff1f;
+  /* The panel's own border, drawn only on the top and left — the other two edges run
+     off into the panel's border, as before. A real 1px border on the panel's OUTER
+     radius, not inset shadows on the inner one: that makes the top-left arc the same
+     ring as the panel's bottom-right arc (outer 20, inner 19) in the same tone, so the
+     pair reads as one shape. The offset-inset hairline plus a top highlight it used to
+     be drew a bright line that thinned out down the left side, so the top-left looked
+     tighter than the bottom-right even though both radii measured the same. */
+  border: solid color-mix(in srgb, var(--vocab-ink) 14%, transparent);
+  border-width: 1px 0 0 1px;
+  border-radius: var(--vocab-reveal-radius) 0 0 0;
+  box-shadow: none;
 }
 .vocab-share-button:hover {
   color: var(--vocab-ink);
