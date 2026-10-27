@@ -2,16 +2,18 @@
  * Regression guard for the CJK (Han) stroke-by-stroke spelling coda.
  *
  * The Latin coda is guarded by check-spelling-coda.ts; this pins the Han path: the
- * vendored stroke dataset covers every Han character the feed can serve, script
+ * per-character stroke files cover every Han character the feed can serve, the loader's
+ * URLs point at those files, script
  * detection routes Han vs Latin correctly, the fixed draw budget keeps every coda
  * inside the stream's pacing envelope, and the per-stroke solver stays clamped.
  *
  * Usage: npx tsx scripts/check-hanzi-spelling.ts
  * Depends on: ../src/features/vocabulary/lib/hanzi, ../src/features/vocabulary/lib/spelling,
- *             ../src/features/vocabulary/data (decks + hanzi-strokes.json)
+ *             ../src/features/vocabulary/lib/hanzi-strokes (URL scheme),
+ *             ../src/features/vocabulary/data (decks), ../public/hanzi (stroke files)
  */
 
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -30,10 +32,12 @@ import {
   SPELLING_HOLD_SECONDS,
   SPELLING_REDUCED_MOTION_MS,
 } from "../src/features/vocabulary/lib/spelling";
+import { hanziStrokeUrl } from "../src/features/vocabulary/lib/hanzi-strokes";
 import type { CharacterJson } from "hanzi-writer";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const dataDir = resolve(here, "../src/features/vocabulary/data");
+const publicDir = resolve(here, "../public");
 
 let failures = 0;
 function check(condition: boolean, message: string): void {
@@ -51,16 +55,17 @@ function collectDecks(dir: string): string[] {
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
     if (statSync(full).isDirectory()) found.push(...collectDecks(full));
-    else if (name.endsWith(".json") && name !== "hanzi-strokes.json") found.push(full);
+    else if (name.endsWith(".json")) found.push(full);
   }
   return found;
 }
 
 const HAN = /\p{Script=Han}/u;
-const strokes = JSON.parse(readFileSync(join(dataDir, "hanzi-strokes.json"), "utf8")) as Record<
-  string,
-  CharacterJson
->;
+/** The stroke file the coda would fetch for a character, read off disk; undefined if absent. */
+function readStrokeFile(ch: string): CharacterJson | undefined {
+  const file = join(publicDir, hanziStrokeUrl(ch));
+  return existsSync(file) ? (JSON.parse(readFileSync(file, "utf8")) as CharacterJson) : undefined;
+}
 
 // Gather every Han word and every unique Han character across all served decks.
 const hanWords: string[] = [];
@@ -75,12 +80,19 @@ for (const file of collectDecks(dataDir)) {
   }
 }
 
+// The files the coda would fetch for those characters, keyed by character.
+const strokes: Record<string, CharacterJson> = {};
+for (const ch of deckChars) {
+  const entry = readStrokeFile(ch);
+  if (entry) strokes[ch] = entry;
+}
+
 // ── 1. Dataset coverage ───────────────────────────────────────────────────────
 check(deckChars.size > 0, `decks contain Han characters to test (${deckChars.size} unique)`);
 const uncovered = [...deckChars].filter((ch) => !strokes[ch]?.strokes?.length);
 check(
   uncovered.length === 0,
-  `every served Han character has bundled stroke data (${uncovered.length} missing: ${uncovered.join(" ") || "none"})`,
+  `every served Han character has a stroke file at its loader URL (${uncovered.length} missing: ${uncovered.join(" ") || "none"})`,
 );
 
 // ── 2. Dataset shape ────────────────────────────────────────────────────────

@@ -48,3 +48,5 @@ src/features/admin/data/llm-config.json
 
 # word-crawler is an independent experimental repo (../word-crawler), not part of the feed.
 /word-crawler/
+# Incomplete stroke-file builds (scripts/build-hanzi-strokes.ts)
+public/hanzi/.*.tmp

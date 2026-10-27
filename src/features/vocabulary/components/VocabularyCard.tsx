@@ -41,6 +41,7 @@ import { hasReportedWord } from "../lib/reported-words";
 import { sceneSkipLimiter } from "../lib/skip-limiter";
 import { getSpellingDurationMs, pickSpellingVariant } from "../lib/spelling";
 import { getStrokeSpellingDurationMs, isHanAnswer } from "../lib/hanzi";
+import { prefetchHanziStrokes } from "../lib/hanzi-strokes";
 import {
   REACTIONS_EVENT,
   REACTIONS_KEY,
@@ -260,11 +261,14 @@ export function VocabularyCard({
         : getSpellingDurationMs(entry.word.word, spellingVariant, reducedMotion),
     [isHan, entry.word.word, spellingVariant, reducedMotion],
   );
-  // Warm the lazy stroke chunk as soon as a Han card mounts, so the coda never waits on a
-  // dynamic import mid-animation; the clue pages give it ample time to arrive.
+  // Warm the lazy stroke chunk and this answer's stroke files as soon as a Han card mounts,
+  // so the coda never waits on a dynamic import or a fetch mid-animation; the clue pages
+  // give both ample time to arrive.
   useEffect(() => {
-    if (isHan) void import("./HanziStrokeSpelling");
-  }, [isHan]);
+    if (!isHan) return;
+    void import("./HanziStrokeSpelling");
+    prefetchHanziStrokes(entry.word.word);
+  }, [isHan, entry.word.word]);
   const revealPage = stages.length - 1;
   const pageCount = stages.length + 1;
   /** Progress-bar keys: one per clue stage plus the trailing spelling coda. */

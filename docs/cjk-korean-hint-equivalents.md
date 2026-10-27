@@ -16,12 +16,18 @@ draws each character stroke-by-stroke instead of popping whole characters:
   (MIT) over a synchronous `charDataLoader`. Strokes paint in the card's `--vocab-accent`
   over a faint `--vocab-ink` outline guide, then flash `--vocab-accent-alt` on completion.
   Multi-character words draw left-to-right. Reduced motion shows the finished character.
-- Stroke data is **vendored, not fetched**: `scripts/build-hanzi-strokes.ts` scans every
-  served deck, pulls just those characters from `hanzi-writer-data`, and writes
-  `src/features/vocabulary/data/hanzi-strokes.json`. Re-run it (`npm run build:hanzi`)
-  whenever a CJK deck changes; `npm run check:hanzi` fails if any served character is
-  uncovered. The renderer and dataset are lazy-loaded, so the English feed chunk never
-  carries Hanzi Writer or the stroke JSON.
+- Stroke data is **one static file per character**: `scripts/build-hanzi-strokes.ts` scans
+  every served deck, pulls just those characters from `hanzi-writer-data`, and writes
+  `public/hanzi/<version>/<codepoint>.json` (the folder is the data package's version, kept
+  in `data/hanzi-strokes-version.ts`). The host serves them as plain cached assets, so the
+  server does no work per reader and a reader downloads only the characters of the cards
+  they meet (~1.2 KB each compressed) — the dataset can grow to thousands of characters
+  without a heavy up-front download. `lib/hanzi-strokes.ts` fetches and memoises them; the
+  card prefetches its answer's files on mount, so the coda draws without waiting. If a file
+  cannot be fetched the coda shows the plain characters. Re-run the script
+  (`npm run build:hanzi`) whenever a CJK deck changes; `npm run check:hanzi` fails if any
+  served character has no file at its loader URL. The renderer is lazy-loaded, so the
+  English feed chunk never carries Hanzi Writer.
 - Timing stays owned by the playback hook: `getStrokeSpellingDurationMs` derives a fixed
   draw budget from the character count alone (pure), and the component splits that budget
   across the real strokes via `solveStrokeTiming`, so the drawing always lands inside the
@@ -33,7 +39,7 @@ draws each character stroke-by-stroke instead of popping whole characters:
 Still deferred: the pinyin/reading hint axis, the spaceless-script masking and tokenization
 fixes (the pack authors `usage` blanks with `____` to avoid the leak), and Japanese/Korean codas.
 
-**Data attribution:** the stroke outlines in `hanzi-strokes.json` derive from
+**Data attribution:** the stroke outlines in `public/hanzi/` derive from
 [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) (Arphic Public License) as
 redistributed by the `hanzi-writer-data` package; they are vendored under that licence.
 

@@ -4801,6 +4801,13 @@
 .vocab-stroke-char svg {
   display: block;
 }
+/* Stroke file unavailable: the answer still shows, as plain characters in the accent.
+   The component sizes the glyph to the box the drawing would have taken. */
+.vocab-stroke-char[data-plain] {
+  line-height: 1;
+  color: var(--vocab-accent);
+  font-weight: 700;
+}
 /* ── Prose inside the meaning panel ───────────────────────────────────────────
    Deck emphasis becomes an accent underline (the text stays the audited ink, so its
    contrast is untouched) and the answer filled into the example becomes an accent
