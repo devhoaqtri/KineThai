@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "vocab:import": "node --experimental-strip-types scripts/import-vocabulary.ts",
+    "vocab:import": "npx tsx scripts/import-vocabulary.ts",
     "check:gradients": "node scripts/check-canvas-gradients.ts",
     "check:ambient": "node scripts/check-ambient-single-stream.ts",
     "check:ambient-zh": "node scripts/check-ambient-zh-pool.ts",
