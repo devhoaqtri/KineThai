@@ -1,0 +1,929 @@
+{
+  "_readme": "Sample cards for the meaning panel's grammar section (docs/word-grammar-fields.md). de/fr/es are the gen-rules v3 samples plus the new shared fields comparison and collocations; ko/ja/zh are new. Every card carries every key its language uses; null = not applicable.",
+  "de": [
+    {
+      "word": "Buch",
+      "pos": "noun",
+      "ipa": "/buːx/",
+      "meaningVi": "cuốn_sách",
+      "gender": "n",
+      "article": "das",
+      "plural": "die Bücher",
+      "comparison": null,
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "collocations": [
+        {
+          "text": "ein Buch lesen",
+          "vi": "đọc sách"
+        },
+        {
+          "text": "ein Buch ausleihen",
+          "vi": "mượn sách"
+        }
+      ],
+      "tipVi": "Số_nhiều có umlaut | và đuôi -er: | das Buch → die Bücher.",
+      "defVi": "Xấp giấy in chữ | đóng gáy | để mình đọc.",
+      "leadVi": "Mở ra là thấy | cả thế_giới | câu_chuyện kỳ_diệu.",
+      "anticipateVi": "Ngồi lật | tận khuya à?",
+      "usageEn": "Dieses _____ habe ich in zwei Tagen gelesen.",
+      "usageVi": "Cuốn_sách này | tôi đọc xong | trong hai ngày.",
+      "topics": ["study", "daily"],
+      "exams": [],
+      "emphasisVi": ["đọc", "câu chuyện", "tận"]
+    },
+    {
+      "word": "Kollege",
+      "pos": "noun",
+      "ipa": "/kɔˈleːɡə/",
+      "meaningVi": "đồng_nghiệp",
+      "gender": "m",
+      "article": "der",
+      "plural": "die Kollegen",
+      "comparison": null,
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "collocations": null,
+      "tipVi": "Danh_từ yếu: | thêm -n | ở mọi cách | trừ cách 1: | den Kollegen.",
+      "defVi": "Người cùng công_ty, | ngày ngày | làm_việc bên mình.",
+      "leadVi": "Ngồi bàn bên_cạnh, | trưa nào | cũng rủ nhau | đi ăn.",
+      "anticipateVi": "Chung cả sếp | luôn nè!",
+      "usageEn": "Mein _____ fährt mich heute nach Hause.",
+      "usageVi": "Hôm nay | đồng_nghiệp | chở tôi về.",
+      "topics": ["work"],
+      "exams": [],
+      "emphasisVi": ["cùng", "bên cạnh", "cả"]
+    },
+    {
+      "word": "groß",
+      "pos": "adj",
+      "ipa": "/ɡʁoːs/",
+      "meaningVi": "to, lớn",
+      "gender": null,
+      "article": null,
+      "plural": null,
+      "comparison": "größer · am größten",
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "collocations": [
+        {
+          "text": "eine große Familie",
+          "vi": "gia_đình đông"
+        }
+      ],
+      "tipVi": "So_sánh có umlaut: | groß → größer → am größten.",
+      "defVi": "Có kích_cỡ | vượt hơn hẳn | mức thông_thường.",
+      "leadVi": "Con_voi đứng cạnh, | ai cũng=thấy | mình bé_tẹo.",
+      "anticipateVi": "Đến cả cửa | cũng chật à?",
+      "usageEn": "Euer Garten ist aber _____!",
+      "usageVi": "Vườn nhà bạn | rộng thật đấy!",
+      "topics": ["general"],
+      "exams": [],
+      "emphasisVi": ["vượt", "bé tẹo", "cả"]
+    },
+    {
+      "word": "ankommen",
+      "pos": "verb",
+      "ipa": "/ˈanˌkɔmən/",
+      "meaningVi": "đến nơi",
+      "gender": null,
+      "article": null,
+      "plural": null,
+      "comparison": null,
+      "verbInfo": {
+        "Konjugation": "stark",
+        "Hilfsverb": "sein",
+        "trennbar": "an-",
+        "Vokalwechsel": null,
+        "Stammformen": {
+          "Präsens": "er kommt an",
+          "Präteritum": "er kam an",
+          "Perfekt": "er ist angekommen"
+        }
+      },
+      "reflexive": null,
+      "governs": "in/an + Dativ",
+      "collocations": [
+        {
+          "text": "pünktlich ankommen",
+          "vi": "đến đúng giờ"
+        }
+      ],
+      "tipVi": "Tiền_tố an | tách ra cuối câu: | Der Zug kommt um acht an.",
+      "defVi": "Đặt chân đến nơi | sau quãng_đường dài.",
+      "leadVi": "Xe dừng bánh, | tài_xế báo: | \"Tới bến rồi nha!\"",
+      "anticipateVi": "Đi mãi | vẫn chưa tới à?",
+      "usageEn": "Wir werden gegen zehn Uhr am Bahnhof _____.",
+      "usageVi": "Khoảng mười giờ | chúng_tôi sẽ tới | nhà_ga.",
+      "topics": ["travel"],
+      "exams": [],
+      "emphasisVi": ["đến", "Tới", "mãi"]
+    },
+    {
+      "word": "helfen",
+      "pos": "verb",
+      "ipa": "/ˈhɛlfn̩/",
+      "meaningVi": "giúp_đỡ",
+      "gender": null,
+      "article": null,
+      "plural": null,
+      "comparison": null,
+      "verbInfo": {
+        "Konjugation": "stark",
+        "Hilfsverb": "haben",
+        "trennbar": null,
+        "Vokalwechsel": "e → i : er hilft",
+        "Stammformen": {
+          "Präsens": "er hilft",
+          "Präteritum": "er half",
+          "Perfekt": "er hat geholfen"
+        }
+      },
+      "reflexive": null,
+      "governs": "+ Dativ",
+      "collocations": [
+        {
+          "text": "beim Kochen helfen",
+          "vi": "phụ nấu ăn"
+        }
+      ],
+      "tipVi": "Đi với Dativ: | ich helfe dir, | không phải dich.",
+      "defVi": "Góp_sức | để=người khác | đỡ vất_vả hơn.",
+      "leadVi": "Thấy bà xách nặng, | cậu bé chạy lại đỡ.",
+      "anticipateVi": "Sao lại | làm một_mình?",
+      "usageEn": "Kannst du mir beim Kochen _____?",
+      "usageVi": "Bạn giúp tôi | nấu ăn được không?",
+      "topics": ["society", "daily"],
+      "exams": [],
+      "emphasisVi": ["Góp sức", "đỡ", "lại"]
+    },
+    {
+      "word": "vergessen",
+      "pos": "verb",
+      "ipa": "/fɛɐ̯ˈɡɛsn̩/",
+      "meaningVi": "quên",
+      "gender": null,
+      "article": null,
+      "plural": null,
+      "comparison": null,
+      "verbInfo": {
+        "Konjugation": "stark",
+        "Hilfsverb": "haben",
+        "trennbar": null,
+        "Vokalwechsel": "e → i : er vergisst",
+        "Stammformen": {
+          "Präsens": "er vergisst",
+          "Präteritum": "er vergaß",
+          "Perfekt": "er hat vergessen"
+        }
+      },
+      "reflexive": null,
+      "governs": "zu + Infinitiv",
+      "collocations": null,
+      "tipVi": "Quá_khứ đổi hẳn | thành vergaß, | không phải vergesste.",
+      "defVi": "Không còn nhớ | điều mình từng biết | hay định làm.",
+      "leadVi": "Mở tủ_lạnh | rồi đứng ngẩn ra, | định lấy gì nhỉ?",
+      "anticipateVi": "Ơ, mình | lại định làm gì?",
+      "usageEn": "Du darfst nicht _____, Oma anzurufen.",
+      "usageVi": "Bạn không được quên | gọi điện cho bà nhé.",
+      "topics": ["thinking"],
+      "exams": [],
+      "emphasisVi": ["nhớ", "ngẩn", "lại"]
+    },
+    {
+      "word": "beeilen",
+      "pos": "verb",
+      "ipa": "/bəˈʔaɪ̯lən/",
+      "meaningVi": "vội_vàng",
+      "gender": null,
+      "article": null,
+      "plural": null,
+      "comparison": null,
+      "verbInfo": {
+        "Konjugation": "schwach",
+        "Hilfsverb": "haben",
+        "trennbar": null,
+        "Vokalwechsel": null,
+        "Stammformen": {
+          "Präsens": "er beeilt sich",
+          "Präteritum": "er beeilte sich",
+          "Perfekt": "er hat sich beeilt"
+        }
+      },
+      "reflexive": "sich beeilen",
+      "governs": "mit + Dativ",
+      "collocations": null,
+      "tipVi": "Luôn đi với sich: | Beeil dich!",
+      "defVi": "Đi hay làm vội_vàng | vì sắp hết | thời_gian.",
+      "leadVi": "Sắp vào lớp, | cuống_cuồng | vừa chạy vừa cài áo.",
+      "anticipateVi": "Từ từ thôi, | kịp mà!",
+      "usageEn": "Wir müssen uns _____, sonst verpassen wir den Bus.",
+      "usageVi": "Chúng_ta | phải nhanh lên | kẻo lỡ xe buýt.",
+      "topics": ["time", "daily"],
+      "exams": [],
+      "emphasisVi": ["vội vàng", "cuống cuồng", "mà"]
+    }
+  ],
+  "fr": [
+    {
+      "word": "cheval",
+      "pos": "noun",
+      "ipa": "/ʃə.val/",
+      "meaningVi": "con_ngựa",
+      "gender": "m",
+      "article": "le",
+      "feminine": null,
+      "plural": "les chevaux",
+      "comparison": null,
+      "hAspire": null,
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "collocations": [
+        {
+          "text": "monter à cheval",
+          "vi": "cưỡi ngựa"
+        }
+      ],
+      "tipVi": "Số_nhiều bất_quy_tắc: | un cheval → des chevaux, | không thêm -s.",
+      "defVi": "Con_vật lớn bốn chân, | chạy nhanh, | người có_thể cưỡi.",
+      "leadVi": "Tiếng vó lộc_cộc | vang trên con_đường làng.",
+      "anticipateVi": "Ai mà | phi nhanh thế?",
+      "usageEn": "Ma sœur apprend à monter à _____.",
+      "usageVi": "Chị gái tôi | đang=học cưỡi ngựa.",
+      "topics": ["nature", "travel"],
+      "exams": [],
+      "emphasisVi": ["cưỡi", "vó", "mà"]
+    },
+    {
+      "word": "hôpital",
+      "pos": "noun",
+      "ipa": "/o.pi.tal/",
+      "meaningVi": "bệnh_viện",
+      "gender": "m",
+      "article": "l'",
+      "feminine": null,
+      "plural": "les hôpitaux",
+      "comparison": null,
+      "hAspire": "h muet",
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "collocations": null,
+      "tipVi": "H câm | nên viết l'hôpital, | không viết le hôpital.",
+      "defVi": "Nơi bác_sĩ ngày đêm | chữa bệnh | cho người ốm.",
+      "leadVi": "Xe cứu_thương hú còi | lao thẳng | vào cổng.",
+      "anticipateVi": "Xe cứ hú còi | chạy đi đâu?",
+      "usageEn": "Ma tante est infirmière dans un grand _____.",
+      "usageVi": "Cô tôi | làm y_tá | ở một bệnh_viện lớn.",
+      "topics": ["health"],
+      "exams": [],
+      "emphasisVi": ["chữa", "cứu thương", "cứ"]
+    },
+    {
+      "word": "petit",
+      "pos": "adj",
+      "ipa": "/pə.ti/",
+      "meaningVi": "nhỏ",
+      "gender": null,
+      "article": null,
+      "feminine": "petite",
+      "plural": "petits / petites",
+      "comparison": null,
+      "hAspire": null,
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "collocations": null,
+      "tipVi": "Đứng trước danh_từ: | un petit jardin.",
+      "defVi": "Có kích_thước | bé hơn hẳn | mức bình_thường.",
+      "leadVi": "Chú kiến con | lọt_thỏm | trong lòng bàn tay.",
+      "anticipateVi": "Chỉ bằng | hạt_đậu thôi à?",
+      "usageEn": "Ce pull est trop _____ pour moi.",
+      "usageVi": "Cái áo len này | quá nhỏ | với tôi.",
+      "topics": ["general"],
+      "exams": [],
+      "emphasisVi": ["bé", "lọt thỏm", "Chỉ"]
+    },
+    {
+      "word": "arriver",
+      "pos": "verb",
+      "ipa": "/aʁive/",
+      "meaningVi": "đến nơi",
+      "gender": null,
+      "article": null,
+      "feminine": null,
+      "plural": null,
+      "comparison": null,
+      "hAspire": null,
+      "verbInfo": {
+        "groupe": "1er groupe",
+        "conjugaison": "régulier",
+        "auxiliaire": "être",
+        "radical": null,
+        "temps": {
+          "présent": "j'arrive",
+          "passé composé": "je suis arrivé",
+          "futur simple": "j'arriverai"
+        }
+      },
+      "reflexive": null,
+      "governs": "à + lieu",
+      "collocations": [
+        {
+          "text": "arriver à l'heure",
+          "vi": "đến đúng giờ"
+        },
+        {
+          "text": "arriver en retard",
+          "vi": "đến muộn"
+        }
+      ],
+      "tipVi": "Quá_khứ dùng être: | je suis arrivé, | không nói j'ai arrivé.",
+      "defVi": "Đặt chân đến nơi | sau quãng_đường dài.",
+      "leadVi": "Xe dừng bánh, | tài_xế báo: | \"Tới bến rồi nha!\"",
+      "anticipateVi": "Đi mãi | vẫn chưa tới à?",
+      "usageEn": "Le bus va _____ dans cinq minutes.",
+      "usageVi": "Năm phút nữa | xe_buýt sẽ tới.",
+      "topics": ["travel"],
+      "exams": [],
+      "emphasisVi": ["đến", "Tới", "mãi"]
+    },
+    {
+      "word": "dépêcher",
+      "pos": "verb",
+      "ipa": "/de.pe.ʃe/",
+      "meaningVi": "vội_vàng",
+      "gender": null,
+      "article": null,
+      "feminine": null,
+      "plural": null,
+      "comparison": null,
+      "hAspire": null,
+      "verbInfo": {
+        "groupe": "1er groupe",
+        "conjugaison": "régulier",
+        "auxiliaire": "être",
+        "radical": null,
+        "temps": {
+          "présent": "je me dépêche",
+          "passé composé": "je me suis dépêché",
+          "futur simple": "je me dépêcherai"
+        }
+      },
+      "reflexive": "se dépêcher",
+      "governs": "de + infinitif",
+      "collocations": null,
+      "tipVi": "Luôn đi với se: | je me dépêche, | dépêche-toi !",
+      "defVi": "Đi hay làm vội_vàng | vì sắp hết | thời_gian.",
+      "leadVi": "Sắp vào lớp, | cuống_cuồng | vừa chạy vừa cài áo.",
+      "anticipateVi": "Từ từ thôi, | kịp mà!",
+      "usageEn": "Pas besoin de te _____, le film commence à neuf heures.",
+      "usageVi": "Không cần vội_vàng, | phim bắt_đầu | lúc chín giờ.",
+      "topics": ["time", "daily"],
+      "exams": [],
+      "emphasisVi": ["vội vàng", "cuống cuồng", "mà"]
+    },
+    {
+      "word": "plaindre",
+      "pos": "verb",
+      "ipa": "/plɛ̃dʁ/",
+      "meaningVi": "phàn_nàn",
+      "gender": null,
+      "article": null,
+      "feminine": null,
+      "plural": null,
+      "comparison": null,
+      "hAspire": null,
+      "verbInfo": {
+        "groupe": "3e groupe",
+        "conjugaison": "irrégulier",
+        "auxiliaire": "être",
+        "radical": "-aindre → -aign- : nous nous plaignons",
+        "temps": {
+          "présent": "je me plains",
+          "passé composé": "je me suis plaint",
+          "futur simple": "je me plaindrai"
+        }
+      },
+      "reflexive": "se plaindre",
+      "governs": "de + nom",
+      "collocations": null,
+      "tipVi": "Phàn_nàn về điều gì | dùng de: | se plaindre du bruit.",
+      "defVi": "Lên_tiếng phàn_nàn | vì không hài_lòng | với điều gì.",
+      "leadVi": "Món lên trễ, nguội_ngắt, | khách cằn_nhằn | với phục_vụ.",
+      "anticipateVi": "Khó quá? | Cứ thở dài đi!",
+      "usageEn": "Les voisins vont encore se _____ du bruit.",
+      "usageVi": "Hàng_xóm | lại sắp phàn_nàn | về tiếng ồn.",
+      "topics": ["communication"],
+      "exams": [],
+      "emphasisVi": ["phàn nàn", "cằn nhằn", "Cứ"]
+    }
+  ],
+  "es": [
+    {
+      "word": "día",
+      "pos": "noun",
+      "ipa": "/ˈdi.a/",
+      "meaningVi": "ngày",
+      "gender": "m",
+      "article": "el",
+      "feminine": null,
+      "plural": "los días",
+      "comparison": null,
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "serEstar": null,
+      "collocations": [
+        {
+          "text": "buenos días",
+          "vi": "chào buổi sáng"
+        },
+        {
+          "text": "todos los días",
+          "vi": "ngày_nào cũng"
+        }
+      ],
+      "tipVi": "Tận_cùng -a | nhưng là giống đực: | el día, buenos días.",
+      "defVi": "Khoảng thời_gian | hai mươi bốn giờ, | từ sáng đến đêm.",
+      "leadVi": "Mặt_trời mọc | rồi lặn, | trọn_vẹn | một vòng quay.",
+      "anticipateVi": "Sáng rồi lại tối?",
+      "usageEn": "Hoy es un _____ muy bonito para ir a la playa.",
+      "usageVi": "Hôm nay | là một ngày rất=đẹp | để đi biển.",
+      "topics": ["time"],
+      "exams": [],
+      "emphasisVi": ["thời gian", "Mặt trời", "lại"]
+    },
+    {
+      "word": "aburrido",
+      "pos": "adj",
+      "ipa": "/abuˈrido/",
+      "meaningVi": "chán",
+      "gender": null,
+      "article": null,
+      "feminine": "aburrida",
+      "plural": "aburridos / aburridas",
+      "comparison": null,
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "serEstar": "ser aburrido = nhàm_chán | estar aburrido = buồn_chán",
+      "collocations": null,
+      "tipVi": "Nói về nữ | đổi -o thành -a: | ella está aburrida.",
+      "defVi": "Thấy buồn_chán | vì chẳng=có gì vui | để=làm.",
+      "leadVi": "Mưa cả=ngày, | nằm ngáp_ngắn ngáp_dài | trên giường.",
+      "anticipateVi": "Lại ngồi đếm thạch_sùng?",
+      "usageEn": "En casa sin internet, mi hermano está muy _____.",
+      "usageVi": "Ở nhà không có mạng | em tôi chán lắm.",
+      "topics": ["emotion"],
+      "exams": [],
+      "emphasisVi": ["buồn chán", "ngáp dài", "Lại"]
+    },
+    {
+      "word": "feliz",
+      "pos": "adj",
+      "ipa": "/feˈliθ/",
+      "meaningVi": "vui_vẻ",
+      "gender": null,
+      "article": null,
+      "feminine": "feliz",
+      "plural": "felices",
+      "comparison": null,
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": "con + sustantivo",
+      "serEstar": "Dùng cả ser | lẫn estar: | soy feliz, | estoy feliz.",
+      "collocations": null,
+      "tipVi": "Số_nhiều đổi z | thành c: | feliz → felices.",
+      "defVi": "Lòng hạnh_phúc, | thấy mọi thứ | đều đáng yêu.",
+      "leadVi": "Nhận quà xong, | em bé | cười tít cả mắt.",
+      "anticipateVi": "Chẳng giấu nổi | nụ cười à?",
+      "usageEn": "Mi abuela está muy _____ con su nuevo jardín.",
+      "usageVi": "Bà tôi rất=vui | với khu_vườn mới.",
+      "topics": ["emotion"],
+      "exams": [],
+      "emphasisVi": ["hạnh phúc", "cười", "Chẳng"]
+    },
+    {
+      "word": "grande",
+      "pos": "adj",
+      "ipa": "/ˈɡɾan.de/",
+      "meaningVi": "to, lớn",
+      "gender": null,
+      "article": null,
+      "feminine": "grande",
+      "plural": "grandes",
+      "comparison": "mayor",
+      "verbInfo": null,
+      "reflexive": null,
+      "governs": null,
+      "serEstar": "Thường dùng ser: | la casa es grande.",
+      "collocations": null,
+      "tipVi": "Trước danh_từ số_ít | rút thành gran: | una gran idea.",
+      "defVi": "Có kích_cỡ | vượt hơn hẳn | mức thông_thường.",
+      "leadVi": "Con_voi đứng cạnh, | ai cũng=thấy | mình bé_tẹo.",
+      "anticipateVi": "Đến cả cửa | cũng chật à?",
+      "usageEn": "Este abrigo me queda muy _____.",
+      "usageVi": "Cái áo khoác này | tôi mặc rộng quá.",
+      "topics": ["general"],
+      "exams": [],
+      "emphasisVi": ["vượt", "bé tẹo", "cả"]
+    },
+    {
+      "word": "dormir",
+      "pos": "verb",
+      "ipa": "/doɾˈmiɾ/",
+      "meaningVi": "ngủ",
+      "gender": null,
+      "article": null,
+      "feminine": null,
+      "plural": null,
+      "comparison": null,
+      "verbInfo": {
+        "conjugación": "irregular",
+        "raíz": "o → ue : duermo",
+        "tiempos": {
+          "presente": "yo duermo",
+          "pretérito": "él durmió",
+          "participio": "dormido",
+          "gerundio": "durmiendo"
+        }
+      },
+      "reflexive": null,
+      "governs": null,
+      "serEstar": null,
+      "collocations": [
+        {
+          "text": "dormir bien",
+          "vi": "ngủ ngon"
+        },
+        {
+          "text": "dormir la siesta",
+          "vi": "ngủ trưa"
+        }
+      ],
+      "tipVi": "Quá_khứ lại đổi o | thành u: | él durmió, durmiendo.",
+      "defVi": "Nhắm mắt nghỉ_ngơi, | không còn tỉnh_táo, | thường về đêm.",
+      "leadVi": "Đặt lưng xuống gối | là ngáy pho_pho ngay.",
+      "anticipateVi": "Mắt đã | díp lại rồi à?",
+      "usageEn": "Necesito _____ ocho horas cada noche.",
+      "usageVi": "Tôi cần ngủ | tám tiếng | mỗi đêm.",
+      "topics": ["health", "daily"],
+      "exams": [],
+      "emphasisVi": ["nghỉ ngơi", "ngáy", "đã"]
+    },
+    {
+      "word": "quejar",
+      "pos": "verb",
+      "ipa": "/keˈxaɾ/",
+      "meaningVi": "phàn_nàn",
+      "gender": null,
+      "article": null,
+      "feminine": null,
+      "plural": null,
+      "comparison": null,
+      "verbInfo": {
+        "conjugación": "regular",
+        "raíz": null,
+        "tiempos": {
+          "presente": "yo me quejo",
+          "pretérito": "él se quejó",
+          "participio": "quejado",
+          "gerundio": "quejándose"
+        }
+      },
+      "reflexive": "quejarse",
+      "governs": "de + sustantivo",
+      "serEstar": null,
+      "collocations": null,
+      "tipVi": "Luôn dùng quejarse de: | se queja del frío.",
+      "defVi": "Lên_tiếng phàn_nàn | vì không hài_lòng | với điều gì.",
+      "leadVi": "Món lên trễ, nguội_ngắt, | khách cằn_nhằn | với phục_vụ.",
+      "anticipateVi": "Khó quá? | Cứ thở dài đi!",
+      "usageEn": "Mi abuela se suele _____ del frío.",
+      "usageVi": "Bà tôi | hay phàn_nàn | về cái_lạnh.",
+      "topics": ["communication"],
+      "exams": [],
+      "emphasisVi": ["phàn nàn", "cằn nhằn", "Cứ"]
+    }
+  ],
+  "ko": [
+    {
+      "word": "학교",
+      "pos": "noun",
+      "ipa": "/hak̚.k͈jo/",
+      "meaningVi": "trường_học",
+      "counter": "곳",
+      "hanja": "學校",
+      "hanViet": "học hiệu",
+      "verbInfo": null,
+      "governs": null,
+      "honorific": null,
+      "collocations": [
+        {
+          "text": "학교에 가다",
+          "vi": "đi học"
+        },
+        {
+          "text": "학교가 끝나다",
+          "vi": "tan học"
+        }
+      ],
+      "tipVi": "Đi đến trường | dùng 에: | 학교에 가요, | không dùng 를.",
+      "defVi": "Nơi học_sinh | ngày ngày đến | học với thầy_cô.",
+      "leadVi": "Tiếng trống | vang lên, | cả sân | ùa vào lớp.",
+      "anticipateVi": "Lại sắp | tới giờ vào lớp?",
+      "usageEn": "저는 매일 버스로 _____에 가요.",
+      "usageVi": "Ngày_nào tôi | cũng đi xe_buýt | đến trường.",
+      "topics": ["study", "daily"],
+      "exams": [],
+      "emphasisVi": ["học", "trống", "Lại"]
+    },
+    {
+      "word": "덥다",
+      "pos": "adj",
+      "ipa": "/tʌp̚.t͈a/",
+      "meaningVi": "nóng",
+      "counter": null,
+      "hanja": null,
+      "hanViet": null,
+      "verbInfo": {
+        "활용": "ㅂ 불규칙",
+        "활용형": {
+          "현재": "더워요",
+          "과거": "더웠어요",
+          "관형형": "더운"
+        }
+      },
+      "governs": null,
+      "honorific": null,
+      "collocations": [
+        {
+          "text": "날씨가 덥다",
+          "vi": "trời nóng"
+        },
+        {
+          "text": "더운 여름",
+          "vi": "mùa hè nóng"
+        }
+      ],
+      "tipVi": "Gốc ㅂ | đổi thành 우: | 덥다 → 더워요, | không nói 덥어요.",
+      "defVi": "Nhiệt_độ cao | khiến người | đổ mồ_hôi, | khó chịu.",
+      "leadVi": "Giữa trưa tháng sáu, | quạt chạy | vẫn thấy hầm_hập.",
+      "anticipateVi": "Muốn chui | vào tủ_lạnh luôn?",
+      "usageEn": "오늘은 날씨가 정말 _____.",
+      "usageVi": "Hôm_nay | trời nóng thật.",
+      "topics": ["nature", "daily"],
+      "exams": [],
+      "emphasisVi": ["mồ hôi", "hầm hập", "luôn"]
+    },
+    {
+      "word": "먹다",
+      "pos": "verb",
+      "ipa": "/mʌk̚.t͈a/",
+      "meaningVi": "ăn",
+      "counter": null,
+      "hanja": null,
+      "hanViet": null,
+      "verbInfo": {
+        "활용": "규칙",
+        "활용형": {
+          "현재": "먹어요",
+          "과거": "먹었어요",
+          "관형형": "먹는"
+        }
+      },
+      "governs": "N을/를",
+      "honorific": {
+        "높임말": "드시다"
+      },
+      "collocations": [
+        {
+          "text": "밥을 먹다",
+          "vi": "ăn cơm"
+        },
+        {
+          "text": "약을 먹다",
+          "vi": "uống thuốc"
+        }
+      ],
+      "tipVi": "Mời người lớn | dùng 드시다: | 할머니, 드세요.",
+      "defVi": "Cho thức_ăn | vào miệng, | nhai rồi nuốt xuống.",
+      "leadVi": "Bát phở nóng_hổi | vừa bưng ra, | cả nhà xì_xụp.",
+      "anticipateVi": "Bụng réo | từ nãy rồi à?",
+      "usageEn": "저는 아침에 빵을 _____.",
+      "usageVi": "Buổi sáng | tôi ăn bánh_mì.",
+      "topics": ["food", "daily"],
+      "exams": [],
+      "emphasisVi": ["nhai", "xì xụp", "réo"]
+    }
+  ],
+  "ja": [
+    {
+      "word": "食べる",
+      "pos": "verb",
+      "ipa": "たべる",
+      "meaningVi": "ăn",
+      "counter": null,
+      "hanViet": "thực",
+      "verbInfo": {
+        "種類": "一段動詞",
+        "自他": "他動詞",
+        "活用形": {
+          "ます形": "食べます",
+          "て形": "食べて",
+          "ない形": "食べない",
+          "た形": "食べた"
+        }
+      },
+      "governs": "Nを",
+      "honorific": {
+        "尊敬語": "召し上がる",
+        "謙譲語": "いただく"
+      },
+      "collocations": [
+        {
+          "text": "ご飯を食べる",
+          "vi": "ăn cơm"
+        },
+        {
+          "text": "外で食べる",
+          "vi": "ăn ngoài"
+        }
+      ],
+      "tipVi": "Nhóm 2: | bỏ る | rồi thêm ます: | 食べます.",
+      "defVi": "Cho thức_ăn | vào miệng, | nhai rồi nuốt xuống.",
+      "leadVi": "Bát phở nóng_hổi | vừa bưng ra, | cả nhà xì_xụp.",
+      "anticipateVi": "Bụng réo | từ nãy rồi à?",
+      "usageEn": "朝はいつもパンを_____。",
+      "usageVi": "Buổi sáng | tôi hay ăn bánh_mì.",
+      "topics": ["food", "daily"],
+      "exams": [],
+      "emphasisVi": ["nhai", "xì xụp", "réo"]
+    },
+    {
+      "word": "本",
+      "pos": "noun",
+      "ipa": "ほん",
+      "meaningVi": "cuốn_sách",
+      "counter": "冊（さつ）",
+      "hanViet": "bản",
+      "verbInfo": null,
+      "governs": null,
+      "honorific": null,
+      "collocations": [
+        {
+          "text": "本を読む",
+          "vi": "đọc sách"
+        },
+        {
+          "text": "本を借りる",
+          "vi": "mượn sách"
+        }
+      ],
+      "tipVi": "本 cũng là | lượng_từ | đếm vật dài: | ペン一本.",
+      "defVi": "Xấp giấy in chữ | đóng gáy | để mình đọc.",
+      "leadVi": "Mở ra là thấy | cả thế_giới | câu_chuyện kỳ_diệu.",
+      "anticipateVi": "Ngồi lật | tận khuya à?",
+      "usageEn": "図書館で_____を二冊借りました。",
+      "usageVi": "Tôi mượn | hai cuốn_sách | ở thư_viện.",
+      "topics": ["study", "daily"],
+      "exams": [],
+      "emphasisVi": ["đọc", "câu chuyện", "tận"]
+    },
+    {
+      "word": "高い",
+      "pos": "adj",
+      "ipa": "たかい",
+      "meaningVi": "cao, đắt",
+      "counter": null,
+      "hanViet": "cao",
+      "verbInfo": {
+        "種類": "い形容詞",
+        "活用形": {
+          "否定": "高くない",
+          "過去": "高かった",
+          "て形": "高くて"
+        }
+      },
+      "governs": "Nが",
+      "honorific": null,
+      "collocations": [
+        {
+          "text": "背が高い",
+          "vi": "cao ráo"
+        },
+        {
+          "text": "値段が高い",
+          "vi": "giá đắt"
+        }
+      ],
+      "tipVi": "Vừa là cao | vừa là đắt: | この服は高い | = áo này đắt.",
+      "defVi": "Vượt hẳn | lên trên | so với mức thường gặp.",
+      "leadVi": "Ngước cổ mỏi nhừ | vẫn chưa thấy | đỉnh tòa_nhà.",
+      "anticipateVi": "Nhón chân | cũng không với tới?",
+      "usageEn": "あのビルはとても_____です。",
+      "usageVi": "Tòa_nhà kia | rất cao.",
+      "topics": ["general"],
+      "exams": [],
+      "emphasisVi": ["Vượt", "Ngước", "Nhón"]
+    }
+  ],
+  "zh": [
+    {
+      "word": "见面",
+      "pos": "verb",
+      "ipa": "jiànmiàn",
+      "meaningVi": "gặp mặt",
+      "counter": null,
+      "traditional": "見面",
+      "hanViet": "kiến diện",
+      "verbInfo": {
+        "离合词": "见…面 : 我们见过面"
+      },
+      "governs": "跟 + 人 + 见面",
+      "reduplication": "见见面",
+      "collocations": [
+        {
+          "text": "第一次见面",
+          "vi": "lần đầu gặp"
+        },
+        {
+          "text": "明天见面",
+          "vi": "mai gặp nhau"
+        }
+      ],
+      "tipVi": "Không nói 见面他: | phải nói 跟他见面.",
+      "defVi": "Gặp nhau | trực_tiếp, | mặt đối mặt | với bạn_bè.",
+      "leadVi": "Nhắn_tin cả năm, | cuối_tuần này | mới hẹn cà_phê.",
+      "anticipateVi": "Hồi_hộp | trước buổi hẹn à?",
+      "usageEn": "我们明天下午_____吧。",
+      "usageVi": "Chiều mai | mình gặp nhau nhé.",
+      "topics": ["communication", "daily"],
+      "exams": [],
+      "emphasisVi": ["mặt đối mặt", "hẹn", "Hồi hộp"]
+    },
+    {
+      "word": "书",
+      "pos": "noun",
+      "ipa": "shū",
+      "meaningVi": "cuốn_sách",
+      "counter": "本 běn",
+      "traditional": "書",
+      "hanViet": "thư",
+      "verbInfo": null,
+      "governs": null,
+      "reduplication": null,
+      "collocations": [
+        {
+          "text": "看书",
+          "vi": "đọc sách"
+        },
+        {
+          "text": "借书",
+          "vi": "mượn sách"
+        }
+      ],
+      "tipVi": "Đọc sách | thường nói 看书, | không chỉ 读书.",
+      "defVi": "Xấp giấy in chữ | đóng gáy | để mình đọc.",
+      "leadVi": "Mở ra là thấy | cả thế_giới | câu_chuyện kỳ_diệu.",
+      "anticipateVi": "Ngồi lật | tận khuya à?",
+      "usageEn": "这本_____很有意思。",
+      "usageVi": "Cuốn_sách này | rất hay.",
+      "topics": ["study", "daily"],
+      "exams": [],
+      "emphasisVi": ["đọc", "câu chuyện", "tận"]
+    },
+    {
+      "word": "高兴",
+      "pos": "adj",
+      "ipa": "gāoxìng",
+      "meaningVi": "vui",
+      "counter": null,
+      "traditional": "高興",
+      "hanViet": "cao hứng",
+      "verbInfo": null,
+      "governs": null,
+      "reduplication": "高高兴兴",
+      "collocations": [
+        {
+          "text": "很高兴认识你",
+          "vi": "rất vui được quen bạn"
+        }
+      ],
+      "tipVi": "Lặp kiểu AABB | khi tả vẻ vui: | 高高兴兴地回家.",
+      "defVi": "Lòng hạnh_phúc, | thấy mọi thứ | đều đáng yêu.",
+      "leadVi": "Nhận quà xong, | em bé | cười tít cả mắt.",
+      "anticipateVi": "Chẳng giấu nổi | nụ cười à?",
+      "usageEn": "见到你我很_____。",
+      "usageVi": "Gặp bạn | tôi rất vui.",
+      "topics": ["emotion"],
+      "exams": [],
+      "emphasisVi": ["hạnh phúc", "cười", "Chẳng"]
+    }
+  ]
+}

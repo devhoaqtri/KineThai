@@ -131,6 +131,23 @@ export function countJoinedUnits(text: string): number {
   return stripWordJoiners(text).split(/\s+/).filter(Boolean).length;
 }
 
+/** The grammar notes written in Vietnamese; every other grammar value is target-language. */
+function encodeGrammar(grammar: VocabularyWord["grammar"]): VocabularyWord["grammar"] {
+  if (!grammar) return grammar;
+  const tipVi = grammar.tipVi && encodeWordJoiners(grammar.tipVi);
+  const serEstar = grammar.serEstar && encodeWordJoiners(grammar.serEstar);
+  const collocations = grammar.collocations?.map((item) =>
+    item.vi && encodeWordJoiners(item.vi) !== item.vi
+      ? { ...item, vi: encodeWordJoiners(item.vi) }
+      : item,
+  );
+  const changed =
+    tipVi !== grammar.tipVi ||
+    serEstar !== grammar.serEstar ||
+    !!collocations?.some((item, index) => item !== grammar.collocations![index]);
+  return changed ? { ...grammar, tipVi, serEstar, collocations } : grammar;
+}
+
 function encodeWord(word: VocabularyWord): VocabularyWord {
   const usage = word.usage.map((example) => {
     const en = encodeWordJoiners(example.en);
@@ -153,13 +170,15 @@ function encodeWord(word: VocabularyWord): VocabularyWord {
   const defVi = encodeWordJoiners(word.defVi);
   const leadVi = encodeWordJoiners(word.leadVi);
   const anticipateVi = encodeWordJoiners(word.anticipateVi);
+  const grammar = encodeGrammar(word.grammar);
   if (
     meaningVi === word.meaningVi &&
     defVi === word.defVi &&
     leadVi === word.leadVi &&
     anticipateVi === word.anticipateVi &&
     !usageChanged &&
-    !emphasisChanged
+    !emphasisChanged &&
+    grammar === word.grammar
   ) {
     return word;
   }
@@ -171,6 +190,7 @@ function encodeWord(word: VocabularyWord): VocabularyWord {
     anticipateVi,
     usage: usageChanged ? usage : word.usage,
     emphasis: emphasisChanged ? emphasis : word.emphasis,
+    grammar,
   };
 }
 

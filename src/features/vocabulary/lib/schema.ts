@@ -1,6 +1,7 @@
 /** WordCrawler validation and normalized catalog contract. Exports: schemas/types, normalizeDeck. Depends on: zod. */
 import { z } from "zod";
 import type { TargetLocale } from "./target-language";
+import { GRAMMAR_KEYS, deckGrammarFields, foldGrammar, grammarSchema } from "./grammar";
 
 /** CEFR levels — used by the English (and ko/ja) vocabulary pages. */
 export const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
@@ -110,13 +111,22 @@ const wordSchema = z.object({
     .max(5)
     .optional()
     .default([]),
+  /**
+   * The word's grammar in its own language (plural, conjugation, governed case,
+   * counter, the beginner trap…), behind the meaning panel's "Nâng cao" section. A
+   * generated deck writes these fields flat on the card; normalizeDeck folds them in
+   * here with every null dropped (lib/grammar.ts). Absent for a word with none.
+   */
+  grammar: grammarSchema.optional(),
 });
+/** A word as a deck writes it: the grammar fields may sit flat on the card. */
+const deckWordSchema = wordSchema.extend(deckGrammarFields);
 const deckSchema = z.object({
   meta: z
     .object({ name: optionalText(160) })
     .passthrough()
     .optional(),
-  words: z.array(wordSchema).min(1, "The deck must contain at least one word").max(100_000),
+  words: z.array(deckWordSchema).min(1, "The deck must contain at least one word").max(100_000),
 });
 export type VocabularyWord = z.infer<typeof wordSchema>;
 export type VocabularyLevel = (typeof LEVELS)[number];
@@ -175,7 +185,11 @@ export function normalizeDeck(input: unknown): Omit<Catalog, "revision"> {
   const ids = new Set<string>();
   const targets = new Set<string>();
   const errors: string[] = [];
-  const words = parsed.data.words.map((entry, index) => {
+  const words = parsed.data.words.map((deckEntry, index) => {
+    const entry = Object.fromEntries(
+      Object.entries(deckEntry).filter(([key]) => !(GRAMMAR_KEYS as string[]).includes(key)),
+    ) as VocabularyWord;
+    const grammar = foldGrammar(deckEntry);
     const word = entry.word.normalize("NFC").toLowerCase().replaceAll("’", "'");
     const id = entry.id.toLowerCase();
     if (ids.has(id)) errors.push(`words.${index}.id: Duplicate ID ${id}`);
@@ -199,6 +213,7 @@ export function normalizeDeck(input: unknown): Omit<Catalog, "revision"> {
       chars: (word.match(/\p{L}/gu) ?? []).length,
       initial: word[0].toUpperCase(),
       emphasis: normalizeEmphasisPhrases(entry.emphasis),
+      grammar,
     };
   });
   if (errors.length) throw new Error(errors.join("\n"));

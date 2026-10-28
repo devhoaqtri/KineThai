@@ -215,6 +215,18 @@
           "vi": "Cô ấy chứng tỏ mình mạnh mẽ hơn người ta tưởng.",
         },
       ],
+
+      // [AUTHOR, written flat] → stored here. OPTIONAL. The word's grammar in its own
+      // language, behind the meaning panel's collapsed "Nâng cao" section. A deck writes
+      // these keys FLAT on the card (plural, verbInfo, governs, counter, hanViet, tipVi…,
+      // null where they do not apply); normalizeDeck folds them into this one object and
+      // drops every null, so a word without grammar has no `grammar` key at all. Field
+      // table, per-language rules (de fr es ko ja zh) and sample cards:
+      // docs/word-grammar-fields.md, docs/word-grammar-sample.json. English decks have none.
+      // "grammar": {
+      //   "gender": "m", "article": "der", "plural": "die Kollegen",
+      //   "tipVi": "Danh_từ yếu: | thêm -n | ở mọi cách | trừ cách 1: | den Kollegen."
+      // },
     },
 
     // ── Minimal valid entry ────────────────────────────────────────────────────────
