@@ -190,15 +190,19 @@ export function normalizeDeck(input: unknown): Omit<Catalog, "revision"> {
       Object.entries(deckEntry).filter(([key]) => !(GRAMMAR_KEYS as string[]).includes(key)),
     ) as VocabularyWord;
     const grammar = foldGrammar(deckEntry);
-    const word = entry.word.normalize("NFC").toLowerCase().replaceAll("’", "'");
+    // The headword keeps the case it was written in: a German noun is capitalised
+    // (der Kollege), and every answer check already compares without case. Duplicates
+    // are still caught case-insensitively.
+    const word = entry.word.normalize("NFC").replaceAll("’", "'");
     const id = entry.id.toLowerCase();
+    const target = word.toLowerCase();
     if (ids.has(id)) errors.push(`words.${index}.id: Duplicate ID ${id}`);
-    if (targets.has(word)) errors.push(`words.${index}.word: Duplicate word ${word}`);
+    if (targets.has(target)) errors.push(`words.${index}.word: Duplicate word ${word}`);
     if (answerPattern(word).test(entry.anticipateVi)) {
       errors.push(`words.${index}.anticipateVi: Contains the English answer`);
     }
     ids.add(id);
-    targets.add(word);
+    targets.add(target);
     // The multi-valued axis is canonical. A deck carrying only the legacy single
     // `topic` is lifted into it, and `topic` is always restated as the first entry so
     // the two can never disagree.

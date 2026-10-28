@@ -94,7 +94,7 @@ Contract:
 - Levels, when supplied: A1, A2, B1, B2, C1, C2. Styles: detective, speed, confession, minimal.
 - Topic slugs: lowercase letters/digits/hyphens, up to 60 characters; omitted/empty topics normalize to `general`.
 - Definitions: up to 400 characters; leads 240; anticipation 180; IPA 120; POS 40. Up to five example pairs, each string up to 400 characters.
-- English words and IDs normalize to lowercase; curly apostrophes in the word normalize to straight apostrophes. Vietnamese source wording/accents remain intact. Letter counts and initials are recomputed rather than trusting supplied values.
+- IDs normalize to lowercase; headwords keep their authored case (German nouns stay capitalised) and duplicates are caught case-insensitively; curly apostrophes in the word normalize to straight apostrophes. Vietnamese source wording/accents remain intact. Letter counts and initials are recomputed rather than trusting supplied values.
 - Maximum input: 100 MiB and 100,000 records. Empty decks, duplicate words/IDs, invalid fields, and target-word leakage in anticipation reject the entire import.
 - Optional stages disappear when their source content is absent. No machine-generated definitions/examples are fabricated.
 

@@ -65,9 +65,16 @@ describe("normalizeDeck", () => {
     expect(result.count).toBe(1);
     expect(result.words[0]!.word).toBe("agree");
   });
-  it("lowercases and NFC-normalizes the headword", () => {
+  it("NFC-normalizes the headword and keeps its case", () => {
     const result = normalizeDeck({ words: [deckWord({ id: "x", word: "Éclair" })] });
-    expect(result.words[0]!.word).toBe("éclair");
+    expect(result.words[0]!.word).toBe("Éclair");
+  });
+  it("rejects a headword repeated in another case", () => {
+    expect(() =>
+      normalizeDeck({
+        words: [deckWord({ id: "a", word: "Buch" }), deckWord({ id: "b", word: "buch" })],
+      }),
+    ).toThrow(/Duplicate word/);
   });
   it("lowercases the id", () => {
     const result = normalizeDeck({ words: [deckWord({ id: "AgreeMe" })] });
