@@ -293,9 +293,7 @@ export function VocabularyCard({
         width: element.clientWidth,
         height: element.clientHeight,
         chromeSide:
-          Number.parseFloat(
-            getComputedStyle(element).getPropertyValue("--vocab-chrome-side"),
-          ) || 0,
+          Number.parseFloat(getComputedStyle(element).getPropertyValue("--vocab-chrome-side")) || 0,
       });
     measure();
     const observer = new ResizeObserver(measure);
@@ -325,6 +323,8 @@ export function VocabularyCard({
   // While the report panel is open the card holds still: the reader is describing
   // THIS page, and the stream must not move on underneath them.
   const [reportOpen, setReportOpen] = useState(false);
+  /** The reader opened the answer's grammar section by hand; playback waits for them. */
+  const [grammarHeld, setGrammarHeld] = useState(false);
   // Visual feedback for the side zones of the three-zone tap: briefly washes the
   // tapped side (left = rewind, right = fast-forward) for 350ms.
   const [tapZone, setTapZone] = useState<"left" | "right" | null>(null);
@@ -410,7 +410,9 @@ export function VocabularyCard({
     count: pageCount,
     active,
     current,
-    autoplay: presentation.autoplay && !reportOpen,
+    // The report sheet and a hand-opened grammar section both hold the card where it is
+    // without touching the reader's autoplay setting.
+    autoplay: presentation.autoplay && !reportOpen && !grammarHeld,
     reducedMotion,
     durations: pageDurations,
     canAdvance,
@@ -1035,6 +1037,7 @@ export function VocabularyCard({
           textBudget={textBudget}
           revealY={revealY}
           timeScale={paceFactor}
+          onGrammarHold={exportLayout ? undefined : setGrammarHeld}
         />
       )}
       {isRevealed && (

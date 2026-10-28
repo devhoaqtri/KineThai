@@ -2303,6 +2303,166 @@
   border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
   padding-top: 14px;
 }
+
+/* ── "Nâng cao": the word's grammar (WordGrammar.tsx) ─────────────────────
+   The foot of the meaning panel. Closed, it is one quiet row — a small-caps title and
+   the names of what it holds — so the gloss stays the thing the panel is about. Open,
+   it is a two-column definition list: the term in the word's own language with its
+   Vietnamese gloss under it, then the value. Rows are `display: contents`, so every
+   label shares one column width however many rows there are. */
+.vocab-grammar {
+  margin-top: 16px;
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+}
+.vocab-grammar-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.74em;
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--vocab-ink) 72%, transparent);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.vocab-grammar-toggle:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--vocab-ink) 60%, transparent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.vocab-grammar-title {
+  flex: none;
+  font-weight: 700;
+  font-size: 0.9em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.vocab-grammar-hint {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.72;
+  transition: opacity var(--dur-quick, 0.15s) ease-out;
+}
+.vocab-grammar[data-open] .vocab-grammar-hint {
+  opacity: 0;
+}
+.vocab-grammar-chevron {
+  flex: none;
+  transition: transform var(--dur-move, 0.25s) var(--ease-spring, ease-out);
+}
+.vocab-grammar[data-open] .vocab-grammar-chevron {
+  transform: rotate(180deg);
+}
+.vocab-grammar-body {
+  overflow: hidden;
+}
+.vocab-grammar-list {
+  display: grid;
+  grid-template-columns: minmax(5.5em, max-content) minmax(0, 1fr);
+  column-gap: 14px;
+  row-gap: 11px;
+  margin: 2px 0 4px;
+  font-size: 0.8em;
+  line-height: 1.38;
+  word-break: normal;
+}
+.vocab-grammar-row {
+  display: contents;
+}
+.vocab-grammar-list dt,
+.vocab-grammar-list dd {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.vocab-grammar-list dt {
+  font-weight: 600;
+  color: color-mix(in srgb, var(--vocab-ink) 70%, transparent);
+}
+.vocab-grammar-list dd {
+  margin: 0;
+  font-weight: 600;
+}
+/* Every gloss — under a term, under a value — is the same quiet second voice. */
+.vocab-grammar small {
+  font-size: 0.8em;
+  font-weight: 450;
+  line-height: 1.3;
+  opacity: 0.72;
+}
+.vocab-grammar-forms {
+  width: 100%;
+  border-collapse: collapse;
+}
+.vocab-grammar-forms tr + tr > * {
+  border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+.vocab-grammar-forms th,
+.vocab-grammar-forms td {
+  padding: 4px 0;
+  vertical-align: top;
+  text-align: left;
+}
+.vocab-grammar-forms th {
+  padding-right: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--vocab-ink) 70%, transparent);
+}
+.vocab-grammar-forms th > * {
+  display: block;
+}
+.vocab-grammar-forms td {
+  font-weight: 600;
+}
+.vocab-grammar-pairs {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vocab-grammar-pairs li {
+  display: flex;
+  flex-direction: column;
+}
+/* The trap note closes the section across both columns, on a faint wash of the ink so
+   it reads as an aside rather than one more row. */
+.vocab-grammar-tip {
+  grid-column: 1 / -1;
+  margin-top: 2px;
+  padding: 9px 12px 10px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--vocab-ink) 9%, transparent);
+  font-weight: 500;
+}
+.vocab-grammar-tip-label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 2px;
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.vocab-grammar-tip-label small {
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* A video export shows the word, not a control nobody can tap. */
+.vocab-card[data-export] .vocab-grammar {
+  display: none;
+}
 .vocab-translation {
   font-family: "Inter", sans-serif;
   font-size: 14px;

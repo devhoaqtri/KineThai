@@ -29,6 +29,7 @@ import { readDifficultyChoice, writeDifficultyChoice } from "../lib/difficulty-c
 import { readDialectChoice, writeDialectChoice } from "../lib/dialect-choice";
 import type { TargetLocale } from "../lib/target-language";
 import { CUSTOM_PACK_EVENT, clearCustomPack, readCustomPack } from "../lib/custom-pack";
+import { DeckLocaleContext } from "../lib/deck-locale";
 import { Link } from "@tanstack/react-router";
 import "../vocabulary.css";
 
@@ -217,126 +218,128 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     );
   }
   return (
-    <main className="vocabulary-shell" ref={shell}>
-      <FeedControls
-        metadata={metadata}
-        levelProgress={levelProgress.seen}
-        filters={filters}
-        locale={locale}
-        presentation={presentation}
-        onFilters={(value) => {
-          // Confirming a picker without changing anything is not a new stream. A fresh
-          // seed remounts the whole feed on a different word, so "Xong" on an untouched
-          // difficulty list — or re-picking the topic already chosen — used to throw away
-          // the word on screen for no reason the reader could see.
-          if (
-            value.topic === filters.topic &&
-            value.level === filters.level &&
-            value.difficulty === filters.difficulty
-          )
-            return;
-          // The level chosen here is the one the next visit opens on.
-          if (value.difficulty !== filters.difficulty) writeDifficultyChoice(value.difficulty);
-          setFilters(value);
-          setSeed(newSeed());
-        }}
-        onPresentation={handlePresentation}
-        open={optionsOpen}
-        onOpen={setOptionsOpen}
-        reducedMotion={reducedMotion}
-        historyStats={viewHistory.stats}
-        onClearHistory={viewHistory.clear}
-        onExport={isAdmin ? openExport : undefined}
-      />
-      {packName && packNoticePresence.mounted && (
-        <div
-          className="vocab-custom-pack-chip"
-          role="status"
-          data-closing={packNoticePresence.closing || undefined}
-        >
-          <Link to="/feed/library" className="vocab-custom-pack-name">
-            Gói của bạn: {packName}
-          </Link>
-          <button type="button" onClick={clearCustomPack} aria-label="Thoát gói của bạn">
-            ×
-          </button>
-        </div>
-      )}
-      <SavedDrawer open={savedOpen} onOpenChange={setSavedOpen} />
-      {/* Beside the drawer rather than inside the card: the word is finished at the moment
+    <DeckLocaleContext.Provider value={locale ?? "en"}>
+      <main className="vocabulary-shell" ref={shell}>
+        <FeedControls
+          metadata={metadata}
+          levelProgress={levelProgress.seen}
+          filters={filters}
+          locale={locale}
+          presentation={presentation}
+          onFilters={(value) => {
+            // Confirming a picker without changing anything is not a new stream. A fresh
+            // seed remounts the whole feed on a different word, so "Xong" on an untouched
+            // difficulty list — or re-picking the topic already chosen — used to throw away
+            // the word on screen for no reason the reader could see.
+            if (
+              value.topic === filters.topic &&
+              value.level === filters.level &&
+              value.difficulty === filters.difficulty
+            )
+              return;
+            // The level chosen here is the one the next visit opens on.
+            if (value.difficulty !== filters.difficulty) writeDifficultyChoice(value.difficulty);
+            setFilters(value);
+            setSeed(newSeed());
+          }}
+          onPresentation={handlePresentation}
+          open={optionsOpen}
+          onOpen={setOptionsOpen}
+          reducedMotion={reducedMotion}
+          historyStats={viewHistory.stats}
+          onClearHistory={viewHistory.clear}
+          onExport={isAdmin ? openExport : undefined}
+        />
+        {packName && packNoticePresence.mounted && (
+          <div
+            className="vocab-custom-pack-chip"
+            role="status"
+            data-closing={packNoticePresence.closing || undefined}
+          >
+            <Link to="/feed/library" className="vocab-custom-pack-name">
+              Gói của bạn: {packName}
+            </Link>
+            <button type="button" onClick={clearCustomPack} aria-label="Thoát gói của bạn">
+              ×
+            </button>
+          </div>
+        )}
+        <SavedDrawer open={savedOpen} onOpenChange={setSavedOpen} />
+        {/* Beside the drawer rather than inside the card: the word is finished at the moment
           the stream starts scrolling to the next one, so a card-level badge would ride out
           of frame half-played. Keyed on the milestone so each one replays from its start.
           It covers the screen, so it suspends the stream below like any other overlay. */}
-      {streak.celebrating !== null ? (
-        <StreakCelebration
-          key={streak.celebrating}
-          days={streak.celebrating}
-          reducedMotion={reducedMotion}
-          onDone={streak.dismiss}
-        />
-      ) : wordCelebration === null && daily.celebrating !== null ? (
-        // A daily goal waits behind the other two, for the same reason.
-        <StreakCelebration
-          key={`daily:${daily.celebrating.goal}:${daily.celebrating.times}`}
-          days={daily.celebrating.goal}
-          reducedMotion={reducedMotion}
-          onDone={daily.dismiss}
-          badge={{
-            tier: dailyTier(daily.celebrating.goal),
-            unit: "từ",
-            count: daily.celebrating.times,
-            title: dailyBadgeTitle(daily.celebrating.goal, daily.celebrating.times),
-            blurb: dailyBadgeBlurb(daily.celebrating.goal, daily.celebrating.times),
-          }}
-        />
-      ) : (
-        // A word milestone waits its turn behind a streak one rather than stacking on it.
-        wordCelebration && (
+        {streak.celebrating !== null ? (
           <StreakCelebration
-            key={`${wordCelebration.scope}:${wordCelebration.words}`}
-            days={wordCelebration.words}
+            key={streak.celebrating}
+            days={streak.celebrating}
             reducedMotion={reducedMotion}
-            onDone={levelProgress.dismiss}
+            onDone={streak.dismiss}
+          />
+        ) : wordCelebration === null && daily.celebrating !== null ? (
+          // A daily goal waits behind the other two, for the same reason.
+          <StreakCelebration
+            key={`daily:${daily.celebrating.goal}:${daily.celebrating.times}`}
+            days={daily.celebrating.goal}
+            reducedMotion={reducedMotion}
+            onDone={daily.dismiss}
             badge={{
-              tier: wordTier(wordCelebration),
+              tier: dailyTier(daily.celebrating.goal),
               unit: "từ",
-              title: wordBadgeTitle(wordCelebration, locale ?? "en"),
-              blurb: wordBadgeBlurb(wordCelebration, locale ?? "en"),
+              count: daily.celebrating.times,
+              title: dailyBadgeTitle(daily.celebrating.goal, daily.celebrating.times),
+              blurb: dailyBadgeBlurb(daily.celebrating.goal, daily.celebrating.times),
             }}
           />
-        )
-      )}
-      <VocabularyStream
-        key={`${packName ?? ""}:${seed}:${filters.topic}:${filters.level}:${filters.difficulty}`}
-        seed={seed}
-        filters={filters}
-        presentation={presentation}
-        reducedMotion={reducedMotion}
-        suspended={
-          optionsOpen ||
-          savedOpen ||
-          !fontsReady ||
-          exportOpen ||
-          streak.celebrating !== null ||
-          wordCelebration !== null ||
-          daily.celebrating !== null
-        }
-        exportOpen={isAdmin && exportOpen}
-        onCloseExport={closeExport}
-        history={viewHistory.history}
-        onRecordView={handleRecordView}
-        onWordEnding={music.wordEnding}
-        onWordFinished={handleWordFinished}
-        onClearHistory={viewHistory.clear}
-        onMetadata={setMetadata}
-        onRestart={shuffle}
-        onClearFilters={() => {
-          writeDifficultyChoice(ALL_FILTERS.difficulty);
-          setFilters(ALL_FILTERS);
-        }}
-        revealButtonLabel={activeWording?.reveal_button}
-        onToggleAutoplay={() => setPresentation((p) => ({ ...p, autoplay: !p.autoplay }))}
-      />
-    </main>
+        ) : (
+          // A word milestone waits its turn behind a streak one rather than stacking on it.
+          wordCelebration && (
+            <StreakCelebration
+              key={`${wordCelebration.scope}:${wordCelebration.words}`}
+              days={wordCelebration.words}
+              reducedMotion={reducedMotion}
+              onDone={levelProgress.dismiss}
+              badge={{
+                tier: wordTier(wordCelebration),
+                unit: "từ",
+                title: wordBadgeTitle(wordCelebration, locale ?? "en"),
+                blurb: wordBadgeBlurb(wordCelebration, locale ?? "en"),
+              }}
+            />
+          )
+        )}
+        <VocabularyStream
+          key={`${packName ?? ""}:${seed}:${filters.topic}:${filters.level}:${filters.difficulty}`}
+          seed={seed}
+          filters={filters}
+          presentation={presentation}
+          reducedMotion={reducedMotion}
+          suspended={
+            optionsOpen ||
+            savedOpen ||
+            !fontsReady ||
+            exportOpen ||
+            streak.celebrating !== null ||
+            wordCelebration !== null ||
+            daily.celebrating !== null
+          }
+          exportOpen={isAdmin && exportOpen}
+          onCloseExport={closeExport}
+          history={viewHistory.history}
+          onRecordView={handleRecordView}
+          onWordEnding={music.wordEnding}
+          onWordFinished={handleWordFinished}
+          onClearHistory={viewHistory.clear}
+          onMetadata={setMetadata}
+          onRestart={shuffle}
+          onClearFilters={() => {
+            writeDifficultyChoice(ALL_FILTERS.difficulty);
+            setFilters(ALL_FILTERS);
+          }}
+          revealButtonLabel={activeWording?.reveal_button}
+          onToggleAutoplay={() => setPresentation((p) => ({ ...p, autoplay: !p.autoplay }))}
+        />
+      </main>
+    </DeckLocaleContext.Provider>
   );
 }

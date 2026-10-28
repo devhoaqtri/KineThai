@@ -11,6 +11,7 @@ import { VOCAB_LINE_SPACING_SCALE } from "../lib/presets";
 import { FilledUsage, MarkedText } from "./MarkedText";
 import { RevealBurst } from "./RevealBurst";
 import { ShareChallengeButton } from "./ShareChallengeButton";
+import { WordGrammar } from "./WordGrammar";
 
 /** Horizontal travel of a clue page as it arrives and leaves, in px. */
 const PAGE_ENTER_OFFSET = 34;
@@ -127,6 +128,7 @@ export function VocabularyStage({
   revealY,
   timeScale = 1,
   textBudget,
+  onGrammarHold,
 }: {
   stage: LearningStage;
   word: VocabularyWord;
@@ -163,6 +165,8 @@ export function VocabularyStage({
    * With them, a Vietnamese clue is broken into lines from the real width of its words.
    */
   textBudget?: React.ComponentProps<typeof WordSequenceText>["measuredLayout"];
+  /** The reader opened (true) or closed (false) the answer's grammar section by hand. */
+  onGrammarHold?: (held: boolean) => void;
 }) {
   const details = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -284,6 +288,13 @@ export function VocabularyStage({
                 </p>
               </div>
             ))}
+            {word.grammar && (
+              <WordGrammar
+                grammar={word.grammar}
+                reducedMotion={reducedMotion}
+                onHold={onGrammarHold}
+              />
+            )}
           </div>
           <ShareChallengeButton code={word.shareCode} />
         </motion.div>
