@@ -3,6 +3,7 @@ import {
   lazy,
   Suspense,
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -36,7 +37,9 @@ import {
 } from "../lib/presets";
 import { getWideRevealY, isShortViewport } from "../lib/landscape-geometry";
 import { buildStages } from "../lib/stages";
+import { DeckLocaleContext } from "../lib/deck-locale";
 import { getExportStageBox, type CardExportLayout } from "../lib/export-layout";
+import { siteBrand } from "../lib/target-language";
 import { hasReportedWord } from "../lib/reported-words";
 import { sceneSkipLimiter } from "../lib/skip-limiter";
 import { getSpellingDurationMs, pickSpellingVariant } from "../lib/spelling";
@@ -242,6 +245,7 @@ export function VocabularyCard({
   onToggleAutoplay?: () => void;
 }) {
   const { theme, style } = choosePresentation(entry.occurrenceId, presentation, entry.position);
+  const brand = siteBrand(useContext(DeckLocaleContext));
   const stages = useMemo(() => buildStages(entry.word, style.id), [entry.word, style.id]);
   const canvas = useMemo(() => buildVocabularyCanvas(theme, style), [theme, style]);
   // The spelling coda is one extra page appended after the reveal stage, so the
@@ -1098,7 +1102,8 @@ export function VocabularyCard({
         })}
       {exportLayout?.showBrand && (
         <p className="vocab-export-brand" aria-hidden="true">
-          anh.chay<span>Lá</span>
+          {brand.lead}
+          <span>{brand.accent}</span>
         </p>
       )}
       {!isSpelling && <p className="vocab-stage-label">{stage.label}</p>}

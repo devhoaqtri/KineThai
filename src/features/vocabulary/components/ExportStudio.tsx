@@ -228,7 +228,11 @@ export function ExportStudio({
     () => ({ safe: preset.safe, showProgress, showBrand }),
     [preset.safe, showProgress, showBrand],
   );
-  const cardPresentation = useMemo(() => ({ theme, style, autoplay: true }), [theme, style]);
+  const dialect = presentation.dialect;
+  const cardPresentation = useMemo(
+    () => ({ theme, style, autoplay: true, dialect }),
+    [theme, style, dialect],
+  );
 
   return (
     <div

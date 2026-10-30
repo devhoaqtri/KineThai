@@ -35,7 +35,8 @@
  *   npx tsx scripts/render-export-clip.ts --mode export T22
  *
  *     --mode <feed|export>  what to record (default: feed)
- *     --base <url>          app origin (default: http://localhost:5195)
+ *     --base <url>          app origin (default: http://localhost:5195; the routes exist only
+ *                           on the dev server, and hoa.localhost:5195 records the Chinese deck)
  *     --out <path>          output file
  *     --fps <n>             output frame rate (default: 30)
  *     --max <seconds>       give up if the word never finishes (default: 120)
@@ -53,6 +54,8 @@
  *     --scale <n>           device pixel ratio (default: 2.667 — 405×720 → 1080×1920)
  *   export mode:
  *     --preset <id>         export preset (default: tiktok-clear)
+ *   export and showcase modes:
+ *     --dialect <default|douyin>  the palette pool (default: the page's own)
  */
 import { spawn, spawnSync } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
@@ -62,6 +65,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 
 import { getExportPreset } from "../src/features/vocabulary/lib/export-presets";
 import { SHOWCASE_CONTRACT } from "../src/features/vocabulary/lib/showcase-contract";
+import { resolveTarget, siteAddress } from "../src/features/vocabulary/lib/target-language";
 import { DIFFICULTY_CHOICE_KEY } from "../src/features/vocabulary/lib/difficulty-choice";
 import { DIFFICULTY_ALL } from "../src/features/vocabulary/lib/difficulty";
 
@@ -104,6 +108,10 @@ if (mode === "export" && !code) {
 }
 const preset = flag("preset", "tiktok-clear");
 const base = flag("base", "http://localhost:5195");
+// The end card names the address of the deck being recorded (hoa.localhost → hoa.chayla.app).
+const address = siteAddress(resolveTarget(new URL(base).host));
+// Export and showcase modes only; the feed takes its dialect from the reader's own choice.
+const dialect = flag("dialect", "");
 const fps = Number(flag("fps", "30"));
 const maxSeconds = Number(flag("max", "120"));
 // A phone-shaped CSS viewport scaled up to the output size, so the app lays itself out the
@@ -314,6 +322,7 @@ async function main() {
     if (introText !== DEFAULT_BADGE) query.set("badge", introText);
     if (introStyle) query.set("intro", introStyle);
     if (outroStyle) query.set("outro", outroStyle);
+    if (dialect) query.set("dialect", dialect);
     url = `${base}/showcase${query.size ? `?${query}` : ""}`;
     await cdp.send("Emulation.setDeviceMetricsOverride", {
       width: cssWidth,
@@ -406,7 +415,9 @@ async function main() {
       deviceScaleFactor: 1,
       mobile: false,
     });
-    url = `${base}/export/${code}?preset=${encodeURIComponent(preset)}`;
+    url =
+      `${base}/export/${code}?preset=${encodeURIComponent(preset)}` +
+      (dialect ? `&dialect=${encodeURIComponent(dialect)}` : "");
   }
 
   console.log(`→ ${url}`);
@@ -622,7 +633,7 @@ async function main() {
         '<div class="vocab-outro-veil"></div>' +
         '<div class="vocab-outro-bar">' +
           '<span class="vocab-outro-lock"></span>' +
-          '<span class="vocab-outro-url">anh.chayla.app</span>' +
+          '<span class="vocab-outro-url">${address}</span>' +
           '<span class="vocab-outro-caret"></span>' +
         '</div>';
       document.body.appendChild(el);

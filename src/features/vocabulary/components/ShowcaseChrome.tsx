@@ -15,13 +15,17 @@
  * Depends on: vocabulary.css (.vocab-toolbar and friends)
  */
 
+import { useContext } from "react";
 import { Pause, Settings, Shuffle, VolumeX } from "lucide-react";
+import { DeckLocaleContext } from "../lib/deck-locale";
+import { siteBrand } from "../lib/target-language";
 
 /**
  * @param hidden - true while the intro's badge is up, so the bar can slide in afterwards
  *   rather than being there from the first frame
  */
 export function ShowcaseChrome({ hidden }: { hidden: boolean }) {
+  const brand = siteBrand(useContext(DeckLocaleContext));
   return (
     <header className="vocab-toolbar" data-showcase-chrome="" data-hidden={hidden || undefined}>
       <div className="vocab-toolbar-row">
@@ -29,7 +33,8 @@ export function ShowcaseChrome({ hidden }: { hidden: boolean }) {
             so the title takes the right corner and the gear the left. */}
         <div className="vocab-toolbar-left">
           <div className="vocab-showcase-brand">
-            anh.chay<span>Lá</span>
+            {brand.lead}
+            <span>{brand.accent}</span>
           </div>
           <div className="vocab-showcase-filter">
             <span aria-hidden="true">🤯</span> tất cả

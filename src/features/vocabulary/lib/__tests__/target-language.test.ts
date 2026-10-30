@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveTarget, siteBrand, siteTitle } from "../target-language";
+import { resolveTarget, siteAddress, siteBrand, siteTitle } from "../target-language";
 import { readVocabularyPage } from "../../api/catalog.server";
 
 describe("resolveTarget", () => {
@@ -24,6 +24,11 @@ describe("resolveTarget", () => {
     for (const locale of ["en", "zh", "ko", "ja", "fr", "de", "es"] as const) {
       const { lead, accent } = siteBrand(locale);
       expect(lead + accent).toBe(siteTitle(locale));
+    }
+  });
+  it("every address resolves back to its own deck", () => {
+    for (const locale of ["en", "zh", "ko", "ja", "fr", "de", "es"] as const) {
+      expect(resolveTarget(siteAddress(locale))).toBe(locale);
     }
   });
 });

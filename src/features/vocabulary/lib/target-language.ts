@@ -3,7 +3,7 @@
  * deck and the page title do. Unknown hosts (preview, localhost, IPs, anh.*) fall back to
  * English and never throw. Host is client-controlled: use it only to pick public content.
  *
- * Exports: TargetLocale, resolveTarget, siteTitle, siteBrand, sitePageHead
+ * Exports: TargetLocale, resolveTarget, siteTitle, siteBrand, siteAddress, sitePageHead
  */
 export type TargetLocale = "en" | "zh" | "ko" | "ja" | "fr" | "de" | "es";
 
@@ -51,6 +51,21 @@ export function siteBrand(locale: TargetLocale): { lead: string; accent: string 
   const title = siteTitle(locale);
   const at = title.lastIndexOf("chay");
   return { lead: title.slice(0, at + "chay".length), accent: title.slice(at + "chay".length) };
+}
+
+const ADDRESSES: Record<TargetLocale, string> = {
+  en: "anh.chayla.app",
+  zh: "hoa.chayla.app",
+  ko: "han.chayla.app",
+  ja: "nhat.chayla.app",
+  fr: "phap.chayla.app",
+  de: "duc.chayla.app",
+  es: "tbn.chayla.app",
+};
+
+/** @param locale Deck locale. @returns The public address for that deck, with no scheme. */
+export function siteAddress(locale: TargetLocale): string {
+  return ADDRESSES[locale];
 }
 
 /** Shared leaf metadata keeps browser and sharing titles aligned with the domain. */
