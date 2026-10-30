@@ -39,7 +39,14 @@ import { levelLadderFor } from "../lib/level-ladder";
 import { activateCustomPack } from "../lib/custom-pack";
 import { useCustomPacks } from "../hooks/useCustomPacks";
 import { CEFR_LEVELS, HSK_LEVELS, type NarrativeStyle } from "../lib/schema";
-import type { HistoryStats } from "../lib/history";
+import {
+  historyWordIds,
+  type HistoryStats,
+  type HistoryWindow,
+  type ViewHistory,
+} from "../lib/history";
+import { catalogFor } from "../lib/catalog-source";
+import { RecallSheet, type RecallFrom } from "./RecallSheet";
 import { douyinStyleLabelVi, styleLabelVi, themeLabelVi, topicLabelVi } from "../lib/i18n";
 import { siteBrand, type TargetLocale } from "../lib/target-language";
 import { useAmbientSound } from "../hooks/useAmbientSound";
@@ -60,6 +67,8 @@ const PACE_OPTIONS: { id: ReadingPace; label: string }[] = [
 
 /** Matches the exit keyframes' duration (--dur-quick) in vocabulary.css. */
 const POPUP_EXIT_MS = 180;
+/** Must match the recall sheet's closing animation in vocabulary.css. */
+const RECALL_EXIT_MS = 380;
 
 /**
  * Invisible full-screen catcher behind a popup. A tap on it only dismisses, so it can
@@ -1062,6 +1071,7 @@ export function FeedControls({
   open,
   onOpen,
   reducedMotion,
+  history,
   historyStats,
   onClearHistory,
   onExport,
@@ -1077,6 +1087,8 @@ export function FeedControls({
   open: boolean;
   onOpen: (value: boolean) => void;
   reducedMotion: boolean;
+  /** Raw on-device history, so a memory cell can open the words behind its count. */
+  history: ViewHistory;
   historyStats: HistoryStats;
   onClearHistory: () => void;
   /** Open the video-export studio. Passed only for admins; absent, the control is not rendered. */
@@ -1086,6 +1098,8 @@ export function FeedControls({
 }) {
   const panelId = useId();
   const toggleButton = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  const zoomRef = useRef<HTMLDivElement>(null);
   const toolbar = useRef<HTMLElement>(null);
   // The Chinese host plays the traditional-instrument pool only; every other host
   // keeps the administered/default pool and can never reach the Chinese tracks.
@@ -1096,6 +1110,84 @@ export function FeedControls({
     toggleButton.current?.focus();
   };
   const options = usePresence(open, POPUP_EXIT_MS);
+  // A memory cell opened into the self-revision sheet. The window and the zoom
+  // origin stay put while the sheet plays its exit, so it folds back into the
+  // cell it came from rather than vanishing in place.
+  const [recallOpen, setRecallOpen] = useState(false);
+  const [recallWindow, setRecallWindow] = useState<HistoryWindow>("today");
+  const [recallFrom, setRecallFrom] = useState<RecallFrom | null>(null);
+  const [recallOrigin, setRecallOrigin] = useState({
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0,
+    pw: 0,
+    ph: 0,
+    zx: 0,
+    zy: 0,
+    scale: 1,
+  });
+  const recall = usePresence(recallOpen, RECALL_EXIT_MS);
+  const recallScroll = useRef(0);
+  const recallReturn = useRef<HTMLElement | null>(null);
+  const recallWords = useMemo(() => {
+    if (!recall.mounted) return [];
+    const names = new Map(catalogFor(locale ?? "en").words.map((word) => [word.id, word.word]));
+    return historyWordIds(history, recallWindow).map((id) => ({ id, label: names.get(id) ?? id }));
+  }, [recall.mounted, history, recallWindow, locale]);
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel || !recall.mounted) return;
+    panel.scrollTop = recallScroll.current;
+  }, [recall.mounted, recall.closing]);
+  useEffect(() => {
+    if (recall.mounted || !recallReturn.current) return;
+    recallReturn.current.focus();
+    recallReturn.current = null;
+  }, [recall.mounted]);
+  useEffect(() => {
+    if (!options.mounted) setRecallOpen(false);
+  }, [options.mounted]);
+  const openRecall = (window: HistoryWindow, cell: HTMLElement) => {
+    const panel = panelRef.current?.getBoundingClientRect();
+    const zoom = zoomRef.current?.getBoundingClientRect();
+    const box = cell.getBoundingClientRect();
+    if (panel && zoom && box.width > 0 && box.height > 0) {
+      const border = panelRef.current
+        ? Number.parseFloat(getComputedStyle(panelRef.current).borderTopWidth) || 0
+        : 0;
+      const cx = box.left + box.width / 2;
+      const cy = box.top + box.height / 2;
+      // The surroundings grow by the same factor as the cell's width, not by
+      // however far the cell sits from the sheet's far edge. That larger factor
+      // finished the zoom while the cell was still opening.
+      const scale = (panel.width - border * 2) / box.width;
+      const readBox = (selector: string) => {
+        const node = cell.querySelector(selector);
+        if (!node) return null;
+        const rect = node.getBoundingClientRect();
+        return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+      };
+      const label = readBox(".vocab-memory-label");
+      const count = readBox(".vocab-memory-count");
+      setRecallFrom(label && count ? { label, count } : null);
+      setRecallOrigin({
+        x: box.left - panel.left - border,
+        y: box.top - panel.top - border,
+        w: box.width,
+        h: box.height,
+        pw: panel.width - border * 2,
+        ph: panel.height - border * 2,
+        zx: cx - zoom.left,
+        zy: cy - zoom.top,
+        scale,
+      });
+    }
+    recallScroll.current = panelRef.current?.scrollTop ?? 0;
+    recallReturn.current = cell;
+    setRecallWindow(window);
+    setRecallOpen(true);
+  };
   const [difficultyOpen, setDifficultyOpen] = useState(false);
   const [ecoOpen, setEcoOpen] = useState(false);
   // Guardrail while any sheet is out: the first tap on anything outside the open
@@ -1310,174 +1402,207 @@ export function FeedControls({
       {options.mounted && (
         <section
           id={panelId}
+          ref={panelRef}
           className="vocab-options"
           data-closing={options.closing || undefined}
+          data-recall={recall.mounted ? recallWindow : undefined}
+          data-recall-closing={recall.closing || undefined}
           inert={options.closing || undefined}
           aria-label="Tùy chọn luồng từ vựng"
+          style={
+            recall.mounted
+              ? {
+                  ["--cell-x" as string]: `${recallOrigin.x}px`,
+                  ["--cell-y" as string]: `${recallOrigin.y}px`,
+                  ["--cell-w" as string]: `${recallOrigin.w}px`,
+                  ["--cell-h" as string]: `${recallOrigin.h}px`,
+                  ["--panel-w" as string]: `${recallOrigin.pw}px`,
+                  ["--panel-h" as string]: `${recallOrigin.ph}px`,
+                  ["--recall-zx" as string]: `${recallOrigin.zx}px`,
+                  ["--recall-zy" as string]: `${recallOrigin.zy}px`,
+                  ["--recall-scale" as string]: String(recallOrigin.scale),
+                }
+              : undefined
+          }
           onKeyDown={(event) => {
-            if (event.key === "Escape") close();
+            if (event.key !== "Escape") return;
+            if (recallOpen) {
+              event.stopPropagation();
+              setRecallOpen(false);
+              return;
+            }
+            close();
           }}
         >
-          {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
+          <div className="vocab-options-zoom" ref={zoomRef} inert={recall.mounted || undefined}>
+            {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
               boxed: what the app is (an experiment, AI-written decks, roadmap, cooperation)
               before how to tune it. */}
-          <Link to="/feed/about" className="vocab-info-row">
-            <span className="vocab-info-row-icon" aria-hidden="true">
-              🌿
-            </span>
-            <span className="vocab-info-row-text">
-              <strong>Thông tin ứng dụng</strong>
-              <small>
-                <span>🧪 Thử nghiệm</span>
-                <span>🤖 Nội dung AI</span>
-                <span>🚀 Lộ trình</span>
-              </small>
-            </span>
-            <ChevronRight size={17} aria-hidden="true" />
-          </Link>
-          <div className="vocab-options-secondary">
-            {/* With only the theme picker left, the picker carries its own label and this
+            <Link to="/feed/about" className="vocab-info-row">
+              <span className="vocab-info-row-icon" aria-hidden="true">
+                🌿
+              </span>
+              <span className="vocab-info-row-text">
+                <strong>Thông tin ứng dụng</strong>
+                <small>
+                  <span>🧪 Thử nghiệm</span>
+                  <span>🤖 Nội dung AI</span>
+                  <span>🚀 Lộ trình</span>
+                </small>
+              </span>
+              <ChevronRight size={17} aria-hidden="true" />
+            </Link>
+            <div className="vocab-options-secondary">
+              {/* With only the theme picker left, the picker carries its own label and this
                 heading would just say the same word twice. */}
-            {SHOW_TOPIC_AND_STYLE_PICKERS && (
-              <span className="vocab-group-label">Chủ đề, giao diện và cách hiện đáp án</span>
-            )}
-            <div className="vocab-select-grid">
               {SHOW_TOPIC_AND_STYLE_PICKERS && (
-                <OptionPicker
-                  label="Chủ đề"
-                  value={filters.topic}
-                  options={[
-                    { id: "", label: "Mọi chủ đề" },
-                    ...(metadata?.topics ?? []).map((topic) => ({
-                      id: topic,
-                      label: topicLabelVi(topic),
-                    })),
-                  ]}
-                  onChange={(topic) => onFilters({ ...filters, topic })}
-                />
+                <span className="vocab-group-label">Chủ đề, giao diện và cách hiện đáp án</span>
               )}
-              <ThemePicker
-                value={presentation.theme}
-                onChange={(theme) => onPresentation({ ...presentation, theme })}
-                dialect={presentation.dialect}
-              />
-              {SHOW_TOPIC_AND_STYLE_PICKERS && (
-                <OptionPicker
-                  label="Cách hiện"
-                  value={presentation.style}
-                  options={[
-                    { id: "mix", label: "Trộn cách hiện" },
-                    ...stylePool(presentation.dialect).map((style) => ({
-                      id: style.id,
-                      label:
-                        presentation.dialect === "douyin"
-                          ? douyinStyleLabelVi(style.id, style.label)
-                          : styleLabelVi(style.id, style.label),
-                    })),
-                  ]}
-                  onChange={(style) =>
-                    onPresentation({ ...presentation, style: style as NarrativeStyle | "mix" })
-                  }
+              <div className="vocab-select-grid">
+                {SHOW_TOPIC_AND_STYLE_PICKERS && (
+                  <OptionPicker
+                    label="Chủ đề"
+                    value={filters.topic}
+                    options={[
+                      { id: "", label: "Mọi chủ đề" },
+                      ...(metadata?.topics ?? []).map((topic) => ({
+                        id: topic,
+                        label: topicLabelVi(topic),
+                      })),
+                    ]}
+                    onChange={(topic) => onFilters({ ...filters, topic })}
+                  />
+                )}
+                <ThemePicker
+                  value={presentation.theme}
+                  onChange={(theme) => onPresentation({ ...presentation, theme })}
+                  dialect={presentation.dialect}
                 />
-              )}
+                {SHOW_TOPIC_AND_STYLE_PICKERS && (
+                  <OptionPicker
+                    label="Cách hiện"
+                    value={presentation.style}
+                    options={[
+                      { id: "mix", label: "Trộn cách hiện" },
+                      ...stylePool(presentation.dialect).map((style) => ({
+                        id: style.id,
+                        label:
+                          presentation.dialect === "douyin"
+                            ? douyinStyleLabelVi(style.id, style.label)
+                            : styleLabelVi(style.id, style.label),
+                      })),
+                    ]}
+                    onChange={(style) =>
+                      onPresentation({ ...presentation, style: style as NarrativeStyle | "mix" })
+                    }
+                  />
+                )}
+              </div>
             </div>
-          </div>
-          <label className="vocab-autoplay">
-            <input
-              type="checkbox"
-              checked={presentation.advance !== false && !reducedMotion}
-              disabled={reducedMotion}
-              onChange={(event) =>
-                onPresentation({ ...presentation, advance: event.target.checked })
-              }
-            />{" "}
-            Tự động phát luồng
-          </label>
-          <p className="vocab-options-summary">
-            {reducedMotion
-              ? "Bạn đang bật chế độ giảm chuyển động, nên gợi ý lật thủ công."
-              : presentation.advance === false
-                ? "Mỗi từ sẽ tự phát lại từ đầu cho đến khi bạn vuốt sang từ mới."
-                : "Gợi ý và từ ngữ tự động chạy hết màn hình. Tắt đi để một từ tự phát lại."}
-          </p>
-          <div className="vocab-pace" role="radiogroup" aria-label="Tốc độ đọc">
-            <span className="vocab-pace-label">Tốc độ</span>
-            <div className="vocab-pace-options">
-              {PACE_OPTIONS.map((option) => {
-                const on = (presentation.pace ?? "normal") === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={on}
-                    data-on={on || undefined}
-                    disabled={reducedMotion}
-                    onClick={() => onPresentation({ ...presentation, pace: option.id })}
-                  >
-                    {option.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          {/* The Douyin dialect only exists on the Chinese host: it swaps the whole
-              visual language — palettes, motion presets and highlight reskin — and
-              deactivates the default one, so it is offered nowhere else. */}
-          {locale === "zh" && (
-            <label className="vocab-autoplay vocab-dialect">
+            <label className="vocab-autoplay">
               <input
                 type="checkbox"
-                checked={presentation.dialect === "douyin"}
+                checked={presentation.advance !== false && !reducedMotion}
+                disabled={reducedMotion}
                 onChange={(event) =>
-                  onPresentation({
-                    ...presentation,
-                    // A dialect flip invalidates an allow-list picked from the other
-                    // pool; "mix" reopens the full new collection instead.
-                    theme: "mix",
-                    dialect: event.target.checked ? "douyin" : "default",
-                  })
+                  onPresentation({ ...presentation, advance: event.target.checked })
                 }
               />{" "}
-              Giao diện Douyin
-              <small className="vocab-dialect-note">
-                Tắt toàn bộ giao diện mặc định, chỉ dùng bảng màu, nhịp hoạt hình và hiệu ứng nổi
-                bật kiểu Douyin.
-              </small>
+              Tự động phát luồng
             </label>
-          )}
-          <div className="vocab-memory" aria-label="Bộ nhớ lượt xem trên thiết bị">
-            <span className="vocab-group-label">Bộ nhớ trên thiết bị</span>
-            {/* Distinct words seen, per window: yesterday, today in the middle carrying the
+            <p className="vocab-options-summary">
+              {reducedMotion
+                ? "Bạn đang bật chế độ giảm chuyển động, nên gợi ý lật thủ công."
+                : presentation.advance === false
+                  ? "Mỗi từ sẽ tự phát lại từ đầu cho đến khi bạn vuốt sang từ mới."
+                  : "Gợi ý và từ ngữ tự động chạy hết màn hình. Tắt đi để một từ tự phát lại."}
+            </p>
+            <div className="vocab-pace" role="radiogroup" aria-label="Tốc độ đọc">
+              <span className="vocab-pace-label">Tốc độ</span>
+              <div className="vocab-pace-options">
+                {PACE_OPTIONS.map((option) => {
+                  const on = (presentation.pace ?? "normal") === option.id;
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      data-on={on || undefined}
+                      disabled={reducedMotion}
+                      onClick={() => onPresentation({ ...presentation, pace: option.id })}
+                    >
+                      {option.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            {/* The Douyin dialect only exists on the Chinese host: it swaps the whole
+              visual language — palettes, motion presets and highlight reskin — and
+              deactivates the default one, so it is offered nowhere else. */}
+            {locale === "zh" && (
+              <label className="vocab-autoplay vocab-dialect">
+                <input
+                  type="checkbox"
+                  checked={presentation.dialect === "douyin"}
+                  onChange={(event) =>
+                    onPresentation({
+                      ...presentation,
+                      // A dialect flip invalidates an allow-list picked from the other
+                      // pool; "mix" reopens the full new collection instead.
+                      theme: "mix",
+                      dialect: event.target.checked ? "douyin" : "default",
+                    })
+                  }
+                />{" "}
+                Giao diện Douyin
+                <small className="vocab-dialect-note">
+                  Tắt toàn bộ giao diện mặc định, chỉ dùng bảng màu, nhịp hoạt hình và hiệu ứng nổi
+                  bật kiểu Douyin.
+                </small>
+              </label>
+            )}
+            <div className="vocab-memory" aria-label="Bộ nhớ lượt xem trên thiết bị">
+              <span className="vocab-group-label">Bộ nhớ trên thiết bị</span>
+              {/* Distinct words seen, per window: yesterday, today in the middle carrying the
                 accent, then the week. The number leads, the window names it, and a window
                 with nothing in it is greyed rather than shouting a zero. */}
-            <dl className="vocab-memory-stats">
-              <div data-empty={historyStats.distinctYesterday === 0 || undefined}>
-                <dt>Hôm qua</dt>
-                <dd>{historyStats.distinctYesterday}</dd>
+              <div className="vocab-memory-stats" role="group" aria-label="Ôn lại từ đã xem">
+                {(
+                  [
+                    ["yesterday", "Hôm qua", historyStats.distinctYesterday],
+                    ["today", "Hôm nay", historyStats.distinctToday],
+                    ["week", "Tuần này", historyStats.distinct7d],
+                  ] as const
+                ).map(([window, label, count]) => (
+                  <button
+                    key={window}
+                    type="button"
+                    data-today={window === "today" || undefined}
+                    data-empty={count === 0 || undefined}
+                    data-open={recallOpen && recallWindow === window ? "" : undefined}
+                    aria-expanded={recallOpen && recallWindow === window}
+                    onClick={(event) => openRecall(window, event.currentTarget)}
+                  >
+                    <span className="vocab-memory-label">{label}</span>
+                    <span className="vocab-memory-count">{count}</span>
+                  </button>
+                ))}
               </div>
-              <div data-today data-empty={historyStats.distinctToday === 0 || undefined}>
-                <dt>Hôm nay</dt>
-                <dd>{historyStats.distinctToday}</dd>
-              </div>
-              <div data-empty={historyStats.distinct7d === 0 || undefined}>
-                <dt>Tuần này</dt>
-                <dd>{historyStats.distinct7d}</dd>
-              </div>
-            </dl>
-            <p className="vocab-options-summary">
-              Số từ đã xem. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày, hai lần trong ba ngày và ba
-              lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
-            </p>
-            <button type="button" className="vocab-memory-clear" onClick={onClearHistory}>
-              Quên lịch sử đã xem
-            </button>
-          </div>
-          <nav aria-label="Điều hướng trang" className="vocab-site-links">
-            {/* Community is not open to readers yet; only the button is hidden, the
+              <p className="vocab-options-summary">
+                Số từ đã xem. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày, hai lần trong ba ngày và
+                ba lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
+              </p>
+              <button type="button" className="vocab-memory-clear" onClick={onClearHistory}>
+                Quên lịch sử đã xem
+              </button>
+            </div>
+            <nav aria-label="Điều hướng trang" className="vocab-site-links">
+              {/* Community is not open to readers yet; only the button is hidden, the
                 /community route still resolves. Flip COMMUNITY_AVAILABLE to bring it back. */}
-            {COMMUNITY_AVAILABLE && <Link to="/community">Cộng đồng</Link>}
-            {/* Temporarily hidden at request: "Đăng nhập" and "Về với từ vựng" leave the
+              {COMMUNITY_AVAILABLE && <Link to="/community">Cộng đồng</Link>}
+              {/* Temporarily hidden at request: "Đăng nhập" and "Về với từ vựng" leave the
                 sheet for now — uncomment (both live together) to bring them back. The
                 /auth route and the close behaviour are untouched.
             <Link to="/auth">Đăng nhập</Link>
@@ -1485,7 +1610,19 @@ export function FeedControls({
               Về với từ vựng
             </button>
             */}
-          </nav>
+            </nav>
+          </div>
+          {recall.mounted && (
+            <RecallSheet
+              key={recallWindow}
+              window={recallWindow}
+              words={recallWords}
+              from={recallFrom}
+              closing={recall.closing}
+              reducedMotion={reducedMotion}
+              onClose={() => setRecallOpen(false)}
+            />
+          )}
         </section>
       )}
     </header>

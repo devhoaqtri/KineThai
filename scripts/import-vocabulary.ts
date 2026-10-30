@@ -15,6 +15,9 @@
  * data/packs/*.json at load time (lib/catalog-source.ts); packs never overwrite the
  * admin-editable base — on a shared id/headword the base wins.
  *
+ * A Word Refinery hand-off stamps `meta.format`; this importer refuses a stamp it was not
+ * written for (assertRefineryFormat) before reading the deck. See docs/word-refinery-import.md.
+ *
  * A `--staged` pack lands in `data/packs/incoming/`, one level below the
  * `data/packs/*.json` glob the loader globs (that pattern is non-recursive), so the words
  * are embedded in the repo and validated but stay invisible to the feed. Moving the file
@@ -28,6 +31,15 @@ import { normalizeDeck } from "../src/features/vocabulary/lib/schema.ts";
 import { toDeck } from "../src/features/vocabulary/lib/custom-pack.ts";
 
 const USAGE = "Usage: npm run vocab:import -- <WordCrawler JSON path> [--pack <name>]";
+
+/**
+ * The hand-off stamp Word Refinery writes into `meta.format`, and the newest
+ * `meta.formatVersion` this importer knows how to read. See
+ * docs/word-refinery-import.md and word-refinery's docs/kinemedia-export.md — the two
+ * are one contract, so a bump on either side means updating both.
+ */
+const REFINERY_FORMAT = "word-refinery.kinemedia-deck";
+const REFINERY_FORMAT_VERSION = 1;
 
 // Split off an optional `--pack <name>`; what remains must be exactly one deck path.
 const argv = process.argv.slice(2);
@@ -65,6 +77,31 @@ function packSlug(name: string): string {
   return slug;
 }
 
+/**
+ * Refuse a Word Refinery hand-off this importer was not written for.
+ *
+ * A deck with no `meta.format` is an ordinary hand-authored file (the docs/Batches decks,
+ * a library export) and passes untouched. One that carries the stamp must match it
+ * exactly, and its `formatVersion` must not be newer than the one this importer knows: a
+ * newer version could be a shape `normalizeDeck` would parse but silently misread, so
+ * refusing beats importing something wrong. Throws with a message the caller prints.
+ */
+function assertRefineryFormat(raw: unknown): void {
+  if (Array.isArray(raw) || typeof raw !== "object" || raw === null) return;
+  const meta = (raw as { meta?: unknown }).meta;
+  if (typeof meta !== "object" || meta === null) return;
+  const { format, formatVersion } = meta as { format?: unknown; formatVersion?: unknown };
+  if (format === undefined) return;
+  if (format !== REFINERY_FORMAT)
+    throw new Error(
+      `meta.format is "${String(format)}", expected "${REFINERY_FORMAT}" — this file was not written for KineMedia`,
+    );
+  if (typeof formatVersion === "number" && formatVersion > REFINERY_FORMAT_VERSION)
+    throw new Error(
+      `meta.formatVersion ${formatVersion} is newer than the ${REFINERY_FORMAT_VERSION} this importer knows; refusing rather than misreading it`,
+    );
+}
+
 if (!source || argv.length !== 1 || (packAt !== -1 && !packName)) {
   console.error(USAGE);
   process.exitCode = 1;
@@ -77,6 +114,10 @@ if (!source || argv.length !== 1 || (packAt !== -1 && !packName)) {
     if ((await stat(input)).size > 100 * 1024 * 1024)
       throw new Error("Deck exceeds the 100 MiB import limit");
     const raw: unknown = JSON.parse(await readFile(input, "utf8"));
+    // A stamped hand-off must be one this importer was written for, before anything reads
+    // its shape. An unstamped file (hand-authored, library export) is not a hand-off and
+    // passes straight through.
+    assertRefineryFormat(raw);
     // Bare word arrays (the docs/Batches decks) go through the same toDeck cleanup
     // the library importer uses: ids, dedupe, level from the file name.
     const catalog = normalizeDeck(Array.isArray(raw) ? toDeck(raw, source) : raw);
