@@ -30,13 +30,15 @@ export const WORD_DATA_PATHS: ReadonlySet<string> = new Set([
 const TOOL_AGENT =
   /curl|wget|httpie|python|aiohttp|httpx|urllib|requests|scrapy|go-http-client|okhttp|java\/|apache-httpclient|libwww|lwp|node-fetch|undici|axios|got\/|deno|bun\/|postman|insomnia|powershell|headless|phantomjs|selenium|puppeteer|playwright|\bbot\b|bot\/|spider|crawl|slurp|scrape|fetch\//i;
 
-const LOCAL_HOST = /^(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)(:\d+)?$/;
+// `hoa.localhost` and its siblings are how a language other than English is reached locally
+// (resolveTarget reads the first label), and every browser resolves *.localhost to loopback.
+const LOCAL_HOST = /^(localhost|[a-z0-9-]+\.localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)(:\d+)?$/;
 
 /**
  * Whether the request was routed to a local host: the dev server or the clip recorder.
  * Judged from the URL the server routed, not a Host header the caller chose.
  * @param request - the incoming request
- * @returns True on localhost and loopback addresses
+ * @returns True on localhost, its language subdomains and loopback addresses
  */
 export function isLocalRequest(request: Request): boolean {
   return LOCAL_HOST.test(new URL(request.url).host);
