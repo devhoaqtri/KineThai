@@ -600,9 +600,13 @@ function DifficultyDropdown({
   const [touched, setTouched] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const list = useRef<HTMLUListElement>(null);
+  // The trigger IS the page title, so returning focus to it paints the keyboard ring
+  // around the title. Only a keyboard reader needs that ring: after a tap/click the title
+  // stays unfocused instead, exactly like any other pointer-dismissed popover.
+  const pointerUsed = useRef(false);
   const close = (restoreFocus: boolean) => {
     onOpenChange(false);
-    if (restoreFocus) trigger.current?.focus();
+    if (restoreFocus && !pointerUsed.current) trigger.current?.focus();
   };
   // Multi-select edits a draft; only "Done" commits it, so a tap never re-shuffles the
   // live stream until the reader confirms.
@@ -774,6 +778,12 @@ function DifficultyDropdown({
         ref={trigger}
         type="button"
         className="vocab-brand"
+        onPointerDownCapture={() => {
+          pointerUsed.current = true;
+        }}
+        onKeyDownCapture={() => {
+          pointerUsed.current = false;
+        }}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
@@ -806,6 +816,12 @@ function DifficultyDropdown({
           className="vocab-difficulty-pop"
           data-closing={presence.closing || undefined}
           inert={presence.closing || undefined}
+          onPointerDownCapture={() => {
+            pointerUsed.current = true;
+          }}
+          onKeyDownCapture={() => {
+            pointerUsed.current = false;
+          }}
         >
           {/* Two pages, side by side: the levels of the built-in deck, and — once the
               reader has imported any — their own packs. A swipe moves between them, as
