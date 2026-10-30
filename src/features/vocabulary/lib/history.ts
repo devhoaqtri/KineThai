@@ -1,5 +1,5 @@
-/** On-device viewing history with sliding-window repeat caps. Exports: history helpers, historyWordIds. Depends on: ./day (localStorage only). */
-import { previousDay, startOfDay } from "./day";
+/** On-device viewing history with sliding-window repeat caps. Exports: history helpers, historyEntries, historyDays. Depends on: ./day (localStorage only). */
+import { nextDay, previousDay, startOfDay } from "./day";
 export const DAY_MS = 24 * 60 * 60 * 1000;
 export const THREE_DAYS_MS = 3 * DAY_MS;
 export const WEEK_MS = 7 * DAY_MS;
@@ -100,42 +100,68 @@ export function recordView(
   return pruneHistory(next, now);
 }
 
-/** Which memory cell was opened. Matches the three counts in the settings sheet. */
-export type HistoryWindow = "yesterday" | "today" | "week";
+/** What the memory sheet shows: the rolling week, or one day by its local midnight. */
+export type HistoryScope = "week" | number;
+
+/** The three cells in the settings sheet, each a scope of the same history. */
+export type MemoryCell = "yesterday" | "today" | "week";
+
+/** @returns The scope a memory cell shows. @pure true */
+export function scopeOfCell(cell: MemoryCell, now: number): HistoryScope {
+  if (cell === "week") return "week";
+  const today = startOfDay(now);
+  return cell === "today" ? today : previousDay(today);
+}
+
+/** One distinct word inside a scope. */
+export type HistoryEntry = {
+  id: string;
+  /** The newest view inside the scope. */
+  at: number;
+  /** Views inside the scope. */
+  views: number;
+};
 
 /**
- * The distinct words seen in one window, newest view first.
+ * The distinct words seen in a scope, newest view first.
  *
- * The windows are the same ones `historyStats` counts, so the list a cell opens can
- * never disagree with the number printed on it. Today and yesterday are calendar
- * days; the week is the rolling seven days.
- * @param history Map. @param window Which cell. @param now Reference. @returns Word ids.
+ * The bounds are the ones `historyStats` counts, so a list can never disagree with the
+ * number printed on the cell that opened it. A day is a calendar day; the week is the
+ * rolling seven days.
+ * @param history Map. @param scope Week or day. @param now Reference time. @returns Entries.
  * @pure true
  */
-export function historyWordIds(
+export function historyEntries(
   history: ViewHistory,
-  window: HistoryWindow,
+  scope: HistoryScope,
   now: number = Date.now(),
-): string[] {
-  const today = startOfDay(now);
-  const yesterday = previousDay(today);
-  const weekCutoff = now - WEEK_MS;
-  const ranked: { id: string; at: number }[] = [];
+): HistoryEntry[] {
+  const from = scope === "week" ? now - WEEK_MS + 1 : scope;
+  const to = scope === "week" ? Number.POSITIVE_INFINITY : nextDay(scope);
+  const entries: HistoryEntry[] = [];
   for (const [id, times] of Object.entries(history)) {
-    let at = Number.NEGATIVE_INFINITY;
-    for (const t of times) {
-      const inWindow =
-        window === "today"
-          ? t >= today && t <= now + 60_000
-          : window === "yesterday"
-            ? t >= yesterday && t < today
-            : t > weekCutoff && t <= now + 60_000;
-      if (inWindow && t > at) at = t;
-    }
-    if (at !== Number.NEGATIVE_INFINITY) ranked.push({ id, at });
+    const inScope = times.filter((t) => t >= from && t < to && t <= now + 60_000);
+    if (inScope.length) entries.push({ id, at: Math.max(...inScope), views: inScope.length });
   }
-  ranked.sort((a, b) => b.at - a.at || a.id.localeCompare(b.id));
-  return ranked.map((row) => row.id);
+  return entries.sort((a, b) => b.at - a.at || a.id.localeCompare(b.id));
+}
+
+/** One column of the week's rhythm. */
+export type HistoryDay = { start: number; ids: string[] };
+
+/**
+ * The last seven calendar days, oldest first, each with the distinct words seen on it.
+ * @param history Map. @param now Reference time. @returns Seven days ending today.
+ * @pure true
+ */
+export function historyDays(history: ViewHistory, now: number = Date.now()): HistoryDay[] {
+  const days: HistoryDay[] = [];
+  let start = startOfDay(now);
+  for (let index = 0; index < 7; index += 1) {
+    days.unshift({ start, ids: historyEntries(history, start, now).map((entry) => entry.id) });
+    start = previousDay(start);
+  }
+  return days;
 }
 
 export type HistoryStats = {

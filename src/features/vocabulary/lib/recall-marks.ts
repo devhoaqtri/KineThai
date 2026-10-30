@@ -6,7 +6,8 @@
  * checks add to the tally. The answer stays on this device. An older store that
  * only listed remembered ids is read as checks.
  *
- * Exports: RECALL_MARKS_KEY, RecallChoice, RecallMarks, loadRecallMarks, saveRecallMarks
+ * Exports: RECALL_MARKS_KEY, RecallChoice, RecallMarks, loadRecallMarks, saveRecallMarks,
+ *   clearRecallMarks
  * Depends on: localStorage only
  */
 
@@ -52,5 +53,14 @@ export function saveRecallMarks(marks: RecallMarks): void {
     localStorage.setItem(RECALL_MARKS_KEY, JSON.stringify(Object.fromEntries(entries)));
   } catch {
     // Quota or privacy mode — the answer stays in memory for this visit.
+  }
+}
+
+/** Forget every answer, alongside the history they belong to. Never throws. */
+export function clearRecallMarks(): void {
+  try {
+    localStorage.removeItem(RECALL_MARKS_KEY);
+  } catch {
+    // Ignore privacy-mode failures.
   }
 }

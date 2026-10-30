@@ -11,6 +11,7 @@ import {
   type RefObject,
 } from "react";
 import {
+  ArrowUpRight,
   ChevronDown,
   ChevronRight,
   Clapperboard,
@@ -40,13 +41,15 @@ import { activateCustomPack } from "../lib/custom-pack";
 import { useCustomPacks } from "../hooks/useCustomPacks";
 import { CEFR_LEVELS, HSK_LEVELS, type NarrativeStyle } from "../lib/schema";
 import {
-  historyWordIds,
+  historyEntries,
+  scopeOfCell,
+  type HistoryScope,
   type HistoryStats,
-  type HistoryWindow,
+  type MemoryCell,
   type ViewHistory,
 } from "../lib/history";
-import { catalogFor } from "../lib/catalog-source";
-import { RecallSheet, type RecallFrom } from "./RecallSheet";
+import { loadRecallMarks, type RecallMarks } from "../lib/recall-marks";
+import { RecallSheet } from "./RecallSheet";
 import { douyinStyleLabelVi, styleLabelVi, themeLabelVi, topicLabelVi } from "../lib/i18n";
 import { siteBrand, type TargetLocale } from "../lib/target-language";
 import { useAmbientSound } from "../hooks/useAmbientSound";
@@ -67,8 +70,6 @@ const PACE_OPTIONS: { id: ReadingPace; label: string }[] = [
 
 /** Matches the exit keyframes' duration (--dur-quick) in vocabulary.css. */
 const POPUP_EXIT_MS = 180;
-/** Must match the recall sheet's closing animation in vocabulary.css. */
-const RECALL_EXIT_MS = 380;
 
 /**
  * Invisible full-screen catcher behind a popup. A tap on it only dismisses, so it can
@@ -1110,90 +1111,47 @@ export function FeedControls({
     toggleButton.current?.focus();
   };
   const options = usePresence(open, POPUP_EXIT_MS);
-  // A memory cell opened into the self-revision sheet. The window and the zoom
-  // origin stay put while the sheet plays its exit, so it folds back into the
-  // cell it came from rather than vanishing in place.
-  const [recallOpen, setRecallOpen] = useState(false);
-  const [recallWindow, setRecallWindow] = useState<HistoryWindow>("today");
-  const [recallFrom, setRecallFrom] = useState<RecallFrom | null>(null);
-  const [recallOrigin, setRecallOrigin] = useState({
-    x: 0,
-    y: 0,
-    w: 0,
-    h: 0,
-    pw: 0,
-    ph: 0,
-    zx: 0,
-    zy: 0,
-    scale: 1,
-  });
-  const recall = usePresence(recallOpen, RECALL_EXIT_MS);
-  const recallScroll = useRef(0);
-  const recallReturn = useRef<HTMLElement | null>(null);
-  const recallWords = useMemo(() => {
-    if (!recall.mounted) return [];
-    const names = new Map(catalogFor(locale ?? "en").words.map((word) => [word.id, word.word]));
-    return historyWordIds(history, recallWindow).map((id) => ({ id, label: names.get(id) ?? id }));
-  }, [recall.mounted, history, recallWindow, locale]);
-  useLayoutEffect(() => {
-    const panel = panelRef.current;
-    if (!panel || !recall.mounted) return;
-    panel.scrollTop = recallScroll.current;
-  }, [recall.mounted, recall.closing]);
+  // A memory cell zoomed into the memory sheet. The scope stays set through the sheet's
+  // own exit; it reports back once it has folded into its cell.
+  const [recallScope, setRecallScope] = useState<HistoryScope | null>(null);
+  const [recallNow, setRecallNow] = useState(0);
+  const [recallMarks, setRecallMarks] = useState<RecallMarks>({});
+  const memoryCells = useRef<Partial<Record<MemoryCell, HTMLButtonElement>>>({});
+  const recallReturn = useRef<HTMLButtonElement | null>(null);
+  const memoryNow = useMemo(() => (open ? Date.now() : 0), [open]);
   useEffect(() => {
-    if (recall.mounted || !recallReturn.current) return;
-    recallReturn.current.focus();
-    recallReturn.current = null;
-  }, [recall.mounted]);
+    if (open) setRecallMarks(loadRecallMarks());
+  }, [open]);
   useEffect(() => {
-    if (!options.mounted) setRecallOpen(false);
+    if (!options.mounted) setRecallScope(null);
   }, [options.mounted]);
-  const openRecall = (window: HistoryWindow, cell: HTMLElement) => {
-    const panelNode = panelRef.current;
-    const panel = panelNode?.getBoundingClientRect();
-    const zoom = zoomRef.current?.getBoundingClientRect();
-    const box = cell.getBoundingClientRect();
-    if (panelNode && panel && zoom && panel.width > 0 && box.width > 0 && box.height > 0) {
-      const border = Number.parseFloat(getComputedStyle(panelNode).borderTopWidth) || 0;
-      // The sheet opens from a fraction of its size, so a tap during that entrance
-      // reads shrunken rectangles. Everything is stored in the panel's own,
-      // untransformed pixels.
-      const k = panel.width / panelNode.offsetWidth;
-      const local = (rect: DOMRect) => ({
-        left: (rect.left - panel.left) / k - border,
-        top: (rect.top - panel.top) / k - border,
-        width: rect.width / k,
-        height: rect.height / k,
-      });
-      const cell0 = local(box);
-      const pw = panelNode.offsetWidth - border * 2;
-      // The surroundings grow by the same factor as the cell's width, not by
-      // however far the cell sits from the sheet's far edge. That larger factor
-      // finished the zoom while the cell was still opening.
-      const scale = pw / cell0.width;
-      const readBox = (selector: string) => {
-        const node = cell.querySelector(selector);
-        return node ? local(node.getBoundingClientRect()) : null;
-      };
-      const label = readBox(".vocab-memory-label");
-      const count = readBox(".vocab-memory-count");
-      setRecallFrom(label && count ? { label, count } : null);
-      setRecallOrigin({
-        x: cell0.left,
-        y: cell0.top,
-        w: cell0.width,
-        h: cell0.height,
-        pw,
-        ph: panelNode.offsetHeight - border * 2,
-        zx: (box.left + box.width / 2 - zoom.left) / k,
-        zy: (box.top + box.height / 2 - zoom.top) / k,
-        scale,
-      });
-    }
-    recallScroll.current = panelRef.current?.scrollTop ?? 0;
-    recallReturn.current = cell;
-    setRecallWindow(window);
-    setRecallOpen(true);
+  const zoomCell = (cell: MemoryCell) => {
+    const box = memoryCells.current[cell];
+    if (!box) return null;
+    return {
+      box,
+      count: box.querySelector<HTMLElement>(".vocab-memory-count"),
+      label: box.querySelector<HTMLElement>(".vocab-memory-label"),
+    };
+  };
+  const cellOfScope = (scope: HistoryScope) => {
+    const cell = (["today", "yesterday", "week"] as const).find(
+      (name) => scopeOfCell(name, recallNow) === scope,
+    );
+    return cell ? zoomCell(cell) : null;
+  };
+  const openRecall = (cell: MemoryCell) => {
+    const now = Date.now();
+    recallReturn.current = memoryCells.current[cell] ?? null;
+    setRecallNow(now);
+    setRecallScope(scopeOfCell(cell, now));
+  };
+  // Each cell's own tally, so the hairline at its foot matches the sheet's meter.
+  const memoryMeter = (cell: MemoryCell) => {
+    const entries = historyEntries(history, scopeOfCell(cell, memoryNow), memoryNow);
+    const yes = entries.filter((entry) => recallMarks[entry.id] === "yes").length;
+    const no = entries.filter((entry) => recallMarks[entry.id] === "no").length;
+    return { yes, no, open: entries.length - yes - no };
   };
   const [difficultyOpen, setDifficultyOpen] = useState(false);
   const [ecoOpen, setEcoOpen] = useState(false);
@@ -1224,7 +1182,7 @@ export function FeedControls({
       if (!(target instanceof Element)) return;
       // instanceof Element, not HTMLElement: tapping a row's svg glyph must count as
       // inside the sheet too.
-      if (target.closest(".vocab-options, .vocab-difficulty-pop")) return;
+      if (target.closest(".vocab-options, .vocab-difficulty-pop, .vocab-recall")) return;
       event.preventDefault();
       event.stopPropagation();
       swallowClickBefore.current = event.timeStamp;
@@ -1412,36 +1370,16 @@ export function FeedControls({
           ref={panelRef}
           className="vocab-options"
           data-closing={options.closing || undefined}
-          data-recall={recall.mounted ? recallWindow : undefined}
-          data-recall-closing={recall.closing || undefined}
-          inert={options.closing || undefined}
-          aria-label="Tùy chọn luồng từ vựng"
-          style={
-            recall.mounted
-              ? {
-                  ["--cell-x" as string]: `${recallOrigin.x}px`,
-                  ["--cell-y" as string]: `${recallOrigin.y}px`,
-                  ["--cell-w" as string]: `${recallOrigin.w}px`,
-                  ["--cell-h" as string]: `${recallOrigin.h}px`,
-                  ["--panel-w" as string]: `${recallOrigin.pw}px`,
-                  ["--panel-h" as string]: `${recallOrigin.ph}px`,
-                  ["--recall-zx" as string]: `${recallOrigin.zx}px`,
-                  ["--recall-zy" as string]: `${recallOrigin.zy}px`,
-                  ["--recall-scale" as string]: String(recallOrigin.scale),
-                }
-              : undefined
-          }
           onKeyDown={(event) => {
             if (event.key !== "Escape") return;
-            if (recallOpen) {
-              event.stopPropagation();
-              setRecallOpen(false);
-              return;
-            }
             close();
           }}
         >
-          <div className="vocab-options-zoom" ref={zoomRef} inert={recall.mounted || undefined}>
+          <div
+            className="vocab-options-zoom"
+            ref={zoomRef}
+            inert={recallScope !== null || undefined}
+          >
             {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
               boxed: what the app is (an experiment, AI-written decks, roadmap, cooperation)
               before how to tune it. */}
@@ -1582,24 +1520,43 @@ export function FeedControls({
                     ["today", "Hôm nay", historyStats.distinctToday],
                     ["week", "Tuần này", historyStats.distinct7d],
                   ] as const
-                ).map(([window, label, count]) => (
-                  <button
-                    key={window}
-                    type="button"
-                    data-today={window === "today" || undefined}
-                    data-empty={count === 0 || undefined}
-                    data-open={recallOpen && recallWindow === window ? "" : undefined}
-                    aria-expanded={recallOpen && recallWindow === window}
-                    onClick={(event) => openRecall(window, event.currentTarget)}
-                  >
-                    <span className="vocab-memory-label">{label}</span>
-                    <span className="vocab-memory-count">{count}</span>
-                  </button>
-                ))}
+                ).map(([cell, label, count]) => {
+                  const meter = memoryMeter(cell);
+                  return (
+                    <button
+                      key={cell}
+                      ref={(node) => {
+                        memoryCells.current[cell] = node ?? undefined;
+                      }}
+                      type="button"
+                      data-today={cell === "today" || undefined}
+                      data-empty={count === 0 || undefined}
+                      aria-haspopup="dialog"
+                      aria-label={`${label}: ${count} từ. Mở để ôn lại`}
+                      onClick={() => openRecall(cell)}
+                    >
+                      <span className="vocab-memory-label">{label}</span>
+                      <span className="vocab-memory-count">{count}</span>
+                      <ArrowUpRight
+                        className="vocab-memory-open"
+                        size={13}
+                        strokeWidth={2.5}
+                        aria-hidden="true"
+                      />
+                      {meter.yes + meter.no > 0 && (
+                        <span className="vocab-memory-meter" aria-hidden="true">
+                          <i data-kind="yes" style={{ flexGrow: meter.yes }} />
+                          <i data-kind="no" style={{ flexGrow: meter.no }} />
+                          <i style={{ flexGrow: meter.open }} />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
               <p className="vocab-options-summary">
-                Số từ đã xem. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày, hai lần trong ba ngày và
-                ba lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
+                Chạm một ô để ôn lại những từ đã xem. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày,
+                hai lần trong ba ngày và ba lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
               </p>
               <button type="button" className="vocab-memory-clear" onClick={onClearHistory}>
                 Quên lịch sử đã xem
@@ -1619,15 +1576,21 @@ export function FeedControls({
             */}
             </nav>
           </div>
-          {recall.mounted && (
+          {recallScope !== null && (
             <RecallSheet
-              key={recallWindow}
-              window={recallWindow}
-              words={recallWords}
-              from={recallFrom}
-              closing={recall.closing}
+              history={history}
+              initialScope={recallScope}
+              now={recallNow}
+              marks={recallMarks}
+              onMarks={setRecallMarks}
+              locale={locale ?? "en"}
+              container={panelRef.current?.closest<HTMLElement>(".vocabulary-shell") ?? null}
+              scene={zoomRef.current}
+              cellFor={cellOfScope}
+              fallbackCell={() => zoomCell("week")}
+              returnFocus={() => recallReturn.current?.focus({ preventScroll: true })}
               reducedMotion={reducedMotion}
-              onClose={() => setRecallOpen(false)}
+              onClosed={() => setRecallScope(null)}
             />
           )}
         </section>

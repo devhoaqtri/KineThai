@@ -14,7 +14,7 @@
  *
  * A leaf module: no imports, so anything may depend on it without pulling a catalog in.
  *
- * Exports: DAY_MS, startOfDay, previousDay, dayGap
+ * Exports: DAY_MS, startOfDay, previousDay, nextDay, dayGap
  * Depends on: none (leaf module)
  */
 
@@ -48,6 +48,19 @@ export function startOfDay(ts: number): number {
 export function previousDay(dayStart: number): number {
   const day = new Date(dayStart);
   day.setDate(day.getDate() - 1);
+  day.setHours(0, 0, 0, 0);
+  return day.getTime();
+}
+
+/**
+ * The local midnight one calendar day after `dayStart`. A calendar step, like previousDay.
+ * @param dayStart - A local midnight, as returned by startOfDay
+ * @returns The next day's local midnight
+ * @pure true
+ */
+export function nextDay(dayStart: number): number {
+  const day = new Date(dayStart);
+  day.setDate(day.getDate() + 1);
   day.setHours(0, 0, 0, 0);
   return day.getTime();
 }

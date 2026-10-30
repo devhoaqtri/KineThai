@@ -6,7 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useScreenWakeLock } from "@/hooks/use-screen-wake-lock";
 import { useShellHeightVar } from "@/hooks/use-shell-height-var";
 import type { FeedPage, Presentation, VocabularyFilters } from "../types";
-import type { VocabularyLevel } from "../lib/schema";
+import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
+import { rememberRecallWord } from "../lib/recall-words";
 import { DIFFICULTY_ALL } from "../lib/difficulty";
 import { SHORT_VIEWPORT_MAX_H } from "../lib/landscape-geometry";
 import { useIsAdmin } from "@/features/admin/hooks/useIsAdmin";
@@ -192,10 +193,11 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   const recordLevel = levelProgress.record;
   const wordCelebration = levelProgress.celebrating;
   const handleRecordView = useCallback(
-    (wordId: string, level?: VocabularyLevel) => {
-      recordView(wordId);
+    (word: VocabularyWord) => {
+      recordView(word.id);
+      rememberRecallWord(word);
       // An imported pack's words are not the catalog's, so they do not fill its levels.
-      if (level && !packName) recordLevel(level, wordId);
+      if (word.level && !packName) recordLevel(word.level, word.id);
       music.wordStarted();
     },
     [recordView, recordLevel, packName, music],
