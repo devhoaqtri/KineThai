@@ -37,6 +37,7 @@ import { Route as AdminTemplatesRouteImport } from './routes/admin/templates'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVocabularyRouteImport } from './routes/admin/vocabulary'
 import { Route as AdminWordingsRouteImport } from './routes/admin/wordings'
+import { Route as CarouselCodeRouteImport } from './routes/carousel.$code'
 import { Route as ExportCodeRouteImport } from './routes/export.$code'
 import { Route as FeedIndexRouteImport } from './routes/feed/index'
 import { Route as FeedAboutRouteImport } from './routes/feed/about'
@@ -194,6 +195,11 @@ const AdminWordingsRoute = AdminWordingsRouteImport.update({
   path: '/wordings',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const CarouselCodeRoute = CarouselCodeRouteImport.update({
+  id: '/carousel/$code',
+  path: '/carousel/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExportCodeRoute = ExportCodeRouteImport.update({
   id: '/export/$code',
   path: '/export/$code',
@@ -298,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRoute
   '/admin/vocabulary': typeof AdminVocabularyRoute
   '/admin/wordings': typeof AdminWordingsRoute
+  '/carousel/$code': typeof CarouselCodeRoute
   '/export/$code': typeof ExportCodeRoute
   '/feed/about': typeof FeedAboutRoute
   '/feed/library': typeof FeedLibraryRoute
@@ -341,6 +348,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRoute
   '/admin/vocabulary': typeof AdminVocabularyRoute
   '/admin/wordings': typeof AdminWordingsRoute
+  '/carousel/$code': typeof CarouselCodeRoute
   '/export/$code': typeof ExportCodeRoute
   '/feed/about': typeof FeedAboutRoute
   '/feed/library': typeof FeedLibraryRoute
@@ -387,6 +395,7 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRoute
   '/admin/vocabulary': typeof AdminVocabularyRoute
   '/admin/wordings': typeof AdminWordingsRoute
+  '/carousel/$code': typeof CarouselCodeRoute
   '/export/$code': typeof ExportCodeRoute
   '/feed/about': typeof FeedAboutRoute
   '/feed/library': typeof FeedLibraryRoute
@@ -433,6 +442,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/vocabulary'
     | '/admin/wordings'
+    | '/carousel/$code'
     | '/export/$code'
     | '/feed/about'
     | '/feed/library'
@@ -476,6 +486,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/vocabulary'
     | '/admin/wordings'
+    | '/carousel/$code'
     | '/export/$code'
     | '/feed/about'
     | '/feed/library'
@@ -521,6 +532,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/admin/vocabulary'
     | '/admin/wordings'
+    | '/carousel/$code'
     | '/export/$code'
     | '/feed/about'
     | '/feed/library'
@@ -547,6 +559,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ShowcaseRoute: typeof ShowcaseRoute
   StoreRoute: typeof StoreRoute
+  CarouselCodeRoute: typeof CarouselCodeRoute
   ExportCodeRoute: typeof ExportCodeRoute
   FeedAboutRoute: typeof FeedAboutRoute
   FeedLibraryRoute: typeof FeedLibraryRoute
@@ -760,6 +773,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminWordingsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/carousel/$code': {
+      id: '/carousel/$code'
+      path: '/carousel/$code'
+      fullPath: '/carousel/$code'
+      preLoaderRoute: typeof CarouselCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/export/$code': {
       id: '/export/$code'
       path: '/export/$code'
@@ -941,6 +961,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ShowcaseRoute: ShowcaseRoute,
   StoreRoute: StoreRoute,
+  CarouselCodeRoute: CarouselCodeRoute,
   ExportCodeRoute: ExportCodeRoute,
   FeedAboutRoute: FeedAboutRoute,
   FeedLibraryRoute: FeedLibraryRoute,

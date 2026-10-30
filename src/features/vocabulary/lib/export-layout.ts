@@ -20,6 +20,11 @@ export type CardExportLayout = {
   showProgress: boolean;
   /** Draw the brand tag at the head of the clear zone. */
   showBrand: boolean;
+  /**
+   * Draw one page finished and hold it, for a still image: no entrance, no timer, no burst.
+   * `page` counts the card's own pages, with the spelling coda last.
+   */
+  still?: { page: number };
 };
 
 /** Room kept at the foot of the clear zone for the page label and progress bar. */

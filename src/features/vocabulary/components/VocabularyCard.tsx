@@ -246,6 +246,7 @@ export function VocabularyCard({
 }) {
   const { theme, style } = choosePresentation(entry.occurrenceId, presentation, entry.position);
   const brand = siteBrand(useContext(DeckLocaleContext));
+  const still = exportLayout?.still;
   const stages = useMemo(() => buildStages(entry.word, style.id), [entry.word, style.id]);
   const canvas = useMemo(() => buildVocabularyCanvas(theme, style), [theme, style]);
   // The spelling coda is one extra page appended after the reveal stage, so the
@@ -416,12 +417,13 @@ export function VocabularyCard({
     current,
     // The report sheet and a hand-opened grammar section both hold the card where it is
     // without touching the reader's autoplay setting.
-    autoplay: presentation.autoplay && !reportOpen && !grammarHeld,
+    autoplay: presentation.autoplay && !reportOpen && !grammarHeld && !still,
     reducedMotion,
     durations: pageDurations,
     canAdvance,
     revealPage,
     loop: looping,
+    initialPage: still?.page,
     onFinish: () => {
       markWordFinished(true);
       advanceWithExit();
@@ -561,7 +563,7 @@ export function VocabularyCard({
   // every visible background strobe at once.
   // Keyed to `started`, not `active`: a pause must not switch the backdrop back to its
   // static form and then restart the drift from its first frame when playback resumes.
-  const sweep = !!sliding && !reducedMotion && started;
+  const sweep = !!sliding && !reducedMotion && started && !still;
   // Once a card has drifted it never goes back to its untouched form while it is mounted:
   // leaving the word only FREEZES the drift where it is. Dropping it instead put the
   // backdrop back at its starting offset while the card was still sliding off screen —
@@ -916,6 +918,7 @@ export function VocabularyCard({
       data-dialect={presentation.dialect === "douyin" ? "douyin" : undefined}
       data-export={exportLayout ? "" : undefined}
       data-export-progress={exportLayout?.showProgress || undefined}
+      data-still={still ? "" : undefined}
       data-stage={isSpelling ? "spelling" : stage.id}
       inert={!active}
       aria-hidden={!active}
@@ -1011,13 +1014,13 @@ export function VocabularyCard({
       {isSpelling ? (
         isHan ? (
           <Suspense fallback={null}>
-            <HanziStrokeSpelling word={entry.word.word} reducedMotion={reducedMotion} />
+            <HanziStrokeSpelling word={entry.word.word} reducedMotion={reducedMotion || !!still} />
           </Suspense>
         ) : (
           <SpellingAnimation
             word={entry.word.word}
             variant={spellingVariant}
-            reducedMotion={reducedMotion}
+            reducedMotion={reducedMotion || !!still}
           />
         )
       ) : (
@@ -1031,6 +1034,7 @@ export function VocabularyCard({
           staged={started}
           playing={playback.playing}
           reducedMotion={reducedMotion}
+          still={!!still}
           playKey={playKey}
           direction={nav.direction}
           dragX={dragX}
@@ -1044,7 +1048,7 @@ export function VocabularyCard({
           onGrammarHold={exportLayout ? undefined : setGrammarHeld}
         />
       )}
-      {isRevealed && (
+      {isRevealed && !still && (
         <EmojiBurst
           wordId={wordId}
           totals={emojiTotals}
@@ -1136,201 +1140,207 @@ export function VocabularyCard({
           onClose={closeReport}
         />
       )}
-      <div
-        className="vocab-action-bar"
-        ref={actionBarRef}
-        data-anticipation={showEmojiStrip || undefined}
-        data-no-gesture
-      >
-        {/* The report button keeps the left end of the row to itself and stays put
+      {!still && (
+        <div
+          className="vocab-action-bar"
+          ref={actionBarRef}
+          data-anticipation={showEmojiStrip || undefined}
+          data-no-gesture
+        >
+          {/* The report button keeps the left end of the row to itself and stays put
             across the reveal; the reveal / heart / bookmark group (and later the emoji
             strip) is centred in the room beside it. */}
-        <WordReportButton
-          buttonRef={reportButton}
-          open={reportOpen}
-          reported={reported}
-          onToggle={() => (reportOpen ? closeReport() : setReportOpen(true))}
-        />
-        <MotionConfig reducedMotion={reducedMotion ? "always" : "never"}>
-          <div className="vocab-action-main">
-            <AnimatePresence mode="wait">
-              {showEmojiStrip ? (
-                <motion.div
-                  key="emoji-strip"
-                  ref={emojiStripRef}
-                  className="vocab-emoji-strip"
-                  variants={stripVariants}
-                  initial="hidden"
-                  animate={leaving ? "leave" : "shown"}
-                  exit="leave"
-                  inert={leaving || undefined}
-                >
-                  {EMOJI_PALETTE.map((emoji, index) => {
-                    const count = emojiCounts[emoji] ?? 0;
-                    const tapped = emojiTap?.emoji === emoji;
-                    return (
-                      // The wrapper carries the motion so the button's own :active
-                      // press scale is never overwritten by an inline transform.
-                      <motion.span
-                        key={emoji}
-                        className="vocab-motion-item"
-                        variants={stripItemVariants}
-                        custom={index}
-                      >
-                        <button
-                          type="button"
-                          className="vocab-emoji-strip-btn"
-                          data-emoji={emoji}
-                          onClick={(e) => handleEmojiTap(emoji, e.currentTarget)}
-                          aria-label={`React with ${emoji}${count ? `, ${count} so far` : ""}`}
-                        >
-                          <span
-                            key={`glyph-${tapped ? emojiTap.count : 0}`}
-                            className="vocab-emoji-glyph"
-                            data-pop={tapped || undefined}
-                          >
-                            {emoji}
-                          </span>
-                          {tapped && (
-                            <span
-                              key={`plus-${emojiTap.count}`}
-                              className="vocab-emoji-plus"
-                              aria-hidden="true"
-                            >
-                              +1
-                            </span>
-                          )}
-                          {count > 0 && (
-                            // Keyed on the value so a changed count rolls in instead of
-                            // silently swapping its digits.
-                            <span
-                              key={`count-${count}`}
-                              className="vocab-emoji-strip-count"
-                              aria-hidden="true"
-                            >
-                              {formatEmojiTotal(count)}
-                            </span>
-                          )}
-                        </button>
-                      </motion.span>
-                    );
-                  })}
+          <WordReportButton
+            buttonRef={reportButton}
+            open={reportOpen}
+            reported={reported}
+            onToggle={() => (reportOpen ? closeReport() : setReportOpen(true))}
+          />
+          <MotionConfig reducedMotion={reducedMotion ? "always" : "never"}>
+            <div className="vocab-action-main">
+              <AnimatePresence mode="wait">
+                {showEmojiStrip ? (
                   <motion.div
-                    className="vocab-emoji-strip-sep"
-                    aria-hidden="true"
-                    variants={stripItemVariants}
-                    custom={EMOJI_PALETTE.length}
-                  />
-                  <motion.span
-                    className="vocab-motion-item"
-                    variants={stripItemVariants}
-                    custom={EMOJI_PALETTE.length + 1}
+                    key="emoji-strip"
+                    ref={emojiStripRef}
+                    className="vocab-emoji-strip"
+                    variants={stripVariants}
+                    initial="hidden"
+                    animate={leaving ? "leave" : "shown"}
+                    exit="leave"
+                    inert={leaving || undefined}
                   >
-                    <button
-                      type="button"
-                      className="vocab-emoji-strip-btn vocab-reaction-heart"
-                      data-on={reactions.heart || undefined}
-                      onClick={() => toggleReaction("heart")}
-                      aria-label={reactions.heart ? "Bỏ yêu thích cho từ này" : "Yêu thích từ này"}
+                    {EMOJI_PALETTE.map((emoji, index) => {
+                      const count = emojiCounts[emoji] ?? 0;
+                      const tapped = emojiTap?.emoji === emoji;
+                      return (
+                        // The wrapper carries the motion so the button's own :active
+                        // press scale is never overwritten by an inline transform.
+                        <motion.span
+                          key={emoji}
+                          className="vocab-motion-item"
+                          variants={stripItemVariants}
+                          custom={index}
+                        >
+                          <button
+                            type="button"
+                            className="vocab-emoji-strip-btn"
+                            data-emoji={emoji}
+                            onClick={(e) => handleEmojiTap(emoji, e.currentTarget)}
+                            aria-label={`React with ${emoji}${count ? `, ${count} so far` : ""}`}
+                          >
+                            <span
+                              key={`glyph-${tapped ? emojiTap.count : 0}`}
+                              className="vocab-emoji-glyph"
+                              data-pop={tapped || undefined}
+                            >
+                              {emoji}
+                            </span>
+                            {tapped && (
+                              <span
+                                key={`plus-${emojiTap.count}`}
+                                className="vocab-emoji-plus"
+                                aria-hidden="true"
+                              >
+                                +1
+                              </span>
+                            )}
+                            {count > 0 && (
+                              // Keyed on the value so a changed count rolls in instead of
+                              // silently swapping its digits.
+                              <span
+                                key={`count-${count}`}
+                                className="vocab-emoji-strip-count"
+                                aria-hidden="true"
+                              >
+                                {formatEmojiTotal(count)}
+                              </span>
+                            )}
+                          </button>
+                        </motion.span>
+                      );
+                    })}
+                    <motion.div
+                      className="vocab-emoji-strip-sep"
+                      aria-hidden="true"
+                      variants={stripItemVariants}
+                      custom={EMOJI_PALETTE.length}
+                    />
+                    <motion.span
+                      className="vocab-motion-item"
+                      variants={stripItemVariants}
+                      custom={EMOJI_PALETTE.length + 1}
                     >
-                      <span
-                        key={pops.heart}
-                        className="vocab-pop"
-                        data-pop={(pops.onStrip && pops.heart > 0) || undefined}
-                      >
-                        <Heart size={16} fill={reactions.heart ? "currentColor" : "none"} />
-                      </span>
-                    </button>
-                  </motion.span>
-                  <motion.span
-                    className="vocab-motion-item"
-                    variants={stripItemVariants}
-                    custom={EMOJI_PALETTE.length + 2}
-                  >
-                    <button
-                      type="button"
-                      className="vocab-emoji-strip-btn vocab-reaction-bookmark"
-                      data-on={reactions.bookmark || undefined}
-                      onClick={() => toggleReaction("bookmark")}
-                      aria-label={reactions.bookmark ? "Bỏ lưu từ này" : "Lưu từ này"}
-                    >
-                      <span
-                        key={pops.bookmark}
-                        className="vocab-pop"
-                        data-pop={(pops.onStrip && pops.bookmark > 0) || undefined}
-                      >
-                        <Bookmark size={16} fill={reactions.bookmark ? "currentColor" : "none"} />
-                      </span>
-                    </button>
-                  </motion.span>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="action-bar"
-                  className="vocab-action-row"
-                  variants={rowVariants}
-                  initial="hidden"
-                  animate={entered || exportLayout ? "shown" : "hidden"}
-                  exit="hidden"
-                >
-                  {!stage.reveal && (
-                    <motion.span className="vocab-motion-item" variants={rowItemVariants}>
                       <button
                         type="button"
-                        className="vocab-reveal-button vocab-reveal-pill"
-                        onClick={playback.reveal}
-                        aria-label="Lộ đáp án"
+                        className="vocab-emoji-strip-btn vocab-reaction-heart"
+                        data-on={reactions.heart || undefined}
+                        onClick={() => toggleReaction("heart")}
+                        aria-label={
+                          reactions.heart ? "Bỏ yêu thích cho từ này" : "Yêu thích từ này"
+                        }
                       >
-                        {revealButtonLabel || "Ê, từ này biết nè"}
+                        <span
+                          key={pops.heart}
+                          className="vocab-pop"
+                          data-pop={(pops.onStrip && pops.heart > 0) || undefined}
+                        >
+                          <Heart size={16} fill={reactions.heart ? "currentColor" : "none"} />
+                        </span>
                       </button>
                     </motion.span>
-                  )}
-                  <motion.div className="vocab-reaction" variants={rowItemVariants}>
-                    <button
-                      type="button"
-                      className="vocab-reaction-button vocab-reaction-heart"
-                      data-on={reactions.heart || undefined}
-                      onClick={() => toggleReaction("heart")}
-                      aria-label={reactions.heart ? "Bỏ yêu thích cho từ này" : "Yêu thích từ này"}
+                    <motion.span
+                      className="vocab-motion-item"
+                      variants={stripItemVariants}
+                      custom={EMOJI_PALETTE.length + 2}
                     >
-                      <span
-                        key={pops.heart}
-                        className="vocab-pop"
-                        data-pop={(!pops.onStrip && pops.heart > 0) || undefined}
+                      <button
+                        type="button"
+                        className="vocab-emoji-strip-btn vocab-reaction-bookmark"
+                        data-on={reactions.bookmark || undefined}
+                        onClick={() => toggleReaction("bookmark")}
+                        aria-label={reactions.bookmark ? "Bỏ lưu từ này" : "Lưu từ này"}
                       >
-                        <Heart size={17} fill={reactions.heart ? "currentColor" : "none"} />
-                      </span>
-                    </button>
-                    <span key={heartsLabel} className="vocab-reaction-count">
-                      {heartsLabel}
-                    </span>
+                        <span
+                          key={pops.bookmark}
+                          className="vocab-pop"
+                          data-pop={(pops.onStrip && pops.bookmark > 0) || undefined}
+                        >
+                          <Bookmark size={16} fill={reactions.bookmark ? "currentColor" : "none"} />
+                        </span>
+                      </button>
+                    </motion.span>
                   </motion.div>
-                  <motion.div className="vocab-reaction" variants={rowItemVariants}>
-                    <button
-                      type="button"
-                      className="vocab-reaction-button vocab-reaction-bookmark"
-                      data-on={reactions.bookmark || undefined}
-                      onClick={() => toggleReaction("bookmark")}
-                      aria-label={reactions.bookmark ? "Bỏ lưu từ này" : "Lưu từ này"}
-                    >
-                      <span
-                        key={pops.bookmark}
-                        className="vocab-pop"
-                        data-pop={(!pops.onStrip && pops.bookmark > 0) || undefined}
+                ) : (
+                  <motion.div
+                    key="action-bar"
+                    className="vocab-action-row"
+                    variants={rowVariants}
+                    initial="hidden"
+                    animate={entered || exportLayout ? "shown" : "hidden"}
+                    exit="hidden"
+                  >
+                    {!stage.reveal && (
+                      <motion.span className="vocab-motion-item" variants={rowItemVariants}>
+                        <button
+                          type="button"
+                          className="vocab-reveal-button vocab-reveal-pill"
+                          onClick={playback.reveal}
+                          aria-label="Lộ đáp án"
+                        >
+                          {revealButtonLabel || "Ê, từ này biết nè"}
+                        </button>
+                      </motion.span>
+                    )}
+                    <motion.div className="vocab-reaction" variants={rowItemVariants}>
+                      <button
+                        type="button"
+                        className="vocab-reaction-button vocab-reaction-heart"
+                        data-on={reactions.heart || undefined}
+                        onClick={() => toggleReaction("heart")}
+                        aria-label={
+                          reactions.heart ? "Bỏ yêu thích cho từ này" : "Yêu thích từ này"
+                        }
                       >
-                        <Bookmark size={17} fill={reactions.bookmark ? "currentColor" : "none"} />
+                        <span
+                          key={pops.heart}
+                          className="vocab-pop"
+                          data-pop={(!pops.onStrip && pops.heart > 0) || undefined}
+                        >
+                          <Heart size={17} fill={reactions.heart ? "currentColor" : "none"} />
+                        </span>
+                      </button>
+                      <span key={heartsLabel} className="vocab-reaction-count">
+                        {heartsLabel}
                       </span>
-                    </button>
-                    <span key={bookmarksLabel} className="vocab-reaction-count">
-                      {bookmarksLabel}
-                    </span>
+                    </motion.div>
+                    <motion.div className="vocab-reaction" variants={rowItemVariants}>
+                      <button
+                        type="button"
+                        className="vocab-reaction-button vocab-reaction-bookmark"
+                        data-on={reactions.bookmark || undefined}
+                        onClick={() => toggleReaction("bookmark")}
+                        aria-label={reactions.bookmark ? "Bỏ lưu từ này" : "Lưu từ này"}
+                      >
+                        <span
+                          key={pops.bookmark}
+                          className="vocab-pop"
+                          data-pop={(!pops.onStrip && pops.bookmark > 0) || undefined}
+                        >
+                          <Bookmark size={17} fill={reactions.bookmark ? "currentColor" : "none"} />
+                        </span>
+                      </button>
+                      <span key={bookmarksLabel} className="vocab-reaction-count">
+                        {bookmarksLabel}
+                      </span>
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </MotionConfig>
-      </div>
+                )}
+              </AnimatePresence>
+            </div>
+          </MotionConfig>
+        </div>
+      )}
     </article>
   );
 }

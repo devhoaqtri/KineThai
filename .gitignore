@@ -9,6 +9,8 @@ lerna-debug.log*
 
 # IDE-generated knowledge/wiki caches
 .qoder/
+# Carousels rendered on the admin's machine
+/exports/
 # Debug/probe screenshot artifacts at repo root
 /probe-*.png
 /rt-*.png

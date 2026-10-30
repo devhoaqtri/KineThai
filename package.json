@@ -40,6 +40,8 @@
     "check:rate-limits": "npx tsx scripts/check-rate-limits.ts",
     "check:deck-not-bundled": "npx tsx scripts/check-deck-not-bundled.ts",
     "check:export-frame": "npx tsx scripts/check-export-frame.ts",
+    "check:carousel-frame": "npx tsx scripts/check-carousel-frame.ts",
+    "carousel": "npx tsx scripts/render-carousel.ts",
     "check:chrome-side": "npx tsx scripts/check-chrome-side.ts",
     "check:fit-floor": "npx tsx scripts/check-fit-floor.ts",
     "check:showcase": "npx tsx scripts/check-showcase.ts",

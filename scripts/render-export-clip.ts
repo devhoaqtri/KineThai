@@ -21,8 +21,8 @@
  * what an unattended job cannot give it. Screencast asks the browser for the frames it is
  * already compositing, so there is nothing to approve.
  *
- * Deliberately dependency-free: Node's own WebSocket talks CDP, and ffmpeg (already on
- * this machine) assembles the frames. Nothing is added to the app's tree for a tool that
+ * Deliberately dependency-free: Node's own WebSocket talks CDP (./lib/cdp), and ffmpeg
+ * (already on this machine) assembles the frames. Nothing is added to the app's tree for a tool that
  * belongs in the poster repo eventually.
  *
  * It records in REAL TIME, like Export Studio: a 30-second word takes 30 seconds. Frames
@@ -57,7 +57,7 @@
  *   export and showcase modes:
  *     --dialect <default|douyin>  the palette pool (default: the page's own)
  */
-import { spawn, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -68,6 +68,7 @@ import { SHOWCASE_CONTRACT } from "../src/features/vocabulary/lib/showcase-contr
 import { resolveTarget, siteAddress } from "../src/features/vocabulary/lib/target-language";
 import { DIFFICULTY_CHOICE_KEY } from "../src/features/vocabulary/lib/difficulty-choice";
 import { DIFFICULTY_ALL } from "../src/features/vocabulary/lib/difficulty";
+import { launchChrome, type Cdp, type ChromeSession } from "./lib/cdp";
 
 /** The frame a preset asks for, read from the app's own table rather than hardcoded. */
 function presetSize(id: string): { width: number; height: number } {
@@ -84,9 +85,6 @@ const ACTIVE_POSITION = `(() => {
   }
   return 0;
 })()`;
-
-const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const DEBUG_PORT = 9333;
 
 // ── Arguments ───────────────────────────────────────────────────────────────────────────
 const argv = process.argv.slice(2);
@@ -186,123 +184,28 @@ async function tap(cdp: Cdp, x: number, y: number): Promise<void> {
   await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
 }
 
-// ── A minimal CDP client over Node's built-in WebSocket ─────────────────────────────────
-type Handler = (params: Record<string, unknown>) => void;
-
-class Cdp {
-  private socket: WebSocket;
-  private nextId = 1;
-  private pending = new Map<
-    number,
-    { resolve: (v: unknown) => void; reject: (e: Error) => void }
-  >();
-  private listeners = new Map<string, Handler[]>();
-
-  private constructor(socket: WebSocket) {
-    this.socket = socket;
-    socket.addEventListener("message", (event) => {
-      const message = JSON.parse(String((event as MessageEvent).data));
-      if (message.id !== undefined) {
-        const waiter = this.pending.get(message.id);
-        this.pending.delete(message.id);
-        if (!waiter) return;
-        if (message.error) waiter.reject(new Error(JSON.stringify(message.error)));
-        else waiter.resolve(message.result);
-        return;
-      }
-      for (const handler of this.listeners.get(message.method) ?? []) handler(message.params ?? {});
-    });
-  }
-
-  static async connect(url: string): Promise<Cdp> {
-    const socket = new WebSocket(url);
-    await new Promise<void>((ok, fail) => {
-      socket.addEventListener("open", () => ok(), { once: true });
-      socket.addEventListener("error", () => fail(new Error(`cannot connect to ${url}`)), {
-        once: true,
-      });
-    });
-    return new Cdp(socket);
-  }
-
-  send<T = unknown>(method: string, params: Record<string, unknown> = {}): Promise<T> {
-    const id = this.nextId++;
-    this.socket.send(JSON.stringify({ id, method, params }));
-    return new Promise<T>((res, rej) =>
-      this.pending.set(id, { resolve: res as (v: unknown) => void, reject: rej }),
-    );
-  }
-
-  on(method: string, handler: Handler): void {
-    this.listeners.set(method, [...(this.listeners.get(method) ?? []), handler]);
-  }
-
-  /** Evaluate an expression in the page and return its JSON value. */
-  async evaluate<T>(expression: string): Promise<T> {
-    const { result } = await this.send<{ result: { value: T } }>("Runtime.evaluate", {
-      expression,
-      returnByValue: true,
-      awaitPromise: true,
-    });
-    return result.value;
-  }
-
-  close(): void {
-    this.socket.close();
-  }
-}
-
 // ── Run ─────────────────────────────────────────────────────────────────────────────────
-const profile = mkdtempSync(join(tmpdir(), "chayla-export-"));
 const frames = mkdtempSync(join(tmpdir(), "chayla-frames-"));
-let chrome: ReturnType<typeof spawn> | null = null;
+let chrome: ChromeSession | null = null;
 
 async function main() {
   // The frame size is the preset's, read from the page once it loads; the window is sized
   // to it so screencast frames come out at exactly the output resolution.
-  chrome = spawn(
-    CHROME,
-    [
-      "--headless=new",
-      `--remote-debugging-port=${DEBUG_PORT}`,
-      `--user-data-dir=${profile}`,
-      "--hide-scrollbars",
-      "--mute-audio",
-      // Forced at the BROWSER, not through Emulation.setDeviceMetricsOverride. Screencast
-      // hands back frames sized in CSS pixels, so an emulated scale factor leaves them at
-      // the viewport's logical size and ffmpeg upscales — 1080×1920 in the container,
-      // 405×720 of real detail. Forcing the device scale factor makes the surface itself
-      // that many pixels, which is what screencast then captures.
-      // Both phone-shaped modes need the forced factor; only export mode draws at the
-      // frame's literal pixel size and wants 1.
-      `--force-device-scale-factor=${mode === "export" ? 1 : scale}`,
-      `--window-size=${mode === "export" ? "1080,1920" : `${cssWidth},${cssHeight}`}`,
-      "--force-color-profile=srgb",
-      // The card plays on its own; nothing should wait for a gesture that will never come.
-      "--autoplay-policy=no-user-gesture-required",
-      "about:blank",
-    ],
-    { stdio: "ignore" },
-  );
-
-  // Wait for the DevTools endpoint rather than guessing a delay.
-  let targetUrl = "";
-  for (let attempt = 0; attempt < 50 && !targetUrl; attempt += 1) {
-    try {
-      const list = (await (await fetch(`http://127.0.0.1:${DEBUG_PORT}/json/list`)).json()) as {
-        type: string;
-        webSocketDebuggerUrl?: string;
-      }[];
-      targetUrl = list.find((t) => t.type === "page")?.webSocketDebuggerUrl ?? "";
-    } catch {
-      await sleep(200);
-    }
-  }
-  if (!targetUrl) throw new Error("Chrome did not expose a page target");
-
-  const cdp = await Cdp.connect(targetUrl);
-  await cdp.send("Page.enable");
-  await cdp.send("Runtime.enable");
+  chrome = await launchChrome([
+    "--mute-audio",
+    // Forced at the BROWSER, not through Emulation.setDeviceMetricsOverride. Screencast
+    // hands back frames sized in CSS pixels, so an emulated scale factor leaves them at
+    // the viewport's logical size and ffmpeg upscales — 1080×1920 in the container,
+    // 405×720 of real detail. Forcing the device scale factor makes the surface itself
+    // that many pixels, which is what screencast then captures.
+    // Both phone-shaped modes need the forced factor; only export mode draws at the
+    // frame's literal pixel size and wants 1.
+    `--force-device-scale-factor=${mode === "export" ? 1 : scale}`,
+    `--window-size=${mode === "export" ? "1080,1920" : `${cssWidth},${cssHeight}`}`,
+    // The card plays on its own; nothing should wait for a gesture that will never come.
+    "--autoplay-policy=no-user-gesture-required",
+  ]);
+  const { cdp } = chrome;
 
   // ── Set the stage, per mode ───────────────────────────────────────────────────────────
   let width: number;
@@ -663,7 +566,6 @@ async function main() {
   const subject = await describe();
   await cdp.send("Page.stopScreencast");
   await sleep(200);
-  cdp.close();
 
   if (captured.length < 2) throw new Error(`captured ${captured.length} frames; nothing to encode`);
 
@@ -773,16 +675,10 @@ main()
     process.exitCode = 1;
   })
   .finally(async () => {
-    chrome?.kill();
-    // Chrome keeps writing to its profile for a moment after the signal, and removing the
-    // directory out from under it fails with ENOTEMPTY. The clip is already written by
-    // now, so a failed cleanup is worth a warning and nothing more.
-    await sleep(500);
-    for (const directory of [profile, frames]) {
-      try {
-        rmSync(directory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 });
-      } catch {
-        console.warn(`! left behind ${directory}`);
-      }
+    await chrome?.close();
+    try {
+      rmSync(frames, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 });
+    } catch {
+      console.warn(`! left behind ${frames}`);
     }
   });

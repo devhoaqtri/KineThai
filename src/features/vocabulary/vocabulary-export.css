@@ -237,6 +237,20 @@
 .vocab-export-brand > span {
   color: var(--vocab-accent);
 }
+/* A still image: one page, finished and held.
+
+   The drift's overhang is dropped so the strip's page shift is exactly one frame wide. The
+   right edge of one slide is then the left edge of the next, and a swipe crosses no seam.
+   The blank slot rests instead of pulsing; its resting state is complete, like every
+   highlight's. */
+.vocab-card[data-still] .vocab-backdrop-drift[data-strip] {
+  inset: 0;
+  transform: none;
+}
+.vocab-card[data-still] [data-kinetic-blank]::before,
+.vocab-card[data-still] [data-kinetic-blank]::after {
+  animation: none;
+}
 /* ── Export studio (admin) ───────────────────────────────────────────────────
    Options on the left, the stage on the right at the full height of the window.
    The stage never changes size between previewing and recording, so the preview is

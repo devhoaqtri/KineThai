@@ -41,6 +41,8 @@ describe("isExportModule", () => {
       `${vocabulary}/components/ExportStudio.tsx`,
       `${vocabulary}/components/ExportFramePage.tsx?tsr-split=component`,
       `${vocabulary}/components/ShowcasePage.tsx`,
+      `${vocabulary}/components/CarouselFramePage.tsx`,
+      `${vocabulary}/lib/slide-settle.ts`,
       `${vocabulary}/lib/export-recorder.ts`,
       `${vocabulary}/lib/export-presets.ts`,
       `${vocabulary}/vocabulary-export.css`,

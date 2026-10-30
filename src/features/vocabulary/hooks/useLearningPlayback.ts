@@ -24,9 +24,11 @@ export function useLearningPlayback(options: {
   revealPage?: number;
   /** Replay the word from its first page instead of finishing when the last page ends. */
   loop?: boolean;
+  /** Page to open on; a still image starts on the page it shows. */
+  initialPage?: number;
   onFinish?: () => void;
 }) {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(options.initialPage ?? 0);
   const [replay, setReplay] = useState(0);
   const [visible, setVisible] = useState(() => typeof document === "undefined" || !document.hidden);
   useEffect(() => {
