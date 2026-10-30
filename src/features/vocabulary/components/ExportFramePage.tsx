@@ -20,8 +20,9 @@
  */
 
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
-import { useParams, useSearch } from "@tanstack/react-router";
+import { useLoaderData, useParams, useSearch } from "@tanstack/react-router";
 import { VocabularyCard } from "./VocabularyCard";
+import { DeckLocaleContext } from "../lib/deck-locale";
 import { getExportPreset } from "../lib/export-presets";
 import { useServedWord } from "../hooks/useServedWord";
 import { EXPORT_CONTRACT, type ExportPhase } from "../lib/export-contract";
@@ -30,6 +31,7 @@ import { EXPORT_CONTRACT, type ExportPhase } from "../lib/export-contract";
 // text small and left, chrome stacked in a corner — which looks like a layout bug and is
 // really a missing import.
 import "../vocabulary.css";
+import "../vocabulary-export.css";
 import type { FeedEntry, Presentation } from "../types";
 
 /** How long to wait for a paint before declaring readiness anyway. See the effect below. */
@@ -43,6 +45,7 @@ function setPhase(phase: ExportPhase) {
 export function ExportFramePage() {
   const { code } = useParams({ from: "/export/$code" });
   const search = useSearch({ from: "/export/$code" });
+  const { locale } = useLoaderData({ from: "/export/$code" });
   const preset = getExportPreset(search.preset);
   // undefined while the lookup is in flight: the phase stays "loading" until it lands.
   const { word } = useServedWord(useMemo(() => ({ code }), [code]));
@@ -105,8 +108,9 @@ export function ExportFramePage() {
       // The route validates this against STYLE_IDS, so the cast narrows a checked value.
       style: (search.style ?? "mix") as Presentation["style"],
       autoplay: true,
+      dialect: search.dialect,
     }),
-    [search.theme, search.style],
+    [search.theme, search.style, search.dialect],
   );
 
   if (word === undefined) return <main className="vocab-export-frame" aria-busy="true" />;
@@ -119,28 +123,30 @@ export function ExportFramePage() {
   }
 
   return (
-    <main className="vocab-export-frame">
-      <div
-        {...{ [EXPORT_CONTRACT.stageAttribute]: "" }}
-        className="vocab-export-stage"
-        style={
-          {
-            "--export-ratio": preset.height / preset.width,
-            aspectRatio: `${preset.width} / ${preset.height}`,
-          } as CSSProperties
-        }
-      >
-        <VocabularyCard
-          entry={entry}
-          presentation={presentation}
-          active={playing}
-          reducedMotion={false}
-          matching={0}
-          canAdvance
-          onAdvance={() => setPhase("done")}
-          exportLayout={exportLayout}
-        />
-      </div>
-    </main>
+    <DeckLocaleContext.Provider value={locale}>
+      <main className="vocab-export-frame">
+        <div
+          {...{ [EXPORT_CONTRACT.stageAttribute]: "" }}
+          className="vocab-export-stage"
+          style={
+            {
+              "--export-ratio": preset.height / preset.width,
+              aspectRatio: `${preset.width} / ${preset.height}`,
+            } as CSSProperties
+          }
+        >
+          <VocabularyCard
+            entry={entry}
+            presentation={presentation}
+            active={playing}
+            reducedMotion={false}
+            matching={0}
+            canAdvance
+            onAdvance={() => setPhase("done")}
+            exportLayout={exportLayout}
+          />
+        </div>
+      </main>
+    </DeckLocaleContext.Provider>
   );
 }

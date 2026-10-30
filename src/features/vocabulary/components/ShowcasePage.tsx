@@ -23,10 +23,12 @@
  * Depends on: VocabularyCard, showcase-contract, useServedWord, vocabulary.css
  */
 
-import { useEffect, useMemo, useState } from "react";
-import { useSearch } from "@tanstack/react-router";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { VocabularyCard } from "./VocabularyCard";
 import { ShowcaseChrome } from "./ShowcaseChrome";
+import { DeckLocaleContext } from "../lib/deck-locale";
+import { siteAddress } from "../lib/target-language";
 import {
   SHOWCASE_CONTRACT,
   pickShowcaseVariants,
@@ -37,6 +39,7 @@ import {
 import { useServedWord, type WordLookup } from "../hooks/useServedWord";
 // Each page component brings the card's stylesheet in; this is a page like any other.
 import "../vocabulary.css";
+import "../vocabulary-export.css";
 import type { FeedEntry, Presentation } from "../types";
 
 /** How long to wait for a paint before declaring readiness anyway. */
@@ -71,6 +74,7 @@ function cssDuration(name: string, fallback: number): number {
 /** One word, played from first frame to end card, ready to be recorded. */
 export function ShowcasePage() {
   const search = useSearch({ from: "/showcase" });
+  const { locale } = useLoaderData({ from: "/showcase" });
   const [phase, setLocalPhase] = useState<ShowcasePhase>("loading");
 
   // Resolved once. A re-render must not land on a different word mid-take, and `seed`
@@ -166,9 +170,9 @@ export function ShowcasePage() {
       autoplay: true,
       advance: true,
       pace: "normal",
-      dialect: "default",
+      dialect: search.dialect ?? "default",
     }),
-    [search.theme, search.style],
+    [search.theme, search.style, search.dialect],
   );
 
   if (word === undefined) return <main className="vocab-showcase" aria-busy="true" />;
@@ -181,31 +185,33 @@ export function ShowcasePage() {
   }
 
   return (
-    <main className="vocab-showcase vocab-recording">
-      <div {...{ [SHOWCASE_CONTRACT.stageAttribute]: "" }} className="vocab-showcase-stage">
-        {/* The chrome a reader taps is drawn here as scenery instead: a clip cannot be
-            tapped, and reusing the live toolbar would drag its dropdowns, sheets and
-            focus handling into a surface that has no one to serve them. */}
-        <ShowcaseChrome hidden={phase === "loading" || phase === "ready" || phase === "intro"} />
-        <VocabularyCard
-          entry={entry}
-          presentation={presentation}
-          // The whole point: held at the first frame of its first page until the badge has
-          // gone. `current` stays true throughout so the card reads this as paused and
-          // holds everything, rather than as the reader having moved on.
-          active={phase === "playing"}
-          current
-          reducedMotion={false}
-          matching={0}
-          canAdvance
-          onAdvance={() => setLocalPhase("outro")}
-        />
-        {phase === "intro" && (
-          <ShowcaseIntro text={search.badge ?? "Từ gì mà ..."} variant={variants.intro} />
-        )}
-        {(phase === "outro" || phase === "done") && <ShowcaseOutro variant={variants.outro} />}
-      </div>
-    </main>
+    <DeckLocaleContext.Provider value={locale}>
+      <main className="vocab-showcase vocab-recording">
+        <div {...{ [SHOWCASE_CONTRACT.stageAttribute]: "" }} className="vocab-showcase-stage">
+          {/* The chrome a reader taps is drawn here as scenery instead: a clip cannot be
+              tapped, and reusing the live toolbar would drag its dropdowns, sheets and
+              focus handling into a surface that has no one to serve them. */}
+          <ShowcaseChrome hidden={phase === "loading" || phase === "ready" || phase === "intro"} />
+          <VocabularyCard
+            entry={entry}
+            presentation={presentation}
+            // The whole point: held at the first frame of its first page until the badge has
+            // gone. `current` stays true throughout so the card reads this as paused and
+            // holds everything, rather than as the reader having moved on.
+            active={phase === "playing"}
+            current
+            reducedMotion={false}
+            matching={0}
+            canAdvance
+            onAdvance={() => setLocalPhase("outro")}
+          />
+          {phase === "intro" && (
+            <ShowcaseIntro text={search.badge ?? "Từ gì mà ..."} variant={variants.intro} />
+          )}
+          {(phase === "outro" || phase === "done") && <ShowcaseOutro variant={variants.outro} />}
+        </div>
+      </main>
+    </DeckLocaleContext.Provider>
   );
 }
 
@@ -227,12 +233,13 @@ function ShowcaseIntro({ text, variant }: { text: string; variant: ShowcaseIntro
 
 /** The end card. Markup only; the timeline is in vocabulary.css. */
 function ShowcaseOutro({ variant }: { variant: ShowcaseOutroVariant }) {
+  const address = siteAddress(useContext(DeckLocaleContext));
   return (
     <div className="vocab-outro" data-outro={variant}>
       <div className="vocab-outro-veil" />
       <div className="vocab-outro-bar">
         <span className="vocab-outro-lock" />
-        <span className="vocab-outro-url">anh.chayla.app</span>
+        <span className="vocab-outro-url">{address}</span>
         <span className="vocab-outro-caret" />
       </div>
     </div>

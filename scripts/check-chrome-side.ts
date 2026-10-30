@@ -21,7 +21,10 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const CSS = join(import.meta.dirname, "..", "src/features/vocabulary/vocabulary.css");
+// The reader's sheet, then the recorded frame's own rules, which only load on the dev server.
+const SHEETS = ["vocabulary.css", "vocabulary-export.css"].map((name) =>
+  join(import.meta.dirname, "..", "src/features/vocabulary", name),
+);
 const VAR = "--vocab-chrome-side";
 
 /** Every rule that puts something against a horizontal edge of the recorded feed. */
@@ -34,7 +37,7 @@ const MUST_READ: { selector: string; why: string }[] = [
   { selector: ".vocab-saved-dock", why: "the saved-words rail on the right edge" },
 ];
 
-const css = readFileSync(CSS, "utf8");
+const css = SHEETS.map((sheet) => readFileSync(sheet, "utf8")).join("\n");
 const failures: string[] = [];
 let checks = 0;
 

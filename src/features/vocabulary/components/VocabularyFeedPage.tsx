@@ -10,7 +10,7 @@ import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
 import { rememberRecallWord } from "../lib/recall-words";
 import { DIFFICULTY_ALL } from "../lib/difficulty";
 import { SHORT_VIEWPORT_MAX_H } from "../lib/landscape-geometry";
-import { useIsAdmin } from "@/features/admin/hooks/useIsAdmin";
+import { useCanExport } from "@/features/admin/hooks/useCanExport";
 import { useFontsReady } from "../hooks/useFontsReady";
 import { useTrackRotation } from "../hooks/useTrackRotation";
 import { useViewHistory } from "../hooks/useViewHistory";
@@ -32,6 +32,10 @@ import type { TargetLocale } from "../lib/target-language";
 import { CUSTOM_PACK_EVENT, clearCustomPack, readCustomPack } from "../lib/custom-pack";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { Link } from "@tanstack/react-router";
+
+// The export studio and the recorder's scenes style themselves from this sheet. The recorder
+// drives this page too, so it loads here on the dev server; production builds never see it.
+if (import.meta.env.DEV) void import("../vocabulary-export.css");
 import "../vocabulary.css";
 
 /** How long the "Gói của bạn" bar stays up after a pack starts playing. */
@@ -148,9 +152,8 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   const shell = useRef<HTMLElement>(null);
   useShellHeightVar(shell, { shortMaxHeight: SHORT_VIEWPORT_MAX_H });
   const [optionsOpen, setOptionsOpen] = useState(false);
-  // Video export is an admin tool; for everyone else the control is never rendered
-  // and the studio's code is never downloaded.
-  const isAdmin = useIsAdmin();
+  // Video export is a local admin tool: a production build has no control and no studio.
+  const canExport = useCanExport();
   const [exportOpen, setExportOpen] = useState(false);
   const openExport = useCallback(() => {
     setOptionsOpen(false);
@@ -251,7 +254,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           history={viewHistory.history}
           historyStats={viewHistory.stats}
           onClearHistory={viewHistory.clear}
-          onExport={isAdmin ? openExport : undefined}
+          onExport={canExport ? openExport : undefined}
         />
         {packName && packNoticePresence.mounted && (
           <div
@@ -326,7 +329,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
             wordCelebration !== null ||
             daily.celebrating !== null
           }
-          exportOpen={isAdmin && exportOpen}
+          exportOpen={canExport && exportOpen}
           onCloseExport={closeExport}
           history={viewHistory.history}
           onRecordView={handleRecordView}

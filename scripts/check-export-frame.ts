@@ -13,7 +13,7 @@
  * Run: npx tsx scripts/check-export-frame.ts
  */
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { EXPORT_CONTRACT } from "../src/features/vocabulary/lib/export-contract";
 import { EXPORT_PRESETS, getExportPreset } from "../src/features/vocabulary/lib/export-presets";
@@ -49,6 +49,15 @@ check("the start event is vocab-export-start", EXPORT_CONTRACT.startEvent === "v
   check("the route is /export/$code", route.includes('createFileRoute("/export/$code")'));
   check("it is noindex", /noindex/.test(route), "a recorder surface must not be crawled");
   check("it validates its search params", route.includes("validateSearch"));
+  check(
+    "it answers 404 outside the dev server",
+    route.includes("if (!import.meta.env.DEV) throw notFound()"),
+  );
+  check(
+    "its page loads only on the dev server",
+    /component: import\.meta\.env\.DEV\s*\?\s*lazyRouteComponent/.test(route) &&
+      !/^import .*ExportFramePage/m.test(route),
+  );
 }
 
 // ── Presets a job can ask for ───────────────────────────────────────────────────────────
@@ -65,14 +74,19 @@ check("the start event is vocab-export-start", EXPORT_CONTRACT.startEvent === "v
   );
 }
 
-// ── Every published English word is addressable by the URL the job builds ───────────────
+// ── Every published word is addressable by the URL the job builds ───────────────────────
 {
   const DATA = "src/features/vocabulary/data";
+  const deckDirs = ["packs", "zh", "ko", "ja", "fr", "de", "es"].filter((dir) =>
+    existsSync(join(DATA, dir)),
+  );
   const files = [
     join(DATA, "catalog.json"),
-    ...readdirSync(join(DATA, "packs"))
-      .filter((f) => f.endsWith(".json"))
-      .map((f) => join(DATA, "packs", f)),
+    ...deckDirs.flatMap((dir) =>
+      readdirSync(join(DATA, dir))
+        .filter((f) => f.endsWith(".json"))
+        .map((f) => join(DATA, dir, f)),
+    ),
   ];
   let total = 0;
   const unaddressable: string[] = [];
@@ -90,7 +104,7 @@ check("the start event is vocab-export-start", EXPORT_CONTRACT.startEvent === "v
   }
   assert.ok(total > 0, "no words were read; this guard would pass vacuously");
   check(
-    `all ${total} published English words can be addressed as /export/<code>`,
+    `all ${total} published words can be addressed as /export/<code>`,
     unaddressable.length === 0,
     unaddressable.slice(0, 5),
   );

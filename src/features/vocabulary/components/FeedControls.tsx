@@ -1324,7 +1324,7 @@ export function FeedControls({
           >
             <Shuffle size={19} />
           </button>
-          {onExport && (
+          {import.meta.env.DEV && onExport && (
             <button
               className="vocab-icon-button vocab-export-open"
               type="button"

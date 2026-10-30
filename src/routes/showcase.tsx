@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, lazyRouteComponent, notFound } from "@tanstack/react-router";
 import { z } from "zod";
-import { ShowcasePage } from "@/features/vocabulary/components/ShowcasePage";
+import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
 import { STYLE_IDS } from "@/features/vocabulary/lib/schema";
 import { SHOWCASE_CONTRACT } from "@/features/vocabulary/lib/showcase-contract";
 
@@ -15,11 +15,12 @@ import { SHOWCASE_CONTRACT } from "@/features/vocabulary/lib/showcase-contract";
  * taps to replay a page. Both were races, and both lost silently. Here the sequence is
  * component state.
  *
- * noindex on purpose, and deliberately not linked from anywhere: a rendering surface for a
- * recorder, not a page for a reader.
+ * Development only. Clips are recorded on the admin's own machine, so a production build
+ * answers 404 here and carries neither the page nor its search schema. noindex stays for
+ * the dev server's sake: a rendering surface for a recorder, not a page for a reader.
  */
-export const Route = createFileRoute("/showcase")({
-  validateSearch: z.object({
+const searchSchema = () =>
+  z.object({
     /** A specific word by share code; otherwise one is picked from the deck. */
     code: z.string().max(16).optional(),
     /** Pick the same word again — an index into the deck, so a job is reproducible. */
@@ -27,6 +28,8 @@ export const Route = createFileRoute("/showcase")({
     /** Pin the palette and narration style, as /export/$code does. */
     theme: z.string().max(400).optional(),
     style: z.enum([...STYLE_IDS, "mix"] as [string, ...string[]]).optional(),
+    /** The palette pool `theme` is read against; "douyin" is the Chinese host's own. */
+    dialect: z.enum(["default", "douyin"]).optional(),
     /** What the opening badge says. */
     badge: z.string().max(80).optional(),
     /** Pin the opening / end-card variant; otherwise each take picks its own. */
@@ -34,9 +37,23 @@ export const Route = createFileRoute("/showcase")({
     outro: z.enum(SHOWCASE_CONTRACT.outroVariants).optional(),
     /** Run without waiting for the start event. For eyeballing it in a browser. */
     autostart: z.boolean().optional(),
-  }),
+  });
+
+export const Route = createFileRoute("/showcase")({
+  validateSearch: (import.meta.env.DEV ? searchSchema() : z.object({})) as ReturnType<
+    typeof searchSchema
+  >,
+  beforeLoad: () => {
+    if (!import.meta.env.DEV) throw notFound();
+  },
+  loader: async () => ({ locale: await getSiteLocale() }),
   head: () => ({
     meta: [{ name: "robots", content: "noindex, nofollow" }, { title: "Showcase" }],
   }),
-  component: ShowcasePage,
+  component: import.meta.env.DEV
+    ? lazyRouteComponent(
+        () => import("@/features/vocabulary/components/ShowcasePage"),
+        "ShowcasePage",
+      )
+    : () => null,
 });

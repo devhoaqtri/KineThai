@@ -9,10 +9,11 @@ import type { FeedPage, Presentation, VocabularyFilters } from "../types";
 import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
 import { VocabularyCard } from "./VocabularyCard";
 
-// Admin-only, and only on demand: readers never download the export studio.
-const ExportStudio = lazy(() =>
-  import("./ExportStudio").then((module) => ({ default: module.ExportStudio })),
-);
+// Local only: a production build has no export studio at all, and even in development it
+// loads on demand, for an admin who opens it.
+const ExportStudio = import.meta.env.DEV
+  ? lazy(() => import("./ExportStudio").then((module) => ({ default: module.ExportStudio })))
+  : null;
 
 /** How long a word must hold the screen before it counts as seen. */
 const VIEW_DWELL_MS = 900;
@@ -392,7 +393,7 @@ export function VocabularyStream({
           })}
         </div>
       </div>
-      {exportOpen && activeEntry && onCloseExport && (
+      {ExportStudio && exportOpen && activeEntry && onCloseExport && (
         <Suspense fallback={null}>
           <ExportStudio entry={activeEntry} presentation={presentation} onClose={onCloseExport} />
         </Suspense>

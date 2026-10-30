@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { isDeckModule } from "../../../../../scripts/deck-guard-plugin";
+import {
+  hasExportStyles,
+  isDeckModule,
+  isExportModule,
+} from "../../../../../scripts/deck-guard-plugin";
 
 const data = "/repo/src/features/vocabulary/data";
 
@@ -27,5 +31,43 @@ describe("isDeckModule", () => {
   });
   it("reads Windows paths", () => {
     expect(isDeckModule("C:\\repo\\src\\features\\vocabulary\\data\\fr\\fr-a1.json")).toBe(true);
+  });
+});
+
+describe("isExportModule", () => {
+  const vocabulary = "/repo/src/features/vocabulary";
+  it("catches the local-only export tools", () => {
+    for (const id of [
+      `${vocabulary}/components/ExportStudio.tsx`,
+      `${vocabulary}/components/ExportFramePage.tsx?tsr-split=component`,
+      `${vocabulary}/components/ShowcasePage.tsx`,
+      `${vocabulary}/lib/export-recorder.ts`,
+      `${vocabulary}/lib/export-presets.ts`,
+      `${vocabulary}/vocabulary-export.css`,
+      "/repo/src/features/post-player/hooks/usePostExport.ts",
+      "/repo/src/features/post-player/lib/export-video.ts",
+    ]) {
+      expect(isExportModule(id), id).toBe(true);
+    }
+  });
+  it("leaves what a reader needs alone", () => {
+    for (const id of [
+      `${vocabulary}/components/VocabularyCard.tsx`,
+      `${vocabulary}/lib/export-layout.ts`,
+      `${vocabulary}/vocabulary.css`,
+      `${vocabulary}/hooks/useServedWord.ts`,
+    ]) {
+      expect(isExportModule(id), id).toBe(false);
+    }
+  });
+});
+
+describe("hasExportStyles", () => {
+  it("finds the export sheet in a built stylesheet", () => {
+    expect(hasExportStyles(".a{color:red}.vocab-export-record{color:red}")).toBe(true);
+    expect(hasExportStyles(".vocab-intro-badge::after{inset:0}")).toBe(true);
+  });
+  it("ignores the reader's stylesheet", () => {
+    expect(hasExportStyles(".vocab-card{color:red}.vocab-export-recording-note{}")).toBe(false);
   });
 });

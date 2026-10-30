@@ -17,11 +17,18 @@ import { useCommentFlow } from "./useCommentFlow";
 import { useCommentStory } from "./useCommentStory";
 import { usePostAutoAdvance } from "./usePostAutoAdvance";
 import { usePostEntrance } from "./usePostEntrance";
-import { usePostExport } from "./usePostExport";
+import { usePostExport, type UsePostExportArgs, type UsePostExportResult } from "./usePostExport";
 import { usePostPageTiming } from "./usePostPageTiming";
 import { usePostPlaybackDerived } from "./usePostPlaybackDerived";
 import { usePostRingProgress } from "./usePostRingProgress";
 import { useTextFitScale } from "./useTextFitScale";
+
+const NO_EXPORT: UsePostExportResult = { handleExportVideo: async () => {} };
+
+// Video export is a local admin tool: a production build keeps no recorder at all.
+const useExportFlow: (args: UsePostExportArgs) => UsePostExportResult = import.meta.env.DEV
+  ? usePostExport
+  : () => NO_EXPORT;
 
 /**
  * Compose PostCard runtime hooks and preserve original effect order.
@@ -223,7 +230,7 @@ export function usePostPlayback(props: PostCardProps) {
     video.play().catch(() => undefined);
   }, [isPaused, isVisible, post.post_type]);
 
-  const { handleExportVideo } = usePostExport({
+  const { handleExportVideo } = useExportFlow({
     post,
     textPages,
     tempo: spec.tempo,

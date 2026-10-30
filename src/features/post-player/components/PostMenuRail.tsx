@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { Bell, Download, Home, Info, Plus, Search, Settings, User } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { ReactElement, ReactNode } from "react";
-import { useIsAdmin } from "@/features/admin/hooks/useIsAdmin";
+import { useCanExport } from "@/features/admin/hooks/useCanExport";
 
 export type PostMenuRailProps = {
   onExport: () => void;
@@ -22,10 +22,10 @@ export type PostMenuRailProps = {
  * @returns Rendered UI
  */
 export function PostMenuRail({ onExport, isExporting }: PostMenuRailProps): ReactElement {
-  // Video export is an admin-only tool; hide the action for everyone else. This rail
+  // Video export is a local admin tool; hide the action for everyone else. This rail
   // mounts only while the overflow menu is open, so the admin check runs at most once
   // per open rather than per card in the feed.
-  const isAdmin = useIsAdmin();
+  const canExport = useCanExport();
   return (
     <motion.div
       initial={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -36,7 +36,7 @@ export function PostMenuRail({ onExport, isExporting }: PostMenuRailProps): Reac
       onClick={(event) => event.stopPropagation()}
     >
       <RailMenuLink to="/create" label="create" icon={<Plus className="size-5" />} emphasized />
-      {isAdmin && (
+      {canExport && (
         <RailMenuButton
           label={isExporting ? "exporting" : "export"}
           icon={<Download className="size-4" />}

@@ -308,7 +308,7 @@ check("recordFinishedWord does not mutate its input", JSON.stringify(base) === f
 // ── 11. The recorded frame must not show a badge ───────────────────────────────────────
 {
   const css = readFileSync(
-    join(import.meta.dirname, "..", "src/features/vocabulary/vocabulary.css"),
+    join(import.meta.dirname, "..", "src/features/vocabulary/vocabulary-export.css"),
     "utf8",
   );
   check(
