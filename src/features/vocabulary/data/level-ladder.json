@@ -104,6 +104,7 @@
   },
   "ja": {
     "levels": [
+      "A1",
       "A2",
       "B1",
       "B2",
@@ -111,36 +112,51 @@
       "C2"
     ],
     "levelCounts": {
-      "A2": 100,
-      "B1": 50,
-      "B2": 50,
-      "C1": 50,
-      "C2": 50
+      "A1": 779,
+      "A2": 747,
+      "B1": 631,
+      "B2": 1166,
+      "C1": 1010,
+      "C2": 572
     },
     "levelSamples": {
-      "A2": [
+      "A1": [
         {
-          "word": "airport"
+          "word": "hungry"
+        },
+        {
+          "word": "thirsty"
+        },
+        {
+          "word": "tired"
         },
         {
           "word": "angry"
+        }
+      ],
+      "A2": [
+        {
+          "word": "polite"
         },
         {
-          "word": "arrive"
+          "word": "lazy"
         },
         {
-          "word": "bank"
+          "word": "exact"
+        },
+        {
+          "word": "specific"
         }
       ],
       "B1": [
         {
-          "word": "achieve"
+          "word": "aware"
         },
         {
-          "word": "advice"
+          "word": "concentrate"
         },
         {
-          "word": "although"
+          "word": "ignore"
         },
         {
           "word": "brave"
@@ -148,44 +164,44 @@
       ],
       "B2": [
         {
-          "word": "abandon"
+          "word": "conscious"
         },
         {
-          "word": "accurate"
+          "word": "awareness"
         },
         {
-          "word": "ambition"
+          "word": "concentration"
         },
         {
-          "word": "acknowledge"
+          "word": "observer"
         }
       ],
       "C1": [
         {
-          "word": "abundant"
+          "word": "engaging"
         },
         {
-          "word": "accumulate"
+          "word": "selective"
         },
         {
-          "word": "adversity"
+          "word": "alert"
         },
         {
-          "word": "aesthetic"
+          "word": "caution"
         }
       ],
       "C2": [
         {
-          "word": "affectionate"
+          "word": "fearless"
         },
         {
-          "word": "anticipation"
+          "word": "reserved"
         },
         {
-          "word": "gasp"
+          "word": "self-assured"
         },
         {
-          "word": "animated"
+          "word": "timid"
         }
       ]
     }

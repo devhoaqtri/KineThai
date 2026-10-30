@@ -57,20 +57,20 @@ describe("Japanese deck", () => {
     expect(page.total).toBeGreaterThanOrEqual(200);
     expect(page.matching).toBe(page.total);
     expect(page.levels).toEqual(expect.arrayContaining(["JPRIM", "JSEC", "JHIGH", "JCOLL"]));
-    expect(page.trackLevels).toEqual(["A2", "B1", "B2", "C1", "C2"]);
+    expect(page.trackLevels).toEqual(["A1", "A2", "B1", "B2", "C1", "C2"]);
   });
 
   it("filters by the English CEFR usage tracks, not the school reader level", () => {
     const page = readVocabularyPage({ ...input, difficulty: "co-ban" }, "ja");
-    expect(page.matching).toBe(100);
-    expect(page.levelCounts).toMatchObject({ A2: 100, B1: 50, B2: 50, C1: 50, C2: 50 });
+    expect(page.matching).toBe(747);
+    expect(page.levelCounts).toMatchObject({ A1: 779, A2: 747, B1: 631, B2: 1166, C1: 1010, C2: 572 });
     for (const entry of page.entries) expect(entry.word.cefr).toBe("A2");
   });
 
   it("gives every Japanese card a katakana reading", () => {
     const words = catalogFor("ja").words;
-    expect(words).toHaveLength(1000);
-    for (const word of words) expect(word.kana).toMatch(/^[\u30a0-\u30ffー]+$/u);
+    expect(words).toHaveLength(16241);
+    for (const word of words) expect(word.kana).toMatch(/^[\u30a0-\u30ffー ]+$/u);
     expect(words.find((word) => word.word === "beach")?.kana).toBe("ビーチ");
   });
 });
