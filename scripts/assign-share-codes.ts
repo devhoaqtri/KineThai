@@ -49,7 +49,7 @@ function deckFiles(locale: string): string[] {
     : packs(join(DATA, locale));
 }
 
-const LOCALES = ["en", "zh", "ko", "ja"];
+const LOCALES = ["en", "zh", "ko", "ja", "fr", "de", "es"];
 const dry = process.argv.includes("--dry");
 
 let ledger: Ledger = {};

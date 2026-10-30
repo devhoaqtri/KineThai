@@ -58,7 +58,7 @@ function check(condition: boolean, message: string): void {
   failures += 1;
 }
 
-for (const locale of ["en", "zh", "ko", "ja"]) {
+for (const locale of ["en", "zh", "ko", "ja", "fr", "de", "es"]) {
   const files = deckFiles(locale);
   if (!files.length) continue;
   const words: Word[] = files.flatMap(
