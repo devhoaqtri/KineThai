@@ -487,6 +487,9 @@ export function VocabularyCard({
       });
     setEmojiOrigins(next);
   }, [showEmojiStrip, width, height]);
+  // A still moves by its place in the post, not by the page it draws: a post can reorder
+  // pages or add a slide of its own, and the strip still has to join up across every swipe.
+  const backdropPage = still ? still.slide : reducedMotion ? 0 : playback.page;
   const sceneTheme = getCanvasSceneTheme(canvas.backgroundScene);
   const patternTheme = getCanvasPatternTheme(canvas.backgroundPattern);
   const sliding =
@@ -495,7 +498,7 @@ export function VocabularyCard({
       : getSlidingCanvasBackground(
           canvas,
           theme.background,
-          reducedMotion ? 0 : playback.page,
+          backdropPage,
           // Blend each step perceptually so the strip keeps its color through the
           // middle of the card, matching the static `theme.paint` on idle cards.
           blendOklch,
@@ -590,7 +593,8 @@ export function VocabularyCard({
   // above, 132px below), so the middle of the room the word is given is NOT the middle
   // of the band; it is derived from the same geometry the stylesheet lays out, which is
   // also where the celebration burst is aimed.
-  const revealY = wideCard ? getWideRevealY(height, twoColumn) : PORTRAIT_REVEAL_Y;
+  const revealY =
+    still?.revealY ?? (wideCard ? getWideRevealY(height, twoColumn) : PORTRAIT_REVEAL_Y);
   // The export frame carries its own safe box; everywhere else the text lives inside the
   // band, so the side inset comes off both edges before anything is fitted to it.
   const textWidth = exportBox?.textWidth ?? Math.max(1, width - 2 * chromeSide);
@@ -599,10 +603,13 @@ export function VocabularyCard({
   const revealCanvasWidth = twoColumn ? Math.round(textWidth * WIDE_WORD_COLUMN) : textWidth;
   const textHeight = exportBox?.textHeight ?? height;
   const textReserve = exportBox ? 0 : undefined;
-  const uniformTextSize = getUniformPageTextSize(
-    Math.max(96, Math.min(160, textWidth * 0.13)),
-    cluePages,
-    cluePages.join(" "),
+  const uniformTextSize = Math.min(
+    getUniformPageTextSize(
+      Math.max(96, Math.min(160, textWidth * 0.13)),
+      cluePages,
+      cluePages.join(" "),
+    ),
+    still?.maxTextSize ?? Infinity,
   );
   const textSize = fitVocabularyTextSize(
     stage.text,
@@ -647,6 +654,7 @@ export function VocabularyCard({
           "--export-stage-top": `${exportBox.top}px`,
           "--export-stage-bottom": `${exportBox.bottom}px`,
           "--export-stage-bottom-band": `${exportBox.bottomBand}px`,
+          ...(still?.panelTop ? { "--still-panel-top": `${still.panelTop}%` } : {}),
         }
       : {}),
   } as CSSProperties;
@@ -962,7 +970,7 @@ export function VocabularyCard({
         >
           <PostCanvasBackdrop
             postId={entry.occurrenceId}
-            backgroundShiftPage={reducedMotion ? 0 : playback.page}
+            backgroundShiftPage={backdropPage}
             sceneTheme={sceneTheme}
             patternTheme={patternTheme}
             slidingCanvasBackground={sliding}
@@ -1011,7 +1019,7 @@ export function VocabularyCard({
           </AnimatePresence>
         </>
       )}
-      {isSpelling ? (
+      {still?.backdropOnly ? null : isSpelling ? (
         isHan ? (
           <Suspense fallback={null}>
             <HanziStrokeSpelling word={entry.word.word} reducedMotion={reducedMotion || !!still} />

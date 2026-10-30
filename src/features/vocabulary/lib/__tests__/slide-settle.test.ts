@@ -27,7 +27,7 @@ describe("findFitProblems", () => {
   });
   it("says how much of the panel is cut off", () => {
     const panel = { scrollHeight: 108, clientHeight: 92 };
-    expect(findFitProblems({ ...base, panel })).toEqual(["Meaning panel is cut off by 16 px"]);
+    expect(findFitProblems({ ...base, panel })).toEqual(["Panel is cut off by 16 px"]);
   });
   it("accepts a panel that fits exactly", () => {
     const panel = { scrollHeight: 92, clientHeight: 92 };

@@ -8,7 +8,7 @@
  * stretched so that the fitter's reserved bands fall exactly outside the clear
  * zone — the text then fills the clear zone using the same rules as the app.
  *
- * Exports: CardExportLayout, getExportStageBox, EXPORT_PROGRESS_BAND_PX, EXPORT_BRAND_BAND_PX
+ * Exports: CardExportLayout, CardStill, getExportStageBox, EXPORT_PROGRESS_BAND_PX, EXPORT_BRAND_BAND_PX
  * Depends on: ./export-presets SafeInsets
  */
 
@@ -20,11 +20,26 @@ export type CardExportLayout = {
   showProgress: boolean;
   /** Draw the brand tag at the head of the clear zone. */
   showBrand: boolean;
-  /**
-   * Draw one page finished and hold it, for a still image: no entrance, no timer, no burst.
-   * `page` counts the card's own pages, with the spelling coda last.
-   */
-  still?: { page: number };
+  /** Draw one page finished and hold it, for a still image. See CardStill. */
+  still?: CardStill;
+};
+
+/** A still image of the card: no entrance, no timer, no burst. */
+export type CardStill = {
+  /** The card's own page, with the spelling coda last. */
+  page: number;
+  /** Place in the post. The backdrop moves by this, so neighbouring slides join up. */
+  slide: number;
+  /** Ceiling on the clue text, so sizes stay close across a word's slides. */
+  maxTextSize?: number;
+  /** Room kept under the brand tag, for the hook on slide 1. */
+  headBand?: number;
+  /** Paint only the backdrop, for a slide that brings its own content. */
+  backdropOnly?: boolean;
+  /** Where the answer sits, as a percentage of its band. */
+  revealY?: number;
+  /** Where the meaning panel starts, as a percentage of the stage. */
+  panelTop?: number;
 };
 
 /** Room kept at the foot of the clear zone for the page label and progress bar. */
@@ -60,7 +75,10 @@ export function getExportStageBox(
   textHeight: number;
 } {
   const { safe } = layout;
-  const textTop = height * safe.top + (layout.showBrand ? EXPORT_BRAND_BAND_PX : 0);
+  const textTop =
+    height * safe.top +
+    (layout.showBrand ? EXPORT_BRAND_BAND_PX : 0) +
+    (layout.still?.headBand ?? 0);
   const textBottom =
     height * (1 - safe.bottom) - (layout.showProgress ? EXPORT_PROGRESS_BAND_PX : 12);
   const textHeight = Math.max(120, textBottom - textTop);

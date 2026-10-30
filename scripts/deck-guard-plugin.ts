@@ -27,8 +27,8 @@ const DECK_MODULE =
 const EXPORT_MODULE = new RegExp(
   "/features/(" +
     [
-      "vocabulary/components/(ExportStudio|ExportGuides|ExportFramePage|ShowcasePage|ShowcaseChrome|CarouselFramePage)\\.tsx",
-      "vocabulary/lib/(export-recorder|export-presets|export-contract|showcase-contract|carousel-contract|carousel-formats|slide-settle)\\.ts",
+      "vocabulary/components/(ExportStudio|ExportGuides|ExportFramePage|ShowcasePage|ShowcaseChrome|CarouselFramePage|CarouselChrome|GrammarSlide)\\.tsx",
+      "vocabulary/lib/(export-recorder|export-presets|export-contract|showcase-contract|carousel|carousel-contract|carousel-copy|carousel-formats|slide-settle)\\.ts",
       "vocabulary/vocabulary-export\\.css",
       "post-player/hooks/usePostExport\\.ts",
       "post-player/lib/export-video\\.ts",

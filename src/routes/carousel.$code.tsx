@@ -25,6 +25,16 @@ const searchSchema = () => {
     dialect: z.enum(["default", "douyin"]).optional(),
     /** The brand tag at the head of the slide. On by default. */
     brand: z.boolean().optional(),
+    /** The account the closing slide names, with or without its @. */
+    handle: z
+      .string()
+      .regex(/^@?[\w.]{1,30}$/)
+      .optional(),
+    /** The address the closing slide shows; defaults to the deck's own. */
+    url: z
+      .string()
+      .regex(/^[a-z]+\.chayla\.app$/)
+      .optional(),
   });
 };
 

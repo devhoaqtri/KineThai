@@ -29,6 +29,8 @@ export type CarouselFormat = {
   height: number;
   /** Margins every slide keeps. */
   safe: SafeInsets;
+  /** The answer slide's two parts: the word in its band, and the top of the meaning panel. */
+  reveal: { wordY: number; panelTop: number };
 };
 
 export const CAROUSEL_FORMATS: readonly CarouselFormat[] = [
@@ -39,6 +41,7 @@ export const CAROUSEL_FORMATS: readonly CarouselFormat[] = [
     width: 1080,
     height: 1350,
     safe: { top: 0.06, right: 0.07, bottom: 0.07, left: 0.07 },
+    reveal: { wordY: 37, panelTop: 53 },
   },
 ];
 

@@ -18,8 +18,11 @@
  *     --theme <id>      pin the palette (default: the word's own pick)
  *     --style <id>      pin the reveal style (default: the word's own pick)
  *     --dialect <id>    default or douyin
+ *     --handle <name>   the account named on the closing slide
+ *     --url <address>   the address on the closing slide (default: the deck's own)
  *     --out <dir>       parent folder (default: exports/carousel)
  *     --twice           render each word twice and fail on any byte that differs
+ *     --seams           fail if any swipe shows a step in the backdrop
  *
  * Exports: renderCarousel, CarouselRenderOptions, CarouselRenderResult
  * Depends on: ./lib/cdp, ffmpeg, carousel contract and formats
@@ -37,11 +40,14 @@ import {
   getCarouselFormat,
   getSlideLayoutSize,
 } from "../src/features/vocabulary/lib/carousel-formats";
-import { resolveTarget, siteAddress } from "../src/features/vocabulary/lib/target-language";
+import { getCarouselFolderName } from "../src/features/vocabulary/lib/carousel";
+import { resolveTarget } from "../src/features/vocabulary/lib/target-language";
 import { launchChrome, type Cdp } from "./lib/cdp";
 
 /** A slide that has not settled by now is stuck, not slow. */
 const SETTLE_LIMIT_MS = 30_000;
+/** Largest average step across a swipe, in levels of 255. Below this nobody can see a join. */
+const SEAM_LIMIT = 1;
 
 export type CarouselRenderOptions = {
   code: string;
@@ -50,6 +56,10 @@ export type CarouselRenderOptions = {
   theme?: string;
   style?: string;
   dialect?: string;
+  /** The account the closing slide names. */
+  handle?: string;
+  /** The address the closing slide shows; defaults to the deck's own. */
+  url?: string;
   /** Parent folder; the word gets its own folder inside it. */
   out: string;
   /** Called after each slide is captured. */
@@ -62,6 +72,10 @@ export type CarouselRenderResult = {
   slides: string[];
   /** SHA-256 of each slide's PNG, in order. */
   hashes: string[];
+  /** Average colour step at each join between neighbouring slides, in levels of 255. */
+  seams: number[];
+  /** Said by the page when it could not keep the answer off slide 1. */
+  warning?: string;
 };
 
 /** Width and height from a PNG's header. */
@@ -97,6 +111,39 @@ function toJpeg(png: Buffer, file: string): void {
     { input: png, stdio: ["pipe", "ignore", "pipe"] },
   );
   if (run.status !== 0) throw new Error(`ffmpeg failed:\n${run.stderr?.toString().slice(-800)}`);
+}
+
+/** One column of a PNG, as raw RGB. */
+function pngColumn(png: Buffer, x: number, height: number): Buffer {
+  const run = spawnSync(
+    "ffmpeg",
+    [
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-f",
+      "image2pipe",
+      "-c:v",
+      "png",
+      "-i",
+      "pipe:0",
+    ].concat(["-vf", `crop=1:${height}:${x}:0`, "-f", "rawvideo", "-pix_fmt", "rgb24", "pipe:1"]),
+    { input: png, maxBuffer: 16 * 1024 * 1024 },
+  );
+  if (run.status !== 0) throw new Error(`ffmpeg failed:\n${run.stderr?.toString().slice(-800)}`);
+  return run.stdout;
+}
+
+/**
+ * How far a slide's right edge is from the next one's left edge.
+ * @returns Average step per colour channel, in levels of 255
+ */
+function seamStep(left: Buffer, right: Buffer, width: number, height: number): number {
+  const a = pngColumn(left, width - 1, height);
+  const b = pngColumn(right, 0, height);
+  let total = 0;
+  for (let index = 0; index < a.length; index += 1) total += Math.abs(a[index]! - b[index]!);
+  return total / a.length;
 }
 
 async function waitForSlide(
@@ -153,12 +200,13 @@ export async function renderCarousel(
   const format = getCarouselFormat(options.format);
   const layout = getSlideLayoutSize(format);
   const locale = resolveTarget(new URL(options.base).host);
-  const brand = siteAddress(locale).split(".")[0];
-  const folder = resolve(options.out, `${brand}-chayla-${options.code}-${format.id}`);
+  const folder = resolve(options.out, getCarouselFolderName(locale, options.code, format.id));
   const query = new URLSearchParams({ format: format.id });
   if (options.theme) query.set("theme", options.theme);
   if (options.style) query.set("style", options.style);
   if (options.dialect) query.set("dialect", options.dialect);
+  if (options.handle) query.set("handle", options.handle);
+  if (options.url) query.set("url", options.url);
 
   const chrome = await launchChrome([
     // Grey-scale text: colour fringes from subpixel text do not survive Instagram's JPEG.
@@ -180,6 +228,8 @@ export async function renderCarousel(
     mkdirSync(folder, { recursive: true });
     const slides: string[] = [];
     const hashes: string[] = [];
+    const seams: number[] = [];
+    let previous: Buffer | null = null;
     let word = "";
     let count = 1;
     for (let slide = 0; slide < count; slide += 1) {
@@ -211,13 +261,23 @@ export async function renderCarousel(
           `captured ${size.width}x${size.height}, not ${format.width}x${format.height}`,
         );
       }
+      if (previous) seams.push(seamStep(previous, png, format.width, format.height));
+      previous = png;
       const file = join(folder, `${String(slide + 1).padStart(2, "0")}.jpg`);
       toJpeg(png, file);
       slides.push(file);
       hashes.push(createHash("sha256").update(png).digest("hex"));
       options.onSlide?.(slide, count);
     }
-    return { word, folder, slides, hashes };
+    // The page wrote these from the same plan the slides came from.
+    const written = await cdp.evaluate<{ caption?: string; alt?: string; warning?: string }>(
+      `({ caption: document.body.dataset.slideCaption, alt: document.body.dataset.slideAlt,
+          warning: document.body.dataset.slideWarning })`,
+    );
+    writeFileSync(join(folder, "caption.txt"), `${written.caption ?? ""}\n`);
+    const alt = JSON.parse(written.alt ?? "[]") as string[];
+    writeFileSync(join(folder, "alt.txt"), `${alt.join("\n")}\n`);
+    return { word, folder, slides, hashes, seams, warning: written.warning };
   } finally {
     await chrome.close();
   }
@@ -229,7 +289,7 @@ async function main() {
     const at = argv.indexOf(`--${name}`);
     return at !== -1 ? argv[at + 1] : undefined;
   };
-  const valued = new Set(["base", "format", "theme", "style", "dialect", "out"]);
+  const valued = new Set(["base", "format", "theme", "style", "dialect", "handle", "url", "out"]);
   const codes = argv.filter(
     (arg, index) =>
       !arg.startsWith("--") &&
@@ -246,11 +306,21 @@ async function main() {
     theme: flag("theme"),
     style: flag("style"),
     dialect: flag("dialect"),
+    handle: flag("handle"),
+    url: flag("url"),
     out: flag("out") ?? "exports/carousel",
   };
   for (const code of codes) {
     const first = await renderCarousel({ ...shared, code });
     console.log(`✓ ${first.word}: ${first.slides.length} slides → ${first.folder}`);
+    if (first.warning) console.log(`  ! ${first.warning}`);
+    if (argv.includes("--seams")) {
+      const worst = Math.max(...first.seams);
+      if (worst > SEAM_LIMIT) {
+        throw new Error(`${code}: a swipe steps ${worst.toFixed(2)} levels, over ${SEAM_LIMIT}`);
+      }
+      console.log(`  seams: worst step ${worst.toFixed(2)} of 255`);
+    }
     if (argv.includes("--twice")) {
       const second = await renderCarousel({ ...shared, code });
       const differs = first.hashes.flatMap((hash, index) =>

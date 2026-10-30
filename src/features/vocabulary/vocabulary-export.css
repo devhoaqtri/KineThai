@@ -251,6 +251,169 @@
 .vocab-card[data-still] [data-kinetic-blank]::after {
   animation: none;
 }
+/* The stroke spelling keeps the same margins as the letter one. */
+.vocab-card[data-export] .vocab-stroke {
+  inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  padding: 0 10px;
+}
+/* The post's own marker stands in for the card's bar and label; their band stays, which is
+   what keeps the text clear of it. */
+.vocab-card[data-still] :is(.vocab-progress, .vocab-stage-label) {
+  display: none;
+}
+.vocab-card[data-still] .vocab-spelling-label {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+}
+.vocab-card[data-still] .vocab-reveal-details {
+  --vocab-reveal-top: var(--still-panel-top, 50%);
+  max-height: calc(100% - var(--vocab-reveal-top) - var(--export-stage-bottom-band));
+}
+/* ── Carousel slide furniture ──────────────────────────────────────────────────────────
+   Drawn over the card, in the same layout pixels. The thread runs along the foot of every
+   slide at one height and off both edges, so it continues across the swipe; it starts at
+   the first dot on slide 1 and ends at the last dot on the final slide. The count sits low
+   and left because Instagram draws its own in the top right corner. */
+.carousel-chrome {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+  font-family: "Inter", sans-serif;
+  color: var(--vocab-ink);
+}
+.carousel-hook {
+  position: absolute;
+  top: calc(var(--safe-top) + 40px);
+  left: calc(var(--safe-left) + 4%);
+  margin: 0;
+  padding: 7px 14px 8px;
+  border-radius: 999px;
+  background: var(--vocab-accent);
+  color: var(--vocab-button-ink);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.carousel-swipe {
+  position: absolute;
+  right: calc(var(--safe-right) + 4%);
+  bottom: calc(var(--safe-bottom) + 26px);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+.carousel-count {
+  position: absolute;
+  left: calc(var(--safe-left) + 4%);
+  bottom: calc(var(--safe-bottom) + 28px);
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  opacity: 0.78;
+}
+.carousel-thread {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--safe-bottom) + 6px);
+  height: 8px;
+}
+.carousel-thread > i {
+  position: absolute;
+  top: 3.25px;
+  height: 1.5px;
+  background: color-mix(in srgb, var(--vocab-ink) 42%, transparent);
+}
+.carousel-thread > ol {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--thread-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.carousel-thread li {
+  width: var(--thread-dot);
+  height: var(--thread-dot);
+  border-radius: 50%;
+  background: var(--vocab-ink);
+}
+.carousel-thread li[data-current] {
+  background: var(--vocab-accent);
+  box-shadow: 0 0 0 2.5px var(--vocab-ink);
+}
+.carousel-closing {
+  position: absolute;
+  top: 66%;
+  left: var(--safe-left);
+  right: var(--safe-right);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+.carousel-closing > p {
+  margin: 0;
+}
+.carousel-handle {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+.carousel-address {
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.86;
+}
+.carousel-grammar {
+  position: absolute;
+  z-index: 5;
+  top: calc(var(--safe-top) + 46px);
+  left: var(--safe-left);
+  right: var(--safe-right);
+  bottom: calc(var(--safe-bottom) + 50px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  font-family: "Inter", sans-serif;
+  color: var(--vocab-ink);
+}
+.carousel-grammar-head {
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.carousel-grammar-head span {
+  display: block;
+  font-size: 0.5em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.carousel-grammar .vocab-grammar-list {
+  margin: 0;
+  font-size: 1em;
+}
+.carousel-grammar .vocab-grammar-tip {
+  grid-column: 1 / -1;
+}
 /* ── Export studio (admin) ───────────────────────────────────────────────────
    Options on the left, the stage on the right at the full height of the window.
    The stage never changes size between previewing and recording, so the preview is

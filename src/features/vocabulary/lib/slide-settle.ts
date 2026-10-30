@@ -70,7 +70,7 @@ export type FitInput = {
   safe: SafeInsets;
   /** Boxes of the words on the page. */
   words: readonly { left: number; top: number; right: number; bottom: number }[];
-  /** The meaning panel's scroller, when the page has one. */
+  /** The meaning panel's scroller or the grammar slide, when the page has one. */
   panel: { scrollHeight: number; clientHeight: number } | null;
 };
 
@@ -95,7 +95,7 @@ export function findFitProblems(input: FitInput): string[] {
   }
   if (panel && panel.scrollHeight > panel.clientHeight) {
     const lost = panel.scrollHeight - panel.clientHeight;
-    problems.push(`Meaning panel is cut off by ${Math.ceil(lost)} px`);
+    problems.push(`Panel is cut off by ${Math.ceil(lost)} px`);
   }
   return problems;
 }
@@ -136,6 +136,7 @@ function runningAnimations(stage: HTMLElement): string[] {
 function contentProblem(stage: HTMLElement): string | null {
   const card = stage.querySelector<HTMLElement>(".vocab-card");
   if (!card) return "The card did not mount";
+  if (stage.querySelector("[data-carousel-grammar]")) return null;
   if (card.dataset.stage !== "spelling") {
     return stage.querySelector("[data-kinetic-word]") ? null : "The page has no text yet";
   }
@@ -166,18 +167,18 @@ function fontProblem(stage: HTMLElement): string | null {
 
 function measureFit(stage: HTMLElement, safe: SafeInsets): string[] {
   const origin = stage.getBoundingClientRect();
-  const words = [...stage.querySelectorAll("[data-kinetic-word], .vocab-spelling-char")].map(
-    (word) => {
-      const box = word.getBoundingClientRect();
-      return {
-        left: box.left - origin.left,
-        top: box.top - origin.top,
-        right: box.right - origin.left,
-        bottom: box.bottom - origin.top,
-      };
-    },
-  );
-  const panel = stage.querySelector<HTMLElement>(".vocab-reveal-scroll");
+  const words = [
+    ...stage.querySelectorAll("[data-kinetic-word], .vocab-spelling-char, .vocab-stroke-char"),
+  ].map((word) => {
+    const box = word.getBoundingClientRect();
+    return {
+      left: box.left - origin.left,
+      top: box.top - origin.top,
+      right: box.right - origin.left,
+      bottom: box.bottom - origin.top,
+    };
+  });
+  const panel = stage.querySelector<HTMLElement>(".vocab-reveal-scroll, [data-carousel-grammar]");
   return findFitProblems({
     width: stage.clientWidth,
     height: stage.clientHeight,

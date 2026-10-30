@@ -9,7 +9,7 @@
  * wants grammar on every word opens it once. Opening it by hand holds the card on its
  * answer until it is closed again: autoplay would otherwise move on mid-table.
  *
- * Exports: WordGrammar
+ * Exports: WordGrammar, GrammarList
  * Depends on: framer-motion, lucide-react, ../lib/grammar, ../lib/grammar-open,
  *   ../lib/deck-locale, ../lib/word-joiner, vocabulary.css (.vocab-grammar*)
  */
@@ -92,6 +92,21 @@ function Row({ row, lang }: { row: GrammarRow; lang: string }) {
         )}
       </dd>
     </div>
+  );
+}
+
+/**
+ * The rows themselves, shared with a carousel's grammar slide.
+ * @param props.rows - from grammarRows
+ * @param props.lang - the deck's language, for its native terms
+ */
+export function GrammarList({ rows, lang }: { rows: GrammarRow[]; lang: string }) {
+  return (
+    <dl className="vocab-grammar-list">
+      {rows.map((row) => (
+        <Row key={row.key} row={row} lang={lang} />
+      ))}
+    </dl>
   );
 }
 
@@ -183,11 +198,7 @@ export function WordGrammar({
             transition={{ height: SPRING.gentle, opacity: { duration: 0.2 } }}
             onAnimationComplete={() => open && reveal()}
           >
-            <dl className="vocab-grammar-list">
-              {rows.map((row) => (
-                <Row key={row.key} row={row} lang={locale} />
-              ))}
-            </dl>
+            <GrammarList rows={rows} lang={locale} />
           </motion.div>
         )}
       </AnimatePresence>
