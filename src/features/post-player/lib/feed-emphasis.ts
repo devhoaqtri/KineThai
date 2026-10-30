@@ -108,6 +108,8 @@ export function getEmphasizedWordIndexes(
   dataEmphasis?: string[],
   boundPhrases?: string[],
 ): Set<number> {
+  const marked = getExactVietnameseMark(words, dataEmphasis);
+  if (marked) return marked;
   const boundKeys = getEmphasisPhraseKeysForLayout(boundPhrases);
   const selected = selectEmphasizedWordIndexes(words, dataEmphasis);
   const phraseKeys = [...getEmphasisPhraseKeysForLayout(dataEmphasis), ...boundKeys];
@@ -118,26 +120,41 @@ export function getEmphasizedWordIndexes(
   );
 }
 
+/**
+ * A Vietnamese page's author mark, exactly as written. The deck validators already hold
+ * every mark to one syllable or one two-syllable `_` word, so growing it can only be
+ * wrong: the compound repair reaches both neighbours of a lone syllable ("gần /hết/ giờ"
+ * glowed three syllables), and a join chain spans `=` clitics ("đã=bắt_chuyện").
+ * @param words - page tokens
+ * @param dataEmphasis - optional upstream annotation phrases
+ * @returns The first matched mark's indexes, or null when the page is not Vietnamese or
+ *   carries no matching mark
+ * @pure true
+ */
+function getExactVietnameseMark(words: string[], dataEmphasis?: string[]): Set<number> | null {
+  if (!isLikelyVietnameseText(words.join(" "))) return null;
+  const span = getDataEmphasisWordSpans(words, dataEmphasis)[0];
+  if (!span) return null;
+  return new Set(Array.from({ length: span.length }, (_, offset) => span.start + offset));
+}
+
 function selectEmphasizedWordIndexes(words: string[], dataEmphasis?: string[]): Set<number> {
   const isVietnameseText = isLikelyVietnameseText(words.join(" "));
   // Upstream annotations are author intent and outrank every heuristic. At most
   // two highlighted words per page: spans come back in annotation priority, so
-  // the first two matched phrases win; each is already a whole compound, and the
-  // expansion + repair defenses still heal single-syllable annotations.
+  // the first two matched phrases win. Vietnamese marks never reach here; they are
+  // taken verbatim by getExactVietnameseMark.
   const spans = getDataEmphasisWordSpans(words, dataEmphasis);
   if (spans.length > 0) {
-    const maxSpans = isVietnameseText ? 1 : 2;
     const chosen = new Set<number>();
-    for (const span of spans.slice(0, maxSpans)) {
+    for (const span of spans.slice(0, 2)) {
       for (let offset = 0; offset < span.length; offset += 1) chosen.add(span.start + offset);
     }
-    const expanded = expandEmphasisToBoundPhrases(
+    return expandEmphasisToBoundPhrases(
       words,
       chosen,
       getEmphasisPhraseKeysForLayout(dataEmphasis),
     );
-    if (!isVietnameseText) return expanded;
-    return new Set(repairSplitCompoundEmphasis(words, [...expanded]));
   }
 
   const poeticIndexes = getSpecialPoeticWordIndexes(words);
