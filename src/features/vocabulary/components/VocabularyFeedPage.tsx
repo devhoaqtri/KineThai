@@ -246,6 +246,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           open={optionsOpen}
           onOpen={setOptionsOpen}
           reducedMotion={reducedMotion}
+          history={viewHistory.history}
           historyStats={viewHistory.stats}
           onClearHistory={viewHistory.clear}
           onExport={isAdmin ? openExport : undefined}

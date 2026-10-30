@@ -1,4 +1,4 @@
-/** On-device viewing history with sliding-window repeat caps. Exports: history helpers. Depends on: ./day (localStorage only). */
+/** On-device viewing history with sliding-window repeat caps. Exports: history helpers, historyWordIds. Depends on: ./day (localStorage only). */
 import { previousDay, startOfDay } from "./day";
 export const DAY_MS = 24 * 60 * 60 * 1000;
 export const THREE_DAYS_MS = 3 * DAY_MS;
@@ -98,6 +98,44 @@ export function recordView(
 ): ViewHistory {
   const next: ViewHistory = { ...history, [wordId]: [...(history[wordId] ?? []), now] };
   return pruneHistory(next, now);
+}
+
+/** Which memory cell was opened. Matches the three counts in the settings sheet. */
+export type HistoryWindow = "yesterday" | "today" | "week";
+
+/**
+ * The distinct words seen in one window, newest view first.
+ *
+ * The windows are the same ones `historyStats` counts, so the list a cell opens can
+ * never disagree with the number printed on it. Today and yesterday are calendar
+ * days; the week is the rolling seven days.
+ * @param history Map. @param window Which cell. @param now Reference. @returns Word ids.
+ * @pure true
+ */
+export function historyWordIds(
+  history: ViewHistory,
+  window: HistoryWindow,
+  now: number = Date.now(),
+): string[] {
+  const today = startOfDay(now);
+  const yesterday = previousDay(today);
+  const weekCutoff = now - WEEK_MS;
+  const ranked: { id: string; at: number }[] = [];
+  for (const [id, times] of Object.entries(history)) {
+    let at = Number.NEGATIVE_INFINITY;
+    for (const t of times) {
+      const inWindow =
+        window === "today"
+          ? t >= today && t <= now + 60_000
+          : window === "yesterday"
+            ? t >= yesterday && t < today
+            : t > weekCutoff && t <= now + 60_000;
+      if (inWindow && t > at) at = t;
+    }
+    if (at !== Number.NEGATIVE_INFINITY) ranked.push({ id, at });
+  }
+  ranked.sort((a, b) => b.at - a.at || a.id.localeCompare(b.id));
+  return ranked.map((row) => row.id);
 }
 
 export type HistoryStats = {
