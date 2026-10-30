@@ -16,7 +16,10 @@ import type { HistoryWindow } from "../lib/history";
 
 export const RECALL_PAGE_SIZE = 10;
 
-/** Where the cell's own label and count sit, so the heading can travel from them. */
+/**
+ * Where the cell's own label and count sit, so the heading can travel from them.
+ * Panel-local, untransformed pixels: measured from inside the border.
+ */
 export type RecallFrom = {
   label: { left: number; top: number; width: number; height: number };
   count: { left: number; top: number; width: number; height: number };
@@ -39,7 +42,7 @@ export function RecallSheet({
   window: HistoryWindow;
   /** Headword per history id, newest first. */
   words: { id: string; label: string }[];
-  /** The tapped cell's label and count, in viewport coordinates. */
+  /** The tapped cell's label and count, in panel-local pixels. */
   from: RecallFrom | null;
   closing: boolean;
   reducedMotion: boolean;
@@ -71,15 +74,14 @@ export function RecallSheet({
     const layer = fly.current;
     const panel = root?.parentElement;
     if (!root || !layer || !panel || !from || !ghostName.current || !ghostTally.current) return;
-    const border = Number.parseFloat(getComputedStyle(panel).borderTopWidth) || 0;
-    const origin = panel.getBoundingClientRect();
     const frame = root.getBoundingClientRect();
+    // The panel may still be scaling in; measure in its untransformed pixels.
+    const k = panel.offsetWidth > 0 ? panel.getBoundingClientRect().width / panel.offsetWidth : 1;
     const point = (left: number, top: number) => ({ x: `${left}px`, y: `${top}px` });
-    const shift = (box: RecallFrom["label"]) =>
-      point(box.left - origin.left - border, box.top - origin.top - border);
+    const shift = (box: RecallFrom["label"]) => point(box.left, box.top);
     const seatOf = (ghost: HTMLElement) => {
       const g = ghost.getBoundingClientRect();
-      return point(g.left - frame.left, g.top - frame.top);
+      return point((g.left - frame.left) / k, (g.top - frame.top) / k);
     };
     const fromName = shift(from.label);
     const fromCount = shift(from.count);

@@ -1149,37 +1149,44 @@ export function FeedControls({
     if (!options.mounted) setRecallOpen(false);
   }, [options.mounted]);
   const openRecall = (window: HistoryWindow, cell: HTMLElement) => {
-    const panel = panelRef.current?.getBoundingClientRect();
+    const panelNode = panelRef.current;
+    const panel = panelNode?.getBoundingClientRect();
     const zoom = zoomRef.current?.getBoundingClientRect();
     const box = cell.getBoundingClientRect();
-    if (panel && zoom && box.width > 0 && box.height > 0) {
-      const border = panelRef.current
-        ? Number.parseFloat(getComputedStyle(panelRef.current).borderTopWidth) || 0
-        : 0;
-      const cx = box.left + box.width / 2;
-      const cy = box.top + box.height / 2;
+    if (panelNode && panel && zoom && panel.width > 0 && box.width > 0 && box.height > 0) {
+      const border = Number.parseFloat(getComputedStyle(panelNode).borderTopWidth) || 0;
+      // The sheet opens from a fraction of its size, so a tap during that entrance
+      // reads shrunken rectangles. Everything is stored in the panel's own,
+      // untransformed pixels.
+      const k = panel.width / panelNode.offsetWidth;
+      const local = (rect: DOMRect) => ({
+        left: (rect.left - panel.left) / k - border,
+        top: (rect.top - panel.top) / k - border,
+        width: rect.width / k,
+        height: rect.height / k,
+      });
+      const cell0 = local(box);
+      const pw = panelNode.offsetWidth - border * 2;
       // The surroundings grow by the same factor as the cell's width, not by
       // however far the cell sits from the sheet's far edge. That larger factor
       // finished the zoom while the cell was still opening.
-      const scale = (panel.width - border * 2) / box.width;
+      const scale = pw / cell0.width;
       const readBox = (selector: string) => {
         const node = cell.querySelector(selector);
-        if (!node) return null;
-        const rect = node.getBoundingClientRect();
-        return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+        return node ? local(node.getBoundingClientRect()) : null;
       };
       const label = readBox(".vocab-memory-label");
       const count = readBox(".vocab-memory-count");
       setRecallFrom(label && count ? { label, count } : null);
       setRecallOrigin({
-        x: box.left - panel.left - border,
-        y: box.top - panel.top - border,
-        w: box.width,
-        h: box.height,
-        pw: panel.width - border * 2,
-        ph: panel.height - border * 2,
-        zx: cx - zoom.left,
-        zy: cy - zoom.top,
+        x: cell0.left,
+        y: cell0.top,
+        w: cell0.width,
+        h: cell0.height,
+        pw,
+        ph: panelNode.offsetHeight - border * 2,
+        zx: (box.left + box.width / 2 - zoom.left) / k,
+        zy: (box.top + box.height / 2 - zoom.top) / k,
         scale,
       });
     }
