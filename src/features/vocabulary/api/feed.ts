@@ -1,6 +1,5 @@
-/** Anonymous browser fetch adapter. Exports: fetchVocabularyPage, VocabularyRequestError. Depends on: transport types, backfill bounds, feed-pager (static-host fallback). */
+/** Anonymous browser fetch adapter. Exports: fetchVocabularyPage, VocabularyRequestError. Depends on: transport types, backfill bounds, feed-pager (static-host fallback, loaded on demand). */
 import { VOCAB_PAGE_LIMIT } from "../lib/backfill";
-import { readVocabularyPage } from "../lib/feed-pager";
 import { readCustomPage } from "../lib/custom-pack";
 import { resolveTarget, type TargetLocale } from "../lib/target-language";
 import type { FeedCursor, FeedPage, VocabularyFilters } from "../types";
@@ -106,6 +105,8 @@ export async function fetchVocabularyPage(
       // If a locale override is provided (from user preference), use it; otherwise
       // fall back to host-based detection.
       const effectiveLocale = locale ?? resolveTarget(window.location.host);
+      // Imported here so only a static host downloads the catalog; it holds every deck.
+      const { readVocabularyPage } = await import("../lib/feed-pager");
       return readVocabularyPage(
         {
           seed: input.seed,

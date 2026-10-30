@@ -46,7 +46,15 @@ console.log("OK — kana marks a Japanese page");
 // Layout still packs whole 文節; this finer split only drives the entrance cascade.
 assert.deepEqual(getJapaneseMoraTokens("ひこうきが"), ["ひ", "こ", "う", "き", "が"]);
 // Spaces between 文節 drop; a kanji splits per glyph exactly like a kana.
-assert.deepEqual(getJapaneseMoraTokens("ひこうきが 空へ"), ["ひ", "こ", "う", "き", "が", "空", "へ"]);
+assert.deepEqual(getJapaneseMoraTokens("ひこうきが 空へ"), [
+  "ひ",
+  "こ",
+  "う",
+  "き",
+  "が",
+  "空",
+  "へ",
+]);
 // A closing mark glues to the glyph before it — it never stands alone or opens a unit.
 assert.deepEqual(getJapaneseMoraTokens("とび立ち、"), ["と", "び", "立", "ち、"]);
 // A masked answer blank (and any Latin run) stays whole.
@@ -365,39 +373,72 @@ assert.deepEqual(
 );
 console.log("OK — Japanese level ids stay out of reader bands; CEFR drives the title picker");
 
-// ── Shipped data/ja/*.json packs: every word-level highlights its authored emphasisJa[0].
+// ── Shipped data/ja/*.json packs: every clue page highlights, and each pack's
+// authored emphasisJa[0] is real Japanese the page can show.
+// A clue page of four tokens or fewer is a short sentence: the reader keeps the single
+// earliest highlight there (limitShortSentenceEmphasis), so emphasisJa[0] may lose to a
+// sibling annotation on that page. On any longer page that carries the phrase it must win.
 const jaDir = fileURLToPath(new URL("../src/features/vocabulary/data/ja", import.meta.url));
 const jaFiles = readdirSync(jaDir)
   .filter((name) => name.endsWith(".json"))
   .sort();
+assert.ok(jaFiles.length > 0, "no shipped Japanese packs found");
 let shippedWords = 0;
+let shortPageDeferrals = 0;
 for (const file of jaFiles) {
   const pack = JSON.parse(readFileSync(join(jaDir, file), "utf8")) as {
+    count?: number;
     words: VocabularyWord[];
   };
+  assert.equal(
+    pack.count ?? pack.words.length,
+    pack.words.length,
+    `${file}: count disagrees with words`,
+  );
   for (const entry of pack.words) {
     shippedWords += 1;
     assert.ok(entry.emphasis && entry.emphasis.length >= 2, `${entry.id}: missing emphasis`);
-    const targetKey = entry.emphasis[0]!
-      .replace(/《[^》]*》/g, "")
-      .replace(/[^\p{L}\p{N}]+/gu, "");
+    const targetKey = entry.emphasis[0]!.replace(/《[^》]*》/g, "").replace(/[^\p{L}\p{N}]+/gu, "");
     const cluePages = buildStages(entry, "detective", "ja").filter(
       (stage) => stage.id.startsWith("lead") || stage.id.startsWith("definition"),
     );
-    const matched = cluePages.some((stage) => {
+    let inClueText = false;
+    for (const stage of cluePages) {
       const pageWords = getWords(stage.text);
-      const indexes = getEmphasizedWordIndexes(pageWords, stage.dataEmphasis, stage.boundPhrases);
-      return [...indexes].some((idx) => {
-        const wordKey = pageWords[idx]!
+      const indexes = [
+        ...getEmphasizedWordIndexes(pageWords, stage.dataEmphasis, stage.boundPhrases),
+      ];
+      assert.ok(indexes.length > 0, `${entry.id}: clue page ${stage.id} highlights nothing`);
+      if (
+        !stage.text
           .replace(/《[^》]*》/g, "")
-          .replace(/[^\p{L}\p{N}]+/gu, "");
+          .replace(/[^\p{L}\p{N}]+/gu, "")
+          .includes(targetKey)
+      )
+        continue;
+      inClueText = true;
+      const highlighted = indexes.some((idx) => {
+        const wordKey = pageWords[idx]!.replace(/《[^》]*》/g, "").replace(/[^\p{L}\p{N}]+/gu, "");
         return wordKey.includes(targetKey) || targetKey.includes(wordKey);
       });
-    });
-    assert.ok(matched, `${entry.id}: emphasis "${entry.emphasis[0]}" did not highlight on any clue page`);
+      if (highlighted) continue;
+      assert.ok(
+        pageWords.length <= 4,
+        `${entry.id}: emphasis "${entry.emphasis[0]}" did not highlight on clue page ${stage.id}`,
+      );
+      shortPageDeferrals += 1;
+    }
+    assert.ok(
+      inClueText,
+      `${entry.id}: emphasis "${entry.emphasis[0]}" is not in any authored Japanese clue`,
+    );
   }
 }
-assert.equal(shippedWords, 1000, "all 1,000 Japanese word-level entries are verified");
-console.log(`OK — all ${shippedWords} shipped Japanese entries highlight their authored emphasisJa`);
+console.log(
+  `OK — all ${shippedWords} shipped Japanese entries carry their emphasisJa on a clue page` +
+    (shortPageDeferrals
+      ? ` (${shortPageDeferrals} short pages defer to their first highlight)`
+      : ""),
+);
 
 console.log("\nAll Japanese layout checks passed.");

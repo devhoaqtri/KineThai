@@ -26,14 +26,26 @@
  * Depends on: usePresence, useSavedCount, BookmarksPage, vocabulary.css
  */
 
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Bookmark, Heart } from "lucide-react";
 import { usePresence } from "@/hooks/use-presence";
 import { useSavedCount } from "../hooks/useSavedCount";
 import { useLocale } from "../lib/useLocale";
 import { t } from "../lib/ui-copy";
-import { BookmarksPage } from "./BookmarksPage";
+
+// The page resolves saved words against the bundled catalog, so it loads when the drawer
+// first opens: the feed itself must never download every deck.
+const BookmarksPage = lazy(() =>
+  import("./BookmarksPage").then((module) => ({ default: module.BookmarksPage })),
+);
 
 /** Matches the panel's exit duration in vocabulary.css and this module's retract timer. */
 export const SAVED_DRAWER_EXIT_MS = 260;
@@ -349,7 +361,15 @@ export function SavedDrawer({ open, onOpenChange }: SavedDrawerProps): React.Rea
             aria-modal="true"
             aria-label={t(locale, "drawer.aria")}
           >
-            <BookmarksPage onClose={() => onOpenChange(false)} />
+            <Suspense
+              fallback={
+                <div className="vocab-saved-empty">
+                  <p>{t(locale, "onboard.loading")}</p>
+                </div>
+              }
+            >
+              <BookmarksPage onClose={() => onOpenChange(false)} />
+            </Suspense>
           </motion.aside>
         </>
       )}
