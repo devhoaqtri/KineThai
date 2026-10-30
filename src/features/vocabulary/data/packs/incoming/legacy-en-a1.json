@@ -1,0 +1,2818 @@
+{
+  "revision": "c8d44b4100fb01b79f2d39fe",
+  "name": "WordCrawler en-a1 deck",
+  "count": 98,
+  "topics": [
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "A1"
+  ],
+  "words": [
+    {
+      "id": "apple",
+      "word": "apple",
+      "defVi": "Loại quả tròn | vỏ đỏ hoặc xanh, ăn giòn ngọt.",
+      "leadVi": "Mẹ gọt vỏ, cắt từng miếng giòn_tan cho=con.",
+      "anticipateVi": "Quả gì giòn tan thế?",
+      "emphasis": [
+        "giòn ngọt",
+        "gọt vỏ"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈæp.əl/",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "I eat an _____ every morning.",
+          "vi": "Sáng nào tôi cũng=ăn một=quả táo."
+        }
+      ],
+      "shareCode": "T22",
+      "meaningVi": "quả=táo"
+    },
+    {
+      "id": "bag",
+      "word": "bag",
+      "defVi": "Đồ_vật có quai | dùng để đựng và mang đồ.",
+      "leadVi": "Sách vở, bút, chìa_khóa | đều nằm gọn trong=đó.",
+      "anticipateVi": "Đựng gì bên trong vậy?",
+      "emphasis": [
+        "mang đồ",
+        "nằm gọn"
+      ],
+      "pos": "noun",
+      "ipa": "/bæɡ/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "She put her phone in her _____.",
+          "vi": "Cô ấy cất điện_thoại | vào=túi_xách."
+        }
+      ],
+      "shareCode": "XRF",
+      "meaningVi": "cái=túi"
+    },
+    {
+      "id": "bed",
+      "word": "bed",
+      "defVi": "Đồ_đạc có đệm | để nằm ngủ vào ban_đêm.",
+      "leadVi": "Tối nào cũng=chui vào chăn ấm | rồi say giấc.",
+      "anticipateVi": "Đêm nay ngả lưng đâu?",
+      "emphasis": [
+        "nằm ngủ",
+        "say giấc"
+      ],
+      "pos": "noun",
+      "ipa": "/bed/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "I go to _____ at ten o'clock.",
+          "vi": "Tôi đi ngủ | lúc mười giờ."
+        }
+      ],
+      "shareCode": "H46",
+      "meaningVi": "cái=giường"
+    },
+    {
+      "id": "bike",
+      "word": "bike",
+      "defVi": "Xe hai bánh | chạy bằng sức đạp của=chân.",
+      "leadVi": "Sáng sớm cậu bé đạp vèo_vèo | ra cổng trường.",
+      "anticipateVi": "Hai bánh lăn đi đâu?",
+      "emphasis": [
+        "sức đạp",
+        "vèo vèo"
+      ],
+      "pos": "noun",
+      "ipa": "/baɪk/",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "I ride my _____ to school.",
+          "vi": "Tôi đạp xe | đến trường."
+        }
+      ],
+      "shareCode": "5K4",
+      "meaningVi": "xe_đạp"
+    },
+    {
+      "id": "bird",
+      "word": "bird",
+      "defVi": "Con_vật có lông_vũ, có cánh | và biết bay.",
+      "leadVi": "Sáng nào cũng=hót líu_lo | trên cành cây trước nhà.",
+      "anticipateVi": "Ai hót trên cành thế?",
+      "emphasis": [
+        "lông vũ",
+        "líu lo"
+      ],
+      "pos": "noun",
+      "ipa": "/bɜːd/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "A small _____ is singing in the tree.",
+          "vi": "Một con=chim nhỏ | đang hót trên cây."
+        }
+      ],
+      "shareCode": "JKV",
+      "meaningVi": "con=chim"
+    },
+    {
+      "id": "book",
+      "word": "book",
+      "defVi": "Nhiều trang giấy in chữ | đóng lại thành tập.",
+      "leadVi": "Mở ra là thấy | cả thế_giới câu_chuyện kỳ_diệu.",
+      "anticipateVi": "Lật từng trang nhé?",
+      "emphasis": [
+        "trang giấy",
+        "kỳ diệu"
+      ],
+      "pos": "noun",
+      "ipa": "/bʊk/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "This _____ is very interesting.",
+          "vi": "Cuốn=sách này | rất=thú_vị."
+        }
+      ],
+      "shareCode": "W9H",
+      "meaningVi": "cuốn=sách"
+    },
+    {
+      "id": "bread",
+      "word": "bread",
+      "defVi": "Món ăn làm từ bột_mì | nướng chín trong lò.",
+      "leadVi": "Sáng sớm, mùi thơm phức bay ra | từ tiệm nhỏ.",
+      "anticipateVi": "Ổ gì thơm phức thế?",
+      "emphasis": [
+        "bột mì",
+        "thơm phức"
+      ],
+      "pos": "noun",
+      "ipa": "/bred/",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "I have _____ and milk for breakfast.",
+          "vi": "Bữa sáng tôi ăn bánh_mì | với sữa."
+        }
+      ],
+      "shareCode": "ZV6",
+      "meaningVi": "bánh_mì"
+    },
+    {
+      "id": "brother",
+      "word": "brother",
+      "defVi": "Con_trai | cùng bố_mẹ sinh ra với=mình.",
+      "leadVi": "Hồi nhỏ hay giành đồ_chơi, | lớn lên lại thương nhau.",
+      "anticipateVi": "Ai chung bố mẹ với bạn?",
+      "emphasis": [
+        "Con trai",
+        "thương nhau"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈbrʌð.ər/",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "society"
+      ],
+      "level": "A1",
+      "chars": 7,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "My _____ is two years older than me.",
+          "vi": "Anh trai tôi | lớn hơn tôi hai tuổi."
+        }
+      ],
+      "shareCode": "R61",
+      "meaningVi": "anh_trai hoặc em_trai"
+    },
+    {
+      "id": "bus",
+      "word": "bus",
+      "defVi": "Xe lớn chở nhiều khách | theo tuyến đường cố_định.",
+      "leadVi": "Đứng ở trạm, | chờ chiếc=xe màu xanh ghé lại.",
+      "anticipateVi": "Trạm kế tiếp là đâu?",
+      "emphasis": [
+        "nhiều khách",
+        "ghé lại"
+      ],
+      "pos": "noun",
+      "ipa": "/bʌs/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "I take the _____ to work.",
+          "vi": "Tôi đi xe_buýt | đi làm."
+        }
+      ],
+      "shareCode": "AQJ",
+      "meaningVi": "xe_buýt"
+    },
+    {
+      "id": "cake",
+      "word": "cake",
+      "defVi": "Món ngọt nướng từ bột, trứng | và đường.",
+      "leadVi": "Thổi nến xong, cả nhà | cắt từng miếng chia nhau.",
+      "anticipateVi": "Sinh_nhật thiếu gì nào?",
+      "emphasis": [
+        "Món ngọt",
+        "Thổi nến"
+      ],
+      "pos": "noun",
+      "ipa": "/keɪk/",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Mom made a chocolate _____ for my birthday.",
+          "vi": "Mẹ làm bánh sô_cô_la | cho=sinh_nhật tôi."
+        }
+      ],
+      "shareCode": "37B",
+      "meaningVi": "bánh_ngọt"
+    },
+    {
+      "id": "car",
+      "word": "car",
+      "defVi": "Xe bốn bánh chạy bằng động_cơ | chở người.",
+      "leadVi": "Bố cầm vô_lăng, | cả nhà ngồi ghế sau.",
+      "anticipateVi": "Bốn bánh chạy vù vù?",
+      "emphasis": [
+        "động cơ",
+        "vô lăng"
+      ],
+      "pos": "noun",
+      "ipa": "/kɑːr/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "My father drives a red _____.",
+          "vi": "Bố tôi lái một=chiếc ô_tô đỏ."
+        }
+      ],
+      "shareCode": "SGB",
+      "meaningVi": "ô_tô"
+    },
+    {
+      "id": "cat",
+      "word": "cat",
+      "defVi": "Con_vật nhỏ | có ria, kêu meo_meo, bắt chuột.",
+      "leadVi": "Cuộn tròn bên bếp, | lim_dim ngủ suốt buổi trưa.",
+      "anticipateVi": "Ai kêu meo_meo đấy?",
+      "emphasis": [
+        "bắt chuột",
+        "lim dim"
+      ],
+      "pos": "noun",
+      "ipa": "/kæt/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Our _____ sleeps on the sofa.",
+          "vi": "Con=mèo nhà tôi | ngủ trên ghế dài."
+        }
+      ],
+      "shareCode": "1PY",
+      "meaningVi": "con=mèo"
+    },
+    {
+      "id": "chair",
+      "word": "chair",
+      "defVi": "Đồ_vật có chân và tựa lưng | để=ngồi.",
+      "leadVi": "Mỏi chân rồi, kéo nó ra | ngồi nghỉ một=lát.",
+      "anticipateVi": "Ngồi lên đây thử nào?",
+      "emphasis": [
+        "tựa lưng",
+        "ngồi nghỉ"
+      ],
+      "pos": "noun",
+      "ipa": "/tʃeər/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Please sit on this _____.",
+          "vi": "Mời bạn ngồi | lên chiếc=ghế này."
+        }
+      ],
+      "shareCode": "GDH",
+      "meaningVi": "cái=ghế"
+    },
+    {
+      "id": "child",
+      "word": "child",
+      "defVi": "Người còn nhỏ tuổi, | chưa lớn thành người_lớn.",
+      "leadVi": "Chạy nhảy suốt ngày, | hỏi gì cũng=tò_mò.",
+      "anticipateVi": "Bé con nhà ai thế?",
+      "emphasis": [
+        "nhỏ tuổi",
+        "Chạy nhảy"
+      ],
+      "pos": "noun",
+      "ipa": "/tʃaɪld/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "The _____ is playing in the garden.",
+          "vi": "Đứa trẻ | đang=chơi trong vườn."
+        }
+      ],
+      "shareCode": "7KX",
+      "meaningVi": "đứa=trẻ"
+    },
+    {
+      "id": "city",
+      "word": "city",
+      "defVi": "Nơi đông dân | có nhiều nhà cao tầng và đường_phố.",
+      "leadVi": "Đèn sáng rực, | xe_cộ nối đuôi nhau suốt đêm.",
+      "anticipateVi": "Phố phường nhộn nhịp ư?",
+      "emphasis": [
+        "đông dân",
+        "sáng rực"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈsɪt.i/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "travel"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Hanoi is a big _____.",
+          "vi": "Hà_Nội | là một=thành_phố lớn."
+        }
+      ],
+      "shareCode": "2Z3",
+      "meaningVi": "thành_phố"
+    },
+    {
+      "id": "clock",
+      "word": "clock",
+      "defVi": "Đồ_vật treo tường | dùng để xem giờ.",
+      "leadVi": "Tích_tắc, tích_tắc, | kim cứ quay mãi không=ngừng.",
+      "anticipateVi": "Mấy giờ rồi nhỉ?",
+      "emphasis": [
+        "xem giờ",
+        "quay mãi"
+      ],
+      "pos": "noun",
+      "ipa": "/klɒk/",
+      "topic": "time",
+      "topics": [
+        "time",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "The _____ on the wall is slow.",
+          "vi": "Cái=đồng_hồ trên tường | chạy chậm."
+        }
+      ],
+      "shareCode": "CYR",
+      "meaningVi": "đồng_hồ"
+    },
+    {
+      "id": "coat",
+      "word": "coat",
+      "defVi": "Áo dài tay mặc ngoài | để giữ ấm khi lạnh.",
+      "leadVi": "Gió bấc thổi về, | mẹ nhắc mặc thêm khi ra cửa.",
+      "anticipateVi": "Trời rét mặc gì đây?",
+      "emphasis": [
+        "giữ ấm",
+        "Gió bấc"
+      ],
+      "pos": "noun",
+      "ipa": "/kəʊt/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Put on your _____, it's cold outside.",
+          "vi": "Mặc áo khoác vào, | ngoài trời lạnh đấy."
+        }
+      ],
+      "shareCode": "F6A",
+      "meaningVi": "áo_khoác"
+    },
+    {
+      "id": "cold",
+      "word": "cold",
+      "defVi": "Có nhiệt_độ thấp | khiến ta thấy rét buốt.",
+      "leadVi": "Sáng mùa đông, | thở ra cả làn khói trắng.",
+      "anticipateVi": "Run cầm cập chưa?",
+      "emphasis": [
+        "rét buốt",
+        "khói trắng"
+      ],
+      "pos": "adj",
+      "ipa": "/kəʊld/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "health"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "It is very _____ today.",
+          "vi": "Hôm nay | trời rất=lạnh."
+        }
+      ],
+      "shareCode": "9X6",
+      "meaningVi": "lạnh"
+    },
+    {
+      "id": "cook",
+      "word": "cook",
+      "defVi": "Làm chín thức_ăn | bằng lửa hoặc nhiệt.",
+      "leadVi": "Tiếng xèo_xèo trong chảo, | mùi thơm lan khắp nhà.",
+      "anticipateVi": "Ai đứng bếp hôm nay?",
+      "emphasis": [
+        "Làm chín",
+        "xèo xèo"
+      ],
+      "pos": "verb",
+      "ipa": "/kʊk/",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "My mother _____ dinner every evening.",
+          "vi": "Mẹ tôi | nấu bữa tối hằng ngày."
+        }
+      ],
+      "shareCode": "26W",
+      "meaningVi": "nấu ăn"
+    },
+    {
+      "id": "cup",
+      "word": "cup",
+      "defVi": "Đồ_vật nhỏ có quai | dùng để uống nước, trà.",
+      "leadVi": "Sáng nào bố cũng=cầm nó | nhâm_nhi trà nóng.",
+      "anticipateVi": "Rót đầy chưa đấy?",
+      "emphasis": [
+        "uống nước",
+        "nhâm nhi"
+      ],
+      "pos": "noun",
+      "ipa": "/kʌp/",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Would you like a _____ of tea?",
+          "vi": "Bạn uống một=tách trà nhé?"
+        }
+      ],
+      "shareCode": "53F",
+      "meaningVi": "cái=tách"
+    },
+    {
+      "id": "dance",
+      "word": "dance",
+      "defVi": "Chuyển_động cơ_thể | theo nhịp_điệu của=âm_nhạc.",
+      "leadVi": "Nhạc vừa nổi lên, | cả nhóm xoay vòng rộn_ràng.",
+      "anticipateVi": "Lắc lư theo nhạc nào?",
+      "emphasis": [
+        "nhịp điệu",
+        "xoay vòng"
+      ],
+      "pos": "verb",
+      "ipa": "/dɑːns/",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "society"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "They love to _____ at parties.",
+          "vi": "Họ thích nhảy múa | trong các=bữa tiệc."
+        }
+      ],
+      "shareCode": "5Y2",
+      "meaningVi": "nhảy_múa"
+    },
+    {
+      "id": "day",
+      "word": "day",
+      "defVi": "Khoảng thời_gian hai mươi bốn giờ, | từ sáng đến đêm.",
+      "leadVi": "Mặt_trời mọc rồi lặn, | trọn_vẹn một vòng quay.",
+      "anticipateVi": "Sáng rồi lại tối?",
+      "emphasis": [
+        "thời gian",
+        "trọn vẹn"
+      ],
+      "pos": "noun",
+      "ipa": "/deɪ/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "There are seven _____s in a week.",
+          "vi": "Một tuần | có bảy ngày."
+        }
+      ],
+      "shareCode": "Z3R",
+      "meaningVi": "ngày"
+    },
+    {
+      "id": "desk",
+      "word": "desk",
+      "defVi": "Bàn để ngồi học | hoặc làm_việc với giấy_tờ.",
+      "leadVi": "Sách vở xếp chồng, | đèn nhỏ chiếu sáng góc học_tập.",
+      "anticipateVi": "Góc học bài ở đâu?",
+      "emphasis": [
+        "ngồi học",
+        "xếp chồng"
+      ],
+      "pos": "noun",
+      "ipa": "/desk/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "work"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "My books are on my _____.",
+          "vi": "Sách của=tôi | nằm trên bàn học."
+        }
+      ],
+      "shareCode": "JXC",
+      "meaningVi": "bàn học, bàn làm_việc"
+    },
+    {
+      "id": "dog",
+      "word": "dog",
+      "defVi": "Con_vật nuôi trung_thành, | biết sủa và trông nhà.",
+      "leadVi": "Vừa thấy chủ về, | nó đã vẫy đuôi rối_rít.",
+      "anticipateVi": "Ai vẫy đuôi chào bạn?",
+      "emphasis": [
+        "trung thành",
+        "vẫy đuôi"
+      ],
+      "pos": "noun",
+      "ipa": "/dɒɡ/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "The _____ is barking at the gate.",
+          "vi": "Con=chó | đang=sủa ở cổng."
+        }
+      ],
+      "shareCode": "YBF",
+      "meaningVi": "con=chó"
+    },
+    {
+      "id": "door",
+      "word": "door",
+      "defVi": "Tấm chắn mở ra đóng vào | ở lối đi.",
+      "leadVi": "Cộc_cộc_cộc, | có ai đang=đứng bên ngoài.",
+      "anticipateVi": "Cộc_cộc ngoài kia là gì?",
+      "emphasis": [
+        "mở ra",
+        "bên ngoài"
+      ],
+      "pos": "noun",
+      "ipa": "/dɔːr/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Please close the _____.",
+          "vi": "Làm ơn | đóng cửa lại."
+        }
+      ],
+      "shareCode": "4K2",
+      "meaningVi": "cửa"
+    },
+    {
+      "id": "drink",
+      "word": "drink",
+      "defVi": "Đưa nước hay chất_lỏng | vào miệng rồi nuốt xuống.",
+      "leadVi": "Trời nóng, | cầm ly nước đá tu ừng_ực.",
+      "anticipateVi": "Khát khô cổ rồi à?",
+      "emphasis": [
+        "chất lỏng",
+        "ừng ực"
+      ],
+      "pos": "verb",
+      "ipa": "/drɪŋk/",
+      "topic": "food",
+      "topics": [
+        "food",
+        "health"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "You should _____ more water.",
+          "vi": "Bạn nên uống | nhiều nước hơn."
+        }
+      ],
+      "shareCode": "M0E",
+      "meaningVi": "uống"
+    },
+    {
+      "id": "egg",
+      "word": "egg",
+      "defVi": "Thứ gà, vịt đẻ ra, | vỏ cứng bên trong lòng_đỏ.",
+      "leadVi": "Sáng sớm, | chảo nóng kêu xèo, lòng_đỏ vàng ươm.",
+      "anticipateVi": "Gà đẻ ra gì nào?",
+      "emphasis": [
+        "lòng đỏ",
+        "vàng ươm"
+      ],
+      "pos": "noun",
+      "ipa": "/eɡ/",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "I want a fried _____ for breakfast.",
+          "vi": "Tôi muốn ăn trứng ốp | cho=bữa sáng."
+        }
+      ],
+      "shareCode": "T0N",
+      "meaningVi": "quả=trứng"
+    },
+    {
+      "id": "eye",
+      "word": "eye",
+      "defVi": "Bộ_phận trên khuôn_mặt | giúp ta nhìn thấy.",
+      "leadVi": "Nhắm lại thì tối om, | mở ra thì thấy hết.",
+      "anticipateVi": "Nhìn bằng gì đây?",
+      "emphasis": [
+        "nhìn thấy",
+        "tối om"
+      ],
+      "pos": "noun",
+      "ipa": "/aɪ/",
+      "topic": "health",
+      "topics": [
+        "health",
+        "perception"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "She has big brown _____s.",
+          "vi": "Cô ấy | có đôi mắt nâu to."
+        }
+      ],
+      "shareCode": "EA5",
+      "meaningVi": "mắt"
+    },
+    {
+      "id": "family",
+      "word": "family",
+      "defVi": "Bố_mẹ, con_cái | cùng chung sống dưới một=mái nhà.",
+      "leadVi": "Bữa cơm tối, | ông bà, bố_mẹ quây quanh mâm.",
+      "anticipateVi": "Ai ngồi quanh mâm cơm?",
+      "emphasis": [
+        "chung sống",
+        "quây quanh"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈfæm.əl.i/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "I live with my _____.",
+          "vi": "Tôi sống | cùng gia_đình."
+        }
+      ],
+      "shareCode": "11A",
+      "meaningVi": "gia_đình"
+    },
+    {
+      "id": "farm",
+      "word": "farm",
+      "defVi": "Vùng đất | để=trồng cây và nuôi gia_súc.",
+      "leadVi": "Gà gáy sáng, | bò gặm cỏ, lúa xanh mướt.",
+      "anticipateVi": "Đồng ruộng có gì vui?",
+      "emphasis": [
+        "gia súc",
+        "xanh mướt"
+      ],
+      "pos": "noun",
+      "ipa": "/fɑːm/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "work"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "My uncle has a big _____.",
+          "vi": "Chú tôi | có một=trang_trại lớn."
+        }
+      ],
+      "shareCode": "BJZ",
+      "meaningVi": "trang_trại"
+    },
+    {
+      "id": "father",
+      "word": "father",
+      "defVi": "Người đàn_ông | sinh ra và nuôi_nấng con_cái.",
+      "leadVi": "Vai rộng cõng con | đi chơi khắp phố.",
+      "anticipateVi": "Người cõng bạn ngày bé?",
+      "emphasis": [
+        "nuôi nấng",
+        "Vai rộng"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈfɑː.ðər/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "My _____ is a doctor.",
+          "vi": "Bố tôi | là bác_sĩ."
+        }
+      ],
+      "shareCode": "MR5",
+      "meaningVi": "bố"
+    },
+    {
+      "id": "fish",
+      "word": "fish",
+      "defVi": "Con_vật sống dưới nước, | thở bằng mang, bơi bằng vây.",
+      "leadVi": "Quẫy đuôi tung_tăng | giữa dòng suối trong veo.",
+      "anticipateVi": "Bơi dưới nước là ai?",
+      "emphasis": [
+        "dưới nước",
+        "tung tăng"
+      ],
+      "pos": "noun",
+      "ipa": "/fɪʃ/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "food"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "We had _____ for dinner.",
+          "vi": "Bữa tối | chúng_tôi ăn cá."
+        }
+      ],
+      "shareCode": "JH4",
+      "meaningVi": "cá"
+    },
+    {
+      "id": "flower",
+      "word": "flower",
+      "defVi": "Bộ_phận đẹp của=cây, | có cánh màu và hương thơm.",
+      "leadVi": "Mùa xuân về, | ong bướm bay rộn quanh vườn.",
+      "anticipateVi": "Vườn nhà nở gì thế?",
+      "emphasis": [
+        "hương thơm",
+        "ong bướm"
+      ],
+      "pos": "noun",
+      "ipa": "/flaʊər/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "She gave me a red _____.",
+          "vi": "Cô ấy tặng tôi | một=bông hoa đỏ."
+        }
+      ],
+      "shareCode": "SDB",
+      "meaningVi": "bông=hoa"
+    },
+    {
+      "id": "friend",
+      "word": "friend",
+      "defVi": "Người mình quý mến | và hay chơi cùng.",
+      "leadVi": "Buồn có người an_ủi, | vui có người cùng cười.",
+      "anticipateVi": "Ai sát cánh cùng bạn?",
+      "emphasis": [
+        "quý mến",
+        "an ủi"
+      ],
+      "pos": "noun",
+      "ipa": "/frend/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "emotion"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "Tom is my best _____.",
+          "vi": "Tom là bạn thân nhất | của=tôi."
+        }
+      ],
+      "shareCode": "SCJ",
+      "meaningVi": "người bạn"
+    },
+    {
+      "id": "fruit",
+      "word": "fruit",
+      "defVi": "Quả chín mọng của=cây, | thường ngọt và ăn được.",
+      "leadVi": "Đĩa cam, chuối, xoài | bày đầy trên bàn.",
+      "anticipateVi": "Tráng miệng món gì nhỉ?",
+      "emphasis": [
+        "chín mọng",
+        "bày đầy"
+      ],
+      "pos": "noun",
+      "ipa": "/fruːt/",
+      "topic": "food",
+      "topics": [
+        "food",
+        "health"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "Eat more fresh _____.",
+          "vi": "Hãy ăn | nhiều trái_cây tươi."
+        }
+      ],
+      "shareCode": "13N",
+      "meaningVi": "trái_cây"
+    },
+    {
+      "id": "game",
+      "word": "game",
+      "defVi": "Hoạt_động vui_chơi | có luật_lệ và người thắng.",
+      "leadVi": "Cả lớp chia hai đội, | reo hò chơi kéo co.",
+      "anticipateVi": "Ai thắng ván này?",
+      "emphasis": [
+        "luật lệ",
+        "reo hò"
+      ],
+      "pos": "noun",
+      "ipa": "/ɡeɪm/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "Let's play a _____ after dinner.",
+          "vi": "Ăn tối xong | mình chơi trò_chơi nhé."
+        }
+      ],
+      "shareCode": "SNV",
+      "meaningVi": "trò_chơi"
+    },
+    {
+      "id": "garden",
+      "word": "garden",
+      "defVi": "Khoảng đất quanh nhà | trồng rau, hoa và cây.",
+      "leadVi": "Chiều nào bà cũng=tưới | mấy luống rau xanh.",
+      "anticipateVi": "Sau nhà có gì xanh?",
+      "emphasis": [
+        "trồng rau",
+        "luống rau"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈɡɑː.dən/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "We grow vegetables in our _____.",
+          "vi": "Chúng_tôi trồng rau | trong vườn."
+        }
+      ],
+      "shareCode": "A5P",
+      "meaningVi": "khu=vườn"
+    },
+    {
+      "id": "glass",
+      "word": "glass",
+      "defVi": "Đồ đựng trong_suốt | để=uống nước hay sữa.",
+      "leadVi": "Rót đầy nước mát, | nhìn xuyên qua thấy cả đáy.",
+      "anticipateVi": "Trong suốt mà đựng được?",
+      "emphasis": [
+        "trong suốt",
+        "xuyên qua"
+      ],
+      "pos": "noun",
+      "ipa": "/ɡlɑːs/",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "Can I have a _____ of water?",
+          "vi": "Cho tôi | một=ly nước nhé?"
+        }
+      ],
+      "shareCode": "PWD",
+      "meaningVi": "cái=ly"
+    },
+    {
+      "id": "happy",
+      "word": "happy",
+      "defVi": "Cảm_thấy vui_vẻ | và hài_lòng với mọi thứ.",
+      "leadVi": "Nhận quà xong, | em bé cười tít cả mắt.",
+      "anticipateVi": "Cười tít mắt vì đâu?",
+      "emphasis": [
+        "vui vẻ",
+        "cười tít"
+      ],
+      "pos": "adj",
+      "ipa": "/ˈhæp.i/",
+      "topic": "emotion",
+      "topics": [
+        "emotion"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "I am very _____ to see you.",
+          "vi": "Tôi rất=vui | được gặp bạn."
+        }
+      ],
+      "shareCode": "8AB",
+      "meaningVi": "vui_vẻ"
+    },
+    {
+      "id": "hat",
+      "word": "hat",
+      "defVi": "Đồ đội trên đầu | để che nắng hoặc giữ ấm.",
+      "leadVi": "Trưa hè ra đồng, | bác nông_dân đội nón lá.",
+      "anticipateVi": "Đội gì cho đỡ nắng?",
+      "emphasis": [
+        "che nắng",
+        "nón lá"
+      ],
+      "pos": "noun",
+      "ipa": "/hæt/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "Wear a _____, it's sunny.",
+          "vi": "Đội mũ vào, | trời nắng đấy."
+        }
+      ],
+      "shareCode": "FNG",
+      "meaningVi": "cái=mũ"
+    },
+    {
+      "id": "help",
+      "word": "help",
+      "defVi": "Làm điều gì đó | để=người khác đỡ vất_vả hơn.",
+      "leadVi": "Thấy bà xách nặng, | cậu bé chạy lại đỡ.",
+      "anticipateVi": "Cần một=tay không?",
+      "emphasis": [
+        "vất vả",
+        "chạy lại"
+      ],
+      "pos": "verb",
+      "ipa": "/help/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "Can you _____ me carry this box?",
+          "vi": "Bạn giúp tôi | bê thùng này nhé?"
+        }
+      ],
+      "shareCode": "F0B",
+      "meaningVi": "giúp_đỡ"
+    },
+    {
+      "id": "home",
+      "word": "home",
+      "defVi": "Nơi mình sống | cùng những người thân_yêu.",
+      "leadVi": "Đi đâu xa rồi cũng=mong | được trở về đây.",
+      "anticipateVi": "Đi xa nhớ đâu nhất?",
+      "emphasis": [
+        "thân yêu",
+        "trở về"
+      ],
+      "pos": "noun",
+      "ipa": "/həʊm/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "I am going _____ now.",
+          "vi": "Bây_giờ | tôi về nhà."
+        }
+      ],
+      "shareCode": "8RR",
+      "meaningVi": "nhà"
+    },
+    {
+      "id": "horse",
+      "word": "horse",
+      "defVi": "Con_vật lớn bốn chân, | chạy nhanh, người có_thể cưỡi.",
+      "leadVi": "Tiếng vó lộc_cộc | vang trên con=đường làng.",
+      "anticipateVi": "Lộc cộc là tiếng gì?",
+      "emphasis": [
+        "bốn chân",
+        "lộc cộc"
+      ],
+      "pos": "noun",
+      "ipa": "/hɔːs/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "travel"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "He rides a white _____.",
+          "vi": "Anh ấy cưỡi | một=con ngựa trắng."
+        }
+      ],
+      "shareCode": "X3N",
+      "meaningVi": "con=ngựa"
+    },
+    {
+      "id": "hot",
+      "word": "hot",
+      "defVi": "Có nhiệt_độ cao | khiến ta toát mồ_hôi.",
+      "leadVi": "Trưa tháng sáu, | mặt đường bốc hơi hầm_hập.",
+      "anticipateVi": "Nóng như đổ lửa à?",
+      "emphasis": [
+        "nhiệt độ",
+        "hầm hập"
+      ],
+      "pos": "adj",
+      "ipa": "/hɒt/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "Be careful, the soup is _____.",
+          "vi": "Cẩn_thận, | canh nóng đấy."
+        }
+      ],
+      "shareCode": "1E9",
+      "meaningVi": "nóng"
+    },
+    {
+      "id": "house",
+      "word": "house",
+      "defVi": "Công_trình có tường, mái | để người ở.",
+      "leadVi": "Ba gian, mái ngói đỏ, | sân trước có giàn hoa.",
+      "anticipateVi": "Mái ngói đỏ của ai?",
+      "emphasis": [
+        "người ở",
+        "mái ngói"
+      ],
+      "pos": "noun",
+      "ipa": "/haʊs/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "They live in a big _____.",
+          "vi": "Họ sống | trong một=ngôi nhà lớn."
+        }
+      ],
+      "shareCode": "VEB",
+      "meaningVi": "ngôi=nhà"
+    },
+    {
+      "id": "ice",
+      "word": "ice",
+      "defVi": "Nước bị đông cứng lại | vì quá lạnh.",
+      "leadVi": "Bỏ vài viên vào ly, | nước mát lạnh ngay.",
+      "anticipateVi": "Lạnh buốt tay chưa?",
+      "emphasis": [
+        "đông cứng",
+        "mát lạnh"
+      ],
+      "pos": "noun",
+      "ipa": "/aɪs/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "food"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "Put some _____ in my drink, please.",
+          "vi": "Cho thêm | ít đá vào ly tôi nhé."
+        }
+      ],
+      "shareCode": "AGV",
+      "meaningVi": "nước đá"
+    },
+    {
+      "id": "juice",
+      "word": "juice",
+      "defVi": "Nước ép ra | từ trái_cây tươi, uống mát lành.",
+      "leadVi": "Vắt mấy quả cam, | được ly nước vàng mát lịm.",
+      "anticipateVi": "Ép ra được gì nào?",
+      "emphasis": [
+        "trái cây",
+        "mát lịm"
+      ],
+      "pos": "noun",
+      "ipa": "/dʒuːs/",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "J",
+      "usage": [
+        {
+          "en": "I drink orange _____ every day.",
+          "vi": "Ngày nào tôi cũng=uống | nước cam."
+        }
+      ],
+      "shareCode": "9Q0",
+      "meaningVi": "nước ép"
+    },
+    {
+      "id": "key",
+      "word": "key",
+      "defVi": "Vật nhỏ bằng kim_loại | dùng để mở khóa.",
+      "leadVi": "Ra khỏi nhà | mới nhớ để quên trên bàn.",
+      "anticipateVi": "Mở cửa bằng gì?",
+      "emphasis": [
+        "mở khóa",
+        "để quên"
+      ],
+      "pos": "noun",
+      "ipa": "/kiː/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "K",
+      "usage": [
+        {
+          "en": "I can't find my _____.",
+          "vi": "Tôi không=tìm thấy | chìa_khóa."
+        }
+      ],
+      "shareCode": "PFA",
+      "meaningVi": "chìa_khóa"
+    },
+    {
+      "id": "leg",
+      "word": "leg",
+      "defVi": "Bộ_phận cơ_thể | giúp ta đứng và đi lại.",
+      "leadVi": "Đá bóng cả chiều, | về nhà mỏi nhừ.",
+      "anticipateVi": "Đi lại bằng gì?",
+      "emphasis": [
+        "đi lại",
+        "mỏi nhừ"
+      ],
+      "pos": "noun",
+      "ipa": "/leɡ/",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "L",
+      "usage": [
+        {
+          "en": "I hurt my _____ playing football.",
+          "vi": "Tôi bị đau chân | khi đá bóng."
+        }
+      ],
+      "shareCode": "AZQ",
+      "meaningVi": "chân"
+    },
+    {
+      "id": "letter",
+      "word": "letter",
+      "defVi": "Lời viết trên giấy | gửi cho người ở xa.",
+      "leadVi": "Phong_bì dán tem, | bỏ vào hòm bưu_điện.",
+      "anticipateVi": "Tem dán lên đâu?",
+      "emphasis": [
+        "ở xa",
+        "dán tem"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈlet.ər/",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "L",
+      "usage": [
+        {
+          "en": "I wrote a _____ to my grandma.",
+          "vi": "Tôi viết thư | cho=bà."
+        }
+      ],
+      "shareCode": "XJS",
+      "meaningVi": "lá=thư"
+    },
+    {
+      "id": "milk",
+      "word": "milk",
+      "defVi": "Chất_lỏng màu trắng | lấy từ bò hoặc dê.",
+      "leadVi": "Mỗi tối, | bé ôm bình uống ừng_ực rồi ngủ.",
+      "anticipateVi": "Trắng mà béo là gì?",
+      "emphasis": [
+        "màu trắng",
+        "ôm bình"
+      ],
+      "pos": "noun",
+      "ipa": "/mɪlk/",
+      "topic": "food",
+      "topics": [
+        "food",
+        "health"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "Babies drink a lot of _____.",
+          "vi": "Em bé | uống rất=nhiều sữa."
+        }
+      ],
+      "shareCode": "6XT",
+      "meaningVi": "sữa"
+    },
+    {
+      "id": "money",
+      "word": "money",
+      "defVi": "Thứ dùng để trao_đổi | lấy hàng_hóa và dịch_vụ.",
+      "leadVi": "Ra chợ | mà quên ví thì đành về tay không.",
+      "anticipateVi": "Mua bằng gì nào?",
+      "emphasis": [
+        "trao đổi",
+        "quên ví"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈmʌn.i/",
+      "topic": "money",
+      "topics": [
+        "money"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "I don't have much _____.",
+          "vi": "Tôi không=có | nhiều tiền."
+        }
+      ],
+      "shareCode": "YNF",
+      "meaningVi": "tiền"
+    },
+    {
+      "id": "moon",
+      "word": "moon",
+      "defVi": "Vật sáng tròn | trên bầu_trời ban_đêm.",
+      "leadVi": "Rằm tháng tám, | chị Hằng soi sáng sân đình.",
+      "anticipateVi": "Ai sáng giữa đêm?",
+      "emphasis": [
+        "bầu trời",
+        "soi sáng"
+      ],
+      "pos": "noun",
+      "ipa": "/muːn/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "The _____ is full tonight.",
+          "vi": "Đêm nay | trăng tròn."
+        }
+      ],
+      "shareCode": "HJJ",
+      "meaningVi": "mặt_trăng"
+    },
+    {
+      "id": "morning",
+      "word": "morning",
+      "defVi": "Khoảng thời_gian đầu ngày, | từ lúc mặt_trời mọc.",
+      "leadVi": "Gà gáy ò_ó_o, | sương đêm còn đọng trên lá.",
+      "anticipateVi": "Gà gáy là lúc nào?",
+      "emphasis": [
+        "mặt trời",
+        "sương đêm"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈmɔː.nɪŋ/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "chars": 7,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "I run every _____.",
+          "vi": "Tôi chạy bộ | mỗi buổi sáng."
+        }
+      ],
+      "shareCode": "W6F",
+      "meaningVi": "buổi sáng"
+    },
+    {
+      "id": "mother",
+      "word": "mother",
+      "defVi": "Người phụ_nữ | sinh ra và chăm_sóc con_cái.",
+      "leadVi": "Ru con ngủ | bằng những câu hát dịu_dàng.",
+      "anticipateVi": "Ai ru bạn ngủ?",
+      "emphasis": [
+        "chăm sóc",
+        "dịu dàng"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈmʌð.ər/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "My _____ cooks very well.",
+          "vi": "Mẹ tôi | nấu ăn rất=ngon."
+        }
+      ],
+      "shareCode": "D2P",
+      "meaningVi": "mẹ"
+    },
+    {
+      "id": "mouth",
+      "word": "mouth",
+      "defVi": "Bộ_phận trên mặt | để=nhai thức_ăn và nói_chuyện.",
+      "leadVi": "Há to ra nào, | bác_sĩ khám răng đây.",
+      "anticipateVi": "Há to ra xem?",
+      "emphasis": [
+        "nói chuyện",
+        "Há to"
+      ],
+      "pos": "noun",
+      "ipa": "/maʊθ/",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "Open your _____, please.",
+          "vi": "Há miệng ra nào."
+        }
+      ],
+      "shareCode": "Y57",
+      "meaningVi": "miệng"
+    },
+    {
+      "id": "music",
+      "word": "music",
+      "defVi": "Âm_thanh có giai_điệu, | nghe thấy dễ_chịu.",
+      "leadVi": "Đeo tai_nghe vào, | chân bất_giác nhịp theo.",
+      "anticipateVi": "Bật bài gì lên nghe?",
+      "emphasis": [
+        "giai điệu",
+        "nhịp theo"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈmjuː.zɪk/",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "emotion"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "I listen to _____ every night.",
+          "vi": "Tối nào tôi cũng=nghe nhạc."
+        }
+      ],
+      "shareCode": "KHD",
+      "meaningVi": "âm_nhạc"
+    },
+    {
+      "id": "name",
+      "word": "name",
+      "defVi": "Tên_gọi riêng | để phân_biệt mỗi người hay vật.",
+      "leadVi": "Cô giáo điểm danh, | ai nghe thấy thì dạ.",
+      "anticipateVi": "Bạn được gọi là gì?",
+      "emphasis": [
+        "phân biệt",
+        "điểm danh"
+      ],
+      "pos": "noun",
+      "ipa": "/neɪm/",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "What is your _____?",
+          "vi": "Bạn tên là gì?"
+        }
+      ],
+      "shareCode": "FXX",
+      "meaningVi": "tên"
+    },
+    {
+      "id": "night",
+      "word": "night",
+      "defVi": "Khoảng thời_gian tối, | từ lúc trời tối đến sáng.",
+      "leadVi": "Đèn tắt hết, | chỉ còn tiếng dế kêu ngoài hiên.",
+      "anticipateVi": "Dế kêu lúc nào?",
+      "emphasis": [
+        "trời tối",
+        "tiếng dế"
+      ],
+      "pos": "noun",
+      "ipa": "/naɪt/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "I can't sleep at _____.",
+          "vi": "Ban_đêm | tôi không=ngủ được."
+        }
+      ],
+      "shareCode": "JH7",
+      "meaningVi": "ban_đêm"
+    },
+    {
+      "id": "nose",
+      "word": "nose",
+      "defVi": "Bộ_phận giữa mặt | giúp ta hít_thở và ngửi mùi.",
+      "leadVi": "Đi qua tiệm bánh, | hít hà mùi thơm phức.",
+      "anticipateVi": "Ngửi bằng gì đây?",
+      "emphasis": [
+        "hít thở",
+        "hít hà"
+      ],
+      "pos": "noun",
+      "ipa": "/nəʊz/",
+      "topic": "health",
+      "topics": [
+        "health",
+        "perception"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "He has a cold and a red _____.",
+          "vi": "Anh ấy bị cảm, | mũi đỏ ửng."
+        }
+      ],
+      "shareCode": "XVB",
+      "meaningVi": "cái=mũi"
+    },
+    {
+      "id": "open",
+      "word": "open",
+      "defVi": "Kéo hoặc đẩy | cho cửa, nắp hay hộp hé ra.",
+      "leadVi": "Kéo rèm, | đẩy cánh cửa_sổ cho nắng tràn vào.",
+      "anticipateVi": "Hé ra chút nào?",
+      "emphasis": [
+        "hé ra",
+        "nắng tràn"
+      ],
+      "pos": "verb",
+      "ipa": "/ˈəʊ.pən/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "O",
+      "usage": [
+        {
+          "en": "Please _____ the window.",
+          "vi": "Làm ơn | mở cửa_sổ ra."
+        }
+      ],
+      "shareCode": "4RY",
+      "meaningVi": "mở"
+    },
+    {
+      "id": "park",
+      "word": "park",
+      "defVi": "Khu đất công_cộng | có cây xanh để=dạo chơi.",
+      "leadVi": "Chiều chủ_nhật, | trẻ con thả diều trên bãi cỏ.",
+      "anticipateVi": "Thả diều ở chỗ nào?",
+      "emphasis": [
+        "công cộng",
+        "thả diều"
+      ],
+      "pos": "noun",
+      "ipa": "/pɑːk/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "We walk in the _____ on Sundays.",
+          "vi": "Chủ_nhật | chúng_tôi đi dạo công_viên."
+        }
+      ],
+      "shareCode": "BZD",
+      "meaningVi": "công_viên"
+    },
+    {
+      "id": "pen",
+      "word": "pen",
+      "defVi": "Đồ_dùng có mực | để viết chữ lên giấy.",
+      "leadVi": "Hết mực giữa giờ, | đành quay sang mượn bạn.",
+      "anticipateVi": "Viết bằng gì nhỉ?",
+      "emphasis": [
+        "viết chữ",
+        "Hết mực"
+      ],
+      "pos": "noun",
+      "ipa": "/pen/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Can I use your _____?",
+          "vi": "Tôi dùng bút | của=bạn được không?"
+        }
+      ],
+      "shareCode": "4EK",
+      "meaningVi": "cái=bút"
+    },
+    {
+      "id": "phone",
+      "word": "phone",
+      "defVi": "Thiết_bị dùng để=gọi | và nói_chuyện ở xa.",
+      "leadVi": "Reng_reng, | màn_hình sáng lên tên mẹ.",
+      "anticipateVi": "Reng reng là gì thế?",
+      "emphasis": [
+        "Thiết bị",
+        "màn hình"
+      ],
+      "pos": "noun",
+      "ipa": "/fəʊn/",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "communication"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "My _____ is ringing.",
+          "vi": "Điện_thoại của=tôi | đang=reo."
+        }
+      ],
+      "shareCode": "ZF7",
+      "meaningVi": "điện_thoại"
+    },
+    {
+      "id": "picture",
+      "word": "picture",
+      "defVi": "Hình vẽ | hoặc ảnh chụp lại cảnh_vật, con_người.",
+      "leadVi": "Treo trên tường, | ghi lại khoảnh_khắc cả nhà cười.",
+      "anticipateVi": "Chụp một=kiểu nhé?",
+      "emphasis": [
+        "ảnh chụp",
+        "khoảnh khắc"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈpɪk.tʃər/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 7,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "She drew a _____ of her cat.",
+          "vi": "Cô bé vẽ | một=bức tranh về con=mèo."
+        }
+      ],
+      "shareCode": "3WR",
+      "meaningVi": "bức=tranh"
+    },
+    {
+      "id": "rain",
+      "word": "rain",
+      "defVi": "Nước rơi từ những đám mây | xuống mặt_đất.",
+      "leadVi": "Lộp_độp trên mái tôn, | đường_phố ướt nhẹp.",
+      "anticipateVi": "Lộp độp ngoài hiên?",
+      "emphasis": [
+        "mặt đất",
+        "ướt nhẹp"
+      ],
+      "pos": "noun",
+      "ipa": "/reɪn/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "We stayed home because of the _____.",
+          "vi": "Chúng_tôi ở nhà | vì trời mưa."
+        }
+      ],
+      "shareCode": "4VP",
+      "meaningVi": "mưa"
+    },
+    {
+      "id": "read",
+      "word": "read",
+      "defVi": "Nhìn chữ viết | và hiểu nội_dung của=nó.",
+      "leadVi": "Ôm cuốn truyện, | mắt dõi theo từng dòng chữ.",
+      "anticipateVi": "Mắt lướt từng dòng ư?",
+      "emphasis": [
+        "nội dung",
+        "dõi theo"
+      ],
+      "pos": "verb",
+      "ipa": "/riːd/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "I like to _____ before bed.",
+          "vi": "Tôi thích đọc | trước khi ngủ."
+        }
+      ],
+      "shareCode": "KMV",
+      "meaningVi": "đọc"
+    },
+    {
+      "id": "rice",
+      "word": "rice",
+      "defVi": "Hạt lương_thực | nấu thành cơm, ăn hằng ngày.",
+      "leadVi": "Nồi niêu reo, | khói bay nghi_ngút trên mâm tối.",
+      "anticipateVi": "Bữa nào cũng=có gì?",
+      "emphasis": [
+        "lương thực",
+        "nghi ngút"
+      ],
+      "pos": "noun",
+      "ipa": "/raɪs/",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "We eat _____ every day.",
+          "vi": "Ngày nào chúng_tôi cũng=ăn cơm."
+        }
+      ],
+      "shareCode": "BKQ",
+      "meaningVi": "cơm, gạo"
+    },
+    {
+      "id": "river",
+      "word": "river",
+      "defVi": "Dòng nước lớn | chảy dài qua nhiều vùng ra biển.",
+      "leadVi": "Con đò nhỏ | lững_lờ trôi giữa hai bờ tre.",
+      "anticipateVi": "Đò qua chỗ nào?",
+      "emphasis": [
+        "chảy dài",
+        "lững lờ"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈrɪv.ər/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "The _____ is very wide here.",
+          "vi": "Ở đây | con=sông rất=rộng."
+        }
+      ],
+      "shareCode": "7KM",
+      "meaningVi": "con=sông"
+    },
+    {
+      "id": "room",
+      "word": "room",
+      "defVi": "Một phần trong ngôi nhà | có tường bao quanh.",
+      "leadVi": "Đóng cửa lại, | đây là góc riêng của=bạn.",
+      "anticipateVi": "Góc riêng ở đâu?",
+      "emphasis": [
+        "bao quanh",
+        "góc riêng"
+      ],
+      "pos": "noun",
+      "ipa": "/ruːm/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "My _____ is small but tidy.",
+          "vi": "Phòng tôi | nhỏ nhưng gọn_gàng."
+        }
+      ],
+      "shareCode": "H4H",
+      "meaningVi": "căn=phòng"
+    },
+    {
+      "id": "run",
+      "word": "run",
+      "defVi": "Di_chuyển rất=nhanh bằng hai chân, | hơn cả đi_bộ.",
+      "leadVi": "Tiếng còi vang lên, | cả đám lao về đích.",
+      "anticipateVi": "Ai về đích trước?",
+      "emphasis": [
+        "Di chuyển",
+        "về đích"
+      ],
+      "pos": "verb",
+      "ipa": "/rʌn/",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "I _____ in the park every morning.",
+          "vi": "Sáng nào tôi cũng=chạy | trong công_viên."
+        }
+      ],
+      "shareCode": "RKX",
+      "meaningVi": "chạy"
+    },
+    {
+      "id": "sad",
+      "word": "sad",
+      "defVi": "Không vui, | trong lòng nặng_trĩu vì chuyện không may.",
+      "leadVi": "Con mèo đi lạc, | cô bé ngồi khóc thút_thít.",
+      "anticipateVi": "Sao mắt đỏ hoe thế?",
+      "emphasis": [
+        "nặng trĩu",
+        "thút thít"
+      ],
+      "pos": "adj",
+      "ipa": "/sæd/",
+      "topic": "emotion",
+      "topics": [
+        "emotion"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "She felt _____ when her friend left.",
+          "vi": "Cô ấy buồn | khi bạn rời đi."
+        }
+      ],
+      "shareCode": "3YW",
+      "meaningVi": "buồn"
+    },
+    {
+      "id": "school",
+      "word": "school",
+      "defVi": "Nơi học_sinh đến | để=học với thầy_cô.",
+      "leadVi": "Tiếng trống vang lên, | áo trắng ùa vào lớp.",
+      "anticipateVi": "Trống đánh ở đâu?",
+      "emphasis": [
+        "học sinh",
+        "áo trắng"
+      ],
+      "pos": "noun",
+      "ipa": "/skuːl/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "I walk to _____ every day.",
+          "vi": "Ngày nào tôi cũng=đi bộ | đến trường."
+        }
+      ],
+      "shareCode": "1AQ",
+      "meaningVi": "trường_học"
+    },
+    {
+      "id": "sea",
+      "word": "sea",
+      "defVi": "Vùng nước mặn | rộng lớn bao quanh đất_liền.",
+      "leadVi": "Sóng vỗ rì_rào, | cát trắng trải dài tít_tắp.",
+      "anticipateVi": "Sóng vỗ ở nơi nào?",
+      "emphasis": [
+        "nước mặn",
+        "rì rào"
+      ],
+      "pos": "noun",
+      "ipa": "/siː/",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "travel"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "We swam in the _____ last summer.",
+          "vi": "Hè năm ngoái | chúng_tôi bơi ở biển."
+        }
+      ],
+      "shareCode": "1GF",
+      "meaningVi": "biển"
+    },
+    {
+      "id": "shoe",
+      "word": "shoe",
+      "defVi": "Đồ mang ở chân | để=bảo_vệ bàn chân.",
+      "leadVi": "Trước khi ra cửa, | ngồi buộc dây cho chặt.",
+      "anticipateVi": "Buộc dây cho chặt nhé?",
+      "emphasis": [
+        "bàn chân",
+        "buộc dây"
+      ],
+      "pos": "noun",
+      "ipa": "/ʃuː/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "These _____s are too small for me.",
+          "vi": "Đôi giày này | chật với tôi."
+        }
+      ],
+      "shareCode": "3KE",
+      "meaningVi": "chiếc=giày"
+    },
+    {
+      "id": "shop",
+      "word": "shop",
+      "defVi": "Nơi bày bán hàng | cho khách đến mua.",
+      "leadVi": "Đèn sáng, | cô chủ mỉm cười chào khách bước vào.",
+      "anticipateVi": "Mua đồ ở đâu?",
+      "emphasis": [
+        "bán hàng",
+        "chào khách"
+      ],
+      "pos": "noun",
+      "ipa": "/ʃɒp/",
+      "topic": "money",
+      "topics": [
+        "money",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "The _____ opens at eight.",
+          "vi": "Cửa_hàng | mở cửa lúc tám giờ."
+        }
+      ],
+      "shareCode": "6PV",
+      "meaningVi": "cửa_hàng"
+    },
+    {
+      "id": "sing",
+      "word": "sing",
+      "defVi": "Dùng giọng | tạo ra giai_điệu theo lời bài.",
+      "leadVi": "Đứng trước gương, | cầm lược làm mi_crô nghêu_ngao.",
+      "anticipateVi": "Ngân nga câu gì thế?",
+      "emphasis": [
+        "giai điệu",
+        "nghêu ngao"
+      ],
+      "pos": "verb",
+      "ipa": "/sɪŋ/",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "emotion"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "She likes to _____ in the shower.",
+          "vi": "Cô ấy thích hát | khi tắm."
+        }
+      ],
+      "shareCode": "C9Y",
+      "meaningVi": "hát"
+    },
+    {
+      "id": "sister",
+      "word": "sister",
+      "defVi": "Con_gái | cùng bố_mẹ sinh ra với=mình.",
+      "leadVi": "Hay tết tóc cho em, | lại chia cả quà_vặt.",
+      "anticipateVi": "Ai tết tóc cho bạn?",
+      "emphasis": [
+        "Con gái",
+        "tết tóc"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈsɪs.tər/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "My _____ is a nurse.",
+          "vi": "Chị gái tôi | là y_tá."
+        }
+      ],
+      "shareCode": "NG1",
+      "meaningVi": "chị gái, em gái"
+    },
+    {
+      "id": "sleep",
+      "word": "sleep",
+      "defVi": "Nhắm mắt nghỉ_ngơi, | không còn tỉnh_táo, thường về đêm.",
+      "leadVi": "Đặt lưng xuống gối | là ngáy pho_pho ngay.",
+      "anticipateVi": "Mắt díp lại rồi à?",
+      "emphasis": [
+        "nghỉ ngơi",
+        "Đặt lưng"
+      ],
+      "pos": "verb",
+      "ipa": "/sliːp/",
+      "topic": "health",
+      "topics": [
+        "health",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "Babies _____ a lot.",
+          "vi": "Em bé | ngủ rất=nhiều."
+        }
+      ],
+      "shareCode": "E68",
+      "meaningVi": "ngủ"
+    },
+    {
+      "id": "small",
+      "word": "small",
+      "defVi": "Có kích_thước | không lớn, kém hơn mức bình_thường.",
+      "leadVi": "Chú kiến con | lọt thỏm trong lòng bàn tay.",
+      "anticipateVi": "Bé tí như hạt đậu?",
+      "emphasis": [
+        "kích thước",
+        "lọt thỏm"
+      ],
+      "pos": "adj",
+      "ipa": "/smɔːl/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "This shirt is too _____ for me.",
+          "vi": "Cái=áo này | quá chật với tôi."
+        }
+      ],
+      "shareCode": "DWW",
+      "meaningVi": "nhỏ"
+    },
+    {
+      "id": "snow",
+      "word": "snow",
+      "defVi": "Những bông trắng | rơi từ trời khi rất lạnh.",
+      "leadVi": "Cả cánh đồng phủ trắng xóa, | trẻ con nặn người tuyết.",
+      "anticipateVi": "Trắng xóa khắp nơi ư?",
+      "emphasis": [
+        "bông trắng",
+        "trắng xóa"
+      ],
+      "pos": "noun",
+      "ipa": "/snəʊ/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "Children play in the _____ in winter.",
+          "vi": "Mùa đông | trẻ_em chơi đùa trong tuyết."
+        }
+      ],
+      "shareCode": "4PC",
+      "meaningVi": "tuyết"
+    },
+    {
+      "id": "song",
+      "word": "song",
+      "defVi": "Bản nhạc có lời | để người ta cất tiếng hát lên.",
+      "leadVi": "Cứ ngân_nga | mãi một điệp_khúc trong đầu.",
+      "anticipateVi": "Điệp khúc nào vang mãi?",
+      "emphasis": [
+        "Bản nhạc",
+        "ngân nga"
+      ],
+      "pos": "noun",
+      "ipa": "/sɒŋ/",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "emotion"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "This is my favourite _____.",
+          "vi": "Đây là | bài hát tôi thích nhất."
+        }
+      ],
+      "shareCode": "FKK",
+      "meaningVi": "bài_hát"
+    },
+    {
+      "id": "star",
+      "word": "star",
+      "defVi": "Điểm sáng nhỏ | lấp_lánh trên bầu_trời đêm.",
+      "leadVi": "Nằm trên sân_thượng, | đếm mãi không=hết.",
+      "anticipateVi": "Đếm mãi có hết không?",
+      "emphasis": [
+        "lấp lánh",
+        "sân thượng"
+      ],
+      "pos": "noun",
+      "ipa": "/stɑːr/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "I can see many _____s tonight.",
+          "vi": "Đêm nay | tôi thấy nhiều ngôi sao."
+        }
+      ],
+      "shareCode": "VY7",
+      "meaningVi": "ngôi=sao"
+    },
+    {
+      "id": "sun",
+      "word": "sun",
+      "defVi": "Quả cầu lửa khổng_lồ | sưởi ấm Trái_Đất.",
+      "leadVi": "Sáng ló rạng ở đằng đông, | chiều khuất sau núi.",
+      "anticipateVi": "Ai ló rạng đằng đông?",
+      "emphasis": [
+        "sưởi ấm",
+        "ló rạng"
+      ],
+      "pos": "noun",
+      "ipa": "/sʌn/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "The _____ is very bright today.",
+          "vi": "Hôm nay | mặt_trời rất=chói."
+        }
+      ],
+      "shareCode": "TKS",
+      "meaningVi": "mặt_trời"
+    },
+    {
+      "id": "swim",
+      "word": "swim",
+      "defVi": "Di_chuyển trong nước | bằng cách quạt tay và đạp chân.",
+      "leadVi": "Mùa hè ra hồ, | bì_bõm cả buổi chiều.",
+      "anticipateVi": "Bì bõm dưới nước à?",
+      "emphasis": [
+        "quạt tay",
+        "bì bõm"
+      ],
+      "pos": "verb",
+      "ipa": "/swɪm/",
+      "topic": "health",
+      "topics": [
+        "health",
+        "travel"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "Can you _____?",
+          "vi": "Bạn biết bơi không?"
+        }
+      ],
+      "shareCode": "2SK",
+      "meaningVi": "bơi"
+    },
+    {
+      "id": "table",
+      "word": "table",
+      "defVi": "Đồ_đạc có mặt phẳng | và chân để=đặt đồ.",
+      "leadVi": "Mâm cơm nóng hổi | đã dọn sẵn chờ cả nhà.",
+      "anticipateVi": "Mâm cơm dọn lên đâu?",
+      "emphasis": [
+        "mặt phẳng",
+        "dọn sẵn"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈteɪ.bəl/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Put the plates on the _____.",
+          "vi": "Đặt đĩa | lên bàn đi."
+        }
+      ],
+      "shareCode": "DMT",
+      "meaningVi": "cái=bàn"
+    },
+    {
+      "id": "teacher",
+      "word": "teacher",
+      "defVi": "Người dạy học | và truyền kiến_thức cho học_trò.",
+      "leadVi": "Đứng trên bục giảng, | tay cầm phấn trắng.",
+      "anticipateVi": "Người đứng bục giảng là ai?",
+      "emphasis": [
+        "dạy học",
+        "phấn trắng"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈtiː.tʃər/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "work"
+      ],
+      "level": "A1",
+      "chars": 7,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Our _____ is very kind.",
+          "vi": "Cô giáo của=chúng_tôi | rất=hiền."
+        }
+      ],
+      "shareCode": "FEF",
+      "meaningVi": "giáo_viên"
+    },
+    {
+      "id": "tea",
+      "word": "tea",
+      "defVi": "Thức uống pha | từ lá cây khô với nước sôi.",
+      "leadVi": "Ông nhấp ngụm nóng, | thơm thoang_thoảng mùi sen.",
+      "anticipateVi": "Ông nhấp ngụm gì?",
+      "emphasis": [
+        "nước sôi",
+        "thoang thoảng"
+      ],
+      "pos": "noun",
+      "ipa": "/tiː/",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Would you like some green _____?",
+          "vi": "Bạn uống | chút trà xanh nhé?"
+        }
+      ],
+      "shareCode": "4SM",
+      "meaningVi": "trà"
+    },
+    {
+      "id": "tree",
+      "word": "tree",
+      "defVi": "Thực_vật có thân gỗ, | cành và nhiều lá.",
+      "leadVi": "Trưa hè, | cả xóm ngồi hóng mát dưới tán lá.",
+      "anticipateVi": "Tán xanh rợp bóng ư?",
+      "emphasis": [
+        "thân gỗ",
+        "hóng mát"
+      ],
+      "pos": "noun",
+      "ipa": "/triː/",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "There is a big _____ in front of my house.",
+          "vi": "Trước nhà tôi | có một=cái cây to."
+        }
+      ],
+      "shareCode": "W9N",
+      "meaningVi": "cái=cây"
+    },
+    {
+      "id": "walk",
+      "word": "walk",
+      "defVi": "Di_chuyển bằng chân | từng bước một, không chạy.",
+      "leadVi": "Chiều mát, | hai ông bà thong_dong dạo quanh hồ.",
+      "anticipateVi": "Tản bộ chút không?",
+      "emphasis": [
+        "từng bước",
+        "thong dong"
+      ],
+      "pos": "verb",
+      "ipa": "/wɔːk/",
+      "topic": "health",
+      "topics": [
+        "health",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "W",
+      "usage": [
+        {
+          "en": "I _____ to work every day.",
+          "vi": "Ngày nào tôi cũng=đi bộ | đi làm."
+        }
+      ],
+      "shareCode": "CGC",
+      "meaningVi": "đi_bộ"
+    },
+    {
+      "id": "wash",
+      "word": "wash",
+      "defVi": "Làm sạch đồ_vật | bằng nước và xà_phòng.",
+      "leadVi": "Bọt trắng sủi đầy chậu, | quần_áo thơm_tho.",
+      "anticipateVi": "Bọt trắng sủi lên à?",
+      "emphasis": [
+        "Làm sạch",
+        "thơm tho"
+      ],
+      "pos": "verb",
+      "ipa": "/wɒʃ/",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "health"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "W",
+      "usage": [
+        {
+          "en": "_____ your hands before eating.",
+          "vi": "Rửa tay | trước khi ăn nhé."
+        }
+      ],
+      "shareCode": "9ZW",
+      "meaningVi": "rửa"
+    },
+    {
+      "id": "window",
+      "word": "window",
+      "defVi": "Khung kính trên tường | để=đón ánh_sáng và gió.",
+      "leadVi": "Ngồi bên đó | ngắm mưa rơi ngoài phố.",
+      "anticipateVi": "Ngắm mưa từ đâu?",
+      "emphasis": [
+        "ánh sáng",
+        "ngắm mưa"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈwɪn.dəʊ/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "W",
+      "usage": [
+        {
+          "en": "Can you open the _____?",
+          "vi": "Bạn mở cửa_sổ | được không?"
+        }
+      ],
+      "shareCode": "7NS",
+      "meaningVi": "cửa_sổ"
+    },
+    {
+      "id": "write",
+      "word": "write",
+      "defVi": "Dùng bút | để tạo ra chữ trên giấy.",
+      "leadVi": "Nắn_nót từng nét | trong cuốn vở ô_li.",
+      "anticipateVi": "Nắn nót từng nét chưa?",
+      "emphasis": [
+        "tạo ra",
+        "Nắn nót"
+      ],
+      "pos": "verb",
+      "ipa": "/raɪt/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "communication"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "W",
+      "usage": [
+        {
+          "en": "Please _____ your name here.",
+          "vi": "Hãy viết tên bạn | vào đây."
+        }
+      ],
+      "shareCode": "7AB",
+      "meaningVi": "viết"
+    },
+    {
+      "id": "big",
+      "word": "big",
+      "defVi": "Có kích_cỡ | vượt hơn hẳn mức thông_thường.",
+      "leadVi": "Con voi đứng cạnh, | ai cũng=thấy mình bé tẹo.",
+      "anticipateVi": "To đùng thế kia à?",
+      "emphasis": [
+        "vượt hơn",
+        "bé tẹo"
+      ],
+      "pos": "adj",
+      "ipa": "/bɪɡ/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "They live in a _____ house.",
+          "vi": "Họ sống | trong một=ngôi nhà to."
+        }
+      ],
+      "shareCode": "EC2",
+      "meaningVi": "to, lớn"
+    },
+    {
+      "id": "red",
+      "word": "red",
+      "defVi": "Có màu | giống màu của=máu hay quả ớt chín.",
+      "leadVi": "Lá cờ Tết tung bay, | phong_bao lì_xì rực_rỡ.",
+      "anticipateVi": "Rực rỡ như lửa chưa?",
+      "emphasis": [
+        "ớt chín",
+        "rực rỡ"
+      ],
+      "pos": "adj",
+      "ipa": "/red/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "She is wearing a _____ dress.",
+          "vi": "Cô ấy mặc | một=chiếc váy đỏ."
+        }
+      ],
+      "shareCode": "FSN",
+      "meaningVi": "đỏ"
+    },
+    {
+      "id": "eat",
+      "word": "eat",
+      "defVi": "Cho thức_ăn vào miệng, | nhai rồi nuốt xuống bụng.",
+      "leadVi": "Bụng réo ùng_ục, | mâm cơm vừa dọn ra.",
+      "anticipateVi": "Bụng réo rồi phải không?",
+      "emphasis": [
+        "thức ăn",
+        "Bụng réo"
+      ],
+      "pos": "verb",
+      "ipa": "/iːt/",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "We _____ lunch at noon.",
+          "vi": "Chúng_tôi ăn trưa | lúc mười hai giờ."
+        }
+      ],
+      "shareCode": "HJA",
+      "meaningVi": "ăn"
+    },
+    {
+      "id": "baby",
+      "word": "baby",
+      "defVi": "Đứa trẻ mới sinh, | còn rất=nhỏ và cần bú sữa.",
+      "leadVi": "Nằm trong nôi, | chân tay cứ khua_khoắng đòi bế.",
+      "anticipateVi": "Ai nằm trong nôi?",
+      "emphasis": [
+        "mới sinh",
+        "khua khoắng"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈbeɪ.bi/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 4,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "The _____ is sleeping now.",
+          "vi": "Em bé | đang=ngủ."
+        }
+      ],
+      "shareCode": "8CF",
+      "meaningVi": "em bé"
+    },
+    {
+      "id": "chicken",
+      "word": "chicken",
+      "defVi": "Loài gia_cầm | nuôi để lấy thịt và trứng.",
+      "leadVi": "Sáng sớm cục tác | ngoài sân, mổ thóc lia_lịa.",
+      "anticipateVi": "Ai cục tác ngoài sân?",
+      "emphasis": [
+        "gia cầm",
+        "cục tác"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈtʃɪk.ɪn/",
+      "topic": "food",
+      "topics": [
+        "food",
+        "nature"
+      ],
+      "level": "A1",
+      "chars": 7,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "We had roast _____ for dinner.",
+          "vi": "Bữa tối | chúng_tôi ăn gà quay."
+        }
+      ],
+      "shareCode": "SKG",
+      "meaningVi": "gà"
+    }
+  ]
+}
