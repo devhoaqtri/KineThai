@@ -21,6 +21,8 @@ import { getReportReason, isSevereReason } from "@/features/vocabulary/lib/word-
 import { adminKeys } from "../../api/keys";
 import { adminWordReportsQueryOptions } from "../../api/queries";
 import { updateWordReports, type WordReportGroup } from "../../api/word-report.functions";
+import { LANGUAGE_LABELS, plainText as plain } from "../../lib/word-library";
+import { DeckLanguageTabs } from "../DeckLanguageTabs";
 
 const STAGE_LABELS: Record<string, string> = {
   lead: "opening clue",
@@ -31,23 +33,6 @@ const STAGE_LABELS: Record<string, string> = {
   reveal: "answer",
   spelling: "spelling",
 };
-
-const LANGUAGE_LABELS: Record<TargetLocale, string> = {
-  en: "English",
-  zh: "Chinese",
-  ko: "Korean",
-  ja: "Japanese",
-  fr: "French",
-  de: "German",
-  es: "Spanish",
-};
-
-/** Deck text carries layout marks (`/emphasis/`, `|`, `=`); show the sentence a reader saw. */
-const plain = (text: string) =>
-  text
-    .replace(/\/([^/]+)\//g, "$1")
-    .replace(/\s*\|\s*/g, " ")
-    .replace(/=/g, " ");
 
 function formatWhen(iso: string): string {
   const date = new Date(iso);
@@ -143,32 +128,26 @@ export function WordReportsPage(): React.ReactElement {
       )}
 
       {decks.length > 0 && (
-        <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Language">
-          {decks.map((deck) => (
-            <button
-              key={deck.locale}
-              type="button"
-              role="tab"
-              aria-selected={deck.locale === locale}
-              className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm ${
-                deck.locale === locale
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-border hover:bg-muted"
-              }`}
-              onClick={() => setPicked(deck.locale)}
-            >
-              {LANGUAGE_LABELS[deck.locale]}
-              {deck.urgent > 0 && (
-                <span className="rounded-full bg-red-600 px-1.5 text-[11px] text-white tabular-nums">
-                  {deck.urgent}
-                </span>
-              )}
-              {deck.open > 0 && (
-                <span className="text-xs tabular-nums opacity-70">{deck.open}</span>
-              )}
-            </button>
-          ))}
-        </div>
+        <DeckLanguageTabs
+          locales={decks.map((deck) => deck.locale)}
+          locale={locale}
+          onPick={setPicked}
+          badge={(entry) => {
+            const deck = decks.find((item) => item.locale === entry);
+            return (
+              <>
+                {deck && deck.urgent > 0 && (
+                  <span className="rounded-full bg-red-600 px-1.5 text-[11px] text-white tabular-nums">
+                    {deck.urgent}
+                  </span>
+                )}
+                {deck && deck.open > 0 && (
+                  <span className="text-xs tabular-nums opacity-70">{deck.open}</span>
+                )}
+              </>
+            );
+          }}
+        />
       )}
 
       {reports.isLoading ? (
@@ -271,15 +250,18 @@ function ReportCard({
           </p>
         </div>
         <div className="flex shrink-0 gap-2">
-          {group.locale === "en" && (
-            <Link
-              to="/admin/vocabulary"
-              search={{ range: "30d", app: "kinetic-canvas", q: group.word }}
-              className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs hover:bg-muted"
-            >
-              <Pencil size={13} /> Edit word
-            </Link>
-          )}
+          <Link
+            to="/admin/library"
+            search={{
+              range: "30d",
+              app: "kinetic-canvas",
+              lang: group.locale === "en" ? undefined : group.locale,
+              word: group.wordId,
+            }}
+            className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs hover:bg-muted"
+          >
+            <Pencil size={13} /> Edit word
+          </Link>
           {isOpen ? (
             <button
               type="button"

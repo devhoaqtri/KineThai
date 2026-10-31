@@ -10,6 +10,7 @@
  */
 
 import { z } from "zod";
+import { TARGET_LOCALES, type TargetLocale } from "@/features/vocabulary/lib/target-language";
 
 /** Comma-separated multi-select axis, kept as a string so the URL stays readable. */
 const axis = z.string().max(240).optional();
@@ -34,6 +35,10 @@ export const adminSearchSchema = z.object({
   dir: z.enum(["asc", "desc"]).optional(),
   page: z.coerce.number().int().min(0).max(100_000).optional(),
   size: z.coerce.number().int().min(10).max(200).optional(),
+  // ── Word library ──
+  lang: z.enum(TARGET_LOCALES as [TargetLocale, ...TargetLocale[]]).optional(),
+  level: z.string().max(8).optional(),
+  word: z.string().max(80).optional(),
 });
 
 export type AdminSearch = z.infer<typeof adminSearchSchema>;

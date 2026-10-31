@@ -16,6 +16,10 @@ export const adminKeys = {
   errors: (from: string, to: string, mode: string, status?: string) =>
     [...adminKeys.all, "errors", from, to, mode, status ?? "all"] as const,
   wordReports: () => [...adminKeys.all, "word-reports"] as const,
+  library: () => [...adminKeys.all, "library"] as const,
+  libraryPage: (query: string) => [...adminKeys.library(), "page", query] as const,
+  libraryWord: (locale: string, id: string) =>
+    [...adminKeys.library(), "word", locale, id] as const,
   workbench: (query: string) => [...adminKeys.all, "workbench", query] as const,
   workbenchViews: () => [...adminKeys.all, "workbench-views"] as const,
   templates: () => [...adminKeys.all, "templates"] as const,

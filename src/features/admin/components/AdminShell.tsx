@@ -23,6 +23,7 @@ const NAV: { to: string; label: string; exact?: boolean }[] = [
   { to: "/admin", label: "Overview", exact: true },
   { to: "/admin/users", label: "Users" },
   { to: "/admin/content", label: "Content" },
+  { to: "/admin/library", label: "Word library" },
   { to: "/admin/vocabulary", label: "Vocabulary" },
   { to: "/admin/wordings", label: "Câu chữ" },
   { to: "/admin/reports", label: "Word reports" },
