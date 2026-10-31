@@ -1089,18 +1089,21 @@
   max-width: 100%;
 }
 .vocab-difficulty-band {
-  /* One fixed slot for every chip, single level ("A2") or band ("A1–A2") alike, so the
-     level names in the rows all begin on the same vertical line. Measured in em off the
-     chip's own type, so it stays correct if this 10px ever moves. */
+  /* One fixed slot for every chip, "A2" and "TOPIK 1–2" alike, so the level names
+     in the rows all begin on the same vertical line. Wide enough for the longest
+     band ("TOPIK 1–6"). Measured in em off the chip's own type. */
   display: inline-grid;
   place-items: center;
   box-sizing: border-box;
-  min-width: 5.6em;
-  padding: 1px 7px;
+  width: 9em;
+  padding: 1px 6px;
+  white-space: nowrap;
   border-radius: 999px;
   background: #ffffff29;
   color: #ffffffd9;
-  font-size: 10px;
+  /* 9.3px is about 7% under the 10px these chips were drawn at, and the em width
+     shrinks with it, so every chip stays one size and the longest band still fits. */
+  font-size: 9.3px;
   font-weight: 800;
   letter-spacing: 0.06em;
   /* The chip is also its row's progress loader: the fill below runs underneath the level

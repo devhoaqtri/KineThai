@@ -13,7 +13,7 @@
  *
  * Exports: DifficultyTrack, DIFFICULTY_TRACKS, DIFFICULTY_IDS, DIFFICULTY_ALL,
  *          LEVEL_SAMPLE_PRIORITY, tracksFor, CEFR_TRACKS, HSK_TRACKS, JLPT_TRACKS, TOPIK_TRACKS,
- *          difficultyLevels, formatLevelBand, countTrackWords,
+ *          difficultyLevels, formatLevelBand, formatLevelChip, countTrackWords,
  *          trackCeiling, isTrackAvailable
  * Depends on: ./schema, ./target-language
  */
@@ -461,22 +461,44 @@ export function difficultyLevels(
   return LEVELS.filter((level) => union.has(level));
 }
 
+/** "TOPIK1" is written "TOPIK 1"; every other level is already its own label. */
+function levelLabel(level: string): string {
+  const topik = /^TOPIK(\d+)$/.exec(level);
+  return topik ? `TOPIK ${topik[1]}` : level;
+}
+
 /**
- * Human-readable band for a dropdown row, e.g. "A1–A2", "HSK1–3" or "B2".
- * Every HSK level shares the "HSK" prefix, so the upper bound drops it.
+ * Human-readable band for a dropdown row, e.g. "A1–A2", "HSK1–3", "TOPIK 1–2" or "B2".
+ * HSK and TOPIK repeat a long prefix on every level, so a range writes that prefix once
+ * and the upper bound keeps only its number. TOPIK keeps a space before the number.
  * @param levels The track's level band
  * @returns A compact band label
  * @pure true
  */
 export function formatLevelBand(levels: readonly VocabularyLevel[]): string {
-  if (levels.length === 1) return levels[0];
+  if (levels.length === 1) return levelLabel(levels[0] ?? "");
   // Order by the canonical sequence, not by declaration order.
   const ordered = LEVELS.filter((level) => levels.includes(level));
   const first = ordered[0];
   const last = ordered[ordered.length - 1];
-  if (!first || !last || first === last) return first ?? "";
-  const hskTop = /^HSK(\d+)$/.exec(last)?.[1];
-  return first.startsWith("HSK") && hskTop ? `${first}–${hskTop}` : `${first}–${last}`;
+  if (!first || !last || first === last) return levelLabel(first ?? "");
+  const head = /^([A-Z]{2,})(\d+)$/.exec(first);
+  const tail = /^([A-Z]{2,})(\d+)$/.exec(last);
+  if (head && tail && head[1] === tail[1]) {
+    return head[1] === "TOPIK" ? `TOPIK ${head[2]}–${tail[2]}` : `${first}–${tail[2]}`;
+  }
+  return `${levelLabel(first)}–${levelLabel(last)}`;
+}
+
+/**
+ * The label drawn in a difficulty chip. Same words as the band; every chip is then
+ * given one shared width in CSS, so a short "A2" and a "TOPIK 1–2" occupy the same slot.
+ * @param levels The track's level band
+ * @returns The chip label
+ * @pure true
+ */
+export function formatLevelChip(levels: readonly VocabularyLevel[]): string {
+  return formatLevelBand(levels);
 }
 
 /**

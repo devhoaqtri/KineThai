@@ -24,6 +24,7 @@ import {
   DIFFICULTY_ALL,
   countTrackWords,
   formatLevelBand,
+  formatLevelChip,
   isTrackAvailable,
   trackCeiling,
   tracksFor,
@@ -99,7 +100,7 @@ export function DifficultyOnboarding({
     return {
       track,
       color: RUNG_COLORS[index % RUNG_COLORS.length]!,
-      band: formatLevelBand(track.levels),
+      band: formatLevelChip(track.levels),
       available,
       count: countTrackWords([track.id], metadata.levelCounts, metadata.levels),
       // The word comes from the track's hardest level: that is the level that sets it apart
@@ -252,7 +253,7 @@ export function DifficultyOnboarding({
           aria-valuemin={1}
           aria-valuemax={rungs.length}
           aria-valuenow={index + 1}
-          aria-valuetext={`${current.track.label}, ${current.band}`}
+          aria-valuetext={`${current.track.label}, ${formatLevelBand(current.track.levels)}`}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerEnd}

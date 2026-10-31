@@ -31,6 +31,7 @@ import { stylePool, themePool } from "../lib/presets";
 import {
   DIFFICULTY_ALL,
   formatLevelBand,
+  formatLevelChip,
   countTrackWords,
   difficultyLevels,
   tracksFor,
@@ -490,13 +491,13 @@ function buildDifficultyOptions(locale: TargetLocale): DifficultyOption[] {
       id: DIFFICULTY_ALL,
       label: "tất cả",
       hint: "Mọi trình độ",
-      band: formatLevelBand(allLevels),
+      band: formatLevelChip(allLevels),
     },
     ...tracks.map((track) => ({
       id: track.id,
       label: track.label,
       hint: track.hint,
-      band: formatLevelBand(track.levels),
+      band: formatLevelChip(track.levels),
     })),
   ];
 }
@@ -969,7 +970,7 @@ function DifficultyDropdown({
                                 data-empty={pack.catalog.levels.length ? undefined : true}
                               >
                                 {pack.catalog.levels.length
-                                  ? formatLevelBand(pack.catalog.levels)
+                                  ? formatLevelChip(pack.catalog.levels)
                                   : "Gói"}
                               </span>
                               <span className="vocab-pack-pick-name">{pack.catalog.name}</span>

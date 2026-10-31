@@ -11,6 +11,7 @@ import {
   countTrackWords,
   difficultyLevels,
   formatLevelBand,
+  formatLevelChip,
   isTrackAvailable,
   trackCeiling,
   tracksFor,
@@ -153,6 +154,16 @@ describe("formatLevelBand", () => {
     expect(formatLevelBand(["C1", "B1"])).toBe("B1–C1"));
   it("renders a wide HSK band", () =>
     expect(formatLevelBand(["HSK4", "HSK5", "HSK6"])).toBe("HSK4–6"));
+  it("writes TOPIK once, with a space before the number", () => {
+    expect(formatLevelBand(["TOPIK1"])).toBe("TOPIK 1");
+    expect(formatLevelBand(["TOPIK1", "TOPIK2"])).toBe("TOPIK 1–2");
+    expect(formatLevelBand(["TOPIK1", "TOPIK2", "TOPIK3"])).toBe("TOPIK 1–3");
+  });
+  it("uses that same label on the chip", () => {
+    expect(formatLevelChip(["TOPIK1"])).toBe("TOPIK 1");
+    expect(formatLevelChip(["TOPIK1", "TOPIK2"])).toBe("TOPIK 1–2");
+    expect(formatLevelChip(["A1", "A2"])).toBe("A1–A2");
+  });
   it("returns empty for no levels", () => expect(formatLevelBand([])).toBe(""));
 });
 
