@@ -8,7 +8,8 @@
  * struck in the same four metals as the streak medals (./streak-tiers), and the medal,
  * the celebration and the saved drawer's shelf all read the tier from here.
  *
- * Exports: ALL_SCOPE, progressScopes, scopeLabel, wordTier, wordBadgeTitle, wordBadgeBlurb
+ * Exports: ALL_SCOPE, progressScopes, scopeKind, scopeLabel, wordTier, wordBadgeTitle,
+ *   wordBadgeBlurb
  * Depends on: ./difficulty, ./level-ladder, ./level-progress, ./streak-tiers,
  *   ./target-language
  */
@@ -25,7 +26,8 @@ export const ALL_SCOPE = "all";
 
 /**
  * @param locale The host's deck locale
- * @returns Every scope progress is counted over, "all" first, and words per level
+ * @returns Every scope progress is counted over — "all" first, then each difficulty track,
+ *   then each single level ("A1", "HSK3") under its own id — and words per level
  */
 export function progressScopes(locale: TargetLocale): {
   scopes: ProgressScope[];
@@ -38,12 +40,23 @@ export function progressScopes(locale: TargetLocale): {
     const levels = difficultyLevels(track.id, ladder.levels);
     if (levels?.length) scopes.push({ id: track.id, levels });
   }
+  for (const level of ladder.levels) {
+    if ((ladder.levelCounts[level] ?? 0) > 0) scopes.push({ id: level, levels: [level] });
+  }
   return { scopes, levelCounts: ladder.levelCounts };
 }
 
-/** @returns "Tổng cộng", or the track's emoji and name; the id itself if unknown. */
+/** @returns What a scope id names: the whole set, one level, or a difficulty track. */
+export function scopeKind(scope: string, locale: TargetLocale): "all" | "level" | "track" {
+  if (scope === ALL_SCOPE) return "all";
+  return (levelLadderFor(locale).levels as readonly string[]).includes(scope) ? "level" : "track";
+}
+
+/** @returns "Tổng cộng", "Cấp B1", or the track's emoji and name; the id itself if unknown. */
 export function scopeLabel(scope: string, locale: TargetLocale): string {
-  if (scope === ALL_SCOPE) return "Tổng cộng";
+  const kind = scopeKind(scope, locale);
+  if (kind === "all") return "Tổng cộng";
+  if (kind === "level") return `Cấp ${scope}`;
   const track = tracksFor(locale).find((entry) => entry.id === scope);
   return track ? `${track.emoji} ${track.label}` : scope;
 }

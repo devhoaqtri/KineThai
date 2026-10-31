@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   ALL_SCOPE,
   progressScopes,
+  scopeKind,
   scopeLabel,
   wordBadgeBlurb,
   wordBadgeTitle,
@@ -48,7 +49,9 @@ describe("wordTier", () => {
 });
 
 describe("scopeLabel", () => {
-  it("names the whole set 'Tổng cộng'", () => expect(scopeLabel(ALL_SCOPE, "en")).toBe("Tổng cộng"));
+  it("names a single level by its code", () => expect(scopeLabel("B1", "en")).toBe("Cấp B1"));
+  it("names the whole set 'Tổng cộng'", () =>
+    expect(scopeLabel(ALL_SCOPE, "en")).toBe("Tổng cộng"));
   it("returns an unknown scope id verbatim", () =>
     expect(scopeLabel("no-such-scope", "en")).toBe("no-such-scope"));
   it("does not depend on locale for the all scope", () =>
@@ -86,10 +89,23 @@ describe("wordBadgeBlurb", () => {
       "zz",
     ));
   it("points to the next rung on an unfinished track", () =>
-    expect(wordBadgeBlurb(milestone({ scope: "zz", words: 100 }), "en")).toContain("mốc tiếp theo"));
+    expect(wordBadgeBlurb(milestone({ scope: "zz", words: 100 }), "en")).toContain(
+      "mốc tiếp theo",
+    ));
 });
 
 describe("progressScopes", () => {
+  it("adds one scope per level that has words, after the tracks", () => {
+    const { scopes, levelCounts } = progressScopes("en");
+    const levels = scopes.filter((scope) => scopeKind(scope.id, "en") === "level");
+    expect(levels.length).toBeGreaterThan(0);
+    for (const scope of levels) {
+      expect(scope.levels).toEqual([scope.id]);
+      expect(levelCounts[scope.levels[0]!]).toBeGreaterThan(0);
+    }
+    const kinds = scopes.map((scope) => scopeKind(scope.id, "en"));
+    expect(kinds.indexOf("level")).toBeGreaterThan(kinds.lastIndexOf("track"));
+  });
   it("lists the whole set first", () => {
     expect(progressScopes("en").scopes[0]!.id).toBe(ALL_SCOPE);
   });
@@ -107,7 +123,8 @@ describe("progressScopes", () => {
   it("only uses levels from the master ladder", () => {
     const { scopes } = progressScopes("en");
     for (const scope of scopes) {
-      for (const level of scope.levels) expect((LEVELS as readonly string[]).includes(level)).toBe(true);
+      for (const level of scope.levels)
+        expect((LEVELS as readonly string[]).includes(level)).toBe(true);
     }
   });
   it("the all scope covers every level the ladder offers", () => {

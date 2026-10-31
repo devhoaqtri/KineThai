@@ -9,7 +9,7 @@
  * The daily goals (./daily-goal) are drawn here too: each medal shows how many days it has
  * been earned, and the goal's size picks its metal.
  *
- * Exports: StreakTier, streakTier, STREAK_TIER_LABEL, streakBlurb, dailyTier,
+ * Exports: StreakTier, streakTier, STREAK_TIER_LABEL, streakBlurb, dailyTier, repeatTier,
  *   dailyBadgeTitle, dailyBadgeBlurb
  * Depends on: nothing
  */
@@ -67,6 +67,18 @@ export function dailyTier(goal: number): StreakTier {
   if (goal >= 50) return "gold";
   if (goal >= 25) return "silver";
   return "bronze";
+}
+
+/**
+ * @param of - Which short goal repeats: the daily goal, or a run of days
+ * @param base - The goal's words, or the run's days
+ * @param times - How many times it must be met
+ * @returns Its metal: always finer than the goal met once (bronze), finer still the longer
+ *   the run or the more days it asks for
+ */
+export function repeatTier(of: "daily" | "streak", base: number, times: number): StreakTier {
+  if (of === "daily") return times >= 20 ? "diamond" : times >= 10 ? "gold" : "silver";
+  return base >= 10 ? "gold" : "silver";
 }
 
 /** @param goal - Words in a day @param times - The count just reached @returns The headline */

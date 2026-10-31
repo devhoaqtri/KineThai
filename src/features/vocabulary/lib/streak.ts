@@ -21,8 +21,8 @@
  * render a badge — the hazard useSavedCount.ts exists to document.
  *
  * Exports: STREAK_KEY, STREAK_EVENT, DAY_MIN_WORDS, DAY_LIMIT, MILESTONES, StreakStore,
- *   parseStreak, recordFinishedWord, currentStreak, milestonesReached, readStreak,
- *   writeStreak, emptyStreak
+ *   parseStreak, recordFinishedWord, currentStreak, milestonesReached, streakRunsCompleted,
+ *   readStreak, writeStreak, emptyStreak
  * Depends on: ./day
  */
 
@@ -95,6 +95,27 @@ export function emptyStreak(): StreakStore {
  */
 export function milestonesReached(streak: number): number[] {
   return MILESTONES.filter((at) => streak >= at);
+}
+
+/**
+ * How many times a run of `length` days has been completed, over the days kept. A long run
+ * counts once per full stretch, so carrying on is never worse than breaking and starting
+ * over: nine days in a row are three 3-day runs.
+ * @param days - Qualifying days, newest first, unique (StreakStore.days)
+ * @param length - Days in one run
+ * @returns Completed runs
+ * @pure true
+ */
+export function streakRunsCompleted(days: readonly number[], length: number): number {
+  if (length <= 0) return 0;
+  let total = 0;
+  let run = 0;
+  for (let at = 0; at < days.length; at += 1) {
+    run = at > 0 && days[at] === previousDay(days[at - 1]!) ? run + 1 : 1;
+    const ends = at === days.length - 1 || days[at + 1] !== previousDay(days[at]!);
+    if (ends) total += Math.floor(run / length);
+  }
+  return total;
 }
 
 /**

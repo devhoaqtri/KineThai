@@ -11,6 +11,7 @@ import {
   parseStreak,
   readStreak,
   recordFinishedWord,
+  streakRunsCompleted,
   writeStreak,
   type StreakStore,
 } from "../streak";
@@ -333,7 +334,11 @@ describe("readStreak", () => {
   });
   it("degrades to an empty store when storage throws", () => {
     vi.stubGlobal("window", {
-      localStorage: { getItem: () => { throw new Error("blocked"); } },
+      localStorage: {
+        getItem: () => {
+          throw new Error("blocked");
+        },
+      },
     });
     vi.stubGlobal("localStorage", {
       getItem: () => {
@@ -370,5 +375,22 @@ describe("writeStreak", () => {
   });
   it("does nothing on the server where there is no window", () => {
     expect(() => writeStreak(storeFrom(consecutive(1), []))).not.toThrow();
+  });
+});
+
+describe("streakRunsCompleted", () => {
+  const run = (from: number, length: number) => Array.from({ length }, (_, i) => back(from + i));
+  it("counts each full stretch of a long run", () => {
+    expect(streakRunsCompleted(run(0, 9), 3)).toBe(3);
+    expect(streakRunsCompleted(run(0, 8), 3)).toBe(2);
+  });
+  it("adds up separate runs and never joins them across a gap", () => {
+    // 4 days, a missed day, then 2 days: one 3-day run, not two.
+    expect(streakRunsCompleted([...run(0, 4), ...run(5, 2)], 3)).toBe(1);
+    expect(streakRunsCompleted([...run(0, 3), ...run(4, 3)], 3)).toBe(2);
+  });
+  it("is zero with no days or no length", () => {
+    expect(streakRunsCompleted([], 3)).toBe(0);
+    expect(streakRunsCompleted(run(0, 5), 0)).toBe(0);
   });
 });
