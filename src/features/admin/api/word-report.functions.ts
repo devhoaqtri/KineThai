@@ -1,17 +1,18 @@
 /**
  * Admin server functions for anonymous word reports filed from the feed.
  *
- * Reports are grouped by word, because that is the unit an admin fixes: ten readers
- * tapping "meaning is wrong" on one card is one problem, not ten.
+ * Reports are grouped by word within a deck, because that is the unit an admin fixes: ten
+ * readers tapping "meaning is wrong" on one card is one problem, not ten. Word ids are only
+ * unique within a deck, so the same id in two languages is two groups.
  *
- * Exports: listWordReportGroups, updateWordReports, WordReportGroup, WordReportOverview
- * Depends on: fs/promises (catalog), zod, admin gates, vocabulary word-report store
+ * Exports: listWordReportGroups, updateWordReports, WordReportGroup, WordReportDeck,
+ *   WordReportOverview
+ * Depends on: zod, admin gates, vocabulary catalog and word-report store (both lazy)
  */
 
 import { createServerFn } from "@tanstack/react-start";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { z } from "zod";
+import { countDistinctReporters, getBlockedByLocale } from "@/features/vocabulary/lib/word-block";
 import {
   byReportPriority,
   isSevereReason,
@@ -19,12 +20,13 @@ import {
   type ReportStage,
   type WordReportStatus,
 } from "@/features/vocabulary/lib/word-report";
+import type { VocabularyWord as Word } from "@/features/vocabulary/lib/schema";
+import type { TargetLocale } from "@/features/vocabulary/lib/target-language";
 import { requireAdminAccess } from "../lib/admin-access";
 import { requireAdminContext } from "../lib/require-admin";
 
-const CATALOG_PATH = resolve(process.cwd(), "src/features/vocabulary/data/catalog.json");
-
 export type WordReportGroup = {
+  locale: TargetLocale;
   wordId: string;
   word: string;
   /** Current catalog text, so the report can be judged without leaving the page. */
@@ -38,6 +40,10 @@ export type WordReportGroup = {
     level: string | null;
   } | null;
   openCount: number;
+  /** Different readers behind the open reports; repeat taps from one reader count once. */
+  readers: number;
+  /** The feed is holding this word back until its reports are resolved. */
+  hidden: boolean;
   /** Open reports naming a severe reason ("nhạy cảm", "không ổn"): these lead the queue. */
   severeCount: number;
   resolvedCount: number;
@@ -50,34 +56,23 @@ export type WordReportGroup = {
   resolvedIds: string[];
 };
 
+/** One language's share of the queue. */
+export type WordReportDeck = {
+  locale: TargetLocale;
+  open: number;
+  /** Words hidden from this language's feed. */
+  urgent: number;
+};
+
 export type WordReportOverview = {
   /** Where reports are being read from in this environment. */
   store: "supabase" | "file";
   openTotal: number;
+  urgentTotal: number;
+  /** Every language with its own deck. */
+  decks: WordReportDeck[];
   groups: WordReportGroup[];
 };
-
-type CatalogWord = {
-  id: string;
-  word: string;
-  defVi?: string;
-  leadVi?: string;
-  anticipateVi?: string;
-  ipa?: string;
-  pos?: string;
-  level?: string;
-  usage?: Array<{ en: string; vi: string }>;
-};
-
-async function readCatalogWords(): Promise<Map<string, CatalogWord>> {
-  try {
-    const parsed = JSON.parse(await readFile(CATALOG_PATH, "utf-8")) as { words?: CatalogWord[] };
-    return new Map((parsed.words ?? []).map((word) => [word.id, word]));
-  } catch {
-    // A deployed build has no catalog file on disk; groups simply show no entry text.
-    return new Map();
-  }
-}
 
 function tally<T extends string>(values: T[]): { id: T; count: number }[] {
   const counts = new Map<T, number>();
@@ -87,26 +82,42 @@ function tally<T extends string>(values: T[]): { id: T; count: number }[] {
 
 /**
  * Every reported word, with its open reports summarised. Words with open reports come
- * first: those flagged with a severe reason at the top, then the most-reported; fully
- * resolved words follow.
+ * first: hidden ones at the top, then those flagged with a severe reason, then the
+ * most-reported; fully resolved words follow.
  */
 export const listWordReportGroups = createServerFn({ method: "GET" })
   .middleware([requireAdminAccess])
   .handler(async ({ context }): Promise<WordReportOverview> => {
     await requireAdminContext({ authUserId: context.userId });
-    const { listWordReports, wordReportStoreKind } =
+    const { listWordReports, listWordReportSignals, wordReportStoreKind } =
       await import("@/features/vocabulary/api/word-report-store.server");
-    const [reports, words] = await Promise.all([listWordReports(), readCatalogWords()]);
+    const { catalogFor, DECK_LOCALES } = await import("@/features/vocabulary/api/catalog.server");
+    // The signals are what the feed itself decides from, so "hidden" here cannot disagree
+    // with what readers are being served.
+    const [reports, signals] = await Promise.all([listWordReports(), listWordReportSignals()]);
+    const blocked = getBlockedByLocale(signals);
 
     const byWord = new Map<string, typeof reports>();
     for (const report of reports) {
-      byWord.set(report.wordId, [...(byWord.get(report.wordId) ?? []), report]);
+      const key = `${report.locale}:${report.wordId}`;
+      byWord.set(key, [...(byWord.get(key) ?? []), report]);
     }
-    const groups: WordReportGroup[] = [...byWord].map(([wordId, items]) => {
+    const decks = new Map<TargetLocale, Map<string, Word>>();
+    const deckWords = (locale: TargetLocale) => {
+      let words = decks.get(locale);
+      if (!words) {
+        words = new Map(catalogFor(locale).words.map((word) => [word.id, word]));
+        decks.set(locale, words);
+      }
+      return words;
+    };
+    const groups: WordReportGroup[] = [...byWord.values()].map((items) => {
+      const { locale, wordId } = items[0]!;
       const open = items.filter((item) => item.status === "new");
       const resolved = items.filter((item) => item.status === "resolved");
-      const entry = words.get(wordId);
+      const entry = deckWords(locale).get(wordId);
       return {
+        locale,
         wordId,
         word: entry?.word ?? items[0]?.word ?? wordId,
         entry: entry
@@ -121,6 +132,8 @@ export const listWordReportGroups = createServerFn({ method: "GET" })
             }
           : null,
         openCount: open.length,
+        readers: countDistinctReporters(signals, wordId, locale),
+        hidden: blocked.get(locale)?.has(wordId) ?? false,
         severeCount: open.filter((item) => item.reasons.some(isSevereReason)).length,
         resolvedCount: resolved.length,
         reasons: tally(open.flatMap((item) => item.reasons)),
@@ -136,6 +149,7 @@ export const listWordReportGroups = createServerFn({ method: "GET" })
     groups.sort(
       (a, b) =>
         Number(b.openCount > 0) - Number(a.openCount > 0) ||
+        Number(b.hidden) - Number(a.hidden) ||
         b.severeCount - a.severeCount ||
         b.openCount - a.openCount ||
         b.latestAt.localeCompare(a.latestAt),
@@ -143,6 +157,15 @@ export const listWordReportGroups = createServerFn({ method: "GET" })
     return {
       store: wordReportStoreKind(),
       openTotal: groups.reduce((total, group) => total + group.openCount, 0),
+      urgentTotal: groups.filter((group) => group.hidden).length,
+      decks: DECK_LOCALES.map((locale) => {
+        const own = groups.filter((group) => group.locale === locale);
+        return {
+          locale,
+          open: own.reduce((total, group) => total + group.openCount, 0),
+          urgent: own.filter((group) => group.hidden).length,
+        };
+      }),
       groups,
     };
   });
@@ -167,5 +190,9 @@ export const updateWordReports = createServerFn({ method: "POST" })
       data.status as WordReportStatus,
       actor.authUserId,
     );
+    // Resolving is what brings a hidden word back, so this process stops waiting on its cache.
+    const { invalidateBlockedWordIds } =
+      await import("@/features/vocabulary/api/word-block.server");
+    invalidateBlockedWordIds();
     return { changed };
   });

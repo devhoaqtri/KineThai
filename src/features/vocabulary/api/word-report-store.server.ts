@@ -25,8 +25,10 @@
 import { randomUUID } from "node:crypto";
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { TARGET_LOCALES, type TargetLocale } from "../lib/target-language";
 import {
   getReportReason,
+  isSevereReason,
   toReportStage,
   type ReportReasonId,
   type WordReport,
@@ -40,13 +42,21 @@ const FILE_CAP = 5000;
 const REPORT_KIND = "word_report";
 const APP_ID = "kinetic-canvas";
 
-type NewReport = Pick<WordReport, "wordId" | "word" | "reasons" | "stage"> & {
+type NewReport = Pick<WordReport, "locale" | "wordId" | "word" | "reasons" | "stage"> & {
   /** Opaque per-word reporter key, or null when the caller could not be distinguished. */
   reporter: string | null;
 };
 
-/** A stored report, as kept in the local file. The reporter key rides alongside. */
-type StoredReport = WordReport & { reporter?: string | null };
+/** A report as kept in the local file. The reporter key rides alongside. */
+type StoredReport = Omit<WordReport, "locale"> & { locale?: string; reporter?: string | null };
+
+/**
+ * A report's deck. One filed before reports carried a language is English: until then only
+ * English words could be reported at all.
+ */
+function deckOf(value: unknown): TargetLocale {
+  return (TARGET_LOCALES as readonly unknown[]).includes(value) ? (value as TargetLocale) : "en";
+}
 
 /** Which home is in use, for the admin page to say where it is reading from. */
 export function wordReportStoreKind(): "supabase" | "file" {
@@ -97,6 +107,7 @@ function fromRow(row: ErrorReportRow): WordReport {
     .filter((reason): reason is ReportReasonId => !!getReportReason(reason));
   return {
     id: row.id,
+    locale: deckOf(metadata.locale),
     wordId: String(metadata.word_id ?? ""),
     word: String(metadata.word ?? ""),
     reasons,
@@ -129,6 +140,7 @@ export async function addWordReport(report: NewReport): Promise<string> {
         message: `Word report: “${report.word}” — ${labels.join("; ")}`,
         metadata: {
           kind: REPORT_KIND,
+          locale: report.locale,
           word_id: report.wordId,
           word: report.word,
           reasons: report.reasons.join(","),
@@ -169,16 +181,19 @@ export async function listWordReports(): Promise<WordReport[]> {
     if (error) throw new Error(error.message);
     return (data ?? []).map(fromRow);
   }
-  return readFileStore();
+  return (await readFileStore()).map((report) => ({
+    ...report,
+    locale: deckOf(report.locale),
+  }));
 }
 
 /**
- * Just what the block rule needs: one row per report, no word text, no reasons.
+ * Just what the block rule needs: one row per report, no word text, no reason names.
  *
  * Kept separate from listWordReports because it is read on the feed's path rather than an
  * admin page — it must stay a narrow projection, and it must never become a reason to pull
  * report bodies into the request that serves a reader their next word.
- * @returns Every stored report reduced to {wordId, reporter, status}
+ * @returns Every stored report reduced to {locale, wordId, reporter, severe, status}
  */
 export async function listWordReportSignals(): Promise<WordReportSignal[]> {
   if (wordReportStoreKind() === "supabase") {
@@ -195,15 +210,21 @@ export async function listWordReportSignals(): Promise<WordReportSignal[]> {
     return (data ?? []).map((row) => {
       const metadata = (row.metadata ?? {}) as Record<string, unknown>;
       return {
+        locale: deckOf(metadata.locale),
         wordId: String(metadata.word_id ?? ""),
         reporter: typeof metadata.reporter === "string" ? metadata.reporter : null,
+        severe: String(metadata.reasons ?? "")
+          .split(",")
+          .some(isSevereReason),
         status: row.status === "resolved" ? ("resolved" as const) : ("new" as const),
       };
     });
   }
   return (await readFileStore()).map((report) => ({
+    locale: deckOf(report.locale),
     wordId: report.wordId,
     reporter: report.reporter ?? null,
+    severe: report.reasons.some(isSevereReason),
     status: report.status,
   }));
 }

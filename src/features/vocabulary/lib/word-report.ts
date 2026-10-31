@@ -8,15 +8,17 @@
  *
  * Two reasons are SEVERE: "nhạy cảm" (sensitive) and "không ổn" (not okay). They are not
  * about a mistake in the card but about whether it should be shown at all, so they are
- * tinted red where a reader picks them and go to the top of the admin's queue.
+ * tinted red where a reader picks them, go to the top of the admin's queue and take a word
+ * out of the feed sooner (./word-block).
  *
  * Exports: REPORT_REASONS, ReportReasonId, REPORT_REASON_IDS, getReportReason,
  *   SEVERE_REPORT_REASONS, isSevereReason, byReportPriority, toReportStage,
  *   wordReportSchema, WordReportInput, WordReport, WordReportStatus, MAX_REPORT_REASONS
- * Depends on: zod
+ * Depends on: zod, ./target-language (type)
  */
 
 import { z } from "zod";
+import type { TargetLocale } from "./target-language";
 
 /** Reasons a reader can tap, in the order they are offered. */
 export const REPORT_REASONS = [
@@ -110,6 +112,8 @@ export type WordReportStatus = "new" | "resolved";
 /** One stored report. */
 export type WordReport = {
   id: string;
+  /** The deck it was filed against. Ids are only unique within one deck. */
+  locale: TargetLocale;
   wordId: string;
   /** The word as it was spelled when reported, kept in case the entry is later edited. */
   word: string;

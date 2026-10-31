@@ -1,5 +1,5 @@
-/** Server-only merged catalog and per-locale paging. Exports: catalog, catalogFor, MAX_POSITION, readVocabularyPage, servedCatalogFor. Depends on: ../lib/catalog-source, ../lib/paging, ../lib/word-block. */
-import { catalog, catalogFor } from "../lib/catalog-source";
+/** Server-only merged catalog and per-locale paging. Exports: catalog, catalogFor, deckLocaleFor, DECK_LOCALES, MAX_POSITION, readVocabularyPage, servedCatalogFor. Depends on: ../lib/catalog-source, ../lib/paging, ../lib/word-block. */
+import { catalog, catalogFor, deckLocaleFor, DECK_LOCALES } from "../lib/catalog-source";
 import type { TargetLocale } from "../lib/target-language";
 import { readCatalogPage, MAX_POSITION } from "../lib/paging";
 import { getBlockDigest } from "../lib/word-block";
@@ -7,7 +7,7 @@ import { getBlockedWordIds } from "./word-block.server";
 import type { Catalog } from "../lib/schema";
 import type { FeedPage, FeedRequest } from "../types";
 
-export { catalog, catalogFor, MAX_POSITION };
+export { catalog, catalogFor, deckLocaleFor, DECK_LOCALES, MAX_POSITION };
 
 /** Last built served catalog per locale, keyed by the blocklist it was built from. */
 const servedCache = new Map<TargetLocale, { digest: string; catalog: Catalog }>();
@@ -24,12 +24,15 @@ const servedCache = new Map<TargetLocale, { digest: string; catalog: Catalog }>(
  *
  * With nothing blocked the digest is empty and the catalog is returned untouched, so the
  * ordinary case allocates nothing and the revision is exactly the deck's own.
+ *
+ * The digest is appended with no separator because a revision travels back as bounded hex
+ * (endpoint.server.ts); anything else would refuse every page after the first.
  * @param locale - answer language
  * @returns The catalog to page over
  */
 export function servedCatalogFor(locale: TargetLocale = "en"): Catalog {
   const full = catalogFor(locale);
-  const blocked = getBlockedWordIds();
+  const blocked = getBlockedWordIds(deckLocaleFor(locale));
   const digest = getBlockDigest(blocked);
   if (!digest) return full;
   const cached = servedCache.get(locale);
@@ -39,7 +42,7 @@ export function servedCatalogFor(locale: TargetLocale = "en"): Catalog {
     ...full,
     words,
     count: words.length,
-    revision: `${full.revision}-${digest}`,
+    revision: `${full.revision}${digest}`,
   };
   servedCache.set(locale, { digest, catalog: served });
   return served;

@@ -58,6 +58,7 @@ export function AdminShell(): React.ReactElement {
   // Open word reports from readers, so new ones are visible from any admin page.
   const wordReportsQuery = useQuery(adminWordReportsQueryOptions());
   const openWordReports = wordReportsQuery.data?.openTotal ?? 0;
+  const hiddenWords = wordReportsQuery.data?.urgentTotal ?? 0;
   const sse = useAdminSse(mode);
   const [lastUpdatedAt] = useState(() => Date.now());
   const updatedAt = healthQuery.dataUpdatedAt || lastUpdatedAt;
@@ -94,6 +95,11 @@ export function AdminShell(): React.ReactElement {
                 {item.to === "/admin/errors" && criticalCount > 0 ? (
                   <span className="ml-2 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] text-white">
                     {criticalCount}
+                  </span>
+                ) : null}
+                {item.to === "/admin/reports" && hiddenWords > 0 ? (
+                  <span className="ml-2 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] text-white">
+                    {hiddenWords}
                   </span>
                 ) : null}
                 {item.to === "/admin/reports" && openWordReports > 0 ? (

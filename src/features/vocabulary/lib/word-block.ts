@@ -15,8 +15,11 @@
  * This module is pure so the rule can be asserted without a database:
  * scripts/check-word-block.ts drives it directly.
  *
- * Exports: BLOCK_AFTER_DISTINCT_REPORTERS, WordReportSignal, getBlockedWordIds,
- *   getBlockDigest, countDistinctReporters
+ * The rule runs per deck. Word ids are only unique within one (`budget` is a German word and
+ * a French one), so reports in one language must never hide a word in another.
+ *
+ * Exports: BLOCK_AFTER_DISTINCT_REPORTERS, BLOCK_AFTER_SEVERE_REPORTERS, WordReportSignal,
+ *   getBlockedByLocale, getBlockedWordIds, getBlockDigest, countDistinctReporters
  * Depends on: none (leaf module)
  */
 
@@ -30,8 +33,18 @@
  */
 export const BLOCK_AFTER_DISTINCT_REPORTERS = 3;
 
+/**
+ * How many separate readers picking a severe reason hide a word.
+ *
+ * Lower because a severe report says the card should not be shown at all, so waiting for a
+ * third reader costs more than a correct word being held back for a while.
+ */
+export const BLOCK_AFTER_SEVERE_REPORTERS = 2;
+
 /** The only part of a stored report this rule looks at. */
 export type WordReportSignal = {
+  /** The deck the report was filed against. */
+  locale: string;
   wordId: string;
   /**
    * Opaque per-word reporter key, or null for a report filed before reporter keys existed
@@ -40,6 +53,8 @@ export type WordReportSignal = {
    * single source cross the threshold alone.
    */
   reporter: string | null;
+  /** The report named a severe reason. */
+  severe: boolean;
   /** Only an unresolved report counts; resolving is the admin verification that lifts it. */
   status: "new" | "resolved";
 };
@@ -48,40 +63,79 @@ export type WordReportSignal = {
  * How many distinct readers have an open report against this word.
  * @param reports - every stored signal, any word, any status
  * @param wordId - the word to count for
+ * @param locale - the deck it belongs to
  * @returns The number of distinct, non-null reporter keys among its open reports
  * @pure true
  */
 export function countDistinctReporters(
   reports: readonly WordReportSignal[],
   wordId: string,
+  locale: string,
 ): number {
   const seen = new Set<string>();
   for (const report of reports) {
-    if (report.wordId !== wordId || report.status !== "new" || !report.reporter) continue;
+    if (report.wordId !== wordId || report.locale !== locale) continue;
+    if (report.status !== "new" || !report.reporter) continue;
     seen.add(report.reporter);
   }
   return seen.size;
 }
 
 /**
- * Every word currently held back from the feed.
+ * Every word currently held back from the feed, per deck.
  * @param reports - every stored signal, any word, any status
- * @returns Word ids with at least BLOCK_AFTER_DISTINCT_REPORTERS distinct open reporters
+ * @returns Deck locale to word ids with at least BLOCK_AFTER_DISTINCT_REPORTERS distinct open
+ *   reporters, or BLOCK_AFTER_SEVERE_REPORTERS of them naming a severe reason
  * @pure true
  */
-export function getBlockedWordIds(reports: readonly WordReportSignal[]): Set<string> {
-  const byWord = new Map<string, Set<string>>();
+export function getBlockedByLocale(reports: readonly WordReportSignal[]): Map<string, Set<string>> {
+  const byWord = new Map<
+    string,
+    { locale: string; wordId: string; readers: Set<string>; severe: Set<string> }
+  >();
   for (const report of reports) {
     if (report.status !== "new" || !report.reporter) continue;
-    let reporters = byWord.get(report.wordId);
-    if (!reporters) byWord.set(report.wordId, (reporters = new Set()));
-    reporters.add(report.reporter);
+    const key = `${report.locale}\n${report.wordId}`;
+    let word = byWord.get(key);
+    if (!word) {
+      word = {
+        locale: report.locale,
+        wordId: report.wordId,
+        readers: new Set(),
+        severe: new Set(),
+      };
+      byWord.set(key, word);
+    }
+    word.readers.add(report.reporter);
+    if (report.severe) word.severe.add(report.reporter);
   }
-  const blocked = new Set<string>();
-  for (const [wordId, reporters] of byWord) {
-    if (reporters.size >= BLOCK_AFTER_DISTINCT_REPORTERS) blocked.add(wordId);
+  const blocked = new Map<string, Set<string>>();
+  for (const { locale, wordId, readers, severe } of byWord.values()) {
+    if (
+      readers.size < BLOCK_AFTER_DISTINCT_REPORTERS &&
+      severe.size < BLOCK_AFTER_SEVERE_REPORTERS
+    ) {
+      continue;
+    }
+    let words = blocked.get(locale);
+    if (!words) blocked.set(locale, (words = new Set()));
+    words.add(wordId);
   }
   return blocked;
+}
+
+/**
+ * The words held back from one deck.
+ * @param reports - every stored signal, any word, any status
+ * @param locale - the deck to read
+ * @returns Its blocked word ids
+ * @pure true
+ */
+export function getBlockedWordIds(
+  reports: readonly WordReportSignal[],
+  locale: string,
+): Set<string> {
+  return getBlockedByLocale(reports).get(locale) ?? new Set();
 }
 
 /**

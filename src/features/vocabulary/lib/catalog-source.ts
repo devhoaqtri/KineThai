@@ -9,13 +9,13 @@
  * Every catalog passes through withWordJoiners on its way in, so deck text that joins
  * the syllables of one word with `_` reaches readers as unbreakable text (./word-joiner).
  *
- * Exports: catalog (English), catalogFor
+ * Exports: catalog (English), catalogFor, deckLocaleFor, DECK_LOCALES
  * Depends on: ../data/catalog.json, ../data/packs/*.json, ../data/<locale>/*.json, ./schema, ./word-joiner
  */
 import baseCatalog from "../data/catalog.json";
 import type { Catalog } from "./schema";
 import { mergeCatalogs } from "./schema";
-import type { TargetLocale } from "./target-language";
+import { TARGET_LOCALES, type TargetLocale } from "./target-language";
 import { withWordJoiners } from "./word-joiner";
 
 function sorted(modules: Record<string, { default: Catalog }>): Catalog[] {
@@ -70,3 +70,17 @@ export function catalogFor(locale: TargetLocale): Catalog {
   byLocale[locale] = result;
   return result;
 }
+
+/**
+ * The deck a language really reads. One with no deck of its own reads English, so its
+ * reports and hidden words are the English deck's.
+ * @param locale Answer language. @returns `locale`, or "en" when it has no deck.
+ */
+export function deckLocaleFor(locale: TargetLocale): TargetLocale {
+  return catalogFor(locale) === catalog ? "en" : locale;
+}
+
+/** Every language with a deck of its own, English first. */
+export const DECK_LOCALES: readonly TargetLocale[] = TARGET_LOCALES.filter(
+  (locale) => deckLocaleFor(locale) === locale,
+);

@@ -4,13 +4,17 @@
  * The per-caller limit is NOT here: it is applied to every public route in src/start.ts,
  * which is where the budget for this path lives (RATE_LIMITS in lib/rate-limit.ts).
  *
+ * The deck comes from the host, like every other public route, so a report always names a
+ * word in the language the reader is actually reading.
+ *
  * Exports: wordReportPostResponse
- * Depends on: ../lib/word-report schema, catalog.server, word-report-store.server,
- *   lib/rate-limit
+ * Depends on: ../lib/word-report schema, ../lib/target-language, catalog.server,
+ *   word-report-store.server, lib/rate-limit
  */
 
 import { wordReportSchema, toReportStage } from "../lib/word-report";
-import { catalog } from "./catalog.server";
+import { resolveTarget } from "../lib/target-language";
+import { catalogFor, deckLocaleFor } from "./catalog.server";
 import { reporterDigest } from "./reporter-digest.server";
 import { invalidateBlockedWordIds } from "./word-block.server";
 import { addWordReport } from "./word-report-store.server";
@@ -24,8 +28,8 @@ function refuse(status: number, code: string, error: string): Response {
 
 /**
  * POST /api/public/word-report — { id, reasons[], stage? }.
- * Accepts only a known word and reasons from the fixed list; stores nothing about
- * who sent it.
+ * Accepts only a word in this host's deck and reasons from the fixed list; of the sender it
+ * stores only the reporter digest.
  * @param request - incoming POST
  * @returns JSON { ok: true } or a refusal with a code
  */
@@ -41,7 +45,9 @@ export async function wordReportPostResponse(request: Request): Promise<Response
 
   // The FULL catalog on purpose: a word already blocked is still reportable, so the
   // reports keep accruing for the admin who will read them.
-  const word = catalog.words.find((entry) => entry.id === parsed.data.id);
+  const host = request.headers.get("host") ?? new URL(request.url).host;
+  const locale = deckLocaleFor(resolveTarget(host));
+  const word = catalogFor(locale).words.find((entry) => entry.id === parsed.data.id);
   if (!word) return refuse(404, "UNKNOWN_WORD", "That word is not in the catalog");
   // The sliding-window limit that used to live here is applied for every public route in
   // src/start.ts. `callerKey` is still needed, for the reporter digest below.
@@ -49,6 +55,7 @@ export async function wordReportPostResponse(request: Request): Promise<Response
 
   try {
     await addWordReport({
+      locale,
       wordId: word.id,
       word: word.word,
       reasons: parsed.data.reasons,
