@@ -97,7 +97,9 @@ function keepFirstRuns(indexes: Iterable<number>, maxRuns: number): Set<number> 
  * Compute emphasizedwordindexes. A page of four words or fewer always ends with a
  * single highlighted word (limitShortSentenceEmphasis), whichever path chose it.
  * @param words - words argument
- * @param dataEmphasis - optional upstream annotation phrases; exact matches win over scoring
+ * @param dataEmphasis - optional upstream annotation phrases; exact matches win over scoring.
+ *   An empty list is a deliberate answer, not a missing one: nothing on this page glows
+ *   and the scoring below must not guess (vocabulary/lib/highlight-gate.ts sends it).
  * @param boundPhrases - optional phrases the source text marked as ONE word. They pick
  *   nothing by themselves; a highlight that lands on one syllable of such a word grows to
  *   cover all of it, exactly as it does for the curated compounds.
@@ -108,6 +110,7 @@ export function getEmphasizedWordIndexes(
   dataEmphasis?: string[],
   boundPhrases?: string[],
 ): Set<number> {
+  if (dataEmphasis?.length === 0) return new Set();
   const boundKeys = getEmphasisPhraseKeysForLayout(boundPhrases);
   const marked = getExactVietnameseMark(words, dataEmphasis, boundKeys);
   if (marked) return marked;

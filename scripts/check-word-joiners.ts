@@ -198,9 +198,10 @@ console.log("OK — a highlight never covers half a joined word");
   console.log("OK — a phrase mark is stripped and its edges are exposed");
 }
 
-// ── A shipped highlight is one syllable or one two-syllable "_" word.
-// Two syllables a space apart are two words, a "=" pair leans but is not one word,
-// and three syllables read as a clause even when joined.
+// ── A shipped mark is one syllable or two connected syllables.
+// Two syllables a space apart are two words, and three read as a clause even when
+// joined. A lone syllable is legal to write but never glows on its own: the highlight
+// gate (lib/highlight-gate.ts) takes the page's connected word instead.
 {
   const dataDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data");
   const decks = (dir: string): string[] =>
@@ -223,7 +224,7 @@ console.log("OK — a highlight never covers half a joined word");
         for (const match of String(entry[field] ?? "").matchAll(/\/([^/]+)\//g)) {
           marks += 1;
           const phrase = match[1]!.trim();
-          if (/[\s=|]/u.test(phrase) || phrase.split("_").length > 2) {
+          if (/[\s|]/u.test(phrase) || phrase.split(/[_=]/).length > 2) {
             offenders.push(`${relative(dataDir, file)} ${String(entry.id ?? entry.word)}.${field}: ${match[0]}`);
           }
         }
@@ -232,7 +233,7 @@ console.log("OK — a highlight never covers half a joined word");
   }
   assert.ok(marks > 0, "the shipped decks carry highlights");
   assert.deepEqual(offenders, [], `highlights that are not one word:\n${offenders.join("\n")}`);
-  console.log(`OK — all ${marks} shipped highlights are one syllable or one two-syllable "_" word`);
+  console.log(`OK — all ${marks} shipped marks are one syllable or two connected syllables`);
 }
 
 console.log("\nAll word-joiner checks passed.");

@@ -1,9 +1,17 @@
-/** Explicit clue stages and answer masking (never infer pages from line breaks). Exports: buildStages, completeUsage, splitEmphasisMarkers. Depends on: schema, word-joiner, hanzi script detection, kinetic-text emphasis types. */
+/** Explicit clue stages and answer masking (never infer pages from line breaks). Exports: buildStages, completeUsage, splitEmphasisMarkers. Depends on: schema, word-joiner, highlight-gate, hanzi script detection, kinetic-text emphasis types. */
 import type { EmphasisVariant } from "@/features/kinetic-text";
 import { answerPattern, type NarrativeStyle, type VocabularyWord } from "./schema";
 import { isHanAnswer, isJapaneseWord, isKoreanWord } from "./hanzi";
+import { gateHighlight } from "./highlight-gate";
 import { paginateText } from "@/features/post-player";
 import { splitWordJoiners, stripWordJoiners } from "./word-joiner";
+
+/**
+ * The stages written from a deck's Vietnamese clue fields, whose highlight passes the
+ * gate. The letters clue is composed here and glows its count; the usage page is in the
+ * answer language, where a syllable count means nothing.
+ */
+const GATED_STAGE_IDS = new Set(["lead", "definition", "anticipation"]);
 
 /**
  * Effect used for the starting initial on the letter-count clue. `frame` draws a
@@ -48,7 +56,10 @@ export type LearningStage = {
   secondary?: string;
   lang: "vi" | "en" | "zh" | "ja" | "ko";
   reveal?: boolean;
-  /** Emphasis phrases extracted from /word/ markers in the source text field. */
+  /**
+   * Emphasis phrases extracted from /word/ markers in the source text field. On a clue
+   * page this is what passed ./highlight-gate: one word, or an empty list for no highlight.
+   */
   dataEmphasis?: string[];
   /**
    * Words the source text joined (see ./word-joiner), each written with plain spaces.
@@ -284,6 +295,10 @@ export function buildStages(word: VocabularyWord, style: NarrativeStyle): Learni
       ...stage,
       id: `${stage.id}-${index}`,
       text,
+      // Per page: a mark pagination moved elsewhere leaves this page free to pick its own.
+      ...(GATED_STAGE_IDS.has(stage.id)
+        ? { dataEmphasis: gateHighlight(text, stage.dataEmphasis, stage.boundPhrases) }
+        : {}),
     }));
   });
 }

@@ -467,11 +467,12 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
   check(`a Han run can still be given one (${reached} of ${hanWords.length * 12})`, reached > 0);
 }
 
-// ── Shipped decks: the feed never draws a highlight that chains unrelated words.
-// Every Vietnamese page is put through the real selection function, exactly as
-// WordSequenceText calls it. A drawn run may hold no bare conjunction, may never pass
-// three syllables, and may only reach three when the deck itself wrote those three as
-// ONE `_` word — the generator's contract, now enforced on the reader's side too.
+// ── Shipped decks: a clue page glows one connected two-syllable word, or nothing.
+// Every clue page is put through the real selection function, exactly as WordSequenceText
+// calls it. What it draws must be exactly one run of exactly two syllables the deck wrote
+// connected with `_` or `=`, holding no bare conjunction. A page holding such a word may
+// not stay dark; a page holding none must. This restates vocabulary/lib/highlight-gate.ts
+// without importing it, so a broken gate cannot vouch for itself.
 {
   const dataDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data");
   const decks = (dir: string): string[] =>
@@ -485,58 +486,56 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
           : [],
     );
   const CONJUNCTIONS = new Set(["và", "hoặc", "nhưng"]);
-  // The player's own detector answers "Vietnamese-ish" to a bilingual deck page that
-  // merely contains one Vietnamese word. Only pages whose content tokens are majority
-  // Vietnamese reach the reader as Vietnamese, so only those are judged here.
-  const viMarked = (token: string) =>
-    /[ăâđêôơưĂÂĐÊÔƠƯ]/.test(token) ||
-    /[\u0300\u0301\u0303\u0309\u0323]/.test(token.normalize("NFD"));
-  const tokenKeys = (tokens: string[], indexes: number[]) =>
-    indexes.map((index) => getCompoundTokenKey(tokens[index] ?? ""));
+  const CLUE_STAGE = /^(lead|definition|anticipation)-\d+$/;
+  const hasRun = (haystack: string[], needle: string[]) =>
+    haystack.some((_, start) => needle.every((key, offset) => haystack[start + offset] === key));
   let pages = 0;
   let drawn = 0;
+  let dark = 0;
   const bad: string[] = [];
   for (const file of decks(dataDir)) {
     const catalog = JSON.parse(readFileSync(file, "utf8")) as { words?: unknown };
     if (!Array.isArray(catalog.words)) continue;
     for (const entry of catalog.words as Record<string, unknown>[]) {
       for (const stage of buildStages(entry as unknown as VocabularyWord, "detective")) {
+        if (!CLUE_STAGE.test(stage.id)) continue;
+        pages += 1;
         const tokens = getWords(stage.text);
-        if (!isLikelyVietnameseText(tokens.join(" "))) continue;
-        const content = tokens.filter((token) => /\p{L}|\p{N}/u.test(token));
-        if (
-          content.length === 0 ||
-          content.filter((token) => viMarked(token)).length * 2 < content.length
-        ) {
+        const pageKeys = tokens.map(getCompoundTokenKey);
+        const chains = getEmphasisPhraseKeysForLayout(stage.boundPhrases).filter((chain) =>
+          hasRun(pageKeys, chain),
+        );
+        const picked = [
+          ...getEmphasizedWordIndexes(tokens, stage.dataEmphasis, stage.boundPhrases),
+        ].sort((left, right) => left - right);
+        const where = `${relative(dataDir, file)} ${String(entry.id ?? entry.word)} ${stage.id}`;
+        if (picked.length === 0) {
+          dark += 1;
+          const eligible = chains.some(
+            (chain) => chain.length === 2 && !chain.some((key) => CONJUNCTIONS.has(key)),
+          );
+          if (eligible) bad.push(`${where} — dark, but "${chains.join(" | ")}" could glow`);
           continue;
         }
-        pages += 1;
-        const picked = getEmphasizedWordIndexes(tokens, stage.dataEmphasis, stage.boundPhrases);
-        for (const run of runsOf(picked, tokens)) {
-          drawn += 1;
-          const keys = tokenKeys(tokens, run);
-          const label = `${relative(dataDir, file)} ${String(entry.id ?? entry.word)}: "${keys.join(" ")}"`;
-          if (keys.some((key) => CONJUNCTIONS.has(key))) {
-            bad.push(`${label} — a conjunction inside the highlight`);
-          } else if (run.length > 3) {
-            bad.push(`${label} — longer than any declared word`);
-          } else if (run.length === 3) {
-            const declared = (stage.boundPhrases ?? []).some((phrase: string) => {
-              const keys2 = phrase.trim().split(/\s+/).map(getCompoundTokenKey);
-              return keys2.length === 3 && keys2.every((key, index) => key === keys[index]);
-            });
-            if (!declared) bad.push(`${label} — three syllables no "_" word declares`);
-          }
+        drawn += 1;
+        const keys = picked.map((index) => pageKeys[index] ?? "");
+        const label = `${where}: "${keys.join(" ")}"`;
+        if (keys.some((key) => CONJUNCTIONS.has(key))) {
+          bad.push(`${label} — a conjunction inside the highlight`);
+        } else if (keys.length !== 2 || picked[1] !== picked[0]! + 1) {
+          bad.push(`${label} — not exactly one two-syllable word`);
+        } else if (!chains.some((chain) => hasRun(chain, keys))) {
+          bad.push(`${label} — the deck did not connect these with "_" or "="`);
         }
       }
     }
   }
   check(
-    `shipped decks draw real highlights (${pages} Vietnamese pages, ${drawn} runs)`,
+    `shipped decks draw real highlights (${pages} clue pages, ${drawn} lit, ${dark} dark)`,
     pages > 1000 && drawn > 1000,
   );
   for (const line of bad.slice(0, 10)) console.error(`  ${line}`);
-  check(`no drawn run chains unrelated words (${bad.length} bad)`, bad.length === 0);
+  check(`every clue page passes the highlight gate (${bad.length} bad)`, bad.length === 0);
 }
 
 console.log(checks.join("\n"));
