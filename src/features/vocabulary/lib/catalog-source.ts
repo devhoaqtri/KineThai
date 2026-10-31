@@ -9,7 +9,7 @@
  * Every catalog passes through withWordJoiners on its way in, so deck text that joins
  * the syllables of one word with `_` reaches readers as unbreakable text (./word-joiner).
  *
- * Exports: catalog (English), catalogFor, withPackCefr, withKanaReadings
+ * Exports: catalog (English), catalogFor, deckLocaleFor, withPackCefr, withKanaReadings
  * Depends on: ../data/catalog.json, ../data/kana-readings.json, ../data/packs/*.json,
  *   ../data/<locale>/*.json, ./schema, ./word-joiner
  */
@@ -120,4 +120,13 @@ export function catalogFor(locale: TargetLocale): Catalog {
   const localized = withKanaReadings(result);
   byLocale[locale] = localized;
   return localized;
+}
+
+/**
+ * The deck a language really reads. One with no packs of its own reads English, so a
+ * report filed from it belongs to the English deck.
+ * @param locale Answer language. @returns `locale`, or "en" when it has no deck.
+ */
+export function deckLocaleFor(locale: TargetLocale): TargetLocale {
+  return locale !== "en" && sources[locale].length ? locale : "en";
 }

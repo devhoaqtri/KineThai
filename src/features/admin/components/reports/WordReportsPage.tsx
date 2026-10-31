@@ -111,7 +111,7 @@ export function WordReportsPage(): React.ReactElement {
         <ul className="space-y-3">
           {visible.map((group) => (
             <ReportCard
-              key={group.wordId}
+              key={`${group.locale}:${group.wordId}`}
               group={group}
               pending={mutation.isPending}
               onResolve={() => mutation.mutate({ ids: group.openIds, status: "resolved" })}
@@ -148,6 +148,9 @@ function ReportCard({
         <div className="min-w-0">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h3 className="text-lg font-semibold">{group.word}</h3>
+            <span className="rounded bg-muted px-1.5 py-0.5 text-[11px] font-medium uppercase text-muted-foreground">
+              {group.locale}
+            </span>
             {group.entry && (
               <span className="text-xs text-muted-foreground">
                 {[group.entry.ipa, group.entry.pos, group.entry.level].filter(Boolean).join(" · ")}
