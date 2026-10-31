@@ -1,7 +1,7 @@
 {
-  "revision": "1cabca774f77961b4e565dcf",
+  "revision": "d4239aa7308edd4ccc04744c",
   "name": "JLPT N301–N304",
-  "count": 348,
+  "count": 367,
   "topics": [
     "attention",
     "character",
@@ -127,6 +127,59 @@
       "shareCode": "E01"
     },
     {
+      "id": "shi-eb3943",
+      "word": "詩",
+      "meaningVi": "thơ",
+      "defVi": "Lời văn ngắn | có nhịp, có vần, | /gửi_gắm/ cảm_xúc.",
+      "leadVi": "Mỗi câu | đều gieo vần | như một khúc /du_dương/.",
+      "anticipateVi": "Cây bút /lãng_mạn/ đâu rồi?",
+      "pos": "noun",
+      "ipa": "し",
+      "topic": "study",
+      "topics": [
+        "study",
+        "emotion"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "_____を書くのが好きです。",
+          "vi": "Tôi thích viết thơ."
+        }
+      ],
+      "chars": 1,
+      "initial": "詩",
+      "grammar": {
+        "counter": "編",
+        "hanViet": "thi"
+      },
+      "shareCode": "PRH"
+    },
+    {
+      "id": "to-ed2567",
+      "word": "と",
+      "meaningVi": "và",
+      "defVi": "Từ dùng để /nối_liền/ | hai sự_vật | đứng ngang_hàng.",
+      "leadVi": "Bánh_mì | cùng trứng_gà, | bữa sáng /đơn_giản/ của mình.",
+      "anticipateVi": "Cả hai /đồng_hành/ nhé!",
+      "pos": "conj",
+      "ipa": "to",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "パン_____たまごを買いました。",
+          "vi": "Tôi đã mua bánh_mì và trứng."
+        }
+      ],
+      "chars": 1,
+      "initial": "と",
+      "shareCode": "A68"
+    },
+    {
       "id": "na-0851a5",
       "word": "名",
       "meaningVi": "tên",
@@ -226,6 +279,34 @@
       "shareCode": "S59"
     },
     {
+      "id": "so-7d8651",
+      "word": "相",
+      "meaningVi": "diện_mạo",
+      "defVi": "Vẻ bên ngoài | /biểu_lộ/ | tình_trạng của sự_vật.",
+      "leadVi": "Cuối thu, | phố_xá khoác lên | nét /se_lạnh/ đầu đông.",
+      "anticipateVi": "/Khung_cảnh/ đổi khác rồi!",
+      "pos": "noun",
+      "ipa": "そう",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "general"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "町は春の様_____を見せ始めました。",
+          "vi": "Thị_trấn | đã bắt_đầu mang | dáng_vẻ mùa=xuân."
+        }
+      ],
+      "chars": 1,
+      "initial": "相",
+      "grammar": {
+        "hanViet": "tướng"
+      },
+      "shareCode": "435"
+    },
+    {
       "id": "ba-314b9a",
       "word": "場",
       "meaningVi": "nơi, dịp",
@@ -275,6 +356,38 @@
         "hanViet": "đối"
       },
       "shareCode": "367"
+    },
+    {
+      "id": "naru-60d3b0",
+      "word": "生る",
+      "meaningVi": "ra quả",
+      "defVi": "Cây_cối | sau mùa hoa | cho quả /sum_suê/ trên cành.",
+      "leadVi": "Cuối hè, | cành cam ngoài vườn | /lúc_lỉu/ quả vàng.",
+      "anticipateVi": "Vườn nhà /bội_thu/ chưa?",
+      "pos": "verb",
+      "ipa": "なる",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "food"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "木に赤い実がたくさん_____ました。",
+          "vi": "Trên cây | quả đỏ ra rất nhiều, | lủng_lẳng khắp cành.",
+          "fill": "生り"
+        }
+      ],
+      "chars": 2,
+      "initial": "生",
+      "grammar": {
+        "verbInfo": {
+          "種類": "五段動詞",
+          "自他": "自動詞"
+        }
+      },
+      "shareCode": "AFF"
     },
     {
       "id": "mono-ff42d5",
@@ -1373,6 +1486,34 @@
       "shareCode": "CB1"
     },
     {
+      "id": "jishin-e60cb0",
+      "word": "自身",
+      "meaningVi": "bản_thân, chính mình",
+      "defVi": "Chính người đó, | không phải ai khác, | /nhấn_mạnh/ chủ_thể.",
+      "leadVi": "Chọn câu_lạc_bộ nào, | mình tự /cân_nhắc/ | rồi quyết.",
+      "anticipateVi": "Tự mình /gánh_vác/!",
+      "pos": "noun",
+      "ipa": "じしん",
+      "topic": "character",
+      "topics": [
+        "character",
+        "thinking"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "これは私_____で決めたことです。",
+          "vi": "Đây là điều | chính tôi đã quyết_định."
+        }
+      ],
+      "chars": 2,
+      "initial": "自",
+      "grammar": {
+        "hanViet": "tự thân"
+      },
+      "shareCode": "KTV"
+    },
+    {
       "id": "bubun-157186",
       "word": "部分",
       "meaningVi": "phần, bộ_phận",
@@ -1542,6 +1683,33 @@
         "hanViet": "ký sự"
       },
       "shareCode": "JPY"
+    },
+    {
+      "id": "chi-35537f",
+      "word": "地",
+      "meaningVi": "nền, đất",
+      "defVi": "Lớp màu nền | bên dưới | những /họa_tiết/ in lên.",
+      "leadVi": "Tấm khăn trắng tinh | thêu chi_chít | /hoa_văn/ đỏ.",
+      "anticipateVi": "/Trắng_tinh/ phía sau!",
+      "pos": "noun",
+      "ipa": "ち",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "白い_____に赤い字で書いてあります。",
+          "vi": "Dòng chữ đỏ | được viết trên nền trắng_tinh."
+        }
+      ],
+      "chars": 1,
+      "initial": "地",
+      "grammar": {
+        "hanViet": "địa"
+      },
+      "shareCode": "M08"
     },
     {
       "id": "chimu-2a7f0d",
@@ -1721,6 +1889,40 @@
         }
       },
       "shareCode": "CAD"
+    },
+    {
+      "id": "kodo-aa8b22",
+      "word": "行動",
+      "meaningVi": "hành_động",
+      "defVi": "Việc làm /cụ_thể/ | để thực_hiện | một ý_định.",
+      "leadVi": "Nghĩ mãi chẳng bằng | /xông_xáo/ | bắt_tay làm ngay.",
+      "anticipateVi": "Đừng /chần_chừ/ nữa!",
+      "pos": "noun",
+      "ipa": "こうどう",
+      "topic": "character",
+      "topics": [
+        "character"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "考える前に_____するタイプです。",
+          "vi": "Tôi là kiểu người | hành_động trước khi nghĩ."
+        }
+      ],
+      "chars": 2,
+      "initial": "行",
+      "grammar": {
+        "hanViet": "hành động",
+        "verbInfo": {
+          "種類": "サ変動詞",
+          "自他": "自動詞"
+        },
+        "honorific": {
+          "尊敬語": "行動なさる"
+        }
+      },
+      "shareCode": "MB2"
     },
     {
       "id": "jitsuwa-a6bccc",
@@ -3386,6 +3588,34 @@
       "shareCode": "1E2"
     },
     {
+      "id": "yaku-fc468d",
+      "word": "役",
+      "meaningVi": "vai_trò, vai",
+      "defVi": "Phần /nhiệm_vụ/ | mà một người | đảm_nhận trong nhóm.",
+      "leadVi": "Kịch cuối năm, | mình được /phân_công/ | đóng chú=thỏ.",
+      "anticipateVi": "Kéo màn, /diễn_viên/ ra chào!",
+      "pos": "noun",
+      "ipa": "やく",
+      "topic": "work",
+      "topics": [
+        "work",
+        "society"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "私の_____をしっかりやりましょう。",
+          "vi": "Hãy làm tốt | vai_trò của mình."
+        }
+      ],
+      "chars": 1,
+      "initial": "役",
+      "grammar": {
+        "hanViet": "dịch"
+      },
+      "shareCode": "6XC"
+    },
+    {
       "id": "matsuri-e87bf4",
       "word": "祭",
       "meaningVi": "lễ_hội",
@@ -3741,6 +3971,61 @@
         }
       },
       "shareCode": "YVT"
+    },
+    {
+      "id": "kyu-1f75ff",
+      "word": "級",
+      "meaningVi": "cấp, cấp_độ",
+      "defVi": "Bậc /trình_độ/ | trong một kỳ thi | hay môn_học.",
+      "leadVi": "Thi đậu bơi | bậc mới, | được thêm /chứng_chỉ/ treo tường.",
+      "anticipateVi": "Leo thêm một /bậc_thang/!",
+      "pos": "noun",
+      "ipa": "きゅう",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "水_泳の_____が一つ上がりました。",
+          "vi": "Cấp_độ bơi của tôi | đã lên một bậc."
+        }
+      ],
+      "chars": 1,
+      "initial": "級",
+      "grammar": {
+        "hanViet": "cấp"
+      },
+      "shareCode": "J4Y"
+    },
+    {
+      "id": "kyu-068402",
+      "word": "球",
+      "meaningVi": "quả cầu, hình_cầu",
+      "defVi": "Vật /tròn_trịa/ | mọi phía, | như quả=bóng hay hòn=bi.",
+      "leadVi": "Lăn hoài trên bàn, | không /góc_cạnh/ nào cả.",
+      "anticipateVi": "Tròn vo /lăn_lóc/ khắp sàn!",
+      "pos": "noun",
+      "ipa": "きゅう",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "ガラスの_____が光っています。",
+          "vi": "Quả cầu thủy_tinh | đang lấp_lánh."
+        }
+      ],
+      "chars": 1,
+      "initial": "球",
+      "grammar": {
+        "counter": "個",
+        "hanViet": "cầu"
+      },
+      "shareCode": "TXT"
     },
     {
       "id": "kodo-945ee5",
@@ -5199,6 +5484,41 @@
       "shareCode": "ACC"
     },
     {
+      "id": "tsukeru-3d69f4",
+      "word": "着ける",
+      "meaningVi": "đeo vào",
+      "defVi": "Đeo đồ /trang_sức/ | hay phụ_kiện | lên người.",
+      "leadVi": "Trước giờ họp, | bố thắt /cà_vạt/ | thật ngay_ngắn.",
+      "anticipateVi": "Chọn đôi /hoa_tai/ xinh nào!",
+      "pos": "verb",
+      "ipa": "つける",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "父は毎_朝ネクタイを_____います。",
+          "vi": "Sáng nào bố cũng | thắt cà_vạt.",
+          "fill": "着けて"
+        }
+      ],
+      "chars": 3,
+      "initial": "着",
+      "grammar": {
+        "verbInfo": {
+          "種類": "一段動詞",
+          "自他": "他動詞"
+        },
+        "honorific": {
+          "尊敬語": "お着けになる",
+          "謙譲語": "お着けする"
+        }
+      },
+      "shareCode": "B22"
+    },
+    {
       "id": "masaka-d6ca95",
       "word": "まさか",
       "meaningVi": "không lẽ nào",
@@ -6023,6 +6343,35 @@
         }
       },
       "shareCode": "1AA"
+    },
+    {
+      "id": "kisha-4fd593",
+      "word": "記者",
+      "meaningVi": "phóng_viên",
+      "defVi": "Người đi /tìm_hiểu/ | rồi viết tin | cho tờ báo.",
+      "leadVi": "Cầm sổ_tay, | bạn ấy /phỏng_vấn/ | thầy hiệu_trưởng.",
+      "anticipateVi": "Tờ báo /trường_học/ ra số mới!",
+      "pos": "noun",
+      "ipa": "きしゃ",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "学_校新_聞の_____になりました。",
+          "vi": "Tôi trở_thành | phóng_viên báo trường."
+        }
+      ],
+      "chars": 2,
+      "initial": "記",
+      "grammar": {
+        "counter": "人",
+        "hanViet": "ký giả"
+      },
+      "shareCode": "660"
     },
     {
       "id": "chika-95f725",
@@ -7318,6 +7667,38 @@
       "shareCode": "FWY"
     },
     {
+      "id": "okoru-758438",
+      "word": "起こる",
+      "meaningVi": "xảy_ra",
+      "defVi": "Một sự_việc | bất_chợt /xuất_hiện/ | hay diễn ra.",
+      "leadVi": "Đang họp | thì máy chiếu bỗng tắt, | ai cũng /ngạc_nhiên/.",
+      "anticipateVi": "Ồ, /sự_cố/ gì vậy?",
+      "pos": "verb",
+      "ipa": "おこる",
+      "topic": "general",
+      "topics": [
+        "general",
+        "daily"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "きのう、学_校でおもしろいことが_____ました。",
+          "vi": "Hôm=qua ở trường | đã xảy_ra chuyện thú_vị.",
+          "fill": "起こり"
+        }
+      ],
+      "chars": 3,
+      "initial": "起",
+      "grammar": {
+        "verbInfo": {
+          "種類": "五段動詞",
+          "自他": "自動詞 ↔ 起こす"
+        }
+      },
+      "shareCode": "AT1"
+    },
+    {
       "id": "kei-0c3977",
       "word": "計",
       "meaningVi": "tổng_cộng",
@@ -7831,6 +8212,34 @@
       "shareCode": "5KZ"
     },
     {
+      "id": "jinko-4d3063",
+      "word": "人工",
+      "meaningVi": "nhân_tạo",
+      "defVi": "Do người /chế_tạo/, | không có sẵn | trong tự_nhiên.",
+      "leadVi": "Cỏ sân bóng | xanh quanh năm, | sờ mới biết /đồ_giả/.",
+      "anticipateVi": "Máy_móc /mô_phỏng/ khéo ghê!",
+      "pos": "noun",
+      "ipa": "じんこう",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "nature"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "これは_____のみずうみです。",
+          "vi": "Đây là | hồ nhân_tạo."
+        }
+      ],
+      "chars": 2,
+      "initial": "人",
+      "grammar": {
+        "hanViet": "nhân công"
+      },
+      "shareCode": "Q00"
+    },
+    {
       "id": "katsuyo-6d609a",
       "word": "活用",
       "meaningVi": "tận_dụng",
@@ -7943,6 +8352,34 @@
       "shareCode": "J6F"
     },
     {
+      "id": "ishi-9f58a8",
+      "word": "意思",
+      "meaningVi": "ý_định",
+      "defVi": "Điều mình /mong_muốn/ | và định làm, | do tự quyết.",
+      "leadVi": "Muốn học vẽ hay không, | con tự /quyết_định/ nhé.",
+      "anticipateVi": "Nói ra /nguyện_vọng/ đi!",
+      "pos": "noun",
+      "ipa": "いし",
+      "topic": "thinking",
+      "topics": [
+        "thinking",
+        "communication"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "じぶんの_____をはっきり伝えましょう。",
+          "vi": "Hãy nói rõ | ý_muốn của mình."
+        }
+      ],
+      "chars": 2,
+      "initial": "意",
+      "grammar": {
+        "hanViet": "ý tư"
+      },
+      "shareCode": "CAJ"
+    },
+    {
       "id": "tasho-5d0b41",
       "word": "多少",
       "meaningVi": "ít_nhiều",
@@ -8029,6 +8466,64 @@
         "hanViet": "tả hữu"
       },
       "shareCode": "APM"
+    },
+    {
+      "id": "igai-a47ce5",
+      "word": "意外",
+      "meaningVi": "bất_ngờ",
+      "defVi": "Khác hẳn | với điều mình /dự_đoán/ | từ trước.",
+      "leadVi": "Ông chú /nghiêm_nghị/ | hóa ra | lại hát rất hay.",
+      "anticipateVi": "Ồ, chuyện này /kỳ_lạ/ ghê!",
+      "pos": "adj",
+      "ipa": "いがい",
+      "topic": "emotion",
+      "topics": [
+        "emotion",
+        "thinking"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "テストは_____にかんたんでした。",
+          "vi": "Bài kiểm_tra | dễ một cách bất_ngờ."
+        }
+      ],
+      "chars": 2,
+      "initial": "意",
+      "grammar": {
+        "hanViet": "ý ngoại",
+        "verbInfo": {
+          "種類": "な形容詞"
+        }
+      },
+      "shareCode": "EHC"
+    },
+    {
+      "id": "kagaku-c55e33",
+      "word": "化学",
+      "meaningVi": "hóa_học",
+      "defVi": "Môn khoa_học về chất | và sự /biến_đổi/ của chúng.",
+      "leadVi": "Nhỏ vài giọt vào ống, | nước bỗng /sủi_bọt/ | đổi màu.",
+      "anticipateVi": "Pha /dung_dịch/ cẩn_thận nhé!",
+      "pos": "noun",
+      "ipa": "かがく",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "兄は大_学で_____を勉_強しています。",
+          "vi": "Anh_trai tôi | học hóa_học ở đại_học."
+        }
+      ],
+      "chars": 2,
+      "initial": "化",
+      "grammar": {
+        "hanViet": "hóa học"
+      },
+      "shareCode": "BE2"
     },
     {
       "id": "gokei-b5c191",
@@ -8920,6 +9415,33 @@
       "shareCode": "N7R"
     },
     {
+      "id": "shotai-025499",
+      "word": "正体",
+      "meaningVi": "danh_tính thật",
+      "defVi": "Bản_chất thật | ẩn sau | lớp vỏ /bề_ngoài/.",
+      "leadVi": "Cuối buổi /hóa_trang/, | người mặc đồ gấu | tháo mũ ra.",
+      "anticipateVi": "Ai đứng sau /mặt_nạ/?",
+      "pos": "noun",
+      "ipa": "しょうたい",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "物_語の最_後に、ねこの_____がわかりました。",
+          "vi": "Cuối câu_chuyện, | thân_phận thật của chú mèo | được tiết_lộ."
+        }
+      ],
+      "chars": 2,
+      "initial": "正",
+      "grammar": {
+        "hanViet": "chính thể"
+      },
+      "shareCode": "9V7"
+    },
+    {
       "id": "ondo-4e683b",
       "word": "温度",
       "meaningVi": "nhiệt_độ",
@@ -9254,6 +9776,33 @@
       "chars": 3,
       "initial": "ダ",
       "shareCode": "PXK"
+    },
+    {
+      "id": "kimi-1f3963",
+      "word": "気味",
+      "meaningVi": "hơi, có vẻ",
+      "defVi": "Hơi có /dấu_hiệu/ | của một trạng_thái | nào đó.",
+      "leadVi": "Sáng dậy | cổ_họng hơi rát, | người /uể_oải/.",
+      "anticipateVi": "Mũi nghẹt, /sụt_sịt/ rồi!",
+      "pos": "noun",
+      "ipa": "きみ",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "N3",
+      "usage": [
+        {
+          "en": "少しかぜ_____です。",
+          "vi": "Tôi thấy | hơi bị cảm."
+        }
+      ],
+      "chars": 2,
+      "initial": "気",
+      "grammar": {
+        "hanViet": "khí vị"
+      },
+      "shareCode": "SFM"
     },
     {
       "id": "mame-c22f91",

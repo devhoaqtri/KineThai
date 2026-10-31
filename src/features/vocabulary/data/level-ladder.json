@@ -105,10 +105,12 @@
   },
   "zh": {
     "levels": [
-      "HSK1"
+      "HSK1",
+      "HSK2"
     ],
     "levelCounts": {
-      "HSK1": 484
+      "HSK1": 484,
+      "HSK2": 89
     },
     "levelSamples": {
       "HSK1": [
@@ -124,15 +126,31 @@
         {
           "word": "了"
         }
+      ],
+      "HSK2": [
+        {
+          "word": "啊"
+        },
+        {
+          "word": "让"
+        },
+        {
+          "word": "但"
+        },
+        {
+          "word": "自己"
+        }
       ]
     }
   },
   "ko": {
     "levels": [
-      "TOPIK1"
+      "TOPIK1",
+      "TOPIK2"
     ],
     "levelCounts": {
-      "TOPIK1": 778
+      "TOPIK1": 778,
+      "TOPIK2": 353
     },
     "levelSamples": {
       "TOPIK1": [
@@ -148,19 +166,49 @@
         {
           "word": "되다"
         }
+      ],
+      "TOPIK2": [
+        {
+          "word": "수"
+        },
+        {
+          "word": "않다"
+        },
+        {
+          "word": "때문"
+        },
+        {
+          "word": "말하다"
+        }
       ]
     }
   },
   "ja": {
     "levels": [
       "N5",
-      "N4"
+      "N4",
+      "N3"
     ],
     "levelCounts": {
-      "N4": 247,
+      "N3": 367,
+      "N4": 228,
       "N5": 681
     },
     "levelSamples": {
+      "N3": [
+        {
+          "word": "野"
+        },
+        {
+          "word": "田"
+        },
+        {
+          "word": "他"
+        },
+        {
+          "word": "出"
+        }
+      ],
       "N4": [
         {
           "word": "葉"
