@@ -3,6 +3,9 @@
 > **Update.** There are now three marks, not one. `_` still means "one word"; `=` binds two
 > words that must share a line but are not one word; `|` marks a phrase edge. Sections 1-4
 > below describe `_`, and section 11 describes the other two.
+>
+> **Highlights:** [highlight-generation-rule.md](highlight-generation-rule.md) is the strict
+> rule and wins over anything here.
 
 **For:** any model or script that writes text for a vocabulary deck (the word crawler, the
 admin "regenerate" action, a future generator for another language).
@@ -92,15 +95,14 @@ one.
 - **Punctuation** stays outside, attached to the last syllable: `ba_lô,` `quan_trọng.`
   `"cà_phê!"`
 - **Highlights** `/…/` wrap whole words, with the join inside: `/quan_trọng/`. Never
-  `/quan/_trọng` or `/quan_/trọng`. A Vietnamese clue page glows **exactly one word of
-  exactly two syllables the text connects** with `_` or `=` (`/quan_trọng/`). Write the
-  mark on that word. Never `/nắng gắt/` (two words), never three syllables, even joined
-  (`/thời_khóa_biểu/` cannot glow; highlight another word). `check:word-joiners` fails a
-  shipped deck that breaks this. A lone-syllable mark (`/gắt/`) passes that check but
-  **does not glow**: the reader's gate (`lib/highlight-gate.ts`) picks a connected word
-  on the page instead. **A sentence with no two-syllable connected word stays dark**, so
-  every clue sentence should contain one. (The admin regenerate prompt uses `*…*` for
-  the same thing; the same rule applies.)
+  `/quan/_trọng` or `/quan_/trọng`. A Vietnamese clue page glows **only a word written
+  inside `/…/`, as exactly two connected syllables** (`/quan_trọng/`). A join alone never
+  glows, and the reader never picks a word for you. Never `/nắng gắt/` (two words), never
+  three syllables, even joined (`/thời_khóa_biểu/` cannot glow; highlight another word).
+  `check:word-joiners` fails a shipped deck that breaks this. A lone-syllable mark
+  (`/gắt/`) passes that check but **does not glow** (`lib/highlight-gate.ts`). **A sentence
+  with no valid mark stays dark**, so every clue sentence needs one. (The admin regenerate
+  prompt uses `*…*` for the same thing; the same rule applies.)
 - **The answer blank** is a run of underscores standing alone, written `____`. It is not
   a join. Never attach a blank to a word (`từ____`) and never write a blank as a single
   underscore: the app reads two or more in a row as the blank, and one as nothing.
@@ -122,7 +124,7 @@ joined the Chinese way). The legacy `emphasis` array may be written either way.
 | `điều quan _trọng` / `quan_ trọng` | a space next to the join; it is no longer a join | `điều quan_trọng`          |
 | `/quan/_trọng lắm`                 | highlight cuts through a word                    | `/quan_trọng/ lắm`         |
 | `dưới /nắng gắt/`                  | highlight covers two unconnected words           | `dưới /ánh_nắng/ gắt`      |
-| `dán /thời_khóa_biểu/`             | highlight of three syllables                     | `/dán/ thời_khóa_biểu`     |
+| `dán /thời_khóa_biểu/`             | highlight of three syllables                     | `dán /lịch_học/`           |
 | `gầm_giường_nín_thở`               | a whole phrase joined; cannot wrap               | `gầm giường nín thở`       |
 | `Cô ấy rất _.`                     | single underscore used as a blank                | `Cô ấy rất ____.`          |
 | `他是一个很诚实的学生。`           | `诚实` and `学生` can each be split              | `他是一个很诚_实的学_生。` |
@@ -151,15 +153,10 @@ words with one space.
 - Chinese: join the characters of each multi-character word (诚_实, 图_书_馆).
 - Never join two different words (not ăn_cơm, not rất_đẹp). Never join more than four
   syllables. When unsure, leave a space.
-- Punctuation stays outside the join (ba_lô, not ba_lô_,). A highlight is exactly one
-  word of exactly two connected syllables (/quan_trọng/); never one syllable, never two
-  separate words, never three syllables. The answer blank is ____ and is never attached
-  to a word.
-- Every clue sentence (defVi, leadVi, anticipateVi) contains at least one such word, or it
-  shows no highlight at all.
-- Every `emphasisVi` phrase is exactly ONE two-syllable connected group of the text it
-  sits in. Never glue a collocation to make it look like one word (not mua_và_bán, not
-  không_có_việc), and never let a phrase hold và, hoặc or nhưng.
+- Punctuation stays outside the join (ba_lô, not ba_lô_,). The answer blank is ____ and is
+  never attached to a word.
+- Highlights: paste the rules from docs/highlight-generation-rule.md here too. Every clue
+  field needs exactly one /x_y/ mark on a real two-syllable word.
 - Use no underscore for any other purpose.
 - Length limits count syllables: ba_lô is two.
 ```
@@ -179,9 +176,9 @@ words with one space.
   - no `/_`, `_/`, `*_` or `_*`;
   - no joined unit longer than four syllables;
   - no join between two Hangul characters, none touching Hiragana or Katakana;
-  - each `emphasisVi` phrase equals exactly one two-syllable connected group of the field
-    it highlights and never holds và, hoặc or nhưng — the reader's own guard proves it on
-    every shipped page: `npm run check:emphasis-runs`.
+  - each field carries one `/…/` mark of two connected syllables, holding no và, hoặc or
+    nhưng. The reader's own guard proves it on every shipped page:
+    `npm run check:emphasis-runs`.
 - **Existing decks** (200 words, 800 Vietnamese fields at the time of writing) have no
   joins. They render as before until they are regenerated or annotated.
 
@@ -218,11 +215,10 @@ verb-object pair (`ăn=cơm`). Linguistically these are clitics; the symbol is t
 glossing rules' clitic boundary.
 
 It breaks exactly like `_` — encoded to a no-break space, reported in `bound`, never split
-across lines. The reader cannot tell the two apart once a deck is loaded, so both are one
-connected group to the highlight gate: `con=mèo` may glow when the page offers nothing
-better. A generator should still mark the `_` word, because `con mèo` is a classifier plus
-a noun, not a phrase worth glowing. A chain mixing the two (`đã=bắt_chuyện`) glows only if
-a mark picks the word out of it; three connected syllables never glow whole.
+across lines. The reader cannot tell the two apart once a deck is loaded, so the highlight
+gate accepts a mark on either, but nothing glows without a mark. A generator marks a `_`
+word: `con mèo` is a classifier plus a noun, not a word worth glowing. In a chain
+(`đã=/bắt_chuyện/`) the mark picks the word out; three connected syllables never glow whole.
 
 ### `|` — phrase edge
 
