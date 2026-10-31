@@ -38,6 +38,7 @@ import {
 import { getWideRevealY, isShortViewport } from "../lib/landscape-geometry";
 import { buildStages } from "../lib/stages";
 import { DeckLocaleContext } from "../lib/deck-locale";
+import { requestDurableStorage } from "../lib/durable-storage";
 import { getExportStageBox, type CardExportLayout } from "../lib/export-layout";
 import { siteBrand } from "../lib/target-language";
 import { hasReportedWord } from "../lib/reported-words";
@@ -850,7 +851,10 @@ export function VocabularyCard({
       // counter itself when the reaction turns on.
       const turningOn = !hasReaction(wordId, kind);
       // The saved pages have no deck to look the word up in, so they keep this copy.
-      if (turningOn) rememberWord(entry.word);
+      if (turningOn) {
+        rememberWord(entry.word);
+        requestDurableStorage();
+      }
       flipReaction(wordId, kind);
       readLocalReactions();
       if (turningOn) {

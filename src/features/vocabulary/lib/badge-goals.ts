@@ -26,7 +26,7 @@ import {
   type ProgressScope,
 } from "./level-progress";
 import type { VocabularyLevel } from "./schema";
-import { DAY_MIN_WORDS, MILESTONES, streakRunsCompleted } from "./streak";
+import { DAY_MIN_WORDS, MILESTONES, STREAK_REPEATS, streakRunsCompleted } from "./streak";
 import { DAILY_GOALS, type DailyGoal } from "./daily-goal";
 import type { TargetLocale } from "./target-language";
 import { ALL_SCOPE, scopeLabel } from "./word-badges";
@@ -45,8 +45,7 @@ export type BadgeGoal =
 
 /** The daily goal that repeats, and how many days met earn each badge. */
 export const DAILY_REPEATS = { goal: 10, times: [5, 10, 20] } as const;
-/** Run length in days → completed runs that earn its repeat badge. */
-export const STREAK_REPEATS: Readonly<Record<number, number>> = { 3: 5, 7: 3, 10: 3 };
+export { STREAK_REPEATS };
 
 /** One badge on a ladder: earned, or the single next one to aim for. */
 export type BadgeRung = { goal: BadgeGoal; earned: boolean };
@@ -99,6 +98,7 @@ function furthest(
  * @param input.streakEarned Streak milestones already earned, in days
  * @param input.streakNow The current run, in days
  * @param input.streakDays Qualifying streak days, newest first
+ * @param input.streakRepeats Run lengths whose repeat badge is saved as earned
  * @param input.wordEarned Word milestone keys already earned ("vo-long:200", "B1:100")
  * @param input.levelScopes One scope per single level
  * @param input.trackScopes One scope per difficulty track
@@ -113,6 +113,8 @@ export function badgeLadders(input: {
   streakNow: number;
   /** Qualifying streak days, newest first (StreakStore.days). */
   streakDays: readonly number[];
+  /** Run lengths with their repeat badge saved (StreakStore.repeats). */
+  streakRepeats: readonly number[];
   wordEarned: readonly string[];
   levelScopes: readonly ProgressScope[];
   trackScopes: readonly ProgressScope[];
@@ -165,7 +167,10 @@ export function badgeLadders(input: {
   for (const [length, times] of Object.entries(STREAK_REPEATS)) {
     const base = Number(length);
     if (!streakEarned.includes(base)) continue;
-    streak.push(...repeats("streak", base, [times], streakRunsCompleted(input.streakDays, base)));
+    // A saved badge stays earned after the days that earned it have aged out.
+    const runs = streakRunsCompleted(input.streakDays, base);
+    const count = input.streakRepeats.includes(base) ? Math.max(runs, times) : runs;
+    streak.push(...repeats("streak", base, [times], count));
   }
 
   const earnedWords = new Map<string, number[]>();
@@ -214,17 +219,8 @@ export function badgeLadders(input: {
  * @returns Repeat badges earned, for the tab's count
  * @pure true
  */
-export function earnedRepeatCount(
-  dailyMet: number,
-  streakEarned: readonly number[],
-  streakDays: readonly number[],
-): number {
-  let count = DAILY_REPEATS.times.filter((times) => dailyMet >= times).length;
-  for (const [length, times] of Object.entries(STREAK_REPEATS)) {
-    const base = Number(length);
-    if (streakEarned.includes(base) && streakRunsCompleted(streakDays, base) >= times) count += 1;
-  }
-  return count;
+export function earnedRepeatCount(dailyMet: number, streakRepeats: readonly number[]): number {
+  return DAILY_REPEATS.times.filter((times) => dailyMet >= times).length + streakRepeats.length;
 }
 
 /** @returns How far the reader is towards a badge, 0 to 1. @pure true */

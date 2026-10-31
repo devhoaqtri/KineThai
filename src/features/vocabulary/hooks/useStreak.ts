@@ -8,10 +8,11 @@
  * a matter of timing.
  *
  * Exports: useStreak
- * Depends on: React, ../lib/streak
+ * Depends on: React, ../lib/streak, ../lib/durable-storage
  */
 
 import { useCallback, useState } from "react";
+import { requestDurableStorage } from "../lib/durable-storage";
 import { readStreak, recordFinishedWord, writeStreak } from "../lib/streak";
 
 export type StreakApi = {
@@ -37,6 +38,7 @@ export function useStreak(): StreakApi {
     // reading session from re-serialising the store — and from waking every drawer
     // listener — once per word for no change.
     if (store !== before) writeStreak(store);
+    if (store.days.length > before.days.length) requestDurableStorage();
     // At most one milestone can be crossed by one day's worth of finishes, but take the
     // largest rather than the first in case a restored store jumps several rungs.
     if (celebrate.length) setCelebrating(Math.max(...celebrate));

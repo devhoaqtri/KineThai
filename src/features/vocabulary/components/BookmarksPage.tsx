@@ -677,6 +677,7 @@ function MedalShelf({
       seen: store.seen,
       streakNow: currentStreak(streak),
       streakDays: streak.days,
+      streakRepeats: streak.repeats,
       today: wordsToday(daily, Date.now()),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -688,6 +689,7 @@ function MedalShelf({
         streakEarned: badges,
         streakNow: progress.streakNow,
         streakDays: progress.streakDays,
+        streakRepeats: progress.streakRepeats,
         wordEarned: wordBadges.map((badge) => badge.key),
         levelScopes: scopes.filter((scope) => scopeKind(scope.id, locale) === "level"),
         trackScopes: scopes.filter((scope) => scopeKind(scope.id, locale) === "track"),
@@ -791,7 +793,7 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
   // The streak's days only move when a milestone list or the daily store does, so the
   // repeats are counted from a fresh read on those changes.
   const repeatsEarned = useMemo(
-    () => earnedRepeatCount(daily.times[DAILY_REPEATS.goal], badges, readStreak().days),
+    () => earnedRepeatCount(daily.times[DAILY_REPEATS.goal], readStreak().repeats),
     [daily.times, badges],
   );
   const counts: Record<TabKind, number> = {

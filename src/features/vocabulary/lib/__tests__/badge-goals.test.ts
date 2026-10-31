@@ -39,6 +39,7 @@ const fresh = {
   streakEarned: [],
   streakNow: 0,
   streakDays: [],
+  streakRepeats: [],
   wordEarned: [],
   levelScopes,
   trackScopes: scopes.slice(1),
@@ -132,13 +133,22 @@ describe("badgeLadders", () => {
   });
 });
 
+describe("a saved repeat badge", () => {
+  const rung = (ladders: ReturnType<typeof badgeLadders>) =>
+    ladders.streak.find(({ goal }) => goal.kind === "repeat" && goal.base === 3);
+  it("stays earned after the days that earned it have aged out", () => {
+    const ladders = badgeLadders({ ...fresh, streakEarned: [3], streakRepeats: [3] });
+    expect(rung(ladders)?.earned).toBe(true);
+  });
+  it("is not earned by a run that was never saved", () => {
+    expect(rung(badgeLadders({ ...fresh, streakEarned: [3] }))?.earned).toBe(false);
+  });
+});
+
 describe("earnedRepeatCount", () => {
-  it("counts the daily repeats passed and the run repeats completed", () => {
-    const days: number[] = [startOfDay(Date.now())];
-    while (days.length < 15) days.push(previousDay(days.at(-1)!));
-    // 15 days in a row: five 3-day runs, two 7-day runs, one 10-day run.
-    expect(earnedRepeatCount(12, [3, 7, 10], days)).toBe(2 + 1);
-    expect(earnedRepeatCount(4, [], days)).toBe(0);
+  it("counts the daily repeats passed and the run repeats saved", () => {
+    expect(earnedRepeatCount(12, [3])).toBe(2 + 1);
+    expect(earnedRepeatCount(4, [])).toBe(0);
   });
 });
 
