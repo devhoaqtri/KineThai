@@ -15,7 +15,7 @@
  *   contract, slide-settle, useServedWord
  */
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useLoaderData, useParams, useSearch } from "@tanstack/react-router";
 import { VocabularyCard } from "./VocabularyCard";
 import { CarouselChrome } from "./CarouselChrome";
@@ -31,15 +31,23 @@ import {
 import { CAROUSEL_CONTRACT, type SlidePhase } from "../lib/carousel-contract";
 import { CAROUSEL_HOOK, CAROUSEL_SWIPE_CUE, CAROUSEL_GRAMMAR_TITLE } from "../lib/carousel-copy";
 import {
+  CJK_FONTS,
   getCarouselFormat,
   getSlideLayoutSize,
   type CarouselFormat,
 } from "../lib/carousel-formats";
 import { DeckLocaleContext } from "../lib/deck-locale";
+import type { SafeInsets } from "../lib/export-presets";
 import type { CardStill } from "../lib/export-layout";
 import { grammarRows } from "../lib/grammar";
 import { choosePresentation } from "../lib/presets";
-import { getSlideFontRequests, loadSlideFonts, settleSlide } from "../lib/slide-settle";
+import {
+  PRONUNCIATION_FONT,
+  getSlideFontRequests,
+  loadFontStylesheet,
+  loadSlideFonts,
+  settleSlide,
+} from "../lib/slide-settle";
 import { buildStages } from "../lib/stages";
 import { siteAddress } from "../lib/target-language";
 import { useServedWord } from "../hooks/useServedWord";
@@ -62,6 +70,7 @@ function stillFor(
   slide: CarouselSlide,
   index: number,
   format: CarouselFormat,
+  fallbackFont: string | undefined,
   maxTextSize?: number,
 ): CardStill {
   return {
@@ -70,9 +79,16 @@ function stillFor(
     maxTextSize,
     headBand: slide.kind === "clue" && slide.hook ? HOOK_BAND_PX : 0,
     backdropOnly: slide.kind === "grammar",
+    answerBandBottom: format.reveal.bandBottom,
     revealY: format.reveal.wordY,
     panelTop: format.reveal.panelTop,
+    fallbackFont,
   };
+}
+
+/** The margins one slide keeps: slide 1 is also the grid's thumbnail. */
+function safeFor(slide: CarouselSlide, format: CarouselFormat): SafeInsets {
+  return slide.kind === "clue" && slide.hook ? (format.gridSafe ?? format.safe) : format.safe;
 }
 
 /** The size a laid-out clue page settled on. */
@@ -88,7 +104,8 @@ export function CarouselFramePage() {
   const { locale } = useLoaderData({ from: "/carousel/$code" });
   const format = getCarouselFormat(search.format);
   const layout = getSlideLayoutSize(format);
-  const index = search.slide ?? 0;
+  const [index, setIndex] = useState(search.slide ?? 0);
+  const cjkFont = CJK_FONTS[locale];
   const address = search.url ?? siteAddress(locale);
   const handle = search.handle ? `@${search.handle.replace(/^@/, "")}` : undefined;
   // undefined while the lookup is in flight.
@@ -181,14 +198,22 @@ export function CarouselFramePage() {
       "anh.hoa.hàn.nhật.pháp.đức.tbn.chayLá",
       JSON.stringify(word.grammar ?? ""),
     ];
-    loadSlideFonts(getSlideFontRequests(look.theme.font, texts)).then(
-      () => {
-        if (!cancelled) setFontsReady(true);
-      },
-      (error: Error) => {
-        if (!cancelled) report("failed", error.message);
-      },
-    );
+    const pronunciation = `${word.ipa ?? ""} · ${word.pos ?? ""}`;
+    Promise.all([
+      loadFontStylesheet(PRONUNCIATION_FONT, pronunciation),
+      ...(cjkFont ? [loadFontStylesheet(cjkFont)] : []),
+    ])
+      .then(() =>
+        loadSlideFonts(getSlideFontRequests(look.theme.font, texts, cjkFont, pronunciation)),
+      )
+      .then(
+        () => {
+          if (!cancelled) setFontsReady(true);
+        },
+        (error: Error) => {
+          if (!cancelled) report("failed", error.message);
+        },
+      );
     return () => {
       cancelled = true;
     };
@@ -224,11 +249,18 @@ export function CarouselFramePage() {
   }, [fontsReady, sizeCap, format.safe]);
 
   useEffect(() => {
+    const show = (event: Event) => setIndex((event as CustomEvent<number>).detail);
+    window.addEventListener(CAROUSEL_CONTRACT.slideEvent, show);
+    return () => window.removeEventListener(CAROUSEL_CONTRACT.slideEvent, show);
+  }, []);
+
+  useEffect(() => {
     const stage = stageRef.current;
     if (sizeCap === undefined || !stage) return;
     let cancelled = false;
     report("settling");
-    void settleSlide(stage, format.safe).then((problems) => {
+    if (!slide) return;
+    void settleSlide(stage, safeFor(slide, format)).then((problems) => {
       if (cancelled) return;
       if (problems.length) report("failed", problems.join("; "));
       else report("settled");
@@ -236,16 +268,16 @@ export function CarouselFramePage() {
     return () => {
       cancelled = true;
     };
-  }, [sizeCap, format.safe]);
+  }, [sizeCap, slide, format]);
 
-  const cardLayout = (still: CardStill) => ({
-    safe: format.safe,
+  const cardLayout = (still: CardStill, safe: SafeInsets) => ({
+    safe,
     // The band is what keeps text clear of the marker; the running bar itself is hidden.
     showProgress: true,
     showBrand: search.brand !== false,
     still,
   });
-  const card = (still: CardStill) =>
+  const card = (still: CardStill, safe: SafeInsets) =>
     entry && (
       <VocabularyCard
         entry={entry}
@@ -255,7 +287,7 @@ export function CarouselFramePage() {
         matching={0}
         canAdvance={false}
         onAdvance={() => undefined}
-        exportLayout={cardLayout(still)}
+        exportLayout={cardLayout(still, safe)}
       />
     );
   const box = { width: layout.width, height: layout.height } as CSSProperties;
@@ -276,11 +308,21 @@ export function CarouselFramePage() {
           ref={stageRef}
           {...{ [CAROUSEL_CONTRACT.stageAttribute]: "" }}
           className="vocab-export-stage"
-          style={box}
+          style={
+            {
+              ...box,
+              ...(cjkFont ? { "--still-fallback-font": `"${cjkFont}"` } : {}),
+            } as CSSProperties
+          }
         >
           {sizeCap !== undefined && slide && look && (
             <>
-              {card(stillFor(slide, index, format, sizeCap ?? undefined))}
+              <Fragment key={index}>
+                {card(
+                  stillFor(slide, index, format, cjkFont, sizeCap ?? undefined),
+                  safeFor(slide, format),
+                )}
+              </Fragment>
               {slide.kind === "grammar" && word && (
                 <GrammarSlide
                   word={word.word}
@@ -295,7 +337,7 @@ export function CarouselFramePage() {
                 index={index}
                 count={plan.slides.length}
                 theme={look.theme}
-                safe={format.safe}
+                safe={safeFor(slide, format)}
                 handle={handle}
                 address={address}
               />
@@ -315,7 +357,7 @@ export function CarouselFramePage() {
                 className="vocab-export-stage"
                 style={{ ...box, visibility: "hidden" }}
               >
-                {card(stillFor(item, place, format))}
+                {card(stillFor(item, place, format, cjkFont), safeFor(item, format))}
               </div>
             ))}
           </div>

@@ -10,7 +10,9 @@
  * down once and never back up, so a first pass in a fallback face could leave its mark on
  * the final layout, and the same slide would come out differently from run to run.
  *
- * Exports: FontRequest, FitInput, getSlideFontRequests, loadSlideFonts, findFitProblems,
+ * Exports: FontRequest, FitInput, getSlideFontRequests, loadFontStylesheet, loadSlideFonts,
+ *   PRONUNCIATION_FONT,
+ *   findFitProblems,
  *   readLayoutSignature, settleSlide
  * Depends on: ./export-presets SafeInsets (type only)
  */
@@ -21,6 +23,16 @@ import type { SafeInsets } from "./export-presets";
 const STAGE_WEIGHTS = [800, 900];
 /** The weights the panel, brand and labels paint, all in Inter. */
 const PANEL_WEIGHTS = [400, 500, 600, 650, 700, 800];
+
+/** The scripts a CJK fallback face has to cover. */
+const CJK = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+
+/**
+ * Draws the pronunciation line. Google's ranged subsets leave out the combining marks German
+ * and Spanish transcriptions use (i̯, t͡s), so the line asks for exactly its own characters
+ * from one face. One face for the whole line also keeps each mark seated on its letter.
+ */
+export const PRONUNCIATION_FONT = "Noto Sans";
 
 /** Gap between layout samples. A timer, because frames stall in a background tab. */
 const SAMPLE_MS = 50;
@@ -37,14 +49,53 @@ export type FontRequest = { family: string; weight: number; text: string };
  * Vietnamese and CJK are separate subsets, fetched only when asked for.
  * @param stageFont - the theme's display family
  * @param texts - all the words the slide may show
+ * @param cjkFont - the deck's CJK face, if it has one
+ * @param pronunciation - the word's transcription
  * @returns One request per family and weight
  * @pure true
  */
-export function getSlideFontRequests(stageFont: string, texts: readonly string[]): FontRequest[] {
+export function getSlideFontRequests(
+  stageFont: string,
+  texts: readonly string[],
+  cjkFont?: string,
+  pronunciation = "",
+): FontRequest[] {
   const text = [...new Set(texts.join(" "))].join("");
   const requests = STAGE_WEIGHTS.map((weight) => ({ family: stageFont, weight, text }));
   for (const weight of PANEL_WEIGHTS) requests.push({ family: "Inter", weight, text });
+  const cjk = [...text].filter((glyph) => CJK.test(glyph)).join("");
+  if (cjkFont && cjk) {
+    for (const weight of [...STAGE_WEIGHTS, ...PANEL_WEIGHTS]) {
+      requests.push({ family: cjkFont, weight, text: cjk });
+    }
+  }
+  if (pronunciation) {
+    requests.push({ family: PRONUNCIATION_FONT, weight: 400, text: pronunciation });
+  }
   return requests;
+}
+
+/**
+ * Add a face's stylesheet to the page and wait for it. Google splits the big fonts into
+ * about a hundred files, so `load` then fetches only the slices the slide's text needs.
+ * @param family - the family to fetch
+ * @param text - fetch exactly these characters at the regular weight, instead of the range
+ * @throws When the stylesheet cannot be loaded
+ */
+export function loadFontStylesheet(family: string, text?: string): Promise<void> {
+  const name = family.replaceAll(" ", "+");
+  const href = text
+    ? `https://fonts.googleapis.com/css2?family=${name}&text=${encodeURIComponent(text)}`
+    : `https://fonts.googleapis.com/css2?family=${name}:wght@400..900&display=swap`;
+  if (document.querySelector(`link[href="${href}"]`)) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.onload = () => resolve();
+    link.onerror = () => reject(new Error(`The font ${family} could not be fetched.`));
+    document.head.append(link);
+  });
 }
 
 /**
@@ -72,6 +123,8 @@ export type FitInput = {
   words: readonly { left: number; top: number; right: number; bottom: number }[];
   /** The meaning panel's scroller or the grammar slide, when the page has one. */
   panel: { scrollHeight: number; clientHeight: number } | null;
+  /** Two parts of a slide that must not touch, as the upper's bottom and the lower's top. */
+  stacked?: readonly { upperBottom: number; lowerTop: number; name: string }[];
 };
 
 /**
@@ -81,7 +134,7 @@ export type FitInput = {
  * @pure true
  */
 export function findFitProblems(input: FitInput): string[] {
-  const { width, height, safe, words, panel } = input;
+  const { width, height, safe, words, panel, stacked = [] } = input;
   const problems: string[] = [];
   const left = width * safe.left - FIT_TOLERANCE_PX;
   const right = width * (1 - safe.right) + FIT_TOLERANCE_PX;
@@ -96,6 +149,9 @@ export function findFitProblems(input: FitInput): string[] {
   if (panel && panel.scrollHeight > panel.clientHeight) {
     const lost = panel.scrollHeight - panel.clientHeight;
     problems.push(`Panel is cut off by ${Math.ceil(lost)} px`);
+  }
+  for (const { upperBottom, lowerTop, name } of stacked) {
+    if (upperBottom > lowerTop + FIT_TOLERANCE_PX) problems.push(`${name} overlap`);
   }
   return problems;
 }
@@ -155,11 +211,20 @@ function fontProblem(stage: HTMLElement): string | null {
       .map((child) => child.textContent ?? "")
       .join("")
       .trim();
-    if (!text) continue;
+    if (!text || node.closest(".sr-only")) continue;
     const style = getComputedStyle(node);
-    const family = style.fontFamily.split(",")[0]!.trim();
-    if (!document.fonts.check(`${style.fontWeight} 64px ${family}`, text)) {
-      return `The font ${family} ${style.fontWeight} was not ready for “${text.slice(0, 24)}”`;
+    const [face, fallback] = style.fontFamily.split(",").map((family) => family.trim());
+    // Each script against the face that draws it. Asked about the whole stack at once, the
+    // browser also wants the CJK face's Latin slices, which nothing here paints.
+    const glyphs = [...text];
+    const parts = [
+      { family: face, part: glyphs.filter((glyph) => !CJK.test(glyph)).join("") },
+      { family: fallback, part: glyphs.filter((glyph) => CJK.test(glyph)).join("") },
+    ];
+    for (const { family, part } of parts) {
+      if (part && !document.fonts.check(`${style.fontWeight} 64px ${family}`, part)) {
+        return `The font ${family} ${style.fontWeight} was not ready for “${part.slice(0, 24)}”`;
+      }
     }
   }
   return null;
@@ -179,12 +244,29 @@ function measureFit(stage: HTMLElement, safe: SafeInsets): string[] {
     };
   });
   const panel = stage.querySelector<HTMLElement>(".vocab-reveal-scroll, [data-carousel-grammar]");
+  const stacked: { upperBottom: number; lowerTop: number; name: string }[] = [];
+  const pair = (upper: Element | null, lower: Element | null, name: string) => {
+    if (!upper || !lower) return;
+    const upperBottom = upper.getBoundingClientRect().bottom;
+    stacked.push({ upperBottom, lowerTop: lower.getBoundingClientRect().top, name });
+  };
+  pair(
+    stage.querySelector("[data-kinetic-word]"),
+    stage.querySelector(".vocab-reveal-details"),
+    "The answer and the meaning panel",
+  );
+  pair(
+    stage.querySelector(".vocab-spelling-word, .vocab-stroke-row"),
+    stage.querySelector(".carousel-closing"),
+    "The spelling and the handle",
+  );
   return findFitProblems({
     width: stage.clientWidth,
     height: stage.clientHeight,
     safe,
     words,
     panel: panel ? { scrollHeight: panel.scrollHeight, clientHeight: panel.clientHeight } : null,
+    stacked,
   });
 }
 

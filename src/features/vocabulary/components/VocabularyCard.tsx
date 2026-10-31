@@ -248,7 +248,11 @@ export function VocabularyCard({
   const brand = siteBrand(useContext(DeckLocaleContext));
   const still = exportLayout?.still;
   const stages = useMemo(() => buildStages(entry.word, style.id), [entry.word, style.id]);
-  const canvas = useMemo(() => buildVocabularyCanvas(theme, style), [theme, style]);
+  const fallbackFont = still?.fallbackFont;
+  const canvas = useMemo(() => {
+    const spec = buildVocabularyCanvas(theme, style);
+    return fallbackFont ? { ...spec, font: `${spec.font}, "${fallbackFont}"` } : spec;
+  }, [theme, style, fallbackFont]);
   // The spelling coda is one extra page appended after the reveal stage, so the
   // playback timer — not the animation component — decides when the card ends.
   const spellingVariant = useMemo(
@@ -644,7 +648,7 @@ export function VocabularyCard({
     "--kinetic-beat": `${getBeatSeconds(style.tempo)}s`,
     background: theme.paint,
     color: theme.ink,
-    fontFamily: `${theme.font}, sans-serif`,
+    fontFamily: `${theme.font}, ${fallbackFont ? `"${fallbackFont}", ` : ""}sans-serif`,
     ...(exportLayout && exportBox
       ? {
           "--safe-top": `${exportLayout.safe.top * 100}%`,
@@ -655,6 +659,9 @@ export function VocabularyCard({
           "--export-stage-bottom": `${exportBox.bottom}px`,
           "--export-stage-bottom-band": `${exportBox.bottomBand}px`,
           ...(still?.panelTop ? { "--still-panel-top": `${still.panelTop}%` } : {}),
+          ...(still?.answerBandBottom
+            ? { "--still-answer-band-bottom": `${still.answerBandBottom}px` }
+            : {}),
         }
       : {}),
   } as CSSProperties;

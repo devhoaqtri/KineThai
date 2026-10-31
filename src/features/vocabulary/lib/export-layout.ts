@@ -36,10 +36,14 @@ export type CardStill = {
   headBand?: number;
   /** Paint only the backdrop, for a slide that brings its own content. */
   backdropOnly?: boolean;
+  /** Taken off the foot of the answer's band, in px, where a slide is short. */
+  answerBandBottom?: number;
   /** Where the answer sits, as a percentage of its band. */
   revealY?: number;
   /** Where the meaning panel starts, as a percentage of the stage. */
   panelTop?: number;
+  /** Family for the glyphs the display face lacks, so CJK text is the same on any machine. */
+  fallbackFont?: string;
 };
 
 /** Room kept at the foot of the clear zone for the page label and progress bar. */

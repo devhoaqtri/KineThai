@@ -33,6 +33,14 @@ describe("findFitProblems", () => {
     const panel = { scrollHeight: 92, clientHeight: 92 };
     expect(findFitProblems({ ...base, panel })).toEqual([]);
   });
+  it("names two parts that overlap", () => {
+    const stacked = [{ upperBottom: 210, lowerTop: 200, name: "The answer and the panel" }];
+    expect(findFitProblems({ ...base, stacked })).toEqual(["The answer and the panel overlap"]);
+  });
+  it("accepts two parts that clear each other", () => {
+    const stacked = [{ upperBottom: 190, lowerTop: 200, name: "The answer and the panel" }];
+    expect(findFitProblems({ ...base, stacked })).toEqual([]);
+  });
   it("reports every problem at once", () => {
     const panel = { scrollHeight: 100, clientHeight: 90 };
     const words = [{ left: 0, top: 0, right: 400, bottom: 500 }];
@@ -50,6 +58,16 @@ describe("getSlideFontRequests", () => {
   it("names every character, so the Vietnamese subset is fetched", () => {
     const [first] = getSlideFontRequests("Inter", ["ờ ể", "ự"]);
     for (const glyph of "ờểự") expect(first!.text).toContain(glyph);
+  });
+  it("asks the CJK face only for CJK glyphs", () => {
+    const requests = getSlideFontRequests("Inter", ["Từ 决定"], "Noto Sans SC");
+    const cjk = requests.filter((r) => r.family === "Noto Sans SC");
+    expect(cjk.length).toBeGreaterThan(0);
+    for (const request of cjk) expect(request.text).toBe("决定");
+  });
+  it("skips the CJK face for text that needs none", () => {
+    const requests = getSlideFontRequests("Inter", ["Từ"], "Noto Sans SC");
+    expect(requests.some((r) => r.family === "Noto Sans SC")).toBe(false);
   });
   it("sends each character once", () => {
     const [first] = getSlideFontRequests("Inter", ["aaaa", "aa"]);

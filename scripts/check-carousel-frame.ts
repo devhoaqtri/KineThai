@@ -33,6 +33,10 @@ check(
   CAROUSEL_CONTRACT.phases,
 );
 check(
+  "the slide event is vocab-carousel-slide",
+  CAROUSEL_CONTRACT.slideEvent === "vocab-carousel-slide",
+);
+check(
   "the stage attribute is data-carousel-stage",
   CAROUSEL_CONTRACT.stageAttribute === "data-carousel-stage",
 );
@@ -60,7 +64,8 @@ check(
   const page = readFileSync("src/features/vocabulary/components/CarouselFramePage.tsx", "utf8");
   check(
     "the page loads fonts before it mounts the card",
-    page.includes("fontsReady && validSlide && (") && page.includes("loadSlideFonts("),
+    page.indexOf("loadSlideFonts(") < page.indexOf("setFontsReady(true)") &&
+      page.includes("fontsReady && sizeCap === undefined &&"),
   );
 }
 

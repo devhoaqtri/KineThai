@@ -41,6 +41,7 @@
     "check:deck-not-bundled": "npx tsx scripts/check-deck-not-bundled.ts",
     "check:export-frame": "npx tsx scripts/check-export-frame.ts",
     "check:carousel-frame": "npx tsx scripts/check-carousel-frame.ts",
+    "check:carousel-fit": "npx tsx scripts/check-carousel-fit.ts",
     "carousel": "npx tsx scripts/render-carousel.ts",
     "check:chrome-side": "npx tsx scripts/check-chrome-side.ts",
     "check:fit-floor": "npx tsx scripts/check-fit-floor.ts",
