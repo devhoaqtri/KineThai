@@ -467,12 +467,13 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
   check(`a Han run can still be given one (${reached} of ${hanWords.length * 12})`, reached > 0);
 }
 
-// ── Shipped decks: a clue page glows one connected two-syllable word, or nothing.
+// ── Shipped decks: a clue page glows one marked, connected word, or nothing.
 // Every clue page is put through the real selection function, exactly as WordSequenceText
-// calls it. What it draws must be exactly one run of exactly two syllables the deck wrote
-// connected with `_` or `=`, holding no bare conjunction. A page holding such a word may
-// not stay dark; a page holding none must. This restates vocabulary/lib/highlight-gate.ts
-// without importing it, so a broken gate cannot vouch for itself.
+// calls it. What it draws must be the deck's own `/…/` mark, written as exactly two
+// syllables connected with `_` or `=`, holding no bare conjunction. A page carrying such a
+// mark may not stay dark; a page carrying none must. This restates
+// vocabulary/lib/highlight-gate.ts without importing it, so a broken gate cannot vouch for
+// itself.
 {
   const dataDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data");
   const decks = (dir: string): string[] =>
@@ -485,8 +486,17 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
           ? [join(dir, entry.name)]
           : [],
     );
+  // A ratchet: lower it as decks improve, never raise it to let a deck through.
+  const MAX_DARK_CLUE_PAGES = 7426;
   const CONJUNCTIONS = new Set(["và", "hoặc", "nhưng"]);
+  const CLUE_FIELD: Record<string, string> = {
+    lead: "leadVi",
+    definition: "defVi",
+    anticipation: "anticipateVi",
+  };
   const CLUE_STAGE = /^(lead|definition|anticipation)-\d+$/;
+  const CONNECTED_PAIR = /^[^\s_=]+[_=][^\s_=]+$/;
+  const keysOf = (phrase: string) => phrase.split(/[\s_=]+/).map(getCompoundTokenKey);
   const hasRun = (haystack: string[], needle: string[]) =>
     haystack.some((_, start) => needle.every((key, offset) => haystack[start + offset] === key));
   let pages = 0;
@@ -498,34 +508,34 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
     if (!Array.isArray(catalog.words)) continue;
     for (const entry of catalog.words as Record<string, unknown>[]) {
       for (const stage of buildStages(entry as unknown as VocabularyWord, "detective")) {
-        if (!CLUE_STAGE.test(stage.id)) continue;
+        const clue = CLUE_STAGE.exec(stage.id)?.[1];
+        if (!clue) continue;
         pages += 1;
         const tokens = getWords(stage.text);
         const pageKeys = tokens.map(getCompoundTokenKey);
-        const chains = getEmphasisPhraseKeysForLayout(stage.boundPhrases).filter((chain) =>
-          hasRun(pageKeys, chain),
-        );
+        const eligible = [...String(entry[CLUE_FIELD[clue]!] ?? "").matchAll(/\/([^/]+)\//g)]
+          .map((match) => match[1]!.trim())
+          .filter((mark) => CONNECTED_PAIR.test(mark))
+          .map(keysOf)
+          .filter((keys) => hasRun(pageKeys, keys))
+          .filter((keys) => !keys.some((key) => CONJUNCTIONS.has(key)));
         const picked = [
           ...getEmphasizedWordIndexes(tokens, stage.dataEmphasis, stage.boundPhrases),
         ].sort((left, right) => left - right);
         const where = `${relative(dataDir, file)} ${String(entry.id ?? entry.word)} ${stage.id}`;
         if (picked.length === 0) {
           dark += 1;
-          const eligible = chains.some(
-            (chain) => chain.length === 2 && !chain.some((key) => CONJUNCTIONS.has(key)),
-          );
-          if (eligible) bad.push(`${where} — dark, but "${chains.join(" | ")}" could glow`);
+          if (eligible.length > 0)
+            bad.push(`${where} — dark, but "${eligible[0]!.join(" ")}" is marked`);
           continue;
         }
         drawn += 1;
         const keys = picked.map((index) => pageKeys[index] ?? "");
         const label = `${where}: "${keys.join(" ")}"`;
-        if (keys.some((key) => CONJUNCTIONS.has(key))) {
-          bad.push(`${label} — a conjunction inside the highlight`);
-        } else if (keys.length !== 2 || picked[1] !== picked[0]! + 1) {
+        if (keys.length !== 2 || picked[1] !== picked[0]! + 1) {
           bad.push(`${label} — not exactly one two-syllable word`);
-        } else if (!chains.some((chain) => hasRun(chain, keys))) {
-          bad.push(`${label} — the deck did not connect these with "_" or "="`);
+        } else if (!eligible.some((mark) => mark.join(" ") === keys.join(" "))) {
+          bad.push(`${label} — not a connected /mark/ the deck wrote on this page`);
         }
       }
     }
@@ -536,6 +546,10 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
   );
   for (const line of bad.slice(0, 10)) console.error(`  ${line}`);
   check(`every clue page passes the highlight gate (${bad.length} bad)`, bad.length === 0);
+  check(
+    `no new dark clue pages (${dark} of at most ${MAX_DARK_CLUE_PAGES})`,
+    dark <= MAX_DARK_CLUE_PAGES,
+  );
 }
 
 console.log(checks.join("\n"));

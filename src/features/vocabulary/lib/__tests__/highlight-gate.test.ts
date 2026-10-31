@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { getEmphasizedWordIndexes } from "@/features/post-player/lib/feed-emphasis";
 import { getWords } from "@/features/kinetic-text";
 import { gateHighlight } from "../highlight-gate";
+import { markPhrase } from "../crawler-shared";
+import { toDeck } from "../custom-pack";
 import { buildStages } from "../stages";
 import { withWordJoiners } from "../word-joiner";
 import { makeCatalog, makeWord } from "./helpers";
@@ -12,11 +14,17 @@ describe("gateHighlight", () => {
   it("keeps an author's mark on a two-syllable connected word", () =>
     expect(gateHighlight(page, ["quan trọng"], ["ba lô", "quan trọng"])).toEqual(["quan trọng"]));
 
-  it("grows a mark on half a connected word to the whole word", () =>
-    expect(gateHighlight(page, ["trọng"], ["quan trọng"])).toEqual(["quan trọng"]));
+  it("never picks a joined word nobody marked", () =>
+    expect(gateHighlight(page, undefined, ["ba lô", "quan trọng"])).toEqual([]));
 
-  it("refuses a lone-syllable mark and glows a connected word instead", () =>
-    expect(gateHighlight(page, ["đựng"], ["ba lô"])).toEqual(["ba lô"]));
+  it("refuses a lone-syllable mark, even with joined words beside it", () =>
+    expect(gateHighlight(page, ["đựng"], ["ba lô"])).toEqual([]));
+
+  it("does not grow a mark on half a joined word", () =>
+    expect(gateHighlight(page, ["trọng"], ["quan trọng"])).toEqual([]));
+
+  it("falls through a refused mark to the next one that passes", () =>
+    expect(gateHighlight(page, ["đựng", "ba lô"], ["ba lô"])).toEqual(["ba lô"]));
 
   it("refuses two syllables the deck did not connect", () =>
     expect(gateHighlight("Đi dưới nắng gắt cả ngày.", ["nắng gắt"], undefined)).toEqual([]));
@@ -31,35 +39,55 @@ describe("gateHighlight", () => {
       "bắt chuyện",
     ]));
 
-  it("leaves a three-syllable chain alone when nothing marks a word in it", () =>
-    expect(gateHighlight("Bạn đã bắt chuyện rồi.", undefined, ["đã bắt chuyện"])).toEqual([]));
+  it("accepts a mark on a = pair", () =>
+    expect(gateHighlight("Nhìn con mèo kìa!", ["con mèo"], ["con mèo"])).toEqual(["con mèo"]));
 
-  it("accepts a = pair when the page has nothing else", () =>
-    expect(gateHighlight("Nhìn con mèo kìa!", undefined, ["con mèo"])).toEqual(["con mèo"]));
+  it("never glows a mark holding a conjunction", () =>
+    expect(gateHighlight("Mua và bán thôi.", ["và bán"], ["và bán"])).toEqual([]));
 
-  it("prefers a real word over one leaning on a function word", () =>
-    expect(
-      gateHighlight("Đây là của mình, thời gian ơi.", undefined, ["của mình", "thời gian"]),
-    ).toEqual(["thời gian"]));
-
-  it("never glows a connected group holding a conjunction", () =>
-    expect(gateHighlight("Mua và bán thôi.", undefined, ["và bán"])).toEqual([]));
-
-  it("ignores a connected word that is not on this page", () =>
+  it("ignores a mark that is not on this page", () =>
     expect(gateHighlight("Trang này khác.", ["ba lô"], ["ba lô"])).toEqual([]));
 
-  it("reads a connected word through its trailing punctuation", () =>
-    expect(gateHighlight("Sững sờ, ngạc nhiên.", undefined, ["Sững sờ,", "ngạc nhiên."])).toEqual([
+  it("reads a marked word through its trailing punctuation", () =>
+    expect(gateHighlight("Sững sờ, ngạc nhiên.", ["ngạc nhiên"], ["ngạc nhiên."])).toEqual([
       "ngạc nhiên",
     ]));
 
-  it("leaves a page with no connected word dark", () =>
+  it("leaves a page with no mark dark", () =>
     expect(gateHighlight("Ngủ thêm năm phút nữa thôi?", undefined, undefined)).toEqual([]));
+});
+
+describe("a flat batch's emphasisVi", () => {
+  const clues = (fields: Record<string, unknown>) =>
+    toDeck([{ word: "water", usageEn: "Drink _____.", usageVi: "Uống nước.", ...fields }], "test")
+      .words[0]!;
+
+  it("reaches the text as an inline mark, because the feed reads nothing else", () =>
+    expect(clues({ defVi: "Rất quan_trọng lắm.", emphasisVi: ["quan trọng"] }).defVi).toBe(
+      "Rất /quan_trọng/ lắm.",
+    ));
+
+  it("gives each phrase the field that holds it", () => {
+    const word = clues({
+      defVi: "Một ba_lô nhỏ.",
+      leadVi: "Rất quan_trọng lắm.",
+      emphasisVi: ["quan trọng", "ba lô"],
+    });
+    expect([word.defVi, word.leadVi]).toEqual(["Một /ba_lô/ nhỏ.", "Rất /quan_trọng/ lắm."]);
+  });
+
+  it("leaves a phrase the text did not join unmarked", () =>
+    expect(clues({ defVi: "Rất quan trọng lắm.", emphasisVi: ["quan trọng"] }).defVi).toBe(
+      "Rất quan trọng lắm.",
+    ));
+
+  it("never marks an inline mark twice", () =>
+    expect(markPhrase("Rất /quan_trọng/ lắm.", "quan trọng")).toBeNull());
 });
 
 describe("the gate in the feed", () => {
   const word = makeWord({
-    defVi: "Cái ba_lô /để/ đựng đồ, rất quan_trọng khi đi=học.",
+    defVi: "Cái /ba_lô/ để đựng đồ, rất quan_trọng khi đi=học.",
     leadVi: "Ngủ thêm năm phút nữa thôi?",
     anticipateVi: "Bạn đã=/bắt_chuyện/ rồi.",
   });
@@ -78,13 +106,13 @@ describe("the gate in the feed", () => {
     const stages = buildStages(source, "detective");
     const stage = (id: string) => stages.find((item) => item.id.startsWith(id))!;
 
-    it(`${name}: glows one connected word in place of a refused mark`, () => {
+    it(`${name}: glows the marked word and no other joined word`, () => {
       const { text, dataEmphasis, boundPhrases } = stage("definition");
-      expect(dataEmphasis).toHaveLength(1);
-      expect(glowing(text, dataEmphasis, boundPhrases)).toHaveLength(2);
+      expect(dataEmphasis).toEqual(["ba lô"]);
+      expect(glowing(text, dataEmphasis, boundPhrases)).toEqual(["ba", "lô"]);
     });
 
-    it(`${name}: a page with no connected word glows nothing, not a guess`, () => {
+    it(`${name}: a page with no mark glows nothing, not a guess`, () => {
       const { text, dataEmphasis, boundPhrases } = stage("lead");
       expect(dataEmphasis).toEqual([]);
       expect(glowing(text, dataEmphasis, boundPhrases)).toEqual([]);

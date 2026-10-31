@@ -42,7 +42,8 @@ function escapeRegExp(text: string): string {
 
 /**
  * Mark a highlight phrase in a field where it stands as one written word: a single
- * syllable on its own, or a two-syllable word written with "_".
+ * syllable on its own, or a two-syllable word written with "_". A word the text already
+ * marks inline is left alone.
  * @param text Deck text
  * @param phrase The phrase, syllables spaced ("trạng thái")
  * @returns The text with the phrase marked, or null when it is not there as one word
@@ -52,7 +53,7 @@ export function markPhrase(text: string, phrase: string): string | null {
   const syllables = phrase.normalize("NFC").trim().split(/\s+/);
   if (!syllables[0] || syllables.length > 2) return null;
   const pattern = new RegExp(
-    `(?<![\\p{L}\\p{N}_])(${syllables.map(escapeRegExp).join("_")})(?![\\p{L}\\p{N}_])`,
+    `(?<![\\p{L}\\p{N}_/])(${syllables.map(escapeRegExp).join("_")})(?![\\p{L}\\p{N}_/])`,
     "iu",
   );
   const source = text.normalize("NFC");

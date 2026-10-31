@@ -14,8 +14,9 @@
  * Exports: CustomPack, PackLibrary, parseCustomPack, loadCustomPackFromUrl, readPackLibrary,
  *   readCustomPack, addCustomPack, activateCustomPack, writeCustomPack, clearCustomPack,
  *   removeCustomPack, readCustomPage, packLevelCounts, CUSTOM_PACK_EVENT, CUSTOM_PACKS_EVENT
- * Depends on: ./schema (normalizeDeck), ./word-joiner, ./paging
+ * Depends on: ./crawler-shared (markPhrase), ./schema (normalizeDeck), ./word-joiner, ./paging
  */
+import { markPhrase } from "./crawler-shared";
 import { normalizeDeck, type Catalog } from "./schema";
 import { withWordJoiners } from "./word-joiner";
 import { readCatalogPage } from "./paging";
@@ -58,13 +59,44 @@ function levelFromSource(source: string): string | undefined {
   return m?.[1]?.toUpperCase();
 }
 
+const MARKED_FIELDS = ["defVi", "leadVi", "anticipateVi"] as const;
+type MarkedField = (typeof MARKED_FIELDS)[number];
+
+/**
+ * Write a flat batch's highlight phrases into its clue text, because the feed glows only
+ * inline `/…/` marks. Each phrase takes the first unmarked clue field holding it as a word.
+ * @param clues The word's clue fields
+ * @param phrases The batch's `emphasisVi`
+ * @returns The clue fields that gained a mark
+ * @pure true
+ */
+function markedClues(clues: Partial<Record<MarkedField, unknown>>, phrases: unknown) {
+  const marked: Partial<Record<MarkedField, string>> = {};
+  if (!Array.isArray(phrases)) return marked;
+  for (const phrase of phrases) {
+    if (typeof phrase !== "string") continue;
+    for (const field of MARKED_FIELDS) {
+      const text = marked[field] ?? clues[field];
+      if (typeof text !== "string" || text.includes("/")) continue;
+      const next = markPhrase(text, phrase);
+      if (!next) continue;
+      marked[field] = next;
+      break;
+    }
+  }
+  return marked;
+}
+
 /**
  * Accept the word packs this app already uses: the WordCrawler batch decks
  * (docs/Batches/<locale>/*.json — a bare array with usageEn/usageVi/emphasisVi, no ids) and the
  * compiled packs (data/packs/*.json — { revision, words: [...] }). Both become the
  * schema's word shape before validation.
  */
-export function toDeck(json: unknown, source: string): { meta?: { name: string }; words: RawWord[] } {
+export function toDeck(
+  json: unknown,
+  source: string,
+): { meta?: { name: string }; words: RawWord[] } {
   const list = (Array.isArray(json) ? json : (json as { words?: unknown })?.words) as unknown;
   if (!Array.isArray(list)) throw new Error("Không tìm thấy danh sách từ trong gói.");
   const root = Array.isArray(json) ? {} : (json as { name?: unknown; meta?: { name?: unknown } });
@@ -116,6 +148,7 @@ export function toDeck(json: unknown, source: string): { meta?: { name: string }
     usedIds.add(id);
     words.push({
       ...rest,
+      ...markedClues(rest, emphasisVi),
       id,
       usage,
       exams,

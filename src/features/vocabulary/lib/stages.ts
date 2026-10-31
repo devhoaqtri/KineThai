@@ -295,7 +295,7 @@ export function buildStages(word: VocabularyWord, style: NarrativeStyle): Learni
       ...stage,
       id: `${stage.id}-${index}`,
       text,
-      // Per page: a mark pagination moved elsewhere leaves this page free to pick its own.
+      // Per page: a mark pagination moved elsewhere leaves this page dark.
       ...(GATED_STAGE_IDS.has(stage.id)
         ? { dataEmphasis: gateHighlight(text, stage.dataEmphasis, stage.boundPhrases) }
         : {}),

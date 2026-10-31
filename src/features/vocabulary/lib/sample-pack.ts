@@ -29,7 +29,7 @@ const SAMPLE_PACK_JSON = `{
       "usageVi": "Bạn có tưởng_tượng nổi | cuộc_sống không có mạng không?",
       "topics": ["thinking"],
       "exams": [],
-      "emphasisVi": ["hình dung", "nhắm mắt"]
+      "emphasisVi": ["hình dung", "bãi biển"]
     },
     {
       "word": "explain",
@@ -43,7 +43,7 @@ const SAMPLE_PACK_JSON = `{
       "usageVi": "Bạn giải_thích luật này | cho mình được không?",
       "topics": ["communication", "study"],
       "exams": [],
-      "emphasisVi": ["giải thích", "từng bước"]
+      "emphasisVi": ["giải thích", "kiên nhẫn"]
     },
     {
       "word": "water",
@@ -166,12 +166,13 @@ Vietnamese is written one syllable at a time, so nothing in the text says where 
 
 ### Highlighted phrases (emphasisVi)
 
-- Give exactly 2 phrases: one copied from defVi, one copied from leadVi.
-- Choose by MEANING first: the phrase that carries the point of the sentence. If the sentence were cut down to two syllables, which two would have to survive? Those.
-- Prefer the compound that names the concept (\`sức_khỏe\`, \`quan_trọng\`), then a vivid verb or adjective phrase (\`lấp_lánh\`), then a concrete noun phrase.
-- Exactly TWO syllables each — never one, never three or more. A joined compound is ideal.
+- Give exactly 2 phrases: one copied from defVi, one copied from leadVi. Only these glow, so a sentence without one shows no highlight.
+- Each phrase is ONE real two-syllable word, joined with \`_\` in the text. Never one syllable, never three or more, never two words that are merely neighbours.
+- Choose by MEANING first: if the sentence were cut down to two syllables, which two would have to survive? Those.
+- It must pass all of these: it is a headword in a Vietnamese dictionary, nothing can sit between its syllables, and it is not part of a longer word (never \`ký_túc\` from \`ký_túc_xá\`).
 - Copy it EXACTLY, diacritics included, but write it PLAIN, with a space where the text has a join: for \`quan_trọng\` in defVi, the entry is "quan trọng".
-- Never pick filler: a classifier and its noun ("con mèo"), a number and its noun ("hai người"), a time phrase ("mỗi ngày"), a generic verb-object pair, a function word (và, là, của, có, được, trong, cho, với, một, rất, cũng, đã, đang, sẽ, không, những, các, thì, mà), or anything that spans a \`=\`, a \`|\` or a comma.
+- Never pick filler: a classifier and its noun ("con mèo"), a number and anything ("hai người"), a quantifier ("mỗi ngày", "cả lớp"), a verb with a direction or result ("nhớ ra", "xem lại"), a comparison ("cao nhất"), a noun with a plain adjective ("sách cũ"), a time phrase, a place name, a function word (và, là, của, có, được, trong, cho, với, một, rất, cũng, đã, đang, sẽ, không, những, các, thì, mà), or anything that spans a \`=\`, a \`|\` or a comma.
+- If no word in the sentence passes, rewrite the sentence around one that does.
 - At most 30 characters each, and the two must differ.
 
 ### Language and guessing rules
