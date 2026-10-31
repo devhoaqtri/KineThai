@@ -39,6 +39,7 @@ import { buildStages } from "../lib/stages";
 import { resolveClue } from "../lib/clues";
 import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
+import { requestDurableStorage } from "../lib/durable-storage";
 import { getExportStageBox, type CardExportLayout } from "../lib/export-layout";
 import { hasReportedWord } from "../lib/reported-words";
 import { sceneSkipLimiter } from "../lib/skip-limiter";
@@ -845,6 +846,7 @@ export function VocabularyCard({
       flipReaction(wordId, kind);
       readLocalReactions();
       if (turningOn) {
+        requestDurableStorage();
         setPops((current) => ({
           ...current,
           [kind]: current[kind] + 1,

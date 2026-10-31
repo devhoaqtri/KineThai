@@ -10017,7 +10017,57 @@ body:has(.vocab-intro) .vocab-resume {
   text-transform: uppercase;
   color: var(--shell-text-mute);
 }
-/* A word badge's scope ("🐣 vỡ lòng") is a name, not a metal: keep its own case. */
+/* One level's row in the words-per-level ladder: its name beside its medals, so a
+   catalog with a dozen tracks stays a short list. */
+.vocab-medal-ladder {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  align-items: center;
+}
+.vocab-medal-ladder-title {
+  margin: 0;
+  padding: 0 0 18px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--shell-text);
+}
+.vocab-medal-ladder .vocab-medal-shelf {
+  padding: 8px 12px 4px 0;
+}
+.vocab-medal-ladder:nth-child(2) .vocab-medal-shelf {
+  padding-top: 16px;
+}
+.vocab-medal-ladder:last-child .vocab-medal-shelf {
+  padding-bottom: 24px;
+}
+.vocab-medal-ladder-title small {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--shell-text-mute);
+}
+/* Under a grey goal, in place of its metal: how close the reader is. */
+.vocab-medal-tile-progress {
+  display: block;
+  width: 44px;
+  height: 4px;
+  margin-top: 1px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--shell-line, #ffffff1a);
+}
+.vocab-medal-tile-progress > span {
+  display: block;
+  height: 100%;
+  min-width: 4px;
+  border-radius: inherit;
+  background: var(--vocab-accent);
+}
+/* A note that is not a metal ("Tiếp theo", "3 lần") keeps its own case. */
 .vocab-medal-tile-tier[data-scope] {
   text-transform: none;
   letter-spacing: 0;

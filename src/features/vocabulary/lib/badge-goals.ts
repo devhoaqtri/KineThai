@@ -1,17 +1,18 @@
 /**
- * The badges a reader has not earned yet, ranked by how close they are, and the plain
- * words for what each one asks.
+ * The badge ladders a reader climbs, and the plain words for what each badge asks.
  *
- * Every badge ladder offers one next rung: the streak's next milestone in days, and for
- * the overall count and each difficulty track, the next 100-word target (or the scope's
- * own size at the end). A rung's distance is in days — days left on the streak, and for
- * words the words left at ASSUMED_DAILY_WORDS a day — so a streak and a word count can be
- * compared at all. Ties go to the broadest goal first: overall words, then the streak,
- * then the tracks in ladder order, easiest first.
+ * Three shelf sections: words in one day (the daily goals), days in a row (the streak),
+ * and words learned — one ladder for a single CEFR/HSK level and one for a difficulty
+ * track ("pack"), each the one the reader has taken furthest. Every ladder lists the rungs
+ * already earned, lowest first, then only the very next one, so a reader always sees one
+ * goal ahead and never the whole climb.
  *
- * Exports: ASSUMED_DAILY_WORDS, BadgeGoal, nextBadgeGoals, badgeGoalCriteria,
- *   badgeGoalProgress
- * Depends on: ./level-progress, ./streak, ./word-badges, ./difficulty,
+ * The two short goals also repeat: meeting the 10-word day 5, 10 and 20 times, completing
+ * a 3-day run 5 times, and a 7- or 10-day run 3 times each earn a badge of their own.
+ *
+ * Exports: BadgeGoal, BadgeRung, BadgeLadder, BadgeLadders, DAILY_REPEATS, STREAK_REPEATS,
+ *   badgeLadders, earnedRepeatCount, badgeGoalRatio, badgeGoalCriteria, badgeGoalProgress
+ * Depends on: ./level-progress, ./streak, ./word-badges, ./difficulty, ./daily-goal,
  *   ./target-language, ./locale
  */
 
@@ -19,104 +20,220 @@ import { formatLevelBand, tracksFor } from "./difficulty";
 import {
   milestoneKey,
   milestonesReached,
+  parseMilestoneKey,
   scopeProgress,
   type LevelProgress,
   type ProgressScope,
 } from "./level-progress";
 import type { Locale } from "./locale";
 import type { VocabularyLevel } from "./schema";
-import { DAY_MIN_WORDS, MILESTONES } from "./streak";
+import { DAY_MIN_WORDS, MILESTONES, STREAK_REPEATS, streakRunsCompleted } from "./streak";
 import { DAILY_GOALS, type DailyGoal } from "./daily-goal";
 import type { TargetLocale } from "./target-language";
 import { ALL_SCOPE, scopeLabel } from "./word-badges";
-
-/** A reading pace for comparing a word target with a streak; one short session a day. */
-export const ASSUMED_DAILY_WORDS = 20;
 
 /** A badge, earned or not, with where the reader stands on it. */
 export type BadgeGoal =
   | { kind: "streak"; days: number; current: number }
   | { kind: "words"; scope: string; words: number; complete: boolean; seen: number }
   /** A daily goal: `times` days met so far, `today` words finished today. */
-  | { kind: "daily"; goal: DailyGoal; times: number; today: number };
+  | { kind: "daily"; goal: DailyGoal; times: number; today: number }
+  /**
+   * A short goal met `times` times: the daily goal of `base` words, or a run of `base`
+   * days. `count` is how many times it has been met so far.
+   */
+  | { kind: "repeat"; of: "daily" | "streak"; base: number; times: number; count: number };
 
-/** The next unearned rung of every scope's ladder, words passed included as "earned". */
-function nextWordGoals(
+/** The daily goal that repeats, and how many days met earn each badge. */
+export const DAILY_REPEATS = { goal: 10, times: [5, 10, 20] } as const;
+export { STREAK_REPEATS };
+
+/** One badge on a ladder: earned, or the single next one to aim for. */
+export type BadgeRung = { goal: BadgeGoal; earned: boolean };
+
+/** One scope's word ladder. */
+export type BadgeLadder = { scope: string; rungs: BadgeRung[] };
+
+/** The shelf's ladders, each its earned rungs lowest first, then the next one. */
+export type BadgeLadders = {
+  /** Words in one day: 10, 25, 50. */
+  daily: BadgeRung[];
+  /** Days in a row. */
+  streak: BadgeRung[];
+  /** The single level taken furthest, or null when the catalog has none. */
+  level: BadgeLadder | null;
+  /** The difficulty track taken furthest, or null when the catalog has none. */
+  track: BadgeLadder | null;
+};
+
+/**
+ * The scope taken furthest: the highest share seen among those not yet finished (a
+ * finished one has no goal left to show), more words seen on a tie, then list order. Only
+ * when every scope is finished does a finished one stand in.
+ */
+function furthest(
   scopes: readonly ProgressScope[],
   seen: LevelProgress,
   levelCounts: Partial<Record<VocabularyLevel, number>>,
-  earned: ReadonlySet<string>,
-): BadgeGoal[] {
-  const goals: BadgeGoal[] = [];
-  for (const scope of scopes) {
-    const progress = scopeProgress(scope.levels, seen, levelCounts);
-    if (progress.total <= 0) continue;
-    // Every rung the scope has, finished or not: milestonesReached over the full size.
-    const ladder = milestonesReached(scope.id, progress.total, progress.total);
-    const next = ladder.find((rung) => !earned.has(milestoneKey(rung)));
-    if (next) goals.push({ kind: "words", ...next, seen: progress.seen });
+): { scope: ProgressScope; seen: number; total: number } | null {
+  const sized = scopes
+    .map((scope) => ({ scope, ...scopeProgress(scope.levels, seen, levelCounts) }))
+    .filter((entry) => entry.total > 0);
+  const open = sized.filter((entry) => entry.seen < entry.total);
+  const pool = open.length ? open : sized;
+  let best: (typeof sized)[number] | null = null;
+  for (const entry of pool) {
+    if (
+      !best ||
+      entry.seen / entry.total > best.seen / best.total ||
+      (entry.seen / entry.total === best.seen / best.total && entry.seen > best.seen)
+    ) {
+      best = entry;
+    }
   }
-  return goals;
+  return best;
 }
 
 /**
+ * @param input.daily Days each daily goal has been met, and words finished today
  * @param input.streakEarned Streak milestones already earned, in days
  * @param input.streakNow The current run, in days
- * @param input.wordEarned Word milestone keys already earned
- * @param input.scopes Every scope word progress is counted over, "all" first
+ * @param input.streakDays Qualifying streak days, newest first
+ * @param input.streakRepeats Run lengths whose repeat badge is saved as earned
+ * @param input.wordEarned Word milestone keys already earned ("vo-long:200", "B1:100")
+ * @param input.levelScopes One scope per single level
+ * @param input.trackScopes One scope per difficulty track
  * @param input.seen Seen words per level
  * @param input.levelCounts Words per level in the catalog
- * @param limit How many to return
- * @returns The closest unearned badges, closest first
+ * @returns Every ladder; a finished one simply has no unearned rung
  * @pure true
  */
-export function nextBadgeGoals(
-  input: {
-    streakEarned: readonly number[];
-    streakNow: number;
-    wordEarned: ReadonlySet<string>;
-    scopes: readonly ProgressScope[];
-    seen: LevelProgress;
-    levelCounts: Partial<Record<VocabularyLevel, number>>;
-    /** The daily goals: days each has been met, and words finished today. */
-    daily?: { times: Record<DailyGoal, number>; today: number };
-  },
-  limit = 5,
-): BadgeGoal[] {
-  const ranked: { goal: BadgeGoal; days: number; order: number }[] = [];
-  // The first badges there are to earn: one good day. Each daily goal is offered until it
-  // is first met — the smallest one not yet met, so 25 appears once 10 has been and 50
-  // after that — and then counts up on the shelf instead of holding a slot here for good.
-  const nextDaily = input.daily && DAILY_GOALS.find((goal) => input.daily!.times[goal] === 0);
-  if (input.daily && nextDaily) {
-    ranked.push({
-      goal: { kind: "daily", goal: nextDaily, times: 0, today: input.daily.today },
-      days: 1,
-      order: -1,
+export function badgeLadders(input: {
+  daily: { times: Record<DailyGoal, number>; today: number };
+  streakEarned: readonly number[];
+  streakNow: number;
+  /** Qualifying streak days, newest first (StreakStore.days). */
+  streakDays: readonly number[];
+  /** Run lengths with their repeat badge saved (StreakStore.repeats). */
+  streakRepeats: readonly number[];
+  wordEarned: readonly string[];
+  levelScopes: readonly ProgressScope[];
+  trackScopes: readonly ProgressScope[];
+  seen: LevelProgress;
+  levelCounts: Partial<Record<VocabularyLevel, number>>;
+}): BadgeLadders {
+  const { times, today } = input.daily;
+  const nextDaily = DAILY_GOALS.find((goal) => times[goal] === 0);
+  const daily: BadgeRung[] = DAILY_GOALS.filter(
+    (goal) => times[goal] > 0 || goal === nextDaily,
+  ).map((goal) => ({
+    goal: { kind: "daily", goal, times: times[goal], today },
+    earned: times[goal] > 0,
+  }));
+
+  // Earned repeats, then the next one. Callers offer them only once the goal itself is met.
+  const repeats = (
+    of: "daily" | "streak",
+    base: number,
+    ladder: readonly number[],
+    count: number,
+  ) => {
+    const rungs: BadgeRung[] = [];
+    for (const times of ladder) {
+      const goal: BadgeGoal = { kind: "repeat", of, base, times, count };
+      rungs.push({ goal, earned: count >= times });
+      if (count < times) break;
+    }
+    return rungs;
+  };
+  if (times[DAILY_REPEATS.goal] > 0) {
+    daily.push(
+      ...repeats("daily", DAILY_REPEATS.goal, DAILY_REPEATS.times, times[DAILY_REPEATS.goal]),
+    );
+  }
+
+  const streakEarned = [...new Set(input.streakEarned)].sort((a, b) => a - b);
+  const nextStreak = MILESTONES.find((days) => !streakEarned.includes(days));
+  const streak: BadgeRung[] = streakEarned.map((days) => ({
+    goal: { kind: "streak", days, current: days },
+    earned: true,
+  }));
+  if (nextStreak !== undefined) {
+    streak.push({
+      goal: { kind: "streak", days: nextStreak, current: input.streakNow },
+      earned: false,
     });
   }
-  const streakDays = MILESTONES.find((days) => !input.streakEarned.includes(days));
-  if (streakDays !== undefined) {
-    ranked.push({
-      goal: { kind: "streak", days: streakDays, current: input.streakNow },
-      days: Math.max(1, streakDays - input.streakNow),
-      order: 1,
-    });
+
+  for (const [length, times] of Object.entries(STREAK_REPEATS)) {
+    const base = Number(length);
+    if (!streakEarned.includes(base)) continue;
+    // A saved badge stays earned after the days that earned it have aged out.
+    const runs = streakRunsCompleted(input.streakDays, base);
+    const count = input.streakRepeats.includes(base) ? Math.max(runs, times) : runs;
+    streak.push(...repeats("streak", base, [times], count));
   }
-  const words = nextWordGoals(input.scopes, input.seen, input.levelCounts, input.wordEarned);
-  words.forEach((goal, index) => {
-    if (goal.kind !== "words") return;
-    ranked.push({
-      goal,
-      days: Math.max(0, Math.ceil((goal.words - goal.seen) / ASSUMED_DAILY_WORDS)),
-      // "all" is first among the scopes; it sorts ahead of the streak, the tracks after.
-      order: goal.scope === ALL_SCOPE ? 0 : 2 + index,
-    });
-  });
-  return ranked
-    .sort((a, b) => a.days - b.days || a.order - b.order)
-    .slice(0, limit)
-    .map((entry) => entry.goal);
+
+  const earnedWords = new Map<string, number[]>();
+  for (const key of new Set(input.wordEarned)) {
+    const parsed = parseMilestoneKey(key);
+    if (parsed) {
+      earnedWords.set(parsed.scope, [...(earnedWords.get(parsed.scope) ?? []), parsed.words]);
+    }
+  }
+  const ladderOf = (scopes: readonly ProgressScope[]): BadgeLadder | null => {
+    const pick = furthest(scopes, input.seen, input.levelCounts);
+    if (!pick) return null;
+    const scope = pick.scope.id;
+    // A rung already passed counts even before it is recorded: the level scopes arrived
+    // after many readers were well past their first hundreds, and are only recorded on the
+    // next word read in that level.
+    const reached = milestonesReached(scope, pick.seen, pick.total).map((rung) => rung.words);
+    const passed = [...new Set([...(earnedWords.get(scope) ?? []), ...reached])].sort(
+      (a, b) => a - b,
+    );
+    const rungs: BadgeRung[] = passed.map((words) => ({
+      goal: { kind: "words", scope, words, complete: words === pick.total, seen: words },
+      earned: true,
+    }));
+    const earned = new Set(passed.map((words) => milestoneKey({ scope, words })));
+    // Every rung the scope has, finished or not: milestonesReached over the full size.
+    const next = milestonesReached(scope, pick.total, pick.total).find(
+      (rung) => !earned.has(milestoneKey(rung)),
+    );
+    if (next) rungs.push({ goal: { kind: "words", ...next, seen: pick.seen }, earned: false });
+    return { scope, rungs };
+  };
+
+  return {
+    daily,
+    streak,
+    level: ladderOf(input.levelScopes),
+    track: ladderOf(input.trackScopes),
+  };
+}
+
+/**
+ * @param dailyMet Days the repeating daily goal has been met
+ * @param streakRepeats Run lengths whose repeat badge is saved as earned
+ * @returns Repeat badges earned, for the tab's count
+ * @pure true
+ */
+export function earnedRepeatCount(dailyMet: number, streakRepeats: readonly number[]): number {
+  return DAILY_REPEATS.times.filter((times) => dailyMet >= times).length + streakRepeats.length;
+}
+
+/** @returns How far the reader is towards a badge, 0 to 1. @pure true */
+export function badgeGoalRatio(goal: BadgeGoal): number {
+  const [now, target] =
+    goal.kind === "daily"
+      ? [goal.today, goal.goal]
+      : goal.kind === "streak"
+        ? [goal.current, goal.days]
+        : goal.kind === "repeat"
+          ? [goal.count, goal.times]
+          : [goal.seen, goal.words];
+  return target > 0 ? Math.min(1, Math.max(0, now / target)) : 0;
 }
 
 /** @returns What a badge asks of the reader, in one or two sentences. */
@@ -131,6 +248,11 @@ export function badgeGoalCriteria(
     }
     if (goal.kind === "streak") {
       return `毎日少なくとも ${DAY_MIN_WORDS} 語を、${goal.days} 日連続で学習します。1日休むとカウントは最初からになります。`;
+    }
+    if (goal.kind === "repeat") {
+      return goal.of === "daily"
+        ? `1日に ${goal.base} 語の学習を ${goal.times} 回達成します。連続した日でなくても構いません。`
+        : `${goal.base} 日連続を ${goal.times} 回達成します。長い連続記録は複数回として数えられます（${goal.base * 2} 日連続なら 2 回）。`;
     }
     const any = "同じ単語を何度見ても1語として数えられます。";
     if (goal.scope === ALL_SCOPE) {
@@ -152,6 +274,11 @@ export function badgeGoalCriteria(
     if (goal.kind === "streak") {
       return `เรียนอย่างน้อยวันละ ${DAY_MIN_WORDS} คำ ติดต่อกัน ${goal.days} วัน หากเว้นหนึ่งวัน สถิติจะเริ่มนับใหม่`;
     }
+    if (goal.kind === "repeat") {
+      return goal.of === "daily"
+        ? `เรียนครบ ${goal.base} คำในหนึ่งวัน จำนวน ${goal.times} ครั้ง ไม่จำเป็นต้องเป็นวันติดกัน`
+        : `ทำสถิติต่อเนื่อง ${goal.base} วันให้ครบ ${goal.times} ครั้ง สถิติยาวนับได้หลายครั้ง: ${goal.base * 2} วันติดกันนับเป็น 2 ครั้ง`;
+    }
     const any = "แต่ละคำนับเพียงครั้งเดียวไม่ว่าจะเจอกี่ครั้งก็ตาม";
     if (goal.scope === ALL_SCOPE) {
       return goal.complete
@@ -170,6 +297,11 @@ export function badgeGoalCriteria(
   }
   if (goal.kind === "streak") {
     return `Học ít nhất ${DAY_MIN_WORDS} từ mỗi ngày, ${goal.days} ngày liền nhau. Bỏ một ngày, chuỗi sẽ bắt đầu lại từ đầu.`;
+  }
+  if (goal.kind === "repeat") {
+    return goal.of === "daily"
+      ? `Học xong ${goal.base} từ trong một ngày, ${goal.times} lần. Các ngày không cần liền nhau.`
+      : `Hoàn thành chuỗi ${goal.base} ngày liền, ${goal.times} lần. Một chuỗi dài được tính nhiều lần: ${goal.base * 2} ngày liền là 2 lần.`;
   }
   const any = "Mỗi từ chỉ tính một lần, dù bạn gặp lại bao nhiêu lần.";
   if (goal.scope === ALL_SCOPE) {
@@ -192,6 +324,7 @@ export function badgeGoalProgress(goal: BadgeGoal, uiLocale: Locale = "vi"): str
       const today = `今日: ${Math.min(goal.today, goal.goal)}/${goal.goal} 語`;
       return goal.times > 0 ? `${goal.times} 回達成 · ${today}` : today;
     }
+    if (goal.kind === "repeat") return `達成: ${Math.min(goal.count, goal.times)}/${goal.times} 回`;
     if (goal.kind === "streak")
       return `現在の連続記録: ${Math.min(goal.current, goal.days)}/${goal.days} 日`;
     return `学習済み: ${Math.min(goal.seen, goal.words)}/${goal.words} 語`;
@@ -201,6 +334,8 @@ export function badgeGoalProgress(goal: BadgeGoal, uiLocale: Locale = "vi"): str
       const today = `วันนี้: ${Math.min(goal.today, goal.goal)}/${goal.goal} คำ`;
       return goal.times > 0 ? `ทำได้แล้ว ${goal.times} ครั้ง · ${today}` : today;
     }
+    if (goal.kind === "repeat")
+      return `ทำได้แล้ว: ${Math.min(goal.count, goal.times)}/${goal.times} ครั้ง`;
     if (goal.kind === "streak")
       return `สถิติปัจจุบัน: ${Math.min(goal.current, goal.days)}/${goal.days} วัน`;
     return `ดูแล้ว: ${Math.min(goal.seen, goal.words)}/${goal.words} คำ`;
@@ -209,6 +344,8 @@ export function badgeGoalProgress(goal: BadgeGoal, uiLocale: Locale = "vi"): str
     const today = `Hôm nay: ${Math.min(goal.today, goal.goal)}/${goal.goal} từ`;
     return goal.times > 0 ? `Đã đạt ${goal.times} lần · ${today}` : today;
   }
+  if (goal.kind === "repeat")
+    return `Đã đạt: ${Math.min(goal.count, goal.times)}/${goal.times} lần`;
   if (goal.kind === "streak")
     return `Chuỗi hiện tại: ${Math.min(goal.current, goal.days)}/${goal.days} ngày`;
   return `Đã xem: ${Math.min(goal.seen, goal.words)}/${goal.words} từ`;

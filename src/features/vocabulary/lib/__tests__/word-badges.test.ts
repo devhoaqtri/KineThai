@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   ALL_SCOPE,
   progressScopes,
+  scopeKind,
   scopeLabel,
   wordBadgeBlurb,
   wordBadgeTitle,
@@ -49,6 +50,16 @@ describe("wordTier", () => {
 });
 
 describe("scopeLabel", () => {
+  it("names a single level by its code", () => {
+    expect(scopeLabel("B1", "en")).toBe("Cấp B1");
+    expect(scopeLabel("B1", "en", "ja")).toBe("B1 レベル");
+    expect(scopeLabel("B1", "en", "th")).toBe("ระดับ B1");
+  });
+  it("names a track in the reader's language, never a raw copy key", () => {
+    for (const ui of ["ja", "th"] as const) {
+      expect(scopeLabel("vo-long", "ja", ui)).not.toContain("difficulty.");
+    }
+  });
   it("names the whole set 'Tổng cộng'", () =>
     expect(scopeLabel(ALL_SCOPE, "en")).toBe("Tổng cộng"));
   it("returns an unknown scope id verbatim", () =>
@@ -94,6 +105,24 @@ describe("wordBadgeBlurb", () => {
 });
 
 describe("progressScopes", () => {
+  it("adds one scope per level that has words, after the tracks", () => {
+    const { scopes, levelCounts } = progressScopes("en");
+    const levels = scopes.filter((scope) => scopeKind(scope.id, "en") === "level");
+    expect(levels.length).toBeGreaterThan(0);
+    for (const scope of levels) {
+      expect(scope.levels).toEqual([scope.id]);
+      expect(levelCounts[scope.levels[0]!]).toBeGreaterThan(0);
+    }
+    const kinds = scopes.map((scope) => scopeKind(scope.id, "en"));
+    expect(kinds.indexOf("level")).toBeGreaterThan(kinds.lastIndexOf("track"));
+  });
+  it("keeps Japanese school codes out of the Japanese deck's level scopes", () => {
+    const levels = progressScopes("ja")
+      .scopes.filter((scope) => scopeKind(scope.id, "ja") === "level")
+      .map((scope) => scope.id);
+    expect(levels.length).toBeGreaterThan(0);
+    for (const level of levels) expect(level).toMatch(/^[ABC][12]$/);
+  });
   it("lists the whole set first", () => {
     expect(progressScopes("en").scopes[0]!.id).toBe(ALL_SCOPE);
   });

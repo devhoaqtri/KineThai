@@ -14,18 +14,24 @@
 
 import { useStreakBadges } from "../hooks/useStreakBadges";
 import { useWordBadges, type EarnedWordBadge } from "../hooks/useWordBadges";
-import { progressScopes, scopeLabel, wordTier } from "../lib/word-badges";
+import { progressScopes, scopeKind, scopeLabel, wordTier } from "../lib/word-badges";
 import {
   badgeGoalCriteria,
   badgeGoalProgress,
-  nextBadgeGoals,
+  badgeGoalRatio,
+  badgeLadders,
+  DAILY_REPEATS,
+  earnedRepeatCount,
   type BadgeGoal,
+  type BadgeLadder,
+  type BadgeRung,
 } from "../lib/badge-goals";
 import { readProgress } from "../lib/level-progress";
 import { currentStreak, readStreak } from "../lib/streak";
 import { DEFAULT_TARGET, resolveTarget, type TargetLocale } from "../lib/target-language";
 import {
   dailyTier,
+  repeatTier,
   streakTier,
   streakTierLabel,
   type StreakTier,
@@ -452,32 +458,37 @@ function SavedFolders({
   );
 }
 
-const MEDAL_COPY: Partial<Record<
-  Locale,
-  {
-    dayUnit: string;
-    wordUnit: string;
-    streakTitle: (days: number) => string;
-    dailyTitle: (goal: number) => string;
-    completeSet: string;
-    wordsCount: (words: number) => string;
-    earnedStatus: string;
-    gotIt: string;
-    tileAria: (caption: string, note: string, earned: boolean) => string;
-    emptyHint: string;
-    dailyAria: string;
-    dailyHeading: string;
-    wordsPerDay: (goal: number) => string;
-    timesCount: (times: number) => string;
-    wordsAria: string;
-    wordsHeading: string;
-    streakHeading: string;
-    upcomingAria: string;
-    upcomingHeading: string;
-    everyDayNote: string;
-    metalShort: Record<StreakTier, string>;
-  }
->> = {
+const MEDAL_COPY: Partial<
+  Record<
+    Locale,
+    {
+      dayUnit: string;
+      wordUnit: string;
+      streakTitle: (days: number) => string;
+      dailyTitle: (goal: number) => string;
+      completeSet: string;
+      wordsCount: (words: number) => string;
+      earnedStatus: string;
+      gotIt: string;
+      tileAria: (
+        caption: string,
+        note: string | undefined,
+        earned: boolean,
+        percent: number,
+      ) => string;
+      emptyHint: string;
+      dailyHeading: string;
+      wordsPerDay: (goal: number) => string;
+      timesCount: (times: number) => string;
+      wordsHeading: string;
+      streakHeading: string;
+      repeatDailyTitle: (times: number, base: number) => string;
+      repeatStreakTitle: (times: number, base: number) => string;
+      levelRow: string;
+      trackRow: string;
+    }
+  >
+> = {
   vi: {
     dayUnit: "ngày",
     wordUnit: "từ",
@@ -487,25 +498,18 @@ const MEDAL_COPY: Partial<Record<
     wordsCount: (words) => `${words} từ`,
     earnedStatus: "Đã đạt",
     gotIt: "Đã hiểu",
-    tileAria: (caption, note, earned) =>
-      `${caption}, ${note}${earned ? "" : " — chưa đạt"}. Xem điều kiện`,
+    tileAria: (caption, note, earned, percent) =>
+      `${caption}${earned ? (note ? `, ${note}` : "") : `, chưa đạt, ${percent}%`}. Xem điều kiện`,
     emptyHint: "Chạm vào một huy hiệu bên dưới để xem cách mở khóa.",
-    dailyAria: "Huy hiệu hằng ngày",
-    dailyHeading: "Hằng ngày",
+    dailyHeading: "Số từ trong một ngày",
     wordsPerDay: (goal) => `${goal} từ/ngày`,
     timesCount: (times) => `${times} lần`,
-    wordsAria: "Mốc số từ đã học",
-    wordsHeading: "Từ đã học",
-    streakHeading: "Chuỗi ngày",
-    upcomingAria: "Huy hiệu sắp đạt",
-    upcomingHeading: "Sắp đạt",
-    everyDayNote: "Mỗi ngày",
-    metalShort: {
-      bronze: "Đồng",
-      silver: "Bạc",
-      gold: "Vàng",
-      diamond: "Kim cương",
-    },
+    wordsHeading: "Số từ đã học",
+    streakHeading: "Chuỗi ngày liên tiếp",
+    repeatDailyTitle: (times, base) => `${times} lần ${base} từ mỗi ngày`,
+    repeatStreakTitle: (times, base) => `${times} lần chuỗi ${base} ngày`,
+    levelRow: "Cấp độ",
+    trackRow: "Gói từ",
   },
   ja: {
     dayUnit: "日",
@@ -516,25 +520,18 @@ const MEDAL_COPY: Partial<Record<
     wordsCount: (words) => `${words} 語`,
     earnedStatus: "獲得済み",
     gotIt: "閉じる",
-    tileAria: (caption, note, earned) =>
-      `${caption}、${note}${earned ? "" : " ― 未獲得"}。条件を見る`,
+    tileAria: (caption, note, earned, percent) =>
+      `${caption}${earned ? (note ? `、${note}` : "") : `、未獲得、${percent}%`}。条件を見る`,
     emptyHint: "下のバッジをタップして獲得条件を確認できます。",
-    dailyAria: "デイリーバッジ",
-    dailyHeading: "デイリー",
+    dailyHeading: "1日の単語数",
     wordsPerDay: (goal) => `${goal} 語/日`,
     timesCount: (times) => `${times} 回`,
-    wordsAria: "学習単語数の節目",
     wordsHeading: "学習した単語",
     streakHeading: "連続日数",
-    upcomingAria: "もうすぐ獲得できるバッジ",
-    upcomingHeading: "もうすぐ獲得",
-    everyDayNote: "毎日",
-    metalShort: {
-      bronze: "ブロンズ",
-      silver: "シルバー",
-      gold: "ゴールド",
-      diamond: "ダイヤ",
-    },
+    repeatDailyTitle: (times, base) => `1日 ${base} 語を ${times} 回`,
+    repeatStreakTitle: (times, base) => `${base}日連続を ${times} 回`,
+    levelRow: "レベル",
+    trackRow: "難易度",
   },
   th: {
     dayUnit: "วัน",
@@ -545,32 +542,26 @@ const MEDAL_COPY: Partial<Record<
     wordsCount: (words) => `${words} คำ`,
     earnedStatus: "ได้รับแล้ว",
     gotIt: "เข้าใจแล้ว",
-    tileAria: (caption, note, earned) =>
-      `${caption}, ${note}${earned ? "" : " — ยังไม่บรรลุ"} ดูเงื่อนไข`,
+    tileAria: (caption, note, earned, percent) =>
+      `${caption}${earned ? (note ? `, ${note}` : "") : `, ยังไม่บรรลุ, ${percent}%`} ดูเงื่อนไข`,
     emptyHint: "แตะเหรียญด้านล่างเพื่อดูวิธีปลดล็อก",
-    dailyAria: "เหรียญประจำวัน",
-    dailyHeading: "ประจำวัน",
+    dailyHeading: "จำนวนคำต่อวัน",
     wordsPerDay: (goal) => `${goal} คำ/วัน`,
     timesCount: (times) => `${times} ครั้ง`,
-    wordsAria: "หมุดหมายจำนวนคำที่เรียน",
     wordsHeading: "คำที่เรียนแล้ว",
     streakHeading: "สถิติวันต่อเนื่อง",
-    upcomingAria: "เหรียญที่ใกล้จะได้รับ",
-    upcomingHeading: "ใกล้จะได้รับ",
-    everyDayNote: "ทุกวัน",
-    metalShort: {
-      bronze: "ทองแดง",
-      silver: "เงิน",
-      gold: "ทอง",
-      diamond: "เพชร",
-    },
+    repeatDailyTitle: (times, base) => `วันละ ${base} คำ ${times} ครั้ง`,
+    repeatStreakTitle: (times, base) => `ต่อเนื่อง ${base} วัน ${times} ครั้ง`,
+    levelRow: "ระดับ",
+    trackRow: "ความยาก",
   },
 };
 
 /**
  * How a badge looks, whatever its kind: the number on its face, its metal, the word under
  * the number, and its name. A daily goal always shows the words it asks for on its face;
- * once met, how many days it has been met rides on the coin's corner.
+ * once met, how many days it has been met rides on the coin's corner. A repeat badge shows
+ * the goal it repeats, with the times it asks for on the corner.
  */
 function medalLook(
   goal: BadgeGoal,
@@ -584,6 +575,18 @@ function medalLook(
       tier: streakTier(goal.days),
       unit: copy.dayUnit,
       title: copy.streakTitle(goal.days),
+    };
+  }
+  if (goal.kind === "repeat") {
+    const daily = goal.of === "daily";
+    return {
+      value: goal.base,
+      tier: repeatTier(goal.of, goal.base, goal.times),
+      unit: daily ? copy.wordUnit : copy.dayUnit,
+      title: daily
+        ? copy.repeatDailyTitle(goal.times, goal.base)
+        : copy.repeatStreakTitle(goal.times, goal.base),
+      count: goal.times,
     };
   }
   if (goal.kind === "daily") {
@@ -682,13 +685,15 @@ function MedalTile({
   goal: BadgeGoal;
   earned: boolean;
   caption: string;
-  note: string;
+  /** Under an earned medal, when there is something to add ("4 lần"). */
+  note?: string;
   locale: TargetLocale;
   ui: Locale;
   onOpen: (goal: BadgeGoal, earned: boolean) => void;
 }) {
   const copy = localeCopy(MEDAL_COPY, ui);
   const look = medalLook(goal, locale, ui);
+  const percent = Math.round(badgeGoalRatio(goal) * 100);
   return (
     <li>
       <button
@@ -696,28 +701,77 @@ function MedalTile({
         className="vocab-medal-tile"
         data-locked={earned ? undefined : true}
         onClick={() => onOpen(goal, earned)}
-        aria-label={copy.tileAria(caption, note, earned)}
+        aria-label={copy.tileAria(caption, note, earned, percent)}
       >
         <StreakMedal days={look.value} tier={look.tier} unit={look.unit} count={look.count} />
         <span className="vocab-medal-tile-days">{caption}</span>
-        {/* Uppercase only for a metal ("ĐỒNG"); a name — a scope, or "Chuỗi ngày" on a
-            goal — keeps its own case. */}
-        <span
-          className="vocab-medal-tile-tier"
-          data-scope={goal.kind === "streak" && earned ? undefined : true}
-        >
-          {note}
-        </span>
+        {earned ? (
+          note && (
+            <span className="vocab-medal-tile-tier" data-scope>
+              {note}
+            </span>
+          )
+        ) : (
+          <span className="vocab-medal-tile-progress" aria-hidden>
+            <span style={{ width: `${percent}%` }} />
+          </span>
+        )}
       </button>
     </li>
   );
 }
 
+/** One rung of a ladder as a tile: its face, its caption, and its count or bar below. */
+function RungTile({
+  rung,
+  locale,
+  ui,
+  onOpen,
+}: {
+  rung: BadgeRung;
+  locale: TargetLocale;
+  ui: Locale;
+  onOpen: (goal: BadgeGoal, earned: boolean) => void;
+}) {
+  const copy = localeCopy(MEDAL_COPY, ui);
+  const { goal, earned } = rung;
+  const shared = { goal, earned, locale, ui, onOpen };
+  if (goal.kind === "daily") {
+    return (
+      <MedalTile
+        {...shared}
+        caption={copy.wordsPerDay(goal.goal)}
+        note={copy.timesCount(goal.times)}
+      />
+    );
+  }
+  if (goal.kind === "repeat") {
+    const unit = goal.of === "daily" ? copy.wordUnit : copy.dayUnit;
+    return <MedalTile {...shared} caption={`${goal.base} ${unit} ×${goal.times}`} />;
+  }
+  if (goal.kind === "streak") {
+    return <MedalTile {...shared} caption={t(ui, "saved.medal.days", { days: goal.days })} />;
+  }
+  return (
+    <MedalTile
+      {...shared}
+      caption={goal.complete ? copy.completeSet : copy.wordsCount(goal.words)}
+    />
+  );
+}
+
+function rungKey({ goal }: BadgeRung): string {
+  if (goal.kind === "daily") return `daily:${goal.goal}`;
+  if (goal.kind === "streak") return `streak:${goal.days}`;
+  if (goal.kind === "repeat") return `repeat:${goal.of}:${goal.base}:${goal.times}`;
+  return `${goal.scope}:${goal.words}`;
+}
+
 /**
- * The milestones tab: every medal this device has earned, newest first — word milestones
- * (every 100 words overall and per level) above the streak's days — then the five
- * closest ones not earned yet, in grey, so the shelf always shows what to aim for. Every
- * medal opens its criteria on tap.
+ * The milestones tab, in three sections: words in one day, days in a row, and words
+ * learned — one row for the single level and one for the pack (difficulty track) taken
+ * furthest. Each row shows what this device has earned, lowest first, then the very next
+ * badge in grey with a bar for how close it is. Every medal opens its criteria on tap.
  */
 function MedalShelf({
   badges,
@@ -735,17 +789,6 @@ function MedalShelf({
   const copy = localeCopy(MEDAL_COPY, ui);
   const [open, setOpen] = useState<{ goal: BadgeGoal; earned: boolean } | null>(null);
   const { scopes, levelCounts } = useMemo(() => progressScopes(locale), [locale]);
-  // A word badge is diamond when it finished its scope, so each scope's size is needed.
-  const totals = useMemo(
-    () =>
-      new Map(
-        scopes.map((scope) => [
-          scope.id,
-          scope.levels.reduce((sum, level) => sum + (levelCounts[level] ?? 0), 0),
-        ]),
-      ),
-    [scopes, levelCounts],
-  );
   // Read fresh on every change to the earned lists: those are what move the next goals.
   const progress = useMemo(() => {
     const store = readProgress();
@@ -753,34 +796,42 @@ function MedalShelf({
     return {
       seen: store.seen,
       streakNow: currentStreak(streak),
+      streakDays: streak.days,
+      streakRepeats: streak.repeats,
       today: wordsToday(daily, Date.now()),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [badges, wordBadges, daily]);
-  const goals = useMemo(
+  const ladders = useMemo(
     () =>
-      nextBadgeGoals({
+      badgeLadders({
+        daily: { times: daily.times, today: progress.today },
         streakEarned: badges,
         streakNow: progress.streakNow,
-        wordEarned: new Set(wordBadges.map((badge) => badge.key)),
-        scopes,
+        streakDays: progress.streakDays,
+        streakRepeats: progress.streakRepeats,
+        wordEarned: wordBadges.map((badge) => badge.key),
+        levelScopes: scopes.filter((scope) => scopeKind(scope.id, locale) === "level"),
+        trackScopes: scopes.filter((scope) => scopeKind(scope.id, locale) === "track"),
         seen: progress.seen,
         levelCounts,
-        daily: { times: daily.times, today: progress.today },
       }),
-    [badges, wordBadges, progress, scopes, levelCounts, daily.times],
+    [badges, wordBadges, progress, scopes, levelCounts, daily.times, locale],
   );
-  const wordGoal = (badge: EarnedWordBadge): BadgeGoal => ({
-    kind: "words",
-    scope: badge.scope,
-    words: badge.words,
-    complete: badge.words === totals.get(badge.scope),
-    seen: badge.words,
-  });
-  // Daily goals met at least once, biggest first: the hardest day leads the row.
-  const dailyMet = DAILY_GOALS.filter((goal) => daily.times[goal] > 0).reverse();
-  const nothingYet = !badges.length && !wordBadges.length && dailyMet.length === 0;
+  const wordRows = [
+    { kind: copy.levelRow, ladder: ladders.level },
+    { kind: copy.trackRow, ladder: ladders.track },
+  ].filter((row): row is { kind: string; ladder: BadgeLadder } => row.ladder !== null);
+  const nothingYet =
+    !badges.length && !wordBadges.length && DAILY_GOALS.every((goal) => daily.times[goal] === 0);
   const open_ = (goal: BadgeGoal, earned: boolean) => setOpen({ goal, earned });
+  const shelf = (rungs: BadgeRung[]) => (
+    <ul className="vocab-medal-shelf">
+      {rungs.map((rung) => (
+        <RungTile key={rungKey(rung)} rung={rung} locale={locale} ui={ui} onOpen={open_} />
+      ))}
+    </ul>
+  );
   return (
     <>
       {nothingYet && (
@@ -789,113 +840,33 @@ function MedalShelf({
           <p>{copy.emptyHint}</p>
         </div>
       )}
-      {dailyMet.length > 0 && (
-        <section className="vocab-medal-group" aria-label={copy.dailyAria}>
+      {ladders.daily.length > 0 && (
+        <section className="vocab-medal-group" aria-label={copy.dailyHeading}>
           <h3 className="vocab-medal-group-title">{copy.dailyHeading}</h3>
-          <ul className="vocab-medal-shelf">
-            {dailyMet.map((goal) => (
-              <MedalTile
-                key={goal}
-                goal={{ kind: "daily", goal, times: daily.times[goal], today: progress.today }}
-                earned
-                caption={copy.wordsPerDay(goal)}
-                note={copy.timesCount(daily.times[goal])}
-                locale={locale}
-                ui={ui}
-                onOpen={open_}
-              />
-            ))}
-          </ul>
+          {shelf(ladders.daily)}
         </section>
       )}
-      {wordBadges.length > 0 && (
-        <section className="vocab-medal-group" aria-label={copy.wordsAria}>
+      {ladders.streak.length > 0 && (
+        <section className="vocab-medal-group" aria-label={copy.streakHeading}>
+          <h3 className="vocab-medal-group-title">{copy.streakHeading}</h3>
+          {shelf(ladders.streak)}
+        </section>
+      )}
+      {wordRows.length > 0 && (
+        <section className="vocab-medal-group" aria-label={copy.wordsHeading}>
           <h3 className="vocab-medal-group-title">{copy.wordsHeading}</h3>
-          <ul className="vocab-medal-shelf">
-            {[...wordBadges].reverse().map((badge) => {
-              const goal = wordGoal(badge);
-              return (
-                <MedalTile
-                  key={badge.key}
-                  goal={goal}
-                  earned
-                  caption={
-                    goal.kind === "words" && goal.complete
-                      ? copy.completeSet
-                      : copy.wordsCount(badge.words)
-                  }
-                  note={scopeLabel(badge.scope, locale, ui)}
-                  locale={locale}
-                  ui={ui}
-                  onOpen={open_}
-                />
-              );
-            })}
-          </ul>
-        </section>
-      )}
-      {badges.length > 0 && (
-        <section className="vocab-medal-group" aria-label={t(ui, "saved.medal.shelfAria")}>
-          {(wordBadges.length > 0 || dailyMet.length > 0) && (
-            <h3 className="vocab-medal-group-title">{copy.streakHeading}</h3>
-          )}
-          <ul className="vocab-medal-shelf">
-            {[...badges].reverse().map((days) => (
-              <MedalTile
-                key={days}
-                goal={{ kind: "streak", days, current: days }}
-                earned
-                caption={t(ui, "saved.medal.days", { days })}
-                note={copy.metalShort[streakTier(days)]}
-                locale={locale}
-                ui={ui}
-                onOpen={open_}
-              />
-            ))}
-          </ul>
-        </section>
-      )}
-      {goals.length > 0 && (
-        <section className="vocab-medal-group" aria-label={copy.upcomingAria}>
-          <h3 className="vocab-medal-group-title">{copy.upcomingHeading}</h3>
-          <ul className="vocab-medal-shelf">
-            {goals.map((goal) =>
-              goal.kind === "daily" ? (
-                <MedalTile
-                  key={`daily:${goal.goal}`}
-                  goal={goal}
-                  earned={false}
-                  caption={copy.wordsPerDay(goal.goal)}
-                  note={copy.everyDayNote}
-                  locale={locale}
-                  ui={ui}
-                  onOpen={open_}
-                />
-              ) : goal.kind === "streak" ? (
-                <MedalTile
-                  key={`streak:${goal.days}`}
-                  goal={goal}
-                  earned={false}
-                  caption={t(ui, "saved.medal.days", { days: goal.days })}
-                  note={copy.streakHeading}
-                  locale={locale}
-                  ui={ui}
-                  onOpen={open_}
-                />
-              ) : (
-                <MedalTile
-                  key={`${goal.scope}:${goal.words}`}
-                  goal={goal}
-                  earned={false}
-                  caption={goal.complete ? copy.completeSet : copy.wordsCount(goal.words)}
-                  note={scopeLabel(goal.scope, locale, ui)}
-                  locale={locale}
-                  ui={ui}
-                  onOpen={open_}
-                />
-              ),
-            )}
-          </ul>
+          {wordRows.map(({ kind, ladder }) => (
+            <div key={kind} className="vocab-medal-ladder">
+              <h4 className="vocab-medal-ladder-title">
+                <small>{kind}</small>
+                {/* The row already says "level", so a level shows as its bare name. */}
+                {scopeKind(ladder.scope, locale) === "level"
+                  ? ladder.scope
+                  : scopeLabel(ladder.scope, locale, ui)}
+              </h4>
+              {shelf(ladder.rungs)}
+            </div>
+          ))}
         </section>
       )}
       {open && (
@@ -944,13 +915,20 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
   const badges = useStreakBadges();
   const wordBadges = useWordBadges();
   const daily = useDailyGoalStore();
+  // The repeats are read fresh whenever a milestone list or the daily store changes.
+  const repeatsEarned = useMemo(
+    () => earnedRepeatCount(daily.times[DAILY_REPEATS.goal], readStreak().repeats),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [daily.times, badges],
+  );
   const counts: Record<TabKind, number> = {
     bookmark: saved.length,
     heart: favorites.length,
     medal:
       badges.length +
       wordBadges.length +
-      DAILY_GOALS.filter((goal) => daily.times[goal] > 0).length,
+      DAILY_GOALS.filter((goal) => daily.times[goal] > 0).length +
+      repeatsEarned,
   };
 
   useEffect(() => {
