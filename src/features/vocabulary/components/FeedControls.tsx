@@ -11,6 +11,7 @@ import {
   type RefObject,
 } from "react";
 import {
+  ArrowUpRight,
   ChevronDown,
   ChevronRight,
   Clapperboard,
@@ -39,7 +40,16 @@ import { levelLadderFor } from "../lib/level-ladder";
 import { activateCustomPack } from "../lib/custom-pack";
 import { useCustomPacks } from "../hooks/useCustomPacks";
 import { CEFR_LEVELS, HSK_LEVELS, type NarrativeStyle, type VocabularyLevel } from "../lib/schema";
-import type { HistoryStats } from "../lib/history";
+import {
+  historyEntries,
+  scopeOfCell,
+  type HistoryScope,
+  type HistoryStats,
+  type MemoryCell,
+  type ViewHistory,
+} from "../lib/history";
+import { loadRecallMarks, type RecallMarks } from "../lib/recall-marks";
+import { RecallSheet } from "./RecallSheet";
 import {
   douyinStyleLabel,
   douyinStyleLabelVi,
@@ -1096,6 +1106,7 @@ export function FeedControls({
   open,
   onOpen,
   reducedMotion,
+  history,
   historyStats,
   onClearHistory,
   onExport,
@@ -1111,6 +1122,8 @@ export function FeedControls({
   open: boolean;
   onOpen: (value: boolean) => void;
   reducedMotion: boolean;
+  /** Raw on-device history, so a memory cell can open the words behind its count. */
+  history: ViewHistory;
   historyStats: HistoryStats;
   onClearHistory: () => void;
   /** Open the video-export studio. Passed only for admins; absent, the control is not rendered. */
@@ -1131,6 +1144,50 @@ export function FeedControls({
     toggleButton.current?.focus();
   };
   const options = usePresence(open, POPUP_EXIT_MS);
+  const panelRef = useRef<HTMLElement>(null);
+  const zoomRef = useRef<HTMLDivElement>(null);
+  // A memory cell zoomed into the memory sheet. The scope stays set through the sheet's
+  // own exit; it reports back once it has folded into its cell.
+  const [recallScope, setRecallScope] = useState<HistoryScope | null>(null);
+  const [recallNow, setRecallNow] = useState(0);
+  const [recallMarks, setRecallMarks] = useState<RecallMarks>({});
+  const memoryCells = useRef<Partial<Record<MemoryCell, HTMLButtonElement>>>({});
+  const recallReturn = useRef<HTMLButtonElement | null>(null);
+  const memoryNow = useMemo(() => (open ? Date.now() : 0), [open]);
+  useEffect(() => {
+    if (open) setRecallMarks(loadRecallMarks());
+  }, [open]);
+  useEffect(() => {
+    if (!options.mounted) setRecallScope(null);
+  }, [options.mounted]);
+  const zoomCell = (cell: MemoryCell) => {
+    const box = memoryCells.current[cell];
+    if (!box) return null;
+    return {
+      box,
+      count: box.querySelector<HTMLElement>(".vocab-memory-count"),
+      label: box.querySelector<HTMLElement>(".vocab-memory-label"),
+    };
+  };
+  const cellOfScope = (scope: HistoryScope) => {
+    const cell = (["today", "yesterday", "week"] as const).find(
+      (name) => scopeOfCell(name, recallNow) === scope,
+    );
+    return cell ? zoomCell(cell) : null;
+  };
+  const openRecall = (cell: MemoryCell) => {
+    const now = Date.now();
+    recallReturn.current = memoryCells.current[cell] ?? null;
+    setRecallNow(now);
+    setRecallScope(scopeOfCell(cell, now));
+  };
+  // Each cell's own tally, so the hairline at its foot matches the sheet's meter.
+  const memoryMeter = (cell: MemoryCell) => {
+    const entries = historyEntries(history, scopeOfCell(cell, memoryNow), memoryNow);
+    const yes = entries.filter((entry) => recallMarks[entry.id] === "yes").length;
+    const no = entries.filter((entry) => recallMarks[entry.id] === "no").length;
+    return { yes, no, open: entries.length - yes - no };
+  };
   const [difficultyOpen, setDifficultyOpen] = useState(false);
   const [ecoOpen, setEcoOpen] = useState(false);
   // Guardrail while any sheet is out: the first tap on anything outside the open
@@ -1160,7 +1217,7 @@ export function FeedControls({
       if (!(target instanceof Element)) return;
       // instanceof Element, not HTMLElement: tapping a row's svg glyph must count as
       // inside the sheet too.
-      if (target.closest(".vocab-options, .vocab-difficulty-pop")) return;
+      if (target.closest(".vocab-options, .vocab-difficulty-pop, .vocab-recall")) return;
       event.preventDefault();
       event.stopPropagation();
       swallowClickBefore.current = event.timeStamp;
@@ -1348,6 +1405,7 @@ export function FeedControls({
       {options.mounted && (
         <section
           id={panelId}
+          ref={panelRef}
           className="vocab-options"
           data-closing={options.closing || undefined}
           inert={options.closing || undefined}
@@ -1356,151 +1414,187 @@ export function FeedControls({
             if (event.key === "Escape") close();
           }}
         >
-          {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
+          <div
+            className="vocab-options-zoom"
+            ref={zoomRef}
+            inert={recallScope !== null || undefined}
+          >
+            {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
               boxed: what the app is (an experiment, AI-written decks, roadmap, cooperation)
               before how to tune it. */}
-          <Link to="/feed/about" className="vocab-info-row">
-            <span className="vocab-info-row-icon" aria-hidden="true">
-              🌿
-            </span>
-            <span className="vocab-info-row-text">
-              <strong>{t(ui, "info.title")}</strong>
-              <small>
-                <span>{t(ui, "info.tag.experiment")}</span>
-                <span>{t(ui, "info.tag.ai")}</span>
-                <span>{t(ui, "info.tag.roadmap")}</span>
-              </small>
-            </span>
-            <ChevronRight size={17} aria-hidden="true" />
-          </Link>
-          <div className="vocab-options-secondary">
-            <span className="vocab-group-label">{t(ui, "options.secondary")}</span>
-            <div className="vocab-select-grid">
-              <ThemePicker
-                value={presentation.theme}
-                onChange={(theme) => onPresentation({ ...presentation, theme })}
-                dialect={presentation.dialect}
-                uiLocale={ui}
-              />
-              {locale === "ja" && (
-                <OptionPicker
-                  label={t(ui, "japanese.label")}
-                  value={japaneseLevel}
-                  options={[
-                    { id: "", label: t(ui, "japanese.all") },
-                    { id: "JPRIM", label: t(ui, "japanese.JPRIM") },
-                    { id: "JSEC", label: t(ui, "japanese.JSEC") },
-                    { id: "JHIGH", label: t(ui, "japanese.JHIGH") },
-                    { id: "JCOLL", label: t(ui, "japanese.JCOLL") },
-                  ]}
-                  onChange={(level) => {
-                    // A level choice edits only the level filter; difficulty stays put.
-                    const next = level as VocabularyLevel | "";
-                    onFilters({ ...filters, level: next });
-                  }}
+            <Link to="/feed/about" className="vocab-info-row">
+              <span className="vocab-info-row-icon" aria-hidden="true">
+                🌿
+              </span>
+              <span className="vocab-info-row-text">
+                <strong>{t(ui, "info.title")}</strong>
+                <small>
+                  <span>{t(ui, "info.tag.experiment")}</span>
+                  <span>{t(ui, "info.tag.ai")}</span>
+                  <span>{t(ui, "info.tag.roadmap")}</span>
+                </small>
+              </span>
+              <ChevronRight size={17} aria-hidden="true" />
+            </Link>
+            <div className="vocab-options-secondary">
+              <span className="vocab-group-label">{t(ui, "options.secondary")}</span>
+              <div className="vocab-select-grid">
+                <ThemePicker
+                  value={presentation.theme}
+                  onChange={(theme) => onPresentation({ ...presentation, theme })}
+                  dialect={presentation.dialect}
+                  uiLocale={ui}
                 />
-              )}
-              <OptionPicker
-                label={t(ui, "language.label")}
-                value={ui}
-                options={SUPPORTED_LOCALES.map((code) => ({
-                  id: code,
-                  label: localeLabel(code),
-                }))}
-                onChange={(code) => setLocale(code as Locale)}
-              />
+                {locale === "ja" && (
+                  <OptionPicker
+                    label={t(ui, "japanese.label")}
+                    value={japaneseLevel}
+                    options={[
+                      { id: "", label: t(ui, "japanese.all") },
+                      { id: "JPRIM", label: t(ui, "japanese.JPRIM") },
+                      { id: "JSEC", label: t(ui, "japanese.JSEC") },
+                      { id: "JHIGH", label: t(ui, "japanese.JHIGH") },
+                      { id: "JCOLL", label: t(ui, "japanese.JCOLL") },
+                    ]}
+                    onChange={(level) => {
+                      // A level choice edits only the level filter; difficulty stays put.
+                      const next = level as VocabularyLevel | "";
+                      onFilters({ ...filters, level: next });
+                    }}
+                  />
+                )}
+                <OptionPicker
+                  label={t(ui, "language.label")}
+                  value={ui}
+                  options={SUPPORTED_LOCALES.map((code) => ({
+                    id: code,
+                    label: localeLabel(code),
+                  }))}
+                  onChange={(code) => setLocale(code as Locale)}
+                />
+              </div>
             </div>
-          </div>
-          <label className="vocab-autoplay">
-            <input
-              type="checkbox"
-              checked={presentation.advance !== false && !reducedMotion}
-              disabled={reducedMotion}
-              onChange={(event) =>
-                onPresentation({ ...presentation, advance: event.target.checked })
-              }
-            />{" "}
-            {t(ui, "advance.label")}
-          </label>
-          <p className="vocab-options-summary">
-            {reducedMotion
-              ? t(ui, "autoplay.reduced")
-              : presentation.advance === false
-                ? t(ui, "advance.replayHint")
-                : t(ui, "advance.flowHint")}
-          </p>
-          <div className="vocab-pace" role="radiogroup" aria-label={t(ui, "pace.aria")}>
-            <span className="vocab-pace-label">{t(ui, "pace.label")}</span>
-            <div className="vocab-pace-options">
-              {PACE_OPTIONS.map((option) => {
-                const on = (presentation.pace ?? "normal") === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={on}
-                    data-on={on || undefined}
-                    disabled={reducedMotion}
-                    onClick={() => onPresentation({ ...presentation, pace: option.id })}
-                  >
-                    {t(ui, `pace.${option.id}`)}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          {/* The Douyin dialect only exists on the Chinese host: it swaps the whole
-              visual language — palettes, motion presets and highlight reskin — and
-              deactivates the default one, so it is offered nowhere else. */}
-          {locale === "zh" && (
-            <label className="vocab-autoplay vocab-dialect">
+            <label className="vocab-autoplay">
               <input
                 type="checkbox"
-                checked={presentation.dialect === "douyin"}
+                checked={presentation.advance !== false && !reducedMotion}
+                disabled={reducedMotion}
                 onChange={(event) =>
-                  onPresentation({
-                    ...presentation,
-                    // A dialect flip invalidates an allow-list picked from the other
-                    // pool; "mix" reopens the full new collection instead.
-                    theme: "mix",
-                    dialect: event.target.checked ? "douyin" : "default",
-                  })
+                  onPresentation({ ...presentation, advance: event.target.checked })
                 }
               />{" "}
-              {t(ui, "dialect.label")}
-              <small className="vocab-dialect-note">{t(ui, "dialect.note")}</small>
+              {t(ui, "advance.label")}
             </label>
-          )}
-          <div className="vocab-memory" aria-label={t(ui, "memory.aria")}>
-            <span className="vocab-group-label">{t(ui, "memory.label")}</span>
-            {/* Distinct words seen, per window: yesterday, today in the middle carrying the
+            <p className="vocab-options-summary">
+              {reducedMotion
+                ? t(ui, "autoplay.reduced")
+                : presentation.advance === false
+                  ? t(ui, "advance.replayHint")
+                  : t(ui, "advance.flowHint")}
+            </p>
+            <div className="vocab-pace" role="radiogroup" aria-label={t(ui, "pace.aria")}>
+              <span className="vocab-pace-label">{t(ui, "pace.label")}</span>
+              <div className="vocab-pace-options">
+                {PACE_OPTIONS.map((option) => {
+                  const on = (presentation.pace ?? "normal") === option.id;
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      data-on={on || undefined}
+                      disabled={reducedMotion}
+                      onClick={() => onPresentation({ ...presentation, pace: option.id })}
+                    >
+                      {t(ui, `pace.${option.id}`)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            {/* The Douyin dialect only exists on the Chinese host: it swaps the whole
+              visual language — palettes, motion presets and highlight reskin — and
+              deactivates the default one, so it is offered nowhere else. */}
+            {locale === "zh" && (
+              <label className="vocab-autoplay vocab-dialect">
+                <input
+                  type="checkbox"
+                  checked={presentation.dialect === "douyin"}
+                  onChange={(event) =>
+                    onPresentation({
+                      ...presentation,
+                      // A dialect flip invalidates an allow-list picked from the other
+                      // pool; "mix" reopens the full new collection instead.
+                      theme: "mix",
+                      dialect: event.target.checked ? "douyin" : "default",
+                    })
+                  }
+                />{" "}
+                {t(ui, "dialect.label")}
+                <small className="vocab-dialect-note">{t(ui, "dialect.note")}</small>
+              </label>
+            )}
+            <div className="vocab-memory" aria-label={t(ui, "memory.aria")}>
+              <span className="vocab-group-label">{t(ui, "memory.label")}</span>
+              {/* Distinct words seen, per window: yesterday, today in the middle carrying the
                 accent, then the week. The number leads, the window names it, and a window
                 with nothing in it is greyed rather than shouting a zero. */}
-            <dl className="vocab-memory-stats">
-              <div data-empty={historyStats.distinctYesterday === 0 || undefined}>
-                <dt>{t(ui, "memory.cell.yesterday")}</dt>
-                <dd>{historyStats.distinctYesterday}</dd>
+              <div
+                className="vocab-memory-stats"
+                role="group"
+                aria-label={t(ui, "memory.reviewAria")}
+              >
+                {(
+                  [
+                    ["yesterday", t(ui, "memory.cell.yesterday"), historyStats.distinctYesterday],
+                    ["today", t(ui, "memory.cell.today"), historyStats.distinctToday],
+                    ["week", t(ui, "memory.cell.week"), historyStats.distinct7d],
+                  ] as const
+                ).map(([cell, label, count]) => {
+                  const meter = memoryMeter(cell);
+                  return (
+                    <button
+                      key={cell}
+                      ref={(node) => {
+                        memoryCells.current[cell] = node ?? undefined;
+                      }}
+                      type="button"
+                      data-today={cell === "today" || undefined}
+                      data-empty={count === 0 || undefined}
+                      aria-haspopup="dialog"
+                      aria-label={t(ui, "memory.cellAria", { label, n: count })}
+                      onClick={() => openRecall(cell)}
+                    >
+                      <span className="vocab-memory-label">{label}</span>
+                      <span className="vocab-memory-count">{count}</span>
+                      <ArrowUpRight
+                        className="vocab-memory-open"
+                        size={13}
+                        strokeWidth={2.5}
+                        aria-hidden="true"
+                      />
+                      {meter.yes + meter.no > 0 && (
+                        <span className="vocab-memory-meter" aria-hidden="true">
+                          <i data-kind="yes" style={{ flexGrow: meter.yes }} />
+                          <i data-kind="no" style={{ flexGrow: meter.no }} />
+                          <i style={{ flexGrow: meter.open }} />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-              <div data-today data-empty={historyStats.distinctToday === 0 || undefined}>
-                <dt>{t(ui, "memory.cell.today")}</dt>
-                <dd>{historyStats.distinctToday}</dd>
-              </div>
-              <div data-empty={historyStats.distinct7d === 0 || undefined}>
-                <dt>{t(ui, "memory.cell.week")}</dt>
-                <dd>{historyStats.distinct7d}</dd>
-              </div>
-            </dl>
-            <p className="vocab-options-summary">{t(ui, "memory.rules")}</p>
-            <button type="button" className="vocab-memory-clear" onClick={onClearHistory}>
-              {t(ui, "memory.forget")}
-            </button>
-          </div>
-          <nav aria-label={t(ui, "nav.aria")} className="vocab-site-links">
-            {/* Community is not open to readers yet; only the button is hidden, the
+              <p className="vocab-options-summary">{t(ui, "memory.rules")}</p>
+              <button type="button" className="vocab-memory-clear" onClick={onClearHistory}>
+                {t(ui, "memory.forget")}
+              </button>
+            </div>
+            <nav aria-label={t(ui, "nav.aria")} className="vocab-site-links">
+              {/* Community is not open to readers yet; only the button is hidden, the
                 /community route still resolves. Flip COMMUNITY_AVAILABLE to bring it back. */}
-            {COMMUNITY_AVAILABLE && <Link to="/community">{t(ui, "nav.community")}</Link>}
-            {/* Temporarily hidden at request: "Đăng nhập" and "Về với từ vựng" leave the
+              {COMMUNITY_AVAILABLE && <Link to="/community">{t(ui, "nav.community")}</Link>}
+              {/* Temporarily hidden at request: "Đăng nhập" and "Về với từ vựng" leave the
                 sheet for now — uncomment (both live together) to bring them back. The
                 /auth route and the close behaviour are untouched.
             <Link to="/auth">Đăng nhập</Link>
@@ -1508,7 +1602,24 @@ export function FeedControls({
               Về với từ vựng
             </button>
             */}
-          </nav>
+            </nav>
+          </div>
+          {recallScope !== null && (
+            <RecallSheet
+              history={history}
+              initialScope={recallScope}
+              now={recallNow}
+              marks={recallMarks}
+              onMarks={setRecallMarks}
+              container={panelRef.current?.closest<HTMLElement>(".vocabulary-shell") ?? null}
+              scene={zoomRef.current}
+              cellFor={cellOfScope}
+              fallbackCell={() => zoomCell("week")}
+              returnFocus={() => recallReturn.current?.focus({ preventScroll: true })}
+              reducedMotion={reducedMotion}
+              onClosed={() => setRecallScope(null)}
+            />
+          )}
         </section>
       )}
     </header>

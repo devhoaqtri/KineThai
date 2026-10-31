@@ -511,8 +511,7 @@
    floating in the middle of the frame rather than as a top edge. Vertically the same rule
    already applied, which is why the top looked right while the sides did not. */
 .vocab-recording .vocab-toolbar::before {
-  inset: calc(-1 * var(--vocab-rec-top, 61px) - 2px)
-    calc(-1 * var(--vocab-chrome-side, 0px)) -26px;
+  inset: calc(-1 * var(--vocab-rec-top, 61px) - 2px) calc(-1 * var(--vocab-chrome-side, 0px)) -26px;
 }
 /* Recorded top bar: the title moves to the RIGHT corner.
    The row is `auto 1fr auto` and its three children are auto-placed in source order, so
@@ -884,7 +883,7 @@
 }
 /* The first block sits beside the notch, so the rest of the sheet starts below
    it rather than running under the button. */
-.vocab-options > :first-child {
+.vocab-options > :first-child:not(.vocab-options-zoom) {
   padding-right: calc(var(--vocab-corner) + 14px);
   min-height: calc(var(--vocab-corner) - 4px);
 }
@@ -1321,7 +1320,7 @@
 }
 /* The first block sits beside the notch, so the rest of the sheet starts below
    it rather than running under the button. */
-.vocab-options > :first-child {
+.vocab-options > :first-child:not(.vocab-options-zoom) {
   padding-right: calc(var(--vocab-corner) + 14px);
   min-height: calc(var(--vocab-corner) - 4px);
 }
@@ -1989,20 +1988,39 @@
   gap: 8px;
   margin: 0;
 }
-.vocab-memory-stats > div {
+.vocab-memory-stats > button {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column-reverse;
+  align-items: flex-start;
   gap: 2px;
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--shell-line);
   border-radius: 12px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--dur-press) var(--ease-out),
+    border-color var(--dur-quick) var(--ease-out),
+    background var(--dur-quick) var(--ease-out);
 }
-.vocab-memory-stats dt {
+.vocab-memory-stats > button:hover {
+  border-color: color-mix(in srgb, var(--shell-text) 28%, transparent);
+}
+.vocab-memory-stats > button:active {
+  transform: scale(0.96);
+}
+.vocab-memory-label {
   font-size: 11px;
   font-weight: 600;
   color: var(--shell-text-mute);
 }
-.vocab-memory-stats dd {
+.vocab-memory-count {
   margin: 0;
   font-size: 22px;
   font-weight: 800;
@@ -2011,20 +2029,38 @@
   color: var(--shell-text);
   font-variant-numeric: tabular-nums;
 }
-.vocab-memory-stats > div[data-today] {
+.vocab-memory-stats > button[data-today] {
   border-color: color-mix(in srgb, var(--vocab-accent) 45%, transparent);
   background: color-mix(in srgb, var(--vocab-accent) 10%, transparent);
 }
-.vocab-memory-stats > div[data-today] dd {
+.vocab-memory-stats > button[data-today] .vocab-memory-count {
   color: var(--vocab-accent);
 }
+/* The cell is a way in. The hairline along its foot is the sheet's meter, in small. */
+.vocab-memory-open {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--shell-text-mute);
+  opacity: 0.7;
+}
+.vocab-memory-meter {
+  --recall-yes: var(--vocab-accent);
+  --recall-no: #ff8fa3;
+  --recall-open: transparent;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+}
 /* Nothing seen in that window: the cell steps back to grey, accent and all. */
-.vocab-memory-stats > div[data-empty] {
+.vocab-memory-stats > button[data-empty] {
   border-color: var(--shell-line);
   background: none;
   opacity: 0.45;
 }
-.vocab-memory-stats > div[data-empty] dd {
+.vocab-memory-stats > button[data-empty] .vocab-memory-count {
   color: var(--shell-text-mute);
 }
 .vocab-memory-clear {
@@ -8372,16 +8408,19 @@
     backdrop-filter: blur(0px);
     background: #0000;
   }
-  15% {  /* 700ms - fully blurred, holds while the address is typed */
+  15% {
+    /* 700ms - fully blurred, holds while the address is typed */
     backdrop-filter: blur(24px);
     background: #00000073;
   }
-  61% {  /* 2800ms - Enter has landed; the empty page starts covering this */
+  61% {
+    /* 2800ms - Enter has landed; the empty page starts covering this */
     backdrop-filter: blur(24px);
     background: #00000073;
   }
   78%,
-  100% {  /* 3600ms - clear again: what is left is the app's own page, emptied */
+  100% {
+    /* 3600ms - clear again: what is left is the app's own page, emptied */
     backdrop-filter: blur(0px);
     background: #0000;
   }
@@ -8408,11 +8447,13 @@ body:has(.vocab-outro) .vocab-resume {
 }
 @keyframes vocab-outro-clear {
   0%,
-  61% {  /* 2800ms - holds until Enter has landed */
+  61% {
+    /* 2800ms - holds until Enter has landed */
     opacity: 1;
   }
   78%,
-  100% {  /* 3600ms */
+  100% {
+    /* 3600ms */
     opacity: 0;
   }
 }
@@ -8433,19 +8474,22 @@ body:has(.vocab-outro) .vocab-resume {
 }
 @keyframes vocab-outro-bar {
   0%,
-  8% {  /* 350ms */
+  8% {
+    /* 350ms */
     opacity: 0;
     transform: scale(0.96) translateY(6px);
   }
   17%,
-  52% {  /* 800ms -> 2400ms */
+  52% {
+    /* 800ms -> 2400ms */
     opacity: 1;
     transform: none;
     box-shadow:
       0 18px 50px #00000059,
       0 2px 0 #ffffff6b inset;
   }
-  58% {  /* 2650ms - Enter: the bar takes the keystroke rather than a key graphic drawn
+  58% {
+    /* 2650ms - Enter: the bar takes the keystroke rather than a key graphic drawn
             over it, which would be one more thing to explain to a viewer */
     opacity: 1;
     transform: scale(0.985);
@@ -8453,12 +8497,14 @@ body:has(.vocab-outro) .vocab-resume {
       0 0 0 6px #7bdcb555,
       0 18px 50px #00000059;
   }
-  61% {  /* 2800ms */
+  61% {
+    /* 2800ms */
     opacity: 1;
     transform: none;
   }
   74%,
-  100% {  /* 3400ms */
+  100% {
+    /* 3400ms */
     opacity: 0;
     transform: scale(1.02);
   }
@@ -8497,12 +8543,14 @@ body:has(.vocab-outro) .vocab-resume {
 }
 @keyframes vocab-outro-type {
   0%,
-  18% {  /* 850ms - the pause before a typist starts */
+  18% {
+    /* 850ms - the pause before a typist starts */
     width: 0;
     /* Governs the interval that STARTS here: 14 characters, one step each. */
     animation-timing-function: steps(14, end);
   }
-  51% {  /* 2350ms - 14ch alone leaves out the letter-spacing and clipped the last letter */
+  51% {
+    /* 2350ms - 14ch alone leaves out the letter-spacing and clipped the last letter */
     width: calc(14ch + 14 * 0.01em);
   }
   /* The rounding slack comes in only once typing is over: spread across the steps, it
@@ -8520,9 +8568,31 @@ body:has(.vocab-outro) .vocab-resume {
   animation: vocab-outro-caret var(--outro-dur) steps(1, end) forwards;
 }
 @keyframes vocab-outro-caret {
-  0%, 6%, 12%, 18%, 24%, 30%, 36%, 42%, 48% { opacity: 1; }
-  3%, 9%, 15%, 21%, 27%, 33%, 39%, 45% { opacity: 0; }
-  52%, 100% { opacity: 0; }  /* 2400ms - gone once Enter is pressed */
+  0%,
+  6%,
+  12%,
+  18%,
+  24%,
+  30%,
+  36%,
+  42%,
+  48% {
+    opacity: 1;
+  }
+  3%,
+  9%,
+  15%,
+  21%,
+  27%,
+  33%,
+  39%,
+  45% {
+    opacity: 0;
+  }
+  52%,
+  100% {
+    opacity: 0;
+  } /* 2400ms - gone once Enter is pressed */
 }
 
 /* End-card variants (data-outro), picked per take like the intro's. Each keeps the bar
@@ -8877,8 +8947,8 @@ body:has(.vocab-outro) .vocab-resume {
   background: var(--c, #ffd166);
   border-radius: var(--r, 2px);
   opacity: 0;
-  animation: vocab-intro-confetti var(--d, 1500ms) cubic-bezier(0.1, 0.65, 0.3, 1)
-    var(--t, 300ms) forwards;
+  animation: vocab-intro-confetti var(--d, 1500ms) cubic-bezier(0.1, 0.65, 0.3, 1) var(--t, 300ms)
+    forwards;
 }
 @keyframes vocab-intro-confetti {
   0% {
@@ -8899,24 +8969,190 @@ body:has(.vocab-outro) .vocab-resume {
       rotate(calc(var(--rot) * 2.2)) scale(0.85);
   }
 }
-.vocab-intro-confetti i:nth-child(1)  { --x: -172px; --y: -96px;  --rot: 220deg; --c: #ff6b6b; --t: 300ms; --d: 1700ms; --w: 13px; --h: 18px; }
-.vocab-intro-confetti i:nth-child(2)  { --x:  168px; --y: -112px; --rot: -260deg; --c: #4ecdc4; --t: 320ms; --d: 1600ms; --w: 11px; --h: 11px; --r: 999px; }
-.vocab-intro-confetti i:nth-child(3)  { --x: -118px; --y: -176px; --rot: 190deg; --c: #ffd166; --t: 345ms; --d: 1800ms; --w: 15px; --h: 9px; }
-.vocab-intro-confetti i:nth-child(4)  { --x:  126px; --y: -186px; --rot: -200deg; --c: #a06bff; --t: 360ms; --d: 1650ms; --w: 10px; --h: 16px; }
-.vocab-intro-confetti i:nth-child(5)  { --x: -214px; --y:  -34px; --rot: 300deg; --c: #7bdcb5; --t: 310ms; --d: 1750ms; --w: 12px; --h: 12px; --r: 999px; }
-.vocab-intro-confetti i:nth-child(6)  { --x:  220px; --y:  -46px; --rot: -320deg; --c: #ff9f1c; --t: 335ms; --d: 1700ms; --w: 14px; --h: 8px; }
-.vocab-intro-confetti i:nth-child(7)  { --x:  -72px; --y: -208px; --rot: 160deg; --c: #4ecdc4; --t: 380ms; --d: 1850ms; --w: 9px; --h: 17px; }
-.vocab-intro-confetti i:nth-child(8)  { --x:   78px; --y: -214px; --rot: -150deg; --c: #ff6b6b; --t: 395ms; --d: 1800ms; --w: 13px; --h: 10px; }
-.vocab-intro-confetti i:nth-child(9)  { --x: -246px; --y: -128px; --rot: 240deg; --c: #ffd166; --t: 355ms; --d: 1900ms; --w: 10px; --h: 10px; --r: 999px; }
-.vocab-intro-confetti i:nth-child(10) { --x:  252px; --y: -136px; --rot: -230deg; --c: #a06bff; --t: 370ms; --d: 1880ms; --w: 12px; --h: 15px; }
-.vocab-intro-confetti i:nth-child(11) { --x: -148px; --y:   38px; --rot: 280deg; --c: #7bdcb5; --t: 325ms; --d: 1600ms; --w: 11px; --h: 14px; }
-.vocab-intro-confetti i:nth-child(12) { --x:  154px; --y:   44px; --rot: -290deg; --c: #ff9f1c; --t: 340ms; --d: 1620ms; --w: 13px; --h: 9px; }
-.vocab-intro-confetti i:nth-child(13) { --x:  -28px; --y: -232px; --rot: 210deg; --c: #ff6b6b; --t: 410ms; --d: 1950ms; --w: 10px; --h: 10px; --r: 999px; }
-.vocab-intro-confetti i:nth-child(14) { --x:   34px; --y: -238px; --rot: -180deg; --c: #4ecdc4; --t: 420ms; --d: 1900ms; --w: 14px; --h: 11px; }
-.vocab-intro-confetti i:nth-child(15) { --x: -196px; --y:  -158px; --rot: 330deg; --c: #ffd166; --t: 365ms; --d: 1820ms; --w: 9px; --h: 15px; }
-.vocab-intro-confetti i:nth-child(16) { --x:  202px; --y:  -166px; --rot: -340deg; --c: #a06bff; --t: 350ms; --d: 1860ms; --w: 12px; --h: 12px; }
-.vocab-intro-confetti i:nth-child(17) { --x: -102px; --y:   76px; --rot: 250deg; --c: #7bdcb5; --t: 330ms; --d: 1560ms; --w: 10px; --h: 13px; }
-.vocab-intro-confetti i:nth-child(18) { --x:  110px; --y:   82px; --rot: -270deg; --c: #ff9f1c; --t: 345ms; --d: 1580ms; --w: 13px; --h: 8px; }
+.vocab-intro-confetti i:nth-child(1) {
+  --x: -172px;
+  --y: -96px;
+  --rot: 220deg;
+  --c: #ff6b6b;
+  --t: 300ms;
+  --d: 1700ms;
+  --w: 13px;
+  --h: 18px;
+}
+.vocab-intro-confetti i:nth-child(2) {
+  --x: 168px;
+  --y: -112px;
+  --rot: -260deg;
+  --c: #4ecdc4;
+  --t: 320ms;
+  --d: 1600ms;
+  --w: 11px;
+  --h: 11px;
+  --r: 999px;
+}
+.vocab-intro-confetti i:nth-child(3) {
+  --x: -118px;
+  --y: -176px;
+  --rot: 190deg;
+  --c: #ffd166;
+  --t: 345ms;
+  --d: 1800ms;
+  --w: 15px;
+  --h: 9px;
+}
+.vocab-intro-confetti i:nth-child(4) {
+  --x: 126px;
+  --y: -186px;
+  --rot: -200deg;
+  --c: #a06bff;
+  --t: 360ms;
+  --d: 1650ms;
+  --w: 10px;
+  --h: 16px;
+}
+.vocab-intro-confetti i:nth-child(5) {
+  --x: -214px;
+  --y: -34px;
+  --rot: 300deg;
+  --c: #7bdcb5;
+  --t: 310ms;
+  --d: 1750ms;
+  --w: 12px;
+  --h: 12px;
+  --r: 999px;
+}
+.vocab-intro-confetti i:nth-child(6) {
+  --x: 220px;
+  --y: -46px;
+  --rot: -320deg;
+  --c: #ff9f1c;
+  --t: 335ms;
+  --d: 1700ms;
+  --w: 14px;
+  --h: 8px;
+}
+.vocab-intro-confetti i:nth-child(7) {
+  --x: -72px;
+  --y: -208px;
+  --rot: 160deg;
+  --c: #4ecdc4;
+  --t: 380ms;
+  --d: 1850ms;
+  --w: 9px;
+  --h: 17px;
+}
+.vocab-intro-confetti i:nth-child(8) {
+  --x: 78px;
+  --y: -214px;
+  --rot: -150deg;
+  --c: #ff6b6b;
+  --t: 395ms;
+  --d: 1800ms;
+  --w: 13px;
+  --h: 10px;
+}
+.vocab-intro-confetti i:nth-child(9) {
+  --x: -246px;
+  --y: -128px;
+  --rot: 240deg;
+  --c: #ffd166;
+  --t: 355ms;
+  --d: 1900ms;
+  --w: 10px;
+  --h: 10px;
+  --r: 999px;
+}
+.vocab-intro-confetti i:nth-child(10) {
+  --x: 252px;
+  --y: -136px;
+  --rot: -230deg;
+  --c: #a06bff;
+  --t: 370ms;
+  --d: 1880ms;
+  --w: 12px;
+  --h: 15px;
+}
+.vocab-intro-confetti i:nth-child(11) {
+  --x: -148px;
+  --y: 38px;
+  --rot: 280deg;
+  --c: #7bdcb5;
+  --t: 325ms;
+  --d: 1600ms;
+  --w: 11px;
+  --h: 14px;
+}
+.vocab-intro-confetti i:nth-child(12) {
+  --x: 154px;
+  --y: 44px;
+  --rot: -290deg;
+  --c: #ff9f1c;
+  --t: 340ms;
+  --d: 1620ms;
+  --w: 13px;
+  --h: 9px;
+}
+.vocab-intro-confetti i:nth-child(13) {
+  --x: -28px;
+  --y: -232px;
+  --rot: 210deg;
+  --c: #ff6b6b;
+  --t: 410ms;
+  --d: 1950ms;
+  --w: 10px;
+  --h: 10px;
+  --r: 999px;
+}
+.vocab-intro-confetti i:nth-child(14) {
+  --x: 34px;
+  --y: -238px;
+  --rot: -180deg;
+  --c: #4ecdc4;
+  --t: 420ms;
+  --d: 1900ms;
+  --w: 14px;
+  --h: 11px;
+}
+.vocab-intro-confetti i:nth-child(15) {
+  --x: -196px;
+  --y: -158px;
+  --rot: 330deg;
+  --c: #ffd166;
+  --t: 365ms;
+  --d: 1820ms;
+  --w: 9px;
+  --h: 15px;
+}
+.vocab-intro-confetti i:nth-child(16) {
+  --x: 202px;
+  --y: -166px;
+  --rot: -340deg;
+  --c: #a06bff;
+  --t: 350ms;
+  --d: 1860ms;
+  --w: 12px;
+  --h: 12px;
+}
+.vocab-intro-confetti i:nth-child(17) {
+  --x: -102px;
+  --y: 76px;
+  --rot: 250deg;
+  --c: #7bdcb5;
+  --t: 330ms;
+  --d: 1560ms;
+  --w: 10px;
+  --h: 13px;
+}
+.vocab-intro-confetti i:nth-child(18) {
+  --x: 110px;
+  --y: 82px;
+  --rot: -270deg;
+  --c: #ff9f1c;
+  --t: 345ms;
+  --d: 1580ms;
+  --w: 13px;
+  --h: 8px;
+}
 
 /* ── Beat 1: variants ─────────────────────────────────────────────────────────────────────
    /showcase picks one per take (data-intro), so consecutive clips do not open the same way.
@@ -9419,21 +9655,9 @@ body:has(.vocab-intro) .vocab-resume {
 
 .vocab-streak-flash {
   --stage: min(74vw, 300px, 46dvh);
-  --r-hi: color-mix(
-    in srgb,
-    var(--popup-accent, var(--vocab-accent)) 88%,
-    #fff
-  );
-  --r-lo: color-mix(
-    in srgb,
-    var(--popup-accent, var(--vocab-accent)) 70%,
-    #000
-  );
-  --r-shade: color-mix(
-    in srgb,
-    var(--popup-accent, var(--vocab-accent)) 45%,
-    #000
-  );
+  --r-hi: color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 88%, #fff);
+  --r-lo: color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 70%, #000);
+  --r-shade: color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 45%, #000);
   --medal-ribbon: var(--popup-accent, var(--vocab-accent));
   position: fixed;
   inset: 0;
@@ -9449,12 +9673,7 @@ body:has(.vocab-intro) .vocab-resume {
     radial-gradient(
       circle at 50% 40%,
       color-mix(in srgb, var(--m-glow) 34%, transparent) 0%,
-      color-mix(
-          in srgb,
-          var(--popup-accent, var(--vocab-accent)) 18%,
-          transparent
-        )
-        34%,
+      color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 18%, transparent) 34%,
       transparent 70%
     ),
     #07050fec;
@@ -9625,9 +9844,7 @@ body:has(.vocab-intro) .vocab-resume {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(
-    0 2px 12px color-mix(in srgb, var(--m-glow) 45%, transparent)
-  );
+  filter: drop-shadow(0 2px 12px color-mix(in srgb, var(--m-glow) 45%, transparent));
 }
 .vocab-streak-flash-caption {
   margin: 0;
@@ -9645,12 +9862,7 @@ body:has(.vocab-intro) .vocab-resume {
   overflow: hidden;
   border: 0;
   border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    var(--m-hi),
-    var(--m-mid) 55%,
-    var(--m-lo)
-  );
+  background: linear-gradient(180deg, var(--m-hi), var(--m-mid) 55%, var(--m-lo));
   color: var(--m-ink);
   font: inherit;
   font-size: 16px;
@@ -9696,8 +9908,7 @@ body:has(.vocab-intro) .vocab-resume {
   border-radius: 2px;
   background: var(--confetti);
   opacity: 0;
-  animation: vocab-streak-fall var(--t) cubic-bezier(0.35, 0.1, 0.65, 0.9)
-    var(--d) infinite;
+  animation: vocab-streak-fall var(--t) cubic-bezier(0.35, 0.1, 0.65, 0.9) var(--d) infinite;
 }
 .vocab-streak-flash-confetti i[data-shape="square"] {
   width: 10px;
@@ -9776,8 +9987,7 @@ body:has(.vocab-intro) .vocab-resume {
   }
   100% {
     opacity: 0;
-    transform: rotate(var(--a))
-      translateY(calc(var(--stage) * var(--dist) * -1)) scale(0.3);
+    transform: rotate(var(--a)) translateY(calc(var(--stage) * var(--dist) * -1)) scale(0.3);
   }
 }
 @keyframes vocab-streak-twinkle {
@@ -9856,8 +10066,7 @@ body:has(.vocab-intro) .vocab-resume {
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--sway), 110dvh, 0)
-      rotate3d(1, 0.4, 0.2, var(--spin));
+    transform: translate3d(var(--sway), 110dvh, 0) rotate3d(1, 0.4, 0.2, var(--spin));
   }
 }
 
@@ -10201,7 +10410,8 @@ body:has(.vocab-intro) .vocab-resume {
 /* The row leads the sheet, so it sits beside the gear's notch. It is drawn bare — no
    fill, no border — straight on the sheet; the whole row (chevron included) stops short
    of the notch, which reaches about one corner width in. */
-.vocab-options > .vocab-info-row:first-child {
+.vocab-options > .vocab-info-row:first-child,
+.vocab-options-zoom > .vocab-info-row:first-child {
   padding-right: 0;
   margin-right: calc(var(--vocab-corner) - 4px);
 }
@@ -10415,5 +10625,660 @@ body:has(.vocab-intro) .vocab-resume {
   from {
     opacity: 0;
     transform: translateY(6px);
+  }
+}
+
+/* ── Memory sheet: a memory cell zoomed to the whole screen (RecallSheet) ── */
+/* ── The memory sheet ─────────────────────────────────────────────────────────
+   A memory cell, zoomed all the way in. The stage is laid out at full size from
+   the first frame; hooks/useRecallZoom reveals it through an aperture and flies the
+   cell's number to the headline, so nothing here is animated in layout. This block
+   only describes the open sheet: its natural state IS the end of the zoom. */
+.vocab-recall {
+  --recall-bar: calc(56px + env(safe-area-inset-top));
+  --recall-yes: var(--vocab-accent);
+  --recall-no: #ff8fa3;
+  --recall-open: color-mix(in srgb, var(--shell-text) 20%, transparent);
+  --recall-gutter: 20px;
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  color: var(--shell-text);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.vocab-recall:focus {
+  outline: none;
+}
+.vocab-recall-backdrop {
+  position: absolute;
+  inset: 0;
+  background: #05040bb3;
+}
+.vocab-recall-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--shell-surface);
+  will-change: clip-path;
+}
+/* The tint of the today cell, so the aperture opens from the colour it was tapped in. */
+.vocab-recall-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+}
+.vocab-recall-stage[data-today] .vocab-recall-wash {
+  background: color-mix(in srgb, var(--vocab-accent) 10%, transparent);
+}
+.vocab-recall-scroll {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* Attached to the content: the glow belongs to the headline and leaves with it. */
+  background: radial-gradient(
+      130% 380px at 18% -40px,
+      color-mix(in srgb, var(--vocab-accent) 13%, transparent),
+      transparent 70%
+    )
+    local no-repeat;
+}
+.vocab-recall-scroll::-webkit-scrollbar {
+  display: none;
+}
+.vocab-recall-column {
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: var(--recall-bar) var(--recall-gutter) calc(32px + env(safe-area-inset-bottom));
+}
+.vocab-recall-topbar {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: var(--recall-bar);
+  /* Lines up with the column on a wide screen rather than the window's corner. */
+  padding: env(safe-area-inset-top) max(12px, calc(50% - 280px + var(--recall-gutter) - 8px)) 0;
+}
+.vocab-recall-topbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--shell-surface) 78%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  border-bottom: 1px solid var(--shell-line);
+  opacity: 0;
+  transition: opacity var(--dur-quick) var(--ease-out);
+}
+.vocab-recall-topbar[data-scrolled]::before {
+  opacity: 1;
+}
+.vocab-recall-grabber {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 7px);
+  left: 50%;
+  width: 36px;
+  height: 4px;
+  margin-left: -18px;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--shell-text) 22%, transparent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .vocab-recall-grabber {
+    display: none;
+  }
+}
+.vocab-recall-back {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--shell-hover);
+  color: var(--shell-text);
+  cursor: pointer;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.vocab-recall-back:active {
+  transform: scale(0.92);
+}
+.vocab-recall-compact {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--dur-quick) var(--ease-out),
+    transform var(--dur-move) var(--ease-spring);
+}
+.vocab-recall-topbar[data-compact] .vocab-recall-compact {
+  opacity: 1;
+  transform: none;
+}
+.vocab-recall-compact strong {
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.vocab-recall-compact small {
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--shell-text-mute);
+  font-variant-numeric: tabular-nums;
+}
+/* Same composition as the cell it grew from: the number, the window under it. */
+.vocab-recall-hero {
+  padding: 10px 0 18px;
+}
+.vocab-recall-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.vocab-recall-count {
+  display: block;
+  font-size: 76px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  transform-origin: 0 0;
+}
+.vocab-recall-count > span {
+  display: inline-block;
+  animation: vocab-recall-tick 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vocab-recall-stage[data-today] .vocab-recall-count {
+  color: var(--vocab-accent);
+}
+@keyframes vocab-recall-tick {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.vocab-recall-unit {
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--shell-text-mute);
+}
+.vocab-recall-name {
+  display: block;
+  width: fit-content;
+  margin-top: 2px;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--shell-text-soft);
+  transform-origin: 0 0;
+}
+/* A three-part meter: remembered, forgotten, not tried. It is the same drawing as the
+   hairline on the cell and the bars of the rhythm strip. */
+.vocab-recall-meter,
+.vocab-memory-meter,
+.vocab-recall-fill {
+  display: flex;
+  overflow: hidden;
+}
+.vocab-recall-meter {
+  gap: 3px;
+  height: 6px;
+  border-radius: 99px;
+}
+.vocab-recall-meter i,
+.vocab-memory-meter i,
+.vocab-recall-fill i {
+  min-width: 0;
+  flex-basis: 0;
+  background: var(--recall-open);
+  transition: flex-grow 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vocab-recall-meter i {
+  border-radius: 99px;
+}
+.vocab-recall-meter i[data-kind="yes"],
+.vocab-memory-meter i[data-kind="yes"],
+.vocab-recall-fill i[data-kind="yes"] {
+  background: var(--recall-yes);
+}
+.vocab-recall-meter i[data-kind="no"],
+.vocab-memory-meter i[data-kind="no"],
+.vocab-recall-fill i[data-kind="no"] {
+  background: var(--recall-no);
+}
+.vocab-recall-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 32px;
+  margin-top: 8px;
+}
+.vocab-recall-summary p {
+  min-width: 0;
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 550;
+  line-height: 1.35;
+  color: var(--shell-text-soft);
+}
+.vocab-recall-summary button {
+  flex: none;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--recall-no) 16%, transparent);
+  color: var(--recall-no);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.vocab-recall-summary button:active {
+  transform: scale(0.95);
+}
+.vocab-recall-summary button[data-on] {
+  background: var(--shell-hover);
+  color: var(--shell-text);
+}
+/* The week at a glance: seven days as bars, and the way to any of them. */
+.vocab-recall-strip {
+  display: grid;
+  grid-template-columns: 58px repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  margin: 14px 0 6px;
+}
+.vocab-recall-strip button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  height: 76px;
+  padding: 0 0 7px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--shell-text-mute);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background var(--dur-quick) var(--ease-out),
+    color var(--dur-quick) var(--ease-out),
+    opacity var(--dur-quick) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+}
+.vocab-recall-strip button:active {
+  transform: scale(0.94);
+}
+.vocab-recall-strip button[data-on] {
+  background: color-mix(in srgb, var(--shell-text) 9%, transparent);
+  color: var(--shell-text);
+}
+.vocab-recall-strip small {
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1;
+}
+.vocab-recall-week {
+  margin-right: 5px;
+}
+.vocab-recall-week strong {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--shell-text);
+  font-variant-numeric: tabular-nums;
+}
+.vocab-recall-day[data-dim] .vocab-recall-bar {
+  opacity: 0.5;
+}
+.vocab-recall-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: 46px;
+  transition: opacity var(--dur-quick) var(--ease-out);
+}
+/* Remembered words fill the bar from its foot, the way a level rises. */
+.vocab-recall-fill {
+  flex-direction: column-reverse;
+  gap: 2px;
+  width: 12px;
+  border-radius: 5px;
+  transition: height 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vocab-recall-day[data-empty] .vocab-recall-bar::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  margin-bottom: 1px;
+  border-radius: 50%;
+  background: var(--recall-open);
+}
+.vocab-recall-list {
+  animation: vocab-recall-list 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes vocab-recall-list {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.vocab-recall-group-head {
+  position: sticky;
+  z-index: 1;
+  top: var(--recall-bar);
+  margin: 0 calc(var(--recall-gutter) * -1);
+  padding: 14px var(--recall-gutter) 6px;
+  background: linear-gradient(var(--shell-surface) 72%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--shell-text-mute);
+}
+/* The timeline. One line down the left edge; each word is a node on it, and the node
+   is the answer: hollow until tried, lit once answered. */
+.vocab-recall-rail {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.vocab-recall-row {
+  position: relative;
+}
+.vocab-recall-item {
+  position: relative;
+  touch-action: pan-y;
+}
+/* Solid only in motion, to slide over the swipe's cues. */
+.vocab-recall-item[data-dragging] {
+  background: var(--shell-surface);
+}
+/* Each row draws its own stretch of the line, so an opened row carries it along. */
+.vocab-recall-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 6.5px;
+  width: 1px;
+  background: var(--shell-line-strong);
+}
+.vocab-recall-row:first-child .vocab-recall-item::before {
+  top: 24px;
+}
+.vocab-recall-row:last-child .vocab-recall-item::before {
+  bottom: auto;
+  height: 24px;
+}
+.vocab-recall-row:only-child .vocab-recall-item::before {
+  display: none;
+}
+.vocab-recall-cues {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  font-weight: 750;
+}
+.vocab-recall-cues span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.vocab-recall-cues [data-kind="yes"] {
+  color: var(--recall-yes);
+}
+.vocab-recall-cues [data-kind="no"] {
+  color: var(--recall-no);
+}
+.vocab-recall-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.vocab-recall-node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--shell-surface);
+  box-shadow: inset 0 0 0 1.5px var(--shell-line-strong);
+  color: #10140f;
+  z-index: 1;
+  transition:
+    background 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vocab-recall-row[data-open] .vocab-recall-node {
+  box-shadow: inset 0 0 0 1.5px var(--shell-text);
+}
+.vocab-recall-row[data-mark="yes"] .vocab-recall-node {
+  background: var(--recall-yes);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--recall-yes) 50%, transparent);
+  animation: vocab-recall-ignite 460ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vocab-recall-row[data-mark="no"] .vocab-recall-node {
+  background: var(--recall-no);
+  color: #2a1016;
+  animation: vocab-recall-ignite 460ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes vocab-recall-ignite {
+  from {
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.35);
+  }
+}
+.vocab-recall-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.vocab-recall-word {
+  overflow: hidden;
+  font-size: 19px;
+  font-weight: 680;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.vocab-recall-meaning {
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--shell-text-soft);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  animation: vocab-recall-unredact 260ms ease;
+}
+.vocab-recall-row[data-open] .vocab-recall-meaning {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--shell-text);
+  white-space: normal;
+}
+.vocab-recall-row:not([data-open])[data-mark] .vocab-recall-word {
+  font-weight: 600;
+}
+@keyframes vocab-recall-unredact {
+  from {
+    opacity: 0;
+  }
+}
+.vocab-recall-redacted {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  overflow: hidden;
+  height: 20px;
+  align-items: center;
+  font-size: 14px;
+}
+.vocab-recall-redacted i {
+  flex: none;
+  height: 9px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--shell-text) 13%, transparent);
+}
+.vocab-recall-meta {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--shell-text-mute);
+  font-variant-numeric: tabular-nums;
+}
+.vocab-recall-views {
+  color: var(--shell-text-soft);
+  font-weight: 750;
+}
+.vocab-recall-detail {
+  overflow: hidden;
+}
+.vocab-recall-detail-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 0 14px 28px;
+}
+.vocab-recall-facts,
+.vocab-recall-example {
+  margin: 0;
+}
+.vocab-recall-facts {
+  font-size: 12.5px;
+  font-weight: 550;
+  line-height: 1.4;
+  color: var(--shell-text-mute);
+}
+.vocab-recall-example {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--shell-text-soft);
+}
+.vocab-recall-answers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 4px;
+}
+.vocab-recall-answers button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 46px;
+  border: 0;
+  border-radius: 14px;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition:
+    transform var(--dur-press) var(--ease-out),
+    background var(--dur-quick) var(--ease-out);
+}
+.vocab-recall-answers button:active {
+  transform: scale(0.96);
+}
+.vocab-recall-answers button[data-kind="no"] {
+  background: color-mix(in srgb, var(--recall-no) 15%, transparent);
+  color: var(--recall-no);
+}
+.vocab-recall-answers button[data-kind="yes"] {
+  background: var(--recall-yes);
+  color: #10140f;
+}
+.vocab-recall-answers button[data-kind="no"][data-on] {
+  background: var(--recall-no);
+  color: #2a1016;
+}
+.vocab-recall-empty {
+  margin: 44px 16px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--shell-text-mute);
+}
+@media (min-width: 768px) {
+  .vocab-recall {
+    --recall-gutter: 28px;
+  }
+  .vocab-recall-column {
+    padding-top: calc(var(--recall-bar) + 24px);
+  }
+  .vocab-recall-count {
+    font-size: 104px;
+  }
+  .vocab-recall-item:hover .vocab-recall-word {
+    color: var(--vocab-accent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocab-recall-count > span,
+  .vocab-recall-list,
+  .vocab-recall-meaning,
+  .vocab-recall-row[data-mark] .vocab-recall-node {
+    animation: none;
+  }
+  .vocab-recall-meter i,
+  .vocab-memory-meter i,
+  .vocab-recall-fill i,
+  .vocab-recall-fill,
+  .vocab-recall-compact {
+    transition: none;
   }
 }
