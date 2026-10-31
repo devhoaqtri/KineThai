@@ -6,15 +6,48 @@
  * Positions are percentages of the frame, traced from each app's layout on a
  * 9:16 screen. It is a guide, not a replica — phones differ by a few pixels.
  *
- * Exports: ExportGuides
- * Depends on: lucide-react, ../lib/export-presets
+ * Exports: ExportGuides, InstagramGuide
+ * Depends on: lucide-react, ../lib/export-presets, ../lib/carousel-formats (type)
  */
 
 import type { CSSProperties } from "react";
 import { Bookmark, Heart, MessageCircle, Music2, Plus, Search, Send, Share2 } from "lucide-react";
+import type { CarouselFormat } from "../lib/carousel-formats";
 import type { ExportPreset } from "../lib/export-presets";
 
 const percent = (value: number) => `${value * 100}%`;
+
+/** The profile grid shows every post as a 3:4 tile, cropped from the centre. */
+const GRID_RATIO = 3 / 4;
+
+/**
+ * What Instagram does to a carousel slide: its own count in the corner, and on slide 1 the
+ * strips the profile grid crops away.
+ * @param props.format - the slide's shape
+ * @param props.index - the slide's place, from 0
+ * @param props.count - slides in the post
+ * @returns Overlay; preview only, never captured
+ */
+export function InstagramGuide({
+  format,
+  index,
+  count,
+}: {
+  format: CarouselFormat;
+  index: number;
+  count: number;
+}) {
+  const crop = Math.max(0, (1 - (format.height * GRID_RATIO) / format.width) / 2);
+  return (
+    <div className="carousel-guide" aria-hidden="true">
+      {index === 0 && <i data-side="left" style={{ width: percent(crop) }} />}
+      {index === 0 && <i data-side="right" style={{ width: percent(crop) }} />}
+      <span>
+        {index + 1}/{count}
+      </span>
+    </div>
+  );
+}
 
 /**
  * Draw the platform interface and the preset's clear zone.

@@ -3,9 +3,11 @@
  * deck and the page title do. Unknown hosts (preview, localhost, IPs, anh.*) fall back to
  * English and never throw. Host is client-controlled: use it only to pick public content.
  *
- * Exports: TargetLocale, resolveTarget, siteTitle, siteBrand, siteAddress, sitePageHead
+ * Exports: TargetLocale, TARGET_LOCALES, resolveTarget, siteTitle, siteBrand, siteAddress, sitePageHead
  */
 export type TargetLocale = "en" | "zh" | "ko" | "ja" | "fr" | "de" | "es";
+
+export const TARGET_LOCALES: readonly TargetLocale[] = ["en", "zh", "ko", "ja", "fr", "de", "es"];
 
 const SUBDOMAINS: Record<string, TargetLocale> = {
   hoa: "zh",

@@ -60,6 +60,8 @@ export type CarouselRenderOptions = {
   handle?: string;
   /** The address the closing slide shows; defaults to the deck's own. */
   url?: string;
+  /** Capture a slide that reports a problem instead of stopping at it. */
+  allowProblems?: boolean;
   /** Parent folder; the word gets its own folder inside it. */
   out: string;
   /** Called after each slide is captured. */
@@ -240,7 +242,7 @@ export async function renderCarousel(
       const state = await waitForSlide(cdp, slide);
       if (state.phase === "missing")
         throw new Error(`No word has the share code "${options.code}"`);
-      if (state.phase === "failed") {
+      if (state.phase === "failed" && !options.allowProblems) {
         throw new Error(`slide ${slide + 1} of "${state.word}": ${state.problem}`);
       }
       word = state.word;

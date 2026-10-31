@@ -46,6 +46,7 @@ import { Route as FeedSavedRouteImport } from './routes/feed/saved'
 import { Route as WCodeRouteImport } from './routes/w.$code'
 import { Route as AuthenticatedPPostIdRouteImport } from './routes/_authenticated/p.$postId'
 import { Route as AuthenticatedUUsernameRouteImport } from './routes/_authenticated/u.$username'
+import { Route as ApiDevCarouselRouteImport } from './routes/api/dev/carousel'
 import { Route as ApiDevFeedLogRouteImport } from './routes/api/dev/feed-log'
 import { Route as ApiPublicEngagementRouteImport } from './routes/api/public/engagement'
 import { Route as ApiPublicTelemetryRouteImport } from './routes/api/public/telemetry'
@@ -240,6 +241,11 @@ const AuthenticatedUUsernameRoute = AuthenticatedUUsernameRouteImport.update({
   path: '/u/$username',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiDevCarouselRoute = ApiDevCarouselRouteImport.update({
+  id: '/api/dev/carousel',
+  path: '/api/dev/carousel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiDevFeedLogRoute = ApiDevFeedLogRouteImport.update({
   id: '/api/dev/feed-log',
   path: '/api/dev/feed-log',
@@ -314,6 +320,7 @@ export interface FileRoutesByFullPath {
   '/feed/': typeof FeedIndexRoute
   '/p/$postId': typeof AuthenticatedPPostIdRoute
   '/u/$username': typeof AuthenticatedUUsernameRoute
+  '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
@@ -358,6 +365,7 @@ export interface FileRoutesByTo {
   '/feed': typeof FeedIndexRoute
   '/p/$postId': typeof AuthenticatedPPostIdRoute
   '/u/$username': typeof AuthenticatedUUsernameRoute
+  '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
@@ -405,6 +413,7 @@ export interface FileRoutesById {
   '/feed/': typeof FeedIndexRoute
   '/_authenticated/p/$postId': typeof AuthenticatedPPostIdRoute
   '/_authenticated/u/$username': typeof AuthenticatedUUsernameRoute
+  '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
@@ -452,6 +461,7 @@ export interface FileRouteTypes {
     | '/feed/'
     | '/p/$postId'
     | '/u/$username'
+    | '/api/dev/carousel'
     | '/api/dev/feed-log'
     | '/api/public/engagement'
     | '/api/public/telemetry'
@@ -496,6 +506,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/p/$postId'
     | '/u/$username'
+    | '/api/dev/carousel'
     | '/api/dev/feed-log'
     | '/api/public/engagement'
     | '/api/public/telemetry'
@@ -542,6 +553,7 @@ export interface FileRouteTypes {
     | '/feed/'
     | '/_authenticated/p/$postId'
     | '/_authenticated/u/$username'
+    | '/api/dev/carousel'
     | '/api/dev/feed-log'
     | '/api/public/engagement'
     | '/api/public/telemetry'
@@ -566,6 +578,7 @@ export interface RootRouteChildren {
   FeedSavedRoute: typeof FeedSavedRoute
   WCodeRoute: typeof WCodeRoute
   FeedIndexRoute: typeof FeedIndexRoute
+  ApiDevCarouselRoute: typeof ApiDevCarouselRoute
   ApiDevFeedLogRoute: typeof ApiDevFeedLogRoute
   ApiPublicEngagementRoute: typeof ApiPublicEngagementRoute
   ApiPublicTelemetryRoute: typeof ApiPublicTelemetryRoute
@@ -836,6 +849,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUUsernameRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/dev/carousel': {
+      id: '/api/dev/carousel'
+      path: '/api/dev/carousel'
+      fullPath: '/api/dev/carousel'
+      preLoaderRoute: typeof ApiDevCarouselRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/dev/feed-log': {
       id: '/api/dev/feed-log'
       path: '/api/dev/feed-log'
@@ -968,6 +988,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedSavedRoute: FeedSavedRoute,
   WCodeRoute: WCodeRoute,
   FeedIndexRoute: FeedIndexRoute,
+  ApiDevCarouselRoute: ApiDevCarouselRoute,
   ApiDevFeedLogRoute: ApiDevFeedLogRoute,
   ApiPublicEngagementRoute: ApiPublicEngagementRoute,
   ApiPublicTelemetryRoute: ApiPublicTelemetryRoute,

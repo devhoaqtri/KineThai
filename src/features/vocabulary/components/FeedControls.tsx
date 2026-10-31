@@ -1092,7 +1092,7 @@ export function FeedControls({
   history: ViewHistory;
   historyStats: HistoryStats;
   onClearHistory: () => void;
-  /** Open the video-export studio. Passed only for admins; absent, the control is not rendered. */
+  /** Open the export studio. Passed only for admins; absent, the control is not rendered. */
   onExport?: () => void;
   /** Visited address's deck locale; the brand title follows it (undefined → English). */
   locale?: TargetLocale;
@@ -1329,8 +1329,8 @@ export function FeedControls({
               className="vocab-icon-button vocab-export-open"
               type="button"
               onClick={onExport}
-              aria-label="Xuất từ này thành video (admin)"
-              title="Xuất từ này thành video"
+              aria-label="Xuất từ này (admin)"
+              title="Xuất từ này"
             >
               <Clapperboard size={19} />
             </button>

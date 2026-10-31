@@ -1,18 +1,21 @@
 /**
- * Admin-only export studio: preview the on-screen word in a social-video layout,
- * then record its whole animation — first clue to spelling — to a video file.
+ * Admin-only export studio, on the dev server: a Video mode and a Carousel mode for the
+ * on-screen word.
  *
- * The preview IS the recording surface: the stage is the same element at the same
- * size in both, so what is shown is what is captured. Recording shares this tab
- * with itself (the browser asks once per take) and runs in real time.
+ * Video previews the word in a social-video layout, then records its whole animation —
+ * first clue to spelling — to a video file. The preview IS the recording surface: the stage
+ * is the same element at the same size in both, so what is shown is what is captured.
+ * Recording shares this tab with itself (the browser asks once per take) and runs in real
+ * time. Carousel is in ./CarouselStudio.
  *
  * Exports: ExportStudio
- * Depends on: VocabularyCard, ExportGuides, export presets/recorder, presets THEMES/STYLES
+ * Depends on: VocabularyCard, ExportGuides, CarouselStudio, export presets/recorder,
+ *   presets THEMES/STYLES
  */
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Circle, Download, RotateCcw, Square, X } from "lucide-react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import {
   DEFAULT_EXPORT_PRESET_ID,
   EXPORT_FRAME_RATES,
@@ -27,6 +30,7 @@ import { canRecordStage, startStageRecording, type StageRecording } from "../lib
 import { STYLES, THEMES } from "../lib/presets";
 import type { NarrativeStyle } from "../lib/schema";
 import type { FeedEntry, Presentation } from "../types";
+import { CarouselStudio } from "./CarouselStudio";
 import { ExportGuides } from "./ExportGuides";
 import { VocabularyCard } from "./VocabularyCard";
 
@@ -42,12 +46,19 @@ type Result = { url: string; name: string; megabytes: number; seconds: number; a
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
+const MODES = [
+  { id: "video", label: "Video" },
+  { id: "carousel", label: "Carousel" },
+] as const;
+
+type StudioMode = (typeof MODES)[number]["id"];
+
 /**
  * Full-screen export studio for one word.
  * @param props.entry - the word to export (the one on screen in the feed)
  * @param props.presentation - the feed's current theme/style choice, used as the default look
  * @param props.onClose - leave the studio
- * @returns Overlay with layout options, a live preview and the record control
+ * @returns The mode the studio is in, with its switch
  */
 export function ExportStudio({
   entry,
@@ -56,6 +67,41 @@ export function ExportStudio({
 }: {
   entry: FeedEntry;
   presentation: Presentation;
+  onClose: () => void;
+}) {
+  const [mode, setMode] = useState<StudioMode>("video");
+  const modeSwitch = (
+    <div className="vocab-export-rates" role="radiogroup" aria-label="What to export">
+      {MODES.map((option) => (
+        <button
+          key={option.id}
+          type="button"
+          role="radio"
+          aria-checked={option.id === mode}
+          data-active={option.id === mode || undefined}
+          onClick={() => setMode(option.id)}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  );
+  const Studio = mode === "video" ? VideoStudio : CarouselStudio;
+  return (
+    <Studio entry={entry} presentation={presentation} modeSwitch={modeSwitch} onClose={onClose} />
+  );
+}
+
+/** Video mode. @param props See ExportStudio; `modeSwitch` is the Video | Carousel control. */
+function VideoStudio({
+  entry,
+  presentation,
+  modeSwitch,
+  onClose,
+}: {
+  entry: FeedEntry;
+  presentation: Presentation;
+  modeSwitch: ReactNode;
   onClose: () => void;
 }) {
   const [presetId, setPresetId] = useState(DEFAULT_EXPORT_PRESET_ID);
@@ -245,7 +291,7 @@ export function ExportStudio({
       <aside className="vocab-export-panel">
         <header className="vocab-export-head">
           <div>
-            <p className="vocab-group-label">Admin · video export</p>
+            <p className="vocab-group-label">Admin · export</p>
             <h2>{entry.word.word}</h2>
           </div>
           <button
@@ -259,6 +305,7 @@ export function ExportStudio({
           </button>
         </header>
 
+        {!busy && modeSwitch}
         {busy ? (
           <div className="vocab-export-live" role="status">
             <p className="vocab-export-live-title">
