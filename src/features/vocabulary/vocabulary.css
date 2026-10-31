@@ -5276,7 +5276,7 @@
     transform: translate(-50%, -50%);
     justify-self: unset;
   }
-  /* Name: centred horizontally, placed above or below the rail. */
+  /* Name: centred horizontally, consistently BELOW the rail. */
   .vocab-onboard[data-landscape] .vocab-onboard-name {
     position: absolute;
     left: 0;
@@ -5285,9 +5285,6 @@
     text-align: center;
     padding: 0 2px;
     box-sizing: border-box;
-  }
-  /* All names: consistently BELOW the rail, fixed position. */
-  .vocab-onboard[data-landscape] .vocab-onboard-name {
     top: calc(50% + 22px);
     bottom: auto;
   }
@@ -5300,7 +5297,10 @@
   .vocab-onboard[data-landscape] .vocab-onboard-rung[data-on] .vocab-onboard-label {
     font-size: 13px;
   }
+  /* Chip and word count stacked, so a narrow column never packs them side by side. */
   .vocab-onboard[data-landscape] .vocab-onboard-meta {
+    flex-direction: column;
+    gap: 2px;
     font-size: 9px;
   }
   .vocab-onboard[data-landscape] .vocab-onboard-band {
