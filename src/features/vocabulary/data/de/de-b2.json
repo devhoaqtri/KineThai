@@ -1,7 +1,7 @@
 {
-  "revision": "999a0097653520bcee57b2be",
+  "revision": "7797f3de4576c36e698fa654",
   "name": "deck-de-B2",
-  "count": 97,
+  "count": 82,
   "topics": [
     "attention",
     "character",
@@ -25,34 +25,6 @@
     "B2"
   ],
   "words": [
-    {
-      "id": "erw-hnen",
-      "word": "erwähnen",
-      "meaningVi": "nhắc đến",
-      "defVi": "Chỉ nhắc đến điều gì | một cách ngắn_gọn, | thoáng qua.",
-      "leadVi": "Kể chuyện đi chơi, | chị buột_miệng | nói tên người cũ.",
-      "anticipateVi": "Tiện_thể | nói luôn nè!",
-      "emphasis": [
-        "nhắc đến",
-        "buột miệng"
-      ],
-      "pos": "verb",
-      "ipa": "/ɛɐ̯ˈvɛːnən/",
-      "topic": "communication",
-      "topics": [
-        "communication"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Vergiss nicht, den Termin beim Arzt zu _____.",
-          "vi": "Đừng quên | nhắc đến | lịch hẹn bác_sĩ nhé."
-        }
-      ],
-      "chars": 8,
-      "initial": "E",
-      "shareCode": "2TC"
-    },
     {
       "id": "schlau",
       "word": "schlau",
@@ -111,64 +83,6 @@
       "shareCode": "AFK"
     },
     {
-      "id": "gro-z-gig",
-      "word": "großzügig",
-      "meaningVi": "hào_phóng",
-      "defVi": "Sẵn_lòng chia_sẻ | tiền_bạc, thời_gian | hay công_sức.",
-      "leadVi": "Lương vừa về, | anh liền quyên_góp | xây cầu cho làng.",
-      "anticipateVi": "Rộng tay cỡ nào đây?",
-      "emphasis": [
-        "chia sẻ",
-        "quyên góp"
-      ],
-      "pos": "adj",
-      "ipa": "/ˈɡʁoːsˌt͡syːɡɪç/",
-      "topic": "character",
-      "topics": [
-        "character",
-        "money"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Unser Chef war sehr _____ und hat allen etwas geschenkt.",
-          "vi": "Sếp chúng_tôi | rất hào_phóng | và tặng quà cho mọi_người."
-        }
-      ],
-      "chars": 9,
-      "initial": "G",
-      "shareCode": "ZRH"
-    },
-    {
-      "id": "ignorieren",
-      "word": "ignorieren",
-      "meaningVi": "phớt_lờ",
-      "defVi": "Cố_tình làm_lơ, | không quan_tâm | hay đáp lại ai.",
-      "leadVi": "Nhắn mười tin, | người kia xem rồi | mà chẳng trả_lời.",
-      "anticipateVi": "Coi như không thấy nha!",
-      "emphasis": [
-        "làm lơ",
-        "trả lời"
-      ],
-      "pos": "verb",
-      "ipa": "/ɪɡnoˈʁiːʁən/",
-      "topic": "attention",
-      "topics": [
-        "attention",
-        "communication"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Solche Nachrichten sollte man einfach _____.",
-          "vi": "Những tin nhắn như_vậy | thì cứ phớt_lờ đi."
-        }
-      ],
-      "chars": 10,
-      "initial": "I",
-      "shareCode": "XQT"
-    },
-    {
       "id": "bezweifeln",
       "word": "bezweifeln",
       "meaningVi": "nghi_ngờ",
@@ -197,35 +111,6 @@
       "shareCode": "KTH"
     },
     {
-      "id": "verwirrt",
-      "word": "verwirrt",
-      "meaningVi": "bối_rối",
-      "defVi": "Thấy bối_rối | vì không=hiểu | chuyện gì đang=xảy_ra.",
-      "leadVi": "Thầy giảng xong bài, | cả lớp nhìn nhau | ngơ_ngác.",
-      "anticipateVi": "Ủa, rồi sao nữa?",
-      "emphasis": [
-        "bối rối",
-        "ngơ ngác"
-      ],
-      "pos": "adj",
-      "ipa": "/fɛɐ̯ˈvɪʁt/",
-      "topic": "emotion",
-      "topics": [
-        "emotion",
-        "thinking"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Nach der langen Erklärung war ich noch mehr _____.",
-          "vi": "Sau lời giải_thích dài, | tôi còn bối_rối hơn."
-        }
-      ],
-      "chars": 8,
-      "initial": "V",
-      "shareCode": "70Z"
-    },
-    {
       "id": "egoistisch",
       "word": "egoistisch",
       "meaningVi": "ích_kỷ",
@@ -252,35 +137,6 @@
       "chars": 10,
       "initial": "E",
       "shareCode": "PT8"
-    },
-    {
-      "id": "ermutigen",
-      "word": "ermutigen",
-      "meaningVi": "động_viên, khuyến_khích",
-      "defVi": "Nói lời động_viên | để ai thêm tự_tin, | cố_gắng.",
-      "leadVi": "Trước giờ thi, | mẹ vỗ vai: | \"Con làm=được mà.\"",
-      "anticipateVi": "Vỗ tay cho bạn | trước nè!",
-      "emphasis": [
-        "động viên",
-        "vỗ vai"
-      ],
-      "pos": "verb",
-      "ipa": "/ɛɐ̯ˈmuːtɪɡn̩/",
-      "topic": "communication",
-      "topics": [
-        "communication",
-        "emotion"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Eltern sollten ihre Kinder _____, Fragen zu stellen.",
-          "vi": "Bố_mẹ | nên khuyến_khích con | đặt câu hỏi."
-        }
-      ],
-      "chars": 9,
-      "initial": "E",
-      "shareCode": "S7B"
     },
     {
       "id": "geduldig",
@@ -339,7 +195,7 @@
       "shareCode": "R93"
     },
     {
-      "id": "verz-gern",
+      "id": "verzogern",
       "word": "verzögern",
       "meaningVi": "làm chậm trễ",
       "defVi": "Khiến việc gì | chậm lại, | trễ hơn | so_với dự_kiến.",
@@ -365,7 +221,7 @@
       ],
       "chars": 9,
       "initial": "V",
-      "shareCode": "6BK"
+      "shareCode": "MAH"
     },
     {
       "id": "effizient",
@@ -424,6 +280,10 @@
       ],
       "chars": 10,
       "initial": "A",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "FZH"
     },
     {
@@ -453,6 +313,10 @@
       ],
       "chars": 6,
       "initial": "B",
+      "grammar": {
+        "gender": "n",
+        "article": "das"
+      },
       "shareCode": "R1S"
     },
     {
@@ -597,10 +461,14 @@
       ],
       "chars": 9,
       "initial": "V",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "JCA"
     },
     {
-      "id": "fr-hlichkeit",
+      "id": "frohlichkeit",
       "word": "Fröhlichkeit",
       "meaningVi": "sự vui_vẻ",
       "defVi": "Sự vui_tươi, | tinh_thần | lúc nào cũng phấn_chấn.",
@@ -626,7 +494,11 @@
       ],
       "chars": 12,
       "initial": "F",
-      "shareCode": "69P"
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
+      "shareCode": "R65"
     },
     {
       "id": "ekel",
@@ -654,10 +526,14 @@
       ],
       "chars": 4,
       "initial": "E",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "FBB"
     },
     {
-      "id": "bergl-cklich",
+      "id": "uberglucklich",
       "word": "überglücklich",
       "meaningVi": "vui_sướng tột_độ",
       "defVi": "Vui_sướng tột_độ, | phấn_khích | như muốn bay lên.",
@@ -682,10 +558,10 @@
       ],
       "chars": 13,
       "initial": "Ü",
-      "shareCode": "H2Q"
+      "shareCode": "D52"
     },
     {
-      "id": "erf-llung",
+      "id": "erfullung",
       "word": "Erfüllung",
       "meaningVi": "sự mãn_nguyện",
       "defVi": "Cảm_giác mãn_nguyện | khi đạt được | điều mình mong_muốn.",
@@ -711,7 +587,11 @@
       ],
       "chars": 9,
       "initial": "E",
-      "shareCode": "WAV"
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
+      "shareCode": "9TE"
     },
     {
       "id": "kichern",
@@ -770,6 +650,10 @@
       ],
       "chars": 8,
       "initial": "U",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "FNW"
     },
     {
@@ -799,6 +683,10 @@
       ],
       "chars": 12,
       "initial": "U",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "XP8"
     },
     {
@@ -827,6 +715,10 @@
       ],
       "chars": 9,
       "initial": "S",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "F3B"
     },
     {
@@ -859,7 +751,7 @@
       "shareCode": "5CX"
     },
     {
-      "id": "zur-ckhaltend",
+      "id": "zuruckhaltend",
       "word": "zurückhaltend",
       "meaningVi": "kín_đáo",
       "defVi": "Kín_đáo, | ít khi để lộ | cảm_xúc hay suy_nghĩ.",
@@ -885,7 +777,7 @@
       ],
       "chars": 13,
       "initial": "Z",
-      "shareCode": "PB8"
+      "shareCode": "0PJ"
     },
     {
       "id": "selbstsicher",
@@ -1000,6 +892,10 @@
       ],
       "chars": 6,
       "initial": "K",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "T7S"
     },
     {
@@ -1028,10 +924,14 @@
       ],
       "chars": 8,
       "initial": "S",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "PTG"
     },
     {
-      "id": "l-stig",
+      "id": "lastig",
       "word": "lästig",
       "meaningVi": "phiền_toái",
       "defVi": "Phiền_toái, | gây chán_ngán | vì cứ lặp_lại mãi.",
@@ -1057,10 +957,10 @@
       ],
       "chars": 6,
       "initial": "L",
-      "shareCode": "X24"
+      "shareCode": "V0X"
     },
     {
-      "id": "gleichg-ltig",
+      "id": "gleichgultig",
       "word": "gleichgültig",
       "meaningVi": "thờ_ơ",
       "defVi": "Thờ_ơ, | chẳng quan_tâm | đến ai hay điều gì.",
@@ -1087,39 +987,10 @@
       ],
       "chars": 12,
       "initial": "G",
-      "shareCode": "XGA"
+      "shareCode": "1MP"
     },
     {
-      "id": "selbstbewusst",
-      "word": "selbstbewusst",
-      "meaningVi": "tự_tin",
-      "defVi": "Tin vào khả_năng | của bản_thân, | không=hề rụt_rè.",
-      "leadVi": "Bước lên sân_khấu, | ngẩng cao đầu | và nói rành_mạch.",
-      "anticipateVi": "Ngẩng đầu lên nào!",
-      "emphasis": [
-        "bản thân",
-        "ngẩng cao"
-      ],
-      "pos": "adj",
-      "ipa": "/ˈzɛlpstbəˌvʊst/",
-      "topic": "character",
-      "topics": [
-        "character",
-        "emotion"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Nach dem Training fühlt sie sich viel _____.",
-          "vi": "Sau khóa luyện_tập | cô=ấy thấy | tự_tin hơn nhiều."
-        }
-      ],
-      "chars": 13,
-      "initial": "S",
-      "shareCode": "96J"
-    },
-    {
-      "id": "ausr-stung",
+      "id": "ausrustung",
       "word": "Ausrüstung",
       "meaningVi": "thiết_bị",
       "defVi": "Máy_móc, dụng_cụ | cần cho=một công_việc cụ_thể.",
@@ -1145,10 +1016,14 @@
       ],
       "chars": 10,
       "initial": "A",
-      "shareCode": "FE4"
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
+      "shareCode": "583"
     },
     {
-      "id": "allm-hlich",
+      "id": "allmahlich",
       "word": "allmählich",
       "meaningVi": "dần_dần",
       "defVi": "Thay_đổi từ_từ, | từng chút một qua thời_gian.",
@@ -1173,66 +1048,7 @@
       ],
       "chars": 10,
       "initial": "A",
-      "shareCode": "7QK"
-    },
-    {
-      "id": "verschmutzung",
-      "word": "Verschmutzung",
-      "meaningVi": "ô_nhiễm",
-      "defVi": "Tình_trạng không_khí, | nước hoặc đất | bị làm bẩn.",
-      "leadVi": "Khói xe mù_mịt, | dòng sông đen ngòm | bốc mùi.",
-      "anticipateVi": "Bầu trời xám vì=đâu?",
-      "emphasis": [
-        "làm bẩn",
-        "mù mịt"
-      ],
-      "pos": "noun",
-      "ipa": "/fɛɐ̯ˈʃmʊtsʊŋ/",
-      "topic": "nature",
-      "topics": [
-        "nature",
-        "health",
-        "society"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Die _____ der Meere durch Plastik wird immer schlimmer.",
-          "vi": "Ô_nhiễm biển | do nhựa | ngày_càng tồi_tệ."
-        }
-      ],
-      "chars": 13,
-      "initial": "V",
-      "shareCode": "AA2"
-    },
-    {
-      "id": "sch-chtern",
-      "word": "schüchtern",
-      "meaningVi": "nhút_nhát",
-      "defVi": "Ngại_ngùng, | e_dè | khi=gặp hay nói_chuyện | người lạ.",
-      "leadVi": "Được=khen trước lớp, | cô bé đỏ mặt | cúi gằm.",
-      "anticipateVi": "Má ửng hồng rồi kìa!",
-      "emphasis": [
-        "e dè",
-        "đỏ mặt"
-      ],
-      "pos": "adj",
-      "ipa": "/ˈʃʏçtɐn/",
-      "topic": "character",
-      "topics": [
-        "character",
-        "emotion"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Am ersten Schultag war der kleine Max sehr _____.",
-          "vi": "Ngày đầu đi học, | bé Max | rất nhút_nhát."
-        }
-      ],
-      "chars": 10,
-      "initial": "S",
-      "shareCode": "AQ2"
+      "shareCode": "7WE"
     },
     {
       "id": "stille",
@@ -1260,65 +1076,11 @@
       ],
       "chars": 6,
       "initial": "S",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "YNQ"
-    },
-    {
-      "id": "oberfl-che",
-      "word": "Oberfläche",
-      "meaningVi": "bề_mặt",
-      "defVi": "Lớp ngoài cùng | hoặc mặt trên | của=một vật.",
-      "leadVi": "Lá vàng trôi lững_lờ | trên mặt hồ phẳng_lặng.",
-      "anticipateVi": "Lớp vỏ bên ngoài ư?",
-      "emphasis": [
-        "ngoài cùng",
-        "mặt hồ"
-      ],
-      "pos": "noun",
-      "ipa": "/ˈoːbɐˌflɛçə/",
-      "topic": "nature",
-      "topics": [
-        "nature",
-        "general"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Die _____ des Tisches ist ganz glatt.",
-          "vi": "Bề_mặt cái_bàn | rất nhẵn."
-        }
-      ],
-      "chars": 10,
-      "initial": "O",
-      "shareCode": "KR4"
-    },
-    {
-      "id": "berleben",
-      "word": "überleben",
-      "meaningVi": "sống_sót",
-      "defVi": "Sống_sót | qua nguy_hiểm | hoặc hoàn_cảnh khắc_nghiệt.",
-      "leadVi": "Lạc giữa rừng ba ngày, | anh vẫn=trở_về an_toàn.",
-      "anticipateVi": "Qua nổi cơn=bão này?",
-      "emphasis": [
-        "Sống sót",
-        "an toàn"
-      ],
-      "pos": "verb",
-      "ipa": "/yːbɐˈleːbn̩/",
-      "topic": "nature",
-      "topics": [
-        "nature",
-        "health"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Ohne Wasser kann man nur wenige Tage _____.",
-          "vi": "Không có nước, | người ta chỉ sống_sót được | vài ngày."
-        }
-      ],
-      "chars": 9,
-      "initial": "Ü",
-      "shareCode": "NGQ"
     },
     {
       "id": "anpassen",
@@ -1408,93 +1170,6 @@
       "shareCode": "D3Y"
     },
     {
-      "id": "einstellung",
-      "word": "Einstellung",
-      "meaningVi": "thái_độ",
-      "defVi": "Cách nghĩ và cảm_nhận | thể_hiện | qua hành_vi.",
-      "leadVi": "Thua trận vẫn mỉm cười, | hẹn ngày phục_thù.",
-      "anticipateVi": "Nhìn đời ra sao?",
-      "emphasis": [
-        "cảm nhận",
-        "phục thù"
-      ],
-      "pos": "noun",
-      "ipa": "/ˈaɪ̯nˌʃtɛlʊŋ/",
-      "topic": "character",
-      "topics": [
-        "character",
-        "thinking"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Mit dieser positiven _____ schaffst du die Prüfung.",
-          "vi": "Với thái_độ tích_cực này, | bạn sẽ vượt qua | kỳ thi."
-        }
-      ],
-      "chars": 11,
-      "initial": "E",
-      "shareCode": "34X"
-    },
-    {
-      "id": "bewusst",
-      "word": "bewusst",
-      "meaningVi": "nhận_thức được, biết",
-      "defVi": "Biết rõ | hoặc nhận ra | điều gì đang=diễn_ra.",
-      "leadVi": "Mải nói_chuyện, | cô vẫn để_ý | tiếng chân | sau lưng.",
-      "anticipateVi": "Bạn có để ý không?",
-      "emphasis": [
-        "nhận ra",
-        "để ý"
-      ],
-      "pos": "adj",
-      "ipa": "/bəˈvʊst/",
-      "topic": "attention",
-      "topics": [
-        "attention",
-        "thinking"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Bist du dir _____, wie spät es schon ist?",
-          "vi": "Bạn có nhận_thức được | giờ đã muộn | thế nào không?"
-        }
-      ],
-      "chars": 7,
-      "initial": "B",
-      "shareCode": "X4G"
-    },
-    {
-      "id": "f-hig",
-      "word": "fähig",
-      "meaningVi": "có khả_năng",
-      "defVi": "Có đủ năng_lực | để làm tốt một việc.",
-      "leadVi": "Giao việc khó nào | cô=ấy cũng xử_lý | gọn_gàng.",
-      "anticipateVi": "Giao được việc chứ?",
-      "emphasis": [
-        "năng lực",
-        "xử lý"
-      ],
-      "pos": "adj",
-      "ipa": "/ˈfɛːɪç/",
-      "topic": "work",
-      "topics": [
-        "work",
-        "character"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Er ist durchaus _____, das Projekt allein zu leiten.",
-          "vi": "Anh=ấy | hoàn_toàn có khả_năng | tự điều_hành dự_án."
-        }
-      ],
-      "chars": 5,
-      "initial": "F",
-      "shareCode": "Y4H"
-    },
-    {
       "id": "umstand",
       "word": "Umstand",
       "meaningVi": "hoàn_cảnh",
@@ -1521,6 +1196,10 @@
       ],
       "chars": 7,
       "initial": "U",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "MGQ"
     },
     {
@@ -1582,35 +1261,6 @@
       "shareCode": "M4Z"
     },
     {
-      "id": "bestimmen",
-      "word": "bestimmen",
-      "meaningVi": "xác_định",
-      "defVi": "Tìm ra | hoặc quyết_định | chính_xác | một điều gì.",
-      "leadVi": "Nhìn vân tay, | cảnh_sát đã biết | ai từng vào phòng.",
-      "anticipateVi": "Ai chốt hạ đây?",
-      "emphasis": [
-        "chính xác",
-        "vân tay"
-      ],
-      "pos": "verb",
-      "ipa": "/bəˈʃtɪmən/",
-      "topic": "thinking",
-      "topics": [
-        "thinking",
-        "study"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Mit diesem Test kann man die Blutgruppe schnell _____.",
-          "vi": "Với xét_nghiệm này, | có_thể nhanh_chóng | xác_định nhóm máu."
-        }
-      ],
-      "chars": 9,
-      "initial": "B",
-      "shareCode": "5F0"
-    },
-    {
       "id": "ablenken",
       "word": "ablenken",
       "meaningVi": "làm phân_tâm",
@@ -1639,7 +1289,7 @@
       "shareCode": "DCS"
     },
     {
-      "id": "vielf-ltig",
+      "id": "vielfaltig",
       "word": "vielfältig",
       "meaningVi": "đa_dạng",
       "defVi": "Gồm nhiều loại khác nhau, | phong_phú | về mọi mặt.",
@@ -1665,7 +1315,7 @@
       ],
       "chars": 10,
       "initial": "V",
-      "shareCode": "QEW"
+      "shareCode": "SB6"
     },
     {
       "id": "auftauchen",
@@ -1754,7 +1404,7 @@
       "shareCode": "R5C"
     },
     {
-      "id": "z-gern",
+      "id": "zogern",
       "word": "zögern",
       "meaningVi": "do_dự, ngần_ngại",
       "defVi": "Ngập_ngừng, | chưa dám quyết | vì còn phân_vân.",
@@ -1780,7 +1430,7 @@
       ],
       "chars": 6,
       "initial": "Z",
-      "shareCode": "H6F"
+      "shareCode": "SDK"
     },
     {
       "id": "identifizieren",
@@ -1870,35 +1520,6 @@
       "shareCode": "4R4"
     },
     {
-      "id": "offensichtlich",
-      "word": "offensichtlich",
-      "meaningVi": "rõ_ràng, hiển_nhiên",
-      "defVi": "Rõ_ràng, | ai nhìn cũng thấy | hay hiểu ngay.",
-      "leadVi": "Mặt đỏ, | nói lắp, | ai cũng biết | cậu đang=nói_dối.",
-      "anticipateVi": "Lộ_liễu quá chưa?",
-      "emphasis": [
-        "Rõ ràng",
-        "nói lắp"
-      ],
-      "pos": "adj",
-      "ipa": "/ˈɔfn̩zɪçtlɪç/",
-      "topic": "perception",
-      "topics": [
-        "perception",
-        "thinking"
-      ],
-      "level": "B2",
-      "usage": [
-        {
-          "en": "Es war _____, dass er gelogen hatte.",
-          "vi": "Rõ_ràng là | anh=ta đã nói_dối."
-        }
-      ],
-      "chars": 14,
-      "initial": "O",
-      "shareCode": "Y49"
-    },
-    {
       "id": "hindernis",
       "word": "Hindernis",
       "meaningVi": "trở_ngại",
@@ -1925,10 +1546,14 @@
       ],
       "chars": 9,
       "initial": "H",
+      "grammar": {
+        "gender": "n",
+        "article": "das"
+      },
       "shareCode": "4ZK"
     },
     {
-      "id": "berwinden",
+      "id": "uberwinden",
       "word": "überwinden",
       "meaningVi": "vượt qua",
       "defVi": "Vượt qua | khó_khăn hoặc nỗi sợ | để tiến lên.",
@@ -1954,7 +1579,7 @@
       ],
       "chars": 10,
       "initial": "Ü",
-      "shareCode": "02A"
+      "shareCode": "RJ4"
     },
     {
       "id": "perspektive",
@@ -1982,10 +1607,14 @@
       ],
       "chars": 11,
       "initial": "P",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "HBR"
     },
     {
-      "id": "priorit-t",
+      "id": "prioritat",
       "word": "Priorität",
       "meaningVi": "ưu_tiên",
       "defVi": "Điều quan_trọng nhất | cần được làm trước.",
@@ -2011,7 +1640,11 @@
       ],
       "chars": 9,
       "initial": "P",
-      "shareCode": "R6K"
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
+      "shareCode": "FY0"
     },
     {
       "id": "verfolgen",
@@ -2043,7 +1676,7 @@
       "shareCode": "HEQ"
     },
     {
-      "id": "einschr-nken",
+      "id": "einschranken",
       "word": "einschränken",
       "meaningVi": "hạn_chế",
       "defVi": "Giới_hạn | số_lượng, phạm_vi | hay quyền làm điều gì.",
@@ -2068,10 +1701,10 @@
       ],
       "chars": 12,
       "initial": "E",
-      "shareCode": "J8K"
+      "shareCode": "JMM"
     },
     {
-      "id": "l-ndlich",
+      "id": "landlich",
       "word": "ländlich",
       "meaningVi": "nông_thôn, thôn_quê",
       "defVi": "Thuộc về | vùng nông_thôn, | xa thành_phố.",
@@ -2097,7 +1730,7 @@
       ],
       "chars": 8,
       "initial": "L",
-      "shareCode": "CFV"
+      "shareCode": "BBV"
     },
     {
       "id": "strategie",
@@ -2126,6 +1759,10 @@
       ],
       "chars": 9,
       "initial": "S",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "4SW"
     },
     {
@@ -2184,6 +1821,10 @@
       ],
       "chars": 9,
       "initial": "B",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "KWW"
     },
     {
@@ -2298,6 +1939,10 @@
       ],
       "chars": 11,
       "initial": "F",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "1BT"
     },
     {
@@ -2356,10 +2001,14 @@
       ],
       "chars": 3,
       "initial": "R",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "SF8"
     },
     {
-      "id": "berzeugend",
+      "id": "uberzeugend",
       "word": "überzeugend",
       "meaningVi": "thuyết_phục",
       "defVi": "Thuyết_phục mạnh, | khiến người ta | không_thể làm_ngơ.",
@@ -2385,10 +2034,10 @@
       ],
       "chars": 11,
       "initial": "Ü",
-      "shareCode": "1WG"
+      "shareCode": "YGH"
     },
     {
-      "id": "glaubw-rdig",
+      "id": "glaubwurdig",
       "word": "glaubwürdig",
       "meaningVi": "đáng tin",
       "defVi": "Đáng tin, | có_thể chấp_nhận | là thật.",
@@ -2414,7 +2063,7 @@
       ],
       "chars": 11,
       "initial": "G",
-      "shareCode": "FZ1"
+      "shareCode": "VAF"
     },
     {
       "id": "absichtlich",
@@ -2533,7 +2182,7 @@
       "shareCode": "2BK"
     },
     {
-      "id": "gef-hrden",
+      "id": "gefahrden",
       "word": "gefährden",
       "meaningVi": "gây nguy_hại, đe_dọa",
       "defVi": "Đẩy vào nguy_cơ | bị tổn_hại | hay thất_bại.",
@@ -2558,7 +2207,7 @@
       ],
       "chars": 9,
       "initial": "G",
-      "shareCode": "Q37"
+      "shareCode": "TFX"
     },
     {
       "id": "veraltet",
@@ -2618,7 +2267,7 @@
       "shareCode": "0F2"
     },
     {
-      "id": "ausl-sen",
+      "id": "auslosen",
       "word": "auslösen",
       "meaningVi": "gây ra, khơi_dậy",
       "defVi": "Khiêu_khích | hoặc gây ra | một phản_ứng mạnh.",
@@ -2644,10 +2293,10 @@
       ],
       "chars": 8,
       "initial": "A",
-      "shareCode": "PCM"
+      "shareCode": "KS9"
     },
     {
-      "id": "berfl-ssig",
+      "id": "uberflussig",
       "word": "überflüssig",
       "meaningVi": "thừa, dư_thừa",
       "defVi": "Thừa_thãi, | không còn cần_thiết | hay hữu_ích nữa.",
@@ -2673,7 +2322,7 @@
       ],
       "chars": 11,
       "initial": "Ü",
-      "shareCode": "J9S"
+      "shareCode": "EG2"
     },
     {
       "id": "skeptisch",
@@ -2733,7 +2382,7 @@
       "shareCode": "ENE"
     },
     {
-      "id": "oberfl-chlich",
+      "id": "oberflachlich",
       "word": "oberflächlich",
       "meaningVi": "hời_hợt",
       "defVi": "Hời_hợt, | chỉ ở bề_ngoài | mà không sâu_sắc.",
@@ -2759,7 +2408,7 @@
       ],
       "chars": 13,
       "initial": "O",
-      "shareCode": "P9G"
+      "shareCode": "TSS"
     },
     {
       "id": "vielseitig",

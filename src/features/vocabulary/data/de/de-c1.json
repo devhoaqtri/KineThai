@@ -1,7 +1,7 @@
 {
-  "revision": "5d88315a07ea73740bb06fca",
+  "revision": "2dd0e7730432e5651f5905ce",
   "name": "deck-de-C1",
-  "count": 83,
+  "count": 81,
   "topics": [
     "character",
     "communication",
@@ -24,35 +24,7 @@
   ],
   "words": [
     {
-      "id": "verlegen",
-      "word": "verlegen",
-      "meaningVi": "ngượng, xấu_hổ",
-      "defVi": "Ngượng_ngùng, | xấu_hổ | vì lỡ làm | điều khó_coi.",
-      "leadVi": "Đi giữa sân_trường | thì tuột dép, | cả lớp cười ồ.",
-      "anticipateVi": "Đỏ_bừng | cả hai má!",
-      "emphasis": [
-        "xấu hổ",
-        "tuột dép"
-      ],
-      "pos": "adj",
-      "ipa": "/fɛɐ̯ˈleːɡn̩/",
-      "topic": "emotion",
-      "topics": [
-        "emotion"
-      ],
-      "level": "C1",
-      "usage": [
-        {
-          "en": "Er wurde ganz _____, als sie ihn lobte.",
-          "vi": "Anh=ấy | rất ngượng | khi cô=ấy khen."
-        }
-      ],
-      "chars": 8,
-      "initial": "V",
-      "shareCode": "8JZ"
-    },
-    {
-      "id": "d-ster",
+      "id": "duster",
       "word": "düster",
       "meaningVi": "ảm_đạm",
       "defVi": "Ảm_đạm, | gần như | chẳng còn chút hy_vọng nào.",
@@ -78,10 +50,10 @@
       ],
       "chars": 6,
       "initial": "D",
-      "shareCode": "HXH"
+      "shareCode": "MWH"
     },
     {
-      "id": "tr-stlich",
+      "id": "trostlich",
       "word": "tröstlich",
       "meaningVi": "an_ủi, ấm_lòng",
       "defVi": "Mang lại an_ủi, | giúp người_ta | bớt lo, bớt buồn.",
@@ -107,7 +79,7 @@
       ],
       "chars": 9,
       "initial": "T",
-      "shareCode": "NE6"
+      "shareCode": "QT6"
     },
     {
       "id": "benommen",
@@ -228,7 +200,7 @@
       "shareCode": "NJD"
     },
     {
-      "id": "gedem-tigt",
+      "id": "gedemutigt",
       "word": "gedemütigt",
       "meaningVi": "bẽ_mặt, nhục_nhã",
       "defVi": "Bẽ_mặt, | thấy nhục_nhã, | xấu_hổ trước mọi_người.",
@@ -253,7 +225,7 @@
       ],
       "chars": 10,
       "initial": "G",
-      "shareCode": "BAA"
+      "shareCode": "40Y"
     },
     {
       "id": "demut",
@@ -282,6 +254,10 @@
       ],
       "chars": 5,
       "initial": "D",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "ZP9"
     },
     {
@@ -311,6 +287,10 @@
       ],
       "chars": 6,
       "initial": "I",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "0AA"
     },
     {
@@ -340,6 +320,10 @@
       ],
       "chars": 7,
       "initial": "H",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "MGR"
     },
     {
@@ -401,7 +385,7 @@
       "shareCode": "YEG"
     },
     {
-      "id": "rgernis",
+      "id": "argernis",
       "word": "Ärgernis",
       "meaningVi": "sự bực_mình",
       "defVi": "Sự bực_mình, | hoặc thứ | cứ làm mình khó_chịu mãi.",
@@ -427,7 +411,11 @@
       ],
       "chars": 8,
       "initial": "Ä",
-      "shareCode": "RZB"
+      "grammar": {
+        "gender": "n",
+        "article": "das"
+      },
+      "shareCode": "0AK"
     },
     {
       "id": "verabscheuen",
@@ -484,6 +472,10 @@
       ],
       "chars": 9,
       "initial": "N",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "N2D"
     },
     {
@@ -512,6 +504,10 @@
       ],
       "chars": 4,
       "initial": "R",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "353"
     },
     {
@@ -541,6 +537,10 @@
       ],
       "chars": 18,
       "initial": "S",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "VCT"
     },
     {
@@ -570,10 +570,14 @@
       ],
       "chars": 13,
       "initial": "S",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "C96"
     },
     {
-      "id": "ersch-ttert",
+      "id": "erschuttert",
       "word": "erschüttert",
       "meaningVi": "bàng_hoàng",
       "defVi": "Bàng_hoàng, run_rẩy | sau chuyện đáng sợ | vừa xảy_ra.",
@@ -598,10 +602,10 @@
       ],
       "chars": 11,
       "initial": "E",
-      "shareCode": "3ZH"
+      "shareCode": "VDR"
     },
     {
-      "id": "mitf-hlen",
+      "id": "mitfuhlen",
       "word": "mitfühlen",
       "meaningVi": "cảm_thông",
       "defVi": "Hiểu và cảm_thông | với nỗi khổ | của người khác.",
@@ -627,7 +631,7 @@
       ],
       "chars": 9,
       "initial": "M",
-      "shareCode": "YN7"
+      "shareCode": "E1P"
     },
     {
       "id": "traumatisch",
@@ -743,6 +747,10 @@
       ],
       "chars": 8,
       "initial": "E",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "1ED"
     },
     {
@@ -775,35 +783,6 @@
       "shareCode": "JK5"
     },
     {
-      "id": "ehrgeiz",
-      "word": "Ehrgeiz",
-      "meaningVi": "hoài_bão, tham_vọng",
-      "defVi": "Khát_vọng mạnh_mẽ | muốn đạt thành_công | hay địa_vị.",
-      "leadVi": "Cậu bé làng nghèo | ấp_ủ mơ | dựng công_ty riêng.",
-      "anticipateVi": "Ước mơ | lớn cỡ nào?",
-      "emphasis": [
-        "Khát vọng",
-        "ấp ủ"
-      ],
-      "pos": "noun",
-      "ipa": "/ˈeːɐ̯ɡaɪ̯ts/",
-      "topic": "work",
-      "topics": [
-        "work",
-        "character"
-      ],
-      "level": "C1",
-      "usage": [
-        {
-          "en": "Mit viel _____ hat sie es bis zur Chefin geschafft.",
-          "vi": "Nhờ tham_vọng lớn, | cô=ấy đã leo lên | vị_trí sếp."
-        }
-      ],
-      "chars": 7,
-      "initial": "E",
-      "shareCode": "0GG"
-    },
-    {
       "id": "ansatz",
       "word": "Ansatz",
       "meaningVi": "cách tiếp_cận",
@@ -830,6 +809,10 @@
       ],
       "chars": 6,
       "initial": "A",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "BM7"
     },
     {
@@ -859,6 +842,10 @@
       ],
       "chars": 8,
       "initial": "B",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "KFD"
     },
     {
@@ -1117,6 +1104,10 @@
       ],
       "chars": 9,
       "initial": "P",
+      "grammar": {
+        "gender": "n",
+        "article": "das"
+      },
       "shareCode": "K0T"
     },
     {
@@ -1175,6 +1166,10 @@
       ],
       "chars": 9,
       "initial": "R",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "D6H"
     },
     {
@@ -1236,7 +1231,7 @@
       "shareCode": "N38"
     },
     {
-      "id": "sthetisch",
+      "id": "asthetisch",
       "word": "ästhetisch",
       "meaningVi": "thẩm_mỹ",
       "defVi": "Liên_quan đến cái_đẹp | và cảm_nhận nghệ_thuật.",
@@ -1262,7 +1257,7 @@
       ],
       "chars": 10,
       "initial": "Ä",
-      "shareCode": "AJA"
+      "shareCode": "5ET"
     },
     {
       "id": "mehrdeutig",
@@ -1294,7 +1289,7 @@
       "shareCode": "766"
     },
     {
-      "id": "willk-rlich",
+      "id": "willkurlich",
       "word": "willkürlich",
       "meaningVi": "tùy_tiện",
       "defVi": "Tùy_tiện, | dựa vào ý_thích | chứ không | theo lý_lẽ.",
@@ -1320,10 +1315,10 @@
       ],
       "chars": 11,
       "initial": "W",
-      "shareCode": "SFM"
+      "shareCode": "T6A"
     },
     {
-      "id": "schl-ssig",
+      "id": "schlussig",
       "word": "schlüssig",
       "meaningVi": "mạch_lạc",
       "defVi": "Mạch_lạc, | các phần gắn_kết | chặt_chẽ và hợp_lý.",
@@ -1349,7 +1344,7 @@
       ],
       "chars": 9,
       "initial": "S",
-      "shareCode": "CST"
+      "shareCode": "06E"
     },
     {
       "id": "zusammenfallen",
@@ -1409,7 +1404,7 @@
       "shareCode": "E3A"
     },
     {
-      "id": "einr-umen",
+      "id": "einraumen",
       "word": "einräumen",
       "meaningVi": "thừa_nhận",
       "defVi": "Miễn_cưỡng thừa_nhận | điều mình từng không muốn nhận.",
@@ -1434,7 +1429,7 @@
       ],
       "chars": 9,
       "initial": "E",
-      "shareCode": "60A"
+      "shareCode": "0K1"
     },
     {
       "id": "gewissenhaft",
@@ -1466,7 +1461,7 @@
       "shareCode": "3R4"
     },
     {
-      "id": "erw-gen",
+      "id": "erwagen",
       "word": "erwägen",
       "meaningVi": "cân_nhắc, suy_ngẫm",
       "defVi": "Suy_ngẫm lâu | và sâu_sắc | về một điều.",
@@ -1491,10 +1486,10 @@
       ],
       "chars": 7,
       "initial": "E",
-      "shareCode": "7DW"
+      "shareCode": "E4B"
     },
     {
-      "id": "herk-mmlich",
+      "id": "herkommlich",
       "word": "herkömmlich",
       "meaningVi": "thông_thường, truyền_thống",
       "defVi": "Theo lối truyền_thống | được số đông chấp_nhận.",
@@ -1519,7 +1514,7 @@
       ],
       "chars": 11,
       "initial": "H",
-      "shareCode": "NFW"
+      "shareCode": "H3P"
     },
     {
       "id": "folgern",
@@ -1604,10 +1599,14 @@
       ],
       "chars": 10,
       "initial": "A",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "S9V"
     },
     {
-      "id": "verk-rpern",
+      "id": "verkorpern",
       "word": "verkörpern",
       "meaningVi": "hiện_thân, thể_hiện",
       "defVi": "Thể_hiện rõ | một phẩm_chất | bằng hình_thức cụ_thể.",
@@ -1633,7 +1632,7 @@
       ],
       "chars": 10,
       "initial": "V",
-      "shareCode": "17M"
+      "shareCode": "22F"
     },
     {
       "id": "verwurzelt",
@@ -1665,7 +1664,7 @@
       "shareCode": "VX0"
     },
     {
-      "id": "ausdr-cklich",
+      "id": "ausdrucklich",
       "word": "ausdrücklich",
       "meaningVi": "rõ_ràng, dứt_khoát",
       "defVi": "Rõ_ràng, | được nói thẳng | mà không ẩn ý.",
@@ -1690,7 +1689,7 @@
       ],
       "chars": 12,
       "initial": "A",
-      "shareCode": "WZF"
+      "shareCode": "VPE"
     },
     {
       "id": "schwanken",
@@ -1748,6 +1747,10 @@
       ],
       "chars": 10,
       "initial": "H",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "6QF"
     },
     {
@@ -1777,6 +1780,10 @@
       ],
       "chars": 9,
       "initial": "H",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "0N9"
     },
     {
@@ -1834,6 +1841,10 @@
       ],
       "chars": 6,
       "initial": "A",
+      "grammar": {
+        "gender": "m",
+        "article": "der"
+      },
       "shareCode": "DP4"
     },
     {
@@ -1865,7 +1876,7 @@
       "shareCode": "S9C"
     },
     {
-      "id": "integrit-t",
+      "id": "integritat",
       "word": "Integrität",
       "meaningVi": "sự chính_trực",
       "defVi": "Sự chính_trực, | trung_thực | và giữ vững đạo_đức.",
@@ -1890,7 +1901,11 @@
       ],
       "chars": 10,
       "initial": "I",
-      "shareCode": "8QS"
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
+      "shareCode": "1PC"
     },
     {
       "id": "intuitiv",
@@ -2006,6 +2021,10 @@
       ],
       "chars": 6,
       "initial": "N",
+      "grammar": {
+        "gender": "f",
+        "article": "die"
+      },
       "shareCode": "G0J"
     },
     {
@@ -2151,7 +2170,7 @@
       "shareCode": "BMB"
     },
     {
-      "id": "vers-hnen",
+      "id": "versohnen",
       "word": "versöhnen",
       "meaningVi": "làm_lành, hòa_giải",
       "defVi": "Hòa_giải | hoặc làm những điều mâu_thuẫn | dung_hòa nhau.",
@@ -2177,7 +2196,7 @@
       ],
       "chars": 9,
       "initial": "V",
-      "shareCode": "567"
+      "shareCode": "6RZ"
     },
     {
       "id": "verfeinern",
@@ -2323,7 +2342,7 @@
       "shareCode": "NSJ"
     },
     {
-      "id": "anf-llig",
+      "id": "anfallig",
       "word": "anfällig",
       "meaningVi": "dễ bị tổn_thương",
       "defVi": "Dễ bị tổn_thương | về thể_xác | hay tinh_thần.",
@@ -2349,10 +2368,10 @@
       ],
       "chars": 8,
       "initial": "A",
-      "shareCode": "85W"
+      "shareCode": "A17"
     },
     {
-      "id": "bef-rworten",
+      "id": "befurworten",
       "word": "befürworten",
       "meaningVi": "ủng_hộ, chủ_trương",
       "defVi": "Công_khai ủng_hộ | và vận_động | cho một ý_tưởng.",
@@ -2378,7 +2397,7 @@
       ],
       "chars": 11,
       "initial": "B",
-      "shareCode": "XPV"
+      "shareCode": "Z5Y"
     },
     {
       "id": "lindern",
