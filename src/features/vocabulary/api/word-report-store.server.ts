@@ -19,6 +19,7 @@
 import { randomUUID } from "node:crypto";
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { TARGET_LOCALES, type TargetLocale } from "../lib/target-language";
 import {
   getReportReason,
   toReportStage,
@@ -33,7 +34,15 @@ const FILE_CAP = 5000;
 const REPORT_KIND = "word_report";
 const APP_ID = "kinetic-canvas";
 
-type NewReport = Pick<WordReport, "wordId" | "word" | "reasons" | "stage">;
+type NewReport = Pick<WordReport, "locale" | "wordId" | "word" | "reasons" | "stage">;
+
+/**
+ * A report's deck. One filed before reports carried a language is English: until then only
+ * English words could be reported at all.
+ */
+function deckOf(value: unknown): TargetLocale {
+  return (TARGET_LOCALES as readonly unknown[]).includes(value) ? (value as TargetLocale) : "en";
+}
 
 /** Which home is in use, for the admin page to say where it is reading from. */
 export function wordReportStoreKind(): "supabase" | "file" {
@@ -45,7 +54,9 @@ export function wordReportStoreKind(): "supabase" | "file" {
 async function readFileStore(): Promise<WordReport[]> {
   try {
     const parsed = JSON.parse(await readFile(STORE_PATH, "utf8")) as unknown;
-    return Array.isArray(parsed) ? (parsed as WordReport[]) : [];
+    return Array.isArray(parsed)
+      ? (parsed as WordReport[]).map((report) => ({ ...report, locale: deckOf(report.locale) }))
+      : [];
   } catch {
     // No file yet simply means no reports yet.
     return [];
@@ -84,6 +95,7 @@ function fromRow(row: ErrorReportRow): WordReport {
     .filter((reason): reason is ReportReasonId => !!getReportReason(reason));
   return {
     id: row.id,
+    locale: deckOf(metadata.locale),
     wordId: String(metadata.word_id ?? ""),
     word: String(metadata.word ?? ""),
     reasons,
@@ -116,6 +128,7 @@ export async function addWordReport(report: NewReport): Promise<string> {
         message: `Word report: “${report.word}” — ${labels.join("; ")}`,
         metadata: {
           kind: REPORT_KIND,
+          locale: report.locale,
           word_id: report.wordId,
           word: report.word,
           reasons: report.reasons.join(","),

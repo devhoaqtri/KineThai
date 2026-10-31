@@ -13,10 +13,11 @@
  * Exports: REPORT_REASONS, ReportReasonId, REPORT_REASON_IDS, getReportReason,
  *   SEVERE_REPORT_REASONS, isSevereReason, byReportPriority, toReportStage,
  *   wordReportSchema, WordReportInput, WordReport, WordReportStatus, MAX_REPORT_REASONS
- * Depends on: zod
+ * Depends on: zod, ./target-language
  */
 
 import { z } from "zod";
+import { TARGET_LOCALES, type TargetLocale } from "./target-language";
 
 /** Reasons a reader can tap, in the order they are offered. */
 export const REPORT_REASONS = [
@@ -95,6 +96,8 @@ export function toReportStage(stageId: string | null | undefined): ReportStage |
 /** What the public endpoint accepts. Anything outside it is refused, never stored. */
 export const wordReportSchema = z.object({
   id: z.string().regex(/^[a-zA-Z0-9_-]{1,64}$/),
+  /** The deck the card came from, which `settings.targetLanguage` can set apart from the host. */
+  locale: z.enum(TARGET_LOCALES).optional(),
   reasons: z
     .array(z.enum(REPORT_REASON_IDS))
     .min(1)
@@ -110,6 +113,8 @@ export type WordReportStatus = "new" | "resolved";
 /** One stored report. */
 export type WordReport = {
   id: string;
+  /** The deck it was filed against. Ids are only unique within one deck. */
+  locale: TargetLocale;
   wordId: string;
   /** The word as it was spelled when reported, kept in case the entry is later edited. */
   word: string;

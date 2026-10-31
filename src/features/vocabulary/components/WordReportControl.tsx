@@ -12,7 +12,7 @@
  * Depends on: React, lucide-react, ../lib/word-report, ../lib/reported-words
  */
 
-import { useCallback, useEffect, useRef, useState, type Ref } from "react";
+import { useCallback, useContext, useEffect, useRef, useState, type Ref } from "react";
 import { Check, X } from "lucide-react";
 import {
   MAX_REPORT_REASONS,
@@ -21,6 +21,7 @@ import {
   toReportStage,
   type ReportReasonId,
 } from "../lib/word-report";
+import { DeckLocaleContext } from "../lib/deck-locale";
 import { rememberReportedWord } from "../lib/reported-words";
 import { t, type CopyKey } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
@@ -97,6 +98,7 @@ export function WordReportPanel({
   onClose: () => void;
 }) {
   const ui = useLocale();
+  const deck = useContext(DeckLocaleContext);
   const [phase, setPhase] = useState<Phase>(alreadyReported ? "sent" : "choosing");
   const [selected, setSelected] = useState<ReportReasonId[]>([]);
   const panel = useRef<HTMLDivElement>(null);
@@ -140,6 +142,7 @@ export function WordReportPanel({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           id: wordId,
+          locale: deck,
           reasons: selected,
           stage: toReportStage(openedOn.current),
         }),
@@ -151,7 +154,7 @@ export function WordReportPanel({
     } catch {
       setPhase("failed");
     }
-  }, [onSent, phase, selected, wordId]);
+  }, [deck, onSent, phase, selected, wordId]);
 
   return (
     // Opts out of the card's tap-to-turn-page gestures.
