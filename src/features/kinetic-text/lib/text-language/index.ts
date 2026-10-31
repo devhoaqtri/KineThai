@@ -56,6 +56,7 @@ export {
   expandEmphasisToBoundPhrases,
   getBoundPhraseEmphasisSeed,
   getBoundPhraseStartIndex,
+  getCompoundTokenKey,
   getSpecialPoeticWordIndexes,
   isLikelyVietnameseText,
   repairSplitCompoundEmphasis,
