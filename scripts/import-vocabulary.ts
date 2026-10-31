@@ -31,6 +31,7 @@ import { normalizeDeck } from "../src/features/vocabulary/lib/schema.ts";
 import { toDeck } from "../src/features/vocabulary/lib/custom-pack.ts";
 import { fromJaCrawler, isJaCrawlerBatch } from "../src/features/vocabulary/lib/crawler-ja.ts";
 import { fromKoCrawler, isKoCrawlerCards } from "../src/features/vocabulary/lib/crawler-ko.ts";
+import { fromZhCrawler, isZhCrawlerBatch } from "../src/features/vocabulary/lib/crawler-zh.ts";
 
 const USAGE =
   "Usage: npm run vocab:import -- <WordCrawler JSON path> [--pack <name>]\n" +
@@ -154,7 +155,9 @@ if (!source || (argv.length !== 1 && locale !== "ko") || (packAt !== -1 && !pack
           ? toDeck(raw, source)
           : locale === "ja" && isJaCrawlerBatch(raw)
             ? fromJaCrawler(raw)
-            : raw,
+            : locale === "zh" && isZhCrawlerBatch(raw)
+              ? fromZhCrawler(raw)
+              : raw,
     );
     const revision = createHash("sha256")
       .update(JSON.stringify(catalog))
