@@ -65,14 +65,29 @@ for (const locale of LOCALES) {
   if (!files.length) continue;
   const issued = (ledger[locale] ??= {});
   const taken = new Set(Object.keys(issued));
+  // A crawler re-import rewrites a deck file without its codes; a word the ledger
+  // already knows gets its own code back rather than a second one.
+  const earlier = new Map<string, string>();
+  for (const [code, id] of Object.entries(issued)) if (!earlier.has(id)) earlier.set(id, code);
 
   const decks = files.map((file) => ({
     file,
     deck: JSON.parse(readFileSync(file, "utf8")) as Deck,
   }));
-  for (const { deck } of decks) {
-    for (const word of deck.words ?? []) if (word.shareCode) taken.add(word.shareCode);
+  const restored = new Set<string>();
+  for (const { file, deck } of decks) {
+    for (const word of deck.words ?? []) {
+      if (word.shareCode) taken.add(word.shareCode);
+      else if (earlier.has(word.id)) {
+        word.shareCode = earlier.get(word.id)!;
+        restored.add(file);
+      }
+    }
   }
+  if (!dry)
+    for (const { file, deck } of decks) {
+      if (restored.has(file)) writeFileSync(file, `${JSON.stringify(deck, null, 2)}\n`);
+    }
 
   const needed = decks.reduce(
     (count, { deck }) => count + (deck.words ?? []).filter((word) => !word.shareCode).length,

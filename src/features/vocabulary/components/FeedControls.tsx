@@ -39,7 +39,7 @@ import { scopeProgress, tierProgress, type LevelProgress } from "../lib/level-pr
 import { levelLadderFor } from "../lib/level-ladder";
 import { activateCustomPack } from "../lib/custom-pack";
 import { useCustomPacks } from "../hooks/useCustomPacks";
-import { CEFR_LEVELS, HSK_LEVELS, type NarrativeStyle } from "../lib/schema";
+import { levelsFor, type NarrativeStyle } from "../lib/schema";
 import {
   historyEntries,
   scopeOfCell,
@@ -484,7 +484,7 @@ type DifficultyOption = {
  */
 function buildDifficultyOptions(locale: TargetLocale): DifficultyOption[] {
   const tracks = tracksFor(locale);
-  const allLevels = locale === "zh" ? HSK_LEVELS : CEFR_LEVELS;
+  const allLevels = levelsFor(locale);
   return [
     {
       id: DIFFICULTY_ALL,

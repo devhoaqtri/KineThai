@@ -12,7 +12,7 @@
  * draws its many strokes faster and a simple one slower, while the card's playback timer
  * only ever needs the character count. This keeps timing owned by the playback hook.
  *
- * Exports: isHanAnswer, getHanCharCount, getStrokeDrawBudgetSeconds, getStrokeSpellingDurationMs,
+ * Exports: isHanAnswer, isJapaneseWord, isKoreanWord, getHanCharCount, getStrokeDrawBudgetSeconds, getStrokeSpellingDurationMs,
  *   solveStrokeTiming,
  *   STROKE_DRAW_BASE_SECONDS, STROKE_DRAW_PER_CHAR_SECONDS, STROKE_DRAW_MAX_SECONDS,
  *   STROKE_SETTLE_SECONDS, STROKE_MIN_MS, STROKE_MAX_MS
@@ -32,6 +32,31 @@ const HAN = /\p{Script=Han}/u;
  */
 export function isHanAnswer(word: string): boolean {
   return HAN.test(word);
+}
+
+const KANA = /[\p{Script=Hiragana}\p{Script=Katakana}]/u;
+
+/**
+ * Whether a word is Japanese: kana in the headword, or in its reading (a Japanese deck
+ * writes a kanji word's reading in hiragana where a Chinese one writes pinyin). Japanese
+ * answers keep the letter coda: the bundled stroke data is Chinese, and kana have none.
+ * @param word Headword. @param reading The card's `ipa`. @returns True for Japanese.
+ * @pure true
+ */
+export function isJapaneseWord(word: string, reading?: string): boolean {
+  return KANA.test(word) || KANA.test(reading ?? "");
+}
+
+const HANGUL = /\p{Script=Hangul}/u;
+
+/**
+ * Whether a word is Korean (written in Hangul). Korean answers keep the letter coda and
+ * get a syllable clue instead of a letter count.
+ * @param word Headword. @returns True when it contains Hangul.
+ * @pure true
+ */
+export function isKoreanWord(word: string): boolean {
+  return HANGUL.test(word);
 }
 
 /**

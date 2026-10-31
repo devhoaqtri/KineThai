@@ -5,6 +5,8 @@ import {
   DIFFICULTY_IDS,
   DIFFICULTY_TRACKS,
   HSK_TRACKS,
+  JLPT_TRACKS,
+  TOPIK_TRACKS,
   LEVEL_SAMPLE_PRIORITY,
   countTrackWords,
   difficultyLevels,
@@ -53,8 +55,34 @@ describe("track catalogues", () => {
 describe("tracksFor", () => {
   it("gives Chinese the HSK set", () => expect(tracksFor("zh")).toBe(HSK_TRACKS));
   it("gives English the CEFR set", () => expect(tracksFor("en")).toBe(CEFR_TRACKS));
-  it("gives Korean the CEFR set", () => expect(tracksFor("ko")).toBe(CEFR_TRACKS));
-  it("gives Japanese the CEFR set", () => expect(tracksFor("ja")).toBe(CEFR_TRACKS));
+  it("gives Korean the TOPIK set", () => expect(tracksFor("ko")).toBe(TOPIK_TRACKS));
+  it("gives Japanese the JLPT set", () => expect(tracksFor("ja")).toBe(JLPT_TRACKS));
+});
+
+describe("TOPIK_TRACKS", () => {
+  it("keeps the ten shared ids in order", () =>
+    expect(TOPIK_TRACKS.map((t) => t.id)).toEqual(CEFR_TRACKS.map((t) => t.id)));
+  it("every TOPIK band is a distinct set of TOPIK levels", () => {
+    for (const track of TOPIK_TRACKS)
+      for (const level of track.levels) expect(level).toMatch(/^TOPIK[1-6]$/);
+    const keys = TOPIK_TRACKS.map((t) => [...t.levels].sort().join("+"));
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+  it("offers the first track once a TOPIK 1 deck is loaded", () =>
+    expect(difficultyLevels("vo-long", ["TOPIK1"])).toEqual(["TOPIK1"]));
+});
+
+describe("JLPT_TRACKS", () => {
+  it("keeps the ten shared ids in order", () =>
+    expect(JLPT_TRACKS.map((t) => t.id)).toEqual(CEFR_TRACKS.map((t) => t.id)));
+  it("every JLPT band is a distinct set of N levels", () => {
+    for (const track of JLPT_TRACKS)
+      for (const level of track.levels) expect(level).toMatch(/^N[1-5]$/);
+    const keys = JLPT_TRACKS.map((t) => [...t.levels].sort().join("+"));
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+  it("offers the N5 track once an N5 deck is loaded", () =>
+    expect(difficultyLevels("vo-long", ["N5"])).toEqual(["N5"]));
 });
 
 describe("trackCeiling", () => {

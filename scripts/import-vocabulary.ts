@@ -25,12 +25,16 @@
  */
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeDeck } from "../src/features/vocabulary/lib/schema.ts";
 import { toDeck } from "../src/features/vocabulary/lib/custom-pack.ts";
+import { fromJaCrawler, isJaCrawlerBatch } from "../src/features/vocabulary/lib/crawler-ja.ts";
+import { fromKoCrawler, isKoCrawlerCards } from "../src/features/vocabulary/lib/crawler-ko.ts";
 
-const USAGE = "Usage: npm run vocab:import -- <WordCrawler JSON path> [--pack <name>]";
+const USAGE =
+  "Usage: npm run vocab:import -- <WordCrawler JSON path> [--pack <name>]\n" +
+  "       Korean crawler batches compile together: <K101.json> <K102.json> … --pack <name> --locale ko";
 
 /**
  * The hand-off stamp Word Refinery writes into `meta.format`, and the newest
@@ -65,6 +69,7 @@ if (packAt !== -1) {
   argv.splice(packAt, packName ? 2 : 1);
 }
 const source = argv[0];
+const sources = [...argv];
 
 /** Restrict a pack name to a filesystem-safe slug so a provider name can't escape data/packs. */
 function packSlug(name: string): string {
@@ -102,7 +107,7 @@ function assertRefineryFormat(raw: unknown): void {
     );
 }
 
-if (!source || argv.length !== 1 || (packAt !== -1 && !packName)) {
+if (!source || (argv.length !== 1 && locale !== "ko") || (packAt !== -1 && !packName)) {
   console.error(USAGE);
   process.exitCode = 1;
 } else if (staged && !packName) {
@@ -110,17 +115,47 @@ if (!source || argv.length !== 1 || (packAt !== -1 && !packName)) {
   process.exitCode = 1;
 } else {
   try {
-    const input = resolve(source);
-    if ((await stat(input)).size > 100 * 1024 * 1024)
-      throw new Error("Deck exceeds the 100 MiB import limit");
-    const raw: unknown = JSON.parse(await readFile(input, "utf8"));
+    const files: { path: string; raw: unknown }[] = [];
+    for (const path of sources) {
+      const input = resolve(path);
+      if ((await stat(input)).size > 100 * 1024 * 1024)
+        throw new Error(`${path} exceeds the 100 MiB import limit`);
+      files.push({ path, raw: JSON.parse(await readFile(input, "utf8")) as unknown });
+    }
+    const raw = files[0]!.raw;
+    // Korean crawler batches are bare card arrays, one file per batch (K101, K102 …);
+    // they compile together into one pack (lib/crawler-ko.ts).
+    const korean =
+      locale === "ko" && files.every((file) => isKoCrawlerCards(file.raw))
+        ? fromKoCrawler(
+            files.map((file) => ({ name: basename(file.path), cards: file.raw as never })),
+          )
+        : null;
+    if (files.length > 1 && !korean)
+      throw new Error("Only Korean crawler batches (--locale ko) compile from several files");
+    if (korean?.skipped.length)
+      console.warn(`Skipped ${korean.skipped.length} empty card(s): ${korean.skipped.join(", ")}`);
+    if (korean?.dropped.length)
+      console.warn(
+        `Kept the first sense of ${korean.dropped.length} repeated headword(s), dropped: ${korean.dropped.join(", ")}`,
+      );
     // A stamped hand-off must be one this importer was written for, before anything reads
     // its shape. An unstamped file (hand-authored, library export) is not a hand-off and
     // passes straight through.
     assertRefineryFormat(raw);
     // Bare word arrays (the docs/Batches decks) go through the same toDeck cleanup
-    // the library importer uses: ids, dedupe, level from the file name.
-    const catalog = normalizeDeck(Array.isArray(raw) ? toDeck(raw, source) : raw);
+    // the library importer uses: ids, dedupe, level from the file name. A crawler
+    // Japanese batch file (cards keyed by batch name, N501…) is mapped onto the deck
+    // contract first (lib/crawler-ja.ts).
+    const catalog = normalizeDeck(
+      korean
+        ? { meta: korean.meta, words: korean.words }
+        : Array.isArray(raw)
+          ? toDeck(raw, source)
+          : locale === "ja" && isJaCrawlerBatch(raw)
+            ? fromJaCrawler(raw)
+            : raw,
+    );
     const revision = createHash("sha256")
       .update(JSON.stringify(catalog))
       .digest("hex")
@@ -147,7 +182,7 @@ if (!source || argv.length !== 1 || (packAt !== -1 && !packName)) {
       slug
         ? staged
           ? `Staged pack "${slug}": ${catalog.count} words; revision ${revision} → data/packs/incoming/${slug}.json. Embedded and validated, but NOT served — move it into data/packs/ and rebuild/restart to display.`
-          : `Compiled pack "${slug}": ${catalog.count} words; revision ${revision} → data/packs/${slug}.json. Restart dev / rebuild to serve.`
+          : `Compiled pack "${slug}": ${catalog.count} words; revision ${revision} → data/${locale ?? "packs"}/${slug}.json. Restart dev / rebuild to serve.`
         : `Imported ${catalog.count} distinct words; revision ${revision}. Rebuild/deploy to publish.`,
     );
   } catch (error) {

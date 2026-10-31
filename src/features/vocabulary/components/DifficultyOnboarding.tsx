@@ -78,8 +78,8 @@ export function DifficultyOnboarding({
 }: {
   metadata: LevelLadder;
   /**
-   * Deck locale. Resolves which track set to render: CEFR for en/ko/ja, HSK for
-   * zh. Without this the picker would hardcode CEFR and every rung would show
+   * Deck locale. Resolves which track set to render: HSK for zh, JLPT for ja, TOPIK
+   * for ko, CEFR for the rest. Without this the picker would hardcode CEFR and every rung would show
    * "Sắp có" on the hoa host because HSK catalogs never populate A1–C2.
    */
   locale: TargetLocale;

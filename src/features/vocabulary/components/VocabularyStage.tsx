@@ -273,7 +273,10 @@ export function VocabularyStage({
               resetting scrollTop when the word changes. */}
           <div className="vocab-reveal-scroll" ref={details}>
             {(word.ipa || word.pos) && (
-              <p className="vocab-pronunciation" lang="en">
+              <p
+                className="vocab-pronunciation"
+                lang={stage.lang === "ja" || stage.lang === "ko" ? stage.lang : "en"}
+              >
                 {word.ipa} {word.pos && <span>· {word.pos}</span>}
               </p>
             )}
@@ -289,7 +292,7 @@ export function VocabularyStage({
               <div className="vocab-example" key={index}>
                 {/* A Han deck writes this sentence in Chinese, and `lang` picks its glyphs. */}
                 <p lang={stage.lang}>
-                  <FilledUsage text={example.en} word={word.word} />
+                  <FilledUsage text={example.en} word={example.fill ?? word.word} />
                 </p>
               </div>
             ))}

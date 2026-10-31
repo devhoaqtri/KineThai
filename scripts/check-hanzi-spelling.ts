@@ -26,6 +26,7 @@ import {
   getStrokeDrawBudgetSeconds,
   getStrokeSpellingDurationMs,
   isHanAnswer,
+  isJapaneseWord,
   solveStrokeTiming,
 } from "../src/features/vocabulary/lib/hanzi";
 import {
@@ -71,10 +72,13 @@ function readStrokeFile(ch: string): CharacterJson | undefined {
 const hanWords: string[] = [];
 const deckChars = new Set<string>();
 for (const file of collectDecks(dataDir)) {
-  const deck = JSON.parse(readFileSync(file, "utf8")) as { words?: { word?: string }[] };
+  const deck = JSON.parse(readFileSync(file, "utf8")) as {
+    words?: { word?: string; ipa?: string }[];
+  };
   for (const entry of deck.words ?? []) {
     const word = entry.word ?? "";
-    if (!isHanAnswer(word)) continue;
+    // Japanese answers keep the letter coda and never fetch a stroke file.
+    if (!isHanAnswer(word) || isJapaneseWord(word, entry.ipa)) continue;
     hanWords.push(word);
     for (const ch of Array.from(word)) if (HAN.test(ch)) deckChars.add(ch);
   }

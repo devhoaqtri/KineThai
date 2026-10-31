@@ -390,7 +390,10 @@ function SavedRow({
             </p>
             {entry.word.usage[0] && (
               <p className="vocab-saved-usage" lang="en">
-                <FilledUsage text={entry.word.usage[0].en} word={entry.word.word} />
+                <FilledUsage
+                  text={entry.word.usage[0].en}
+                  word={entry.word.usage[0].fill ?? entry.word.word}
+                />
               </p>
             )}
           </>

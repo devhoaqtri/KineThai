@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { TargetLocale } from "./target-language";
 import { GRAMMAR_KEYS, deckGrammarFields, foldGrammar, grammarSchema } from "./grammar";
 
-/** CEFR levels — used by the English (and ko/ja) vocabulary pages. */
+/** CEFR levels — used by the English (and ko, fr, de, es) vocabulary pages. */
 export const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"] as const;
 /** HSK 3.0 (2021) proficiency levels — the official Chinese word-frequency standard for the hoa domain. */
 export const HSK_LEVELS = [
@@ -17,8 +17,12 @@ export const HSK_LEVELS = [
   "HSK8",
   "HSK9",
 ] as const;
-/** Master enum accepted by the word schema; covers both proficiency systems. */
-export const LEVELS = [...CEFR_LEVELS, ...HSK_LEVELS] as const;
+/** JLPT levels, easiest first (N5 is the beginner level) — the nhat (Japanese) domain. */
+export const JLPT_LEVELS = ["N5", "N4", "N3", "N2", "N1"] as const;
+/** TOPIK levels, easiest first — the han (Korean) domain. */
+export const TOPIK_LEVELS = ["TOPIK1", "TOPIK2", "TOPIK3", "TOPIK4", "TOPIK5", "TOPIK6"] as const;
+/** Master enum accepted by the word schema; covers every proficiency system, each easiest first. */
+export const LEVELS = [...CEFR_LEVELS, ...HSK_LEVELS, ...JLPT_LEVELS, ...TOPIK_LEVELS] as const;
 export const STYLE_IDS = ["detective", "speed", "confession", "minimal"] as const;
 const optionalText = (max: number) => z.string().trim().max(max).optional().default("");
 /** A grouping-axis value: lowercase slug, no spaces, so it is safe in a URL filter. */
@@ -56,8 +60,11 @@ const wordSchema = z.object({
     .max(64)
     // A headword in any deck language: Unicode letters (so German äöüß, French
     // accents, Spanish ñ all pass) with inner ', - or spaces for multi-word entries
-    // ("sich vorstellen"), or one or more Han characters for the Chinese deck.
-    .regex(/^(?:(?=.{2})\p{L}+(?:['’ -]\p{L}+)*|\p{Script=Han}+)$/u),
+    // ("sich vorstellen"), or any run of Han, kana or Hangul for the Chinese, Japanese
+    // and Korean decks, where one glyph can be a whole word (水, お, 것).
+    .regex(
+      /^(?:(?=.{2})\p{L}+(?:['’ -]\p{L}+)*|[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}ー\p{Script=Hangul}]+)$/u,
+    ),
   /**
    * The short handle used to share this word as a challenge (`/w/K7F`). Assigned
    * once by scripts/assign-share-codes.ts and then permanent: codes escape into
@@ -107,7 +114,17 @@ const wordSchema = z.object({
   chars: z.number().int().nonnegative().optional(),
   initial: z.string().max(4).optional(),
   usage: z
-    .array(z.object({ en: z.string().trim().min(1).max(400), vi: optionalText(400) }))
+    .array(
+      z.object({
+        en: z.string().trim().min(1).max(400),
+        vi: optionalText(400),
+        /**
+         * What fills the blank when it is not the headword itself: a conjugated form
+         * (する → します, 行く → 行って). Absent when the headword fits as written.
+         */
+        fill: z.string().trim().min(1).max(64).optional(),
+      }),
+    )
     .max(5)
     .optional()
     .default([]),
@@ -131,11 +148,23 @@ const deckSchema = z.object({
 export type VocabularyWord = z.infer<typeof wordSchema>;
 export type VocabularyLevel = (typeof LEVELS)[number];
 export type NarrativeStyle = (typeof STYLE_IDS)[number];
-export type LevelSystem = "cefr" | "hsk";
+export type LevelSystem = "cefr" | "hsk" | "jlpt" | "topik";
 
 /** Which proficiency standard applies to a deck locale. */
 export function levelSystemFor(locale: TargetLocale): LevelSystem {
-  return locale === "zh" ? "hsk" : "cefr";
+  if (locale === "zh") return "hsk";
+  if (locale === "ja") return "jlpt";
+  if (locale === "ko") return "topik";
+  return "cefr";
+}
+
+/** @returns Every level of a deck locale's proficiency system, easiest first. */
+export function levelsFor(locale: TargetLocale): readonly VocabularyLevel[] {
+  const system = levelSystemFor(locale);
+  if (system === "hsk") return HSK_LEVELS;
+  if (system === "jlpt") return JLPT_LEVELS;
+  if (system === "topik") return TOPIK_LEVELS;
+  return CEFR_LEVELS;
 }
 export type Catalog = {
   revision: string;

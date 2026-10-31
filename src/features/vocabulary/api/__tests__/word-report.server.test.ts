@@ -60,9 +60,10 @@ describe("word reports by language", () => {
     expect(stored.reports[0]).toMatchObject({ locale, wordId: word.id, word: word.word });
   });
 
-  it("files a language with no deck of its own under the English deck it reads", async () => {
-    await file("han.chayla.app", catalogFor("en").words[0]!.id);
-    expect(stored.reports[0]).toMatchObject({ locale: "en" });
+  it("files a Korean report under the Korean deck, not the English one", async () => {
+    await file("han.chayla.app", catalogFor("ko").words[0]!.id);
+    expect(stored.reports[0]).toMatchObject({ locale: "ko" });
+    expect((await file("han.chayla.app", catalogFor("en").words[0]!.id)).status).toBe(404);
   });
 
   it("refuses a word this host's deck does not hold", async () => {

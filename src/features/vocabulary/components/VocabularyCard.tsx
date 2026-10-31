@@ -44,7 +44,7 @@ import { siteBrand } from "../lib/target-language";
 import { hasReportedWord } from "../lib/reported-words";
 import { sceneSkipLimiter } from "../lib/skip-limiter";
 import { getSpellingDurationMs, pickSpellingVariant } from "../lib/spelling";
-import { getStrokeSpellingDurationMs, isHanAnswer } from "../lib/hanzi";
+import { getStrokeSpellingDurationMs, isHanAnswer, isJapaneseWord } from "../lib/hanzi";
 import { prefetchHanziStrokes } from "../lib/hanzi-strokes";
 import {
   REACTIONS_EVENT,
@@ -263,7 +263,8 @@ export function VocabularyCard({
   // A Han answer draws stroke-by-stroke instead of popping letters. The branch is decided
   // by pure script detection (lib/hanzi imports no stroke data), so this card chunk stays
   // lean for the English feed and the coda duration needs only the character count.
-  const isHan = isHanAnswer(entry.word.word);
+  // A Japanese answer pops its glyphs like letters: the bundled stroke data is Chinese.
+  const isHan = isHanAnswer(entry.word.word) && !isJapaneseWord(entry.word.word, entry.word.ipa);
   const spellingDuration = useMemo(
     () =>
       isHan
@@ -1040,6 +1041,7 @@ export function VocabularyCard({
             word={entry.word.word}
             variant={spellingVariant}
             reducedMotion={reducedMotion || !!still}
+            lang={stages[revealPage]?.lang}
           />
         )
       ) : (

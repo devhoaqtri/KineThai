@@ -1,30 +1,35 @@
 /**
- * Han (Chinese) kinetic line helpers: script detection and per-glyph tokenization.
+ * Han (Chinese and Japanese) kinetic line helpers: script detection and per-glyph
+ * tokenization.
  *
- * Chinese writes words without spaces, so whitespace tokenizing leaves a whole sample
+ * Chinese and Japanese write words without spaces, so whitespace tokenizing leaves a whole sample
  * sentence as ONE unbreakable "word" — it renders on a single shrunken line. These
  * helpers split Han text into per-character tokens (punctuation glued to its neighbour
  * so no line ever opens with it), which the Vietnamese line packer then staggers across
- * many short indented lines with the same font size and block fill.
+ * many short indented lines with the same font size and block fill. Japanese kana count
+ * as glyphs alongside kanji; a small kana or the long-vowel mark rides on the glyph
+ * before it, since Japanese never opens a line with one.
  *
  * Exports: isLikelyChineseText, getHanTokens, isHanToken
  * Depends on: none (leaf module)
  */
 
-const HAN = /\p{Script=Han}/u;
+const HAN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}ー]/u;
 
 /**
- * Tokenizer alternation, in priority order: one Han character (every glyph is its own
- * token), a run of letters/digits/underscores (a Latin word or a masked "_____" blank
- * stays whole), or a run of punctuation (attached to a neighbour by getHanTokens).
+ * Tokenizer alternation, in priority order: one Han or kana character with any small kana
+ * or long-vowel marks after it (every glyph is its own token), a run of
+ * letters/digits/underscores (a Latin word or a masked "_____" blank stays whole), or a run
+ * of punctuation (attached to a neighbour by getHanTokens).
  */
-const HAN_TOKEN_RUNS = /_{2,}|[\p{Script=Han}]|[\p{L}\p{N}_]+|[^\p{L}\p{N}_\s]+/gu;
+const HAN_TOKEN_RUNS =
+  /_{2,}|[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}ー][ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶㇰ-ㇿーゝゞヽヾ]*|[\p{L}\p{N}_]+|[^\p{L}\p{N}_\s]+/gu;
 
 /** Opening quotes/brackets introduce what follows, so they glue to the NEXT token. */
 const OPENING_PUNCTUATION = /^[‘“〝（［｛〈《「『【〔]/u;
 
 /**
- * True when the text is written mostly in Han characters. Counted per glyph, not per
+ * True when the text is written mostly in Han characters (kana included). Counted per glyph, not per
  * whitespace token: a Chinese sentence arrives as a single token. Latin letters are the
  * counterweight, so Vietnamese (zero Han) and English never trigger, while a Han sentence
  * with a sprinkling of Latin or a masked blank still does.

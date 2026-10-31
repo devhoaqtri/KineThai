@@ -23,6 +23,8 @@ export type RecallWord = {
   pos?: string;
   /** Example sentence with its ____ answer blank. */
   example?: string;
+  /** What fills that blank when it is not the word itself (a conjugated form). */
+  fill?: string;
 };
 
 function isCopy(value: unknown): value is RecallWord {
@@ -57,12 +59,14 @@ export function rememberRecallWord(word: VocabularyWord, now: number = Date.now(
     const history = loadHistory(now);
     const kept = Object.entries(loadRecallWords()).filter(([id]) => id in history);
     const example = word.usage[0]?.en;
+    const fill = word.usage[0]?.fill;
     const copy: RecallWord = {
       word: word.word,
       meaning: word.meaningVi || word.defVi,
       ...(word.ipa && { ipa: word.ipa }),
       ...(word.pos && { pos: word.pos }),
       ...(example && { example }),
+      ...(fill && { fill }),
     };
     localStorage.setItem(
       RECALL_WORDS_KEY,

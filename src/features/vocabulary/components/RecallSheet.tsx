@@ -230,7 +230,7 @@ function Row({
                 )}
                 {copy?.example && (
                   <p className="vocab-recall-example" lang={lang}>
-                    <FilledUsage text={copy.example} word={copy.word} />
+                    <FilledUsage text={copy.example} word={copy.fill ?? copy.word} />
                   </p>
                 )}
                 {!copy && (

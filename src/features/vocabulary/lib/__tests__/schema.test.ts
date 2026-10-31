@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   CEFR_LEVELS,
   HSK_LEVELS,
+  JLPT_LEVELS,
   LEVELS,
+  TOPIK_LEVELS,
   STYLE_IDS,
   answerPattern,
   levelSystemFor,
@@ -23,18 +25,43 @@ describe("level constants", () => {
   it("lists the six CEFR levels", () =>
     expect(CEFR_LEVELS).toEqual(["A1", "A2", "B1", "B2", "C1", "C2"]));
   it("lists the nine HSK levels", () => expect(HSK_LEVELS).toHaveLength(9));
-  it("master LEVELS is CEFR then HSK", () =>
-    expect(LEVELS).toEqual([...CEFR_LEVELS, ...HSK_LEVELS]));
+  it("lists the five JLPT levels, easiest first", () =>
+    expect(JLPT_LEVELS).toEqual(["N5", "N4", "N3", "N2", "N1"]));
+  it("lists the six TOPIK levels, easiest first", () =>
+    expect(TOPIK_LEVELS).toEqual(["TOPIK1", "TOPIK2", "TOPIK3", "TOPIK4", "TOPIK5", "TOPIK6"]));
+  it("master LEVELS is CEFR, then HSK, JLPT and TOPIK", () =>
+    expect(LEVELS).toEqual([...CEFR_LEVELS, ...HSK_LEVELS, ...JLPT_LEVELS, ...TOPIK_LEVELS]));
   it("ships four narrative styles", () =>
     expect(STYLE_IDS).toEqual(["detective", "speed", "confession", "minimal"]));
 });
 
 describe("levelSystemFor", () => {
   it("maps Chinese to HSK", () => expect(levelSystemFor("zh")).toBe("hsk"));
+  it("maps Japanese to JLPT", () => expect(levelSystemFor("ja")).toBe("jlpt"));
+  it("maps Korean to TOPIK", () => expect(levelSystemFor("ko")).toBe("topik"));
   it("maps English to CEFR", () => expect(levelSystemFor("en")).toBe("cefr"));
   it("maps every other locale to CEFR", () => {
-    for (const locale of ["ko", "ja", "fr", "de", "es"] as const)
-      expect(levelSystemFor(locale)).toBe("cefr");
+    for (const locale of ["fr", "de", "es"] as const) expect(levelSystemFor(locale)).toBe("cefr");
+  });
+});
+
+describe("normalizeDeck — Korean", () => {
+  it("accepts a one-syllable Hangul headword", () =>
+    expect(normalizeDeck({ words: [deckWord({ id: "geot", word: "것" })] }).words[0]?.word).toBe(
+      "것",
+    ));
+});
+
+describe("normalizeDeck — Japanese", () => {
+  it("accepts a one-kana headword", () =>
+    expect(normalizeDeck({ words: [deckWord({ id: "o", word: "お" })] }).words[0]?.word).toBe(
+      "お",
+    ));
+  it("keeps the form that fills a conjugated blank", () => {
+    const usage = [{ en: "毎日_____。", vi: "Ngày nào cũng học.", fill: "勉強します" }];
+    expect(
+      normalizeDeck({ words: [deckWord({ id: "b", word: "勉強する", usage })] }).words[0]?.usage,
+    ).toEqual(usage);
   });
 });
 

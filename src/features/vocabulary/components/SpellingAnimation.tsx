@@ -87,16 +87,19 @@ function variantMotion(
 
 /**
  * Render the answered word letter by letter.
- * @param props Word, chosen variant and motion preference. @returns Centred spelling overlay.
+ * @param props Word, chosen variant, motion preference and the word's language.
+ * @returns Centred spelling overlay.
  */
 export function SpellingAnimation({
   word,
   variant,
   reducedMotion,
+  lang = "en",
 }: {
   word: string;
   variant: SpellingVariant;
   reducedMotion: boolean;
+  lang?: string;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const wordRef = useRef<HTMLDivElement>(null);
@@ -151,7 +154,7 @@ export function SpellingAnimation({
   return (
     <div className="vocab-spelling" ref={hostRef} aria-hidden="true">
       <p className="vocab-spelling-label">Đánh vần lại lần nữa</p>
-      <p className="sr-only" lang="en">
+      <p className="sr-only" lang={lang}>
         {word}
       </p>
       <motion.div
@@ -161,7 +164,7 @@ export function SpellingAnimation({
         variants={containerVariants}
         initial="hidden"
         animate="shown"
-        lang="en"
+        lang={lang}
       >
         {letters.map((letter, index) => {
           const child: Variants = reducedMotion

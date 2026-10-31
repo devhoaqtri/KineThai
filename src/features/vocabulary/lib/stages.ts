@@ -1,7 +1,7 @@
 /** Explicit clue stages and answer masking (never infer pages from line breaks). Exports: buildStages, completeUsage, splitEmphasisMarkers. Depends on: schema, word-joiner, hanzi script detection, kinetic-text emphasis types. */
 import type { EmphasisVariant } from "@/features/kinetic-text";
 import { answerPattern, type NarrativeStyle, type VocabularyWord } from "./schema";
-import { isHanAnswer } from "./hanzi";
+import { isHanAnswer, isJapaneseWord, isKoreanWord } from "./hanzi";
 import { paginateText } from "@/features/post-player";
 import { splitWordJoiners, stripWordJoiners } from "./word-joiner";
 
@@ -46,7 +46,7 @@ export type LearningStage = {
   label: string;
   text: string;
   secondary?: string;
-  lang: "vi" | "en" | "zh";
+  lang: "vi" | "en" | "zh" | "ja" | "ko";
   reveal?: boolean;
   /** Emphasis phrases extracted from /word/ markers in the source text field. */
   dataEmphasis?: string[];
@@ -96,17 +96,74 @@ export function splitEmphasisMarkers(text: string): { text: string; marked: bool
   return parts;
 }
 
-/** Fill a deck's deliberate answer blank. @param text Example sentence. @param word Target. @returns Completed sentence. */
-export function completeUsage(text: string, word: string): string {
-  return text.replace(/_{2,}/g, word);
+/**
+ * Fill a deck's deliberate answer blank. @param text Example sentence. @param word Target.
+ * @param fill The form that fills the blank when it is not the target (します for する).
+ * @returns Completed sentence.
+ */
+export function completeUsage(text: string, word: string, fill?: string): string {
+  return text.replace(/_{2,}/g, fill ?? word);
+}
+
+/** A kana glyph with any small kana or long-vowel mark riding on it (きょ, コー). */
+const KANA_UNIT =
+  /[\p{Script=Hiragana}\p{Script=Katakana}][ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮー]*/gu;
+
+/**
+ * The letter clue for a Japanese word: how long its kana reading is, and the sound it
+ * opens with, plus the kanji count when it is written in kanji. The opening sound is
+ * held back when it would be the whole reading (お, 目 → め).
+ */
+function japaneseLettersStage(word: VocabularyWord, hanCount: number): LearningStage {
+  const reading = hanCount > 0 ? (word.ipa ?? "") : word.word;
+  const kanaCount = (reading.match(/[\p{Script=Hiragana}\p{Script=Katakana}ー]/gu) ?? []).length;
+  const units = reading.match(KANA_UNIT) ?? [];
+  const initial = units.length > 1 ? units[0]! : "";
+  const opening = initial ? `, bắt đầu bằng ${initial}` : "";
+  return {
+    id: "letters",
+    label: hanCount > 0 ? "Đếm chữ Hán" : "Đếm chữ cái",
+    text:
+      hanCount > 0
+        ? `Gồm ${hanCount} chữ Hán, đọc thành ${kanaCount} chữ kana${opening}`
+        : `Gồm ${kanaCount} chữ kana${opening}`,
+    lang: "vi",
+    secondaryEmphasis: initial ? { phrase: initial, variant: INITIAL_EMPHASIS_VARIANT } : undefined,
+  };
+}
+
+/** Initial consonants of a Hangul syllable, in Unicode order. */
+const HANGUL_INITIALS = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+
+/**
+ * The letter clue for a Korean word: its syllable count and the consonant it opens
+ * with. The first syllable would give away a one-syllable word (것, 집), so only its
+ * initial consonant is named.
+ */
+function koreanLettersStage(word: VocabularyWord): LearningStage {
+  const syllables = word.word.match(/[\uac00-\ud7a3]/gu) ?? [];
+  const first = syllables[0];
+  const initial = first ? HANGUL_INITIALS[Math.floor((first.codePointAt(0)! - 0xac00) / 588)]! : "";
+  return {
+    id: "letters",
+    label: "Đếm âm tiết",
+    text: initial
+      ? `Gồm ${syllables.length} âm tiết, bắt đầu bằng ${initial}`
+      : `Gồm ${syllables.length} âm tiết`,
+    lang: "vi",
+    secondaryEmphasis: initial ? { phrase: initial, variant: INITIAL_EMPHASIS_VARIANT } : undefined,
+  };
 }
 
 /** Create the supplied seven-stage flow, skipping absent optional content. @param word Catalog entry. @param style Narrative preset. @returns Ordered stages. */
 export function buildStages(word: VocabularyWord, style: NarrativeStyle): LearningStage[] {
   const mask = (text: string) => text.replace(answerPattern(word.word), "_____");
   // The answer language drives <p lang> and font selection on the pages that render the
-  // target script: a Han deck writes its usage sentence and reveal in Chinese, not English.
-  const answerLang = isHanAnswer(word.word) ? "zh" : "en";
+  // target script: a Han deck writes its usage sentence and reveal in Chinese (or
+  // Japanese), not English.
+  const japanese = isJapaneseWord(word.word, word.ipa);
+  const korean = isKoreanWord(word.word);
+  const answerLang = japanese ? "ja" : korean ? "ko" : isHanAnswer(word.word) ? "zh" : "en";
   const stages: LearningStage[] = [];
   const leadLabels: Record<NarrativeStyle, string> = {
     detective: "Bối cảnh",
@@ -137,7 +194,9 @@ export function buildStages(word: VocabularyWord, style: NarrativeStyle): Learni
     });
   }
   const hanCount = (word.word.match(/\p{Script=Han}/gu) ?? []).length;
-  if (hanCount > 0) {
+  if (japanese) stages.push(japaneseLettersStage(word, hanCount));
+  else if (korean) stages.push(koreanLettersStage(word));
+  else if (hanCount > 0) {
     // Chinese: the first character would give away half a 2-character word, so the
     // clue is the character count plus the first pinyin letter.
     const pinyinInitial = (word.ipa?.trim()[0] ?? "").toUpperCase();
@@ -157,7 +216,7 @@ export function buildStages(word: VocabularyWord, style: NarrativeStyle): Learni
   const count = latinLetters.length;
   const initial = word.word[0].toUpperCase();
   const final = (latinLetters[count - 1] ?? "").toUpperCase();
-  if (hanCount === 0) {
+  if (hanCount === 0 && !japanese && !korean) {
     // One letter-shape clue per word, chosen deterministically from its id so the ladder varies
     // from card to card but never reshuffles for the same word. Two shapes today:
     //   · count — how many letters, plus the opening one (the original clue);

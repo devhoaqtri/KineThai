@@ -285,6 +285,9 @@ const TERM_VI: Record<string, string> = {
   현재: "hiện tại",
   과거: "quá khứ",
   관형형: "định ngữ",
+  해요체: "lịch sự",
+  반말: "thân mật",
+  합쇼체: "trang trọng",
   높임말: "kính ngữ",
   // ja
   種類: "nhóm",

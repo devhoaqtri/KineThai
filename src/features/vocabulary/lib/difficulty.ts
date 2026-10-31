@@ -2,15 +2,17 @@
  * Difficulty tracks: the learner-facing names shown in the feed's dropdown, and
  * the level bands each one selects.
  *
- * Two sets coexist: CEFR tracks for English pages, HSK tracks for the hoa (Chinese)
- * domain. The bands deliberately overlap: ten named intents cannot map one-to-one
- * onto six CEFR (or nine HSK) levels without either collapsing two tracks into the
+ * Three sets coexist: CEFR tracks for English pages, HSK tracks for the hoa (Chinese)
+ * domain, JLPT tracks for the nhat (Japanese) one and TOPIK tracks for the han (Korean)
+ * one, all under the same ten ids. The bands deliberately overlap: ten named intents
+ * cannot map one-to-one onto six CEFR (nine HSK, five JLPT, six TOPIK) levels without
+ * either collapsing two tracks into the
  * same words or leaving tracks empty, and an empty track is worse than a shared one.
  * Every band is distinct as a set, and every band intersects the levels the bundled
  * deck actually carries, so no track renders an empty stream.
  *
  * Exports: DifficultyTrack, DIFFICULTY_TRACKS, DIFFICULTY_IDS, DIFFICULTY_ALL,
- *          LEVEL_SAMPLE_PRIORITY, tracksFor, CEFR_TRACKS, HSK_TRACKS,
+ *          LEVEL_SAMPLE_PRIORITY, tracksFor, CEFR_TRACKS, HSK_TRACKS, JLPT_TRACKS, TOPIK_TRACKS,
  *          difficultyLevels, formatLevelBand, countTrackWords,
  *          trackCeiling, isTrackAvailable
  * Depends on: ./schema, ./target-language
@@ -208,7 +210,163 @@ export const HSK_TRACKS: readonly DifficultyTrack[] = [
   },
 ];
 
-/** Track ids shared by both sets (same id appears in CEFR_TRACKS and HSK_TRACKS). */
+/**
+ * The ten JLPT tracks for the nhat (Japanese) feed, over N5 (easiest) to N1. Five levels
+ * for ten intents, so most tracks are a single level or a neighbouring pair; every band
+ * is still a distinct set.
+ */
+export const JLPT_TRACKS: readonly DifficultyTrack[] = [
+  {
+    id: "vo-long",
+    label: "nhập môn",
+    hint: "Mới bắt đầu, toàn từ rất quen",
+    emoji: "🐣",
+    levels: ["N5"],
+  },
+  {
+    id: "co-ban",
+    label: "cơ bản",
+    hint: "Vốn từ nền tảng hằng ngày",
+    emoji: "🌱",
+    levels: ["N4"],
+  },
+  {
+    id: "du-lich",
+    label: "du lịch",
+    hint: "Đủ dùng khi đi xa",
+    emoji: "🌿",
+    levels: ["N5", "N4"],
+  },
+  {
+    id: "giao-tiep",
+    label: "giao tiếp",
+    hint: "Nói chuyện tự nhiên hơn",
+    emoji: "🌾",
+    levels: ["N5", "N4", "N3"],
+  },
+  {
+    id: "doc-hieu",
+    label: "đọc hiểu",
+    hint: "Đọc báo và đọc truyện",
+    emoji: "🍃",
+    levels: ["N4", "N3"],
+  },
+  {
+    id: "chuyen-sau",
+    label: "trung cấp",
+    hint: "Sắc thái và cách dùng",
+    emoji: "🌳",
+    levels: ["N3"],
+  },
+  {
+    id: "viet-lach",
+    label: "viết lách",
+    hint: "Chữ nghĩa dùng khi viết",
+    emoji: "🔥",
+    levels: ["N3", "N2"],
+  },
+  {
+    id: "du-hoc",
+    label: "du học",
+    hint: "Tiếng Nhật học thuật",
+    emoji: "🚀",
+    levels: ["N4", "N3", "N2"],
+  },
+  {
+    id: "nang-cao",
+    label: "nâng cao",
+    hint: "Từ trừu tượng hơn",
+    emoji: "⚡",
+    levels: ["N2", "N1"],
+  },
+  {
+    id: "van-chuong",
+    label: "văn chương",
+    hint: "Ngôn từ đẹp và hiếm",
+    emoji: "🧠",
+    levels: ["N1"],
+  },
+];
+
+/**
+ * The ten TOPIK tracks for the han (Korean) feed, over TOPIK 1 (easiest) to 6. The CEFR
+ * bands one level for one level, except that the first track is TOPIK 1 alone so a deck
+ * that only reaches TOPIK 1 still has a track to start on.
+ */
+export const TOPIK_TRACKS: readonly DifficultyTrack[] = [
+  {
+    id: "vo-long",
+    label: "nhập môn",
+    hint: "Mới bắt đầu, toàn từ rất quen",
+    emoji: "🐣",
+    levels: ["TOPIK1"],
+  },
+  {
+    id: "co-ban",
+    label: "cơ bản",
+    hint: "Vốn từ nền tảng hằng ngày",
+    emoji: "🌱",
+    levels: ["TOPIK2"],
+  },
+  {
+    id: "du-lich",
+    label: "du lịch",
+    hint: "Đủ dùng khi đi xa",
+    emoji: "🌿",
+    levels: ["TOPIK1", "TOPIK2"],
+  },
+  {
+    id: "giao-tiep",
+    label: "giao tiếp",
+    hint: "Nói chuyện tự nhiên hơn",
+    emoji: "🌾",
+    levels: ["TOPIK1", "TOPIK2", "TOPIK3"],
+  },
+  {
+    id: "doc-hieu",
+    label: "đọc hiểu",
+    hint: "Đọc báo và đọc truyện",
+    emoji: "🍃",
+    levels: ["TOPIK3", "TOPIK4"],
+  },
+  {
+    id: "chuyen-sau",
+    label: "chuyên sâu",
+    hint: "Sắc thái và cách dùng",
+    emoji: "🌳",
+    levels: ["TOPIK4"],
+  },
+  {
+    id: "viet-lach",
+    label: "viết lách",
+    hint: "Chữ nghĩa dùng khi viết",
+    emoji: "🔥",
+    levels: ["TOPIK3", "TOPIK5"],
+  },
+  {
+    id: "du-hoc",
+    label: "du học",
+    hint: "Tiếng Hàn học thuật",
+    emoji: "🚀",
+    levels: ["TOPIK3", "TOPIK4", "TOPIK5"],
+  },
+  {
+    id: "nang-cao",
+    label: "nâng cao",
+    hint: "Từ trừu tượng hơn",
+    emoji: "⚡",
+    levels: ["TOPIK4", "TOPIK5"],
+  },
+  {
+    id: "van-chuong",
+    label: "văn chương",
+    hint: "Ngôn từ đẹp và hiếm",
+    emoji: "🧠",
+    levels: ["TOPIK5", "TOPIK6"],
+  },
+];
+
+/** Track ids shared by every set (the same id appears in CEFR, HSK, JLPT and TOPIK tracks). */
 const SHARED_TRACK_IDS = CEFR_TRACKS.map((track) => track.id);
 
 /** Default export for consumers that don't branch by locale (the English UI). */
@@ -220,11 +378,14 @@ export const DIFFICULTY_IDS = SHARED_TRACK_IDS;
 /**
  * Resolve the locale-appropriate difficulty tracks.
  * @param locale Deck locale
- * @returns HSK tracks for zh, CEFR tracks for en/ko/ja
+ * @returns HSK tracks for zh, JLPT for ja, TOPIK for ko, CEFR tracks for the rest
  * @pure true
  */
 export function tracksFor(locale: TargetLocale): readonly DifficultyTrack[] {
-  return locale === "zh" ? HSK_TRACKS : CEFR_TRACKS;
+  if (locale === "zh") return HSK_TRACKS;
+  if (locale === "ja") return JLPT_TRACKS;
+  if (locale === "ko") return TOPIK_TRACKS;
+  return CEFR_TRACKS;
 }
 
 /**
@@ -267,8 +428,8 @@ export function isTrackAvailable(
  * contribute nothing — so a selection made only of such tracks admits NO words, rather
  * than falling back to "everything".
  *
- * Searches both CEFR_TRACKS and HSK_TRACKS: the catalog's levels decide which set
- * provides a match (a CEFR catalog will never find an HSK track available, and vice versa).
+ * Searches every track set: the catalog's levels decide which set provides a match (a
+ * CEFR catalog will never find an HSK, JLPT or TOPIK track available, and vice versa).
  * @param difficulty Comma-joined track ids, or the empty sentinel for "all"
  * @param catalogLevels Levels the catalog has words for; omit to skip the availability rule
  * @returns The union band, an empty band when tracks were chosen but none can be served,
@@ -284,14 +445,14 @@ export function difficultyLevels(
     .map((id) => id.trim())
     .filter(Boolean);
   if (!ids.length) return null;
-  const allTracks = [...CEFR_TRACKS, ...HSK_TRACKS];
+  const allTracks = [...CEFR_TRACKS, ...HSK_TRACKS, ...JLPT_TRACKS, ...TOPIK_TRACKS];
   const union = new Set<VocabularyLevel>();
   for (const id of ids) {
     // Find the track matching this id whose levels intersect with the catalog's levels.
     // When no catalogLevels provided, prefer the first match (CEFR order).
     const matches = allTracks.filter((entry) => entry.id === id);
     const track = catalogLevels
-      ? matches.find((t) => isTrackAvailable(t, catalogLevels)) ?? matches[0]
+      ? (matches.find((t) => isTrackAvailable(t, catalogLevels)) ?? matches[0])
       : matches[0];
     if (!track) continue;
     if (catalogLevels && !isTrackAvailable(track, catalogLevels)) continue;

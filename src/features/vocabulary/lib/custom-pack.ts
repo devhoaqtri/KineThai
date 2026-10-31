@@ -50,9 +50,11 @@ function hash(text: string): string {
 
 type RawWord = Record<string, unknown>;
 
-/** Level named in a file name or URL (deck-v3-A1.json, hsk2.json), if any. */
+/** Level named in a file name or URL (deck-v3-A1.json, hsk2.json, jlpt-n5.json, topik1.json), if any. */
 function levelFromSource(source: string): string | undefined {
-  const m = source.match(/(?:^|[^a-z0-9])(a1|a2|b1|b2|c1|c2|hsk[1-9])(?=[^a-z0-9]|$)/i);
+  const m = source.match(
+    /(?:^|[^a-z0-9])(a1|a2|b1|b2|c1|c2|hsk[1-9]|n[1-5]|topik[1-6])(?=[^a-z0-9]|$)/i,
+  );
   return m?.[1]?.toUpperCase();
 }
 
