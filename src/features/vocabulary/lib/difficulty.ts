@@ -55,7 +55,7 @@ export const DIFFICULTY_ALL = "";
 export const LEVEL_SAMPLE_PRIORITY: Partial<Record<VocabularyLevel, readonly string[]>> = {
   A1: ["angry", "afraid", "amazing", "awesome"],
   A2: ["active", "alive", "attractive", "awful"],
-  B2: ["awareness", "astonishing", "apology", "approval"],
+  B2: ["anxiety", "astonishing", "apology", "approval"],
   C1: ["articulate", "anonymous", "assertion", "aspiration"],
   HSK1: ["饥饿", "口渴", "累", "生气"],
   HSK2: ["骄傲", "诚实", "礼貌", "懒"],
