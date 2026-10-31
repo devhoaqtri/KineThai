@@ -11,12 +11,16 @@
  * Run: npx tsx scripts/check-emphasis-runs.ts
  */
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DEFAULT_CANVAS } from "../src/features/canvas";
 import { VietnameseLineBlock } from "../src/features/kinetic-text/components/VietnameseLineBlock";
 import { entranceVariants } from "../src/features/kinetic-text/components/preview-tempo";
 import {
+  getCompoundTokenKey,
   getEmphasisPhraseKeysForLayout,
   getEmphasizedRunPhraseKeys,
   getEmphasisVariant,
@@ -301,7 +305,12 @@ function pageKeys(words: string[], emphasized: Set<number>, dataEmphasis?: strin
     for (let index = 0; index < words.length; index += 1) {
       for (const color of [EMPHASIS_COLOR, "#3a0ca3"]) {
         const shared = { words, text, emphasized: new Set([index]), emphasisColor: color };
-        const lone = resolveWordEmphasisVariant({ ...shared, word: words[index]!, index, inRun: false });
+        const lone = resolveWordEmphasisVariant({
+          ...shared,
+          word: words[index]!,
+          index,
+          inRun: false,
+        });
         const boxless = resolveWordEmphasisVariant({
           ...shared,
           word: words[index]!,
@@ -363,6 +372,79 @@ function pageKeys(words: string[], emphasized: Set<number>, dataEmphasis?: strin
     `no deck page with a blank underlines a word (${blankPages} pages, ${offending} bad)`,
     blankPages > 0 && offending === 0,
   );
+}
+
+// ── Shipped decks: the feed never draws a highlight that chains unrelated words.
+// Every Vietnamese page is put through the real selection function, exactly as
+// WordSequenceText calls it. A drawn run may hold no bare conjunction, may never pass
+// three syllables, and may only reach three when the deck itself wrote those three as
+// ONE `_` word — the generator's contract, now enforced on the reader's side too.
+{
+  const dataDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data");
+  const decks = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+      entry.isDirectory()
+        ? entry.name === "incoming"
+          ? []
+          : decks(join(dir, entry.name))
+        : entry.name.endsWith(".json")
+          ? [join(dir, entry.name)]
+          : [],
+    );
+  const CONJUNCTIONS = new Set(["và", "hoặc", "nhưng"]);
+  // The player's own detector answers "Vietnamese-ish" to a bilingual deck page that
+  // merely contains one Vietnamese word. Only pages whose content tokens are majority
+  // Vietnamese reach the reader as Vietnamese, so only those are judged here.
+  const viMarked = (token: string) =>
+    /[ăâđêôơưĂÂĐÊÔƠƯ]/.test(token) ||
+    /[\u0300\u0301\u0303\u0309\u0323]/.test(token.normalize("NFD"));
+  const tokenKeys = (tokens: string[], indexes: number[]) =>
+    indexes.map((index) => getCompoundTokenKey(tokens[index] ?? ""));
+  let pages = 0;
+  let drawn = 0;
+  const bad: string[] = [];
+  for (const file of decks(dataDir)) {
+    const catalog = JSON.parse(readFileSync(file, "utf8")) as { words?: unknown };
+    if (!Array.isArray(catalog.words)) continue;
+    for (const entry of catalog.words as Record<string, unknown>[]) {
+      // Vietnamese explicitly: stages default to the Japanese UI, which reads the clues in `localized`.
+      for (const stage of buildStages(entry as unknown as VocabularyWord, "detective", "vi")) {
+        const tokens = getWords(stage.text);
+        if (!isLikelyVietnameseText(tokens.join(" "))) continue;
+        const content = tokens.filter((token) => /\p{L}|\p{N}/u.test(token));
+        if (
+          content.length === 0 ||
+          content.filter((token) => viMarked(token)).length * 2 < content.length
+        ) {
+          continue;
+        }
+        pages += 1;
+        const picked = getEmphasizedWordIndexes(tokens, stage.dataEmphasis, stage.boundPhrases);
+        for (const run of runsOf(picked, tokens)) {
+          drawn += 1;
+          const keys = tokenKeys(tokens, run);
+          const label = `${relative(dataDir, file)} ${String(entry.id ?? entry.word)}: "${keys.join(" ")}"`;
+          if (keys.some((key) => CONJUNCTIONS.has(key))) {
+            bad.push(`${label} — a conjunction inside the highlight`);
+          } else if (run.length > 3) {
+            bad.push(`${label} — longer than any declared word`);
+          } else if (run.length === 3) {
+            const declared = (stage.boundPhrases ?? []).some((phrase: string) => {
+              const keys2 = phrase.trim().split(/\s+/).map(getCompoundTokenKey);
+              return keys2.length === 3 && keys2.every((key, index) => key === keys[index]);
+            });
+            if (!declared) bad.push(`${label} — three syllables no "_" word declares`);
+          }
+        }
+      }
+    }
+  }
+  check(
+    `shipped decks draw real highlights (${pages} Vietnamese pages, ${drawn} runs)`,
+    pages > 1000 && drawn > 1000,
+  );
+  for (const line of bad.slice(0, 10)) console.error(`  ${line}`);
+  check(`no drawn run chains unrelated words (${bad.length} bad)`, bad.length === 0);
 }
 
 console.log(checks.join("\n"));

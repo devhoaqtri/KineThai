@@ -90,6 +90,11 @@ function matchingPool(
 
 /** Sample words kept per level: enough for every track that shares a top level. */
 const LEVEL_SAMPLES = 4;
+
+/** @param word Deck word. @returns Whether it begins with an a, ignoring accents. @pure true */
+function startsWithA(word: string): boolean {
+  return /^a/i.test(word.normalize("NFD"));
+}
 const levelTallies = new Map<
   string,
   {
@@ -104,9 +109,9 @@ const levelTallies = new Map<
  * difficulty picker, and it is taken with the SAME topic test `matchingPool` uses, so a
  * track's figure is by construction the number of words choosing it will stream.
  *
- * Sample selection is two-pass per level: priority words named in LEVEL_SAMPLE_PRIORITY
- * are looked up by name first (wherever they appear in the merged catalog), then any
- * remaining slots are filled in catalog order. This ensures the onboarding picker always
+ * Sample selection per level: words starting with "a" come first (priority words named in
+ * LEVEL_SAMPLE_PRIORITY, then catalog order), then any remaining slots take the other
+ * priority words and finally catalog order. This ensures the onboarding picker always
  * shows a learner-appropriate representative word rather than the first word the base
  * catalog happens to carry for that level.
  * @param topic Topic slug, or "" for every topic
@@ -144,21 +149,18 @@ function levelTally(catalog: Catalog, topic: string) {
     const priority = LEVEL_SAMPLE_PRIORITY[level] ?? [];
     const picked: FeedPage["levelSamples"][VocabularyLevel] = [];
     const already = new Set<string>();
-    // Pass 1: priority words in declared order, matched case-sensitively.
-    for (const name of priority) {
-      if (picked.length >= LEVEL_SAMPLES) break;
-      const w = words.find((x) => x.word === name && !already.has(name));
-      if (w) {
-        picked.push({ word: w.word, defVi: w.defVi.replace(/\//g, "") });
-        already.add(w.word);
-      }
-    }
-    // Pass 2: fill remaining slots in catalog order, skipping already-picked.
-    for (const w of words) {
-      if (picked.length >= LEVEL_SAMPLES) break;
-      if (already.has(w.word)) continue;
+    const take = (w: (typeof words)[number]) => {
+      if (picked.length >= LEVEL_SAMPLES || already.has(w.word)) return;
       picked.push({ word: w.word, defVi: w.defVi.replace(/\//g, "") });
-    }
+      already.add(w.word);
+    };
+    const named = priority.flatMap((name) => words.filter((x) => x.word === name));
+    // Words starting with "a" go first so every rung's sample shares an initial; a level
+    // without enough of them (or a non-Latin deck) falls back to the old order.
+    for (const w of named) if (startsWithA(w.word)) take(w);
+    for (const w of words) if (startsWithA(w.word)) take(w);
+    for (const w of named) take(w);
+    for (const w of words) take(w);
     samples[level] = picked;
   }
   const tally = { counts, samples, total: heads.size };

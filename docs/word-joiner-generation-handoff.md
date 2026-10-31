@@ -92,8 +92,12 @@ one.
 - **Punctuation** stays outside, attached to the last syllable: `ba_lô,` `quan_trọng.`
   `"cà_phê!"`
 - **Highlights** `/…/` wrap whole words, with the join inside: `/quan_trọng/`. Never
-  `/quan/_trọng` or `/quan_/trọng`. Keep a highlight to at most three syllables. (The
-  admin regenerate prompt uses `*…*` for the same thing; the same rule applies.)
+  `/quan/_trọng` or `/quan_/trọng`. A Vietnamese highlight is ONE word: a single
+  syllable (`/gắt/`) or exactly two syllables the text joins with `_` (`/quan_trọng/`).
+  Never `/nắng gắt/` (two words), never across a `=`, never three syllables, even joined
+  (`/thời_khóa_biểu/` cannot glow; highlight another word). `check:word-joiners` fails a
+  shipped deck that breaks this. (The admin regenerate prompt uses `*…*` for the same
+  thing; the same rule applies.)
 - **The answer blank** is a run of underscores standing alone, written `____`. It is not
   a join. Never attach a blank to a word (`từ____`) and never write a blank as a single
   underscore: the app reads two or more in a row as the blank, and one as nothing.
@@ -114,6 +118,8 @@ joined the Chinese way). The legacy `emphasis` array may be written either way.
 | `Cô ấy ăn_cơm rất_nhanh.`          | two separate words joined, twice                 | `Cô ấy ăn cơm rất nhanh.`  |
 | `điều quan _trọng` / `quan_ trọng` | a space next to the join; it is no longer a join | `điều quan_trọng`          |
 | `/quan/_trọng lắm`                 | highlight cuts through a word                    | `/quan_trọng/ lắm`         |
+| `dưới /nắng gắt/`                  | highlight covers two words                       | `dưới nắng /gắt/`          |
+| `dán /thời_khóa_biểu/`             | highlight of three syllables                     | `/dán/ thời_khóa_biểu`     |
 | `gầm_giường_nín_thở`               | a whole phrase joined; cannot wrap               | `gầm giường nín thở`       |
 | `Cô ấy rất _.`                     | single underscore used as a blank                | `Cô ấy rất ____.`          |
 | `他是一个很诚实的学生。`           | `诚实` and `学生` can each be split              | `他是一个很诚_实的学_生。` |
@@ -142,8 +148,14 @@ words with one space.
 - Chinese: join the characters of each multi-character word (诚_实, 图_书_馆).
 - Never join two different words (not ăn_cơm, not rất_đẹp). Never join more than four
   syllables. When unsure, leave a space.
-- Punctuation stays outside the join (ba_lô, not ba_lô_,). A highlight wraps whole words
-  (/quan_trọng/). The answer blank is ____ and is never attached to a word.
+- Punctuation stays outside the join (ba_lô, not ba_lô_,). A highlight is one word: one
+  syllable (/gắt/) or one two-syllable joined word (/quan_trọng/); never two separate
+  words, never across "=", never three syllables. The answer blank is ____ and is never
+  attached to a word.
+- Every `emphasisVi` phrase is exactly ONE joined group (or one lone syllable) of the text
+  it sits in — at most three syllables, and three only for a real lexicalised word
+  (nút_bịt_tai). Never glue a collocation to make it look like one word (not
+  mua_và_bán, not không_có_việc), and never let a phrase hold và, hoặc or nhưng.
 - Use no underscore for any other purpose.
 - Length limits count syllables: ba_lô is two.
 ```
@@ -162,7 +174,10 @@ words with one space.
     underscore is an error; a run of two or more is the blank and must stand alone;
   - no `/_`, `_/`, `*_` or `_*`;
   - no joined unit longer than four syllables;
-  - no join between two Hangul characters, none touching Hiragana or Katakana.
+  - no join between two Hangul characters, none touching Hiragana or Katakana;
+  - each `emphasisVi` phrase equals exactly one `_` group of the field it highlights (or one
+    lone syllable), is at most three syllables, and never holds và, hoặc or nhưng —
+    the reader's own guard proves it on every shipped page: `npm run check:emphasis-runs`.
 - **Existing decks** (200 words, 800 Vietnamese fields at the time of writing) have no
   joins. They render as before until they are regenerated or annotated.
 

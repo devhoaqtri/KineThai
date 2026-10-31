@@ -7,6 +7,7 @@
 
 import {
   expandEmphasisToBoundPhrases,
+  getCompoundTokenKey,
   getDataEmphasisWordSpans,
   getEmphasisPhraseKeysForLayout,
   getSpecialPoeticWordIndexes,
@@ -109,6 +110,8 @@ export function getEmphasizedWordIndexes(
   boundPhrases?: string[],
 ): Set<number> {
   const boundKeys = getEmphasisPhraseKeysForLayout(boundPhrases);
+  const marked = getExactVietnameseMark(words, dataEmphasis, boundKeys);
+  if (marked) return marked;
   const selected = selectEmphasizedWordIndexes(words, dataEmphasis);
   const phraseKeys = [...getEmphasisPhraseKeysForLayout(dataEmphasis), ...boundKeys];
   return limitShortSentenceEmphasis(
@@ -118,26 +121,72 @@ export function getEmphasizedWordIndexes(
   );
 }
 
+/**
+ * A Vietnamese page's author mark, exactly as written. The compound repair is skipped
+ * because it grew marks the author did not choose: it reaches both neighbours of a lone
+ * syllable ("gần /hết/ giờ" glowed three syllables), and a join chain spans `=` clitics
+ * ("đã=bắt_chuyện"). One growth is still owed: a one-syllable mark that sits INSIDE a
+ * word the deck joined with `_` is half a word — the reader sees "ba_lô" as one unit, so
+ * the glow covers the whole joined word and never chains past it. A mark of two or more
+ * syllables is a whole word as written and never grows.
+ * @param words - page tokens
+ * @param dataEmphasis - optional upstream annotation phrases
+ * @param boundKeys - token keys of the phrases the source text marked as ONE word
+ * @returns The first matched mark's indexes, or null when the page is not Vietnamese or
+ *   carries no matching mark
+ * @pure true
+ */
+function getExactVietnameseMark(
+  words: string[],
+  dataEmphasis?: string[],
+  boundKeys: readonly (readonly string[])[] = [],
+): Set<number> | null {
+  if (!isLikelyVietnameseText(words.join(" "))) return null;
+  const span = getDataEmphasisWordSpans(words, dataEmphasis)[0];
+  if (!span) return null;
+  const mark = new Set(Array.from({ length: span.length }, (_, offset) => span.start + offset));
+  if (span.length === 1 && boundKeys.length > 0) {
+    let container: readonly string[] | null = null;
+    let containerStart = 0;
+    for (const phrase of boundKeys) {
+      if (phrase.length < 2) continue;
+      for (let start = 0; start + phrase.length <= words.length; start += 1) {
+        if (start > span.start || span.start >= start + phrase.length) continue;
+        const keyed = words.slice(start, start + phrase.length).map(getCompoundTokenKey);
+        if (phrase.every((key, index) => key === keyed[index])) {
+          if (!container || phrase.length > container.length) {
+            container = phrase;
+            containerStart = start;
+          }
+          break;
+        }
+      }
+    }
+    if (container) {
+      for (let offset = 0; offset < container.length; offset += 1)
+        mark.add(containerStart + offset);
+    }
+  }
+  return mark;
+}
+
 function selectEmphasizedWordIndexes(words: string[], dataEmphasis?: string[]): Set<number> {
   const isVietnameseText = isLikelyVietnameseText(words.join(" "));
   // Upstream annotations are author intent and outrank every heuristic. At most
   // two highlighted words per page: spans come back in annotation priority, so
-  // the first two matched phrases win; each is already a whole compound, and the
-  // expansion + repair defenses still heal single-syllable annotations.
+  // the first two matched phrases win. Vietnamese marks never reach here; they are
+  // taken verbatim by getExactVietnameseMark.
   const spans = getDataEmphasisWordSpans(words, dataEmphasis);
   if (spans.length > 0) {
-    const maxSpans = isVietnameseText ? 1 : 2;
     const chosen = new Set<number>();
-    for (const span of spans.slice(0, maxSpans)) {
+    for (const span of spans.slice(0, 2)) {
       for (let offset = 0; offset < span.length; offset += 1) chosen.add(span.start + offset);
     }
-    const expanded = expandEmphasisToBoundPhrases(
+    return expandEmphasisToBoundPhrases(
       words,
       chosen,
       getEmphasisPhraseKeysForLayout(dataEmphasis),
     );
-    if (!isVietnameseText) return expanded;
-    return new Set(repairSplitCompoundEmphasis(words, [...expanded]));
   }
 
   const poeticIndexes = getSpecialPoeticWordIndexes(words);
@@ -168,9 +217,13 @@ function selectEmphasizedWordIndexes(words: string[], dataEmphasis?: string[]): 
   }
   const expanded = expandEmphasisToBoundPhrases(words, selected);
 
-  // Compound guard: never leave one syllable of a Vietnamese pair glowing alone.
   if (!isVietnameseText) return keepFirstRuns(expanded, 2);
-  return keepFirstRuns(repairSplitCompoundEmphasis(words, [...expanded]), 1);
+  // Compound guard: a page with no mark is picked by score, and KineThai's Vietnamese clues
+  // rarely join their words with `_`, so without this "công an" would glow only "an". The
+  // repair may only finish a pair: past two syllables it is welding unrelated words into a
+  // chain ("đầy thương mến"), which readers must never see, so the pick stays as it was.
+  const repaired = keepFirstRuns(repairSplitCompoundEmphasis(words, [...expanded]), 1);
+  return repaired.size > 2 ? keepFirstRuns(expanded, 1) : repaired;
 }
 
 // Feed scoring — includes digit punchline + ALLCAPS bonuses and a wider EMPHASIS_WORDS

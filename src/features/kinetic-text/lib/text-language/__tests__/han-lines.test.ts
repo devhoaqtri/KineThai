@@ -31,8 +31,8 @@ describe("getHanTokens", () => {
     expect(getHanTokens("hello 世界")).toEqual(["hello", "世", "界"]));
   it("keeps a space-separated masked blank whole", () =>
     expect(getHanTokens("我 _____ 你")).toEqual(["我", "_____", "你"]));
-  it("merges a blank glued to a Han glyph (Han is a letter run)", () =>
-    expect(getHanTokens("我_____你")).toEqual(["我", "_____你"]));
+  it("keeps a blank apart from the Han glyph after it, so it draws as a slot", () =>
+    expect(getHanTokens("我_____你")).toEqual(["我", "_____", "你"]));
   it("returns an empty array for an empty string", () => expect(getHanTokens("")).toEqual([]));
   it("reconstructs the visible text when joined", () => {
     for (const text of ["我爱你", "你好。", "「你好」", "hello 世界"])

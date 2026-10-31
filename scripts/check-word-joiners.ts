@@ -4,6 +4,9 @@
  * Run: npx tsx scripts/check-word-joiners.ts
  */
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   getEmphasisPhraseKeysForLayout,
   getVietnameseLayoutMetrics,
@@ -181,18 +184,51 @@ console.log("OK — a highlight never covers half a joined word");
   const text = "Chất_lỏng trong suốt | mà ta uống=mỗi ngày.";
   const encoded = encodeWordJoiners(text);
   assert.ok(!encoded.includes("|"), "the phrase mark never reaches a reader");
-  assert.equal(
-    countJoinedUnits(text),
-    9,
-    "a phrase mark must not change a word count either",
-  );
-  assert.deepEqual(splitPhrases(text), [
-    "Chất lỏng trong suốt",
-    "mà ta uống mỗi ngày.",
-  ]);
+  assert.equal(countJoinedUnits(text), 9, "a phrase mark must not change a word count either");
+  assert.deepEqual(splitPhrases(text), ["Chất lỏng trong suốt", "mà ta uống mỗi ngày."]);
   // Nothing honours the edges yet; this records what a packer will read.
   assert.deepEqual(splitPhrases("không có dấu nào"), ["không có dấu nào"]);
   console.log("OK — a phrase mark is stripped and its edges are exposed");
+}
+
+// ── A shipped highlight is one syllable or one two-syllable "_" word.
+// Two syllables a space apart are two words, a "=" pair leans but is not one word,
+// and three syllables read as a clause even when joined.
+{
+  const dataDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data");
+  const decks = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+      entry.isDirectory()
+        ? entry.name === "incoming"
+          ? []
+          : decks(join(dir, entry.name))
+        : entry.name.endsWith(".json")
+          ? [join(dir, entry.name)]
+          : [],
+    );
+  let marks = 0;
+  const offenders: string[] = [];
+  // The legacy English base deck predates this rule; the generated decks are held to it.
+  for (const file of decks(dataDir).filter((path) => relative(dataDir, path) !== "catalog.json")) {
+    const words = (JSON.parse(readFileSync(file, "utf8")) as { words?: unknown }).words;
+    if (!Array.isArray(words)) continue;
+    for (const entry of words as Record<string, unknown>[]) {
+      for (const field of ["defVi", "leadVi", "anticipateVi"]) {
+        for (const match of String(entry[field] ?? "").matchAll(/\/([^/]+)\//g)) {
+          marks += 1;
+          const phrase = match[1]!.trim();
+          if (/[\s=|]/u.test(phrase) || phrase.split("_").length > 2) {
+            offenders.push(
+              `${relative(dataDir, file)} ${String(entry.id ?? entry.word)}.${field}: ${match[0]}`,
+            );
+          }
+        }
+      }
+    }
+  }
+  assert.ok(marks > 0, "the shipped decks carry highlights");
+  assert.deepEqual(offenders, [], `highlights that are not one word:\n${offenders.join("\n")}`);
+  console.log(`OK — all ${marks} shipped highlights are one syllable or one two-syllable "_" word`);
 }
 
 console.log("\nAll word-joiner checks passed.");

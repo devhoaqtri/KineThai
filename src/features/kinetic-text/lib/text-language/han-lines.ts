@@ -18,7 +18,7 @@ const HAN = /\p{Script=Han}/u;
  * token), a run of letters/digits/underscores (a Latin word or a masked "_____" blank
  * stays whole), or a run of punctuation (attached to a neighbour by getHanTokens).
  */
-const HAN_TOKEN_RUNS = /[\p{Script=Han}]|[\p{L}\p{N}_]+|[^\p{L}\p{N}_\s]+/gu;
+const HAN_TOKEN_RUNS = /_{2,}|[\p{Script=Han}]|[\p{L}\p{N}_]+|[^\p{L}\p{N}_\s]+/gu;
 
 /** Opening quotes/brackets introduce what follows, so they glue to the NEXT token. */
 const OPENING_PUNCTUATION = /^[‘“〝（［｛〈《「『【〔]/u;

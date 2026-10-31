@@ -49,11 +49,14 @@ export const DIFFICULTY_ALL = "";
  * The base catalog carries business HSK3 words (deadline, feedback…) that would be
  * shown as the first HSK3 samples under the old catalog-order rule; listing specific
  * everyday words here ensures the representative shown for each level is one that
- * a learner would actually recognise at that difficulty.
+ * a learner would actually recognise at that difficulty. Latin-script samples also start
+ * with "a" (see levelTally), so these lists do too.
  */
 export const LEVEL_SAMPLE_PRIORITY: Partial<Record<VocabularyLevel, readonly string[]>> = {
-  A1: ["hungry", "thirsty", "tired", "angry"],
-  A2: ["proud", "honest", "polite", "lazy"],
+  A1: ["angry", "afraid", "amazing", "awesome"],
+  A2: ["active", "alive", "attractive", "awful"],
+  B2: ["anxiety", "astonishing", "apology", "approval"],
+  C1: ["articulate", "anonymous", "assertion", "aspiration"],
   HSK1: ["饥饿", "口渴", "累", "生气"],
   HSK2: ["骄傲", "诚实", "礼貌", "懒"],
 };
