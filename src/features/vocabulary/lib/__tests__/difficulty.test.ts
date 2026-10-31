@@ -145,7 +145,7 @@ describe("countTrackWords", () => {
 
 describe("LEVEL_SAMPLE_PRIORITY", () => {
   it("prioritises everyday A1 words", () =>
-    expect(LEVEL_SAMPLE_PRIORITY.A1).toEqual(["hungry", "thirsty", "tired", "angry"]));
+    expect(LEVEL_SAMPLE_PRIORITY.A1).toEqual(["angry", "afraid", "amazing", "awesome"]));
   it("prioritises Han glyphs for HSK1", () => {
     for (const word of LEVEL_SAMPLE_PRIORITY.HSK1 ?? []) expect(word).toMatch(/^\p{Script=Han}+$/u);
   });

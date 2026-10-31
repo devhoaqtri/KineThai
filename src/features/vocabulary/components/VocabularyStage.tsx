@@ -292,7 +292,8 @@ export function VocabularyStage({
             </p>
             {word.usage.map((example, index) => (
               <div className="vocab-example" key={index}>
-                <p lang="en">
+                {/* A Han deck writes this sentence in Chinese, and `lang` picks its glyphs. */}
+                <p lang={stage.lang}>
                   <FilledUsage text={example.en} word={word.word} />
                 </p>
               </div>
