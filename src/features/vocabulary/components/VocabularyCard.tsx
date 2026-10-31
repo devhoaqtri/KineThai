@@ -1,4 +1,4 @@
-/** One independent vocabulary learning card; clue navigation and heart/bookmark reactions stay on-device, and the reveal is followed by a spelling coda (letter-by-letter for Latin, stroke-by-stroke for Han). Exports: VocabularyCard. Depends on: presets, playback, VocabularyStage, SpellingAnimation, HanziStrokeSpelling, reactions. */
+/** One independent vocabulary learning card; clue navigation and heart/bookmark reactions stay on-device, and the reveal is followed by a spelling coda (letter-by-letter for Latin, stroke-by-stroke for Han, jamo assembling into blocks for Korean). Exports: VocabularyCard. Depends on: presets, playback, VocabularyStage, SpellingAnimation, HanziStrokeSpelling, HangulAssembly, reactions. */
 import {
   lazy,
   Suspense,
@@ -44,7 +44,13 @@ import { siteBrand } from "../lib/target-language";
 import { hasReportedWord } from "../lib/reported-words";
 import { sceneSkipLimiter } from "../lib/skip-limiter";
 import { getSpellingDurationMs, pickSpellingVariant } from "../lib/spelling";
-import { getStrokeSpellingDurationMs, isHanAnswer, isJapaneseWord } from "../lib/hanzi";
+import {
+  getStrokeSpellingDurationMs,
+  isHanAnswer,
+  isJapaneseWord,
+  isKoreanWord,
+} from "../lib/hanzi";
+import { hangulAssemblyDurationMs } from "../lib/hangul-assembly";
 import { prefetchHanziStrokes } from "../lib/hanzi-strokes";
 import {
   REACTIONS_EVENT,
@@ -62,6 +68,7 @@ import { useLearningPlayback } from "../hooks/useLearningPlayback";
 import { usePresence } from "@/hooks/use-presence";
 import type { FeedEntry, Presentation, ReadingPace } from "../types";
 import { EmojiBurst } from "./EmojiBurst";
+import { HangulAssembly } from "./HangulAssembly";
 import { SpellingAnimation } from "./SpellingAnimation";
 import { VocabularyStage } from "./VocabularyStage";
 import { WordReportButton, WordReportPanel } from "./WordReportControl";
@@ -265,12 +272,16 @@ export function VocabularyCard({
   // lean for the English feed and the coda duration needs only the character count.
   // A Japanese answer pops its glyphs like letters: the bundled stroke data is Chinese.
   const isHan = isHanAnswer(entry.word.word) && !isJapaneseWord(entry.word.word, entry.word.ipa);
+  // A Korean answer is rebuilt block by block from its letters (jamo) instead.
+  const isHangul = isKoreanWord(entry.word.word);
   const spellingDuration = useMemo(
     () =>
       isHan
         ? getStrokeSpellingDurationMs(entry.word.word, reducedMotion)
-        : getSpellingDurationMs(entry.word.word, spellingVariant, reducedMotion),
-    [isHan, entry.word.word, spellingVariant, reducedMotion],
+        : isHangul
+          ? hangulAssemblyDurationMs(entry.word.word, reducedMotion)
+          : getSpellingDurationMs(entry.word.word, spellingVariant, reducedMotion),
+    [isHan, isHangul, entry.word.word, spellingVariant, reducedMotion],
   );
   // Warm the lazy stroke chunk and this answer's stroke files as soon as a Han card mounts,
   // so the coda never waits on a dynamic import or a fetch mid-animation; the clue pages
@@ -1036,6 +1047,8 @@ export function VocabularyCard({
           <Suspense fallback={null}>
             <HanziStrokeSpelling word={entry.word.word} reducedMotion={reducedMotion || !!still} />
           </Suspense>
+        ) : isHangul ? (
+          <HangulAssembly word={entry.word.word} reducedMotion={reducedMotion || !!still} />
         ) : (
           <SpellingAnimation
             word={entry.word.word}
