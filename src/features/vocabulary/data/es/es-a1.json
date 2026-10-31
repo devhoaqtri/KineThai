@@ -1,5 +1,5 @@
 {
-  "revision": "bd0f179bf41e69a1c1e80323",
+  "revision": "9569a20db9e2211798d9e6a9",
   "name": "deck-es-A1",
   "count": 107,
   "topics": [
@@ -30,7 +30,7 @@
       "word": "barato",
       "meaningVi": "rẻ",
       "defVi": "Có giá rẻ, | chỉ cần ít tiền | là mua=được.",
-      "leadVi": "Áo_thun đồng_giá ba chục, | ai đi ngang | cũng ghé.",
+      "leadVi": "/Áo_thun/ đồng_giá ba chục, | ai đi ngang | cũng ghé.",
       "anticipateVi": "Mua một tặng một nè!",
       "emphasis": [
         "giá rẻ",
@@ -58,8 +58,8 @@
       "id": "caro",
       "word": "caro",
       "meaningVi": "đắt",
-      "defVi": "Có giá đắt_đỏ, | cao hơn nhiều | so=với bình_thường.",
-      "leadVi": "Nhìn hóa_đơn nhà_hàng xong, | ví bỗng thấy | nhẹ_tênh.",
+      "defVi": "Có giá đắt_đỏ, | cao hơn nhiều | so=với /bình_thường/.",
+      "leadVi": "Nhìn hóa_đơn nhà_hàng xong, | ví bỗng thấy | /nhẹ_tênh/.",
       "anticipateVi": "Nghe giá | là muốn xỉu!",
       "emphasis": [
         "đắt đỏ",
@@ -86,8 +86,8 @@
       "id": "pasaporte",
       "word": "pasaporte",
       "meaningVi": "hộ_chiếu",
-      "defVi": "Giấy_tờ tùy_thân | bắt_buộc | khi đi ra nước_ngoài.",
-      "leadVi": "Ra tới sân_bay | mới hoảng_hồn: | sổ nhỏ đâu rồi?",
+      "defVi": "Giấy_tờ tùy_thân | bắt_buộc | khi đi ra /nước_ngoài/.",
+      "leadVi": "Ra tới /sân_bay/ | mới hoảng_hồn: | sổ nhỏ đâu rồi?",
       "anticipateVi": "Xuất trình đi | bạn ơi!",
       "emphasis": [
         "tùy thân",
@@ -114,9 +114,9 @@
       "id": "desayuno",
       "word": "desayuno",
       "meaningVi": "bữa_sáng",
-      "defVi": "Bữa=ăn đầu_tiên | trong ngày, | thường ăn | lúc sáng_sớm.",
-      "leadVi": "Ổ bánh_mì nóng giòn | với ly cà_phê sữa đá.",
-      "anticipateVi": "Bánh_mì hay xôi đây?",
+      "defVi": "/Bữa=ăn/ đầu_tiên | trong ngày, | thường ăn | lúc sáng_sớm.",
+      "leadVi": "Ổ /bánh_mì/ nóng giòn | với ly cà_phê sữa đá.",
+      "anticipateVi": "/Bánh_mì/ hay xôi đây?",
       "emphasis": [
         "đầu tiên",
         "nóng giòn"
@@ -143,8 +143,8 @@
       "id": "cocina",
       "word": "cocina",
       "meaningVi": "nhà_bếp",
-      "defVi": "Căn_phòng để nấu_nướng, | có bếp | và chén_bát.",
-      "leadVi": "Mùi hành phi thơm_lừng | bay ra | từ cuối nhà.",
+      "defVi": "Căn_phòng để /nấu_nướng/, | có bếp | và chén_bát.",
+      "leadVi": "Mùi hành phi /thơm_lừng/ | bay ra | từ cuối nhà.",
       "anticipateVi": "Ai đang=nấu gì | thơm thế?",
       "emphasis": [
         "nấu nướng",
@@ -172,7 +172,7 @@
       "id": "vacaciones",
       "word": "vacaciones",
       "meaningVi": "kỳ nghỉ",
-      "defVi": "Dịp nghỉ_ngơi, | không phải đi học | hay đi làm.",
+      "defVi": "Dịp /nghỉ_ngơi/, | không phải đi học | hay đi làm.",
       "leadVi": "Nghỉ_lễ dài ngày, | cả nhà xách vali | đi Đà_Lạt.",
       "anticipateVi": "Xếp vali | chưa nào?",
       "emphasis": [
@@ -201,9 +201,9 @@
       "id": "deberes",
       "word": "deberes",
       "meaningVi": "bài_tập về nhà",
-      "defVi": "Những bài_tập | thầy_cô giao | để làm ở nhà.",
-      "leadVi": "Tối Chủ_nhật | mới lôi vở ra, | chép vội | cho kịp.",
-      "anticipateVi": "Nộp=bài đúng hạn nha!",
+      "defVi": "Những /bài_tập/ | thầy_cô giao | để làm ở nhà.",
+      "leadVi": "Tối /Chủ_nhật/ | mới lôi vở ra, | chép vội | cho kịp.",
+      "anticipateVi": "/Nộp=bài/ đúng hạn nha!",
       "emphasis": [
         "bài tập",
         "chép vội"
@@ -229,8 +229,8 @@
       "id": "biblioteca",
       "word": "biblioteca",
       "meaningVi": "thư_viện",
-      "defVi": "Nơi cất_giữ nhiều sách | để đọc | hoặc mượn về.",
-      "leadVi": "Hắt_hơi một cái, | cả phòng đang=đọc | quay lại nhìn.",
+      "defVi": "Nơi /cất_giữ/ nhiều sách | để đọc | hoặc mượn về.",
+      "leadVi": "/Hắt_hơi/ một cái, | cả phòng đang=đọc | quay lại nhìn.",
       "anticipateVi": "Mở=sách ra nào!",
       "emphasis": [
         "nhiều sách",
@@ -257,9 +257,9 @@
       "id": "mercado",
       "word": "mercado",
       "meaningVi": "chợ",
-      "defVi": "Nơi mọi người | tụ_họp | mua_bán rau, | thịt, cá.",
-      "leadVi": "Sáng_sớm, | cô bán cá | rao inh_ỏi: | \"Tươi_rói nè!\"",
-      "anticipateVi": "Trả=giá | đi nào!",
+      "defVi": "Nơi mọi người | tụ_họp | /mua_bán/ rau, | thịt, cá.",
+      "leadVi": "Sáng_sớm, | cô bán cá | rao inh_ỏi: | \"/Tươi_rói/ nè!\"",
+      "anticipateVi": "/Trả=giá/ | đi nào!",
       "emphasis": [
         "mua bán",
         "inh ỏi"
@@ -286,9 +286,9 @@
       "id": "aeropuerto",
       "word": "aeropuerto",
       "meaningVi": "sân_bay",
-      "defVi": "Nơi máy_bay cất_cánh, | hạ_cánh | và đón trả khách.",
-      "leadVi": "Kéo vali | qua cửa an_ninh, | loa gọi chuyến liên_tục.",
-      "anticipateVi": "Thắt dây an_toàn nào!",
+      "defVi": "Nơi máy_bay cất_cánh, | /hạ_cánh/ | và đón trả khách.",
+      "leadVi": "Kéo vali | qua cửa /an_ninh/, | loa gọi chuyến liên_tục.",
+      "anticipateVi": "Thắt dây /an_toàn/ nào!",
       "emphasis": [
         "cất cánh",
         "an ninh"
@@ -314,7 +314,7 @@
       "id": "diccionario",
       "word": "diccionario",
       "meaningVi": "từ_điển",
-      "defVi": "Cuốn_sách để tra_cứu | nghĩa của=từ, | xếp theo vần.",
+      "defVi": "Cuốn_sách để /tra_cứu/ | nghĩa của=từ, | xếp theo vần.",
       "leadVi": "Gặp chữ lạ | là lật cuốn_sách dày_cộm | ra tìm.",
       "anticipateVi": "Tra thử | chữ này xem!",
       "emphasis": [
@@ -342,8 +342,8 @@
       "id": "llegar",
       "word": "llegar",
       "meaningVi": "đến nơi",
-      "defVi": "Đặt chân đến nơi | sau một quãng_đường đi.",
-      "leadVi": "Xe dừng bánh, | tài_xế báo: | \"Tới bến rồi nha!\"",
+      "defVi": "Đặt chân đến nơi | sau một /quãng_đường/ đi.",
+      "leadVi": "Xe dừng bánh, | /tài_xế/ báo: | \"Tới bến rồi nha!\"",
       "anticipateVi": "Sắp tới chưa vậy?",
       "emphasis": [
         "đến nơi",
@@ -370,8 +370,8 @@
       "id": "esperar",
       "word": "esperar",
       "meaningVi": "chờ, đợi",
-      "defVi": "Nán lại chờ_đợi | cho tới khi | người mình mong đến.",
-      "leadVi": "Đặt đồ_ăn xong, | sốt_ruột | mở ứng_dụng xem mãi.",
+      "defVi": "Nán lại /chờ_đợi/ | cho tới khi | người mình mong đến.",
+      "leadVi": "Đặt đồ_ăn xong, | /sốt_ruột/ | mở ứng_dụng xem mãi.",
       "anticipateVi": "Khoan, chút nữa thôi!",
       "emphasis": [
         "chờ đợi",
@@ -399,8 +399,8 @@
       "id": "creer",
       "word": "creer",
       "meaningVi": "tin, tin_tưởng",
-      "defVi": "Tin_tưởng rằng | điều gì=đó | đúng là sự_thật.",
-      "leadVi": "Nghe chuyện ông Bụt, | lũ nhỏ đinh_ninh | là chuyện thật.",
+      "defVi": "/Tin_tưởng/ rằng | điều gì=đó | đúng là sự_thật.",
+      "leadVi": "Nghe chuyện ông Bụt, | lũ nhỏ /đinh_ninh/ | là chuyện thật.",
       "anticipateVi": "Thật hay đùa vậy?",
       "emphasis": [
         "sự thật",
@@ -427,9 +427,9 @@
       "id": "viajar",
       "word": "viajar",
       "meaningVi": "đi du_lịch",
-      "defVi": "Rời nhà đi xa | để vui_chơi | hay công_tác.",
-      "leadVi": "Ba_lô trên vai, | năm nào | cũng khám_phá tỉnh mới.",
-      "anticipateVi": "Xách ba_lô lên | và đi!",
+      "defVi": "Rời nhà đi xa | để vui_chơi | hay /công_tác/.",
+      "leadVi": "Ba_lô trên vai, | năm nào | cũng /khám_phá/ tỉnh mới.",
+      "anticipateVi": "Xách /ba_lô/ lên | và đi!",
       "emphasis": [
         "đi xa",
         "khám phá"
@@ -455,9 +455,9 @@
       "id": "bolso",
       "word": "bolso",
       "meaningVi": "cái=túi",
-      "defVi": "Đồ_vật có quai | dùng để đựng | và mang đồ.",
-      "leadVi": "Sách vở, bút, chìa_khóa | đều nằm gọn trong=đó.",
-      "anticipateVi": "Đựng gì | bên trong vậy?",
+      "defVi": "/Đồ_vật/ có quai | dùng để đựng | và mang đồ.",
+      "leadVi": "Sách vở, bút, /chìa_khóa/ | đều nằm gọn trong=đó.",
+      "anticipateVi": "Đựng gì | /bên_trong/ vậy?",
       "emphasis": [
         "mang đồ",
         "nằm gọn"
@@ -483,9 +483,9 @@
       "id": "cama",
       "word": "cama",
       "meaningVi": "cái=giường",
-      "defVi": "Đồ_đạc có đệm | để nằm ngủ | vào ban_đêm.",
-      "leadVi": "Tối nào cũng=chui | vào chăn ấm | rồi say giấc.",
-      "anticipateVi": "Đêm nay | ngả lưng đâu?",
+      "defVi": "Đồ_đạc có đệm | để nằm ngủ | vào /ban_đêm/.",
+      "leadVi": "Tối nào cũng=chui | vào chăn ấm | rồi /say_giấc/.",
+      "anticipateVi": "Đêm nay | /ngả_lưng/ đâu?",
       "emphasis": [
         "nằm ngủ",
         "say giấc"
@@ -511,8 +511,8 @@
       "id": "libro",
       "word": "libro",
       "meaningVi": "cuốn=sách",
-      "defVi": "Nhiều trang giấy in chữ | đóng lại | thành tập.",
-      "leadVi": "Mở ra là thấy | cả thế_giới | câu_chuyện kỳ_diệu.",
+      "defVi": "Nhiều trang giấy /in_chữ/ | đóng lại | thành tập.",
+      "leadVi": "Mở ra là thấy | cả thế_giới | câu_chuyện /kỳ_diệu/.",
       "anticipateVi": "Lật từng trang nhé?",
       "emphasis": [
         "trang giấy",
@@ -540,9 +540,9 @@
       "id": "pan",
       "word": "pan",
       "meaningVi": "bánh_mì",
-      "defVi": "Món_ăn | làm từ bột_mì | nướng chín trong lò.",
-      "leadVi": "Sáng sớm, | mùi thơm phức bay ra | từ tiệm nhỏ.",
-      "anticipateVi": "Ổ gì | thơm phức thế?",
+      "defVi": "Món_ăn | làm từ /bột_mì/ | nướng chín trong lò.",
+      "leadVi": "Sáng sớm, | mùi /thơm_phức/ bay ra | từ tiệm nhỏ.",
+      "anticipateVi": "Ổ gì | /thơm_phức/ thế?",
       "emphasis": [
         "bột mì",
         "thơm phức"
@@ -568,9 +568,9 @@
       "id": "hermano",
       "word": "hermano",
       "meaningVi": "anh_trai hoặc em_trai",
-      "defVi": "Con_trai | cùng bố_mẹ | sinh ra với=mình.",
-      "leadVi": "Hồi nhỏ hay giành đồ_chơi, | lớn lên | lại thương nhau.",
-      "anticipateVi": "Ai chung bố mẹ | với bạn?",
+      "defVi": "/Con_trai/ | cùng bố_mẹ | sinh ra với=mình.",
+      "leadVi": "Hồi nhỏ hay giành /đồ_chơi/, | lớn lên | lại thương nhau.",
+      "anticipateVi": "Ai chung /bố_mẹ/ | với bạn?",
       "emphasis": [
         "Con trai",
         "thương nhau"
@@ -597,9 +597,9 @@
       "id": "autob-s",
       "word": "autobús",
       "meaningVi": "xe_buýt",
-      "defVi": "Xe lớn | chở nhiều khách | theo tuyến đường cố_định.",
-      "leadVi": "Đứng ở trạm, | chờ chiếc_xe màu xanh | ghé lại.",
-      "anticipateVi": "Trạm kế tiếp | là đâu?",
+      "defVi": "Xe lớn | chở nhiều khách | theo tuyến đường /cố_định/.",
+      "leadVi": "Đứng ở trạm, | chờ chiếc_xe /màu_xanh/ | ghé lại.",
+      "anticipateVi": "Trạm /kế_tiếp/ | là đâu?",
       "emphasis": [
         "nhiều khách",
         "ghé lại"
@@ -625,9 +625,9 @@
       "id": "coche",
       "word": "coche",
       "meaningVi": "ô_tô",
-      "defVi": "Xe bốn bánh | chạy bằng động_cơ | chở người.",
-      "leadVi": "Bố cầm vô_lăng, | cả nhà ngồi ghế sau.",
-      "anticipateVi": "Bốn bánh chạy vù vù?",
+      "defVi": "Xe bốn bánh | chạy bằng /động_cơ/ | chở người.",
+      "leadVi": "Bố cầm /vô_lăng/, | cả nhà ngồi ghế sau.",
+      "anticipateVi": "Bốn bánh chạy /vù_vù/?",
       "emphasis": [
         "động cơ",
         "vô lăng"
@@ -653,7 +653,7 @@
       "id": "silla",
       "word": "silla",
       "meaningVi": "cái=ghế",
-      "defVi": "Đồ_vật có chân | và tựa lưng | để=ngồi.",
+      "defVi": "/Đồ_vật/ có chân | và tựa lưng | để=ngồi.",
       "leadVi": "Mỏi chân rồi, | kéo nó ra | ngồi nghỉ một lát.",
       "anticipateVi": "Ngồi lên đây | thử nào?",
       "emphasis": [
@@ -681,8 +681,8 @@
       "id": "ni-o",
       "word": "niño",
       "meaningVi": "đứa=trẻ",
-      "defVi": "Người còn nhỏ tuổi, | chưa lớn | thành người_lớn.",
-      "leadVi": "Chạy nhảy suốt ngày, | hỏi gì | cũng=tò_mò.",
+      "defVi": "Người còn nhỏ tuổi, | chưa lớn | thành /người_lớn/.",
+      "leadVi": "Chạy nhảy suốt ngày, | hỏi gì | cũng=/tò_mò/.",
       "anticipateVi": "Bé con nhà ai thế?",
       "emphasis": [
         "nhỏ tuổi",
@@ -710,9 +710,9 @@
       "id": "ciudad",
       "word": "ciudad",
       "meaningVi": "thành_phố",
-      "defVi": "Nơi đông dân | có nhiều nhà cao tầng | và đường_phố.",
-      "leadVi": "Đèn sáng rực, | xe_cộ nối đuôi nhau | suốt đêm.",
-      "anticipateVi": "Phố phường nhộn nhịp ư?",
+      "defVi": "Nơi đông dân | có nhiều nhà cao tầng | và /đường_phố/.",
+      "leadVi": "Đèn sáng rực, | /xe_cộ/ nối đuôi nhau | suốt đêm.",
+      "anticipateVi": "Phố phường /nhộn_nhịp/ ư?",
       "emphasis": [
         "đông dân",
         "sáng rực"
@@ -739,8 +739,8 @@
       "id": "reloj",
       "word": "reloj",
       "meaningVi": "đồng_hồ",
-      "defVi": "Đồ_vật treo tường | dùng để xem giờ.",
-      "leadVi": "Tích_tắc, | tích_tắc, | kim cứ quay mãi | không=ngừng.",
+      "defVi": "/Đồ_vật/ treo tường | dùng để xem giờ.",
+      "leadVi": "Tích_tắc, | tích_tắc, | kim cứ quay mãi | /không=ngừng/.",
       "anticipateVi": "Mấy giờ rồi nhỉ?",
       "emphasis": [
         "xem giờ",
@@ -768,9 +768,9 @@
       "id": "fr-o",
       "word": "frío",
       "meaningVi": "lạnh",
-      "defVi": "Có nhiệt_độ thấp | khiến ta thấy rét buốt.",
-      "leadVi": "Sáng mùa đông, | thở ra | cả làn khói trắng.",
-      "anticipateVi": "Run cầm cập chưa?",
+      "defVi": "Có /nhiệt_độ/ thấp | khiến ta thấy rét buốt.",
+      "leadVi": "Sáng /mùa_đông/, | thở ra | cả làn khói trắng.",
+      "anticipateVi": "Run /cầm_cập/ chưa?",
       "emphasis": [
         "rét buốt",
         "khói trắng"
@@ -797,9 +797,9 @@
       "id": "bailar",
       "word": "bailar",
       "meaningVi": "nhảy_múa",
-      "defVi": "Chuyển_động cơ_thể | theo nhịp_điệu | của=âm_nhạc.",
-      "leadVi": "Nhạc vừa nổi lên, | cả nhóm xoay vòng | rộn_ràng.",
-      "anticipateVi": "Lắc lư theo nhạc nào?",
+      "defVi": "Chuyển_động cơ_thể | theo /nhịp_điệu/ | của=âm_nhạc.",
+      "leadVi": "Nhạc vừa nổi lên, | cả nhóm xoay vòng | /rộn_ràng/.",
+      "anticipateVi": "/Lắc_lư/ theo nhạc nào?",
       "emphasis": [
         "nhịp điệu",
         "xoay vòng"
@@ -826,8 +826,8 @@
       "id": "d-a",
       "word": "día",
       "meaningVi": "ngày",
-      "defVi": "Khoảng thời_gian | hai mươi bốn giờ, | từ sáng đến đêm.",
-      "leadVi": "Mặt_trời mọc | rồi lặn, | trọn_vẹn | một vòng quay.",
+      "defVi": "Khoảng /thời_gian/ | hai mươi bốn giờ, | từ sáng đến đêm.",
+      "leadVi": "Mặt_trời mọc | rồi lặn, | /trọn_vẹn/ | một vòng quay.",
       "anticipateVi": "Sáng rồi lại tối?",
       "emphasis": [
         "thời gian",
@@ -855,7 +855,7 @@
       "word": "puerta",
       "meaningVi": "cửa",
       "defVi": "Tấm_chắn | mở ra đóng vào | ở lối đi.",
-      "leadVi": "Cộc_cộc_cộc, | có ai | đang=đứng bên ngoài.",
+      "leadVi": "Cộc_cộc_cộc, | có ai | đang=đứng /bên_ngoài/.",
       "anticipateVi": "Cộc_cộc ngoài kia | là gì?",
       "emphasis": [
         "mở ra",
@@ -882,9 +882,9 @@
       "id": "beber",
       "word": "beber",
       "meaningVi": "uống",
-      "defVi": "Đưa nước hay chất_lỏng | vào miệng | rồi nuốt xuống.",
-      "leadVi": "Trời nóng, | cầm ly nước đá | tu ừng_ực.",
-      "anticipateVi": "Khát khô cổ rồi à?",
+      "defVi": "Đưa nước hay /chất_lỏng/ | vào miệng | rồi nuốt xuống.",
+      "leadVi": "Trời nóng, | cầm ly nước đá | tu /ừng_ực/.",
+      "anticipateVi": "/Khát_khô/ cổ rồi à?",
       "emphasis": [
         "chất lỏng",
         "ừng ực"
@@ -911,8 +911,8 @@
       "id": "ojo",
       "word": "ojo",
       "meaningVi": "mắt",
-      "defVi": "Bộ_phận | trên khuôn_mặt | giúp ta nhìn thấy.",
-      "leadVi": "Nhắm lại | thì tối om, | mở ra | thì thấy hết.",
+      "defVi": "Bộ_phận | trên /khuôn_mặt/ | giúp ta nhìn thấy.",
+      "leadVi": "Nhắm lại | thì /tối_om/, | mở ra | thì thấy hết.",
       "anticipateVi": "Nhìn bằng gì đây?",
       "emphasis": [
         "nhìn thấy",
@@ -940,9 +940,9 @@
       "id": "familia",
       "word": "familia",
       "meaningVi": "gia_đình",
-      "defVi": "Bố_mẹ, con_cái | cùng chung sống | dưới một mái nhà.",
-      "leadVi": "Bữa cơm tối, | ông bà, bố_mẹ | quây quanh mâm.",
-      "anticipateVi": "Ai ngồi | quanh mâm cơm?",
+      "defVi": "/Bố_mẹ/, con_cái | cùng chung sống | dưới một mái nhà.",
+      "leadVi": "Bữa cơm tối, | ông bà, /bố_mẹ/ | quây quanh mâm.",
+      "anticipateVi": "Ai ngồi | quanh /mâm_cơm/?",
       "emphasis": [
         "chung sống",
         "quây quanh"
@@ -969,7 +969,7 @@
       "id": "padre",
       "word": "padre",
       "meaningVi": "bố",
-      "defVi": "Người đàn_ông | sinh ra | và nuôi_nấng con_cái.",
+      "defVi": "Người đàn_ông | sinh ra | và /nuôi_nấng/ con_cái.",
       "leadVi": "Vai rộng | cõng con | đi chơi khắp phố.",
       "anticipateVi": "Người cõng bạn | ngày bé?",
       "emphasis": [
@@ -998,8 +998,8 @@
       "id": "pescado",
       "word": "pescado",
       "meaningVi": "cá",
-      "defVi": "Con_vật sống dưới nước, | thở bằng mang, | bơi bằng vây.",
-      "leadVi": "Quẫy đuôi tung_tăng | giữa dòng suối trong veo.",
+      "defVi": "/Con_vật/ sống dưới nước, | thở bằng mang, | bơi bằng vây.",
+      "leadVi": "Quẫy đuôi /tung_tăng/ | giữa dòng suối trong veo.",
       "anticipateVi": "Bơi dưới nước | là ai?",
       "emphasis": [
         "dưới nước",
@@ -1027,8 +1027,8 @@
       "id": "flor",
       "word": "flor",
       "meaningVi": "bông=hoa",
-      "defVi": "Bộ_phận đẹp của=cây, | có cánh màu | và hương thơm.",
-      "leadVi": "Mùa xuân về, | ong bướm bay rộn | quanh vườn.",
+      "defVi": "/Bộ_phận/ đẹp của=cây, | có cánh màu | và hương thơm.",
+      "leadVi": "Mùa xuân về, | /ong_bướm/ bay rộn | quanh vườn.",
       "anticipateVi": "Vườn nhà | nở gì thế?",
       "emphasis": [
         "hương thơm",
@@ -1055,8 +1055,8 @@
       "id": "amigo",
       "word": "amigo",
       "meaningVi": "người bạn",
-      "defVi": "Người mình quý mến | và hay chơi cùng.",
-      "leadVi": "Buồn có người an_ủi, | vui có người cùng cười.",
+      "defVi": "Người mình /quý_mến/ | và hay chơi cùng.",
+      "leadVi": "Buồn có người /an_ủi/, | vui có người cùng cười.",
       "anticipateVi": "Ai sát cánh | cùng bạn?",
       "emphasis": [
         "quý mến",
@@ -1086,7 +1086,7 @@
       "meaningVi": "trái_cây",
       "defVi": "Quả chín mọng | của=cây, | thường ngọt và ăn được.",
       "leadVi": "Đĩa cam, chuối, xoài | bày đầy trên bàn.",
-      "anticipateVi": "Tráng miệng | món gì nhỉ?",
+      "anticipateVi": "/Tráng_miệng/ | món gì nhỉ?",
       "emphasis": [
         "chín mọng",
         "bày đầy"
@@ -1113,8 +1113,8 @@
       "id": "juego",
       "word": "juego",
       "meaningVi": "trò_chơi",
-      "defVi": "Hoạt_động vui_chơi | có luật_lệ | và người thắng.",
-      "leadVi": "Cả lớp chia hai đội, | reo hò | chơi kéo co.",
+      "defVi": "Hoạt_động vui_chơi | có /luật_lệ/ | và người thắng.",
+      "leadVi": "Cả lớp chia hai đội, | reo hò | chơi /kéo_co/.",
       "anticipateVi": "Ai thắng ván này?",
       "emphasis": [
         "luật lệ",
@@ -1141,8 +1141,8 @@
       "id": "feliz",
       "word": "feliz",
       "meaningVi": "vui_vẻ",
-      "defVi": "Cảm_thấy vui_vẻ | và hài_lòng | với mọi thứ.",
-      "leadVi": "Nhận quà xong, | em bé | cười tít cả mắt.",
+      "defVi": "/Cảm_thấy/ vui_vẻ | và hài_lòng | với mọi thứ.",
+      "leadVi": "Nhận quà xong, | em bé | /cười_tít/ cả mắt.",
       "anticipateVi": "Cười tít mắt vì đâu?",
       "emphasis": [
         "vui vẻ",
@@ -1169,9 +1169,9 @@
       "id": "ayudar",
       "word": "ayudar",
       "meaningVi": "giúp_đỡ",
-      "defVi": "Làm điều gì đó | để=người khác | đỡ vất_vả hơn.",
-      "leadVi": "Thấy bà xách nặng, | cậu bé chạy lại đỡ.",
-      "anticipateVi": "Cần một tay không?",
+      "defVi": "Làm điều gì đó | để=người khác | đỡ /vất_vả/ hơn.",
+      "leadVi": "Thấy bà xách nặng, | /cậu_bé/ chạy lại đỡ.",
+      "anticipateVi": "Cần một /tay_không/?",
       "emphasis": [
         "vất vả",
         "chạy lại"
@@ -1198,8 +1198,8 @@
       "id": "caliente",
       "word": "caliente",
       "meaningVi": "nóng",
-      "defVi": "Có nhiệt_độ cao | khiến ta toát mồ_hôi.",
-      "leadVi": "Trưa tháng sáu, | mặt đường | bốc hơi hầm_hập.",
+      "defVi": "Có /nhiệt_độ/ cao | khiến ta toát mồ_hôi.",
+      "leadVi": "Trưa tháng sáu, | /mặt_đường/ | bốc hơi hầm_hập.",
       "anticipateVi": "Nóng như đổ lửa à?",
       "emphasis": [
         "nhiệt độ",
@@ -1227,9 +1227,9 @@
       "id": "casa",
       "word": "casa",
       "meaningVi": "ngôi=nhà",
-      "defVi": "Công_trình có tường, mái | để người ở.",
-      "leadVi": "Ba gian, | mái ngói đỏ, | sân trước | có giàn hoa.",
-      "anticipateVi": "Mái ngói đỏ của ai?",
+      "defVi": "/Công_trình/ có tường, mái | để người ở.",
+      "leadVi": "Ba gian, | /mái_ngói/ đỏ, | sân trước | có giàn hoa.",
+      "anticipateVi": "/Mái_ngói/ đỏ của ai?",
       "emphasis": [
         "người ở",
         "mái ngói"
@@ -1255,9 +1255,9 @@
       "id": "llave",
       "word": "llave",
       "meaningVi": "chìa_khóa",
-      "defVi": "Vật nhỏ | bằng kim_loại | dùng để mở khóa.",
-      "leadVi": "Ra khỏi nhà | mới nhớ | để quên trên bàn.",
-      "anticipateVi": "Mở cửa | bằng gì?",
+      "defVi": "Vật nhỏ | bằng /kim_loại/ | dùng để mở khóa.",
+      "leadVi": "/Ra_khỏi/ nhà | mới nhớ | để quên trên bàn.",
+      "anticipateVi": "/Mở_cửa/ | bằng gì?",
       "emphasis": [
         "mở khóa",
         "để quên"
@@ -1284,7 +1284,7 @@
       "word": "carta",
       "meaningVi": "lá=thư",
       "defVi": "Lời viết trên giấy | gửi cho người ở xa.",
-      "leadVi": "Phong_bì dán tem, | bỏ vào hòm bưu_điện.",
+      "leadVi": "Phong_bì dán tem, | bỏ vào hòm /bưu_điện/.",
       "anticipateVi": "Tem dán lên đâu?",
       "emphasis": [
         "ở xa",
@@ -1311,8 +1311,8 @@
       "id": "leche",
       "word": "leche",
       "meaningVi": "sữa",
-      "defVi": "Chất_lỏng màu trắng | lấy từ bò | hoặc dê.",
-      "leadVi": "Mỗi tối, | bé ôm bình | uống ừng_ực | rồi ngủ.",
+      "defVi": "/Chất_lỏng/ màu trắng | lấy từ bò | hoặc dê.",
+      "leadVi": "Mỗi tối, | bé ôm bình | uống /ừng_ực/ | rồi ngủ.",
       "anticipateVi": "Trắng mà béo | là gì?",
       "emphasis": [
         "màu trắng",
@@ -1340,8 +1340,8 @@
       "id": "dinero",
       "word": "dinero",
       "meaningVi": "tiền",
-      "defVi": "Thứ dùng để trao_đổi | lấy hàng_hóa và dịch_vụ.",
-      "leadVi": "Ra chợ | mà quên ví | thì đành về tay không.",
+      "defVi": "Thứ dùng để trao_đổi | lấy hàng_hóa và /dịch_vụ/.",
+      "leadVi": "Ra chợ | mà quên ví | thì đành về /tay_không/.",
       "anticipateVi": "Mua bằng gì nào?",
       "emphasis": [
         "trao đổi",
@@ -1368,9 +1368,9 @@
       "id": "ma-ana",
       "word": "mañana",
       "meaningVi": "buổi sáng",
-      "defVi": "Khoảng thời_gian | đầu ngày, | từ lúc mặt_trời mọc.",
-      "leadVi": "Gà gáy ò_ó_o, | sương đêm | còn đọng trên lá.",
-      "anticipateVi": "Gà gáy | là lúc nào?",
+      "defVi": "Khoảng thời_gian | đầu ngày, | từ lúc /mặt_trời/ mọc.",
+      "leadVi": "/Gà_gáy/ ò_ó_o, | sương đêm | còn đọng trên lá.",
+      "anticipateVi": "/Gà_gáy/ | là lúc nào?",
       "emphasis": [
         "mặt trời",
         "sương đêm"
@@ -1396,8 +1396,8 @@
       "id": "madre",
       "word": "madre",
       "meaningVi": "mẹ",
-      "defVi": "Người phụ_nữ | sinh ra | và chăm_sóc con_cái.",
-      "leadVi": "Ru con ngủ | bằng những câu_hát dịu_dàng.",
+      "defVi": "Người phụ_nữ | sinh ra | và /chăm_sóc/ con_cái.",
+      "leadVi": "Ru con ngủ | bằng những câu_hát /dịu_dàng/.",
       "anticipateVi": "Ai ru bạn ngủ?",
       "emphasis": [
         "chăm sóc",
@@ -1425,8 +1425,8 @@
       "id": "m-sica",
       "word": "música",
       "meaningVi": "âm_nhạc",
-      "defVi": "Âm_thanh có giai_điệu, | nghe thấy dễ_chịu.",
-      "leadVi": "Đeo tai_nghe vào, | chân bất_giác | nhịp theo.",
+      "defVi": "Âm_thanh có /giai_điệu/, | nghe thấy dễ_chịu.",
+      "leadVi": "Đeo /tai_nghe/ vào, | chân bất_giác | nhịp theo.",
       "anticipateVi": "Bật bài gì lên nghe?",
       "emphasis": [
         "giai điệu",
@@ -1454,8 +1454,8 @@
       "id": "nombre",
       "word": "nombre",
       "meaningVi": "tên",
-      "defVi": "Tên_gọi riêng | để phân_biệt | mỗi người hay vật.",
-      "leadVi": "Cô giáo điểm danh, | ai nghe thấy | thì dạ.",
+      "defVi": "Tên_gọi riêng | để /phân_biệt/ | mỗi người hay vật.",
+      "leadVi": "Cô giáo /điểm_danh/, | ai nghe thấy | thì dạ.",
       "anticipateVi": "Bạn được gọi là gì?",
       "emphasis": [
         "phân biệt",
@@ -1482,7 +1482,7 @@
       "id": "noche",
       "word": "noche",
       "meaningVi": "ban_đêm",
-      "defVi": "Khoảng thời_gian tối, | từ lúc trời tối | đến sáng.",
+      "defVi": "Khoảng /thời_gian/ tối, | từ lúc trời tối | đến sáng.",
       "leadVi": "Đèn tắt hết, | chỉ còn tiếng dế kêu | ngoài hiên.",
       "anticipateVi": "Dế kêu lúc nào?",
       "emphasis": [
@@ -1510,8 +1510,8 @@
       "id": "nariz",
       "word": "nariz",
       "meaningVi": "cái=mũi",
-      "defVi": "Bộ_phận giữa mặt | giúp ta hít_thở | và ngửi mùi.",
-      "leadVi": "Đi qua tiệm bánh, | hít hà | mùi thơm phức.",
+      "defVi": "Bộ_phận giữa mặt | giúp ta /hít_thở/ | và ngửi mùi.",
+      "leadVi": "Đi qua tiệm bánh, | /hít_hà/ | mùi thơm phức.",
       "anticipateVi": "Ngửi bằng gì đây?",
       "emphasis": [
         "hít thở",
@@ -1540,7 +1540,7 @@
       "word": "abrir",
       "meaningVi": "mở",
       "defVi": "Kéo hoặc đẩy | cho cửa, nắp hay hộp | hé ra.",
-      "leadVi": "Kéo rèm, | đẩy cánh cửa_sổ | cho nắng tràn vào.",
+      "leadVi": "Kéo rèm, | đẩy cánh /cửa_sổ/ | cho nắng tràn vào.",
       "anticipateVi": "Hé ra chút nào?",
       "emphasis": [
         "hé ra",
@@ -1567,9 +1567,9 @@
       "id": "parque",
       "word": "parque",
       "meaningVi": "công_viên",
-      "defVi": "Khu đất công_cộng | có cây xanh | để=dạo chơi.",
-      "leadVi": "Chiều chủ_nhật, | trẻ con thả diều | trên bãi cỏ.",
-      "anticipateVi": "Thả diều ở chỗ nào?",
+      "defVi": "Khu đất /công_cộng/ | có cây xanh | để=dạo chơi.",
+      "leadVi": "Chiều /chủ_nhật/, | trẻ con thả diều | trên bãi cỏ.",
+      "anticipateVi": "/Thả_diều/ ở chỗ nào?",
       "emphasis": [
         "công cộng",
         "thả diều"
@@ -1596,7 +1596,7 @@
       "id": "bol-grafo",
       "word": "bolígrafo",
       "meaningVi": "cái=bút",
-      "defVi": "Đồ_dùng có mực | để viết chữ | lên giấy.",
+      "defVi": "/Đồ_dùng/ có mực | để viết chữ | lên giấy.",
       "leadVi": "Hết mực giữa giờ, | đành quay sang | mượn bạn.",
       "anticipateVi": "Viết bằng gì nhỉ?",
       "emphasis": [
@@ -1624,9 +1624,9 @@
       "id": "tel-fono",
       "word": "teléfono",
       "meaningVi": "điện_thoại",
-      "defVi": "Thiết_bị | dùng để=gọi | và nói_chuyện ở xa.",
-      "leadVi": "Reng_reng, | màn_hình sáng lên tên mẹ.",
-      "anticipateVi": "Reng reng là gì thế?",
+      "defVi": "Thiết_bị | dùng để=gọi | và /nói_chuyện/ ở xa.",
+      "leadVi": "/Reng_reng/, | màn_hình sáng lên tên mẹ.",
+      "anticipateVi": "/Reng_reng/ là gì thế?",
       "emphasis": [
         "Thiết bị",
         "màn hình"
@@ -1653,8 +1653,8 @@
       "id": "leer",
       "word": "leer",
       "meaningVi": "đọc",
-      "defVi": "Nhìn chữ viết | và hiểu | nội_dung của=nó.",
-      "leadVi": "Ôm cuốn_truyện, | mắt dõi theo | từng dòng_chữ.",
+      "defVi": "Nhìn chữ viết | và hiểu | /nội_dung/ của=nó.",
+      "leadVi": "Ôm cuốn_truyện, | mắt dõi theo | từng /dòng_chữ/.",
       "anticipateVi": "Mắt lướt từng dòng ư?",
       "emphasis": [
         "nội dung",
@@ -1681,8 +1681,8 @@
       "id": "r-o",
       "word": "río",
       "meaningVi": "con=sông",
-      "defVi": "Dòng nước lớn | chảy dài qua nhiều vùng | ra biển.",
-      "leadVi": "Con_đò nhỏ | lững_lờ trôi | giữa hai bờ tre.",
+      "defVi": "/Dòng_nước/ lớn | chảy dài qua nhiều vùng | ra biển.",
+      "leadVi": "Con_đò nhỏ | /lững_lờ/ trôi | giữa hai bờ tre.",
       "anticipateVi": "Đò qua | chỗ nào?",
       "emphasis": [
         "chảy dài",
@@ -1709,8 +1709,8 @@
       "id": "habitaci-n",
       "word": "habitación",
       "meaningVi": "căn=phòng",
-      "defVi": "Một phần | trong ngôi_nhà | có tường bao quanh.",
-      "leadVi": "Đóng cửa lại, | đây là góc riêng | của=bạn.",
+      "defVi": "Một phần | trong /ngôi_nhà/ | có tường bao quanh.",
+      "leadVi": "/Đóng_cửa/ lại, | đây là góc riêng | của=bạn.",
       "anticipateVi": "Góc riêng ở đâu?",
       "emphasis": [
         "bao quanh",
@@ -1737,9 +1737,9 @@
       "id": "correr",
       "word": "correr",
       "meaningVi": "chạy",
-      "defVi": "Di_chuyển rất=nhanh | bằng hai chân, | hơn cả đi_bộ.",
-      "leadVi": "Tiếng còi | vang lên, | cả đám | lao về đích.",
-      "anticipateVi": "Ai về đích trước?",
+      "defVi": "Di_chuyển rất=nhanh | bằng hai chân, | hơn cả /đi_bộ/.",
+      "leadVi": "Tiếng còi | vang lên, | cả đám | lao /về_đích/.",
+      "anticipateVi": "Ai /về_đích/ trước?",
       "emphasis": [
         "Di chuyển",
         "về đích"
@@ -1765,7 +1765,7 @@
       "id": "escuela",
       "word": "escuela",
       "meaningVi": "trường_học",
-      "defVi": "Nơi học_sinh đến | để=học | với thầy_cô.",
+      "defVi": "Nơi học_sinh đến | để=học | với /thầy_cô/.",
       "leadVi": "Tiếng trống | vang lên, | áo trắng | ùa vào lớp.",
       "anticipateVi": "Trống đánh | ở đâu?",
       "emphasis": [
@@ -1793,8 +1793,8 @@
       "id": "mar",
       "word": "mar",
       "meaningVi": "biển",
-      "defVi": "Vùng nước mặn | rộng lớn | bao quanh đất_liền.",
-      "leadVi": "Sóng vỗ rì_rào, | cát trắng trải dài tít_tắp.",
+      "defVi": "Vùng nước mặn | rộng lớn | bao quanh /đất_liền/.",
+      "leadVi": "Sóng vỗ /rì_rào/, | cát trắng trải dài tít_tắp.",
       "anticipateVi": "Sóng vỗ ở nơi nào?",
       "emphasis": [
         "nước mặn",
@@ -1822,7 +1822,7 @@
       "id": "zapato",
       "word": "zapato",
       "meaningVi": "chiếc=giày",
-      "defVi": "Đồ mang ở chân | để=bảo_vệ bàn chân.",
+      "defVi": "Đồ mang ở chân | để=/bảo_vệ/ bàn chân.",
       "leadVi": "Trước khi ra cửa, | ngồi buộc dây | cho chặt.",
       "anticipateVi": "Buộc dây | cho chặt nhé?",
       "emphasis": [
@@ -1851,7 +1851,7 @@
       "word": "tienda",
       "meaningVi": "cửa_hàng",
       "defVi": "Nơi bày bán hàng | cho khách | đến mua.",
-      "leadVi": "Đèn sáng, | cô chủ mỉm cười | chào khách bước vào.",
+      "leadVi": "Đèn sáng, | cô chủ /mỉm_cười/ | chào khách bước vào.",
       "anticipateVi": "Mua đồ ở đâu?",
       "emphasis": [
         "bán hàng",
@@ -1879,9 +1879,9 @@
       "id": "cantar",
       "word": "cantar",
       "meaningVi": "hát",
-      "defVi": "Dùng giọng | tạo ra giai_điệu | theo lời bài.",
-      "leadVi": "Đứng trước gương, | cầm lược làm mi_crô | nghêu_ngao.",
-      "anticipateVi": "Ngân nga | câu gì thế?",
+      "defVi": "Dùng giọng | tạo ra /giai_điệu/ | theo lời bài.",
+      "leadVi": "Đứng trước gương, | cầm lược làm /mi_crô/ | nghêu_ngao.",
+      "anticipateVi": "/Ngân_nga/ | câu gì thế?",
       "emphasis": [
         "giai điệu",
         "nghêu ngao"
@@ -1908,8 +1908,8 @@
       "id": "hermana",
       "word": "hermana",
       "meaningVi": "chị gái, em gái",
-      "defVi": "Con_gái | cùng bố_mẹ | sinh ra với=mình.",
-      "leadVi": "Hay tết tóc cho em, | lại chia | cả quà_vặt.",
+      "defVi": "/Con_gái/ | cùng bố_mẹ | sinh ra với=mình.",
+      "leadVi": "Hay tết tóc cho em, | lại chia | cả /quà_vặt/.",
       "anticipateVi": "Ai tết tóc | cho bạn?",
       "emphasis": [
         "Con gái",
@@ -1937,7 +1937,7 @@
       "id": "dormir",
       "word": "dormir",
       "meaningVi": "ngủ",
-      "defVi": "Nhắm mắt nghỉ_ngơi, | không còn tỉnh_táo, | thường về đêm.",
+      "defVi": "Nhắm mắt nghỉ_ngơi, | không còn /tỉnh_táo/, | thường về đêm.",
       "leadVi": "Đặt lưng xuống gối | là ngáy pho_pho ngay.",
       "anticipateVi": "Mắt díp lại rồi à?",
       "emphasis": [
@@ -1966,9 +1966,9 @@
       "id": "peque-o",
       "word": "pequeño",
       "meaningVi": "nhỏ",
-      "defVi": "Có kích_thước | không lớn, | kém hơn mức bình_thường.",
-      "leadVi": "Chú kiến con | lọt thỏm | trong lòng bàn tay.",
-      "anticipateVi": "Bé tí như hạt_đậu?",
+      "defVi": "Có /kích_thước/ | không lớn, | kém hơn mức bình_thường.",
+      "leadVi": "Chú kiến con | /lọt_thỏm/ | trong lòng bàn tay.",
+      "anticipateVi": "Bé tí như /hạt_đậu/?",
       "emphasis": [
         "kích thước",
         "lọt thỏm"
@@ -1994,8 +1994,8 @@
       "id": "canci-n",
       "word": "canción",
       "meaningVi": "bài_hát",
-      "defVi": "Bản nhạc có lời | để người ta | cất tiếng hát lên.",
-      "leadVi": "Cứ ngân_nga mãi | một điệp_khúc | trong đầu.",
+      "defVi": "/Bản_nhạc/ có lời | để người ta | cất tiếng hát lên.",
+      "leadVi": "Cứ /ngân_nga/ mãi | một điệp_khúc | trong đầu.",
       "anticipateVi": "Điệp khúc nào | vang mãi?",
       "emphasis": [
         "Bản nhạc",
@@ -2023,9 +2023,9 @@
       "id": "sol",
       "word": "sol",
       "meaningVi": "mặt_trời",
-      "defVi": "Quả_cầu lửa khổng_lồ | sưởi ấm Trái_Đất.",
-      "leadVi": "Sáng ló rạng | ở đằng đông, | chiều khuất sau núi.",
-      "anticipateVi": "Ai ló rạng | đằng đông?",
+      "defVi": "Quả_cầu lửa /khổng_lồ/ | sưởi ấm Trái_Đất.",
+      "leadVi": "Sáng /ló_rạng/ | ở đằng đông, | chiều khuất sau núi.",
+      "anticipateVi": "Ai /ló_rạng/ | đằng đông?",
       "emphasis": [
         "sưởi ấm",
         "ló rạng"
@@ -2051,9 +2051,9 @@
       "id": "nadar",
       "word": "nadar",
       "meaningVi": "bơi",
-      "defVi": "Di_chuyển trong nước | bằng cách quạt tay | và đạp chân.",
-      "leadVi": "Mùa hè ra hồ, | bì_bõm | cả buổi_chiều.",
-      "anticipateVi": "Bì bõm | dưới nước à?",
+      "defVi": "/Di_chuyển/ trong nước | bằng cách quạt tay | và đạp chân.",
+      "leadVi": "Mùa hè ra hồ, | /bì_bõm/ | cả buổi_chiều.",
+      "anticipateVi": "/Bì_bõm/ | dưới nước à?",
       "emphasis": [
         "quạt tay",
         "bì bõm"
@@ -2080,9 +2080,9 @@
       "id": "mesa",
       "word": "mesa",
       "meaningVi": "cái=bàn",
-      "defVi": "Đồ_đạc có mặt phẳng | và chân | để=đặt đồ.",
-      "leadVi": "Mâm cơm nóng hổi | đã dọn sẵn | chờ cả nhà.",
-      "anticipateVi": "Mâm cơm | dọn lên đâu?",
+      "defVi": "/Đồ_đạc/ có mặt phẳng | và chân | để=đặt đồ.",
+      "leadVi": "Mâm cơm /nóng_hổi/ | đã dọn sẵn | chờ cả nhà.",
+      "anticipateVi": "/Mâm_cơm/ | dọn lên đâu?",
       "emphasis": [
         "mặt phẳng",
         "dọn sẵn"
@@ -2108,9 +2108,9 @@
       "id": "profesor",
       "word": "profesor",
       "meaningVi": "giáo_viên",
-      "defVi": "Người dạy học | và truyền kiến_thức | cho học_trò.",
-      "leadVi": "Đứng trên bục giảng, | tay cầm phấn trắng.",
-      "anticipateVi": "Người đứng bục giảng | là ai?",
+      "defVi": "Người dạy học | và truyền /kiến_thức/ | cho học_trò.",
+      "leadVi": "Đứng trên /bục_giảng/, | tay cầm phấn trắng.",
+      "anticipateVi": "Người đứng /bục_giảng/ | là ai?",
       "emphasis": [
         "dạy học",
         "phấn trắng"
@@ -2137,8 +2137,8 @@
       "id": "t",
       "word": "té",
       "meaningVi": "trà",
-      "defVi": "Thức uống pha | từ lá cây khô | với nước sôi.",
-      "leadVi": "Ông nhấp ngụm nóng, | thơm thoang_thoảng | mùi sen.",
+      "defVi": "/Thức_uống/ pha | từ lá cây khô | với nước sôi.",
+      "leadVi": "Ông nhấp ngụm nóng, | thơm /thoang_thoảng/ | mùi sen.",
       "anticipateVi": "Ông nhấp | ngụm gì?",
       "emphasis": [
         "nước sôi",
@@ -2165,9 +2165,9 @@
       "id": "rbol",
       "word": "árbol",
       "meaningVi": "cái=cây",
-      "defVi": "Thực_vật có thân gỗ, | cành và nhiều lá.",
-      "leadVi": "Trưa hè, | cả xóm ngồi | hóng mát | dưới tán lá.",
-      "anticipateVi": "Tán xanh | rợp bóng ư?",
+      "defVi": "Thực_vật có /thân_gỗ/, | cành và nhiều lá.",
+      "leadVi": "Trưa hè, | cả xóm ngồi | hóng mát | dưới /tán_lá/.",
+      "anticipateVi": "Tán xanh | /rợp_bóng/ ư?",
       "emphasis": [
         "thân gỗ",
         "hóng mát"
@@ -2193,7 +2193,7 @@
       "id": "ventana",
       "word": "ventana",
       "meaningVi": "cửa_sổ",
-      "defVi": "Khung kính trên tường | để=đón ánh_sáng và gió.",
+      "defVi": "Khung kính trên tường | để=đón /ánh_sáng/ và gió.",
       "leadVi": "Ngồi bên đó | ngắm mưa rơi | ngoài phố.",
       "anticipateVi": "Ngắm mưa | từ đâu?",
       "emphasis": [
@@ -2222,8 +2222,8 @@
       "word": "escribir",
       "meaningVi": "viết",
       "defVi": "Dùng bút | để tạo ra chữ | trên giấy.",
-      "leadVi": "Nắn_nót từng nét | trong cuốn_vở ô_li.",
-      "anticipateVi": "Nắn nót từng nét chưa?",
+      "leadVi": "/Nắn_nót/ từng nét | trong cuốn_vở ô_li.",
+      "anticipateVi": "/Nắn_nót/ từng nét chưa?",
       "emphasis": [
         "tạo ra",
         "Nắn nót"
@@ -2250,9 +2250,9 @@
       "id": "grande",
       "word": "grande",
       "meaningVi": "to, lớn",
-      "defVi": "Có kích_cỡ | vượt hơn hẳn | mức thông_thường.",
+      "defVi": "Có kích_cỡ | vượt hơn hẳn | mức /thông_thường/.",
       "leadVi": "Con_voi đứng cạnh, | ai cũng=thấy | mình bé tẹo.",
-      "anticipateVi": "To đùng | thế kia à?",
+      "anticipateVi": "/To_đùng/ | thế kia à?",
       "emphasis": [
         "vượt hơn",
         "bé tẹo"
@@ -2279,8 +2279,8 @@
       "word": "rojo",
       "meaningVi": "đỏ",
       "defVi": "Có màu | giống màu của=máu | hay quả_ớt chín.",
-      "leadVi": "Lá_cờ Tết | tung bay, | phong_bao lì_xì rực_rỡ.",
-      "anticipateVi": "Rực rỡ như lửa chưa?",
+      "leadVi": "/Lá_cờ/ Tết | tung bay, | phong_bao lì_xì rực_rỡ.",
+      "anticipateVi": "/Rực_rỡ/ như lửa chưa?",
       "emphasis": [
         "ớt chín",
         "rực rỡ"
@@ -2306,8 +2306,8 @@
       "id": "comer",
       "word": "comer",
       "meaningVi": "ăn",
-      "defVi": "Cho thức_ăn vào miệng, | nhai rồi nuốt | xuống bụng.",
-      "leadVi": "Bụng réo ùng_ục, | mâm cơm vừa dọn ra.",
+      "defVi": "Cho /thức_ăn/ vào miệng, | nhai rồi nuốt | xuống bụng.",
+      "leadVi": "Bụng réo /ùng_ục/, | mâm cơm vừa dọn ra.",
       "anticipateVi": "Bụng réo rồi phải không?",
       "emphasis": [
         "thức ăn",
@@ -2335,8 +2335,8 @@
       "id": "banco",
       "word": "banco",
       "meaningVi": "ngân_hàng",
-      "defVi": "Nơi giữ tiền, | cho vay | và chuyển tiền | giúp khách.",
-      "leadVi": "Xếp hàng ở quầy, | điền tờ_phiếu | gửi tiết_kiệm.",
+      "defVi": "Nơi giữ tiền, | /cho_vay/ | và chuyển tiền | giúp khách.",
+      "leadVi": "Xếp hàng ở quầy, | điền tờ_phiếu | gửi /tiết_kiệm/.",
       "anticipateVi": "Gửi tiền ở đâu?",
       "emphasis": [
         "giữ tiền",
@@ -2364,9 +2364,9 @@
       "id": "playa",
       "word": "playa",
       "meaningVi": "bãi_biển",
-      "defVi": "Dải cát | trải dài | dọc theo bờ biển.",
-      "leadVi": "Chân trần dẫm cát nóng, | sóng mát lùa qua.",
-      "anticipateVi": "Chân trần dẫm đâu?",
+      "defVi": "/Dải_cát/ | trải dài | dọc theo bờ biển.",
+      "leadVi": "/Chân_trần/ dẫm cát nóng, | sóng mát lùa qua.",
+      "anticipateVi": "/Chân_trần/ dẫm đâu?",
       "emphasis": [
         "Dải cát",
         "cát nóng"
@@ -2394,7 +2394,7 @@
       "word": "llevar",
       "meaningVi": "mang, xách",
       "defVi": "Cầm hoặc mang vật gì | từ chỗ này | sang chỗ khác.",
-      "leadVi": "Bao gạo nặng_trĩu | đè lên vai bố.",
+      "leadVi": "Bao gạo /nặng_trĩu/ | đè lên vai bố.",
       "anticipateVi": "Vác nổi | không đấy?",
       "emphasis": [
         "mang vật",
@@ -2421,9 +2421,9 @@
       "id": "primo",
       "word": "primo",
       "meaningVi": "anh_chị_em họ",
-      "defVi": "Người cùng dòng_họ, | là con của=cô, | dì, chú, bác.",
-      "leadVi": "Tết nào về quê | cũng gặp lại | đám nhóc họ hàng.",
-      "anticipateVi": "Họ hàng gần ư?",
+      "defVi": "Người cùng /dòng_họ/, | là con của=cô, | dì, chú, bác.",
+      "leadVi": "Tết nào về quê | cũng gặp lại | đám nhóc /họ_hàng/.",
+      "anticipateVi": "/Họ_hàng/ gần ư?",
       "emphasis": [
         "dòng họ",
         "họ hàng"
@@ -2449,9 +2449,9 @@
       "id": "oscuro",
       "word": "oscuro",
       "meaningVi": "tối",
-      "defVi": "Thiếu ánh_sáng, | khó nhìn thấy | mọi vật xung_quanh.",
-      "leadVi": "Mất điện giữa đêm, | đưa tay ra | không thấy ngón.",
-      "anticipateVi": "Mò_mẫm | trong đêm à?",
+      "defVi": "Thiếu ánh_sáng, | khó nhìn thấy | mọi vật /xung_quanh/.",
+      "leadVi": "/Mất_điện/ giữa đêm, | đưa tay ra | không thấy ngón.",
+      "anticipateVi": "/Mò_mẫm/ | trong đêm à?",
       "emphasis": [
         "ánh sáng",
         "Mất điện"
@@ -2478,9 +2478,9 @@
       "id": "dif-cil",
       "word": "difícil",
       "meaningVi": "khó",
-      "defVi": "Cần nhiều công_sức | hoặc trí_óc | mới làm được.",
-      "leadVi": "Bài_toán cuối | khiến cả lớp | vò đầu bứt tai.",
-      "anticipateVi": "Vò đầu bứt tai chưa?",
+      "defVi": "Cần nhiều công_sức | hoặc /trí_óc/ | mới làm được.",
+      "leadVi": "/Bài_toán/ cuối | khiến cả lớp | vò đầu bứt tai.",
+      "anticipateVi": "/Vò_đầu/ bứt tai chưa?",
       "emphasis": [
         "công sức",
         "vò đầu"
@@ -2506,9 +2506,9 @@
       "id": "m-dico",
       "word": "médico",
       "meaningVi": "bác_sĩ",
-      "defVi": "Người khám bệnh | và chữa bệnh | cho người ốm.",
-      "leadVi": "Áo blu trắng, | ống nghe | đeo trên cổ.",
-      "anticipateVi": "Ai đeo ống nghe?",
+      "defVi": "Người khám bệnh | và chữa bệnh | cho /người_ốm/.",
+      "leadVi": "Áo blu trắng, | /ống_nghe/ | đeo trên cổ.",
+      "anticipateVi": "Ai đeo /ống_nghe/?",
       "emphasis": [
         "chữa bệnh",
         "ống nghe"
@@ -2535,8 +2535,8 @@
       "id": "temprano",
       "word": "temprano",
       "meaningVi": "sớm",
-      "defVi": "Vào lúc sớm hơn | thời_điểm | thường_lệ | hoặc dự_kiến.",
-      "leadVi": "Gà chưa gáy, | ông đã dậy | chạy bộ quanh hồ.",
+      "defVi": "Vào lúc sớm hơn | thời_điểm | thường_lệ | hoặc /dự_kiến/.",
+      "leadVi": "Gà chưa gáy, | ông đã dậy | /chạy_bộ/ quanh hồ.",
       "anticipateVi": "Dậy từ tinh mơ à?",
       "emphasis": [
         "thường lệ",
@@ -2563,8 +2563,8 @@
       "id": "f-cil",
       "word": "fácil",
       "meaningVi": "dễ",
-      "defVi": "Không cần nhiều sức | hay suy_nghĩ | để làm.",
-      "leadVi": "Một cộng một, | em bé cũng | trả_lời ngay.",
+      "defVi": "Không cần nhiều sức | hay /suy_nghĩ/ | để làm.",
+      "leadVi": "Một cộng một, | em bé cũng | /trả_lời/ ngay.",
       "anticipateVi": "Dễ như ăn kẹo?",
       "emphasis": [
         "nhiều sức",
@@ -2592,9 +2592,9 @@
       "id": "examen",
       "word": "examen",
       "meaningVi": "kỳ=thi",
-      "defVi": "Bài kiểm_tra | quan_trọng | để đánh_giá người học.",
-      "leadVi": "Phòng im phăng_phắc, | chỉ nghe | tiếng bút sột_soạt.",
-      "anticipateVi": "Ôn bài kỹ chưa?",
+      "defVi": "Bài kiểm_tra | quan_trọng | để /đánh_giá/ người học.",
+      "leadVi": "Phòng im phăng_phắc, | chỉ nghe | tiếng bút /sột_soạt/.",
+      "anticipateVi": "/Ôn_bài/ kỹ chưa?",
       "emphasis": [
         "quan trọng",
         "sột soạt"
@@ -2620,8 +2620,8 @@
       "id": "r-pido",
       "word": "rápido",
       "meaningVi": "nhanh",
-      "defVi": "Di_chuyển | hoặc làm việc | với tốc_độ cao.",
-      "leadVi": "Vèo một cái, | chiếc_xe | đã mất hút | cuối đường.",
+      "defVi": "Di_chuyển | hoặc làm việc | với /tốc_độ/ cao.",
+      "leadVi": "Vèo một cái, | chiếc_xe | đã /mất_hút/ | cuối đường.",
       "anticipateVi": "Vèo cái | là xong?",
       "emphasis": [
         "tốc độ",
@@ -2648,8 +2648,8 @@
       "id": "terminar",
       "word": "terminar",
       "meaningVi": "làm xong",
-      "defVi": "Làm xong hết, | không còn phần nào dang_dở.",
-      "leadVi": "Đặt bút xuống, | thở phào | vì bài đã xong.",
+      "defVi": "Làm xong hết, | không còn phần nào /dang_dở/.",
+      "leadVi": "Đặt bút xuống, | /thở_phào/ | vì bài đã xong.",
       "anticipateVi": "Xong hẳn rồi chứ?",
       "emphasis": [
         "dang dở",
@@ -2677,8 +2677,8 @@
       "id": "hospital",
       "word": "hospital",
       "meaningVi": "bệnh_viện",
-      "defVi": "Nơi bác_sĩ chữa bệnh | và chăm_sóc | người ốm.",
-      "leadVi": "Xe cứu_thương hú còi | lao thẳng | vào cổng.",
+      "defVi": "Nơi bác_sĩ chữa bệnh | và /chăm_sóc/ | người ốm.",
+      "leadVi": "Xe /cứu_thương/ hú còi | lao thẳng | vào cổng.",
       "anticipateVi": "Xe hú còi | đi đâu?",
       "emphasis": [
         "chữa bệnh",
@@ -2705,8 +2705,8 @@
       "id": "aprender",
       "word": "aprender",
       "meaningVi": "học",
-      "defVi": "Tiếp_thu | kiến_thức | hoặc kỹ_năng mới.",
-      "leadVi": "Lần đầu | ngã xe đau điếng, | lần sau đã vững.",
+      "defVi": "/Tiếp_thu/ | kiến_thức | hoặc kỹ_năng mới.",
+      "leadVi": "/Lần_đầu/ | ngã xe đau điếng, | lần sau đã vững.",
       "anticipateVi": "Ngã rồi | mới khôn?",
       "emphasis": [
         "kiến thức",
@@ -2733,9 +2733,9 @@
       "id": "mapa",
       "word": "mapa",
       "meaningVi": "bản_đồ",
-      "defVi": "Hình vẽ thu nhỏ | một vùng đất, đường_sá.",
-      "leadVi": "Lạc giữa phố lạ, | mở điện_thoại | tìm đường về.",
-      "anticipateVi": "Tìm đường | kiểu gì?",
+      "defVi": "Hình vẽ /thu_nhỏ/ | một vùng đất, đường_sá.",
+      "leadVi": "Lạc giữa phố lạ, | mở /điện_thoại/ | tìm đường về.",
+      "anticipateVi": "/Tìm_đường/ | kiểu gì?",
       "emphasis": [
         "thu nhỏ",
         "tìm đường"
@@ -2761,8 +2761,8 @@
       "id": "mensaje",
       "word": "mensaje",
       "meaningVi": "tin nhắn",
-      "defVi": "Lời nhắn gửi | cho ai đó | qua điện_thoại hay giấy.",
-      "leadVi": "Tinh một tiếng, | màn_hình hiện: | tối nay | đi ăn nhé?",
+      "defVi": "Lời nhắn gửi | cho ai đó | qua /điện_thoại/ hay giấy.",
+      "leadVi": "Tinh một tiếng, | /màn_hình/ hiện: | tối nay | đi ăn nhé?",
       "anticipateVi": "Tin gì | vừa đến?",
       "emphasis": [
         "Lời nhắn",
@@ -2790,8 +2790,8 @@
       "id": "monta-a",
       "word": "montaña",
       "meaningVi": "núi",
-      "defVi": "Khối đất đá | nhô rất cao | trên mặt_đất.",
-      "leadVi": "Leo mãi mới tới đỉnh, | mây trôi | ngang tầm mắt.",
+      "defVi": "Khối đất đá | nhô rất cao | trên /mặt_đất/.",
+      "leadVi": "Leo mãi mới tới đỉnh, | mây trôi | ngang /tầm_mắt/.",
       "anticipateVi": "Mây trôi ngang tầm?",
       "emphasis": [
         "đất đá",
@@ -2819,9 +2819,9 @@
       "id": "museo",
       "word": "museo",
       "meaningVi": "bảo_tàng",
-      "defVi": "Nơi trưng_bày | đồ_vật cổ, | tranh hoặc hiện_vật quý.",
-      "leadVi": "Đứng trước tủ kính, | ngắm chiếc trống đồng ngàn năm.",
-      "anticipateVi": "Hiện vật xưa | ở đâu?",
+      "defVi": "Nơi /trưng_bày/ | đồ_vật cổ, | tranh hoặc hiện_vật quý.",
+      "leadVi": "Đứng trước tủ kính, | ngắm chiếc /trống_đồng/ ngàn năm.",
+      "anticipateVi": "/Hiện_vật/ xưa | ở đâu?",
       "emphasis": [
         "trưng bày",
         "trống đồng"
@@ -2848,8 +2848,8 @@
       "id": "planta",
       "word": "planta",
       "meaningVi": "cái=cây",
-      "defVi": "Sinh_vật có rễ, lá, | sống nhờ nước | và ánh_sáng.",
-      "leadVi": "Chậu xanh | trên bậu cửa, | sáng nào | cũng được tưới.",
+      "defVi": "/Sinh_vật/ có rễ, lá, | sống nhờ nước | và ánh_sáng.",
+      "leadVi": "Chậu xanh | trên /bậu_cửa/, | sáng nào | cũng được tưới.",
       "anticipateVi": "Chậu xanh tưới chưa?",
       "emphasis": [
         "Sinh vật",
@@ -2876,9 +2876,9 @@
       "id": "restaurante",
       "word": "restaurante",
       "meaningVi": "nhà_hàng",
-      "defVi": "Nơi bán đồ ăn | và phục_vụ khách | tại chỗ.",
-      "leadVi": "Cầm thực_đơn, | gọi món | rồi chờ người bưng ra.",
-      "anticipateVi": "Gọi món ở đâu?",
+      "defVi": "Nơi bán đồ ăn | và /phục_vụ/ khách | tại chỗ.",
+      "leadVi": "Cầm /thực_đơn/, | gọi món | rồi chờ người bưng ra.",
+      "anticipateVi": "/Gọi_món/ ở đâu?",
       "emphasis": [
         "phục vụ",
         "thực đơn"
@@ -2904,8 +2904,8 @@
       "id": "carretera",
       "word": "carretera",
       "meaningVi": "con=đường",
-      "defVi": "Lối đi rộng | cho xe_cộ | và người qua lại.",
-      "leadVi": "Xe chạy nườm_nượp, | đèn đỏ bật | thì dừng.",
+      "defVi": "Lối đi rộng | cho /xe_cộ/ | và người qua lại.",
+      "leadVi": "Xe chạy /nườm_nượp/, | đèn đỏ bật | thì dừng.",
       "anticipateVi": "Xe chạy | lối nào?",
       "emphasis": [
         "Lối đi",
@@ -2933,7 +2933,7 @@
       "word": "vender",
       "meaningVi": "bán",
       "defVi": "Đưa hàng | cho người khác | để nhận lại tiền.",
-      "leadVi": "Bà cụ đầu ngõ | ngày ngày bày mẹt rau.",
+      "leadVi": "Bà cụ /đầu_ngõ/ | ngày ngày bày mẹt rau.",
       "anticipateVi": "Bày mẹt ra | làm gì?",
       "emphasis": [
         "nhận lại",
@@ -2961,8 +2961,8 @@
       "id": "enfermo",
       "word": "enfermo",
       "meaningVi": "ốm",
-      "defVi": "Không khỏe, | cơ_thể bị bệnh | hoặc mệt.",
-      "leadVi": "Sốt hầm_hập, | nằm đắp chăn | xin nghỉ học.",
+      "defVi": "Không khỏe, | /cơ_thể/ bị bệnh | hoặc mệt.",
+      "leadVi": "Sốt hầm_hập, | nằm đắp chăn | xin /nghỉ_học/.",
       "anticipateVi": "Ốm rồi | phải không?",
       "emphasis": [
         "bị bệnh",
@@ -2989,9 +2989,9 @@
       "id": "deporte",
       "word": "deporte",
       "meaningVi": "môn thể_thao",
-      "defVi": "Hoạt_động thể_chất | có luật chơi | và thi_đấu.",
-      "leadVi": "Sân bóng chiều nay | rộn_ràng tiếng còi, | tiếng hò_reo.",
-      "anticipateVi": "Ra sân chơi không?",
+      "defVi": "Hoạt_động /thể_chất/ | có luật chơi | và thi_đấu.",
+      "leadVi": "Sân bóng chiều nay | rộn_ràng tiếng còi, | tiếng /hò_reo/.",
+      "anticipateVi": "Ra /sân_chơi/ không?",
       "emphasis": [
         "thể chất",
         "Sân bóng"
@@ -3017,8 +3017,8 @@
       "id": "viento",
       "word": "viento",
       "meaningVi": "gió",
-      "defVi": "Không_khí chuyển_động | thổi từ nơi này | sang nơi khác.",
-      "leadVi": "Lá rơi xào_xạc, | diều căng dây | bay vút.",
+      "defVi": "Không_khí /chuyển_động/ | thổi từ nơi này | sang nơi khác.",
+      "leadVi": "Lá rơi /xào_xạc/, | diều căng dây | bay vút.",
       "anticipateVi": "Diều bay nhờ gì?",
       "emphasis": [
         "chuyển động",
@@ -3045,8 +3045,8 @@
       "id": "t-mido",
       "word": "tímido",
       "meaningVi": "nhút_nhát",
-      "defVi": "Ngại_ngùng, | e_dè | khi=gặp hay nói_chuyện | người lạ.",
-      "leadVi": "Được=khen trước lớp, | cô bé đỏ mặt | cúi gằm.",
+      "defVi": "Ngại_ngùng, | /e_dè/ | khi=gặp hay nói_chuyện | người lạ.",
+      "leadVi": "Được=khen trước lớp, | cô bé /đỏ_mặt/ | cúi gằm.",
       "anticipateVi": "Má ửng hồng rồi kìa!",
       "emphasis": [
         "e dè",
