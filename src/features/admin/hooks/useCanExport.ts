@@ -12,4 +12,7 @@
 import { useIsAdmin } from "./useIsAdmin";
 
 /** @returns true for an admin on the dev server; false in every production build */
-export const useCanExport: () => boolean = import.meta.env.DEV ? useIsAdmin : () => false;
+// Optional-chained like ambient.ts: Vite still replaces import.meta.env with a literal,
+// and bare-Node guard scripts can import this module without a top-level throw.
+export const useCanExport: () => boolean =
+  (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true ? useIsAdmin : () => false;

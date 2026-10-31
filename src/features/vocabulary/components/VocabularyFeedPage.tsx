@@ -35,7 +35,9 @@ import { Link } from "@tanstack/react-router";
 
 // The export studio and the recorder's scenes style themselves from this sheet. The recorder
 // drives this page too, so it loads here on the dev server; production builds never see it.
-if (import.meta.env.DEV) void import("../vocabulary-export.css");
+// Optional-chained like ambient.ts so bare-Node guard scripts can import this module safely.
+if ((import.meta as { env?: { DEV?: boolean } }).env?.DEV === true)
+  void import("../vocabulary-export.css");
 import "../vocabulary.css";
 
 /** How long the "Gói của bạn" bar stays up after a pack starts playing. */

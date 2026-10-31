@@ -2,18 +2,18 @@
  * Feed-player word emphasis selection (diverges from KineticText preview emphasis).
  *
  * Exports: getEmphasizedWordIndexes, getWordImportance
- * Depends on: features/kinetic-text emphasis + Vietnamese compound-repair helpers
+ * Depends on: features/kinetic-text emphasis + Vietnamese bound-phrase helpers
  */
 
 import {
   expandEmphasisToBoundPhrases,
+  getCompoundTokenKey,
   getDataEmphasisWordSpans,
   getEmphasisPhraseKeysForLayout,
   getSpecialPoeticWordIndexes,
   getWords,
   isLikelyVietnameseText,
   limitShortSentenceEmphasis,
-  repairSplitCompoundEmphasis,
 } from "@/features/kinetic-text";
 
 const STOP_WORDS = new Set([
@@ -108,9 +108,9 @@ export function getEmphasizedWordIndexes(
   dataEmphasis?: string[],
   boundPhrases?: string[],
 ): Set<number> {
-  const marked = getExactVietnameseMark(words, dataEmphasis);
-  if (marked) return marked;
   const boundKeys = getEmphasisPhraseKeysForLayout(boundPhrases);
+  const marked = getExactVietnameseMark(words, dataEmphasis, boundKeys);
+  if (marked) return marked;
   const selected = selectEmphasizedWordIndexes(words, dataEmphasis);
   const phraseKeys = [...getEmphasisPhraseKeysForLayout(dataEmphasis), ...boundKeys];
   return limitShortSentenceEmphasis(
@@ -121,21 +121,52 @@ export function getEmphasizedWordIndexes(
 }
 
 /**
- * A Vietnamese page's author mark, exactly as written. The deck validators already hold
- * every mark to one syllable or one two-syllable `_` word, so growing it can only be
- * wrong: the compound repair reaches both neighbours of a lone syllable ("gần /hết/ giờ"
- * glowed three syllables), and a join chain spans `=` clitics ("đã=bắt_chuyện").
+ * A Vietnamese page's author mark, exactly as written. The compound repair is skipped
+ * because it grew marks the author did not choose: it reaches both neighbours of a lone
+ * syllable ("gần /hết/ giờ" glowed three syllables), and a join chain spans `=` clitics
+ * ("đã=bắt_chuyện"). One growth is still owed: a one-syllable mark that sits INSIDE a
+ * word the deck joined with `_` is half a word — the reader sees "ba_lô" as one unit, so
+ * the glow covers the whole joined word and never chains past it. A mark of two or more
+ * syllables is a whole word as written and never grows.
  * @param words - page tokens
  * @param dataEmphasis - optional upstream annotation phrases
+ * @param boundKeys - token keys of the phrases the source text marked as ONE word
  * @returns The first matched mark's indexes, or null when the page is not Vietnamese or
  *   carries no matching mark
  * @pure true
  */
-function getExactVietnameseMark(words: string[], dataEmphasis?: string[]): Set<number> | null {
+function getExactVietnameseMark(
+  words: string[],
+  dataEmphasis?: string[],
+  boundKeys: readonly (readonly string[])[] = [],
+): Set<number> | null {
   if (!isLikelyVietnameseText(words.join(" "))) return null;
   const span = getDataEmphasisWordSpans(words, dataEmphasis)[0];
   if (!span) return null;
-  return new Set(Array.from({ length: span.length }, (_, offset) => span.start + offset));
+  const mark = new Set(Array.from({ length: span.length }, (_, offset) => span.start + offset));
+  if (span.length === 1 && boundKeys.length > 0) {
+    let container: readonly string[] | null = null;
+    let containerStart = 0;
+    for (const phrase of boundKeys) {
+      if (phrase.length < 2) continue;
+      for (let start = 0; start + phrase.length <= words.length; start += 1) {
+        if (start > span.start || span.start >= start + phrase.length) continue;
+        const keyed = words.slice(start, start + phrase.length).map(getCompoundTokenKey);
+        if (phrase.every((key, index) => key === keyed[index])) {
+          if (!container || phrase.length > container.length) {
+            container = phrase;
+            containerStart = start;
+          }
+          break;
+        }
+      }
+    }
+    if (container) {
+      for (let offset = 0; offset < container.length; offset += 1)
+        mark.add(containerStart + offset);
+    }
+  }
+  return mark;
 }
 
 function selectEmphasizedWordIndexes(words: string[], dataEmphasis?: string[]): Set<number> {
@@ -185,9 +216,12 @@ function selectEmphasizedWordIndexes(words: string[], dataEmphasis?: string[]): 
   }
   const expanded = expandEmphasisToBoundPhrases(words, selected);
 
-  // Compound guard: never leave one syllable of a Vietnamese pair glowing alone.
   if (!isVietnameseText) return keepFirstRuns(expanded, 2);
-  return keepFirstRuns(repairSplitCompoundEmphasis(words, [...expanded]), 1);
+  // The curated expansion above already heals a pick that landed on half of a known
+  // compound, and the deck's own `_` words grow at the call site. The old neighbour
+  // repair is gone: it welded any two content words into a glowing chain ("đầy
+  // /thương/ mến" ran three syllables), which is what readers must never see.
+  return keepFirstRuns(expanded, 1);
 }
 
 // Feed scoring — includes digit punchline + ALLCAPS bonuses and a wider EMPHASIS_WORDS

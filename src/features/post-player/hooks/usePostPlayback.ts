@@ -26,9 +26,10 @@ import { useTextFitScale } from "./useTextFitScale";
 const NO_EXPORT: UsePostExportResult = { handleExportVideo: async () => {} };
 
 // Video export is a local admin tool: a production build keeps no recorder at all.
-const useExportFlow: (args: UsePostExportArgs) => UsePostExportResult = import.meta.env.DEV
-  ? usePostExport
-  : () => NO_EXPORT;
+// Optional-chained like ambient.ts, so bare-Node guard scripts can load this graph:
+// Vite still replaces import.meta.env with a literal, plain Node reads undefined.
+const useExportFlow: (args: UsePostExportArgs) => UsePostExportResult =
+  (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true ? usePostExport : () => NO_EXPORT;
 
 /**
  * Compose PostCard runtime hooks and preserve original effect order.

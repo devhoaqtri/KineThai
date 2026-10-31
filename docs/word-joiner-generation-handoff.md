@@ -152,6 +152,10 @@ words with one space.
   syllable (/gắt/) or one two-syllable joined word (/quan_trọng/); never two separate
   words, never across "=", never three syllables. The answer blank is ____ and is never
   attached to a word.
+- Every `emphasisVi` phrase is exactly ONE joined group (or one lone syllable) of the text
+  it sits in — at most three syllables, and three only for a real lexicalised word
+  (nút_bịt_tai). Never glue a collocation to make it look like one word (not
+  mua_và_bán, not không_có_việc), and never let a phrase hold và, hoặc or nhưng.
 - Use no underscore for any other purpose.
 - Length limits count syllables: ba_lô is two.
 ```
@@ -170,7 +174,10 @@ words with one space.
     underscore is an error; a run of two or more is the blank and must stand alone;
   - no `/_`, `_/`, `*_` or `_*`;
   - no joined unit longer than four syllables;
-  - no join between two Hangul characters, none touching Hiragana or Katakana.
+  - no join between two Hangul characters, none touching Hiragana or Katakana;
+  - each `emphasisVi` phrase equals exactly one `_` group of the field it highlights (or one
+    lone syllable), is at most three syllables, and never holds và, hoặc or nhưng —
+    the reader's own guard proves it on every shipped page: `npm run check:emphasis-runs`.
 - **Existing decks** (200 words, 800 Vietnamese fields at the time of writing) have no
   joins. They render as before until they are regenerated or annotated.
 

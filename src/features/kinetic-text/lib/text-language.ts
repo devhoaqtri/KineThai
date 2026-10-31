@@ -12,6 +12,7 @@ export {
   expandEmphasisToBoundPhrases,
   getBoundPhraseEmphasisSeed,
   getBoundPhraseStartIndex,
+  getCompoundTokenKey,
   getDataEmphasisWordIndexes,
   getDataEmphasisWordSpans,
   getEmphasisPhraseKeysForLayout,

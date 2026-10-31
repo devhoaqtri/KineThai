@@ -10,10 +10,12 @@ import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
 import { VocabularyCard } from "./VocabularyCard";
 
 // Local only: a production build has no export studio at all, and even in development it
-// loads on demand, for an admin who opens it.
-const ExportStudio = import.meta.env.DEV
-  ? lazy(() => import("./ExportStudio").then((module) => ({ default: module.ExportStudio })))
-  : null;
+// loads on demand, for an admin who opens it. Optional-chained like ambient.ts so bare-Node
+// guard scripts can import this module without a top-level throw.
+const ExportStudio =
+  (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true
+    ? lazy(() => import("./ExportStudio").then((module) => ({ default: module.ExportStudio })))
+    : null;
 
 /** How long a word must hold the screen before it counts as seen. */
 const VIEW_DWELL_MS = 900;
@@ -103,8 +105,7 @@ export function VocabularyStream({
   );
   // Every word the pool holds is buffered: the stream ends on a page of its own after
   // the last word, rather than a toast that can only restart the feed.
-  const poolDone =
-    visibleEntries.length > 0 && (!query.hasNextPage || !canFetchMorePositions);
+  const poolDone = visibleEntries.length > 0 && (!query.hasNextPage || !canFetchMorePositions);
   const rows = useMemo(
     () => (poolDone ? [...visibleEntries, { occurrenceId: FEED_END_ID }] : visibleEntries),
     [poolDone, visibleEntries],
@@ -344,8 +345,8 @@ export function VocabularyStream({
                     <p className="vocab-eyebrow">Hết dòng từ</p>
                     <h1>Bạn đã xem hết mọi từ rồi.</h1>
                     <p>
-                      Bộ nhớ trên thiết bị giữ mỗi từ ở mức một lần mỗi ngày, hai lần trong ba
-                      ngày, ba lần mỗi tuần. Xóa lịch sử xem để mọi từ quay lại ngay.
+                      Bộ nhớ trên thiết bị giữ mỗi từ ở mức một lần mỗi ngày, hai lần trong ba ngày,
+                      ba lần mỗi tuần. Xóa lịch sử xem để mọi từ quay lại ngay.
                     </p>
                     <button
                       type="button"
