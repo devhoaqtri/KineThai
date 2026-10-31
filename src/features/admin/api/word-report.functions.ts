@@ -1,17 +1,18 @@
 /**
  * Admin server functions for anonymous word reports filed from the feed.
  *
- * Reports are grouped by word, because that is the unit an admin fixes: ten readers
- * tapping "meaning is wrong" on one card is one problem, not ten.
+ * Reports are grouped by word within a deck, because that is the unit an admin fixes: ten
+ * readers tapping "meaning is wrong" on one card is one problem, not ten. Word ids are only
+ * unique within a deck, so the same id in two languages is two groups.
  *
  * Exports: listWordReportGroups, updateWordReports, WordReportGroup, WordReportOverview
- * Depends on: fs/promises (catalog), zod, admin gates, vocabulary word-report store
+ * Depends on: zod, admin gates, vocabulary catalog and word-report store (both lazy)
  */
 
 import { createServerFn } from "@tanstack/react-start";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { z } from "zod";
+import type { VocabularyWord as Word } from "@/features/vocabulary/lib/schema";
+import type { TargetLocale } from "@/features/vocabulary/lib/target-language";
 import {
   byReportPriority,
   isSevereReason,
@@ -22,9 +23,8 @@ import {
 import { requireAdminAccess } from "../lib/admin-access";
 import { requireAdminContext } from "../lib/require-admin";
 
-const CATALOG_PATH = resolve(process.cwd(), "src/features/vocabulary/data/catalog.json");
-
 export type WordReportGroup = {
+  locale: TargetLocale;
   wordId: string;
   word: string;
   /** Current catalog text, so the report can be judged without leaving the page. */
@@ -57,28 +57,6 @@ export type WordReportOverview = {
   groups: WordReportGroup[];
 };
 
-type CatalogWord = {
-  id: string;
-  word: string;
-  defVi?: string;
-  leadVi?: string;
-  anticipateVi?: string;
-  ipa?: string;
-  pos?: string;
-  level?: string;
-  usage?: Array<{ en: string; vi: string }>;
-};
-
-async function readCatalogWords(): Promise<Map<string, CatalogWord>> {
-  try {
-    const parsed = JSON.parse(await readFile(CATALOG_PATH, "utf-8")) as { words?: CatalogWord[] };
-    return new Map((parsed.words ?? []).map((word) => [word.id, word]));
-  } catch {
-    // A deployed build has no catalog file on disk; groups simply show no entry text.
-    return new Map();
-  }
-}
-
 function tally<T extends string>(values: T[]): { id: T; count: number }[] {
   const counts = new Map<T, number>();
   for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
@@ -96,17 +74,30 @@ export const listWordReportGroups = createServerFn({ method: "GET" })
     await requireAdminContext({ authUserId: context.userId });
     const { listWordReports, wordReportStoreKind } =
       await import("@/features/vocabulary/api/word-report-store.server");
-    const [reports, words] = await Promise.all([listWordReports(), readCatalogWords()]);
+    const { catalogFor } = await import("@/features/vocabulary/api/catalog.server");
+    const reports = await listWordReports();
 
     const byWord = new Map<string, typeof reports>();
     for (const report of reports) {
-      byWord.set(report.wordId, [...(byWord.get(report.wordId) ?? []), report]);
+      const key = `${report.locale}:${report.wordId}`;
+      byWord.set(key, [...(byWord.get(key) ?? []), report]);
     }
-    const groups: WordReportGroup[] = [...byWord].map(([wordId, items]) => {
+    const decks = new Map<TargetLocale, Map<string, Word>>();
+    const deckWords = (locale: TargetLocale) => {
+      let words = decks.get(locale);
+      if (!words) {
+        words = new Map(catalogFor(locale).words.map((word) => [word.id, word]));
+        decks.set(locale, words);
+      }
+      return words;
+    };
+    const groups: WordReportGroup[] = [...byWord.values()].map((items) => {
+      const { locale, wordId } = items[0]!;
       const open = items.filter((item) => item.status === "new");
       const resolved = items.filter((item) => item.status === "resolved");
-      const entry = words.get(wordId);
+      const entry = deckWords(locale).get(wordId);
       return {
+        locale,
         wordId,
         word: entry?.word ?? items[0]?.word ?? wordId,
         entry: entry

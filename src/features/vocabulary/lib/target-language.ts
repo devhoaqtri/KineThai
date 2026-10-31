@@ -4,9 +4,12 @@
  * fall back to Japanese, the app's default deck, and never throw. Host is
  * client-controlled: use it only to pick public content.
  *
- * Exports: DEFAULT_TARGET, TargetLocale, resolveTarget, siteTitle, siteBrand, sitePageHead
+ * Exports: DEFAULT_TARGET, TARGET_LOCALES, TargetLocale, resolveTarget, siteTitle, siteBrand,
+ *   sitePageHead
  */
-export type TargetLocale = "en" | "zh" | "ko" | "ja" | "fr" | "de" | "es";
+export const TARGET_LOCALES = ["en", "zh", "ko", "ja", "fr", "de", "es"] as const;
+
+export type TargetLocale = (typeof TARGET_LOCALES)[number];
 
 /** The deck served when nothing on the address names another language. */
 export const DEFAULT_TARGET: TargetLocale = "ja";
