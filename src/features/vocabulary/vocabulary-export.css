@@ -283,10 +283,9 @@
   font-family: "Inter", var(--still-fallback-font, sans-serif), sans-serif;
 }
 /* ── Carousel slide furniture ──────────────────────────────────────────────────────────
-   Drawn over the card, in the same layout pixels. The thread runs along the foot of every
-   slide at one height and off both edges, so it continues across the swipe; it starts at
-   the first dot on slide 1 and ends at the last dot on the final slide. The count sits low
-   and left because Instagram draws its own in the top right corner. */
+   Drawn over the card, in the same layout pixels. The app's progress bars sit at the foot
+   of every slide, filled up to that slide. The count stays low and left because Instagram
+   draws its own in the top right corner. */
 .carousel-chrome {
   position: absolute;
   z-index: 5;
@@ -331,39 +330,14 @@
   letter-spacing: 0.04em;
   opacity: 0.78;
 }
-.carousel-thread {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(var(--safe-bottom) + 6px);
-  height: 8px;
-}
-.carousel-thread > i {
-  position: absolute;
-  top: 3.25px;
-  height: 1.5px;
-  background: color-mix(in srgb, var(--vocab-ink) 42%, transparent);
-}
-.carousel-thread > ol {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--thread-gap);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.carousel-thread li {
-  width: var(--thread-dot);
-  height: var(--thread-dot);
-  border-radius: 50%;
-  background: var(--vocab-ink);
-}
-.carousel-thread li[data-current] {
-  background: var(--vocab-accent);
-  box-shadow: 0 0 0 2.5px var(--vocab-ink);
+.carousel-chrome .vocab-progress {
+  /* The feed's shell sets this; a slide's furniture sits outside it. */
+  --vocab-chrome-progress: 4px;
+  left: calc(var(--carousel-edge) + 4%);
+  right: calc(var(--carousel-edge) + 4%);
+  bottom: calc(var(--safe-bottom) + 10px);
+  width: auto;
+  transform: none;
 }
 .carousel-closing {
   position: absolute;

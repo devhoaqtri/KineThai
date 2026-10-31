@@ -1,6 +1,6 @@
 /**
- * What a carousel adds to a card: the hook on slide 1, the marker on every slide, and the
- * handle and address on the closing spelling page.
+ * What a carousel adds to a card: the hook on slide 1, the app's progress bars on every
+ * slide, and the handle and address on the closing spelling page.
  *
  * Drawn over the card rather than inside it, so a reader's card never carries any of this.
  * The layout is in vocabulary-export.css.
@@ -16,31 +16,14 @@ import { CAROUSEL_HOOK, CAROUSEL_SWIPE_CUE } from "../lib/carousel-copy";
 import type { SafeInsets } from "../lib/export-presets";
 import type { VocabularyTheme } from "../lib/presets";
 
-const DOT_PX = 6;
-const DOT_GAP_PX = 11;
-
-/**
- * Where the thread runs. It reaches both edges so it continues across a swipe, except past
- * the ends of the post, where there is nothing to continue to.
- * @param index - this slide's place
- * @param count - slides in the post
- * @returns Left and right ends, as CSS
- * @pure true
- */
-function threadEnds(index: number, count: number): { left: string; right: string } {
-  const half = (count * DOT_PX + (count - 1) * DOT_GAP_PX) / 2;
-  return {
-    left: index === 0 ? `calc(50% - ${half}px)` : "0",
-    right: index === count - 1 ? `calc(50% - ${half}px)` : "0",
-  };
-}
-
 /**
  * @param props.slide - what this slide is
  * @param props.index - its place in the post, from 0
  * @param props.count - slides in the post
  * @param props.theme - the card's palette, which this sits on
- * @param props.safe - the format's margins
+ * @param props.safe - this slide's margins
+ * @param props.edge - the format's side margin, a fraction: the progress bars sit on it on
+ *   every slide, so they hold still through a swipe even where slide 1 has wider margins
  * @param props.handle - the account shown on the closing slide, if any
  * @param props.address - the site address shown on the closing slide
  */
@@ -50,6 +33,7 @@ export function CarouselChrome({
   count,
   theme,
   safe,
+  edge,
   handle,
   address,
 }: {
@@ -58,6 +42,7 @@ export function CarouselChrome({
   count: number;
   theme: VocabularyTheme;
   safe: SafeInsets;
+  edge: number;
   handle?: string;
   address: string;
 }) {
@@ -69,8 +54,7 @@ export function CarouselChrome({
     "--safe-right": `${safe.right * 100}%`,
     "--safe-bottom": `${safe.bottom * 100}%`,
     "--safe-left": `${safe.left * 100}%`,
-    "--thread-dot": `${DOT_PX}px`,
-    "--thread-gap": `${DOT_GAP_PX}px`,
+    "--carousel-edge": `${edge * 100}%`,
   } as CSSProperties;
   const hook = slide.kind === "clue" && slide.hook;
   return (
@@ -91,13 +75,12 @@ export function CarouselChrome({
       <p className="carousel-count">
         {index + 1}/{count}
       </p>
-      <div className="carousel-thread">
-        <i style={threadEnds(index, count)} />
-        <ol>
-          {Array.from({ length: count }, (_, dot) => (
-            <li key={dot} data-current={dot === index || undefined} />
-          ))}
-        </ol>
+      {/* The card's own bars, filled up to this slide. Each is drawn full rather than
+          filling: a still has no page timer. */}
+      <div className="vocab-progress">
+        {Array.from({ length: count }, (_, slot) => (
+          <span key={slot} data-complete={slot <= index} />
+        ))}
       </div>
     </div>
   );

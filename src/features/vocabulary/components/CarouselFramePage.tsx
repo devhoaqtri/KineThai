@@ -338,6 +338,7 @@ export function CarouselFramePage() {
                 count={plan.slides.length}
                 theme={look.theme}
                 safe={safeFor(slide, format)}
+                edge={format.safe.left}
                 handle={handle}
                 address={address}
               />
