@@ -21,7 +21,10 @@
  *     --handle <name>   the account named on the closing slide
  *     --url <address>   the address on the closing slide (default: the deck's own)
  *     --out <dir>       parent folder (default: exports/carousel)
- *     --twice           render each word twice and fail on any byte that differs
+ *     --twice           render each word twice and fail on any byte that differs. Run it on
+ *                       an idle machine: under full CPU load about one run in six differs by
+ *                       a few pixels on letter edges, at most 9 levels of 255. Nobody can
+ *                       see that, but it is not byte-identical.
  *     --seams           fail if any swipe shows a step in the backdrop
  *
  * Exports: renderCarousel, CarouselRenderOptions, CarouselRenderResult
@@ -29,10 +32,11 @@
  */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
+import { inflateSync } from "node:zlib";
 
 import {
   CAROUSEL_FORMATS,
@@ -46,6 +50,8 @@ import { launchChrome, type Cdp } from "./lib/cdp";
 
 /** A slide that has not settled by now is stuck, not slow. */
 const SETTLE_LIMIT_MS = 30_000;
+/** One image should encode in well under a second. */
+const ENCODE_LIMIT_MS = 30_000;
 /** Largest average step across a swipe, in levels of 255. Below this nobody can see a join. */
 const SEAM_LIMIT = 1;
 
@@ -60,6 +66,8 @@ export type CarouselRenderOptions = {
   handle?: string;
   /** The address the closing slide shows; defaults to the deck's own. */
   url?: string;
+  /** Measure the step at each join, which reads every pixel of two edges per slide. */
+  measureSeams?: boolean;
   /** Capture a slide that reports a problem instead of stopping at it. */
   allowProblems?: boolean;
   /** Parent folder; the word gets its own folder inside it. */
@@ -74,7 +82,7 @@ export type CarouselRenderResult = {
   slides: string[];
   /** SHA-256 of each slide's PNG, in order. */
   hashes: string[];
-  /** Average colour step at each join between neighbouring slides, in levels of 255. */
+  /** Average colour step at each join, in levels of 255; empty unless asked for. */
   seams: number[];
   /** Said by the page when it could not keep the answer off slide 1. */
   warning?: string;
@@ -86,66 +94,106 @@ function pngSize(png: Buffer): { width: number; height: number } {
 }
 
 function toJpeg(png: Buffer, file: string): void {
-  const run = spawnSync(
-    "ffmpeg",
-    [
-      "-hide_banner",
-      "-loglevel",
-      "error",
-      "-y",
-      "-f",
-      "image2pipe",
-      "-c:v",
-      "png",
-      "-i",
-      "pipe:0",
-      // yuvj444p: no chroma subsampling, or red text on a blue field goes soft.
-      "-pix_fmt",
-      "yuvj444p",
-      "-q:v",
-      "2",
-      "-frames:v",
-      "1",
-      "-update",
-      "1",
-      file,
-    ],
-    { input: png, stdio: ["pipe", "ignore", "pipe"] },
-  );
-  if (run.status !== 0) throw new Error(`ffmpeg failed:\n${run.stderr?.toString().slice(-800)}`);
+  // From a file, not a pipe, and on a clock: a stuck encoder must fail, not freeze the studio.
+  const source = `${file}.png`;
+  writeFileSync(source, png);
+  try {
+    const run = spawnSync(
+      "ffmpeg",
+      [
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-y",
+        "-i",
+        source,
+        // yuvj444p: no chroma subsampling, or red text on a blue field goes soft.
+        "-pix_fmt",
+        "yuvj444p",
+        "-q:v",
+        "2",
+        "-frames:v",
+        "1",
+        "-update",
+        "1",
+        file,
+      ],
+      { stdio: ["ignore", "ignore", "pipe"], timeout: ENCODE_LIMIT_MS },
+    );
+    if (run.status !== 0) {
+      throw new Error(`ffmpeg failed:\n${run.stderr?.toString().slice(-800) || "it timed out"}`);
+    }
+  } finally {
+    rmSync(source, { force: true });
+  }
 }
 
-/** One column of a PNG, as raw RGB. */
-function pngColumn(png: Buffer, x: number, height: number): Buffer {
-  const run = spawnSync(
-    "ffmpeg",
-    [
-      "-hide_banner",
-      "-loglevel",
-      "error",
-      "-f",
-      "image2pipe",
-      "-c:v",
-      "png",
-      "-i",
-      "pipe:0",
-    ].concat(["-vf", `crop=1:${height}:${x}:0`, "-f", "rawvideo", "-pix_fmt", "rgb24", "pipe:1"]),
-    { input: png, maxBuffer: 16 * 1024 * 1024 },
-  );
-  if (run.status !== 0) throw new Error(`ffmpeg failed:\n${run.stderr?.toString().slice(-800)}`);
-  return run.stdout;
+/**
+ * The pixels of an 8-bit, non-interlaced PNG, which is what Chrome captures. Read here rather
+ * than through ffmpeg, which can sit forever on a piped image, with nothing to say so.
+ * @returns Rows of RGB or RGBA bytes, and how many bytes one pixel takes
+ */
+function decodePng(png: Buffer): { rows: Buffer[]; pixelBytes: number } {
+  const width = png.readUInt32BE(16);
+  const height = png.readUInt32BE(20);
+  const pixelBytes = png[25] === 6 ? 4 : 3;
+  if (png[24] !== 8 || (png[25] !== 2 && png[25] !== 6) || png[28] !== 0) {
+    throw new Error("Chrome's PNG is not 8-bit RGB, so the seam cannot be measured");
+  }
+  const chunks: Buffer[] = [];
+  for (let at = 8; at < png.length; ) {
+    const length = png.readUInt32BE(at);
+    if (png.toString("latin1", at + 4, at + 8) === "IDAT") {
+      chunks.push(png.subarray(at + 8, at + 8 + length));
+    }
+    at += length + 12;
+  }
+  const raw = inflateSync(Buffer.concat(chunks));
+  const stride = width * pixelBytes;
+  const rows: Buffer[] = [];
+  for (let y = 0; y < height; y += 1) {
+    const start = y * (stride + 1);
+    const filter = raw[start]!;
+    const line = Buffer.from(raw.subarray(start + 1, start + 1 + stride));
+    const above = rows[y - 1];
+    for (let x = 0; x < stride; x += 1) {
+      const a = x >= pixelBytes ? line[x - pixelBytes]! : 0;
+      const b = above ? above[x]! : 0;
+      const c = above && x >= pixelBytes ? above[x - pixelBytes]! : 0;
+      let predicted = 0;
+      if (filter === 1) predicted = a;
+      else if (filter === 2) predicted = b;
+      else if (filter === 3) predicted = (a + b) >> 1;
+      else if (filter === 4) {
+        const p = a + b - c;
+        const [pa, pb, pc] = [Math.abs(p - a), Math.abs(p - b), Math.abs(p - c)];
+        predicted = pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
+      }
+      line[x] = (line[x]! + predicted) & 255;
+    }
+    rows.push(line);
+  }
+  return { rows, pixelBytes };
 }
 
 /**
  * How far a slide's right edge is from the next one's left edge.
  * @returns Average step per colour channel, in levels of 255
  */
-function seamStep(left: Buffer, right: Buffer, width: number, height: number): number {
-  const a = pngColumn(left, width - 1, height);
-  const b = pngColumn(right, 0, height);
+function seamStep(left: Buffer, right: Buffer): number {
+  const a = decodePng(left);
+  const b = decodePng(right);
   let total = 0;
-  for (let index = 0; index < a.length; index += 1) total += Math.abs(a[index]! - b[index]!);
-  return total / a.length;
+  let samples = 0;
+  a.rows.forEach((row, y) => {
+    const last = row.length - a.pixelBytes;
+    for (let channel = 0; channel < 3; channel += 1) {
+      total += Math.abs(row[last + channel]! - b.rows[y]![channel]!);
+      samples += 1;
+    }
+  });
+  return total / samples;
 }
 
 async function waitForSlide(
@@ -263,7 +311,7 @@ export async function renderCarousel(
           `captured ${size.width}x${size.height}, not ${format.width}x${format.height}`,
         );
       }
-      if (previous) seams.push(seamStep(previous, png, format.width, format.height));
+      if (options.measureSeams && previous) seams.push(seamStep(previous, png));
       previous = png;
       const file = join(folder, `${String(slide + 1).padStart(2, "0")}.jpg`);
       toJpeg(png, file);
@@ -313,7 +361,8 @@ async function main() {
     out: flag("out") ?? "exports/carousel",
   };
   for (const code of codes) {
-    const first = await renderCarousel({ ...shared, code });
+    const measureSeams = argv.includes("--seams");
+    const first = await renderCarousel({ ...shared, code, measureSeams });
     console.log(`✓ ${first.word}: ${first.slides.length} slides → ${first.folder}`);
     if (first.warning) console.log(`  ! ${first.warning}`);
     if (argv.includes("--seams")) {
