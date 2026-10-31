@@ -14,6 +14,8 @@ import { join } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+/** Longest any one DevTools command may take. */
+const COMMAND_LIMIT_MS = 20_000;
 
 type Handler = (params: Record<string, unknown>) => void;
 
@@ -54,12 +56,29 @@ export class Cdp {
     return new Cdp(socket);
   }
 
+  /**
+   * Send a command. It gives up rather than wait forever: an evaluate caught by a navigation
+   * can go unanswered for good, and a run stuck on one looks exactly like a slow one.
+   */
   send<T = unknown>(method: string, params: Record<string, unknown> = {}): Promise<T> {
     const id = this.nextId++;
     this.socket.send(JSON.stringify({ id, method, params }));
-    return new Promise<T>((res, rej) =>
-      this.pending.set(id, { resolve: res as (v: unknown) => void, reject: rej }),
-    );
+    return new Promise<T>((res, rej) => {
+      const timer = setTimeout(() => {
+        this.pending.delete(id);
+        rej(new Error(`Chrome did not answer ${method} within ${COMMAND_LIMIT_MS / 1000}s`));
+      }, COMMAND_LIMIT_MS);
+      this.pending.set(id, {
+        resolve: (value) => {
+          clearTimeout(timer);
+          res(value as T);
+        },
+        reject: (error) => {
+          clearTimeout(timer);
+          rej(error);
+        },
+      });
+    });
   }
 
   on(method: string, handler: Handler): void {
