@@ -35,6 +35,16 @@ export const TOPIC_LABELS_VI: Record<string, string> = {
   thinking: "Suy nghĩ",
   time: "Thời gian",
   work: "Công việc",
+  food: "Ẩm thực",
+  general: "Chung",
+  health: "Sức khỏe",
+  money: "Tiền bạc",
+  nature: "Thiên nhiên",
+  perception: "Nhận thức",
+  society: "Xã hội",
+  study: "Học tập",
+  technology: "Công nghệ",
+  travel: "Du lịch",
 };
 
 /** Palette id → a Vietnamese name for the colour story it tells. */
@@ -81,6 +91,17 @@ export const THEME_LABELS_VI: Record<string, string> = {
   "spring-crimson": "Đỏ xuân",
   "hongbao-gold": "Lì xì vàng",
   "lantern-paper-cut": "Đèn lồng giấy",
+  "paper-dawn": "Bình minh giấy",
+  "linen-sage": "Vải lanh xô thơm",
+  "porcelain-blush": "Sứ hồng phấn",
+  "almond-sky": "Trời hạnh nhân",
+  "frost-lilac": "Tử đinh hương sương",
+  "oat-mint": "Yến mạch bạc hà",
+  "chalk-periwinkle": "Phấn dừa cạn",
+  "shell-celadon": "Vỏ sò men ngọc",
+  "dove-apricot": "Bồ câu mơ",
+  snowfall: "Tuyết rơi",
+  "graphite-veil": "Màn than chì",
 };
 
 /** Narrative style id → the Vietnamese name of that reveal. */
@@ -201,6 +222,16 @@ const TOPIC_LABELS_TH: Record<string, string> = {
   thinking: "ความคิด",
   time: "เวลา",
   work: "งาน",
+  food: "อาหาร",
+  general: "ทั่วไป",
+  health: "สุขภาพ",
+  money: "การเงิน",
+  nature: "ธรรมชาติ",
+  perception: "การรับรู้",
+  society: "สังคม",
+  study: "การเรียน",
+  technology: "เทคโนโลยี",
+  travel: "การเดินทาง",
 };
 
 const TOPIC_LABELS_JA: Record<string, string> = {
@@ -212,6 +243,16 @@ const TOPIC_LABELS_JA: Record<string, string> = {
   thinking: "思考",
   time: "時間",
   work: "仕事",
+  food: "食べ物",
+  general: "一般",
+  health: "健康",
+  money: "お金",
+  nature: "自然",
+  perception: "知覚",
+  society: "社会",
+  study: "学習",
+  technology: "テクノロジー",
+  travel: "旅行",
 };
 
 const STYLE_LABELS_TH: Record<string, string> = {
@@ -315,6 +356,17 @@ const THEME_LABELS_TH: Record<string, string> = {
   "spring-crimson": "แดงวสันต์",
   "hongbao-gold": "อั่งเปาทอง",
   "lantern-paper-cut": "โคมกระดาษตัด",
+  "paper-dawn": "รุ่งอรุณกระดาษ",
+  "linen-sage": "ลินินเซจ",
+  "porcelain-blush": "กระเบื้องชมพู",
+  "almond-sky": "ฟ้าอัลมอนด์",
+  "frost-lilac": "ไลแลคน้ำค้างแข็ง",
+  "oat-mint": "ข้าวโอ๊ตมินต์",
+  "chalk-periwinkle": "ชอล์กพีริวิงเคิล",
+  "shell-celadon": "เปลือกหอยเซลาดอน",
+  "dove-apricot": "นกพิราบแอปริคอต",
+  snowfall: "หิมะโปรย",
+  "graphite-veil": "ม่านกราไฟต์",
 };
 
 const THEME_LABELS_JA: Record<string, string> = {
@@ -357,6 +409,17 @@ const THEME_LABELS_JA: Record<string, string> = {
   "spring-crimson": "春節クリムゾン",
   "hongbao-gold": "紅包ゴールド",
   "lantern-paper-cut": "切り絵ランタン",
+  "paper-dawn": "和紙の夜明け",
+  "linen-sage": "リネンセージ",
+  "porcelain-blush": "磁器の薄紅",
+  "almond-sky": "アーモンドの空",
+  "frost-lilac": "霜のライラック",
+  "oat-mint": "オーツミント",
+  "chalk-periwinkle": "チョークペリウィンクル",
+  "shell-celadon": "貝殻と青磁",
+  "dove-apricot": "鳩羽とアプリコット",
+  snowfall: "雪景色",
+  "graphite-veil": "グラファイトのヴェール",
 };
 
 /** Locale → label set. Stub locales fall back to Vietnamese via the helpers below. */
