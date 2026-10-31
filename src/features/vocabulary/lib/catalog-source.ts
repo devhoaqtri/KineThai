@@ -33,6 +33,7 @@ const zhPacks = sorted(
 const koPacks = sorted(
   import.meta.glob<{ default: Catalog }>("../data/ko/*.json", { eager: true }),
 );
+// One file per JLPT level (jlpt-n5.json, jlpt-n4.json, …). A new deck is picked up here.
 const jaPacks = sorted(
   import.meta.glob<{ default: Catalog }>("../data/ja/*.json", { eager: true }),
 );
