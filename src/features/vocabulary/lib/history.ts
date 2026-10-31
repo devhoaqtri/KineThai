@@ -1,5 +1,5 @@
 /** On-device viewing history with sliding-window repeat caps. Exports: history helpers. Depends on: ./day (localStorage only). */
-import { previousDay, startOfDay } from "./day";
+import { nextDay, previousDay, startOfDay } from "./day";
 import type { Locale } from "./locale";
 import { BASE_LOCALE, DEFAULT_LOCALE } from "./locale";
 
@@ -101,6 +101,70 @@ export function recordView(
 ): ViewHistory {
   const next: ViewHistory = { ...history, [wordId]: [...(history[wordId] ?? []), now] };
   return pruneHistory(next, now);
+}
+
+/** What the memory sheet shows: the rolling week, or one day by its local midnight. */
+export type HistoryScope = "week" | number;
+
+/** The three cells in the settings sheet, each a scope of the same history. */
+export type MemoryCell = "yesterday" | "today" | "week";
+
+/** @returns The scope a memory cell shows. @pure true */
+export function scopeOfCell(cell: MemoryCell, now: number): HistoryScope {
+  if (cell === "week") return "week";
+  const today = startOfDay(now);
+  return cell === "today" ? today : previousDay(today);
+}
+
+/** One distinct word inside a scope. */
+export type HistoryEntry = {
+  id: string;
+  /** The newest view inside the scope. */
+  at: number;
+  /** Views inside the scope. */
+  views: number;
+};
+
+/**
+ * The distinct words seen in a scope, newest view first.
+ *
+ * The bounds are the ones `historyStats` counts, so a list can never disagree with the
+ * number printed on the cell that opened it. A day is a calendar day; the week is the
+ * rolling seven days.
+ * @param history Map. @param scope Week or day. @param now Reference time. @returns Entries.
+ * @pure true
+ */
+export function historyEntries(
+  history: ViewHistory,
+  scope: HistoryScope,
+  now: number = Date.now(),
+): HistoryEntry[] {
+  const from = scope === "week" ? now - WEEK_MS + 1 : scope;
+  const to = scope === "week" ? Number.POSITIVE_INFINITY : nextDay(scope);
+  const entries: HistoryEntry[] = [];
+  for (const [id, times] of Object.entries(history)) {
+    const inScope = times.filter((t) => t >= from && t < to && t <= now + 60_000);
+    if (inScope.length) entries.push({ id, at: Math.max(...inScope), views: inScope.length });
+  }
+  return entries.sort((a, b) => b.at - a.at || a.id.localeCompare(b.id));
+}
+
+/** One column of the week's rhythm. */
+export type HistoryDay = { start: number; ids: string[] };
+
+/**
+ * The last seven calendar days, oldest first, each with the distinct words seen on it.
+ * @param history Map. @param now Reference time. @returns Seven days ending today.
+ * @pure true
+ */
+export function historyDays(history: ViewHistory, now: number = Date.now()): HistoryDay[] {
+  const days: HistoryDay[] = [];
+  let start = startOfDay(now);
+  for (let index = 0; index < 7; index += 1) {
+    days.unshift({ start, ids: historyEntries(history, start, now).map((entry) => entry.id) });
+    start = previousDay(start);
+  }
+  return days;
 }
 
 export type HistoryStats = {

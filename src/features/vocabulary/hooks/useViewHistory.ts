@@ -8,6 +8,8 @@ import {
   saveHistory,
   type ViewHistory,
 } from "../lib/history";
+import { clearRecallMarks } from "../lib/recall-marks";
+import { clearRecallWords } from "../lib/recall-words";
 
 /** Keep view history in state, persisted to localStorage and synced across tabs. @returns History map, recorder, and clearer. */
 export function useViewHistory() {
@@ -38,6 +40,8 @@ export function useViewHistory() {
     } catch {
       // Ignore privacy-mode failures.
     }
+    clearRecallWords();
+    clearRecallMarks();
   }, []);
   return { history, record, clear, stats: historyStats(history) };
 }
