@@ -1,38 +1,32 @@
 /**
- * Counts finished words towards the daily goals, and surfaces each one the moment it is met. The same
- * split as ./useStreak: lib/daily-goal decides, this owns the read, the write and the one
- * piece of transient state — which count is being celebrated right now.
+ * Counts finished words towards the daily goals, and sends each one to the badge inbox the
+ * moment it is met. The same split as ./useStreak: lib/daily-goal decides, this owns the read
+ * and the write.
  *
  * Exports: useDailyGoal, useDailyGoalStore
- * Depends on: React, ../lib/daily-goal
+ * Depends on: React, ../lib/daily-goal, ../lib/badge-inbox
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { enqueueBadge } from "../lib/badge-inbox";
 import {
   DAILY_GOAL_EVENT,
   DAILY_GOAL_KEY,
   readDailyGoal,
   recordDailyWord,
   writeDailyGoal,
-  type DailyGoal,
   type DailyGoalStore,
 } from "../lib/daily-goal";
 
-/** @returns The finish handler, and the goal just met with its count (1, 2, 3…), or null */
-export function useDailyGoal(): {
-  finish: (wordId: string) => void;
-  celebrating: { goal: DailyGoal; times: number } | null;
-  dismiss: () => void;
-} {
-  const [celebrating, setCelebrating] = useState<{ goal: DailyGoal; times: number } | null>(null);
+/** @returns The finish handler */
+export function useDailyGoal(): { finish: (wordId: string) => void } {
   const finish = useCallback((wordId: string) => {
     const before = readDailyGoal();
     const { store, reached } = recordDailyWord(before, wordId, Date.now());
     if (store !== before) writeDailyGoal(store);
-    if (reached) setCelebrating({ goal: reached, times: store.times[reached] });
+    if (reached) enqueueBadge({ kind: "daily", goal: reached, times: store.times[reached] });
   }, []);
-  const dismiss = useCallback(() => setCelebrating(null), []);
-  return { finish, celebrating, dismiss };
+  return { finish };
 }
 
 /** @returns The stored daily goal, kept in sync with this tab, other tabs and focus. */
