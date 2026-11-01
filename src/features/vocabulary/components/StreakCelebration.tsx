@@ -137,9 +137,20 @@ export function StreakCelebration({
 
   useEffect(() => () => window.clearTimeout(leaveTimer.current), []);
 
+  // The clock only runs while the page can be seen: a badge that lands as the reader switches
+  // away waits for them, and gets its full time when they come back.
   useEffect(() => {
-    const timer = window.setTimeout(leave, STREAK_CELEBRATION_MS);
-    return () => window.clearTimeout(timer);
+    let timer: number | undefined;
+    const arm = () => {
+      window.clearTimeout(timer);
+      if (!document.hidden) timer = window.setTimeout(leave, STREAK_CELEBRATION_MS);
+    };
+    arm();
+    document.addEventListener("visibilitychange", arm);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", arm);
+    };
   }, [leave]);
 
   useEffect(() => {

@@ -1,13 +1,14 @@
 /**
- * Files each read word under its level and surfaces a word milestone the moment it is
- * earned. The same split as ./useStreak: lib/level-progress decides what is earned, this
- * owns the read, the write and which badge is being celebrated right now.
+ * Files each read word under its level and sends a word milestone to the badge inbox the
+ * moment it is earned. The same split as ./useStreak: lib/level-progress decides what is
+ * earned, this owns the read and the write.
  *
  * Exports: useLevelProgress
- * Depends on: React, ../lib/level-progress, ../lib/word-badges
+ * Depends on: React, ../lib/level-progress, ../lib/word-badges, ../lib/badge-inbox
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { enqueueBadge } from "../lib/badge-inbox";
 import { ALL_SCOPE, progressScopes } from "../lib/word-badges";
 import {
   LEVEL_PROGRESS_EVENT,
@@ -33,17 +34,14 @@ function headline(reached: WordMilestone[]): WordMilestone {
 
 /**
  * @param locale The host's deck locale: decides the scopes and their sizes
- * @returns Seen words per level, the recorder, and the celebration in progress
+ * @returns Seen words per level, and the recorder
  */
 export function useLevelProgress(locale: TargetLocale): {
   seen: LevelProgress;
   record: (level: VocabularyLevel, wordId: string) => void;
-  celebrating: WordMilestone | null;
-  dismiss: () => void;
 } {
   const { scopes, levelCounts } = useMemo(() => progressScopes(locale), [locale]);
   const [seen, setSeen] = useState<LevelProgress>(() => readProgress().seen);
-  const [celebrating, setCelebrating] = useState<WordMilestone | null>(null);
 
   useEffect(() => {
     const refresh = () => setSeen(readProgress().seen);
@@ -66,12 +64,10 @@ export function useLevelProgress(locale: TargetLocale): {
       const { store, reached } = recordSeenWord(before, level, wordId, scopes, levelCounts);
       if (store === before) return;
       writeProgress(store);
-      if (reached.length) setCelebrating(headline(reached));
+      if (reached.length) enqueueBadge({ kind: "word", milestone: headline(reached) });
     },
     [scopes, levelCounts],
   );
 
-  const dismiss = useCallback(() => setCelebrating(null), []);
-
-  return { seen, record, celebrating, dismiss };
+  return { seen, record };
 }

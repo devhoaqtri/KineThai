@@ -21,6 +21,8 @@ import { useTrackRotation } from "../hooks/useTrackRotation";
 import { useViewHistory } from "../hooks/useViewHistory";
 import { useLevelProgress } from "../hooks/useLevelProgress";
 import { useDailyGoal } from "../hooks/useDailyGoal";
+import { useBadgeInbox } from "../hooks/useBadgeInbox";
+import { badgeKey } from "../lib/badge-inbox";
 import { dailyBadgeBlurb, dailyBadgeTitle, dailyTier } from "../lib/streak-tiers";
 import { usePresence } from "@/hooks/use-presence";
 import { getActiveVocabWording } from "@/features/admin/api/wording.functions";
@@ -212,6 +214,9 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   const streak = useStreak();
   // The daily goals count the same finished words as the streak, so one handler feeds both.
   const daily = useDailyGoal();
+  // A badge waits here until it has really been shown, so a reload can't lose it.
+  const inbox = useBadgeInbox();
+  const badge = inbox.current;
   const ui = useLocale();
   const finishStreak = streak.finish;
   const finishDaily = daily.finish;
@@ -239,7 +244,6 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     staleTime: 60_000, // Cache for 1 minute
   });
   const recordLevel = levelProgress.record;
-  const wordCelebration = levelProgress.celebrating;
   const handleRecordView = useCallback(
     (word: VocabularyWord) => {
       recordView(word.id);
@@ -322,44 +326,42 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
             the stream starts scrolling to the next one, so a card-level badge would ride out
             of frame half-played. Keyed on the milestone so each one replays from its start.
             It covers the screen, so it suspends the stream below like any other overlay. */}
-        {streak.celebrating !== null ? (
+        {badge?.kind === "streak" && (
           <StreakCelebration
-            key={streak.celebrating}
-            days={streak.celebrating}
+            key={badgeKey(badge)}
+            days={badge.days}
             reducedMotion={reducedMotion}
-            onDone={streak.dismiss}
+            onDone={inbox.dismiss}
           />
-        ) : wordCelebration === null && daily.celebrating !== null ? (
-          // A daily goal waits behind the other two, for the same reason.
+        )}
+        {badge?.kind === "daily" && (
           <StreakCelebration
-            key={`daily:${daily.celebrating.goal}:${daily.celebrating.times}`}
-            days={daily.celebrating.goal}
+            key={badgeKey(badge)}
+            days={badge.goal}
             reducedMotion={reducedMotion}
-            onDone={daily.dismiss}
+            onDone={inbox.dismiss}
             badge={{
-              tier: dailyTier(daily.celebrating.goal),
+              tier: dailyTier(badge.goal),
               unit: t(ui, "onboard.wordsUnit"),
-              count: daily.celebrating.times,
-              title: dailyBadgeTitle(daily.celebrating.goal, daily.celebrating.times, ui),
-              blurb: dailyBadgeBlurb(daily.celebrating.goal, daily.celebrating.times, ui),
+              count: badge.times,
+              title: dailyBadgeTitle(badge.goal, badge.times, ui),
+              blurb: dailyBadgeBlurb(badge.goal, badge.times, ui),
             }}
           />
-        ) : (
-          // A word milestone waits its turn behind a streak one rather than stacking on it.
-          wordCelebration && (
-            <StreakCelebration
-              key={`${wordCelebration.scope}:${wordCelebration.words}`}
-              days={wordCelebration.words}
-              reducedMotion={reducedMotion}
-              onDone={levelProgress.dismiss}
-              badge={{
-                tier: wordTier(wordCelebration),
-                unit: t(ui, "onboard.wordsUnit"),
-                title: wordBadgeTitle(wordCelebration, effectiveLocale, ui),
-                blurb: wordBadgeBlurb(wordCelebration, effectiveLocale, ui),
-              }}
-            />
-          )
+        )}
+        {badge?.kind === "word" && (
+          <StreakCelebration
+            key={badgeKey(badge)}
+            days={badge.milestone.words}
+            reducedMotion={reducedMotion}
+            onDone={inbox.dismiss}
+            badge={{
+              tier: wordTier(badge.milestone),
+              unit: t(ui, "onboard.wordsUnit"),
+              title: wordBadgeTitle(badge.milestone, effectiveLocale, ui),
+              blurb: wordBadgeBlurb(badge.milestone, effectiveLocale, ui),
+            }}
+          />
         )}
         <VocabularyStream
           key={`${packName ?? ""}:${seed}:${filters.topic}:${filters.level}:${filters.difficulty}`}
@@ -368,15 +370,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           locale={effectiveLocale}
           presentation={presentation}
           reducedMotion={reducedMotion}
-          suspended={
-            optionsOpen ||
-            savedOpen ||
-            !fontsReady ||
-            exportOpen ||
-            streak.celebrating !== null ||
-            wordCelebration !== null ||
-            daily.celebrating !== null
-          }
+          suspended={optionsOpen || savedOpen || !fontsReady || exportOpen || badge !== null}
           exportOpen={isAdmin && exportOpen}
           onCloseExport={closeExport}
           history={viewHistory.history}
