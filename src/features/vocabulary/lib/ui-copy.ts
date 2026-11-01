@@ -103,7 +103,6 @@ const VI = {
   "saved.empty.medal.title": "Chưa có huy hiệu nào",
   "saved.empty.medal.body":
     "Học vài từ mỗi ngày, liền nhiều ngày — huy hiệu sẽ tự xuất hiện ở đây.",
-  "saved.medal.shelfAria": "Mốc chuỗi ngày đã đạt",
   "saved.medal.days": "{days} ngày",
   "saved.empty.bookmark.title": "Kho từ đang trống",
   "saved.empty.bookmark.body":
@@ -300,6 +299,9 @@ const VI = {
 
 export type CopyKey = keyof typeof VI;
 
+/** Every copy key, for the guard that no key ever reaches a reader raw. */
+export const COPY_KEYS = Object.keys(VI) as CopyKey[];
+
 /** Thai overlay. Rough translations; correctness not asserted. */
 const TH: Partial<Record<CopyKey, string>> = {
   "options.title": "ตัวเลือกคลังคำศัพท์",
@@ -383,7 +385,6 @@ const TH: Partial<Record<CopyKey, string>> = {
   "saved.tab.medal": "เหรียญตรา",
   "saved.empty.medal.title": "ยังไม่มีเหรียญตรา",
   "saved.empty.medal.body": "เรียนวันละไม่กี่คำต่อเนื่องหลายวัน — เหรียญตราจะปรากฏที่นี่เอง",
-  "saved.medal.shelfAria": "หมุดหมายสถิติวันที่ทำได้",
   "saved.medal.days": "{days} วัน",
   "saved.empty.bookmark.title": "คลังคำยังว่างอยู่",
   "saved.empty.bookmark.body":
@@ -652,7 +653,6 @@ const JA: Partial<Record<CopyKey, string>> = {
   "saved.tab.medal": "バッジ",
   "saved.empty.medal.title": "まだバッジはありません",
   "saved.empty.medal.body": "毎日数語ずつ続けて学ぶと、ここにバッジが表示されます。",
-  "saved.medal.shelfAria": "達成した連続日数のマイルストーン",
   "saved.medal.days": "{days} 日",
   "saved.empty.bookmark.title": "語彙ストックは空です",
   "saved.empty.bookmark.body":

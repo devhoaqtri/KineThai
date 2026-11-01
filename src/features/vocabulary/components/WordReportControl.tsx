@@ -23,7 +23,7 @@ import {
 } from "../lib/word-report";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { rememberReportedWord } from "../lib/reported-words";
-import { t, type CopyKey } from "../lib/ui-copy";
+import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
 
 type Phase = "choosing" | "sending" | "sent" | "failed";
@@ -205,7 +205,7 @@ export function WordReportPanel({
                   aria-pressed={selected.includes(reason.id)}
                   onClick={() => toggle(reason.id)}
                 >
-                  {t(ui, `report.reason.${reason.id}` as CopyKey)}
+                  {t(ui, `report.reason.${reason.id}`)}
                 </button>
               ))}
             </div>

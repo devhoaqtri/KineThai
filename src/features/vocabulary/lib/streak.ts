@@ -20,9 +20,9 @@
  * A leaf module: it imports only ./day, so the feed chunk never pulls a catalog in to
  * render a badge — the hazard useSavedCount.ts exists to document.
  *
- * Exports: STREAK_KEY, STREAK_EVENT, DAY_MIN_WORDS, DAY_LIMIT, MILESTONES, StreakStore,
- *   parseStreak, recordFinishedWord, currentStreak, milestonesReached, readStreak,
- *   writeStreak, emptyStreak
+ * Exports: STREAK_KEY, STREAK_EVENT, DAY_MIN_WORDS, DAY_LIMIT, MILESTONES, STREAK_REPEATS,
+ *   StreakStore, parseStreak, recordFinishedWord, currentStreak, milestonesReached,
+ *   streakRunsCompleted, streakRepeatsEarned, readStreak, writeStreak, emptyStreak
  * Depends on: ./day
  */
 
@@ -52,7 +52,8 @@ export const DAY_MIN_WORDS = 3;
  * How many qualifying days are kept. Oldest fall off first.
  *
  * Truncation can only ever shorten a reported streak, and only past 400 consecutive days —
- * beyond the last milestone. Mirrors the 400-item cap in ./reported-words.
+ * beyond the last milestone. Mirrors the 400-item cap in ./reported-words. Nothing a reader
+ * has earned may depend on these days alone: they age out, so badges are saved when earned.
  */
 export const DAY_LIMIT = 400;
 
@@ -70,6 +71,9 @@ export const MILESTONES = [3, 7, 10, 20, 30, 50, 75, 100, 150, 200, 300, 365] as
  */
 const RETIRED_MILESTONES: readonly number[] = [5];
 
+/** Run length in days → completed runs that earn its repeat badge. */
+export const STREAK_REPEATS: Readonly<Record<number, number>> = { 3: 5, 7: 3, 10: 3 };
+
 export type StreakStore = {
   /** Local midnights of qualifying days, newest first, unique, at most DAY_LIMIT. */
   days: number[];
@@ -80,11 +84,16 @@ export type StreakStore = {
   pending?: { day: number; words: string[] };
   /** Milestones already celebrated, ascending. The celebrate-once record. */
   earned: number[];
+  /**
+   * Run lengths whose repeat badge is earned, ascending. Saved rather than counted from
+   * `days` each time, because those age out and a badge must not leave with them.
+   */
+  repeats: number[];
 };
 
 /** A device that has never finished a word. @returns the empty store @pure true */
 export function emptyStreak(): StreakStore {
-  return { days: [], earned: [] };
+  return { days: [], earned: [], repeats: [] };
 }
 
 /**
@@ -95,6 +104,48 @@ export function emptyStreak(): StreakStore {
  */
 export function milestonesReached(streak: number): number[] {
   return MILESTONES.filter((at) => streak >= at);
+}
+
+/**
+ * How many times a run of `length` days has been completed, over the days kept. A long run
+ * counts once per full stretch, so carrying on is never worse than breaking and starting
+ * over: nine days in a row are three 3-day runs.
+ * @param days - Qualifying days, newest first, unique (StreakStore.days)
+ * @param length - Days in one run
+ * @returns Completed runs
+ * @pure true
+ */
+export function streakRunsCompleted(days: readonly number[], length: number): number {
+  if (length <= 0) return 0;
+  let total = 0;
+  let run = 0;
+  for (let at = 0; at < days.length; at += 1) {
+    run = at > 0 && days[at] === previousDay(days[at - 1]!) ? run + 1 : 1;
+    const ends = at === days.length - 1 || days[at + 1] !== previousDay(days[at]!);
+    if (ends) total += Math.floor(run / length);
+  }
+  return total;
+}
+
+/**
+ * The repeat badges a reader holds: those already saved, plus any these days now reach.
+ * @param days - Qualifying days, newest first, unique
+ * @param earned - Milestones earned; a repeat needs its run to have been earned once
+ * @param saved - Run lengths already saved
+ * @returns Run lengths with their badge earned, ascending
+ * @pure true
+ */
+export function streakRepeatsEarned(
+  days: readonly number[],
+  earned: readonly number[],
+  saved: readonly number[],
+): number[] {
+  const held = new Set(saved);
+  for (const [length, times] of Object.entries(STREAK_REPEATS)) {
+    const run = Number(length);
+    if (earned.includes(run) && streakRunsCompleted(days, run) >= times) held.add(run);
+  }
+  return [...held].sort((a, b) => a - b);
 }
 
 /**
@@ -157,14 +208,15 @@ export function recordFinishedWord(
 
   // The day qualifies. It joins `days` and its word list is discarded.
   const days = [today, ...store.days].slice(0, DAY_LIMIT);
-  const next: StreakStore = { days, earned: store.earned };
+  const next: StreakStore = { days, earned: store.earned, repeats: store.repeats };
   const celebrate = milestonesReached(currentStreak(next, now)).filter(
     (at) => !next.earned.includes(at),
   );
+  const earned = celebrate.length
+    ? [...next.earned, ...celebrate].sort((a, b) => a - b)
+    : next.earned;
   return {
-    store: celebrate.length
-      ? { ...next, earned: [...next.earned, ...celebrate].sort((a, b) => a - b) }
-      : next,
+    store: { ...next, earned, repeats: streakRepeatsEarned(days, earned, store.repeats) },
     celebrate,
   };
 }
@@ -181,6 +233,9 @@ export function recordFinishedWord(
  * 1970, and nothing that far back can reach a streak anyway. And an absent `earned` is
  * seeded from the streak already lived rather than left empty, so adding a lower milestone
  * in a later release cannot retro-fire a celebration for days long past.
+ *
+ * Repeat badges are worked out from every stored day, before the age limit drops any, so a
+ * reader who earned one before badges were saved keeps it.
  * @param raw - The stored string, or null
  * @param now - Reference time
  * @returns A valid store
@@ -205,18 +260,18 @@ export function parseStreak(raw: string | null, now: number = Date.now()): Strea
   const newestAllowed = today + 2 * 24 * 60 * 60 * 1000;
   const oldestAllowed = today - DAY_LIMIT * 24 * 60 * 60 * 1000;
   const seen = new Set<number>();
-  const days = (Array.isArray(source.days) ? source.days : [])
+  const stored = (Array.isArray(source.days) ? source.days : [])
     .filter((value): value is number => typeof value === "number" && Number.isFinite(value))
     .map(startOfDay)
     .filter((day) => {
-      if (day >= newestAllowed || day < oldestAllowed || seen.has(day)) return false;
+      if (day >= newestAllowed || seen.has(day)) return false;
       seen.add(day);
       return true;
     })
-    .sort((a, b) => b - a)
-    .slice(0, DAY_LIMIT);
+    .sort((a, b) => b - a);
+  const days = stored.filter((day) => day >= oldestAllowed).slice(0, DAY_LIMIT);
 
-  const store: StreakStore = { days, earned: [] };
+  const store: StreakStore = { days, earned: [], repeats: [] };
 
   // A day that never reached the threshold is forgotten the moment it stops being today.
   const pending = source.pending;
@@ -239,6 +294,10 @@ export function parseStreak(raw: string | null, now: number = Date.now()): Strea
       )
     : null;
   store.earned = (earned ?? milestonesReached(currentStreak(store, now))).sort((a, b) => a - b);
+  const saved = (Array.isArray(source.repeats) ? source.repeats : []).filter(
+    (value): value is number => typeof value === "number" && value in STREAK_REPEATS,
+  );
+  store.repeats = streakRepeatsEarned(stored, store.earned, saved);
   return store;
 }
 

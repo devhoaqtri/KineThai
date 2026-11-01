@@ -11,6 +11,8 @@ import {
   parseStreak,
   readStreak,
   recordFinishedWord,
+  streakRepeatsEarned,
+  streakRunsCompleted,
   writeStreak,
   type StreakStore,
 } from "../streak";
@@ -38,7 +40,7 @@ function reached(days: number): number[] {
   return MILESTONES.filter((m) => days >= m);
 }
 function storeFrom(days: number[], earned?: number[]): StreakStore {
-  return { days, earned: earned ?? reached(days.length) };
+  return { days, earned: earned ?? reached(days.length), repeats: [] };
 }
 const NOON = noon(TODAY);
 // Finish today as the next day of a run whose prior days end yesterday. Three fresh
@@ -48,7 +50,7 @@ function finishToday(
   earned: number[],
   at: number = NOON,
 ): { celebrate: number[]; store: StreakStore } {
-  let store: StreakStore = { days: priorDays, earned };
+  let store: StreakStore = { days: priorDays, earned, repeats: [] };
   let celebrate: number[] = [];
   for (const id of ["w1", "w2", "w3"]) {
     const r = recordFinishedWord(store, id, at);
@@ -89,7 +91,7 @@ describe("constants", () => {
 
 describe("emptyStreak", () => {
   it("has no days and nothing earned", () => {
-    expect(emptyStreak()).toEqual({ days: [], earned: [] });
+    expect(emptyStreak()).toEqual({ days: [], earned: [], repeats: [] });
   });
   it("returns a fresh object each call", () => {
     const a = emptyStreak();
@@ -122,31 +124,36 @@ describe("currentStreak", () => {
     expect(currentStreak(emptyStreak(), AT)).toBe(0);
   });
   it("is one for a single qualifying day today", () => {
-    expect(currentStreak({ days: [DAY(0)], earned: [] }, AT)).toBe(1);
+    expect(currentStreak({ days: [DAY(0)], earned: [], repeats: [] }, AT)).toBe(1);
   });
   it("still reads one when the run is anchored today", () => {
-    expect(currentStreak({ days: consecutive(1), earned: [] }, AT)).toBe(1);
+    expect(currentStreak({ days: consecutive(1), earned: [], repeats: [] }, AT)).toBe(1);
   });
   it("counts a full run ending today", () => {
-    expect(currentStreak({ days: consecutive(5), earned: [] }, AT)).toBe(5);
+    expect(currentStreak({ days: consecutive(5), earned: [], repeats: [] }, AT)).toBe(5);
   });
   it("anchors on yesterday too, before today has qualified", () => {
-    expect(currentStreak({ days: consecutive(3, 1), earned: [] }, AT)).toBe(3);
+    expect(currentStreak({ days: consecutive(3, 1), earned: [], repeats: [] }, AT)).toBe(3);
   });
   it("is zero when the newest day is two days back", () => {
-    expect(currentStreak({ days: consecutive(3, 2), earned: [] }, AT)).toBe(0);
+    expect(currentStreak({ days: consecutive(3, 2), earned: [], repeats: [] }, AT)).toBe(0);
   });
   it("stops the walk at the first gap", () => {
     // Today, yesterday, then a missing day before an older one.
     const days = [DAY(0), DAY(1), DAY(3)];
-    expect(currentStreak({ days, earned: [] }, AT)).toBe(2);
+    expect(currentStreak({ days, earned: [], repeats: [] }, AT)).toBe(2);
   });
   it("ignores a pending day that has not qualified", () => {
-    const store = { days: consecutive(2), earned: [], pending: { day: DAY(0), words: ["a"] } };
+    const store = {
+      days: consecutive(2),
+      earned: [],
+      pending: { day: DAY(0), words: ["a"] },
+      repeats: [],
+    };
     expect(currentStreak(store, AT)).toBe(2);
   });
   it("does not mutate the store it reads", () => {
-    const store = { days: consecutive(3), earned: [] };
+    const store = { days: consecutive(3), earned: [], repeats: [] };
     currentStreak(store, AT);
     expect(store.days).toHaveLength(3);
   });
@@ -154,7 +161,7 @@ describe("currentStreak", () => {
 
 describe("recordFinishedWord", () => {
   it("is a no-op when today already qualified", () => {
-    const store = { days: [DAY(0), DAY(1), DAY(2)], earned: [3] };
+    const store = { days: [DAY(0), DAY(1), DAY(2)], earned: [3], repeats: [] };
     expect(recordFinishedWord(store, "w", AT)).toEqual({ store, celebrate: [] });
   });
   it("starts a pending day with the first word", () => {
@@ -243,28 +250,32 @@ describe("parseStreak", () => {
     expect(parseStreak("[]", AT)).toEqual(emptyStreak());
   });
   it("keeps a well-formed store and drops non-finite days", () => {
-    const raw = JSON.stringify({ days: [DAY(0), "x", null, DAY(1)], earned: [] });
+    const raw = JSON.stringify({ days: [DAY(0), "x", null, DAY(1)], earned: [], repeats: [] });
     expect(parseStreak(raw, AT).days).toEqual([DAY(0), DAY(1)]);
   });
   it("drops a day stamped in the future", () => {
-    const raw = JSON.stringify({ days: [DAY(0) + 5 * 24 * 60 * 60 * 1000, DAY(1)], earned: [] });
+    const raw = JSON.stringify({
+      days: [DAY(0) + 5 * 24 * 60 * 60 * 1000, DAY(1)],
+      earned: [],
+      repeats: [],
+    });
     expect(parseStreak(raw, AT).days).toEqual([DAY(1)]);
   });
   it("drops a day older than the cap", () => {
-    const raw = JSON.stringify({ days: [DAY(0), back(DAY_LIMIT + 50)], earned: [] });
+    const raw = JSON.stringify({ days: [DAY(0), back(DAY_LIMIT + 50)], earned: [], repeats: [] });
     expect(parseStreak(raw, AT).days).toEqual([DAY(0)]);
   });
   it("deduplicates days", () => {
-    const raw = JSON.stringify({ days: [DAY(0), DAY(0), DAY(1)], earned: [] });
+    const raw = JSON.stringify({ days: [DAY(0), DAY(0), DAY(1)], earned: [], repeats: [] });
     expect(parseStreak(raw, AT).days).toEqual([DAY(0), DAY(1)]);
   });
   it("sorts days newest first", () => {
-    const raw = JSON.stringify({ days: [DAY(2), DAY(0), DAY(1)], earned: [] });
+    const raw = JSON.stringify({ days: [DAY(2), DAY(0), DAY(1)], earned: [], repeats: [] });
     expect(parseStreak(raw, AT).days).toEqual([DAY(0), DAY(1), DAY(2)]);
   });
   it("truncates to DAY_LIMIT days", () => {
     const many = Array.from({ length: DAY_LIMIT + 20 }, (_, i) => DAY(i));
-    const raw = JSON.stringify({ days: many, earned: [] });
+    const raw = JSON.stringify({ days: many, earned: [], repeats: [] });
     expect(parseStreak(raw, AT).days).toHaveLength(DAY_LIMIT);
   });
   it("seeds an absent earned from the lived streak", () => {
@@ -272,19 +283,19 @@ describe("parseStreak", () => {
     expect(parseStreak(raw, AT).earned).toEqual([3]);
   });
   it("does not seed a present-but-empty earned", () => {
-    const raw = JSON.stringify({ days: consecutive(3), earned: [] });
+    const raw = JSON.stringify({ days: consecutive(3), earned: [], repeats: [] });
     expect(parseStreak(raw, AT).earned).toEqual([]);
   });
   it("filters an earned list to ladder and retired milestones", () => {
-    const raw = JSON.stringify({ days: consecutive(3), earned: [3, 5, 99] });
+    const raw = JSON.stringify({ days: consecutive(3), earned: [3, 5, 99], repeats: [] });
     expect(parseStreak(raw, AT).earned).toEqual([3, 5]);
   });
   it("keeps a retired milestone a reader already earned", () => {
-    const raw = JSON.stringify({ days: consecutive(3), earned: [5] });
+    const raw = JSON.stringify({ days: consecutive(3), earned: [5], repeats: [] });
     expect(parseStreak(raw, AT).earned).toEqual([5]);
   });
   it("sorts a restored earned list ascending", () => {
-    const raw = JSON.stringify({ days: consecutive(3), earned: [7, 3] });
+    const raw = JSON.stringify({ days: consecutive(3), earned: [7, 3], repeats: [] });
     expect(parseStreak(raw, AT).earned).toEqual([3, 7]);
   });
   it("keeps a pending day only when it is today", () => {
@@ -315,7 +326,7 @@ describe("parseStreak", () => {
     expect(parseStreak(raw, AT).pending?.words).toEqual(["a"]);
   });
   it("normalises a mid-day timestamp to local midnight", () => {
-    const raw = JSON.stringify({ days: [noon(DAY(0)), noon(DAY(1))], earned: [] });
+    const raw = JSON.stringify({ days: [noon(DAY(0)), noon(DAY(1))], earned: [], repeats: [] });
     expect(parseStreak(raw, AT).days).toEqual([DAY(0), DAY(1)]);
   });
 });
@@ -326,7 +337,9 @@ describe("readStreak", () => {
     expect(readStreak(AT)).toEqual(emptyStreak());
   });
   it("reads a stored value back through parseStreak", () => {
-    const ls = makeStorage({ [STREAK_KEY]: JSON.stringify({ days: consecutive(3), earned: [] }) });
+    const ls = makeStorage({
+      [STREAK_KEY]: JSON.stringify({ days: consecutive(3), earned: [], repeats: [] }),
+    });
     vi.stubGlobal("window", { localStorage: ls });
     vi.stubGlobal("localStorage", ls);
     expect(currentStreak(readStreak(AT), AT)).toBe(3);
@@ -374,5 +387,68 @@ describe("writeStreak", () => {
   });
   it("does nothing on the server where there is no window", () => {
     expect(() => writeStreak(storeFrom(consecutive(1), []))).not.toThrow();
+  });
+});
+
+describe("streakRunsCompleted", () => {
+  const run = (from: number, length: number) => Array.from({ length }, (_, i) => back(from + i));
+  it("counts each full stretch of a long run", () => {
+    expect(streakRunsCompleted(run(0, 9), 3)).toBe(3);
+    expect(streakRunsCompleted(run(0, 8), 3)).toBe(2);
+  });
+  it("adds up separate runs and never joins them across a gap", () => {
+    // 4 days, a missed day, then 2 days: one 3-day run, not two.
+    expect(streakRunsCompleted([...run(0, 4), ...run(5, 2)], 3)).toBe(1);
+    expect(streakRunsCompleted([...run(0, 3), ...run(4, 3)], 3)).toBe(2);
+  });
+  it("is zero with no days or no length", () => {
+    expect(streakRunsCompleted([], 3)).toBe(0);
+    expect(streakRunsCompleted(run(0, 5), 0)).toBe(0);
+  });
+});
+
+describe("repeat badges", () => {
+  const DAY = 24 * 60 * 60 * 1000;
+  // Five separate 3-day runs, a clear day between each.
+  const earlyRuns = () => {
+    const days: number[] = [];
+    for (let run = 0; run < 5; run += 1) {
+      for (let day = 0; day < 3; day += 1) days.push(back(run * 4 + day));
+    }
+    return days;
+  };
+  const stored = (extra: object = {}) =>
+    JSON.stringify({ days: earlyRuns(), earned: [3], ...extra });
+
+  it("is earned once the runs are completed", () => {
+    expect(streakRepeatsEarned(earlyRuns(), [3], [])).toEqual([3]);
+  });
+  it("needs its run to have been earned first", () => {
+    expect(streakRepeatsEarned(earlyRuns(), [], [])).toEqual([]);
+  });
+  it("is recorded on the day that completes it", () => {
+    const days = earlyRuns().slice(1);
+    let store: StreakStore = { days, earned: [3], repeats: [] };
+    for (const word of ["a", "b", "c"]) store = recordFinishedWord(store, word, AT).store;
+    expect(store.repeats).toEqual([3]);
+  });
+  it.each([300, 395, 410, 1000])("survives %i days away", (away) => {
+    expect(parseStreak(stored(), AT + away * DAY).repeats).toEqual([3]);
+  });
+  it("is kept by a reader whose old days have already gone", () => {
+    const raw = JSON.stringify({ days: [], earned: [3], repeats: [3] });
+    expect(parseStreak(raw, AT).repeats).toEqual([3]);
+  });
+  it("survives a return after the days have aged out and a new day is written", () => {
+    const later = AT + 500 * DAY;
+    let store = parseStreak(stored(), later);
+    expect(store.days).toEqual([]);
+    for (const word of ["a", "b", "c"]) store = recordFinishedWord(store, word, later).store;
+    const next = parseStreak(JSON.stringify(store), later + 500 * DAY);
+    expect(next.repeats).toEqual([3]);
+  });
+  it("ignores a stored value that is not a repeat", () => {
+    const raw = JSON.stringify({ days: [], earned: [3], repeats: [3, 4, "7", null] });
+    expect(parseStreak(raw, AT).repeats).toEqual([3]);
   });
 });
