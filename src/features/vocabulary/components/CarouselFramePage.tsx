@@ -196,7 +196,8 @@ export function CarouselFramePage() {
       address,
       handle ?? "",
       "anh.hoa.hàn.nhật.pháp.đức.tbn.chayLá",
-      JSON.stringify(word.grammar ?? ""),
+      // The rows, not word.grammar: their labels come from the app's own tables.
+      JSON.stringify(grammarParts),
     ];
     const pronunciation = `${word.ipa ?? ""} · ${word.pos ?? ""}`;
     Promise.all([
@@ -221,6 +222,7 @@ export function CarouselFramePage() {
     word,
     look,
     stages,
+    grammarParts,
     plan,
     slide,
     index,

@@ -261,7 +261,8 @@
   display: none;
 }
 .vocab-card[data-still] .vocab-pronunciation {
-  font-family: "Noto Sans", sans-serif;
+  /* A Japanese or Korean reading is written in its own script, which Noto Sans does not have. */
+  font-family: "Noto Sans", var(--still-fallback-font, sans-serif), sans-serif;
   font-weight: 400;
 }
 .vocab-card[data-still] .vocab-stage-band[data-reveal] {

@@ -222,6 +222,10 @@ function fontProblem(stage: HTMLElement): string | null {
       { family: fallback, part: glyphs.filter((glyph) => CJK.test(glyph)).join("") },
     ];
     for (const { family, part } of parts) {
+      // The browser calls a generic family ready, and then paints this in a system font.
+      if (part && (!family || family === "sans-serif")) {
+        return `No face was asked for “${part.slice(0, 24)}”`;
+      }
       if (part && !document.fonts.check(`${style.fontWeight} 64px ${family}`, part)) {
         return `The font ${family} ${style.fontWeight} was not ready for “${part.slice(0, 24)}”`;
       }
