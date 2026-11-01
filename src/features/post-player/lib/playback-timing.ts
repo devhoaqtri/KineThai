@@ -147,6 +147,9 @@ export function getPageTextSize(baseSize: number, text: string, isVietnamese: bo
   return Math.max(baseSize, 96);
 }
 
+/** The shortest a page may stay up before tempo and pace, in every language. */
+const MIN_PAGE_MS = 3200;
+
 /**
  * Compute pageduration.
  * @param text - text argument
@@ -156,23 +159,23 @@ export function getPageTextSize(baseSize: number, text: string, isVietnamese: bo
  */
 export function getPageDuration(text: string, tempo: Tempo, rhythm: Rhythm): number {
   const wordCount = getPageWordCount(text);
-  const base = Math.max(3200, Math.min(5200, 1900 + wordCount * 430));
+  const base = Math.max(MIN_PAGE_MS, Math.min(5200, 1900 + wordCount * 430));
   const rhythmMultiplier = rhythm === "poetic" ? 1.18 : 1;
-  const duration = base * tempoConfig[tempo].pageMultiplier * rhythmMultiplier;
-  // A Japanese page reveals mora-by-mora, a finer cascade than its 文節 count implies.
-  // Time the page from that cascade plus a short read-hold, not from the generic word
-  // count: a short 3-文節 page would otherwise sit motionless for most of its dwell
-  // after the last mora had already landed.
+  const scale = tempoConfig[tempo].pageMultiplier * rhythmMultiplier;
+  // A Japanese page reveals mora-by-mora, a finer cascade than its 文節 count implies, so
+  // it is timed from that cascade plus a short read-hold rather than the word count. It
+  // keeps every language's minimum: the cascade alone left a reader as little as 1.5s
+  // for a whole clue, and a page needs time to be read, not just to land.
   if (isLikelyJapaneseText(text)) {
     const moraCount = getJapaneseMoraTokens(text).length;
-    return (
+    const cascade =
       (getMoraDelay(moraCount, tempo, rhythm) + tempoConfig[tempo].wordDuration) *
         tempoConfig[tempo].pageMultiplier *
         1000 +
-      800
-    );
+      800;
+    return Math.max(MIN_PAGE_MS * scale, cascade);
   }
-  return duration;
+  return base * scale;
 }
 
 /**

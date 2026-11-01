@@ -3,27 +3,36 @@ import { getJapaneseMoraTokens } from "@/features/kinetic-text";
 import { getMoraDelay, getPageDuration, tempoConfig } from "../playback-timing";
 
 describe("getPageDuration on Japanese pages", () => {
-  it("uses the mora cascade and leaves only a short read-hold", () => {
-    const page = "頭の 回転が 速い！";
-    const morae = getJapaneseMoraTokens(page).length;
-    const duration = getPageDuration(page, "steady", "smooth");
-    const lastMoraLands =
-      (getMoraDelay(morae - 1, "steady", "smooth") + tempoConfig.steady.wordDuration) * 1000;
-    const hold = duration - lastMoraLands;
+  const shortPage = "頭の 回転が 速い！";
 
-    expect(duration).toBeLessThan(2500);
-    expect(hold).toBeGreaterThanOrEqual(800);
-    expect(hold).toBeLessThan(1000);
+  it("keeps a short page up for every language's minimum", () => {
+    expect(getPageDuration(shortPage, "steady", "smooth")).toBe(3200);
+    expect(getPageDuration(shortPage, "steady", "stagger")).toBe(3200);
   });
 
-  it("keeps the read-hold short on a long page instead of scaling it by word count", () => {
-    const page = "待たされたり、 物事が 進まなかったりして いらいらする 気持ち。";
-    const morae = getJapaneseMoraTokens(page).length;
-    const duration = getPageDuration(page, "steady", "smooth");
-    const lastMoraLands =
-      (getMoraDelay(morae - 1, "steady", "smooth") + tempoConfig.steady.wordDuration) * 1000;
+  it("scales that minimum with tempo and rhythm, as other languages do", () => {
+    expect(getPageDuration(shortPage, "snappy", "burst")).toBeCloseTo(3200 * 0.78);
+    expect(getPageDuration(shortPage, "slow", "poetic")).toBeGreaterThanOrEqual(3200 * 1.22 * 1.18);
+  });
 
+  it("never lets the burst rhythm's capped cascade rush a long page", () => {
+    const page = "待たされたり、 物事が 進まなかったりして いらいらする 気持ち。";
+    expect(getPageDuration(page, "snappy", "burst")).toBeCloseTo(3200 * 0.78);
+  });
+
+  it("gives a page longer than the minimum its whole cascade and read-hold", () => {
+    const page = "待たされたり、 物事が 進まなかったりして いらいらする 気持ち。".repeat(3);
+    const morae = getJapaneseMoraTokens(page).length;
+    const duration = getPageDuration(page, "steady", "stagger");
+    const lastMoraLands =
+      (getMoraDelay(morae - 1, "steady", "stagger") + tempoConfig.steady.wordDuration) * 1000;
+
+    expect(duration).toBeGreaterThan(3200);
     expect(duration - lastMoraLands).toBeGreaterThanOrEqual(800);
     expect(duration - lastMoraLands).toBeLessThan(1000);
+  });
+
+  it("leaves non-Japanese pages on the word-count timing", () => {
+    expect(getPageDuration("Một trang tiếng Việt rất ngắn gọn.", "steady", "stagger")).toBe(4910);
   });
 });
