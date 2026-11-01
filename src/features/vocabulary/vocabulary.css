@@ -67,8 +67,12 @@
 /* A pale card under white chrome needed a dark scrim to stay legible, and that scrim
    is what turned mint and blush into grey. On a light card the chrome flips to dark
    ink over a soft white veil instead, so the palette keeps its color right up to the
-   top edge. `data-current` (not :not([inert])) so this holds while a panel is open. */
-.vocabulary-shell:has(.vocab-slot[data-current] .vocab-card[data-tone="light"]) {
+   top edge. The attribute is set by VocabularyCard when its card is active (more
+   reliable than :has()); the :has() rule below is the fallback for any card that
+   mounts before the effect runs. `data-current` (not :not([inert])) so this holds
+   while a panel is open. */
+.vocabulary-shell:has(.vocab-slot[data-current] .vocab-card[data-tone="light"]),
+.vocabulary-shell[data-tone="light"] {
   --chrome-ink: #14101f;
   --chrome-fill: #ffffff66;
   --chrome-scrim: linear-gradient(180deg, #ffffff8c, #ffffff3d 58%, transparent);

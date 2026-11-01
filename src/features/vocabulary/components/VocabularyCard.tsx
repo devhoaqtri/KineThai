@@ -281,6 +281,18 @@ export function VocabularyCard({
   const cardRef = useRef<HTMLElement>(null);
   const actionBarRef = useRef<HTMLDivElement>(null);
   const emojiStripRef = useRef<HTMLDivElement>(null);
+  // Publish the current card's measured tone up to the shell so the top-bar chrome
+  // (scrim, ink, shadow) can flip to a light veil over a pale backdrop. The CSS
+  // :has() rule is the fallback; this attribute is the reliable source and works
+  // even where :has() is not supported. Written by the word on screen, not only while it
+  // plays: a sheet covering the feed can change the theme underneath it, and a background
+  // card never overwrites the live one.
+  useEffect(() => {
+    if (!current) return;
+    const shell = cardRef.current?.closest(".vocabulary-shell");
+    if (!shell) return;
+    shell.setAttribute("data-tone", theme.tone);
+  }, [current, theme.tone]);
   // `chromeSide` is --vocab-chrome-side read back off the card. The text is fitted to the
   // BAND, which that variable has already narrowed; fitting it to the card instead sizes it
   // for room it does not have, and a long answer word then runs out past the inset that was
