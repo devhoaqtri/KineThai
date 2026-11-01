@@ -152,12 +152,14 @@ describe("level samples", () => {
     expect(picked).not.toContain("不好意思");
     expect(picked).not.toContain("的");
   });
-  it("keeps a Japanese level on two-syllable words", () => {
+  it("treats a Japanese level the same, counting kanji", () => {
     const words = [
-      makeWord({ word: "図書館", level: "A1", ipa: "としょかん" }),
       makeWord({ word: "歌", level: "A1", ipa: "うた" }),
+      makeWord({ word: "生る", level: "A1", ipa: "なる" }),
+      makeWord({ word: "教室", level: "A1", ipa: "きょうしつ" }),
+      makeWord({ word: "図書館", level: "A1", ipa: "としょかん" }),
     ];
-    expect(samples(words, "japanese-samples-revision-0")[0]).toBe("歌");
+    expect(samples(words, "japanese-samples-revision-0").slice(0, 2)).toEqual(["図書館", "教室"]);
   });
   it("prefers two syllables everywhere else", () => {
     const words = [
