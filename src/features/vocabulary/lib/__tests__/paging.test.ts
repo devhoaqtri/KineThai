@@ -129,3 +129,34 @@ describe("empty and edge catalogs", () => {
     expect(page.levelSamples).toBeDefined();
   });
 });
+
+describe("level samples", () => {
+  const samples = (words: Parameters<typeof makeCatalog>[0], revision: string) =>
+    readCatalogPage(makeCatalog(words, { revision }), request()).levelSamples.A1!.map(
+      ({ word }) => word,
+    );
+  it("leads a Chinese level with its longest words", () => {
+    const words = ["的", "自己", "不好意思", "把", "打电话"].map((word) =>
+      makeWord({ word, level: "A1", ipa: "pinyin" }),
+    );
+    expect(samples(words, "chinese-samples-revision-0").slice(0, 3)).toEqual([
+      "不好意思",
+      "打电话",
+      "自己",
+    ]);
+  });
+  it("keeps a Japanese level on two-syllable words", () => {
+    const words = [
+      makeWord({ word: "図書館", level: "A1", ipa: "としょかん" }),
+      makeWord({ word: "歌", level: "A1", ipa: "うた" }),
+    ];
+    expect(samples(words, "japanese-samples-revision-0")[0]).toBe("歌");
+  });
+  it("prefers two syllables everywhere else", () => {
+    const words = [
+      makeWord({ word: "gut", level: "A1", ipa: "/ɡuːt/" }),
+      makeWord({ word: "Apfel", level: "A1", ipa: "/ˈapfl̩/" }),
+    ];
+    expect(samples(words, "latin-samples-revision-000")[0]).toBe("Apfel");
+  });
+});

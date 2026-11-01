@@ -1,6 +1,7 @@
-/** Pure deterministic paging over any compiled catalog; shared by the server endpoint and browser-imported packs. Exports: MAX_POSITION, readCatalogPage. Depends on: schema, difficulty, random, syllables. */
+/** Pure deterministic paging over any compiled catalog; shared by the server endpoint and browser-imported packs. Exports: MAX_POSITION, readCatalogPage. Depends on: schema, difficulty, hanzi, random, syllables. */
 import type { Catalog, VocabularyLevel } from "./schema";
 import { LEVEL_SAMPLE_PRIORITY, difficultyLevels } from "./difficulty";
+import { getHanCharCount, isHanAnswer, isJapaneseWord } from "./hanzi";
 import { randomGenerator } from "./random";
 import { countSyllables } from "./syllables";
 import type { FeedPage, FeedRequest } from "../types";
@@ -124,6 +125,9 @@ function levelTally(catalog: Catalog, topic: string) {
       for (const w of named) if (keep(w)) take(w);
       for (const w of words) if (keep(w)) take(w);
     };
+    const chinese = words.filter((w) => isHanAnswer(w.word) && !isJapaneseWord(w.word, w.ipa));
+    chinese.sort((a, b) => getHanCharCount(b.word) - getHanCharCount(a.word));
+    for (const w of chinese) take(w);
     pass((w) => countSyllables(w) === 2);
     pass(() => true);
     samples[level] = picked;
