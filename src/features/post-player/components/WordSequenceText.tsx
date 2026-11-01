@@ -22,7 +22,9 @@ import {
   getEmphasizedRunLayoutPhraseKeys,
   getEmphasizedRunPhraseKeys,
   getHanLayoutMetrics,
+  getCompoundTokenKey,
   getHanTokens,
+  getHanWordSpans,
   getKineticTextLayoutMode,
   getLoopAnimation,
   getVietnameseLayoutMetrics,
@@ -108,7 +110,7 @@ export type WordSequenceTextProps = {
    */
   timeScale?: number;
   /**
-   * Lay a Vietnamese page out from measured widths instead of the character-count
+   * Lay a packed page out from measured widths instead of the character-count
    * estimate: every unbreakable segment is measured as drawn, and the line breaks and
    * the font size are solved together inside these limits (see useMeasuredLines).
    * Omitted — every community post — the estimate-packed lines and the fit solver stand
@@ -201,8 +203,13 @@ export function WordSequenceText({
       ...getEmphasisPhraseKeysForLayout(dataEmphasis),
       ...getEmphasisPhraseKeysForLayout(boundPhrases),
       ...getEmphasizedRunLayoutPhraseKeys(words, emphasized),
+      // A Han word stays whole across a line break, and that is all it means: unlike the
+      // keys above it shares no effect, so it stays out of phraseKeys.
+      ...(isHan
+        ? getHanWordSpans(words).map((span) => span.map((token) => getCompoundTokenKey(token)))
+        : []),
     ],
-    [dataEmphasis, boundPhrases, words, emphasized],
+    [dataEmphasis, boundPhrases, words, emphasized, isHan],
   );
   const isSolo = words.length <= 1;
   const visualScaleGuard = Math.max(
@@ -281,15 +288,16 @@ export function WordSequenceText({
   // Where the page's own phrases meet: a comma, full stop or semicolon closes the phrase it
   // ends. A break is welcome right after one, never one word away from it.
   const phraseEdges = useMemo(
-    () => (isVietnamese ? getPunctuationPhraseEdges(words) : undefined),
-    [isVietnamese, words],
+    () => (isPackedLines ? getPunctuationPhraseEdges(words) : undefined),
+    [isPackedLines, words],
   );
   const measuredLines = useMeasuredLines({
     budget: measuredLayout,
-    enabled: isVietnamese && !measure,
+    enabled: isPackedLines && !measure,
     lines: packedLayout.lines,
     signature: measuredSignature,
     phraseEdges,
+    softPhraseEdges: isHan,
     lineSpacingScale,
     wrapperRef,
     textRef,

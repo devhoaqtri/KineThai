@@ -605,4 +605,28 @@ function linesFor(items: MeasuredSegment[], mask: number) {
   console.log(`OK — too few segments to reach the floor still renders: ${show(solved.lines)}`);
 }
 
+// A Han page's edges are a preference: a wide blank beside a comma must not be kept with
+// the words before it when that sets the whole page small.
+{
+  const items = segments(
+    ["我要", 2],
+    ["先", 1],
+    ["____，", 2.6],
+    ["再", 1],
+    ["换", 1],
+    ["上", 1],
+    ["干净", 2],
+    ["的", 1],
+    ["衣服。", 2.5],
+  );
+  const words = items.flatMap((item) => item.segment.words.map((word) => word.text));
+  const phraseEdges = getPunctuationPhraseEdges(words);
+  assert.ok(phraseEdges.length > 0, "a full-width comma must make a phrase edge");
+  const strict = solveMeasuredLines(items, BOUNDS, { phraseEdges });
+  const soft = solveMeasuredLines(items, BOUNDS, { phraseEdges, softPhraseEdges: true });
+  assert.ok(strict && soft, "both pages must get a layout");
+  assert.ok(soft.fontPx > strict.fontPx, `soft edges did not read larger: ${show(soft.lines)}`);
+  console.log(`OK — a Han page is not held small by its comma: ${show(soft.lines)}`);
+}
+
 console.log("\nAll measured-line checks passed.");

@@ -22,6 +22,7 @@ export {
   getHanCharBudgetForLine,
   getHanLayoutMetrics,
   getHanTokens,
+  getHanWordSpans,
   getSpecialPoeticWordIndexes,
   getTextPageWordLimit,
   getVietnameseCanvasInnerWidth,

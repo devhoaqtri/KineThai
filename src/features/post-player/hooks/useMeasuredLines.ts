@@ -1,5 +1,5 @@
 /**
- * Measured line layout for a packed Vietnamese page: measure what was drawn, then break.
+ * Measured line layout for a packed page: measure what was drawn, then break.
  *
  * Exports: MeasuredLayoutBudget, useMeasuredLines
  * Depends on: kinetic-text solveMeasuredLines / getWidestLineWidth, playback-timing safe insets
@@ -85,6 +85,7 @@ function settle(fontPx: number): number {
  * @param args.signature - changes whenever a segment's drawn size could change
  * @param args.phraseEdges - word indices at which a phrase begins; they change the solve,
  *   not the measurements, so they are not part of the signature
+ * @param args.softPhraseEdges - a break one word from an edge is a preference, not a rule
  * @param args.lineSpacingScale - the caller's multiplier on the inter-line gap
  * @returns The solved lines and font size, or null while the estimate still stands
  */
@@ -94,6 +95,7 @@ export function useMeasuredLines({
   lines,
   signature,
   phraseEdges,
+  softPhraseEdges,
   lineSpacingScale,
   wrapperRef,
   textRef,
@@ -103,6 +105,7 @@ export function useMeasuredLines({
   lines: WordLine[];
   signature: string;
   phraseEdges?: readonly number[];
+  softPhraseEdges?: boolean;
   lineSpacingScale: number;
   wrapperRef: RefObject<HTMLDivElement | null>;
   textRef: RefObject<HTMLDivElement | null>;
@@ -199,7 +202,7 @@ export function useMeasuredLines({
         gapEm: SEGMENT_GAP_EM,
         lineGapEm: LINE_GAP_EM * lineSpacingScale,
       },
-      { phraseEdges },
+      { phraseEdges, softPhraseEdges },
     );
     if (!solved) {
       setSolution((current) => (current ? null : current));
@@ -224,6 +227,7 @@ export function useMeasuredLines({
     lines,
     signature,
     phraseEdges,
+    softPhraseEdges,
     fontRevision,
     boxRevision,
     maxSize,

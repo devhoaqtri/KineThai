@@ -1,5 +1,5 @@
 /**
- * Line layout for a packed Vietnamese page, solved from MEASURED widths.
+ * Line layout for a packed page, Vietnamese or Han, solved from MEASURED widths.
  *
  * The character-count packer in ./page-metrics decides breaks from an estimate (every
  * character 0.58em wide, at the size the page starts at) and never revisits them. A
@@ -68,6 +68,12 @@ export type MeasuredLineOptions = {
    * page is not phrased and lays out exactly as it would without this option.
    */
   phraseEdges?: readonly number[];
+  /**
+   * Treat a break one word from an edge as a preference, not a rule. For Han text, which
+   * breaks anywhere in print: its one wide token, a masked blank beside a comma, would
+   * otherwise have to share a line with the words before it and size the whole page.
+   */
+  softPhraseEdges?: boolean;
 };
 
 /**
@@ -121,6 +127,8 @@ const CROWDED_PAGE_MIN_LINES = 3;
  * every arrangement without one would have to be set at less than about half the size.
  */
 const PHRASE_SPLIT_FACTOR = 0.45;
+/** The same break on a page whose edges are only a preference (softPhraseEdges). */
+const SOFT_PHRASE_SPLIT_FACTOR = 0.92;
 /** Any other break inside a phrase, against one on an edge: an edge wins close calls. */
 const INSIDE_PHRASE_FACTOR = 0.98;
 /**
@@ -135,8 +143,9 @@ const INSIDE_PHRASE_FACTOR = 0.98;
  *
  * A colon is deliberately NOT here. A Vietnamese colon introduces what follows and stays
  * glued to it ("Nhỏ thôi: …"); paginate.ts excludes it from page breaks for the same reason.
+ * The full-width marks are the same marks in a Han sentence, and its enumeration comma.
  */
-const PHRASE_END = endsWithPunctuation("[,.;?!\u2026]");
+const PHRASE_END = endsWithPunctuation("[,.;?!\u2026，。；？！、]");
 const HAS_GLYPH = /\p{L}|\p{N}/u;
 
 /**
@@ -193,6 +202,7 @@ export function isBreakOneWordFromEdge(
 function getBreakFactors(
   segments: readonly MeasuredSegment[],
   phraseEdges: readonly number[] | undefined,
+  softPhraseEdges: boolean | undefined,
 ): number[] {
   const count = segments.length;
   const factors = new Array<number>(Math.max(0, count - 1)).fill(1);
@@ -217,7 +227,8 @@ function getBreakFactors(
     const tooClose = edges.some((edge) =>
       at < edge ? wordsBetween(at, edge) <= 1 : wordsBetween(edge, at) === 1,
     );
-    factors[gap] = tooClose ? PHRASE_SPLIT_FACTOR : INSIDE_PHRASE_FACTOR;
+    const splitFactor = softPhraseEdges ? SOFT_PHRASE_SPLIT_FACTOR : PHRASE_SPLIT_FACTOR;
+    factors[gap] = tooClose ? splitFactor : INSIDE_PHRASE_FACTOR;
   }
   return factors;
 }
@@ -252,7 +263,7 @@ export function solveMeasuredLines(
   const floorPx = Math.min(bounds.maxFontPx, bounds.floorFontPx);
   // Widths of the lines that hold one lone word, refilled for every arrangement.
   const loneWidths: number[] = [];
-  const breakFactors = getBreakFactors(segments, options.phraseEdges);
+  const breakFactors = getBreakFactors(segments, options.phraseEdges, options.softPhraseEdges);
   // A long page may be worth spreading even where the score would rather cram it. Count the
   // syllables across every segment — a bound phrase is two, a lone token is one.
   const syllables = segments.reduce((total, { segment }) => total + segment.words.length, 0);
