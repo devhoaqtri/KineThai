@@ -129,6 +129,7 @@ export function VocabularyStage({
   revealY,
   timeScale = 1,
   textBudget,
+  expandGrammar = false,
   onGrammarHold,
 }: {
   stage: LearningStage;
@@ -168,6 +169,8 @@ export function VocabularyStage({
    * With them, a Vietnamese clue is broken into lines from the real width of its words.
    */
   textBudget?: React.ComponentProps<typeof WordSequenceText>["measuredLayout"];
+  /** The reader's Settings choice to open the answer's grammar section on every word. */
+  expandGrammar?: boolean;
   /** The reader opened (true) or closed (false) the answer's grammar section by hand. */
   onGrammarHold?: (held: boolean) => void;
 }) {
@@ -298,7 +301,10 @@ export function VocabularyStage({
             ))}
             {word.grammar && (
               <WordGrammar
+                // Flipping the choice with this word on screen moves its section too.
+                key={String(expandGrammar)}
                 grammar={word.grammar}
+                expanded={expandGrammar}
                 reducedMotion={reducedMotion}
                 onHold={onGrammarHold}
               />

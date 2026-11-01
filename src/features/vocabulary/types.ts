@@ -57,6 +57,8 @@ export type ReadingPace = "slow" | "normal" | "fast";
 /**
  * `autoplay` is play/pause. `advance` decides what a finished word does: move on to the
  * next one (default), or replay itself from the first clue until the reader moves on.
+ * `expandGrammar` opens the answer's "Nâng cao" section on every word that has one and
+ * gives that answer page twice the time.
  */
 export type Presentation = {
   theme: string;
@@ -65,4 +67,5 @@ export type Presentation = {
   advance?: boolean;
   pace?: ReadingPace;
   dialect?: VisualDialect;
+  expandGrammar?: boolean;
 };

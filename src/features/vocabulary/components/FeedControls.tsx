@@ -1484,6 +1484,22 @@ export function FeedControls({
                 })}
               </div>
             </div>
+            {/* Grammar only exists on the language decks; the English deck has none. */}
+            {locale && locale !== "en" && (
+              <label className="vocab-autoplay vocab-dialect">
+                <input
+                  type="checkbox"
+                  checked={!!presentation.expandGrammar}
+                  onChange={(event) =>
+                    onPresentation({ ...presentation, expandGrammar: event.target.checked })
+                  }
+                />{" "}
+                Luôn mở Nâng cao
+                <small className="vocab-dialect-note">
+                  Từ nào có phần Nâng cao sẽ mở sẵn, và màn hình đáp án của từ đó dài gấp đôi.
+                </small>
+              </label>
+            )}
             {/* The Douyin dialect only exists on the Chinese host: it swaps the whole
               visual language — palettes, motion presets and highlight reskin — and
               deactivates the default one, so it is offered nowhere else. */}

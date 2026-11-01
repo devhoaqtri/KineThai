@@ -18,9 +18,10 @@ rows), `components/WordGrammar.tsx` (the section), sample cards for all six lang
   new sub-key or enumerated value needs one gloss line there and nothing else; an
   unknown one still shows, just without a gloss.
 - **The section is closed by default**: one quiet row at the foot of the panel
-  ("NÂNG CAO  số nhiều · cách chia · đi kèm ⌄"). The reader's open/closed choice is
-  remembered on the device. Opening it by hand holds autoplay on that answer until it
-  is closed. It never appears in video exports, or for a word with no grammar.
+  ("NÂNG CAO  số nhiều · cách chia · đi kèm ⌄"). Opening it by hand holds autoplay on
+  that answer until it is closed, for that word only. "Luôn mở Nâng cao" in Settings
+  opens it on every word without holding, and doubles that word's answer page. It never
+  appears in video exports, or for a word with no grammar.
 
 ## The fields
 

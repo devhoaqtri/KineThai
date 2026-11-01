@@ -5,13 +5,13 @@
  * one trap a beginner falls into.
  *
  * Closed by default, it is one quiet row at the foot of the panel naming what it holds.
- * Whether it is open is remembered on this device (lib/grammar-open), so a reader who
- * wants grammar on every word opens it once. Opening it by hand holds the card on its
- * answer until it is closed again: autoplay would otherwise move on mid-table.
+ * Opening it by hand holds the card on its answer until it is closed again: autoplay
+ * would otherwise move on mid-table. That is for this word only. A reader who wants
+ * grammar on every word turns on "Luôn mở Nâng cao" in Settings (lib/grammar-expand),
+ * which opens it without holding anything and gives the answer twice the time instead.
  *
  * Exports: WordGrammar, GrammarList
- * Depends on: framer-motion, lucide-react, ../lib/grammar, ../lib/grammar-open,
- *   ../lib/deck-locale, ../lib/word-joiner, vocabulary.css (.vocab-grammar*)
+ * Depends on: framer-motion, lucide-react, ../lib/grammar, ../lib/deck-locale, ../lib/word-joiner, vocabulary.css (.vocab-grammar*)
  */
 import { useContext, useEffect, useId, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -24,7 +24,6 @@ import {
   type GrammarRow,
   type WordGrammar as Grammar,
 } from "../lib/grammar";
-import { readGrammarOpen, writeGrammarOpen } from "../lib/grammar-open";
 import { encodeWordJoiners } from "../lib/word-joiner";
 
 /** Fields whose value is written in Vietnamese, not the target language. */
@@ -112,26 +111,29 @@ export function GrammarList({ rows, lang }: { rows: GrammarRow[]; lang: string }
 
 /**
  * @param props.grammar - the word's folded grammar
+ * @param props.expanded - start open, from the reader's Settings choice
  * @param props.reducedMotion - open and close without the height spring
  * @param props.onHold - true when the reader opens the section by hand, false when it
  *   closes or leaves the screen; the card pauses its autoplay in between
  */
 export function WordGrammar({
   grammar,
+  expanded,
   reducedMotion,
   onHold,
 }: {
   grammar: Grammar;
+  expanded: boolean;
   reducedMotion: boolean;
   onHold?: (held: boolean) => void;
 }) {
   const locale = useContext(DeckLocaleContext);
   const rows = useMemo(() => grammarRows(grammar, locale), [grammar, locale]);
-  const [open, setOpen] = useState(readGrammarOpen);
+  const [open, setOpen] = useState(expanded);
   const bodyId = useId();
   const section = useRef<HTMLElement>(null);
   // Only a hand-opened section holds the card: one that opened itself from the
-  // remembered preference must not stop a stream the reader left playing.
+  // Settings choice must not stop a stream the reader left playing.
   const held = useRef(false);
   const release = useRef(onHold);
   release.current = onHold;
@@ -146,7 +148,6 @@ export function WordGrammar({
   const toggle = () => {
     const next = !open;
     setOpen(next);
-    writeGrammarOpen(next);
     if (next !== held.current) {
       held.current = next;
       onHold?.(next);
