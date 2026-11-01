@@ -1,7 +1,8 @@
-/** Pure deterministic paging over any compiled catalog; shared by the server endpoint and browser-imported packs. Exports: MAX_POSITION, readCatalogPage. Depends on: schema, difficulty, random. */
+/** Pure deterministic paging over any compiled catalog; shared by the server endpoint and browser-imported packs. Exports: MAX_POSITION, readCatalogPage. Depends on: schema, difficulty, random, syllables. */
 import type { Catalog, VocabularyLevel } from "./schema";
 import { LEVEL_SAMPLE_PRIORITY, difficultyLevels } from "./difficulty";
 import { randomGenerator } from "./random";
+import { countSyllables } from "./syllables";
 import type { FeedPage, FeedRequest } from "../types";
 
 export const MAX_POSITION = 1_000_000_000_000;
@@ -78,11 +79,13 @@ const levelTallies = new Map<
  * difficulty picker, and it is taken with the SAME topic test `matchingPool` uses, so a
  * track's figure is by construction the number of words choosing it will stream.
  *
- * Sample selection per level: words starting with "a" come first (priority words named in
- * LEVEL_SAMPLE_PRIORITY, then catalog order), then any remaining slots take the other
- * priority words and finally catalog order. This ensures the onboarding picker always
- * shows a learner-appropriate representative word rather than the first word the base
- * catalog happens to carry for that level.
+ * Sample selection per level: two-syllable words come first, because a one-syllable word
+ * is too often a particle (的, 把) to say anything about a level. Among any words, those
+ * starting with "a" lead (priority words named in LEVEL_SAMPLE_PRIORITY, then catalog
+ * order), then the other priority words and finally catalog order. This ensures the
+ * onboarding picker always shows a learner-appropriate representative word rather than the
+ * first word the base catalog happens to carry for that level. A level short of
+ * two-syllable words fills up from the rest.
  * @param topic Topic slug, or "" for every topic
  * @returns Per-level counts plus the topic's full size (unlevelled words included)
  */
@@ -115,10 +118,14 @@ function levelTally(catalog: Catalog, topic: string) {
     const named = priority.flatMap((name) => words.filter((x) => x.word === name));
     // Words starting with "a" go first so every rung's sample shares an initial; a level
     // without enough of them (or a non-Latin deck) falls back to the old order.
-    for (const w of named) if (startsWithA(w.word)) take(w);
-    for (const w of words) if (startsWithA(w.word)) take(w);
-    for (const w of named) take(w);
-    for (const w of words) take(w);
+    const pass = (keep: (word: (typeof words)[number]) => boolean) => {
+      for (const w of named) if (startsWithA(w.word) && keep(w)) take(w);
+      for (const w of words) if (startsWithA(w.word) && keep(w)) take(w);
+      for (const w of named) if (keep(w)) take(w);
+      for (const w of words) if (keep(w)) take(w);
+    };
+    pass((w) => countSyllables(w) === 2);
+    pass(() => true);
     samples[level] = picked;
   }
   const tally = { counts, samples, total };
