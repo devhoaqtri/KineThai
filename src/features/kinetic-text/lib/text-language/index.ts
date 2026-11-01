@@ -43,7 +43,7 @@ export type {
   MeasuredSegment,
 } from "./measured-lines";
 
-export { getHanTokens, isLikelyChineseText } from "./han-lines";
+export { getHanTokens, getHanWordSpans, isLikelyChineseText } from "./han-lines";
 
 export {
   getJapaneseCharBudgetForLine,

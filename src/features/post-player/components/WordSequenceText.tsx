@@ -22,7 +22,9 @@ import {
   getEmphasizedRunLayoutPhraseKeys,
   getEmphasizedRunPhraseKeys,
   getHanLayoutMetrics,
+  getCompoundTokenKey,
   getHanTokens,
+  getHanWordSpans,
   getJapaneseLayoutMetrics,
   getKineticTextLayoutMode,
   getLoopAnimation,
@@ -214,8 +216,13 @@ export function WordSequenceText({
       ...getEmphasisPhraseKeysForLayout(dataEmphasis),
       ...getEmphasisPhraseKeysForLayout(boundPhrases),
       ...getEmphasizedRunLayoutPhraseKeys(words, emphasized),
+      // A Han word stays whole across a line break, and that is all it means: unlike the
+      // keys above it shares no effect, so it stays out of phraseKeys.
+      ...(isHan
+        ? getHanWordSpans(words).map((span) => span.map((token) => getCompoundTokenKey(token)))
+        : []),
     ],
-    [dataEmphasis, boundPhrases, words, emphasized],
+    [dataEmphasis, boundPhrases, words, emphasized, isHan],
   );
   const isSolo = words.length <= 1;
   const visualScaleGuard = Math.max(
@@ -313,15 +320,21 @@ export function WordSequenceText({
   // the deck's `|` chunks, because those marks are display-only and cannot survive in
   // `spec.text`. Either way a break is welcome right after an edge, never one word away.
   const layoutPhraseEdges = useMemo(
-    () => (isJapanese ? phraseEdges : isVietnamese ? getPunctuationPhraseEdges(words) : undefined),
-    [isJapanese, isVietnamese, phraseEdges, words],
+    () =>
+      isJapanese
+        ? phraseEdges
+        : isPackedLines
+          ? getPunctuationPhraseEdges(words)
+          : undefined,
+    [isJapanese, isPackedLines, phraseEdges, words],
   );
   const measuredLines = useMeasuredLines({
     budget: measuredLayout,
-    enabled: (isVietnamese || isJapanese) && !measure,
+    enabled: (isPackedLines || isJapanese) && !measure,
     lines: packedLayout.lines,
     signature: measuredSignature,
     phraseEdges: layoutPhraseEdges,
+    softPhraseEdges: isHan,
     // Japanese 文節 are drawn flush; the gap belongs to spaced scripts only.
     segmentGapEm: isJapanese ? 0 : undefined,
     lineSpacingScale,

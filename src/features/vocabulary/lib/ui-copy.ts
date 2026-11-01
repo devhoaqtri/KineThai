@@ -69,6 +69,9 @@ const VI = {
   "recall.yes": "Vẫn nhớ",
   "recall.no": "Quên rồi",
   "recall.unseenAria": "{word}, chưa xem nghĩa. Chạm để kiểm tra",
+  "recall.rateAria": "{word}. Chạm để kiểm tra",
+  "recall.markYesAria": "Đánh dấu nhớ từ {word}",
+  "recall.markNoAria": "Đánh dấu quên từ {word}",
   "recall.weekViews": "gặp {n} lần tuần này",
   "recall.noCopy": "Nghĩa sẽ có ở đây khi từ này quay lại trong luồng.",
   "recall.stripAria": "Chọn ngày trong tuần",
@@ -316,6 +319,8 @@ const VI = {
   "share.labelDone": "Đã chép!",
   "share.label": "Chia sẻ",
   "grammar.title": "Nâng cao",
+  "grammar.alwaysOpen.label": "Luôn mở Nâng cao",
+  "grammar.alwaysOpen.note": "Từ nào có phần Nâng cao sẽ mở sẵn, và màn hình đáp án của từ đó dài gấp đôi.",
   "common.close": "Đóng",
 } as const;
 
@@ -376,6 +381,9 @@ const TH: Partial<Record<CopyKey, string>> = {
   "recall.yes": "ยังจำได้",
   "recall.no": "ลืมแล้ว",
   "recall.unseenAria": "{word} ยังไม่ดูความหมาย แตะเพื่อตรวจสอบ",
+  "recall.rateAria": "{word} แตะเพื่อตรวจสอบ",
+  "recall.markYesAria": "ทำเครื่องหมายว่าจำ {word} ได้",
+  "recall.markNoAria": "ทำเครื่องหมายว่าลืม {word}",
   "recall.weekViews": "เจอ {n} ครั้งในสัปดาห์นี้",
   "recall.noCopy": "ความหมายจะแสดงที่นี่เมื่อคำนี้กลับมาในฟีด",
   "recall.stripAria": "เลือกวันในสัปดาห์",
@@ -611,6 +619,8 @@ const TH: Partial<Record<CopyKey, string>> = {
   "share.labelDone": "คัดลอกแล้ว!",
   "share.label": "แชร์",
   "grammar.title": "ขั้นสูง",
+  "grammar.alwaysOpen.label": "เปิดส่วนขั้นสูงเสมอ",
+  "grammar.alwaysOpen.note": "คำศัพท์ที่มีส่วนขั้นสูงจะเปิดไว้เสมอ และหน้าเฉลยจะแสดงนานขึ้นสองเท่า",
   "common.close": "ปิด",
 };
 
@@ -666,6 +676,9 @@ const JA: Partial<Record<CopyKey, string>> = {
   "recall.yes": "覚えている",
   "recall.no": "忘れた",
   "recall.unseenAria": "{word}、意味は未確認。タップして確認",
+  "recall.rateAria": "{word}。タップして確認",
+  "recall.markYesAria": "{word} を「覚えている」にする",
+  "recall.markNoAria": "{word} を「忘れた」にする",
   "recall.weekViews": "今週 {n} 回",
   "recall.noCopy": "この単語がフィードに戻ると、ここに意味が表示されます。",
   "recall.stripAria": "今週の日を選ぶ",
@@ -900,6 +913,8 @@ const JA: Partial<Record<CopyKey, string>> = {
   "share.labelDone": "コピーしました！",
   "share.label": "共有",
   "grammar.title": "上級",
+  "grammar.alwaysOpen.label": "上級セクションを常に開く",
+  "grammar.alwaysOpen.note": "上級解説がある単語では常に展開され、解答ページの表示時間が2倍になります。",
   "common.close": "閉じる",
 };
 

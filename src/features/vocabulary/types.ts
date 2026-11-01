@@ -42,8 +42,10 @@ export type FeedPage = {
   levelSamples: Partial<Record<VocabularyLevel, { word: string; defVi: string }[]>>;
   /** Total words under the page's topic filter, unlevelled words included. */
   topicTotal: number;
+  /** Signed cursor the next (or previous) page request must echo back. Server pages only. */
+  cursor?: string;
 };
-export type FeedCursor = { position: number; revision?: string };
+export type FeedCursor = { position: number; revision?: string; token?: string };
 /**
  * Which visual dialect dresses the stream. "douyin" swaps in the mainland-flavored
  * palettes, motion presets and highlight reskin; it is only ever offered on the
@@ -60,6 +62,8 @@ export type ReadingPace = "slow" | "normal" | "fast";
 /**
  * `autoplay` is play/pause. `advance` decides what a finished word does: move on to the
  * next one (default), or replay itself from the first clue until the reader moves on.
+ * `expandGrammar` opens the answer's "Nâng cao" section on every word that has one and
+ * gives that answer page twice the time.
  */
 export type Presentation = {
   theme: string;
@@ -68,4 +72,5 @@ export type Presentation = {
   advance?: boolean;
   pace?: ReadingPace;
   dialect?: VisualDialect;
+  expandGrammar?: boolean;
 };

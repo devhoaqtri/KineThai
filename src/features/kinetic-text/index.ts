@@ -24,6 +24,7 @@ export {
   getHanCharBudgetForLine,
   getHanLayoutMetrics,
   getHanTokens,
+  getHanWordSpans,
   getJapaneseCharBudgetForLine,
   getJapaneseLayoutMetrics,
   getJapaneseMoraTokens,

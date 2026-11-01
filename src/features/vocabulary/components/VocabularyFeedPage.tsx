@@ -35,6 +35,7 @@ import { DifficultyOnboarding } from "./DifficultyOnboarding";
 import { levelLadderFor } from "../lib/level-ladder";
 import { readDifficultyChoice, writeDifficultyChoice } from "../lib/difficulty-choice";
 import { readDialectChoice, writeDialectChoice } from "../lib/dialect-choice";
+import { readGrammarExpand, writeGrammarExpand } from "../lib/grammar-expand";
 import { readPreferences, writePreferences } from "@/features/settings/lib/preferences";
 import { DEFAULT_TARGET, type TargetLocale } from "../lib/target-language";
 import { CUSTOM_PACK_EVENT, clearCustomPack, readCustomPack } from "../lib/custom-pack";
@@ -83,15 +84,18 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     // Only the Chinese host honors the stored Douyin-dialect preference; every
     // other address renders the default visuals even on a device that switched.
     dialect: effectiveLocale === "zh" ? readDialectChoice() : "default",
+    expandGrammar: readGrammarExpand(),
   }));
   // The dialect is a device-level preference: remember it the moment it flips so
   // the next visit to this host opens in the same visual language.
   const handlePresentation = useCallback(
     (next: Presentation) => {
       if (next.dialect !== presentation.dialect) writeDialectChoice(next.dialect ?? "default");
+      if (next.expandGrammar !== presentation.expandGrammar)
+        writeGrammarExpand(!!next.expandGrammar);
       setPresentation(next);
     },
-    [presentation.dialect],
+    [presentation.dialect, presentation.expandGrammar],
   );
   // Keep the Settings proficiency in step with a level chosen from the feed itself.
   // Difficulty choices never write this preference.

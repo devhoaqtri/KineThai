@@ -10687,14 +10687,21 @@ body:has(.vocab-intro) .vocab-resume {
    A memory cell, zoomed all the way in. The stage is laid out at full size from
    the first frame; hooks/useRecallZoom reveals it through an aperture and flies the
    cell's number to the headline, so nothing here is animated in layout. This block
-   only describes the open sheet: its natural state IS the end of the zoom. */
+   only describes the open sheet: its natural state IS the end of the zoom.
+
+   It fills the settings panel, not the screen, so it takes the panel's corners and
+   notch for free. The panel stops scrolling under it, and RecallSheet pins it over
+   whatever part of the panel was in view. */
+.vocab-options:has(> .vocab-recall) {
+  overflow: hidden;
+}
 .vocab-recall {
-  --recall-bar: calc(56px + env(safe-area-inset-top));
+  --recall-bar: 56px;
   --recall-yes: var(--vocab-accent);
   --recall-no: #ff8fa3;
   --recall-open: color-mix(in srgb, var(--shell-text) 20%, transparent);
   --recall-gutter: 20px;
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 70;
   color: var(--shell-text);
@@ -10750,7 +10757,7 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-recall-column {
   width: min(100%, 560px);
   margin: 0 auto;
-  padding: var(--recall-bar) var(--recall-gutter) calc(32px + env(safe-area-inset-bottom));
+  padding: var(--recall-bar) var(--recall-gutter) 24px;
 }
 .vocab-recall-topbar {
   position: absolute;
@@ -10762,8 +10769,9 @@ body:has(.vocab-intro) .vocab-resume {
   align-items: center;
   gap: 10px;
   height: var(--recall-bar);
-  /* Lines up with the column on a wide screen rather than the window's corner. */
-  padding: env(safe-area-inset-top) max(12px, calc(50% - 280px + var(--recall-gutter) - 8px)) 0;
+  /* Lines up with the column on a wide panel; the right side stays clear of the gear. */
+  padding: 0 calc(var(--vocab-corner) + 14px) 0
+    max(12px, calc(50% - 280px + var(--recall-gutter) - 8px));
 }
 .vocab-recall-topbar::before {
   content: "";
@@ -10782,7 +10790,7 @@ body:has(.vocab-intro) .vocab-resume {
 }
 .vocab-recall-grabber {
   position: absolute;
-  top: calc(env(safe-area-inset-top) + 7px);
+  top: 7px;
   left: 50%;
   width: 36px;
   height: 4px;
@@ -10853,7 +10861,7 @@ body:has(.vocab-intro) .vocab-resume {
 }
 .vocab-recall-count {
   display: block;
-  font-size: 76px;
+  font-size: 60px;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -10963,7 +10971,7 @@ body:has(.vocab-intro) .vocab-resume {
 /* The week at a glance: seven days as bars, and the way to any of them. */
 .vocab-recall-strip {
   display: grid;
-  grid-template-columns: 58px repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr)) 58px;
   gap: 3px;
   margin: 14px 0 6px;
 }
@@ -11001,7 +11009,7 @@ body:has(.vocab-intro) .vocab-resume {
   line-height: 1;
 }
 .vocab-recall-week {
-  margin-right: 5px;
+  margin-left: 5px;
 }
 .vocab-recall-week strong {
   font-size: 22px;
@@ -11040,6 +11048,10 @@ body:has(.vocab-intro) .vocab-resume {
 }
 .vocab-recall-list {
   animation: vocab-recall-list 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Today and yesterday have no strip, so the list keeps its distance from the tally. */
+.vocab-recall-tally + .vocab-recall-list {
+  margin-top: 14px;
 }
 @keyframes vocab-recall-list {
   from {
@@ -11118,11 +11130,18 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-recall-cues [data-kind="no"] {
   color: var(--recall-no);
 }
+/* The word and its answers, side by side: nothing has to open before it can be answered. */
+.vocab-recall-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .vocab-recall-toggle {
   display: flex;
+  flex: 1;
   align-items: flex-start;
   gap: 14px;
-  width: 100%;
+  min-width: 0;
   min-height: 60px;
   padding: 10px 0;
   border: 0;
@@ -11263,23 +11282,18 @@ body:has(.vocab-intro) .vocab-resume {
   color: var(--shell-text-soft);
 }
 .vocab-recall-answers {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 4px;
+  display: flex;
+  flex: none;
+  gap: 6px;
 }
 .vocab-recall-answers button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 46px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
   border: 0;
-  border-radius: 14px;
-  font: inherit;
-  font-size: 14.5px;
-  font-weight: 750;
-  letter-spacing: -0.01em;
+  border-radius: 50%;
   cursor: pointer;
   transition:
     transform var(--dur-press) var(--ease-out),
@@ -11293,6 +11307,10 @@ body:has(.vocab-intro) .vocab-resume {
   color: var(--recall-no);
 }
 .vocab-recall-answers button[data-kind="yes"] {
+  background: color-mix(in srgb, var(--recall-yes) 15%, transparent);
+  color: var(--recall-yes);
+}
+.vocab-recall-answers button[data-kind="yes"][data-on] {
   background: var(--recall-yes);
   color: #10140f;
 }
@@ -11308,15 +11326,6 @@ body:has(.vocab-intro) .vocab-resume {
   color: var(--shell-text-mute);
 }
 @media (min-width: 768px) {
-  .vocab-recall {
-    --recall-gutter: 28px;
-  }
-  .vocab-recall-column {
-    padding-top: calc(var(--recall-bar) + 24px);
-  }
-  .vocab-recall-count {
-    font-size: 104px;
-  }
   .vocab-recall-item:hover .vocab-recall-word {
     color: var(--vocab-accent);
   }

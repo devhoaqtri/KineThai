@@ -47,6 +47,11 @@ import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
 import { FilledUsage, MarkedText } from "./MarkedText";
 
+/**
+ * Rows show only the word and its short meaning for now. Flip this to bring back the
+ * time, view count, IPA, part of speech and example.
+ */
+const SHOW_WORD_DETAILS = false;
 /** How far a row has to travel sideways before it counts as an answer. */
 const SWIPE_PX = 72;
 /** A pull past this share of the screen closes on release. */
@@ -185,46 +190,84 @@ function Row({
           dragged.current = true;
           setDragging(true);
         }}
+        onPointerDownCapture={() => {
+          dragged.current = false;
+        }}
         onDragEnd={settle}
       >
-        <button
-          type="button"
-          className="vocab-recall-toggle"
-          aria-expanded={open}
-          aria-label={revealed ? label : t(ui, "recall.unseenAria", { word: label })}
-          onClick={() => {
-            // The pointer-up that ends a swipe still lands here as a click.
-            if (dragged.current) {
-              dragged.current = false;
-              return;
+        <div className="vocab-recall-line">
+          <button
+            type="button"
+            className="vocab-recall-toggle"
+            aria-expanded={open}
+            aria-label={
+              SHOW_WORD_DETAILS
+                ? (revealed ? label : t(ui, "recall.unseenAria", { word: label }))
+                : t(ui, "recall.rateAria", { word: label })
             }
-            onToggle();
-          }}
-        >
-          <span className="vocab-recall-node" aria-hidden="true">
-            {mark === "yes" && <Check size={9} strokeWidth={4} />}
-            {mark === "no" && <X size={9} strokeWidth={4} />}
-          </span>
-          <span className="vocab-recall-main">
-            <span className="vocab-recall-word" lang={lang}>
-              {label}
+            onClick={() => {
+              // The pointer-up that ends a swipe still lands here as a click.
+              if (!dragged.current) onToggle();
+            }}
+          >
+            <span className="vocab-recall-node" aria-hidden="true">
+              {mark === "yes" && <Check size={9} strokeWidth={4} />}
+              {mark === "no" && <X size={9} strokeWidth={4} />}
             </span>
-            {copy &&
-              (revealed ? (
+            <span className="vocab-recall-main">
+              <span className="vocab-recall-word" lang={lang}>
+                {label}
+              </span>
+              {copy &&
+                (revealed ? (
+                  <span className="vocab-recall-meaning" lang={ui}>
+                    <MarkedText text={meaning} />
+                  </span>
+                ) : (
+                  <Redacted text={meaning} />
+                ))}
+              {!copy && open && (
                 <span className="vocab-recall-meaning" lang={ui}>
-                  <MarkedText text={meaning} />
+                  {t(ui, "recall.noCopy")}
                 </span>
-              ) : (
-                <Redacted text={meaning} />
-              ))}
-          </span>
-          <span className="vocab-recall-meta">
-            {entry.views > 1 && <span className="vocab-recall-views">×{entry.views}</span>}
-            <time dateTime={new Date(entry.at).toISOString()}>{clock(entry.at)}</time>
-          </span>
-        </button>
+              )}
+            </span>
+            {SHOW_WORD_DETAILS && (
+              <span className="vocab-recall-meta">
+                {entry.views > 1 && <span className="vocab-recall-views">×{entry.views}</span>}
+                <time dateTime={new Date(entry.at).toISOString()}>{clock(entry.at)}</time>
+              </span>
+            )}
+          </button>
+          <div className="vocab-recall-answers" role="group" aria-label={label}>
+            <button
+              type="button"
+              data-kind="no"
+              data-on={mark === "no" || undefined}
+              aria-pressed={mark === "no"}
+              aria-label={t(ui, "recall.markNoAria", { word: label })}
+              onClick={() => {
+                if (!dragged.current) onMark("no", true);
+              }}
+            >
+              <X size={18} strokeWidth={2.75} />
+            </button>
+            <button
+              type="button"
+              data-kind="yes"
+              data-on={mark === "yes" || undefined}
+              aria-pressed={mark === "yes"}
+              aria-label={t(ui, "recall.markYesAria", { word: label })}
+              onClick={() => {
+                if (!dragged.current) onMark("yes", true);
+              }}
+            >
+              <Check size={18} strokeWidth={2.75} />
+            </button>
+          </div>
+        </div>
         <AnimatePresence initial={false}>
-          {open && (
+          {SHOW_WORD_DETAILS && open && (
             <motion.div
               className="vocab-recall-detail"
               initial={{ height: 0, opacity: 0 }}
@@ -250,31 +293,6 @@ function Row({
                     <FilledUsage text={copy.example} word={copy.word} />
                   </p>
                 )}
-                {!copy && (
-                  <p className="vocab-recall-facts" lang={ui}>
-                    {t(ui, "recall.noCopy")}
-                  </p>
-                )}
-                <div className="vocab-recall-answers" role="group" aria-label={label}>
-                  <button
-                    type="button"
-                    data-kind="no"
-                    data-on={mark === "no" || undefined}
-                    aria-pressed={mark === "no"}
-                    onClick={() => onMark("no", true)}
-                  >
-                    <X size={16} strokeWidth={2.75} /> {t(ui, "recall.no")}
-                  </button>
-                  <button
-                    type="button"
-                    data-kind="yes"
-                    data-on={mark === "yes" || undefined}
-                    aria-pressed={mark === "yes"}
-                    onClick={() => onMark("yes", true)}
-                  >
-                    <Check size={16} strokeWidth={2.75} /> {t(ui, "recall.yes")}
-                  </button>
-                </div>
               </div>
             </motion.div>
           )}
@@ -306,17 +324,6 @@ function RhythmStrip({
   const today = startOfDay(now);
   return (
     <div className="vocab-recall-strip" role="group" aria-label={t(ui, "recall.stripAria")}>
-      <button
-        type="button"
-        className="vocab-recall-week"
-        data-on={scope === "week" || undefined}
-        aria-pressed={scope === "week"}
-        aria-label={t(ui, "recall.scopeAria", { label: t(ui, "memory.cell.week"), n: weekCount })}
-        onClick={() => onScope("week")}
-      >
-        <strong>{weekCount}</strong>
-        <small>{t(ui, "recall.sevenDays")}</small>
-      </button>
       {days.map((day) => {
         const tally = tallyOf(day.ids, marks);
         const name = dayName(day.start, now, ui);
@@ -350,6 +357,17 @@ function RhythmStrip({
           </button>
         );
       })}
+      <button
+        type="button"
+        className="vocab-recall-week"
+        data-on={scope === "week" || undefined}
+        aria-pressed={scope === "week"}
+        aria-label={t(ui, "recall.scopeAria", { label: t(ui, "memory.cell.week"), n: weekCount })}
+        onClick={() => onScope("week")}
+      >
+        <strong>{weekCount}</strong>
+        <small>{t(ui, "recall.sevenDays")}</small>
+      </button>
     </div>
   );
 }
@@ -403,6 +421,7 @@ export function RecallSheet({
   const [copies] = useState(loadRecallWords);
 
   const back = useRef<HTMLButtonElement>(null);
+  const sheet = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const wash = useRef<HTMLDivElement>(null);
@@ -543,6 +562,12 @@ export function RecallSheet({
   }, [zoom]);
 
   useLayoutEffect(() => {
+    const node = sheet.current;
+    if (!node || !container) return;
+    node.style.transform = `translateY(${container.scrollTop}px)`;
+  }, [container]);
+
+  useLayoutEffect(() => {
     if (scroller.current) scroller.current.scrollTop = 0;
     setOpenId(null);
     setOnlyForgotten(false);
@@ -565,6 +590,7 @@ export function RecallSheet({
     <Dialog.Root open onOpenChange={(open) => !open && zoom.close()}>
       <Dialog.Portal container={container}>
         <Dialog.Content
+          ref={sheet}
           className="vocab-recall"
           aria-describedby={undefined}
           onOpenAutoFocus={(event) => {
@@ -632,17 +658,19 @@ export function RecallSheet({
                     </>
                   )}
                 </div>
-                <div ref={strip}>
-                  <RhythmStrip
-                    days={days}
-                    scope={scope}
-                    marks={marks}
-                    now={now}
-                    ui={ui}
-                    weekCount={week.length}
-                    onScope={setScope}
-                  />
-                </div>
+                {initialScope === "week" && (
+                  <div ref={strip}>
+                    <RhythmStrip
+                      days={days}
+                      scope={scope}
+                      marks={marks}
+                      now={now}
+                      ui={ui}
+                      weekCount={week.length}
+                      onScope={setScope}
+                    />
+                  </div>
+                )}
                 <div ref={list} key={`${scope}-${forgotten}`} className="vocab-recall-list">
                   {entries.length === 0 && (
                     <p className="vocab-recall-empty">

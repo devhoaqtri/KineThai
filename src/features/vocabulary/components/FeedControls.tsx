@@ -1513,6 +1513,20 @@ export function FeedControls({
                 })}
               </div>
             </div>
+            {/* Grammar only exists on the language decks; the English deck has none. */}
+            {locale && locale !== "en" && (
+              <label className="vocab-autoplay vocab-dialect">
+                <input
+                  type="checkbox"
+                  checked={!!presentation.expandGrammar}
+                  onChange={(event) =>
+                    onPresentation({ ...presentation, expandGrammar: event.target.checked })
+                  }
+                />{" "}
+                {t(ui, "grammar.alwaysOpen.label")}
+                <small className="vocab-dialect-note">{t(ui, "grammar.alwaysOpen.note")}</small>
+              </label>
+            )}
             {/* The Douyin dialect only exists on the Chinese host: it swaps the whole
               visual language — palettes, motion presets and highlight reskin — and
               deactivates the default one, so it is offered nowhere else. */}
@@ -1611,7 +1625,7 @@ export function FeedControls({
               now={recallNow}
               marks={recallMarks}
               onMarks={setRecallMarks}
-              container={panelRef.current?.closest<HTMLElement>(".vocabulary-shell") ?? null}
+              container={panelRef.current}
               scene={zoomRef.current}
               cellFor={cellOfScope}
               fallbackCell={() => zoomCell("week")}

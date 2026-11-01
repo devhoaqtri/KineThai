@@ -7,11 +7,17 @@
  * so no line ever opens with it), which the Vietnamese line packer then staggers across
  * many short indented lines with the same font size and block fill.
  *
- * Exports: isLikelyChineseText, getHanTokens, isHanToken
+ * A glyph is the unit of animation but not of reading, so getHanWordSpans finds the words
+ * the glyphs make, for the layout to keep whole.
+ *
+ * Exports: isLikelyChineseText, getHanTokens, isHanToken, getHanWordSpans
  * Depends on: none (leaf module)
  */
 
-const HAN = /\p{Script=Han}/u;
+const HAN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}ー]/u;
+const KANA = /[\p{Script=Hiragana}\p{Script=Katakana}]/u;
+/** The join a deck's `_` becomes between glyphs (see vocabulary word-joiner); not part of a word. */
+const WORD_JOINER = /\u2060/gu;
 
 /**
  * Tokenizer alternation, in priority order: one Han character (every glyph is its own
@@ -86,4 +92,41 @@ export function getHanTokens(text: string): string[] {
 export function isHanToken(token: string): boolean {
   const first = token.charAt(0);
   return first ? HAN.test(first) : false;
+}
+
+/**
+ * The runs of tokens that make one word, found by the platform's dictionary segmenter.
+ * Without them every glyph is its own unbreakable piece, which lets a line end inside a
+ * word and makes a sentence too many pieces for the measured layout to arrange.
+ * @param tokens - getHanTokens output for the page
+ * @returns Each word of two or more glyphs, as its tokens; empty where the platform has
+ *   no segmenter, which leaves the page breaking between any two glyphs
+ * @pure true
+ */
+export function getHanWordSpans(tokens: readonly string[]): string[][] {
+  if (typeof Intl.Segmenter === "undefined") return [];
+  const clean = tokens.map((token) => token.replace(WORD_JOINER, ""));
+  const text = clean.join("");
+  const language = KANA.test(text) ? "ja" : "zh";
+  const segmenter = new Intl.Segmenter(language, { granularity: "word" });
+  // Where each token starts in the joined text, so a word can be mapped back onto tokens.
+  const starts: number[] = [];
+  let offset = 0;
+  for (const token of clean) {
+    starts.push(offset);
+    offset += token.length;
+  }
+  const spans: string[][] = [];
+  for (const { segment, index, isWordLike } of segmenter.segment(text)) {
+    if (!isWordLike) continue;
+    const end = index + segment.length;
+    const first = starts.indexOf(index);
+    // The word has to begin on a token and cover at least two; a token runs past the
+    // end of a word only by the punctuation riding on it.
+    const inside = starts.filter((start) => start >= index && start < end).length;
+    if (first < 0 || inside < 2) continue;
+    const span = tokens.slice(first, first + inside);
+    if (span.every(isHanToken)) spans.push(span);
+  }
+  return spans;
 }

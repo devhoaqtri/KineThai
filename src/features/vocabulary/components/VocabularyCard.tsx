@@ -3,6 +3,7 @@ import {
   lazy,
   Suspense,
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -37,6 +38,8 @@ import {
 import { getWideRevealY, isShortViewport } from "../lib/landscape-geometry";
 import { buildStages } from "../lib/stages";
 import { resolveClue } from "../lib/clues";
+import { DeckLocaleContext } from "../lib/deck-locale";
+import { grammarRows } from "../lib/grammar";
 import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
 import { requestDurableStorage } from "../lib/durable-storage";
@@ -90,6 +93,8 @@ const RESUME_ICON_EXIT = {
 } as const;
 /** Clue-page duration multipliers; "fast" is the stream's native timing. */
 const PACE_FACTOR: Record<ReadingPace, number> = { slow: 1.75, normal: 1.35, fast: 1 };
+/** How much longer the answer stays up while its grammar section is always open. */
+const EXPANDED_GRAMMAR_FACTOR = 2;
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 const EASE_IN = [0.5, 0, 0.75, 0] as const;
@@ -245,10 +250,17 @@ export function VocabularyCard({
   onToggleAutoplay?: () => void;
 }) {
   const { theme, style } = choosePresentation(entry.occurrenceId, presentation, entry.position);
+  const locale = useContext(DeckLocaleContext);
+  const expandGrammar = !exportLayout && !!presentation.expandGrammar;
+  const still = exportLayout?.still;
+  const fallbackFont = still?.fallbackFont;
   // Card stages follow the active UI locale (Japanese by default); the reveal stays English.
   const ui = useLocale();
   const stages = useMemo(() => buildStages(entry.word, style.id, ui), [entry.word, style.id, ui]);
-  const canvas = useMemo(() => buildVocabularyCanvas(theme, style), [theme, style]);
+  const canvas = useMemo(() => {
+    const spec = buildVocabularyCanvas(theme, style);
+    return fallbackFont ? { ...spec, font: `${spec.font}, "${fallbackFont}"` } : spec;
+  }, [theme, style, fallbackFont]);
   // The spelling coda is one extra page appended after the reveal stage, so the
   // playback timer — not the animation component — decides when the card ends.
   const spellingVariant = useMemo(
@@ -320,6 +332,12 @@ export function VocabularyCard({
   // Pace stretches the clue pages twice over, in step: how long each page stays up, and
   // how slowly its words are read out onto it. The spelling coda keeps its own timing.
   const paceFactor = exportLayout ? 1 : PACE_FACTOR[presentation.pace ?? "normal"];
+  // An always-open grammar section doubles the answer page's time so the reader has room
+  // to read the table before autoplay moves on. Hand-opening holds the card instead.
+  const answerFactor =
+    expandGrammar && entry.word.grammar && grammarRows(entry.word.grammar, locale, ui).length
+      ? EXPANDED_GRAMMAR_FACTOR
+      : 1;
   /** One duration per page: every clue stage plus the trailing spelling coda. */
   const pageDurations = useMemo(
     () => [
@@ -338,12 +356,12 @@ export function VocabularyCard({
               .join(" "),
             style.tempo,
             style.rhythm,
-          ) * paceFactor,
+          ) * (stage.reveal ? answerFactor : paceFactor),
         ),
       ),
       spellingDuration,
     ],
-    [stages, entry.word, ui, style.tempo, style.rhythm, spellingDuration, paceFactor],
+    [stages, entry.word, ui, style.tempo, style.rhythm, spellingDuration, paceFactor, answerFactor],
   );
   const looping = presentation.advance === false && !exportLayout;
   // While the report panel is open the card holds still: the reader is describing
@@ -1055,6 +1073,7 @@ export function VocabularyCard({
           staged={started}
           playing={playback.playing}
           reducedMotion={reducedMotion}
+          still={!!exportLayout?.still}
           playKey={playKey}
           direction={nav.direction}
           dragX={dragX}
@@ -1065,6 +1084,7 @@ export function VocabularyCard({
           textBudget={textBudget}
           revealY={revealY}
           timeScale={paceFactor}
+          expandGrammar={expandGrammar}
           onGrammarHold={exportLayout ? undefined : setGrammarHeld}
         />
       )}

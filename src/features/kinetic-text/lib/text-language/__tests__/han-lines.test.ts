@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getHanTokens, isHanToken, isLikelyChineseText } from "../han-lines";
+import { getHanTokens, getHanWordSpans, isHanToken, isLikelyChineseText } from "../han-lines";
 
 describe("isLikelyChineseText", () => {
   it("detects a full Han sentence", () => expect(isLikelyChineseText("我爱你")).toBe(true));
@@ -55,4 +55,18 @@ describe("isHanToken", () => {
   it("is true when a closing mark trails", () => expect(isHanToken("你」")).toBe(true));
   it("is false for the empty token", () => expect(isHanToken("")).toBe(false));
   it("is false for a blank run", () => expect(isHanToken("_____")).toBe(false));
+});
+
+describe("getHanWordSpans", () => {
+  it("groups the glyphs of a word", () =>
+    expect(getHanWordSpans(getHanTokens("不能打电话。"))).toContainEqual(["打", "电", "话。"]));
+  it("sees through a deck's joins", () =>
+    expect(getHanWordSpans(["请⁠", "问"])).toEqual([["请⁠", "问"]]));
+  it("leaves a masked blank out of every word", () => {
+    const spans = getHanWordSpans(getHanTokens("这个____只能照相"));
+    expect(spans.flat()).not.toContain("____");
+  });
+  it("uses the Japanese dictionary for text with kana", () =>
+    expect(getHanWordSpans(getHanTokens("学校へ行きます"))).toContainEqual(["学", "校"]));
+  it("has nothing to group in one glyph", () => expect(getHanWordSpans(["好"])).toEqual([]));
 });
