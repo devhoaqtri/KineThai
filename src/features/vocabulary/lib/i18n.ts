@@ -535,7 +535,9 @@ const STAGE_LABELS: Record<Locale, StageLabels | undefined> = {
     usage: "例文",
     anticipation: "当ててみて！",
     letters: "文字数",
-    lettersText: "{count} 文字、{initial} で始まる",
+    // The space is a 文節 break, not a gap: glued to 「文字、」 the initial's highlight spreads
+    // to the whole token.
+    lettersText: "{count} 文字、 {initial} で始まる",
     lettersTextHan: "{count} 文字の漢字",
     lettersTextHanPinyin: "{count} 文字の漢字、ピンインは {initial} で始まる",
     reveal: "これだ！",
