@@ -202,7 +202,9 @@ function Row({
             aria-expanded={open}
             aria-label={
               SHOW_WORD_DETAILS
-                ? (revealed ? label : t(ui, "recall.unseenAria", { word: label }))
+                ? revealed
+                  ? label
+                  : t(ui, "recall.unseenAria", { word: label })
                 : t(ui, "recall.rateAria", { word: label })
             }
             onClick={() => {
@@ -588,152 +590,150 @@ export function RecallSheet({
 
   return (
     <Dialog.Root open onOpenChange={(open) => !open && zoom.close()}>
-      <Dialog.Portal container={container}>
-        <Dialog.Content
-          ref={sheet}
-          className="vocab-recall"
-          aria-describedby={undefined}
-          onOpenAutoFocus={(event) => {
-            event.preventDefault();
-            back.current?.focus({ preventScroll: true });
-          }}
-          // This dialog has no Radix trigger to hand focus back to.
-          onCloseAutoFocus={(event) => {
-            event.preventDefault();
-            returnFocus();
-          }}
-          // The settings sheet behind must not read this Escape as its own.
-          onKeyDown={(event) => event.stopPropagation()}
+      <Dialog.Content
+        ref={sheet}
+        className="vocab-recall"
+        aria-describedby={undefined}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          back.current?.focus({ preventScroll: true });
+        }}
+        // This dialog has no Radix trigger to hand focus back to.
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          returnFocus();
+        }}
+        // The settings sheet behind must not read this Escape as its own.
+        onKeyDown={(event) => event.stopPropagation()}
+      >
+        <Dialog.Title className="sr-only">
+          {t(ui, "recall.scopeAria", { label, n: entries.length })}
+        </Dialog.Title>
+        <div ref={backdrop} className="vocab-recall-backdrop" />
+        <div
+          ref={stage}
+          className="vocab-recall-stage"
+          data-today={(typeof scope === "number" && scope === startOfDay(now)) || undefined}
         >
-          <Dialog.Title className="sr-only">
-            {t(ui, "recall.scopeAria", { label, n: entries.length })}
-          </Dialog.Title>
-          <div ref={backdrop} className="vocab-recall-backdrop" />
+          <div ref={wash} className="vocab-recall-wash" />
           <div
-            ref={stage}
-            className="vocab-recall-stage"
-            data-today={(typeof scope === "number" && scope === startOfDay(now)) || undefined}
+            ref={scroller}
+            className="vocab-recall-scroll"
+            onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 4)}
           >
-            <div ref={wash} className="vocab-recall-wash" />
-            <div
-              ref={scroller}
-              className="vocab-recall-scroll"
-              onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 4)}
-            >
-              <div className="vocab-recall-column">
-                <div ref={hero} className="vocab-recall-hero">
-                  <div className="vocab-recall-headline">
-                    <strong ref={count} className="vocab-recall-count">
-                      <span key={scope}>{entries.length}</span>
-                    </strong>
-                    <span ref={unit} className="vocab-recall-unit">
-                      {t(ui, "onboard.wordsUnit")}
-                    </span>
-                  </div>
-                  <span ref={name} className="vocab-recall-name">
-                    {label}
+            <div className="vocab-recall-column">
+              <div ref={hero} className="vocab-recall-hero">
+                <div className="vocab-recall-headline">
+                  <strong ref={count} className="vocab-recall-count">
+                    <span key={scope}>{entries.length}</span>
+                  </strong>
+                  <span ref={unit} className="vocab-recall-unit">
+                    {t(ui, "onboard.wordsUnit")}
                   </span>
                 </div>
-                <div ref={tally} className="vocab-recall-tally">
-                  {score.total > 0 && (
-                    <>
-                      <div className="vocab-recall-meter" aria-hidden="true">
-                        <MeterParts {...score} />
-                      </div>
-                      <div className="vocab-recall-summary">
-                        <p aria-live="polite">{summary}</p>
-                        {score.no > 0 && (
-                          <button
-                            type="button"
-                            aria-pressed={forgotten}
-                            data-on={forgotten || undefined}
-                            onClick={() => setOnlyForgotten((on) => !on)}
-                          >
-                            {forgotten
-                              ? t(ui, "recall.showAll")
-                              : t(ui, "recall.showForgotten", { n: score.no })}
-                          </button>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-                {initialScope === "week" && (
-                  <div ref={strip}>
-                    <RhythmStrip
-                      days={days}
-                      scope={scope}
-                      marks={marks}
-                      now={now}
-                      ui={ui}
-                      weekCount={week.length}
-                      onScope={setScope}
-                    />
-                  </div>
-                )}
-                <div ref={list} key={`${scope}-${forgotten}`} className="vocab-recall-list">
-                  {entries.length === 0 && (
-                    <p className="vocab-recall-empty">
-                      {scope === "week"
-                        ? t(ui, "recall.empty.week")
-                        : scope === startOfDay(now)
-                          ? t(ui, "recall.empty.today")
-                          : t(ui, "recall.empty.day")}
-                    </p>
-                  )}
-                  {groups.map((group) => (
-                    <section key={group.start} className="vocab-recall-group">
-                      {scope === "week" && (
-                        <h3 className="vocab-recall-group-head">{dayName(group.start, now, ui)}</h3>
+                <span ref={name} className="vocab-recall-name">
+                  {label}
+                </span>
+              </div>
+              <div ref={tally} className="vocab-recall-tally">
+                {score.total > 0 && (
+                  <>
+                    <div className="vocab-recall-meter" aria-hidden="true">
+                      <MeterParts {...score} />
+                    </div>
+                    <div className="vocab-recall-summary">
+                      <p aria-live="polite">{summary}</p>
+                      {score.no > 0 && (
+                        <button
+                          type="button"
+                          aria-pressed={forgotten}
+                          data-on={forgotten || undefined}
+                          onClick={() => setOnlyForgotten((on) => !on)}
+                        >
+                          {forgotten
+                            ? t(ui, "recall.showAll")
+                            : t(ui, "recall.showForgotten", { n: score.no })}
+                        </button>
                       )}
-                      <ol className="vocab-recall-rail">
-                        {group.rows.map((entry) => (
-                          <Row
-                            key={entry.id}
-                            entry={entry}
-                            copy={copies[entry.id]}
-                            mark={marks[entry.id]}
-                            open={openId === entry.id}
-                            ui={ui}
-                            weekViews={week.find((row) => row.id === entry.id)?.views ?? 1}
-                            onToggle={() =>
-                              setOpenId((current) => (current === entry.id ? null : entry.id))
-                            }
-                            onMark={(choice, toggle) => mark(entry.id, choice, toggle)}
-                          />
-                        ))}
-                      </ol>
-                    </section>
-                  ))}
+                    </div>
+                  </>
+                )}
+              </div>
+              {initialScope === "week" && (
+                <div ref={strip}>
+                  <RhythmStrip
+                    days={days}
+                    scope={scope}
+                    marks={marks}
+                    now={now}
+                    ui={ui}
+                    weekCount={week.length}
+                    onScope={setScope}
+                  />
                 </div>
+              )}
+              <div ref={list} key={`${scope}-${forgotten}`} className="vocab-recall-list">
+                {entries.length === 0 && (
+                  <p className="vocab-recall-empty">
+                    {scope === "week"
+                      ? t(ui, "recall.empty.week")
+                      : scope === startOfDay(now)
+                        ? t(ui, "recall.empty.today")
+                        : t(ui, "recall.empty.day")}
+                  </p>
+                )}
+                {groups.map((group) => (
+                  <section key={group.start} className="vocab-recall-group">
+                    {scope === "week" && (
+                      <h3 className="vocab-recall-group-head">{dayName(group.start, now, ui)}</h3>
+                    )}
+                    <ol className="vocab-recall-rail">
+                      {group.rows.map((entry) => (
+                        <Row
+                          key={entry.id}
+                          entry={entry}
+                          copy={copies[entry.id]}
+                          mark={marks[entry.id]}
+                          open={openId === entry.id}
+                          ui={ui}
+                          weekViews={week.find((row) => row.id === entry.id)?.views ?? 1}
+                          onToggle={() =>
+                            setOpenId((current) => (current === entry.id ? null : entry.id))
+                          }
+                          onMark={(choice, toggle) => mark(entry.id, choice, toggle)}
+                        />
+                      ))}
+                    </ol>
+                  </section>
+                ))}
               </div>
             </div>
-            <header
-              ref={bar}
-              className="vocab-recall-topbar"
-              data-scrolled={scrolled || undefined}
-              data-compact={compact || undefined}
-            >
-              <span className="vocab-recall-grabber" aria-hidden="true" />
-              <button
-                ref={back}
-                type="button"
-                className="vocab-recall-back"
-                onClick={zoom.close}
-                aria-label={t(ui, "recall.back")}
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <p className="vocab-recall-compact" aria-hidden={!compact}>
-                <strong>{label}</strong>
-                <small>
-                  {entries.length} {t(ui, "onboard.wordsUnit")}
-                </small>
-              </p>
-            </header>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
+          <header
+            ref={bar}
+            className="vocab-recall-topbar"
+            data-scrolled={scrolled || undefined}
+            data-compact={compact || undefined}
+          >
+            <span className="vocab-recall-grabber" aria-hidden="true" />
+            <button
+              ref={back}
+              type="button"
+              className="vocab-recall-back"
+              onClick={zoom.close}
+              aria-label={t(ui, "recall.back")}
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <p className="vocab-recall-compact" aria-hidden={!compact}>
+              <strong>{label}</strong>
+              <small>
+                {entries.length} {t(ui, "onboard.wordsUnit")}
+              </small>
+            </p>
+          </header>
+        </div>
+      </Dialog.Content>
     </Dialog.Root>
   );
 }

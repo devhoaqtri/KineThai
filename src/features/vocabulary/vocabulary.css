@@ -10692,6 +10692,7 @@ body:has(.vocab-intro) .vocab-resume {
    It fills the settings panel, not the screen, so it takes the panel's corners and
    notch for free. The panel stops scrolling under it, and RecallSheet pins it over
    whatever part of the panel was in view. */
+.vocab-options:has(.vocab-recall),
 .vocab-options:has(> .vocab-recall) {
   overflow: hidden;
 }
@@ -10705,6 +10706,10 @@ body:has(.vocab-intro) .vocab-resume {
   inset: 0;
   z-index: 70;
   color: var(--shell-text);
+  border-radius: inherit;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 100%;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -10714,11 +10719,13 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-recall-backdrop {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background: #05040bb3;
 }
 .vocab-recall-stage {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   overflow: hidden;
   background: var(--shell-surface);
   will-change: clip-path;
