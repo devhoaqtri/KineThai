@@ -135,15 +135,22 @@ describe("level samples", () => {
     readCatalogPage(makeCatalog(words, { revision }), request()).levelSamples.A1!.map(
       ({ word }) => word,
     );
-  it("leads a Chinese level with its longest words", () => {
-    const words = ["的", "自己", "不好意思", "把", "打电话"].map((word) =>
-      makeWord({ word, level: "A1", ipa: "pinyin" }),
-    );
-    expect(samples(words, "chinese-samples-revision-0").slice(0, 3)).toEqual([
+  it("mixes mid-length Chinese words from the middle of the level", () => {
+    const words = [
+      "的",
+      "我们",
+      "他们",
+      "好看",
       "不好意思",
+      "把",
       "打电话",
-      "自己",
-    ]);
+      "电影院",
+      "洗手间",
+    ].map((word) => makeWord({ word, level: "A1", ipa: "pinyin" }));
+    const picked = samples(words, "chinese-samples-revision-0");
+    expect(picked.slice(0, 2)).toEqual(["电影院", "他们"]);
+    expect(picked).not.toContain("不好意思");
+    expect(picked).not.toContain("的");
   });
   it("keeps a Japanese level on two-syllable words", () => {
     const words = [

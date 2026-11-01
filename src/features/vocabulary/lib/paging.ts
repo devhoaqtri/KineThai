@@ -6,6 +6,12 @@ import { randomGenerator } from "./random";
 import { countSyllables } from "./syllables";
 import type { FeedPage, FeedRequest } from "../types";
 
+/** @returns The list starting from its middle, wrapping round. @pure true */
+function fromMiddle<T>(list: readonly T[]): T[] {
+  const middle = Math.floor(list.length / 2);
+  return [...list.slice(middle), ...list.slice(0, middle)];
+}
+
 export const MAX_POSITION = 1_000_000_000_000;
 const pools = new Map<string, Uint32Array>();
 const orders = new Map<string, Uint32Array>();
@@ -126,8 +132,12 @@ function levelTally(catalog: Catalog, topic: string) {
       for (const w of words) if (keep(w)) take(w);
     };
     const chinese = words.filter((w) => isHanAnswer(w.word) && !isJapaneseWord(w.word, w.ipa));
-    chinese.sort((a, b) => getHanCharCount(b.word) - getHanCharCount(a.word));
-    for (const w of chinese) take(w);
+    const ofLength = (size: number) =>
+      fromMiddle(chinese.filter((w) => getHanCharCount(w.word) === size));
+    const [three, two] = [ofLength(3), ofLength(2)];
+    for (let index = 0; index < Math.max(three.length, two.length); index += 1) {
+      for (const w of [three[index], two[index]]) if (w) take(w);
+    }
     pass((w) => countSyllables(w) === 2);
     pass(() => true);
     samples[level] = picked;
