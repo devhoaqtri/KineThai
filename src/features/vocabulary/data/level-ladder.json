@@ -106,11 +106,13 @@
   "zh": {
     "levels": [
       "HSK1",
-      "HSK2"
+      "HSK2",
+      "HSK3"
     ],
     "levelCounts": {
       "HSK1": 484,
-      "HSK2": 588
+      "HSK2": 711,
+      "HSK3": 398
     },
     "levelSamples": {
       "HSK1": [
@@ -140,6 +142,20 @@
         {
           "word": "自己"
         }
+      ],
+      "HSK3": [
+        {
+          "word": "把"
+        },
+        {
+          "word": "被"
+        },
+        {
+          "word": "就是"
+        },
+        {
+          "word": "时"
+        }
       ]
     }
   },
@@ -150,7 +166,7 @@
     ],
     "levelCounts": {
       "TOPIK1": 778,
-      "TOPIK2": 353
+      "TOPIK2": 763
     },
     "levelSamples": {
       "TOPIK1": [
@@ -169,16 +185,16 @@
       ],
       "TOPIK2": [
         {
-          "word": "수"
+          "word": "접시"
         },
         {
-          "word": "않다"
+          "word": "건너가다"
         },
         {
-          "word": "때문"
+          "word": "껌"
         },
         {
-          "word": "말하다"
+          "word": "자랑"
         }
       ]
     }
