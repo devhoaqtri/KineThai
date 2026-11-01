@@ -8,7 +8,7 @@ import { formatCountdown, isWordAllowed, nextAvailableAt, type ViewHistory } fro
 import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
 import type { FeedPage, Presentation, TargetLocale, VocabularyFilters } from "../types";
-import { wordTrackLevel, type VocabularyLevel } from "../lib/schema";
+import type { VocabularyWord } from "../lib/schema";
 import { VocabularyCard } from "./VocabularyCard";
 
 // Admin-only, and only on demand: readers never download the export studio.
@@ -62,7 +62,7 @@ export function VocabularyStream({
   suspended: boolean;
   history: ViewHistory;
   /** A word was read: its id, and its level when it has one (for level progress). */
-  onRecordView: (wordId: string, level?: VocabularyLevel) => void;
+  onRecordView: (word: VocabularyWord) => void;
   /** The on-screen word reached its final page; ms left before the stream moves on. */
   onWordEnding?: (remainingMs: number) => void;
   /** A word was finished; the feed records it against the reader's daily streak. */
@@ -167,17 +167,16 @@ export function VocabularyStream({
   const recorded = useRef(new Set<string>());
   const activeEntry = visibleEntries[activeIndex];
   const activeOccurrenceId = activeEntry?.occurrenceId;
-  const activeWordId = activeEntry?.word.id;
-  const activeWordLevel = activeEntry ? wordTrackLevel(activeEntry.word) : undefined;
+  const activeWord = activeEntry?.word;
   useEffect(() => {
-    if (!activeOccurrenceId || !activeWordId || suspended) return;
+    if (!activeOccurrenceId || !activeWord || suspended) return;
     if (recorded.current.has(activeOccurrenceId)) return;
     const timer = setTimeout(() => {
       recorded.current.add(activeOccurrenceId);
-      onRecordView(activeWordId, activeWordLevel);
+      onRecordView(activeWord);
     }, VIEW_DWELL_MS);
     return () => clearTimeout(timer);
-  }, [activeOccurrenceId, activeWordId, activeWordLevel, suspended, onRecordView]);
+  }, [activeOccurrenceId, activeWord, suspended, onRecordView]);
 
   // The export studio needs a word. Opened with none on screen (empty stream, every
   // word blocked) it would render nothing while still holding the feed suspended, so

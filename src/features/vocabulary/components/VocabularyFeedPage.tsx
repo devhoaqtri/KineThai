@@ -7,7 +7,13 @@ import { useScreenWakeLock } from "@/hooks/use-screen-wake-lock";
 import { useShellHeightVar } from "@/hooks/use-shell-height-var";
 import type { FeedPage, Presentation, VocabularyFilters } from "../types";
 import { DIFFICULTY_ALL } from "../lib/difficulty";
-import { isJapaneseLevel, type VocabularyLevel } from "../lib/schema";
+import {
+  isJapaneseLevel,
+  wordTrackLevel,
+  type VocabularyLevel,
+  type VocabularyWord,
+} from "../lib/schema";
+import { rememberRecallWord } from "../lib/recall-words";
 import { SHORT_VIEWPORT_MAX_H } from "../lib/landscape-geometry";
 import { useIsAdmin } from "@/features/admin/hooks/useIsAdmin";
 import { useFontsReady } from "../hooks/useFontsReady";
@@ -235,10 +241,12 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   const recordLevel = levelProgress.record;
   const wordCelebration = levelProgress.celebrating;
   const handleRecordView = useCallback(
-    (wordId: string, level?: VocabularyLevel) => {
-      recordView(wordId);
+    (word: VocabularyWord) => {
+      recordView(word.id);
+      rememberRecallWord(word);
+      const level = wordTrackLevel(word);
       // An imported pack's words are not the catalog's, so they do not fill its levels.
-      if (level && !packName) recordLevel(level, wordId);
+      if (level && !packName) recordLevel(level, word.id);
       music.wordStarted();
     },
     [recordView, recordLevel, packName, music],
@@ -290,6 +298,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           open={optionsOpen}
           onOpen={setOptionsOpen}
           reducedMotion={reducedMotion}
+          history={viewHistory.history}
           historyStats={viewHistory.stats}
           onClearHistory={viewHistory.clear}
           onExport={isAdmin ? openExport : undefined}
