@@ -2205,7 +2205,7 @@
 /* The week at a glance: seven days as bars, and the way to any of them. */
 .vocab-recall-strip {
   display: grid;
-  grid-template-columns: 58px repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr)) 58px;
   gap: 3px;
   margin: 14px 0 6px;
 }
@@ -2243,7 +2243,7 @@
   line-height: 1;
 }
 .vocab-recall-week {
-  margin-right: 5px;
+  margin-left: 5px;
 }
 .vocab-recall-week strong {
   font-size: 22px;
@@ -2282,6 +2282,10 @@
 }
 .vocab-recall-list {
   animation: vocab-recall-list 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Today and yesterday have no strip, so the list keeps its distance from the tally. */
+.vocab-recall-tally + .vocab-recall-list {
+  margin-top: 14px;
 }
 @keyframes vocab-recall-list {
   from {

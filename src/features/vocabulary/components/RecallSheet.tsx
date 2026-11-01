@@ -1,9 +1,11 @@
 /**
  * The memory sheet: a memory cell, zoomed all the way in.
  *
- * One history, seen at any distance. The cell's number becomes the headline, the week's
- * rhythm sits under it and picks any of the last seven days, and below runs the timeline
- * of the words themselves.
+ * One history, seen at any distance. The cell's number becomes the headline, and below
+ * runs the timeline of the words themselves. Only the week cell also opens the week's
+ * rhythm, seven days ending in their total, which picks any one of them. Today and
+ * yesterday stay on their own day: the rest of the week is mostly empty and beside the
+ * point there.
  *
  * It lives inside the settings panel and fills exactly that panel, never the screen: a
  * tap outside closes the panel, sheet and all, like any other tap outside it.
@@ -304,17 +306,6 @@ function RhythmStrip({
   const today = startOfDay(now);
   return (
     <div className="vocab-recall-strip" role="group" aria-label="Chọn ngày trong tuần">
-      <button
-        type="button"
-        className="vocab-recall-week"
-        data-on={scope === "week" || undefined}
-        aria-pressed={scope === "week"}
-        aria-label={`Tuần này, ${weekCount} từ`}
-        onClick={() => onScope("week")}
-      >
-        <strong>{weekCount}</strong>
-        <small>7 ngày</small>
-      </button>
       {days.map((day) => {
         const tally = tallyOf(day.ids, marks);
         const name = dayName(day.start, now);
@@ -345,6 +336,17 @@ function RhythmStrip({
           </button>
         );
       })}
+      <button
+        type="button"
+        className="vocab-recall-week"
+        data-on={scope === "week" || undefined}
+        aria-pressed={scope === "week"}
+        aria-label={`Tuần này, ${weekCount} từ`}
+        onClick={() => onScope("week")}
+      >
+        <strong>{weekCount}</strong>
+        <small>7 ngày</small>
+      </button>
     </div>
   );
 }
@@ -642,16 +644,18 @@ export function RecallSheet({
                     </>
                   )}
                 </div>
-                <div ref={strip}>
-                  <RhythmStrip
-                    days={days}
-                    scope={scope}
-                    marks={marks}
-                    now={now}
-                    weekCount={week.length}
-                    onScope={setScope}
-                  />
-                </div>
+                {initialScope === "week" && (
+                  <div ref={strip}>
+                    <RhythmStrip
+                      days={days}
+                      scope={scope}
+                      marks={marks}
+                      now={now}
+                      weekCount={week.length}
+                      onScope={setScope}
+                    />
+                  </div>
+                )}
                 <div ref={list} key={`${scope}-${forgotten}`} className="vocab-recall-list">
                   {entries.length === 0 && (
                     <p className="vocab-recall-empty">
