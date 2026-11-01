@@ -125,6 +125,7 @@ export function VocabularyStage({
   staged,
   playing,
   reducedMotion,
+  still = false,
   playKey,
   direction,
   dragX,
@@ -133,6 +134,7 @@ export function VocabularyStage({
   revealY,
   timeScale = 1,
   textBudget,
+  expandGrammar = false,
   onGrammarHold,
 }: {
   stage: LearningStage;
@@ -148,6 +150,8 @@ export function VocabularyStage({
   staged: boolean;
   playing: boolean;
   reducedMotion: boolean;
+  /** A still image: the page is painted finished, with no entrance, loop or burst. */
+  still?: boolean;
   playKey: number;
   /** 1 when the reader moved forward to this page, -1 when they stepped back. */
   direction: number;
@@ -170,6 +174,8 @@ export function VocabularyStage({
    * With them, a Vietnamese clue is broken into lines from the real width of its words.
    */
   textBudget?: React.ComponentProps<typeof WordSequenceText>["measuredLayout"];
+  /** The reader's Settings choice to open the answer's grammar section on every word. */
+  expandGrammar?: boolean;
   /** The reader opened (true) or closed (false) the answer's grammar section by hand. */
   onGrammarHold?: (held: boolean) => void;
 }) {
@@ -189,13 +195,14 @@ export function VocabularyStage({
       <p className="sr-only" lang={stage.lang}>
         {stage.text}
       </p>
-      {stage.reveal && staged && !reducedMotion && <RevealBurst key={playKey} />}
+      {stage.reveal && staged && !reducedMotion && !still && <RevealBurst key={playKey} />}
       {/* No `initial={false}` here. It read as "do not slide the first page in", but
           AnimatePresence hands that flag to EVERY motion component underneath, so on a card
           that was born playing — the first word of a stream, whenever its fonts were ready
           before its data — the whole page, words included, was painted finished and never
-          animated. Every later card dodged it only because it mounts off screen first. */}
-      <AnimatePresence custom={pageMotion}>
+          animated. Every later card dodged it only because it mounts off screen first.
+          A still wants exactly that, so it alone asks for it. */}
+      <AnimatePresence custom={pageMotion} initial={still ? false : undefined}>
         {staged && (
           // Two layers per page. The outer BAND is the box the text is fitted to — the
           // fit pipeline reads its height — and it never transforms, so the page's
@@ -232,7 +239,7 @@ export function VocabularyStage({
                 spec={{
                   ...spec,
                   y: stage.reveal ? revealY : 46,
-                  loop: stage.reveal ? spec.loop : "none",
+                  loop: stage.reveal && !still ? spec.loop : "none",
                 }}
                 playKey={playKey}
                 playing={playing}
@@ -264,7 +271,7 @@ export function VocabularyStage({
           className="vocab-reveal-details"
           tabIndex={0}
           aria-label={t(locale, "stage.details")}
-          initial={reducedMotion ? false : { opacity: 0, y: 30, scale: 0.96 }}
+          initial={reducedMotion || still ? false : { opacity: 0, y: 30, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={
             reducedMotion ? { duration: 0 } : { ...SPRING.gentle, delay: DETAILS_DELAY_SECONDS }
@@ -294,13 +301,16 @@ export function VocabularyStage({
               <div className="vocab-example" key={index}>
                 {/* A Han deck writes this sentence in Chinese, and `lang` picks its glyphs. */}
                 <p lang={stage.lang}>
-                  <FilledUsage text={example.en} word={word.word} />
+                  <FilledUsage text={example.en} word={example.fill ?? word.word} />
                 </p>
               </div>
             ))}
             {word.grammar && (
               <WordGrammar
+                // Flipping the choice with this word on screen moves its section too.
+                key={String(expandGrammar)}
                 grammar={word.grammar}
+                expanded={expandGrammar}
                 reducedMotion={reducedMotion}
                 onHold={onGrammarHold}
               />

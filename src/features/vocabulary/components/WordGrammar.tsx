@@ -1,18 +1,18 @@
 /**
- * The meaning panel's collapsible grammar section: a word's grammar in its own language —
+ * The meaning panel's "Nâng cao" section: a word's grammar in its own language —
  * gender and plural, conjugation class and principal forms, the case or particle it
  * governs, counters, honorifics, the Sino-Vietnamese reading, everyday pairings, and the
  * one trap a beginner falls into.
  *
  * Closed by default, it is one quiet row at the foot of the panel naming what it holds.
- * Whether it is open is remembered on this device (lib/grammar-open), so a reader who
- * wants grammar on every word opens it once. Opening it by hand holds the card on its
- * answer until it is closed again: autoplay would otherwise move on mid-table.
+ * Opening it by hand holds the card on its answer until it is closed again: autoplay
+ * would otherwise move on mid-table. That is for this word only. A reader who wants
+ * grammar on every word turns on "Luôn mở Nâng cao" in Settings (lib/grammar-expand),
+ * which opens it without holding anything and gives the answer twice the time instead.
  *
- * Exports: WordGrammar
- * Depends on: framer-motion, lucide-react, ../lib/grammar, ../lib/grammar-open,
- *   ../lib/deck-locale, ../lib/word-joiner, ../lib/ui-copy, ../lib/useLocale,
- *   vocabulary.css (.vocab-grammar*)
+ * Exports: WordGrammar, GrammarList
+ * Depends on: framer-motion, lucide-react, ../lib/grammar, ../lib/deck-locale,
+ *   ../lib/word-joiner, ../lib/ui-copy, ../lib/useLocale, vocabulary.css (.vocab-grammar*)
  */
 import { useContext, useEffect, useId, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -25,7 +25,6 @@ import {
   type GrammarRow,
   type WordGrammar as Grammar,
 } from "../lib/grammar";
-import { readGrammarOpen, writeGrammarOpen } from "../lib/grammar-open";
 import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
 import { encodeWordJoiners } from "../lib/word-joiner";
@@ -107,28 +106,55 @@ function Row({ row, lang, uiLang }: { row: GrammarRow; lang: string; uiLang: str
 }
 
 /**
+ * The rows themselves, shared with a carousel's grammar slide.
+ * @param props.rows - from grammarRows
+ * @param props.lang - the deck's language, for its native terms
+ * @param props.uiLang - the reader's UI language
+ */
+export function GrammarList({
+  rows,
+  lang,
+  uiLang,
+}: {
+  rows: GrammarRow[];
+  lang: string;
+  uiLang?: string;
+}) {
+  return (
+    <dl className="vocab-grammar-list">
+      {rows.map((row) => (
+        <Row key={row.key} row={row} lang={lang} uiLang={uiLang ?? "vi"} />
+      ))}
+    </dl>
+  );
+}
+
+/**
  * @param props.grammar - the word's folded grammar
+ * @param props.expanded - start open, from the reader's Settings choice
  * @param props.reducedMotion - open and close without the height spring
  * @param props.onHold - true when the reader opens the section by hand, false when it
  *   closes or leaves the screen; the card pauses its autoplay in between
  */
 export function WordGrammar({
   grammar,
+  expanded,
   reducedMotion,
   onHold,
 }: {
   grammar: Grammar;
+  expanded: boolean;
   reducedMotion: boolean;
   onHold?: (held: boolean) => void;
 }) {
   const ui = useLocale();
   const locale = useContext(DeckLocaleContext);
   const rows = useMemo(() => grammarRows(grammar, locale, ui), [grammar, locale, ui]);
-  const [open, setOpen] = useState(readGrammarOpen);
+  const [open, setOpen] = useState(expanded);
   const bodyId = useId();
   const section = useRef<HTMLElement>(null);
   // Only a hand-opened section holds the card: one that opened itself from the
-  // remembered preference must not stop a stream the reader left playing.
+  // Settings choice must not stop a stream the reader left playing.
   const held = useRef(false);
   const release = useRef(onHold);
   release.current = onHold;
@@ -143,7 +169,6 @@ export function WordGrammar({
   const toggle = () => {
     const next = !open;
     setOpen(next);
-    writeGrammarOpen(next);
     if (next !== held.current) {
       held.current = next;
       onHold?.(next);
@@ -195,11 +220,7 @@ export function WordGrammar({
             transition={{ height: SPRING.gentle, opacity: { duration: 0.2 } }}
             onAnimationComplete={() => open && reveal()}
           >
-            <dl className="vocab-grammar-list">
-              {rows.map((row) => (
-                <Row key={row.key} row={row} lang={locale} uiLang={ui} />
-              ))}
-            </dl>
+            <GrammarList rows={rows} lang={locale} uiLang={ui} />
           </motion.div>
         )}
       </AnimatePresence>

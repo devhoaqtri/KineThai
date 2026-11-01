@@ -297,7 +297,58 @@ function linesFor(items: MeasuredSegment[], mask: number) {
     [],
     "a colon is not one of the marks",
   );
-  assert.deepEqual(getPunctuationPhraseEdges(["Thật", "sao?", "Ừ"]), [], "nor is a question mark");
+  // A sentence-final mark closes a phrase at least as firmly as a comma does. This used
+  // to assert the opposite for `?`, which let a line end one word past a sentence end.
+  assert.deepEqual(
+    getPunctuationPhraseEdges(["Thật", "sao?", "Ừ"]),
+    [2],
+    "a question mark closes a phrase",
+  );
+  assert.deepEqual(
+    getPunctuationPhraseEdges(["Cháy", "rồi!", "Chạy"]),
+    [2],
+    "so does an exclamation mark",
+  );
+  assert.deepEqual(getPunctuationPhraseEdges(["Thôi", "vậy…", "Về"]), [2], "so does an ellipsis");
+  assert.deepEqual(
+    getPunctuationPhraseEdges(["Hỏi", "rằng:", "“Sao?”", "Ừ"]),
+    [3],
+    "a sentence mark inside closing quotes still closes the phrase",
+  );
+  // The failure that motivated this: without an edge at the `?`, the solver was free to
+  // pull the next sentence's first word back onto this sentence's line.
+  {
+    const items = segments(
+      ["Bạn", 2.0],
+      ["có", 1.3],
+      ["nghe", 2.4],
+      ["không?", 3.6],
+      ["Tôi", 1.9],
+      ["ngồi", 2.3],
+      ["đây", 2.1],
+      ["mãi", 2.0],
+      ["rồi.", 2.3],
+    );
+    const tokens = items.flatMap((item) => item.segment.words.map((word) => word.text));
+    const edges = getPunctuationPhraseEdges(tokens);
+    assert.ok(edges.includes(4), "the word after `không?` opens a new phrase");
+    const solved = solveMeasuredLines(
+      items,
+      { ...BOUNDS, lineWidthPx: 220 },
+      {
+        phraseEdges: edges,
+      },
+    );
+    assert.ok(solved, "expected a layout");
+    const rows = solved.lines.map((line) =>
+      line.segments.flatMap((segment) => segment.words.map((word) => word.index)),
+    );
+    assert.ok(
+      !rows.some((row) => row[row.length - 1] === 4),
+      `no line may end one word past the sentence: ${show(solved.lines)}`,
+    );
+    console.log(`OK — a sentence end is honoured as a phrase edge: ${show(solved.lines)}`);
+  }
 
   // A page with nothing to say about phrases solves exactly as before.
   const plain = segments(
@@ -389,6 +440,193 @@ function linesFor(items: MeasuredSegment[], mask: number) {
   console.log(
     `OK — ${pages} pages with commas or semicolons; the rule gave way on ${violations}, each only where nothing clean fits as large`,
   );
+}
+
+// ── Long pages: >9 syllables spread to a readable size instead of cramming small. ──
+{
+  const items = segments(
+    ["Mưa", 2.4],
+    ["rơi", 2.2],
+    ["ngoài", 2.6],
+    ["hiên,", 2.5],
+    ["gió", 2.1],
+    ["lùa", 2.0],
+    ["lá", 1.9],
+    ["khô", 2.2],
+    ["bay", 2.1],
+    ["đi", 1.8],
+    ["lặng", 2.5],
+    ["lẽ.", 2.7],
+  );
+  const syllables = items.reduce((n, s) => n + s.segment.words.length, 0);
+  assert.ok(syllables > 9, `test needs a long page, got ${syllables} syllables`);
+  const solved = assertInBounds("long page spread", items, BOUNDS);
+  // The largest font any sub-4-line cram could reach, for comparison.
+  let cramFont = 0;
+  for (let mask = 0; mask < 1 << (items.length - 1); mask += 1) {
+    if (linesFor(items, mask).length >= 4) continue;
+    cramFont = Math.max(cramFont, fontFor(items, mask, BOUNDS));
+  }
+  assert.ok(
+    solved.lines.length >= 4,
+    `a >9-syllable page must spread to at least 4 lines: ${show(solved.lines)}`,
+  );
+  assert.ok(
+    solved.fontPx >= cramFont - 1e-6,
+    `spreading must never set the page smaller than the best cram (${solved.fontPx.toFixed(1)} < ${cramFont.toFixed(1)})`,
+  );
+  console.log(
+    `OK — long page spreads to ${solved.lines.length} lines at ${solved.fontPx.toFixed(1)}px, never below the best 3-line cram ${cramFont.toFixed(1)}px: ${show(solved.lines)}`,
+  );
+}
+
+// ── Live inversion: a clean cram outscores the top spread candidate, yet another
+// spread reads larger. That bigger one must win — a small spread must not veto it.
+// Reconstructed from a shipped lead (11 syllables, two comma edges, joined "các=em",
+// "im_lặng") at the bounds a live card measured; the old pick kept 3 lines at ~47px.
+{
+  const items = segments(
+    ["Chia", 2.32],
+    ["đất,", 2.32],
+    ["anh", 1.74],
+    ["cả", 1.16],
+    ["phần", 2.32],
+    ["to,", 1.74],
+    ["các em", 3.18],
+    ["im lặng", 3.86],
+    ["mãi", 1.74],
+  );
+  const live = {
+    lineWidthPx: 486,
+    hardHeightPx: 606,
+    budgetHeightPx: 520,
+    budgetLineEm: 1.6,
+    maxFontPx: 89,
+    floorFontPx: 64,
+    gapEm: 0.24,
+    lineGapEm: 0.06,
+  };
+  const edges = getPunctuationPhraseEdges(tokensOf(items));
+  const solved = solveMeasuredLines(items, live, { phraseEdges: edges });
+  assert.ok(solved, "live inversion: expected a layout");
+  assert.ok(
+    solved.lines.length >= 4,
+    `the larger spread must not be vetoed by a smaller one: ${show(solved.lines)}`,
+  );
+  assert.ok(
+    phraseViolations(solved.lines, edges).length === 0,
+    `spreading must not break the phrase rule on the way: ${show(solved.lines)}`,
+  );
+  console.log(
+    `OK — spread bigger than the cram it replaces, phrases kept: ${show(solved.lines)} @ ${solved.fontPx.toFixed(1)}px`,
+  );
+}
+
+// ── A crowded page is never set on two lines ──────────────────────────────────
+//
+// Two lines holding eight syllables are two LONG lines, and a long line is set small
+// because its width is what binds — so that page lands noticeably smaller than the scenes
+// either side of it. Past six syllables the layout must use three lines or more. This is a
+// floor, not a preference: unlike the spread rule above it cannot be outvoted by score.
+{
+  // The page this was written for, at the widths a real card measures.
+  const items = segments(
+    ["Chuông", 3.0],
+    ["reo", 2.0],
+    ["inh", 1.9],
+    ["ỏi,", 1.6],
+    ["vươn", 2.5],
+    ["vai", 1.9],
+    ["ngồi", 2.3],
+    ["dậy", 2.4],
+  );
+  const count = items.reduce((total, item) => total + item.segment.words.length, 0);
+  assert.equal(count, 8, "the example page is eight syllables");
+
+  let twoLiners = 0;
+  let widths = 0;
+  for (let width = 240; width <= 560; width += 10) {
+    const solved = solveMeasuredLines(items, { ...BOUNDS, lineWidthPx: width });
+    if (!solved) continue;
+    widths += 1;
+    if (solved.lines.length < 3) {
+      twoLiners += 1;
+      console.error(`      ${width}px -> ${show(solved.lines)}`);
+    }
+  }
+  assert.ok(widths > 0, "no width produced a layout; the check would pass vacuously");
+  assert.equal(
+    twoLiners,
+    0,
+    `an 8-syllable page was set on fewer than 3 lines at ${twoLiners} width(s)`,
+  );
+  const sample = solveMeasuredLines(items, { ...BOUNDS, lineWidthPx: 346 })!;
+  console.log(
+    `OK — 8 syllables never on two lines across ${widths} widths: ${show(sample.lines)} @ ${sample.fontPx.toFixed(1)}px`,
+  );
+}
+
+// Six or fewer is still free to use two lines — the cap must not creep downward. The
+// comma case asserted earlier in this file is exactly that: six syllables, two lines,
+// "Mở cửa ra, / ồ đẹp quá!". It is still passing above, so the boundary is covered from
+// the allowed side; this checks the first syllable PAST it, which is where the cap bites.
+{
+  const items = segments(
+    ["Mở", 2.0],
+    ["cửa", 2.3],
+    ["ra,", 1.8],
+    ["ồ", 1.2],
+    ["đẹp", 2.2],
+    ["quá", 2.4],
+    ["nhỉ!", 2.5],
+  );
+  const count = items.reduce((total, item) => total + item.segment.words.length, 0);
+  assert.equal(count, 7, "one syllable past the cap");
+  let belowFloor = 0;
+  let widths = 0;
+  for (let width = 240; width <= 560; width += 10) {
+    const solved = solveMeasuredLines(items, { ...BOUNDS, lineWidthPx: width });
+    if (!solved) continue;
+    widths += 1;
+    if (solved.lines.length < 3) belowFloor += 1;
+  }
+  assert.ok(widths > 0, "no width produced a layout; the check would pass vacuously");
+  assert.equal(belowFloor, 0, `a 7-syllable page fell below three lines at ${belowFloor} width(s)`);
+  console.log(
+    `OK — seven syllables, the first past the cap, never on two lines (${widths} widths)`,
+  );
+}
+
+// A page with too few segments to reach three lines is exempt rather than unset.
+{
+  const items = segments(["một hai ba b\u1ed1n", 6.0], ["năm sáu bảy", 4.5]);
+  const solved = solveMeasuredLines(items, BOUNDS);
+  assert.ok(solved, "a two-segment page must still get a layout");
+  console.log(`OK — too few segments to reach the floor still renders: ${show(solved.lines)}`);
+}
+
+// A Han page's edges are a preference: a wide blank beside a comma must not be kept with
+// the words before it when that sets the whole page small.
+{
+  const items = segments(
+    ["我要", 2],
+    ["先", 1],
+    ["____，", 2.6],
+    ["再", 1],
+    ["换", 1],
+    ["上", 1],
+    ["干净", 2],
+    ["的", 1],
+    ["衣服。", 2.5],
+  );
+  const words = items.flatMap((item) => item.segment.words.map((word) => word.text));
+  const phraseEdges = getPunctuationPhraseEdges(words);
+  assert.ok(phraseEdges.length > 0, "a full-width comma must make a phrase edge");
+  const strict = solveMeasuredLines(items, BOUNDS, { phraseEdges });
+  const soft = solveMeasuredLines(items, BOUNDS, { phraseEdges, softPhraseEdges: true });
+  assert.ok(strict && soft, "both pages must get a layout");
+  assert.ok(soft.fontPx > strict.fontPx, `soft edges did not read larger: ${show(soft.lines)}`);
+  console.log(`OK — a Han page is not held small by its comma: ${show(soft.lines)}`);
 }
 
 console.log("\nAll measured-line checks passed.");

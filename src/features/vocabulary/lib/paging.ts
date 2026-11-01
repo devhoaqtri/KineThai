@@ -1,8 +1,16 @@
-/** Pure deterministic paging over any compiled catalog; shared by the server endpoint and browser-imported packs. Exports: MAX_POSITION, readCatalogPage. Depends on: schema, difficulty, random. */
+/** Pure deterministic paging over any compiled catalog; shared by the server endpoint and browser-imported packs. Exports: MAX_POSITION, readCatalogPage. Depends on: schema, difficulty, hanzi, random, syllables. */
 import { wordTrackLevel, type Catalog, type VocabularyLevel, type VocabularyWord } from "./schema";
 import { LEVEL_SAMPLE_PRIORITY, difficultyLevels } from "./difficulty";
+import { getHanCharCount, isHanAnswer } from "./hanzi";
 import { randomGenerator } from "./random";
+import { countSyllables } from "./syllables";
 import type { FeedPage, FeedRequest } from "../types";
+
+/** @returns The list starting from its middle, wrapping round. @pure true */
+function fromMiddle<T>(list: readonly T[]): T[] {
+  const middle = Math.floor(list.length / 2);
+  return [...list.slice(middle), ...list.slice(0, middle)];
+}
 
 export const MAX_POSITION = 1_000_000_000_000;
 const pools = new Map<string, Uint32Array>();
@@ -157,10 +165,21 @@ function levelTally(catalog: Catalog, topic: string) {
     const named = priority.flatMap((name) => words.filter((x) => x.word === name));
     // Words starting with "a" go first so every rung's sample shares an initial; a level
     // without enough of them (or a non-Latin deck) falls back to the old order.
-    for (const w of named) if (startsWithA(w.word)) take(w);
-    for (const w of words) if (startsWithA(w.word)) take(w);
-    for (const w of named) take(w);
-    for (const w of words) take(w);
+    const pass = (keep: (word: (typeof words)[number]) => boolean) => {
+      for (const w of named) if (startsWithA(w.word) && keep(w)) take(w);
+      for (const w of words) if (startsWithA(w.word) && keep(w)) take(w);
+      for (const w of named) if (keep(w)) take(w);
+      for (const w of words) if (keep(w)) take(w);
+    };
+    const han = words.filter((w) => isHanAnswer(w.word));
+    const ofLength = (size: number) =>
+      fromMiddle(han.filter((w) => getHanCharCount(w.word) === size));
+    const [three, two] = [ofLength(3), ofLength(2)];
+    for (let index = 0; index < Math.max(three.length, two.length); index += 1) {
+      for (const w of [three[index], two[index]]) if (w) take(w);
+    }
+    pass((w) => countSyllables(w) === 2);
+    pass(() => true);
     samples[level] = picked;
   }
   const tally = { counts, samples, total: heads.size };

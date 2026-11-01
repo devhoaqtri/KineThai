@@ -147,6 +147,11 @@ const wordSchema = z.object({
       z.object({
         en: z.string().trim().min(1).max(400),
         vi: optionalText(400),
+        /**
+         * What fills the blank when it is not the headword itself: a conjugated form
+         * (する → します, 行く → 行って). Absent when the headword fits as written.
+         */
+        fill: z.string().trim().min(1).max(64).optional(),
         /** Per-locale contextual gloss of the example (the "hint" phrase). `vi` is the
          * base `vi` field; other locales overlay it when selected. */
         glosses: localizedText(),

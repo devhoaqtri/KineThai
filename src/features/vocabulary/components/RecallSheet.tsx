@@ -47,6 +47,11 @@ import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
 import { FilledUsage, MarkedText } from "./MarkedText";
 
+/**
+ * Rows show only the word and its short meaning for now. Flip this to bring back the
+ * time, view count, IPA, part of speech and example.
+ */
+const SHOW_WORD_DETAILS = false;
 /** How far a row has to travel sideways before it counts as an answer. */
 const SWIPE_PX = 72;
 /** A pull past this share of the screen closes on release. */
@@ -185,46 +190,86 @@ function Row({
           dragged.current = true;
           setDragging(true);
         }}
+        onPointerDownCapture={() => {
+          dragged.current = false;
+        }}
         onDragEnd={settle}
       >
-        <button
-          type="button"
-          className="vocab-recall-toggle"
-          aria-expanded={open}
-          aria-label={revealed ? label : t(ui, "recall.unseenAria", { word: label })}
-          onClick={() => {
-            // The pointer-up that ends a swipe still lands here as a click.
-            if (dragged.current) {
-              dragged.current = false;
-              return;
+        <div className="vocab-recall-line">
+          <button
+            type="button"
+            className="vocab-recall-toggle"
+            aria-expanded={open}
+            aria-label={
+              SHOW_WORD_DETAILS
+                ? revealed
+                  ? label
+                  : t(ui, "recall.unseenAria", { word: label })
+                : t(ui, "recall.rateAria", { word: label })
             }
-            onToggle();
-          }}
-        >
-          <span className="vocab-recall-node" aria-hidden="true">
-            {mark === "yes" && <Check size={9} strokeWidth={4} />}
-            {mark === "no" && <X size={9} strokeWidth={4} />}
-          </span>
-          <span className="vocab-recall-main">
-            <span className="vocab-recall-word" lang={lang}>
-              {label}
+            onClick={() => {
+              // The pointer-up that ends a swipe still lands here as a click.
+              if (!dragged.current) onToggle();
+            }}
+          >
+            <span className="vocab-recall-node" aria-hidden="true">
+              {mark === "yes" && <Check size={9} strokeWidth={4} />}
+              {mark === "no" && <X size={9} strokeWidth={4} />}
             </span>
-            {copy &&
-              (revealed ? (
+            <span className="vocab-recall-main">
+              <span className="vocab-recall-word" lang={lang}>
+                {label}
+              </span>
+              {copy &&
+                (revealed ? (
+                  <span className="vocab-recall-meaning" lang={ui}>
+                    <MarkedText text={meaning} />
+                  </span>
+                ) : (
+                  <Redacted text={meaning} />
+                ))}
+              {!copy && open && (
                 <span className="vocab-recall-meaning" lang={ui}>
-                  <MarkedText text={meaning} />
+                  {t(ui, "recall.noCopy")}
                 </span>
-              ) : (
-                <Redacted text={meaning} />
-              ))}
-          </span>
-          <span className="vocab-recall-meta">
-            {entry.views > 1 && <span className="vocab-recall-views">×{entry.views}</span>}
-            <time dateTime={new Date(entry.at).toISOString()}>{clock(entry.at)}</time>
-          </span>
-        </button>
+              )}
+            </span>
+            {SHOW_WORD_DETAILS && (
+              <span className="vocab-recall-meta">
+                {entry.views > 1 && <span className="vocab-recall-views">×{entry.views}</span>}
+                <time dateTime={new Date(entry.at).toISOString()}>{clock(entry.at)}</time>
+              </span>
+            )}
+          </button>
+          <div className="vocab-recall-answers" role="group" aria-label={label}>
+            <button
+              type="button"
+              data-kind="no"
+              data-on={mark === "no" || undefined}
+              aria-pressed={mark === "no"}
+              aria-label={t(ui, "recall.markNoAria", { word: label })}
+              onClick={() => {
+                if (!dragged.current) onMark("no", true);
+              }}
+            >
+              <X size={18} strokeWidth={2.75} />
+            </button>
+            <button
+              type="button"
+              data-kind="yes"
+              data-on={mark === "yes" || undefined}
+              aria-pressed={mark === "yes"}
+              aria-label={t(ui, "recall.markYesAria", { word: label })}
+              onClick={() => {
+                if (!dragged.current) onMark("yes", true);
+              }}
+            >
+              <Check size={18} strokeWidth={2.75} />
+            </button>
+          </div>
+        </div>
         <AnimatePresence initial={false}>
-          {open && (
+          {SHOW_WORD_DETAILS && open && (
             <motion.div
               className="vocab-recall-detail"
               initial={{ height: 0, opacity: 0 }}
@@ -250,31 +295,6 @@ function Row({
                     <FilledUsage text={copy.example} word={copy.word} />
                   </p>
                 )}
-                {!copy && (
-                  <p className="vocab-recall-facts" lang={ui}>
-                    {t(ui, "recall.noCopy")}
-                  </p>
-                )}
-                <div className="vocab-recall-answers" role="group" aria-label={label}>
-                  <button
-                    type="button"
-                    data-kind="no"
-                    data-on={mark === "no" || undefined}
-                    aria-pressed={mark === "no"}
-                    onClick={() => onMark("no", true)}
-                  >
-                    <X size={16} strokeWidth={2.75} /> {t(ui, "recall.no")}
-                  </button>
-                  <button
-                    type="button"
-                    data-kind="yes"
-                    data-on={mark === "yes" || undefined}
-                    aria-pressed={mark === "yes"}
-                    onClick={() => onMark("yes", true)}
-                  >
-                    <Check size={16} strokeWidth={2.75} /> {t(ui, "recall.yes")}
-                  </button>
-                </div>
               </div>
             </motion.div>
           )}
@@ -306,17 +326,6 @@ function RhythmStrip({
   const today = startOfDay(now);
   return (
     <div className="vocab-recall-strip" role="group" aria-label={t(ui, "recall.stripAria")}>
-      <button
-        type="button"
-        className="vocab-recall-week"
-        data-on={scope === "week" || undefined}
-        aria-pressed={scope === "week"}
-        aria-label={t(ui, "recall.scopeAria", { label: t(ui, "memory.cell.week"), n: weekCount })}
-        onClick={() => onScope("week")}
-      >
-        <strong>{weekCount}</strong>
-        <small>{t(ui, "recall.sevenDays")}</small>
-      </button>
       {days.map((day) => {
         const tally = tallyOf(day.ids, marks);
         const name = dayName(day.start, now, ui);
@@ -350,6 +359,17 @@ function RhythmStrip({
           </button>
         );
       })}
+      <button
+        type="button"
+        className="vocab-recall-week"
+        data-on={scope === "week" || undefined}
+        aria-pressed={scope === "week"}
+        aria-label={t(ui, "recall.scopeAria", { label: t(ui, "memory.cell.week"), n: weekCount })}
+        onClick={() => onScope("week")}
+      >
+        <strong>{weekCount}</strong>
+        <small>{t(ui, "recall.sevenDays")}</small>
+      </button>
     </div>
   );
 }
@@ -403,6 +423,7 @@ export function RecallSheet({
   const [copies] = useState(loadRecallWords);
 
   const back = useRef<HTMLButtonElement>(null);
+  const sheet = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const wash = useRef<HTMLDivElement>(null);
@@ -543,6 +564,12 @@ export function RecallSheet({
   }, [zoom]);
 
   useLayoutEffect(() => {
+    const node = sheet.current;
+    if (!node || !container) return;
+    node.style.transform = `translateY(${container.scrollTop}px)`;
+  }, [container]);
+
+  useLayoutEffect(() => {
     if (scroller.current) scroller.current.scrollTop = 0;
     setOpenId(null);
     setOnlyForgotten(false);
@@ -563,75 +590,76 @@ export function RecallSheet({
 
   return (
     <Dialog.Root open onOpenChange={(open) => !open && zoom.close()}>
-      <Dialog.Portal container={container}>
-        <Dialog.Content
-          className="vocab-recall"
-          aria-describedby={undefined}
-          onOpenAutoFocus={(event) => {
-            event.preventDefault();
-            back.current?.focus({ preventScroll: true });
-          }}
-          // This dialog has no Radix trigger to hand focus back to.
-          onCloseAutoFocus={(event) => {
-            event.preventDefault();
-            returnFocus();
-          }}
-          // The settings sheet behind must not read this Escape as its own.
-          onKeyDown={(event) => event.stopPropagation()}
+      <Dialog.Content
+        ref={sheet}
+        className="vocab-recall"
+        aria-describedby={undefined}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          back.current?.focus({ preventScroll: true });
+        }}
+        // This dialog has no Radix trigger to hand focus back to.
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          returnFocus();
+        }}
+        // The settings sheet behind must not read this Escape as its own.
+        onKeyDown={(event) => event.stopPropagation()}
+      >
+        <Dialog.Title className="sr-only">
+          {t(ui, "recall.scopeAria", { label, n: entries.length })}
+        </Dialog.Title>
+        <div ref={backdrop} className="vocab-recall-backdrop" />
+        <div
+          ref={stage}
+          className="vocab-recall-stage"
+          data-today={(typeof scope === "number" && scope === startOfDay(now)) || undefined}
         >
-          <Dialog.Title className="sr-only">
-            {t(ui, "recall.scopeAria", { label, n: entries.length })}
-          </Dialog.Title>
-          <div ref={backdrop} className="vocab-recall-backdrop" />
+          <div ref={wash} className="vocab-recall-wash" />
           <div
-            ref={stage}
-            className="vocab-recall-stage"
-            data-today={(typeof scope === "number" && scope === startOfDay(now)) || undefined}
+            ref={scroller}
+            className="vocab-recall-scroll"
+            onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 4)}
           >
-            <div ref={wash} className="vocab-recall-wash" />
-            <div
-              ref={scroller}
-              className="vocab-recall-scroll"
-              onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 4)}
-            >
-              <div className="vocab-recall-column">
-                <div ref={hero} className="vocab-recall-hero">
-                  <div className="vocab-recall-headline">
-                    <strong ref={count} className="vocab-recall-count">
-                      <span key={scope}>{entries.length}</span>
-                    </strong>
-                    <span ref={unit} className="vocab-recall-unit">
-                      {t(ui, "onboard.wordsUnit")}
-                    </span>
-                  </div>
-                  <span ref={name} className="vocab-recall-name">
-                    {label}
+            <div className="vocab-recall-column">
+              <div ref={hero} className="vocab-recall-hero">
+                <div className="vocab-recall-headline">
+                  <strong ref={count} className="vocab-recall-count">
+                    <span key={scope}>{entries.length}</span>
+                  </strong>
+                  <span ref={unit} className="vocab-recall-unit">
+                    {t(ui, "onboard.wordsUnit")}
                   </span>
                 </div>
-                <div ref={tally} className="vocab-recall-tally">
-                  {score.total > 0 && (
-                    <>
-                      <div className="vocab-recall-meter" aria-hidden="true">
-                        <MeterParts {...score} />
-                      </div>
-                      <div className="vocab-recall-summary">
-                        <p aria-live="polite">{summary}</p>
-                        {score.no > 0 && (
-                          <button
-                            type="button"
-                            aria-pressed={forgotten}
-                            data-on={forgotten || undefined}
-                            onClick={() => setOnlyForgotten((on) => !on)}
-                          >
-                            {forgotten
-                              ? t(ui, "recall.showAll")
-                              : t(ui, "recall.showForgotten", { n: score.no })}
-                          </button>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
+                <span ref={name} className="vocab-recall-name">
+                  {label}
+                </span>
+              </div>
+              <div ref={tally} className="vocab-recall-tally">
+                {score.total > 0 && (
+                  <>
+                    <div className="vocab-recall-meter" aria-hidden="true">
+                      <MeterParts {...score} />
+                    </div>
+                    <div className="vocab-recall-summary">
+                      <p aria-live="polite">{summary}</p>
+                      {score.no > 0 && (
+                        <button
+                          type="button"
+                          aria-pressed={forgotten}
+                          data-on={forgotten || undefined}
+                          onClick={() => setOnlyForgotten((on) => !on)}
+                        >
+                          {forgotten
+                            ? t(ui, "recall.showAll")
+                            : t(ui, "recall.showForgotten", { n: score.no })}
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+              {initialScope === "week" && (
                 <div ref={strip}>
                   <RhythmStrip
                     days={days}
@@ -643,69 +671,69 @@ export function RecallSheet({
                     onScope={setScope}
                   />
                 </div>
-                <div ref={list} key={`${scope}-${forgotten}`} className="vocab-recall-list">
-                  {entries.length === 0 && (
-                    <p className="vocab-recall-empty">
-                      {scope === "week"
-                        ? t(ui, "recall.empty.week")
-                        : scope === startOfDay(now)
-                          ? t(ui, "recall.empty.today")
-                          : t(ui, "recall.empty.day")}
-                    </p>
-                  )}
-                  {groups.map((group) => (
-                    <section key={group.start} className="vocab-recall-group">
-                      {scope === "week" && (
-                        <h3 className="vocab-recall-group-head">{dayName(group.start, now, ui)}</h3>
-                      )}
-                      <ol className="vocab-recall-rail">
-                        {group.rows.map((entry) => (
-                          <Row
-                            key={entry.id}
-                            entry={entry}
-                            copy={copies[entry.id]}
-                            mark={marks[entry.id]}
-                            open={openId === entry.id}
-                            ui={ui}
-                            weekViews={week.find((row) => row.id === entry.id)?.views ?? 1}
-                            onToggle={() =>
-                              setOpenId((current) => (current === entry.id ? null : entry.id))
-                            }
-                            onMark={(choice, toggle) => mark(entry.id, choice, toggle)}
-                          />
-                        ))}
-                      </ol>
-                    </section>
-                  ))}
-                </div>
+              )}
+              <div ref={list} key={`${scope}-${forgotten}`} className="vocab-recall-list">
+                {entries.length === 0 && (
+                  <p className="vocab-recall-empty">
+                    {scope === "week"
+                      ? t(ui, "recall.empty.week")
+                      : scope === startOfDay(now)
+                        ? t(ui, "recall.empty.today")
+                        : t(ui, "recall.empty.day")}
+                  </p>
+                )}
+                {groups.map((group) => (
+                  <section key={group.start} className="vocab-recall-group">
+                    {scope === "week" && (
+                      <h3 className="vocab-recall-group-head">{dayName(group.start, now, ui)}</h3>
+                    )}
+                    <ol className="vocab-recall-rail">
+                      {group.rows.map((entry) => (
+                        <Row
+                          key={entry.id}
+                          entry={entry}
+                          copy={copies[entry.id]}
+                          mark={marks[entry.id]}
+                          open={openId === entry.id}
+                          ui={ui}
+                          weekViews={week.find((row) => row.id === entry.id)?.views ?? 1}
+                          onToggle={() =>
+                            setOpenId((current) => (current === entry.id ? null : entry.id))
+                          }
+                          onMark={(choice, toggle) => mark(entry.id, choice, toggle)}
+                        />
+                      ))}
+                    </ol>
+                  </section>
+                ))}
               </div>
             </div>
-            <header
-              ref={bar}
-              className="vocab-recall-topbar"
-              data-scrolled={scrolled || undefined}
-              data-compact={compact || undefined}
-            >
-              <span className="vocab-recall-grabber" aria-hidden="true" />
-              <button
-                ref={back}
-                type="button"
-                className="vocab-recall-back"
-                onClick={zoom.close}
-                aria-label={t(ui, "recall.back")}
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <p className="vocab-recall-compact" aria-hidden={!compact}>
-                <strong>{label}</strong>
-                <small>
-                  {entries.length} {t(ui, "onboard.wordsUnit")}
-                </small>
-              </p>
-            </header>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
+          <header
+            ref={bar}
+            className="vocab-recall-topbar"
+            data-scrolled={scrolled || undefined}
+            data-compact={compact || undefined}
+          >
+            <span className="vocab-recall-grabber" aria-hidden="true" />
+            <button
+              ref={back}
+              type="button"
+              className="vocab-recall-back"
+              onClick={zoom.close}
+              aria-label={t(ui, "recall.back")}
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <p className="vocab-recall-compact" aria-hidden={!compact}>
+              <strong>{label}</strong>
+              <small>
+                {entries.length} {t(ui, "onboard.wordsUnit")}
+              </small>
+            </p>
+          </header>
+        </div>
+      </Dialog.Content>
     </Dialog.Root>
   );
 }
