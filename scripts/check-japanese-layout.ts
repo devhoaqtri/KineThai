@@ -232,7 +232,12 @@ assert.equal(flatWord!.usage[0]?.glosses?.ja, "わたしたちは | 二時間 �
 assert.deepEqual(flatWord!.emphasis, ["飛び立ち", "荷物検査"]);
 const flatStages = buildStages(flatWord!, "detective", "ja");
 const flatDefinition = flatStages.find((stage) => stage.id.startsWith("definition"));
-assert.deepEqual(flatDefinition?.phraseEdges, [2, 4]);
+// 23 characters is too much for one page: it splits at the phrase break nearest the middle.
+assert.deepEqual(
+  flatStages.filter((stage) => stage.id.startsWith("definition")).map((stage) => stage.text),
+  ["飛行機が 飛び立ち、 人を 乗せたり", "降ろしたり する 場所。"],
+);
+assert.deepEqual(flatDefinition?.phraseEdges, [2]);
 assert.deepEqual(flatDefinition?.dataEmphasis, ["飛び立ち", "荷物検査"]);
 assert.deepEqual(
   [...getEmphasizedWordIndexes(getWords(flatDefinition!.text), flatDefinition!.dataEmphasis)],

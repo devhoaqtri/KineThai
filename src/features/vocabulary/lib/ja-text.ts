@@ -8,8 +8,9 @@
  * line, while `|` becomes the phrase edge the layout prefers to break on.
  *
  * Exports: JapanesePage, stripJapaneseMarks, parseJapaneseMarkup, paginateJapaneseChunks
- * Depends on: kinetic-text isLikelyJapaneseText (via callers)
+ * Depends on: kinetic-text getJapaneseMoraTokens, JAPANESE_LONG_PAGE_MORAE
  */
+import { getJapaneseMoraTokens, JAPANESE_LONG_PAGE_MORAE } from "@/features/kinetic-text";
 
 /** One page's display tokens plus the phrase edges (token indexes where a chunk begins). */
 export type JapanesePage = {
@@ -80,12 +81,69 @@ export function parseJapaneseMarkup(text: string): {
   };
 }
 
+/** A side shorter than this reads as an orphan, so such a split is not worth making. */
+const MIN_SPLIT_MORAE = 6;
+/** A 文節 ending here closes a clause, so a chunk may be split after it as a last resort. */
+const CLAUSE_END = /[、。！？!?…」』）]$/u;
+
+type Cut = [head: string[][], tail: string[][]];
+
+function countMorae(chunks: readonly (readonly string[])[]): number {
+  return getJapaneseMoraTokens(chunks.flat().join(" ")).length;
+}
+
+/** Every break between two authored chunks. */
+function chunkCuts(page: readonly string[][]): Cut[] {
+  return page.slice(1).map((_, index) => [page.slice(0, index + 1), page.slice(index + 1)]);
+}
+
+/** Every break after a clause-ending 文節 inside a chunk. */
+function clauseCuts(page: readonly string[][]): Cut[] {
+  return page.flatMap((chunk, at) =>
+    chunk.slice(0, -1).flatMap((token, index): Cut[] =>
+      CLAUSE_END.test(token)
+        ? [
+            [
+              [...page.slice(0, at), chunk.slice(0, index + 1)],
+              [chunk.slice(index + 1), ...page.slice(at + 1)],
+            ],
+          ]
+        : [],
+    ),
+  );
+}
+
+/** @returns The cut leaving the two sides most even, or null when every cut orphans one. */
+function balancedCut(cuts: readonly Cut[]): Cut | null {
+  let best: Cut | null = null;
+  let bestGap = Number.POSITIVE_INFINITY;
+  for (const cut of cuts) {
+    const [head, tail] = [countMorae(cut[0]), countMorae(cut[1])];
+    if (Math.min(head, tail) < MIN_SPLIT_MORAE || Math.abs(head - tail) >= bestGap) continue;
+    best = cut;
+    bestGap = Math.abs(head - tail);
+  }
+  return best;
+}
+
 /**
- * Turn chunks into pages without ever cutting a chunk.
+ * Split a page too long for one screen, at the phrase break that leaves the two sides most
+ * even by what there is to read, then the same again for a side still too long. Authored
+ * chunks are tried first, then clause ends. A page with neither stays whole.
+ */
+function splitLongPage(page: readonly string[][]): string[][][] {
+  if (countMorae(page) < JAPANESE_LONG_PAGE_MORAE) return [[...page]];
+  const cut = balancedCut(chunkCuts(page)) ?? balancedCut(clauseCuts(page));
+  return cut ? cut.flatMap(splitLongPage) : [[...page]];
+}
+
+/**
+ * Turn chunks into pages without ever cutting a chunk at a place the deck did not mark.
  *
  * A field shorter than twice the page budget keeps one page, matching the rest of the
- * reader; past that, chunks are grouped greedily. A single chunk wider than the budget
- * still stands alone: a phrase is never split to save a page.
+ * reader; past that, chunks are grouped greedily. Either way a page with too much to read
+ * is then split in two (see splitLongPage), because the budget counts 文節, and a line of
+ * eight 文節 can hold thirty characters.
  *
  * @param chunks - display tokens grouped by authored chunk
  * @param tokenLimit - soft tokens per page
@@ -98,7 +156,7 @@ export function paginateJapaneseChunks(
 ): JapanesePage[] {
   const totalTokens = chunks.reduce((total, chunk) => total + chunk.length, 0);
   if (chunks.length <= 1 || totalTokens <= tokenLimit * 2) {
-    return [toPage(chunks)];
+    return splitLongPage(chunks.map((chunk) => [...chunk])).map(toPage);
   }
 
   const pages: string[][][] = [];
@@ -122,7 +180,7 @@ export function paginateJapaneseChunks(
     pages[pages.length - 1]!.push(...tail);
   }
 
-  return pages.map(toPage);
+  return pages.flatMap(splitLongPage).map(toPage);
 }
 
 function countTokens(chunks: readonly (readonly string[])[]): number {

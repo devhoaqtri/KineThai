@@ -6,7 +6,8 @@
  * gap at all and a line may break between any two 文節. Glyphs themselves cost a full
  * em, unlike the ~0.58em average of Vietnamese letters.
  *
- * Exports: isLikelyJapaneseText, getJapaneseMoraTokens, getJapaneseCharBudgetForLine, getJapaneseLayoutMetrics
+ * Exports: JAPANESE_LONG_PAGE_MORAE, isLikelyJapaneseText, getJapaneseMoraTokens,
+ *   getJapaneseCharBudgetForLine, getJapaneseLayoutMetrics
  * Depends on: ./page-metrics
  */
 
@@ -17,6 +18,12 @@ import {
   suggestPackedFitScale,
 } from "./page-metrics";
 import type { VietnameseLayoutMetrics } from "./types";
+
+/**
+ * A Japanese page this long is too much for one screen: the pager splits it at a phrase
+ * break, and one that cannot be split gets more time on screen. About one page in five.
+ */
+export const JAPANESE_LONG_PAGE_MORAE = 20;
 
 /** Hiragana or katakana. Kanji alone is ambiguous (Chinese has no kana), so it never triggers. */
 const KANA = /[\u3040-\u30ff\uff66-\uff9f]/u;

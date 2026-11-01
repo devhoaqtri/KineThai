@@ -13,6 +13,7 @@ import {
   isLikelyChineseText,
   isLikelyJapaneseText,
   isLikelyVietnameseText,
+  JAPANESE_LONG_PAGE_MORAE,
 } from "@/features/kinetic-text";
 
 /** Keep kinetic text clear of the canvas edge without stealing its scale. */
@@ -151,6 +152,19 @@ export function getPageTextSize(baseSize: number, text: string, isVietnamese: bo
 const MIN_PAGE_MS = 3200;
 
 /**
+ * Morae that take as long to read as one Vietnamese syllable: the same clue runs about 14
+ * morae in the Japanese decks and 9 syllables in the Vietnamese ones. A 文節 is no measure
+ * of this, since a whole clue is only about five of them.
+ */
+const MORAE_PER_SYLLABLE = 1.5;
+
+/**
+ * A long Japanese page is normally split in two; one with no phrase break to split at gets
+ * this much more time, since the word count stops adding any at 12 morae.
+ */
+const LONG_PAGE_SCALE = 1.5;
+
+/**
  * Compute pageduration.
  * @param text - text argument
  * @param tempo - tempo argument
@@ -158,22 +172,23 @@ const MIN_PAGE_MS = 3200;
  * @returns Computed value
  */
 export function getPageDuration(text: string, tempo: Tempo, rhythm: Rhythm): number {
-  const wordCount = getPageWordCount(text);
+  // A Japanese page is timed by how much there is to read, in the same units as every
+  // other language, so a clue stays up as long as its Vietnamese equivalent. It reveals
+  // mora by mora, so a page with more cascade than that keeps the time to finish it.
+  const japanese = isLikelyJapaneseText(text);
+  const moraCount = japanese ? getJapaneseMoraTokens(text).length : 0;
+  const wordCount = japanese ? moraCount / MORAE_PER_SYLLABLE : getPageWordCount(text);
   const base = Math.max(MIN_PAGE_MS, Math.min(5200, 1900 + wordCount * 430));
   const rhythmMultiplier = rhythm === "poetic" ? 1.18 : 1;
   const scale = tempoConfig[tempo].pageMultiplier * rhythmMultiplier;
-  // A Japanese page reveals mora-by-mora, a finer cascade than its 文節 count implies, so
-  // it is timed from that cascade plus a short read-hold rather than the word count. It
-  // keeps every language's minimum: the cascade alone left a reader as little as 1.5s
-  // for a whole clue, and a page needs time to be read, not just to land.
-  if (isLikelyJapaneseText(text)) {
-    const moraCount = getJapaneseMoraTokens(text).length;
+  if (japanese) {
     const cascade =
       (getMoraDelay(moraCount, tempo, rhythm) + tempoConfig[tempo].wordDuration) *
         tempoConfig[tempo].pageMultiplier *
         1000 +
       800;
-    return Math.max(MIN_PAGE_MS * scale, cascade);
+    const length = moraCount >= JAPANESE_LONG_PAGE_MORAE ? LONG_PAGE_SCALE : 1;
+    return Math.max(base * scale * length, cascade);
   }
   return base * scale;
 }

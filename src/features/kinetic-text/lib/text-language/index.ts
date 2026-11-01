@@ -49,6 +49,7 @@ export {
   getJapaneseCharBudgetForLine,
   getJapaneseLayoutMetrics,
   getJapaneseMoraTokens,
+  JAPANESE_LONG_PAGE_MORAE,
   isLikelyJapaneseText,
 } from "./japanese-text";
 
