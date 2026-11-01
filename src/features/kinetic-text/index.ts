@@ -27,6 +27,7 @@ export {
   getJapaneseCharBudgetForLine,
   getJapaneseLayoutMetrics,
   getJapaneseMoraTokens,
+  JAPANESE_LONG_PAGE_MORAE,
   getSpecialPoeticWordIndexes,
   getTextPageWordLimit,
   getVietnameseCanvasInnerWidth,
