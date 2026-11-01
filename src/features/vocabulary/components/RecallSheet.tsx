@@ -5,13 +5,16 @@
  * rhythm sits under it and picks any of the last seven days, and below runs the timeline
  * of the words themselves.
  *
- * It is built for honest recall. A word's meaning stays redacted until the reader has
- * tried it, then opens with the example and the two answers: "Vẫn nhớ", "Quên rồi". The
+ * It lives inside the settings panel and fills exactly that panel, never the screen: a
+ * tap outside closes the panel, sheet and all, like any other tap outside it.
+ *
+ * It is built for quick, honest recall. A word's short meaning stays redacted until the
+ * reader taps the word, and every row carries the two answers, a check and a cross. The
  * answer is the timeline's own node, lit on the rail, and the row keeps its meaning from
  * then on, so a finished day reads as a glossary. Marking never opens the next word,
- * which would show its meaning before it could be tried. A sideways swipe answers
- * without opening. A pull down from the top folds the sheet back into its cell, with
- * the finger on the zoom's own playhead (../hooks/useRecallZoom).
+ * which would show its meaning before it could be tried. A sideways swipe answers the
+ * same way. A pull down from the top folds the sheet back into its cell, with the finger
+ * on the zoom's own playhead (../hooks/useRecallZoom).
  *
  * Exports: RecallSheet
  * Depends on: @radix-ui/react-dialog, framer-motion, lucide-react, ../hooks/useRecallZoom,
@@ -36,6 +39,11 @@ import { saveRecallMarks, type RecallChoice, type RecallMarks } from "../lib/rec
 import { loadRecallWords, recallFallbackLabel, type RecallWord } from "../lib/recall-words";
 import { FilledUsage, MarkedText } from "./MarkedText";
 
+/**
+ * Rows show only the word and its short meaning for now. Flip this to bring back the
+ * time, view count, IPA, part of speech and example.
+ */
+const SHOW_WORD_DETAILS = false;
 /** How far a row has to travel sideways before it counts as an answer. */
 const SWIPE_PX = 72;
 /** A pull past this share of the screen closes on release. */
@@ -172,46 +180,80 @@ function Row({
           dragged.current = true;
           setDragging(true);
         }}
+        onPointerDownCapture={() => {
+          dragged.current = false;
+        }}
         onDragEnd={settle}
       >
-        <button
-          type="button"
-          className="vocab-recall-toggle"
-          aria-expanded={open}
-          aria-label={revealed ? label : `${label}, chưa xem nghĩa. Chạm để kiểm tra`}
-          onClick={() => {
-            // The pointer-up that ends a swipe still lands here as a click.
-            if (dragged.current) {
-              dragged.current = false;
-              return;
-            }
-            onToggle();
-          }}
-        >
-          <span className="vocab-recall-node" aria-hidden="true">
-            {mark === "yes" && <Check size={9} strokeWidth={4} />}
-            {mark === "no" && <X size={9} strokeWidth={4} />}
-          </span>
-          <span className="vocab-recall-main">
-            <span className="vocab-recall-word" lang={lang}>
-              {label}
+        <div className="vocab-recall-line">
+          <button
+            type="button"
+            className="vocab-recall-toggle"
+            aria-expanded={open}
+            aria-label={revealed ? label : `${label}, chưa xem nghĩa. Chạm để kiểm tra`}
+            onClick={() => {
+              // The pointer-up that ends a swipe still lands here as a click.
+              if (!dragged.current) onToggle();
+            }}
+          >
+            <span className="vocab-recall-node" aria-hidden="true">
+              {mark === "yes" && <Check size={9} strokeWidth={4} />}
+              {mark === "no" && <X size={9} strokeWidth={4} />}
             </span>
-            {copy &&
-              (revealed ? (
+            <span className="vocab-recall-main">
+              <span className="vocab-recall-word" lang={lang}>
+                {label}
+              </span>
+              {copy &&
+                (revealed ? (
+                  <span className="vocab-recall-meaning" lang="vi">
+                    <MarkedText text={copy.meaning} />
+                  </span>
+                ) : (
+                  <Redacted text={copy.meaning} />
+                ))}
+              {!copy && open && (
                 <span className="vocab-recall-meaning" lang="vi">
-                  <MarkedText text={copy.meaning} />
+                  Nghĩa sẽ có ở đây khi từ này quay lại trong luồng.
                 </span>
-              ) : (
-                <Redacted text={copy.meaning} />
-              ))}
-          </span>
-          <span className="vocab-recall-meta">
-            {entry.views > 1 && <span className="vocab-recall-views">×{entry.views}</span>}
-            <time dateTime={new Date(entry.at).toISOString()}>{clock(entry.at)}</time>
-          </span>
-        </button>
+              )}
+            </span>
+            {SHOW_WORD_DETAILS && (
+              <span className="vocab-recall-meta">
+                {entry.views > 1 && <span className="vocab-recall-views">×{entry.views}</span>}
+                <time dateTime={new Date(entry.at).toISOString()}>{clock(entry.at)}</time>
+              </span>
+            )}
+          </button>
+          <div className="vocab-recall-answers" role="group" aria-label={label}>
+            <button
+              type="button"
+              data-kind="no"
+              data-on={mark === "no" || undefined}
+              aria-pressed={mark === "no"}
+              aria-label="Quên rồi"
+              onClick={() => {
+                if (!dragged.current) onMark("no", true);
+              }}
+            >
+              <X size={18} strokeWidth={2.75} />
+            </button>
+            <button
+              type="button"
+              data-kind="yes"
+              data-on={mark === "yes" || undefined}
+              aria-pressed={mark === "yes"}
+              aria-label="Vẫn nhớ"
+              onClick={() => {
+                if (!dragged.current) onMark("yes", true);
+              }}
+            >
+              <Check size={18} strokeWidth={2.75} />
+            </button>
+          </div>
+        </div>
         <AnimatePresence initial={false}>
-          {open && (
+          {SHOW_WORD_DETAILS && open && (
             <motion.div
               className="vocab-recall-detail"
               initial={{ height: 0, opacity: 0 }}
@@ -233,31 +275,6 @@ function Row({
                     <FilledUsage text={copy.example} word={copy.fill ?? copy.word} />
                   </p>
                 )}
-                {!copy && (
-                  <p className="vocab-recall-facts" lang="vi">
-                    Nghĩa sẽ có ở đây khi từ này quay lại trong luồng.
-                  </p>
-                )}
-                <div className="vocab-recall-answers" role="group" aria-label={label}>
-                  <button
-                    type="button"
-                    data-kind="no"
-                    data-on={mark === "no" || undefined}
-                    aria-pressed={mark === "no"}
-                    onClick={() => onMark("no", true)}
-                  >
-                    <X size={16} strokeWidth={2.75} /> Quên rồi
-                  </button>
-                  <button
-                    type="button"
-                    data-kind="yes"
-                    data-on={mark === "yes" || undefined}
-                    aria-pressed={mark === "yes"}
-                    onClick={() => onMark("yes", true)}
-                  >
-                    <Check size={16} strokeWidth={2.75} /> Vẫn nhớ
-                  </button>
-                </div>
               </div>
             </motion.div>
           )}
@@ -338,7 +355,7 @@ function RhythmStrip({
  * @param props.marks - Answers so far, owned by the settings sheet for its cells
  * @param props.onMarks - The answers changed
  * @param props.locale - Language of the headwords
- * @param props.container - The themed element to portal into
+ * @param props.container - The settings panel the sheet fills
  * @param props.scene - The settings content the zoom pushes past the camera
  * @param props.cellFor - The memory cell that shows a scope, or null for any other day
  * @param props.fallbackCell - The cell to fold into from a day no cell shows
@@ -383,6 +400,7 @@ export function RecallSheet({
   const [copies] = useState(loadRecallWords);
 
   const back = useRef<HTMLButtonElement>(null);
+  const sheet = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
   const wash = useRef<HTMLDivElement>(null);
@@ -414,6 +432,19 @@ export function RecallSheet({
     }
     return [...byDay].map(([start, rows]) => ({ start, rows }));
   }, [scope, shown]);
+
+  // The memory cells sit low in the panel, so it is usually scrolled when one is tapped.
+  // The sheet stays over the part in view, and comes first: the zoom measures it next.
+  useLayoutEffect(() => {
+    const pin = () => {
+      if (sheet.current && container) {
+        sheet.current.style.transform = `translateY(${container.scrollTop}px)`;
+      }
+    };
+    pin();
+    container?.addEventListener("scroll", pin, { passive: true });
+    return () => container?.removeEventListener("scroll", pin);
+  }, [container]);
 
   const zoom = useRecallZoom({
     parts: () => {
@@ -475,8 +506,8 @@ export function RecallSheet({
   // pointer events: the browser cancels a pointer the moment it takes the pan, and only
   // a non-passive touchmove can claim the gesture.
   useEffect(() => {
-    const sheet = stage.current;
-    if (!sheet) return;
+    const area = stage.current;
+    if (!area) return;
     let startY = 0;
     let startX = 0;
     let pulling = false;
@@ -502,23 +533,23 @@ export function RecallSheet({
       }
       event.preventDefault();
       travelled = Math.max(0, touch.clientY - startY);
-      zoom.scrub(travelled / sheet.clientHeight / 0.7);
+      zoom.scrub(travelled / area.clientHeight / 0.7);
     };
     const onEnd = () => {
       if (!pulling) return;
       pulling = false;
-      if (travelled / sheet.clientHeight > DISMISS_SHARE) zoom.close();
+      if (travelled / area.clientHeight > DISMISS_SHARE) zoom.close();
       else zoom.cancelScrub();
     };
-    sheet.addEventListener("touchstart", onStart, { passive: true });
-    sheet.addEventListener("touchmove", onMove, { passive: false });
-    sheet.addEventListener("touchend", onEnd);
-    sheet.addEventListener("touchcancel", onEnd);
+    area.addEventListener("touchstart", onStart, { passive: true });
+    area.addEventListener("touchmove", onMove, { passive: false });
+    area.addEventListener("touchend", onEnd);
+    area.addEventListener("touchcancel", onEnd);
     return () => {
-      sheet.removeEventListener("touchstart", onStart);
-      sheet.removeEventListener("touchmove", onMove);
-      sheet.removeEventListener("touchend", onEnd);
-      sheet.removeEventListener("touchcancel", onEnd);
+      area.removeEventListener("touchstart", onStart);
+      area.removeEventListener("touchmove", onMove);
+      area.removeEventListener("touchend", onEnd);
+      area.removeEventListener("touchcancel", onEnd);
     };
   }, [zoom]);
 
@@ -545,6 +576,7 @@ export function RecallSheet({
     <Dialog.Root open onOpenChange={(open) => !open && zoom.close()}>
       <Dialog.Portal container={container}>
         <Dialog.Content
+          ref={sheet}
           className="vocab-recall"
           aria-describedby={undefined}
           onOpenAutoFocus={(event) => {

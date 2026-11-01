@@ -1,6 +1,6 @@
 /**
  * The memory sheet's zoom: one clock for everything that moves between a memory cell and
- * the full screen.
+ * the settings panel it fills.
  *
  * The sheet is laid out at its final size from the first frame and revealed through an
  * aperture, a clip that opens from the cell's own rectangle, so no text is ever scaled

@@ -1585,7 +1585,7 @@ export function FeedControls({
               marks={recallMarks}
               onMarks={setRecallMarks}
               locale={locale ?? "en"}
-              container={panelRef.current?.closest<HTMLElement>(".vocabulary-shell") ?? null}
+              container={panelRef.current}
               scene={zoomRef.current}
               cellFor={cellOfScope}
               fallbackCell={() => zoomCell("week")}
