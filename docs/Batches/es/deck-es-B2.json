@@ -1137,24 +1137,30 @@
   {
     "word": "esencial",
     "pos": "adj",
-    "ipa": "/e.senˈθjal/",
+    "ipa": "/esenˈθjal/",
     "meaningVi": "thiết_yếu",
     "gender": null,
     "article": null,
     "feminine": "esencial",
-    "defVi": "Cực_kỳ cần_thiết, | thiếu nó | thì không=thể được.",
-    "leadVi": "Đi sa_mạc | mà quên nước | thì coi như xong.",
-    "anticipateVi": "Thiếu nó có=sao không?",
-    "usageEn": "Dormir bien es _____ para la salud.",
-    "usageVi": "Ngủ ngon | là điều thiết_yếu | cho sức_khỏe.",
+    "plural": "esenciales",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "para + sustantivo",
+    "serEstar": "Thường dùng ser: | el agua es esencial.",
+    "tipVi": "Hay đi với para: | esencial para la salud.",
+    "defVi": "Là phần /cốt_lõi/, | thiếu đi | là hỏng cả tổng_thể.",
+    "leadVi": "Thiếu tay_trống, | ban_nhạc | của chị /lạc_nhịp/ hẳn.",
+    "anticipateVi": "Buổi diễn /suôn_sẻ/ nổi không?",
+    "usageEn": "Dormir bien es _____ antes de un examen.",
+    "usageVi": "Ngủ đủ giấc | là thiết_yếu | trước kỳ_thi.",
     "topics": [
-      "general",
-      "health"
+      "general"
     ],
     "exams": [],
     "emphasisVi": [
-      "cần thiết",
-      "quên nước"
+      "cốt lõi",
+      "lạc nhịp",
+      "suôn sẻ"
     ]
   },
   {
@@ -3041,23 +3047,39 @@
   {
     "word": "afirmar",
     "pos": "verb",
-    "ipa": "/a.fiɾˈmaɾ/",
+    "ipa": "/afiɾˈmaɾ/",
     "meaningVi": "khẳng_định",
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Khẳng_định mạnh_mẽ | một quan_điểm | hay quyền của=mình.",
-    "leadVi": "Giữa phòng họp, | cô đứng dậy | dõng_dạc nêu ý.",
-    "anticipateVi": "Nói chắc như đinh?",
-    "usageEn": "El testigo llegó a _____ que vio al ladrón.",
-    "usageVi": "Nhân_chứng khẳng_định | đã thấy tên trộm.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo afirmo",
+        "pretérito": "él afirmó",
+        "participio": "afirmado",
+        "gerundio": "afirmando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Hay theo sau | là que: | afirma que es verdad.",
+    "defVi": "Nói /chắc_nịch/ | rằng điều=gì | là thật.",
+    "leadVi": "Bị nghi quay_cóp, | bạn /cam_đoan/ | mình tự làm.",
+    "anticipateVi": "Chìa /giấy_nháp/ làm bằng?",
+    "usageEn": "Nadie puede _____ que el plan vaya a funcionar.",
+    "usageVi": "Không ai có_thể | khẳng_định | kế_hoạch sẽ thành_công.",
     "topics": [
       "communication"
     ],
     "exams": [],
     "emphasisVi": [
-      "Khẳng định",
-      "dõng dạc"
+      "chắc nịch",
+      "cam đoan",
+      "giấy nháp"
     ]
   },
   {
@@ -3255,19 +3277,35 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Khiêu_khích | hoặc gây ra | một phản_ứng mạnh.",
-    "leadVi": "Cậu=ta | cố_tình trêu mãi, | đến khi bạn nổi khùng.",
-    "anticipateVi": "Chọc tức ai đấy?",
-    "usageEn": "Esas palabras pueden _____ una pelea.",
-    "usageVi": "Những lời đó | có_thể gây ra | một cuộc ẩu_đả.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo provoco",
+        "pretérito": "él provocó",
+        "participio": "provocado",
+        "gerundio": "provocando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Nghĩa hay gặp | là gây ra: | provocar un atasco.",
+    "defVi": "Cố_ý | làm ai | /nổi_giận/ hay phản_ứng.",
+    "leadVi": "Đội bạn /trêu_chọc/, | đội mình | vẫn giữ bình_tĩnh.",
+    "anticipateVi": "Đáp trả | bằng /bàn_thắng/?",
+    "usageEn": "Intentaron _____ al portero, pero él no les hizo caso.",
+    "usageVi": "Họ cố khiêu_khích | thủ_môn, | nhưng anh=ấy | không thèm để_ý.",
     "topics": [
       "emotion",
       "communication"
     ],
     "exams": [],
     "emphasisVi": [
-      "Khiêu khích",
-      "nổi khùng"
+      "nổi giận",
+      "trêu chọc",
+      "bàn thắng"
     ]
   },
   {

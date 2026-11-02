@@ -593,18 +593,25 @@
     "gender": null,
     "article": null,
     "feminine": "inherente",
-    "defVi": "Tồn_tại sẵn | bên trong, | không_thể tách rời.",
-    "leadVi": "Leo núi cao | luôn đi kèm rủi_ro, | chẳng tránh được.",
-    "anticipateVi": "Sinh ra đã có?",
-    "usageEn": "El riesgo es _____ a cualquier deporte extremo.",
-    "usageVi": "Rủi_ro | là điều vốn_có | ở mọi môn thể_thao mạo_hiểm.",
+    "plural": "inherentes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "a + sustantivo",
+    "serEstar": "Thường dùng ser: | el riesgo es inherente.",
+    "tipVi": "Đi với a: | un riesgo inherente al deporte.",
+    "defVi": "Có sẵn bên trong, | là phần /tự_nhiên/ | không tách được.",
+    "leadVi": "Leo núi | luôn đi_kèm | một_chút /mạo_hiểm/.",
+    "anticipateVi": "Dây thừng /chắc_chắn/ chưa?",
+    "usageEn": "El riesgo es _____ a cualquier deporte de aventura.",
+    "usageVi": "Rủi_ro vốn_có | trong mọi môn | thể_thao mạo_hiểm.",
     "topics": [
-      "thinking"
+      "general"
     ],
     "exams": [],
     "emphasisVi": [
-      "Tồn tại",
-      "đi kèm"
+      "tự nhiên",
+      "mạo hiểm",
+      "chắc chắn"
     ]
   },
   {
@@ -727,19 +734,35 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Làm suy_yếu dần | sức_mạnh, uy_tín | hay niềm tin.",
-    "leadVi": "Lời đàm_tiếu sau lưng | gặm_nhấm lòng tin của=đội.",
-    "anticipateVi": "Ai đào chân móng?",
-    "usageEn": "Las mentiras pueden _____ la confianza en una pareja.",
-    "usageVi": "Những lời nói_dối | có_thể làm suy_yếu | lòng tin | trong một cặp đôi.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo socavo",
+        "pretérito": "él socavó",
+        "participio": "socavado",
+        "gerundio": "socavando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Âm_thầm làm /lung_lay/ | nền_móng | từ bên trong.",
+    "leadVi": "Lời đồn | dần /bào_mòn/ | lòng_tin cả=nhóm.",
+    "anticipateVi": "Nói thẳng để /gỡ_rối/?",
+    "usageEn": "Los rumores pueden _____ la confianza entre compañeros.",
+    "usageVi": "Tin_đồn | có_thể làm suy_yếu | lòng_tin giữa đồng_nghiệp.",
     "topics": [
-      "society",
-      "emotion"
+      "communication",
+      "society"
     ],
     "exams": [],
     "emphasisVi": [
-      "suy yếu",
-      "gặm nhấm"
+      "lung lay",
+      "bào mòn",
+      "gỡ rối"
     ]
   },
   {

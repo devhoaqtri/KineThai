@@ -1,5 +1,5 @@
 {
-  "revision": "5f9270b9644b10444dc46a5d",
+  "revision": "8615b3946c50e642b0c7d9b6",
   "name": "WordCrawler vocabulary",
   "count": 862,
   "topics": [
@@ -1390,29 +1390,36 @@
       "word": "esencial",
       "shareCode": "DXT",
       "meaningVi": "thiết_yếu",
-      "defVi": "/Cực_kỳ/ cần_thiết, | thiếu nó | thì không=thể được.",
-      "leadVi": "Đi /sa_mạc/ | mà quên nước | thì coi như xong.",
-      "anticipateVi": "Thiếu nó có=sao không?",
+      "defVi": "Là phần /cốt_lõi/, | thiếu đi | là hỏng cả tổng_thể.",
+      "leadVi": "Thiếu tay_trống, | ban_nhạc | của chị /lạc_nhịp/ hẳn.",
+      "anticipateVi": "Buổi diễn /suôn_sẻ/ nổi không?",
       "emphasis": [
-        "cần thiết",
-        "quên nước"
+        "cốt lõi",
+        "lạc nhịp",
+        "suôn sẻ"
       ],
       "pos": "adj",
-      "ipa": "/e.senˈθjal/",
+      "ipa": "/esenˈθjal/",
       "topic": "general",
       "topics": [
-        "general",
-        "health"
+        "general"
       ],
       "level": "B2",
       "chars": 8,
       "initial": "E",
       "usage": [
         {
-          "en": "Dormir bien es _____ para la salud.",
-          "vi": "Ngủ ngon | là điều thiết_yếu | cho sức_khỏe."
+          "en": "Dormir bien es _____ antes de un examen.",
+          "vi": "Ngủ đủ giấc | là thiết_yếu | trước kỳ_thi."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "esencial",
+        "plural": "esenciales",
+        "governs": "para + sustantivo",
+        "serEstar": "Thường dùng ser: | el agua es esencial.",
+        "tipVi": "Hay đi với para: | esencial para la salud."
+      }
     },
     {
       "id": "familiar",
@@ -3607,15 +3614,16 @@
       "word": "afirmar",
       "shareCode": "7WN",
       "meaningVi": "khẳng_định",
-      "defVi": "Khẳng_định mạnh_mẽ | một /quan_điểm/ | hay quyền của=mình.",
-      "leadVi": "Giữa phòng họp, | cô đứng dậy | /dõng_dạc/ nêu ý.",
-      "anticipateVi": "Nói chắc như đinh?",
+      "defVi": "Nói /chắc_nịch/ | rằng điều=gì | là thật.",
+      "leadVi": "Bị nghi quay_cóp, | bạn /cam_đoan/ | mình tự làm.",
+      "anticipateVi": "Chìa /giấy_nháp/ làm bằng?",
       "emphasis": [
-        "Khẳng định",
-        "dõng dạc"
+        "chắc nịch",
+        "cam đoan",
+        "giấy nháp"
       ],
       "pos": "verb",
-      "ipa": "/a.fiɾˈmaɾ/",
+      "ipa": "/afiɾˈmaɾ/",
       "topic": "communication",
       "topics": [
         "communication"
@@ -3625,10 +3633,22 @@
       "initial": "A",
       "usage": [
         {
-          "en": "El testigo llegó a _____ que vio al ladrón.",
-          "vi": "Nhân_chứng khẳng_định | đã thấy tên trộm."
+          "en": "Nadie puede _____ que el plan vaya a funcionar.",
+          "vi": "Không ai có_thể | khẳng_định | kế_hoạch sẽ thành_công."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo afirmo",
+            "pretérito": "él afirmó",
+            "participio": "afirmado",
+            "gerundio": "afirmando"
+          }
+        },
+        "tipVi": "Hay theo sau | là que: | afirma que es verdad."
+      }
     },
     {
       "id": "coincidir",
@@ -3859,12 +3879,13 @@
       "word": "provocar",
       "shareCode": "XWJ",
       "meaningVi": "gây ra, khơi_dậy",
-      "defVi": "/Khiêu_khích/ | hoặc gây ra | một phản_ứng mạnh.",
-      "leadVi": "Cậu=ta | /cố_tình/ trêu mãi, | đến khi bạn nổi khùng.",
-      "anticipateVi": "/Chọc_tức/ ai đấy?",
+      "defVi": "Cố_ý | làm ai | /nổi_giận/ hay phản_ứng.",
+      "leadVi": "Đội bạn /trêu_chọc/, | đội mình | vẫn giữ bình_tĩnh.",
+      "anticipateVi": "Đáp trả | bằng /bàn_thắng/?",
       "emphasis": [
-        "Khiêu khích",
-        "nổi khùng"
+        "nổi giận",
+        "trêu chọc",
+        "bàn thắng"
       ],
       "pos": "verb",
       "ipa": "/pɾoβoˈkaɾ/",
@@ -3878,10 +3899,22 @@
       "initial": "P",
       "usage": [
         {
-          "en": "Esas palabras pueden _____ una pelea.",
-          "vi": "Những lời đó | có_thể gây ra | một cuộc ẩu_đả."
+          "en": "Intentaron _____ al portero, pero él no les hizo caso.",
+          "vi": "Họ cố khiêu_khích | thủ_môn, | nhưng anh=ấy | không thèm để_ý."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo provoco",
+            "pretérito": "él provocó",
+            "participio": "provocado",
+            "gerundio": "provocando"
+          }
+        },
+        "tipVi": "Nghĩa hay gặp | là gây ra: | provocar un atasco."
+      }
     },
     {
       "id": "reforzar",

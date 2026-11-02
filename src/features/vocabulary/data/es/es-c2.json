@@ -1,5 +1,5 @@
 {
-  "revision": "aa2c5a2faaedb992ed3e5dbc",
+  "revision": "9144448b4320a57687550d4f",
   "name": "WordCrawler vocabulary",
   "count": 32,
   "topics": [
@@ -742,28 +742,36 @@
       "word": "inherente",
       "shareCode": "DRX",
       "meaningVi": "vốn_có",
-      "defVi": "/Tồn_tại/ sẵn | bên trong, | không_thể tách rời.",
-      "leadVi": "Leo núi cao | luôn đi kèm /rủi_ro/, | chẳng tránh được.",
-      "anticipateVi": "/Sinh_ra/ đã có?",
+      "defVi": "Có sẵn bên trong, | là phần /tự_nhiên/ | không tách được.",
+      "leadVi": "Leo núi | luôn đi_kèm | một_chút /mạo_hiểm/.",
+      "anticipateVi": "Dây thừng /chắc_chắn/ chưa?",
       "emphasis": [
-        "Tồn tại",
-        "đi kèm"
+        "tự nhiên",
+        "mạo hiểm",
+        "chắc chắn"
       ],
       "pos": "adj",
       "ipa": "/ineˈɾente/",
-      "topic": "thinking",
+      "topic": "general",
       "topics": [
-        "thinking"
+        "general"
       ],
       "level": "C2",
       "chars": 9,
       "initial": "I",
       "usage": [
         {
-          "en": "El riesgo es _____ a cualquier deporte extremo.",
-          "vi": "Rủi_ro | là điều vốn_có | ở mọi môn thể_thao mạo_hiểm."
+          "en": "El riesgo es _____ a cualquier deporte de aventura.",
+          "vi": "Rủi_ro vốn_có | trong mọi môn | thể_thao mạo_hiểm."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "inherente",
+        "plural": "inherentes",
+        "governs": "a + sustantivo",
+        "serEstar": "Thường dùng ser: | el riesgo es inherente.",
+        "tipVi": "Đi với a: | un riesgo inherente al deporte."
+      }
     },
     {
       "id": "mitigar",
@@ -912,29 +920,41 @@
       "word": "socavar",
       "shareCode": "5B2",
       "meaningVi": "làm suy_yếu, phá_hoại",
-      "defVi": "Làm suy_yếu dần | sức_mạnh, /uy_tín/ | hay niềm tin.",
-      "leadVi": "Lời đàm_tiếu sau lưng | /gặm_nhấm/ lòng tin của=đội.",
-      "anticipateVi": "Ai đào chân móng?",
+      "defVi": "Âm_thầm làm /lung_lay/ | nền_móng | từ bên trong.",
+      "leadVi": "Lời đồn | dần /bào_mòn/ | lòng_tin cả=nhóm.",
+      "anticipateVi": "Nói thẳng để /gỡ_rối/?",
       "emphasis": [
-        "suy yếu",
-        "gặm nhấm"
+        "lung lay",
+        "bào mòn",
+        "gỡ rối"
       ],
       "pos": "verb",
       "ipa": "/sokaˈβaɾ/",
-      "topic": "society",
+      "topic": "communication",
       "topics": [
-        "society",
-        "emotion"
+        "communication",
+        "society"
       ],
       "level": "C2",
       "chars": 7,
       "initial": "S",
       "usage": [
         {
-          "en": "Las mentiras pueden _____ la confianza en una pareja.",
-          "vi": "Những lời nói_dối | có_thể làm suy_yếu | lòng tin | trong một cặp đôi."
+          "en": "Los rumores pueden _____ la confianza entre compañeros.",
+          "vi": "Tin_đồn | có_thể làm suy_yếu | lòng_tin giữa đồng_nghiệp."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo socavo",
+            "pretérito": "él socavó",
+            "participio": "socavado",
+            "gerundio": "socavando"
+          }
+        }
+      }
     },
     {
       "id": "viable",
