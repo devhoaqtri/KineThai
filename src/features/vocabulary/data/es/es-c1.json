@@ -1,5 +1,5 @@
 {
-  "revision": "1a767e5e6145e383d4c470e6",
+  "revision": "6caf210480dac36a30a09fca",
   "name": "WordCrawler vocabulary",
   "count": 93,
   "topics": [
@@ -270,13 +270,14 @@
       "id": "interrumpir",
       "word": "interrumpir",
       "shareCode": "4KD",
-      "meaningVi": "ngắt lời",
-      "defVi": "Bỗng /chen_ngang/ | khi người khác | đang=nói hoặc làm việc.",
-      "leadVi": "Thầy giảng chưa hết câu, | cậu đã=giơ tay | /cắt_lời/.",
-      "anticipateVi": "Xen vô | làm chi?",
+      "meaningVi": "ngắt_lời",
+      "defVi": "/Chen_ngang/ vào | khi người khác | đang=nói.",
+      "leadVi": "Mình đang kể dở, | cậu=ấy | /cắt_ngang/ hỏi chuyện khác.",
+      "anticipateVi": "Để mình nói /trọn_vẹn/ đã?",
       "emphasis": [
-        "chen ngang",
-        "cắt lời"
+        "Chen ngang",
+        "cắt ngang",
+        "trọn vẹn"
       ],
       "pos": "verb",
       "ipa": "/inteɾumˈpiɾ/",
@@ -289,10 +290,22 @@
       "initial": "I",
       "usage": [
         {
-          "en": "Perdona, no quería _____ tu llamada.",
-          "vi": "Xin_lỗi, | tôi không định cắt ngang | cuộc_gọi của=bạn."
+          "en": "No me gusta _____ a nadie cuando habla.",
+          "vi": "Mình không thích | ngắt_lời ai | khi người_ta đang nói."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo interrumpo",
+            "pretérito": "él interrumpió",
+            "participio": "interrumpido",
+            "gerundio": "interrumpiendo"
+          }
+        },
+        "tipVi": "Viết hai chữ r: | interrumpir."
+      }
     },
     {
       "id": "eficiente",
@@ -1088,18 +1101,18 @@
       "word": "obvio",
       "shareCode": "SR0",
       "meaningVi": "rõ_ràng, hiển_nhiên",
-      "defVi": "/Rõ_ràng/, | ai nhìn cũng thấy | hay hiểu ngay.",
-      "leadVi": "Mặt đỏ, | nói lắp, | ai cũng biết | cậu đang=/nói_dối/.",
-      "anticipateVi": "/Lộ_liễu/ quá chưa?",
+      "defVi": "Dễ thấy, | dễ hiểu, | ai cũng /nhận_ra/ ngay.",
+      "leadVi": "Mắt /đỏ_hoe/, | mình vẫn chối | là không khóc.",
+      "anticipateVi": "Đám bạn /phì_cười/?",
       "emphasis": [
-        "Rõ ràng",
-        "nói lắp"
+        "nhận ra",
+        "đỏ hoe",
+        "phì cười"
       ],
       "pos": "adj",
-      "ipa": "/ˈoβ.βjo/",
-      "topic": "perception",
+      "ipa": "/ˈoβjo/",
+      "topic": "thinking",
       "topics": [
-        "perception",
         "thinking"
       ],
       "level": "C1",
@@ -1107,10 +1120,15 @@
       "initial": "O",
       "usage": [
         {
-          "en": "Era _____ que el niño tenía sueño.",
-          "vi": "Rõ_ràng là | thằng bé buồn_ngủ."
+          "en": "El error era tan _____ que todos lo vieron.",
+          "vi": "Lỗi sai | rõ_ràng tới mức | ai cũng thấy."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "obvia",
+        "plural": "obvios / obvias",
+        "serEstar": "Thường dùng ser: | es obvio."
+      }
     },
     {
       "id": "potencial",
@@ -1294,29 +1312,35 @@
       "word": "tendencia",
       "shareCode": "RK1",
       "meaningVi": "xu_hướng, khuynh_hướng",
-      "defVi": "/Khuynh_hướng/ | thường hành_động | theo một kiểu nào đó.",
-      "leadVi": "Cứ /căng_thẳng/ là | cô lại cắn móng tay.",
-      "anticipateVi": "Lại thế nữa rồi?",
+      "defVi": "Hướng /thay_đổi/ | được nhiều người | cùng làm theo.",
+      "leadVi": "Mạng rộ /trào_lưu/, | mình tập | điệu nhảy mới.",
+      "anticipateVi": "/Lượt_xem/ tăng vọt?",
       "emphasis": [
-        "Khuynh hướng",
-        "cắn móng"
+        "thay đổi",
+        "trào lưu",
+        "Lượt xem"
       ],
       "pos": "noun",
-      "ipa": "/tenˈden.θja/",
-      "topic": "character",
+      "ipa": "/tenˈdenθja/",
+      "topic": "society",
       "topics": [
-        "character",
-        "thinking"
+        "society"
       ],
       "level": "C1",
       "chars": 9,
       "initial": "T",
       "usage": [
         {
-          "en": "Mi hermano tiene _____ a llegar tarde.",
-          "vi": "Em trai tôi | có xu_hướng đến muộn."
+          "en": "Los vídeos cortos son una _____ muy fuerte entre los jóvenes.",
+          "vi": "Phim ngắn | là xu_hướng rất mạnh | trong giới trẻ."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las tendencias",
+        "tipVi": "Có xu_hướng làm gì: | tener tendencia a + infinitivo."
+      }
     },
     {
       "id": "tolerar",
@@ -1555,18 +1579,18 @@
       "word": "convincente",
       "shareCode": "R04",
       "meaningVi": "thuyết_phục",
-      "defVi": "/Thuyết_phục/ mạnh, | khiến người ta | không_thể làm_ngơ.",
-      "leadVi": "Lật trang đầu, | /cuốn_hút/ đến mức | thức trắng đọc hết.",
-      "anticipateVi": "/Cuốn_hút/ tới mức nào?",
+      "defVi": "Khiến người nghe | /tin_tưởng/ | là thật, là đúng.",
+      "leadVi": "Tranh_biện, | mình đưa | ba /số_liệu/ rõ_ràng.",
+      "anticipateVi": "Đội bạn /cứng_họng/?",
       "emphasis": [
-        "làm ngơ",
-        "thức trắng"
+        "tin tưởng",
+        "số liệu",
+        "cứng họng"
       ],
       "pos": "adj",
-      "ipa": "/kom.binˈθen.te/",
-      "topic": "thinking",
+      "ipa": "/kombinˈθente/",
+      "topic": "communication",
       "topics": [
-        "thinking",
         "communication"
       ],
       "level": "C1",
@@ -1574,10 +1598,16 @@
       "initial": "C",
       "usage": [
         {
-          "en": "No encontró ninguna excusa _____.",
-          "vi": "Anh=ấy | không tìm được | lý_do nào thuyết_phục."
+          "en": "Su explicación fue tan _____ que todos la creímos.",
+          "vi": "Lời giải_thích | thuyết_phục tới mức | ai cũng tin."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "convincente",
+        "plural": "convincentes",
+        "serEstar": "Thường dùng ser: | su respuesta fue convincente.",
+        "tipVi": "Động_từ | là convencer: | me convenció."
+      }
     },
     {
       "id": "convencional",

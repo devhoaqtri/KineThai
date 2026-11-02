@@ -433,19 +433,25 @@
     "gender": null,
     "article": null,
     "feminine": "curiosa",
-    "defVi": "Luôn muốn tìm_hiểu | những điều | mình chưa=từng biết.",
-    "leadVi": "Thấy cái gì lạ | cũng hỏi tại_sao, | mở ra xem.",
-    "anticipateVi": "Sao lại thế nhỉ?",
-    "usageEn": "Mi sobrino es muy _____ y pregunta por todo.",
-    "usageVi": "Cháu tôi rất tò_mò, | cái gì cũng hỏi.",
+    "plural": "curiosos / curiosas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | soy muy curioso.",
+    "tipVi": "Với đồ_vật, | curioso là lạ: | una idea curiosa.",
+    "defVi": "Muốn biết thêm, | /hỏi_han/ | về mọi thứ quanh mình.",
+    "leadVi": "Thấy hộp quà lạ, | bạn /háo_hức/ | lắc thử nghe.",
+    "anticipateVi": "Lắc mãi vẫn /bí_ẩn/?",
+    "usageEn": "Mi hermano pequeño es muy _____ y siempre pregunta por qué.",
+    "usageVi": "Em_trai mình | rất=tò_mò, | lúc=nào cũng hỏi tại sao.",
     "topics": [
-      "character",
-      "thinking"
+      "character"
     ],
     "exams": [],
     "emphasisVi": [
-      "tìm hiểu",
-      "tại sao"
+      "hỏi han",
+      "háo hức",
+      "bí ẩn"
     ]
   },
   {
@@ -545,20 +551,26 @@
     "gender": null,
     "article": null,
     "feminine": "animada",
-    "defVi": "Sôi_nổi, | nói_chuyện đầy hào_hứng | và rất=nhiệt_tình.",
-    "leadVi": "Nhắc đến bóng_đá, | ông chú liền | khua tay múa chân.",
-    "anticipateVi": "Nói không kịp thở!",
-    "usageEn": "El ambiente en el mercado es muy _____ por la mañana.",
-    "usageVi": "Không_khí | ở chợ buổi_sáng | rất sôi_nổi.",
+    "plural": "animados / animadas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "ser animado: | tính sôi_nổi; | estar animado: | đang hào_hứng.",
+    "tipVi": "Phim hoạt_hình | là dibujos animados.",
+    "defVi": "Đầy năng_lượng, | vui_vẻ và /náo_nhiệt/.",
+    "leadVi": "Đêm hội trường, | sân_khấu | /rộn_ràng/ tiếng hò_reo.",
+    "anticipateVi": "Sàn nhảy /chật_kín/ chưa?",
+    "usageEn": "La fiesta estuvo muy _____ hasta las dos de la mañana.",
+    "usageVi": "Bữa tiệc | rất=sôi_nổi | tới hai giờ sáng.",
     "topics": [
-      "emotion",
-      "communication",
-      "character"
+      "character",
+      "daily"
     ],
     "exams": [],
     "emphasisVi": [
-      "hào hứng",
-      "khua tay"
+      "náo nhiệt",
+      "rộn ràng",
+      "chật kín"
     ]
   },
   {
@@ -863,24 +875,29 @@
     "word": "empatía",
     "pos": "noun",
     "ipa": "/empaˈtia/",
-    "meaningVi": "sự thấu_cảm",
+    "meaningVi": "sự đồng_cảm",
     "gender": "f",
     "article": "la",
     "feminine": null,
-    "defVi": "Sự thấu_cảm, | đặt mình | vào chỗ người khác | để hiểu.",
-    "leadVi": "Từng mồ_côi, | giờ chị | dành cuối_tuần | ở trại trẻ.",
-    "anticipateVi": "Đi giày | của người khác.",
-    "usageEn": "Ella escucha a sus amigos con mucha _____.",
-    "usageVi": "Cô=ấy | lắng_nghe bạn_bè | với nhiều thấu_cảm.",
+    "plural": "las empatías",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Sự /thấu_hiểu/ | cảm_xúc | của người khác.",
+    "leadVi": "Bạn ốm dài ngày, | cả=lớp | gửi thiệp /hỏi_thăm/.",
+    "anticipateVi": "Đọc xong /rưng_rưng/ à?",
+    "usageEn": "La enfermera trata a cada paciente con mucha _____.",
+    "usageVi": "Cô y_tá | đối_xử với mỗi bệnh_nhân | bằng sự đồng_cảm.",
     "topics": [
-      "emotion",
-      "character",
-      "society"
+      "emotion"
     ],
     "exams": [],
     "emphasisVi": [
-      "thấu cảm",
-      "mồ côi"
+      "thấu hiểu",
+      "hỏi thăm",
+      "rưng rưng"
     ]
   },
   {
@@ -1014,24 +1031,39 @@
   {
     "word": "entregar",
     "pos": "verb",
-    "ipa": "/en.tɾeˈɣaɾ/",
-    "meaningVi": "giao hàng",
+    "ipa": "/entɾeˈɣaɾ/",
+    "meaningVi": "giao, nộp",
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Mang hàng_hóa hoặc thư_từ | đến tận tay người nhận.",
-    "leadVi": "Chuông cửa reo, | một gói_hàng | đang=chờ ngoài cổng.",
-    "anticipateVi": "Ai gõ cửa | nhà bạn?",
-    "usageEn": "La tienda puede _____ el pedido mañana por la mañana.",
-    "usageVi": "Cửa_hàng | có_thể giao đơn hàng | sáng mai.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo entrego",
+        "pretérito": "él entregó",
+        "participio": "entregado",
+        "gerundio": "entregando"
+      }
+    },
+    "reflexive": null,
+    "governs": "a + persona",
+    "serEstar": null,
+    "tipVi": "Pretérito của yo | thêm u: | entregué, không phải entregé.",
+    "defVi": "Mang hàng, thư | tới /tận_tay/ | người nhận ở nhà.",
+    "leadVi": "Mưa to, | anh /bưu_tá/ | vẫn mang gói tới cửa.",
+    "anticipateVi": "Hàng còn /khô_ráo/?",
+    "usageEn": "La tienda va a _____ el sofá el lunes por la mañana.",
+    "usageVi": "Cửa_hàng | sẽ giao ghế sô_pha | vào sáng thứ_Hai.",
     "topics": [
-      "work",
-      "daily"
+      "work"
     ],
     "exams": [],
     "emphasisVi": [
       "tận tay",
-      "gói hàng"
+      "bưu tá",
+      "khô ráo"
     ]
   },
   {
@@ -1076,23 +1108,30 @@
   {
     "word": "destino",
     "pos": "noun",
-    "ipa": "/desˈti.no/",
-    "meaningVi": "điểm_đến",
+    "ipa": "/desˈtino/",
+    "meaningVi": "điểm đến",
     "gender": "m",
     "article": "el",
     "feminine": null,
-    "defVi": "Nơi mà người hoặc vật | được=đưa tới | cuối hành_trình.",
-    "leadVi": "Vé đã=cầm, | ba_lô đã=đeo, | chỉ=còn chọn nơi.",
-    "anticipateVi": "Chuyến này đi đâu?",
-    "usageEn": "Cancún es un _____ muy popular en verano.",
-    "usageVi": "Cancún là điểm_đến | rất được ưa_chuộng | vào mùa hè.",
+    "plural": "los destinos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng nghĩa | số_phận.",
+    "defVi": "Nơi /cuối_cùng/ | mình muốn tới | trong chuyến đi.",
+    "leadVi": "Lên kế_hoạch hè, | cả=nhóm | /bốc_thăm/ chọn tỉnh.",
+    "anticipateVi": "Trúng tỉnh /xa_tít/?",
+    "usageEn": "Esta playa es un _____ muy popular en verano.",
+    "usageVi": "Bãi biển này | là điểm đến | rất đông khách mùa_hè.",
     "topics": [
       "travel"
     ],
     "exams": [],
     "emphasisVi": [
-      "hành trình",
-      "chọn nơi"
+      "cuối cùng",
+      "bốc thăm",
+      "xa tít"
     ]
   },
   {
@@ -1785,23 +1824,29 @@
     "word": "ansiedad",
     "pos": "noun",
     "ipa": "/ansjeˈðað/",
-    "meaningVi": "sự=lo_âu",
+    "meaningVi": "sự lo_âu",
     "gender": "f",
     "article": "la",
     "feminine": null,
-    "defVi": "Cảm_giác lo_âu, | bồn_chồn | về điều sắp tới.",
-    "leadVi": "Đêm trước kỳ thi, | trằn_trọc mãi | không chợp mắt.",
-    "anticipateVi": "Trằn trọc | vì đâu?",
-    "usageEn": "Hablar en público me provoca mucha _____.",
-    "usageVi": "Nói trước đám đông | khiến tôi | rất lo_âu.",
+    "plural": "las ansiedades",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Cảm_giác /bồn_chồn/, | sợ điều không hay | sắp xảy_ra.",
+    "leadVi": "Đêm trước kỳ_thi, | mình /trằn_trọc/ | mãi không ngủ.",
+    "anticipateVi": "Thử nghe /nhạc_nhẹ/ nhé?",
+    "usageEn": "Antes de los exámenes siento un poco de _____.",
+    "usageVi": "Trước kỳ_thi, | mình thấy | hơi lo_âu.",
     "topics": [
-      "emotion",
-      "health"
+      "emotion"
     ],
     "exams": [],
     "emphasisVi": [
-      "lo âu",
-      "trằn trọc"
+      "bồn chồn",
+      "trằn trọc",
+      "nhạc nhẹ"
     ]
   },
   {
@@ -1835,19 +1880,25 @@
     "gender": null,
     "article": null,
     "feminine": "consciente",
-    "defVi": "Biết rõ | hoặc nhận ra | điều gì đang=diễn_ra.",
-    "leadVi": "Mải nói_chuyện, | cô vẫn để_ý | tiếng chân | sau lưng.",
-    "anticipateVi": "Bạn có để ý không?",
-    "usageEn": "No era _____ de lo tarde que era.",
-    "usageVi": "Tôi không nhận_thức được | là đã muộn | thế nào.",
+    "plural": "conscientes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "de + sustantivo",
+    "serEstar": "ser consciente de: | biết rõ; | estar consciente: | còn tỉnh_táo.",
+    "tipVi": "Viết sc | ở giữa: | consciente, không viết conciente.",
+    "defVi": "/Nhận_biết/ rõ_ràng | điều mình đang=làm, đang=nghĩ.",
+    "leadVi": "Đi siêu_thị, | mình /tự_giác/ | mang túi=vải theo.",
+    "anticipateVi": "/Trái_đất/ cảm_ơn nhé?",
+    "usageEn": "Soy _____ de que necesito dormir más antes de los exámenes.",
+    "usageVi": "Mình biết rõ | là mình cần ngủ nhiều=hơn | trước mùa thi.",
     "topics": [
-      "attention",
-      "thinking"
+      "attention"
     ],
     "exams": [],
     "emphasisVi": [
-      "nhận ra",
-      "để ý"
+      "Nhận biết",
+      "tự giác",
+      "Trái đất"
     ]
   },
   {
@@ -1932,19 +1983,34 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Rút ra nhận_định | sau khi xem_xét | mọi thông_tin.",
-    "leadVi": "Dấu chân bùn, | cửa mở, | thám_tử chỉ ra thủ_phạm.",
-    "anticipateVi": "Rốt cuộc là sao?",
-    "usageEn": "Por su cara, puedo _____ que no está contento.",
-    "usageVi": "Nhìn mặt anh=ấy, | tôi có_thể kết_luận | là anh=ấy | không vui.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "irregular",
+      "raíz": "i → y : concluyo",
+      "tiempos": {
+        "presente": "yo concluyo",
+        "pretérito": "él concluyó",
+        "participio": "concluido",
+        "gerundio": "concluyendo"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Thêm y | khi chia: | concluyo, concluyó.",
+    "defVi": "Đi đến | ý cuối_cùng | sau khi /suy_xét/ kỹ.",
+    "leadVi": "Đọc xong đánh_giá, | mình /quyết_định/ | chờ giảm_giá.",
+    "anticipateVi": "Đợi /khuyến_mãi/ cuối năm?",
+    "usageEn": "Después de mirar los datos, podemos _____ que el plan funciona.",
+    "usageVi": "Xem số_liệu xong, | có_thể kết_luận | là kế_hoạch hiệu_quả.",
     "topics": [
-      "thinking",
-      "study"
+      "thinking"
     ],
     "exams": [],
     "emphasisVi": [
-      "Rút ra",
-      "thám tử"
+      "suy xét",
+      "quyết định",
+      "khuyến mãi"
     ]
   },
   {
@@ -1978,18 +2044,34 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Nói rằng | điều người khác cáo_buộc | là không đúng.",
-    "leadVi": "Bị bắt quả tang, | cậu=ta | vẫn lắc đầu chối phăng.",
-    "anticipateVi": "Chối được không?",
-    "usageEn": "Mi hermana va a _____ que rompió el jarrón.",
-    "usageVi": "Em gái tôi | sẽ phủ_nhận | đã làm vỡ bình hoa.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "irregular",
+      "raíz": "e → ie : niego",
+      "tiempos": {
+        "presente": "yo niego",
+        "pretérito": "él negó",
+        "participio": "negado",
+        "gerundio": "negando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Negarse a | là từ_chối: | se negó a venir.",
+    "defVi": "Nói rằng | một điều | không phải /sự_thật/.",
+    "leadVi": "Mép dính sô_cô_la, | bạn cùng phòng vẫn /lắc_đầu/.",
+    "anticipateVi": "/Bằng_chứng/ rành_rành?",
+    "usageEn": "Ella no puede _____ que estuvo allí.",
+    "usageVi": "Cô=ấy không thể | phủ_nhận | mình đã ở đó.",
     "topics": [
       "communication"
     ],
     "exams": [],
     "emphasisVi": [
-      "cáo buộc",
-      "chối phăng"
+      "sự thật",
+      "lắc đầu",
+      "Bằng chứng"
     ]
   },
   {
@@ -2237,47 +2319,68 @@
   {
     "word": "influencia",
     "pos": "noun",
-    "ipa": "/im.fluˈen.θja/",
+    "ipa": "/influˈenθja/",
     "meaningVi": "ảnh_hưởng",
     "gender": "f",
     "article": "la",
     "feminine": null,
-    "defVi": "Sức tác_động | làm thay_đổi | suy_nghĩ hay hành_vi.",
-    "leadVi": "Một câu nói của=thầy | theo cậu | suốt cả đời.",
-    "anticipateVi": "Ai định_hướng bạn?",
-    "usageEn": "La música de los Beatles tuvo mucha _____ en él.",
-    "usageVi": "Nhạc của=ban Beatles | có ảnh_hưởng lớn | đến anh=ấy.",
+    "plural": "las influencias",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Ảnh_hưởng tới ai | dùng en: | influencia en los jóvenes.",
+    "defVi": "Sức /tác_động/ | khiến người khác | đổi suy_nghĩ, hành_động.",
+    "leadVi": "Nhờ cô dạy văn, | mình /quyết_định/ | theo ngành sư_phạm.",
+    "anticipateVi": "Mẹ /ủng_hộ/ chứ?",
+    "usageEn": "Mi profesor tuvo mucha _____ en mi vida.",
+    "usageVi": "Thầy mình | có ảnh_hưởng lớn | đến cuộc_đời mình.",
     "topics": [
-      "society",
-      "thinking"
+      "society"
     ],
     "exams": [],
     "emphasisVi": [
-      "hành vi",
-      "cả đời"
+      "tác động",
+      "quyết định",
+      "ủng hộ"
     ]
   },
   {
     "word": "insistir",
     "pos": "verb",
-    "ipa": "/in.sisˈtiɾ/",
+    "ipa": "/insisˈtiɾ/",
     "meaningVi": "nhất_quyết, khăng_khăng",
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Một_mực đòi | hay khẳng_định, | không chịu nhượng_bộ.",
-    "leadVi": "Khách từ_chối mãi, | bà vẫn dúi hộp_bánh.",
-    "anticipateVi": "Nhất_quyết thế à?",
-    "usageEn": "Mi abuela va a _____ en que te quedes a cenar.",
-    "usageVi": "Bà tôi | sẽ nhất_quyết | giữ bạn ở lại | ăn tối.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo insisto",
+        "pretérito": "él insistió",
+        "participio": "insistido",
+        "gerundio": "insistiendo"
+      }
+    },
+    "reflexive": null,
+    "governs": "en + sustantivo",
+    "serEstar": null,
+    "tipVi": "Đi với en: | insiste en pagar.",
+    "defVi": "Một=mực đòi | bằng được, | không chịu /nhượng_bộ/.",
+    "leadVi": "Đi ăn chung, | bạn /nhất_định/ | đòi trả hết tiền.",
+    "anticipateVi": "Người ngồi cạnh /ngại_ngùng/?",
+    "usageEn": "Mi madre va a _____ en que lleve un abrigo.",
+    "usageVi": "Mẹ mình sẽ | khăng_khăng | bắt mình mặc áo_khoác.",
     "topics": [
-      "communication",
-      "character"
+      "communication"
     ],
     "exams": [],
     "emphasisVi": [
       "nhượng bộ",
-      "dúi hộp"
+      "nhất định",
+      "ngại ngùng"
     ]
   },
   {
@@ -2306,23 +2409,39 @@
   {
     "word": "investigar",
     "pos": "verb",
-    "ipa": "/im.bes.tiˈɣaɾ/",
+    "ipa": "/imbestiˈɣaɾ/",
     "meaningVi": "điều_tra",
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Tìm_hiểu kỹ | để phát_hiện | sự_thật một vụ_việc.",
-    "leadVi": "Phóng_viên | lặn_lội | lần ra đường dây buôn_lậu.",
-    "anticipateVi": "Lần ra manh_mối chưa?",
-    "usageEn": "La policía va a _____ el robo del banco.",
-    "usageVi": "Cảnh_sát sẽ điều_tra | vụ cướp ngân_hàng.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo investigo",
+        "pretérito": "él investigó",
+        "participio": "investigado",
+        "gerundio": "investigando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Quá_khứ ngôi yo | thêm u: | yo investigué.",
+    "defVi": "Tìm_hiểu /kỹ_lưỡng/ | để phát_hiện | sự_thật phía sau.",
+    "leadVi": "Làm đề_tài, | nhóm mình | /khảo_sát/ cả trăm bạn.",
+    "anticipateVi": "Số_liệu /bất_ngờ/ không?",
+    "usageEn": "Los científicos van a _____ el agua del río.",
+    "usageVi": "Các nhà khoa_học | sẽ điều_tra | nước của con=sông.",
     "topics": [
       "society"
     ],
     "exams": [],
     "emphasisVi": [
-      "sự thật",
-      "lặn lội"
+      "kỹ lưỡng",
+      "khảo sát",
+      "bất ngờ"
     ]
   },
   {
@@ -2555,23 +2674,39 @@
   {
     "word": "revelar",
     "pos": "verb",
-    "ipa": "/re.βeˈlaɾ/",
+    "ipa": "/reβeˈlaɾ/",
     "meaningVi": "tiết_lộ, để lộ",
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Tiết_lộ | hoặc để lộ | điều trước đó | còn giấu kín.",
-    "leadVi": "Tấm_màn kéo lên, | bức_tượng hiện ra | trước đám_đông.",
-    "anticipateVi": "Màn kéo lên chưa?",
-    "usageEn": "No quiso _____ el final de la película.",
-    "usageVi": "Anh=ấy | không muốn | tiết_lộ đoạn kết bộ_phim.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo revelo",
+        "pretérito": "él reveló",
+        "participio": "revelado",
+        "gerundio": "revelando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng nghĩa rửa ảnh: | revelar fotos.",
+    "defVi": "Để lộ ra | điều trước đó | còn /giấu_kín/.",
+    "leadVi": "Chưa tới sinh_nhật, | mình lỡ | để lộ /bí_mật/ quà.",
+    "anticipateVi": "Bạn_thân /hờn_dỗi/ chưa?",
+    "usageEn": "El cantante va a _____ el nombre de su nuevo disco mañana.",
+    "usageVi": "Ngày_mai | ca_sĩ sẽ | tiết_lộ tên đĩa_nhạc mới.",
     "topics": [
       "communication"
     ],
     "exams": [],
     "emphasisVi": [
       "giấu kín",
-      "màn kéo"
+      "bí mật",
+      "hờn dỗi"
     ]
   },
   {
@@ -3003,6 +3138,3918 @@
     "emphasisVi": [
       "tổn thương",
       "chim non"
+    ]
+  },
+  {
+    "word": "concentración",
+    "pos": "noun",
+    "ipa": "/konθentɾaˈθjon/",
+    "meaningVi": "sự tập_trung",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las concentraciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Số nhiều bỏ dấu: | las concentraciones.",
+    "defVi": "Khả_năng | dồn hết | /chú_ý/ vào một việc.",
+    "leadVi": "Giải đề toán, | mình /cắm_cúi/ | ba tiếng không ngẩng đầu.",
+    "anticipateVi": "/Thông_báo/ tắt sạch chưa?",
+    "usageEn": "Con el ruido de la calle, pierdo la _____.",
+    "usageVi": "Ngoài đường | ồn quá, | mình mất tập_trung.",
+    "topics": [
+      "attention"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "chú ý",
+      "cắm cúi",
+      "Thông báo"
+    ]
+  },
+  {
+    "word": "observador",
+    "pos": "noun",
+    "ipa": "/oβseɾβaˈðoɾ/",
+    "meaningVi": "người quan_sát",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los observadores",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Nói về nữ | thì dùng | la observadora.",
+    "defVi": "Người theo_dõi, | ghi lại | mà không /can_thiệp/.",
+    "leadVi": "Trận_đấu giao_hữu, | mình ngồi ngoài | /ghi_chép/ từng pha.",
+    "anticipateVi": "Có ai /để_ý/ mình không?",
+    "usageEn": "En la reunión había un _____ que no hablaba, solo tomaba notas.",
+    "usageVi": "Trong buổi họp | có một người quan_sát | không nói, chỉ ghi_chép.",
+    "topics": [
+      "attention"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "can thiệp",
+      "ghi chép",
+      "để ý"
+    ]
+  },
+  {
+    "word": "testarudo",
+    "pos": "adj",
+    "ipa": "/testaˈɾuðo/",
+    "meaningVi": "bướng_bỉnh",
+    "gender": null,
+    "article": null,
+    "feminine": "testaruda",
+    "plural": "testarudos / testarudas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es muy testarudo.",
+    "tipVi": null,
+    "defVi": "/Khăng_khăng/ | giữ ý mình, | không chịu nghe ai.",
+    "leadVi": "Lạc đường, | em /nhất_quyết/ | không mở bản_đồ.",
+    "anticipateVi": "Đi /lòng_vòng/ mãi?",
+    "usageEn": "Mi abuelo es tan _____ que nunca cambia de opinión.",
+    "usageVi": "Ông mình | bướng_bỉnh tới mức | chẳng bao_giờ đổi ý.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Khăng khăng",
+      "nhất quyết",
+      "lòng vòng"
+    ]
+  },
+  {
+    "word": "audaz",
+    "pos": "adj",
+    "ipa": "/awˈðaθ/",
+    "meaningVi": "táo_bạo",
+    "gender": null,
+    "article": null,
+    "feminine": "audaz",
+    "plural": "audaces",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es una idea audaz.",
+    "tipVi": "Số nhiều | đổi z thành c: audaces.",
+    "defVi": "Dám làm | điều mới, | không ngại /rủi_ro/.",
+    "leadVi": "Tóc đen mười năm, | mình /mạnh_dạn/ | nhuộm hẳn màu xanh.",
+    "anticipateVi": "Nhà mình /sững_sờ/ nhỉ?",
+    "usageEn": "Fue una decisión _____ dejar su trabajo para abrir un café.",
+    "usageVi": "Bỏ việc | để mở quán cà_phê | là một quyết_định táo_bạo.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "rủi ro",
+      "mạnh dạn",
+      "sững sờ"
+    ]
+  },
+  {
+    "word": "encantador",
+    "pos": "adj",
+    "ipa": "/eŋkantaˈðoɾ/",
+    "meaningVi": "duyên_dáng",
+    "gender": null,
+    "article": null,
+    "feminine": "encantadora",
+    "plural": "encantadores / encantadoras",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es encantadora.",
+    "tipVi": "Giống cái | thêm -a: | una persona encantadora.",
+    "defVi": "Có /sức_hút/ | dễ_chịu, làm người khác mến.",
+    "leadVi": "Mới gặp, | cô=ấy cười | /tươi_tắn/, cả nhóm mến ngay.",
+    "anticipateVi": "Ai cũng muốn /làm_quen/?",
+    "usageEn": "Mi vecina es una señora _____ que siempre nos saluda con una sonrisa.",
+    "usageVi": "Bà hàng_xóm | là người duyên_dáng, | lúc=nào cũng cười chào tụi mình.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "sức hút",
+      "tươi tắn",
+      "làm quen"
+    ]
+  },
+  {
+    "word": "decente",
+    "pos": "adj",
+    "ipa": "/deˈθente/",
+    "meaningVi": "tươm_tất",
+    "gender": null,
+    "article": null,
+    "feminine": "decente",
+    "plural": "decentes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es un sueldo decente.",
+    "tipVi": "Tả người, | decente là | đứng_đắn.",
+    "defVi": "Đủ tốt, | /chấp_nhận/ được, | không tệ chút nào.",
+    "leadVi": "Lương làm thêm | không cao | nhưng vẫn đủ /chi_tiêu/.",
+    "anticipateVi": "Ví tiền /dư_dả/ không?",
+    "usageEn": "Busco un trabajo con un sueldo _____ cerca de casa.",
+    "usageVi": "Mình tìm việc | lương tươm_tất | gần nhà.",
+    "topics": [
+      "work",
+      "money"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "chấp nhận",
+      "chi tiêu",
+      "dư dả"
+    ]
+  },
+  {
+    "word": "dependiente",
+    "pos": "adj",
+    "ipa": "/depenˈdjente/",
+    "meaningVi": "phụ_thuộc",
+    "gender": null,
+    "article": null,
+    "feminine": "dependiente",
+    "plural": "dependientes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "de + sustantivo",
+    "serEstar": "Thường dùng ser: | es muy dependiente.",
+    "tipVi": "Danh_từ | el dependiente | là nhân_viên bán hàng.",
+    "defVi": "Cần /dựa_dẫm/ | vào người khác | mới tự lo được.",
+    "leadVi": "Hết pin điện_thoại, | bạn /lúng_túng/ | không biết đường về.",
+    "anticipateVi": "Hỏi đường /người_lạ/ nhé?",
+    "usageEn": "Muchos estudiantes son _____ de sus padres.",
+    "usageVi": "Nhiều sinh_viên | phụ_thuộc | vào bố_mẹ.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "dựa dẫm",
+      "lúng túng",
+      "người lạ"
+    ]
+  },
+  {
+    "word": "deshonesto",
+    "pos": "adj",
+    "ipa": "/desoˈnesto/",
+    "meaningVi": "không trung_thực",
+    "gender": null,
+    "article": null,
+    "feminine": "deshonesta",
+    "plural": "deshonestos / deshonestas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es deshonesto.",
+    "tipVi": "h không đọc: | deshonesto đọc như desonesto.",
+    "defVi": "Hay nói_dối, | /gian_lận/ | để có lợi cho mình.",
+    "leadVi": "Nhận bài nhóm | thành của riêng mình | là /gian_dối/.",
+    "anticipateVi": "Trưởng nhóm /phát_hiện/ chưa?",
+    "usageEn": "Copiar el trabajo de otro y decir que es tuyo es _____.",
+    "usageVi": "Chép bài người khác | rồi nói là của mình | là không trung_thực.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "gian lận",
+      "gian dối",
+      "phát hiện"
+    ]
+  },
+  {
+    "word": "dinámico",
+    "pos": "adj",
+    "ipa": "/diˈnamiko/",
+    "meaningVi": "năng_động",
+    "gender": null,
+    "article": null,
+    "feminine": "dinámica",
+    "plural": "dinámicos / dinámicas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es muy dinámica.",
+    "tipVi": "Có dấu | trên a: | dinámico, dinámica.",
+    "defVi": "Đầy /sức_sống/, | luôn hoạt_động và đổi_mới.",
+    "leadVi": "Năm nhất, | bạn /tham_gia/ | ba câu_lạc_bộ.",
+    "anticipateVi": "Thời_khóa_biểu /dày_đặc/ nhỉ?",
+    "usageEn": "Buscamos a una persona joven y _____ para el equipo de ventas.",
+    "usageVi": "Tụi mình cần | một người trẻ, năng_động | cho nhóm bán hàng.",
+    "topics": [
+      "character",
+      "work"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "sức sống",
+      "tham gia",
+      "dày đặc"
+    ]
+  },
+  {
+    "word": "impaciente",
+    "pos": "adj",
+    "ipa": "/impaˈθjente/",
+    "meaningVi": "thiếu kiên_nhẫn",
+    "gender": null,
+    "article": null,
+    "feminine": "impaciente",
+    "plural": "impacientes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "ser impaciente: | tính nóng_vội; | estar impaciente: | đang sốt_ruột.",
+    "tipVi": "Nóng lòng làm gì | dùng por: | impaciente por llegar.",
+    "defVi": "Không chịu chờ, | dễ /bực_bội/ khi phải đợi.",
+    "leadVi": "Mạng chậm, | bạn /sốt_ruột/ | bấm tải lại liên_tục.",
+    "anticipateVi": "Phím bấm sắp /bốc_khói/?",
+    "usageEn": "No seas _____, el autobús llega en cinco minutos.",
+    "usageVi": "Đừng sốt_ruột, | năm phút nữa | xe_buýt tới.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "bực bội",
+      "sốt ruột",
+      "bốc khói"
+    ]
+  },
+  {
+    "word": "leal",
+    "pos": "adj",
+    "ipa": "/leˈal/",
+    "meaningVi": "trung_thành",
+    "gender": null,
+    "article": null,
+    "feminine": "leal",
+    "plural": "leales",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "a + persona",
+    "serEstar": "Thường dùng ser: | es un amigo leal.",
+    "tipVi": "Trung_thành với ai | dùng a: | leal a sus amigos.",
+    "defVi": "Luôn ủng_hộ, | không /bỏ_rơi/ người mình quý.",
+    "leadVi": "Đội nhà thua mãi, | mình vẫn | /cổ_vũ/ hết mùa.",
+    "anticipateVi": "Mùa giải tới /phục_thù/ nhé?",
+    "usageEn": "Mi perro es muy _____ y siempre me espera en la puerta.",
+    "usageVi": "Con=chó của=mình | rất=trung_thành, | lúc=nào cũng đợi mình ở cửa.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "bỏ rơi",
+      "cổ vũ",
+      "phục thù"
+    ]
+  },
+  {
+    "word": "modesto",
+    "pos": "adj",
+    "ipa": "/moˈðesto/",
+    "meaningVi": "khiêm_tốn",
+    "gender": null,
+    "article": null,
+    "feminine": "modesta",
+    "plural": "modestos / modestas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es muy modesto.",
+    "tipVi": "Tả nhà, | tả lương: | modesto là đơn_sơ.",
+    "defVi": "Không /khoe_khoang/ | về tài_năng của=mình.",
+    "leadVi": "Đạt giải nhất, | bạn chỉ | bảo là /may_mắn/.",
+    "anticipateVi": "Tin vui /lan_truyền/ khắp trường?",
+    "usageEn": "Aunque ganó el premio, sigue siendo muy _____.",
+    "usageVi": "Dù đoạt giải, | bạn=ấy vẫn | rất=khiêm_tốn.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "khoe khoang",
+      "may mắn",
+      "lan truyền"
+    ]
+  },
+  {
+    "word": "optimista",
+    "pos": "adj",
+    "ipa": "/optiˈmista/",
+    "meaningVi": "lạc_quan",
+    "gender": null,
+    "article": null,
+    "feminine": "optimista",
+    "plural": "optimistas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Dùng cả ser | lẫn estar: | soy optimista, | estoy optimista.",
+    "tipVi": "Tận_cùng -a | nhưng dùng cả cho nam: | él es optimista.",
+    "defVi": "Luôn tin rằng | mọi chuyện | sẽ=/tốt_đẹp/.",
+    "leadVi": "Trượt nguyện_vọng một, | bạn vẫn /vui_vẻ/ | tính tiếp.",
+    "anticipateVi": "/Cơ_hội/ còn dài mà?",
+    "usageEn": "Mi amiga es muy _____ y siempre ve el lado bueno.",
+    "usageVi": "Bạn mình | rất=lạc_quan, | lúc=nào cũng thấy mặt tốt.",
+    "topics": [
+      "character",
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tốt đẹp",
+      "vui vẻ",
+      "Cơ hội"
+    ]
+  },
+  {
+    "word": "sensible",
+    "pos": "adj",
+    "ipa": "/senˈsiβle/",
+    "meaningVi": "nhạy_cảm",
+    "gender": null,
+    "article": null,
+    "feminine": "sensible",
+    "plural": "sensibles",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "a + sustantivo",
+    "serEstar": "Thường dùng ser: | es muy sensible.",
+    "tipVi": "Sensible là nhạy_cảm; | hợp_lý | là sensato.",
+    "defVi": "Dễ /xúc_động/, | dễ bị tổn_thương | vì lời nói.",
+    "leadVi": "Xem phim hoạt_hình, | em khóc | /sụt_sùi/ đoạn cuối.",
+    "anticipateVi": "Hết cả gói /khăn_giấy/?",
+    "usageEn": "Es una persona muy _____ y llora con las películas tristes.",
+    "usageVi": "Bạn=ấy rất=nhạy_cảm, | xem phim buồn | là khóc.",
+    "topics": [
+      "character",
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "xúc động",
+      "sụt sùi",
+      "khăn giấy"
+    ]
+  },
+  {
+    "word": "sincero",
+    "pos": "adj",
+    "ipa": "/sinˈθeɾo/",
+    "meaningVi": "chân_thành",
+    "gender": null,
+    "article": null,
+    "feminine": "sincera",
+    "plural": "sinceros / sinceras",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | sé sincero conmigo.",
+    "tipVi": "Thành_thật mà nói | là para ser sincero.",
+    "defVi": "/Thật_lòng/, | không giả_tạo | khi nói hay làm.",
+    "leadVi": "Làm bạn buồn, | mình /thành_thật/ | nhận lỗi trước.",
+    "anticipateVi": "Người kia /tha_thứ/ chưa nhỉ?",
+    "usageEn": "Gracias por tu ayuda, eres un amigo muy _____.",
+    "usageVi": "Cảm_ơn bạn đã giúp, | bạn là | người bạn rất=chân_thành.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Thật lòng",
+      "thành thật",
+      "tha thứ"
+    ]
+  },
+  {
+    "word": "estricto",
+    "pos": "adj",
+    "ipa": "/esˈtɾikto/",
+    "meaningVi": "nghiêm_khắc",
+    "gender": null,
+    "article": null,
+    "feminine": "estricta",
+    "plural": "estrictos / estrictas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "con + sustantivo",
+    "serEstar": "Thường dùng ser: | es muy estricta.",
+    "tipVi": "Nghiêm với ai | dùng con: | estricto con los alumnos.",
+    "defVi": "Đòi_hỏi /tuân_thủ/ | quy_định | rất=chặt_chẽ.",
+    "leadVi": "Tiết thầy chủ_nhiệm, | cả=lớp | ngồi /nghiêm_chỉnh/.",
+    "anticipateVi": "Quên /đồng_phục/ thì sao?",
+    "usageEn": "Mi profesor de matemáticas es muy _____ con las fechas de entrega.",
+    "usageVi": "Thầy dạy toán | rất=nghiêm_khắc | chuyện hạn nộp bài.",
+    "topics": [
+      "character",
+      "study"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tuân thủ",
+      "nghiêm chỉnh",
+      "đồng phục"
+    ]
+  },
+  {
+    "word": "minucioso",
+    "pos": "adj",
+    "ipa": "/minuˈθjoso/",
+    "meaningVi": "kỹ_lưỡng",
+    "gender": null,
+    "article": null,
+    "feminine": "minuciosa",
+    "plural": "minuciosos / minuciosas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es muy minuciosa.",
+    "tipVi": "Tả cả việc làm: | una revisión minuciosa.",
+    "defVi": "Làm cẩn_thận, | không /bỏ_sót/ | chi_tiết nào.",
+    "leadVi": "Trước khi nộp, | mình /rà_soát/ | từng dấu_chấm.",
+    "anticipateVi": "Sạch bóng lỗi /chính_tả/?",
+    "usageEn": "Es una estudiante muy _____ y revisa cada detalle.",
+    "usageVi": "Bạn=ấy là sinh_viên | rất=kỹ_lưỡng, | soát từng chi_tiết.",
+    "topics": [
+      "character",
+      "study"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "bỏ sót",
+      "rà soát",
+      "chính tả"
+    ]
+  },
+  {
+    "word": "dispuesto",
+    "pos": "adj",
+    "ipa": "/disˈpwesto/",
+    "meaningVi": "sẵn_lòng",
+    "gender": null,
+    "article": null,
+    "feminine": "dispuesta",
+    "plural": "dispuestos / dispuestas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "a + infinitivo",
+    "serEstar": "Thường dùng estar: | estoy dispuesto a ayudar.",
+    "tipVi": "Là phân_từ | của disponer, | luôn đi với a.",
+    "defVi": "Vui_vẻ /đồng_ý/ | làm một việc | khi được nhờ.",
+    "leadVi": "Bạn cần chuyển nhà, | chị /xung_phong/ | khuân đồ cả buổi.",
+    "anticipateVi": "Đền bằng /trà_sữa/ nhé?",
+    "usageEn": "Estoy _____ a ayudarte con la mudanza este sábado.",
+    "usageVi": "Mình sẵn_lòng | giúp bạn chuyển nhà | thứ Bảy này.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "đồng ý",
+      "xung phong",
+      "trà sữa"
+    ]
+  },
+  {
+    "word": "sabio",
+    "pos": "adj",
+    "ipa": "/ˈsaβjo/",
+    "meaningVi": "khôn_ngoan",
+    "gender": null,
+    "article": null,
+    "feminine": "sabia",
+    "plural": "sabios / sabias",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | fue una decisión sabia.",
+    "tipVi": "Đừng nhầm | với sabía | (biết, của saber).",
+    "defVi": "Có hiểu_biết, | biết /phán_đoán/ | đúng_đắn.",
+    "leadVi": "Bế_tắc chuyện học, | bạn gọi | ông_ngoại xin /lời_khuyên/.",
+    "anticipateVi": "Ông /chậm_rãi/ kể chuyện?",
+    "usageEn": "Ahorrar un poco cada mes es una decisión _____.",
+    "usageVi": "Mỗi=tháng tiết_kiệm một_chút | là quyết_định khôn_ngoan.",
+    "topics": [
+      "character",
+      "thinking"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "phán đoán",
+      "lời khuyên",
+      "chậm rãi"
+    ]
+  },
+  {
+    "word": "característica",
+    "pos": "noun",
+    "ipa": "/kaɾakteˈɾistika/",
+    "meaningVi": "đặc_điểm",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las características",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Dấu nằm | trên í: característica.",
+    "defVi": "/Đặc_trưng/ | giúp mình nhận_ra | người hay vật.",
+    "leadVi": "Tả bạn_thân, | mình kể | điểm /nổi_bật/ nhất.",
+    "anticipateVi": "Vẽ ra /chân_dung/ được chưa?",
+    "usageEn": "La paciencia es una _____ importante de un buen profesor.",
+    "usageVi": "Kiên_nhẫn là | đặc_điểm quan_trọng | của=một giáo_viên giỏi.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Đặc trưng",
+      "nổi bật",
+      "chân dung"
+    ]
+  },
+  {
+    "word": "moral",
+    "pos": "adj",
+    "ipa": "/moˈɾal/",
+    "meaningVi": "đạo_đức",
+    "gender": null,
+    "article": null,
+    "feminine": "moral",
+    "plural": "morales",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es una decisión moral.",
+    "tipVi": "Danh_từ la moral | là tinh_thần: | tengo la moral alta.",
+    "defVi": "Liên_quan | /lẽ_phải/, | điều đúng điều sai trong đời.",
+    "leadVi": "Nhặt được ví, | bạn thấy | /bổn_phận/ phải trả lại.",
+    "anticipateVi": "Chủ ví /rối_rít/ cảm_ơn?",
+    "usageEn": "Tenemos la obligación _____ de ayudar a los demás.",
+    "usageVi": "Chúng_ta có | bổn_phận đạo_đức | giúp người khác.",
+    "topics": [
+      "character",
+      "society"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "lẽ phải",
+      "bổn phận",
+      "rối rít"
+    ]
+  },
+  {
+    "word": "coraje",
+    "pos": "noun",
+    "ipa": "/koˈɾaxe/",
+    "meaningVi": "lòng dũng_cảm",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": null,
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Ở vài nước, | coraje còn là | cơn giận.",
+    "defVi": "Sức_mạnh | để làm | điều /đáng_sợ/ hay khó.",
+    "leadVi": "Sợ độ cao, | mình vẫn | /gan_dạ/ leo lên đỉnh.",
+    "anticipateVi": "/Lẩy_bẩy/ hai chân?",
+    "usageEn": "Hace falta _____ para decir la verdad cuando te equivocas.",
+    "usageVi": "Cần dũng_cảm | để nói thật | khi mình sai.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "đáng sợ",
+      "gan dạ",
+      "Lẩy bẩy"
+    ]
+  },
+  {
+    "word": "creatividad",
+    "pos": "noun",
+    "ipa": "/kɾeatiβiˈðað/",
+    "meaningVi": "sự sáng_tạo",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": null,
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Danh_từ đuôi -dad | luôn giống cái: | la creatividad.",
+    "defVi": "Khả_năng | tạo ý_tưởng | mới lạ, /độc_đáo/.",
+    "leadVi": "Thiếu tiền làm đạo_cụ, | bạn /tận_dụng/ | thùng giấy cũ.",
+    "anticipateVi": "Ai tin là đồ /tái_chế/?",
+    "usageEn": "Este trabajo necesita mucha _____ e imaginación.",
+    "usageVi": "Công_việc này | cần nhiều | sáng_tạo và trí_tưởng_tượng.",
+    "topics": [
+      "character",
+      "thinking"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "độc đáo",
+      "tận dụng",
+      "tái chế"
+    ]
+  },
+  {
+    "word": "determinación",
+    "pos": "noun",
+    "ipa": "/deteɾminaˈθjon/",
+    "meaningVi": "sự quyết_tâm",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las determinaciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Hay đi với con: | con determinación.",
+    "defVi": "Ý_chí | không /lùi_bước/ | trước khó_khăn.",
+    "leadVi": "Trượt lần đầu, | bạn /miệt_mài/ | ôn lại suốt hè.",
+    "anticipateVi": "Lần hai /thành_công/ chứ?",
+    "usageEn": "Con trabajo y _____, consiguió terminar la carrera.",
+    "usageVi": "Nhờ chăm_chỉ | và quyết_tâm, | bạn=ấy đã học xong đại_học.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "lùi bước",
+      "miệt mài",
+      "thành công"
+    ]
+  },
+  {
+    "word": "disciplina",
+    "pos": "noun",
+    "ipa": "/disθiˈplina/",
+    "meaningVi": "kỷ_luật",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las disciplinas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Còn là | môn học | hay môn thể_thao.",
+    "defVi": "Thói_quen | tuân theo | /quy_tắc/, giờ_giấc.",
+    "leadVi": "Năm giờ sáng, | mình /đều_đặn/ | dậy chạy dù mưa.",
+    "anticipateVi": "Tiếng /báo_thức/ chưa kịp reo?",
+    "usageEn": "La _____ te ayuda a estudiar mejor cada día.",
+    "usageVi": "Kỷ_luật | giúp bạn học | tốt hơn mỗi=ngày.",
+    "topics": [
+      "character",
+      "study"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "quy tắc",
+      "đều đặn",
+      "báo thức"
+    ]
+  },
+  {
+    "word": "genio",
+    "pos": "noun",
+    "ipa": "/ˈxenjo/",
+    "meaningVi": "thiên_tài",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los genios",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Tener mal genio | là nóng tính.",
+    "defVi": "Người có trí_tuệ | hay tài_năng | /phi_thường/.",
+    "leadVi": "Mười lăm tuổi, | bạn=ấy /sáng_chế/ | máy lọc nước.",
+    "anticipateVi": "/Báo_chí/ săn đón chưa?",
+    "usageEn": "Mi compañero es un _____ de la música.",
+    "usageVi": "Bạn cùng lớp mình | là thiên_tài | âm_nhạc.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "phi thường",
+      "sáng chế",
+      "Báo chí"
+    ]
+  },
+  {
+    "word": "bondad",
+    "pos": "noun",
+    "ipa": "/bonˈdað/",
+    "meaningVi": "sự tử_tế",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las bondades",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Lịch_sự: | ¿Tendría la bondad de…? | là xin vui_lòng.",
+    "defVi": "Phẩm_chất | /hiền_lành/, | biết quan_tâm người khác.",
+    "leadVi": "Mưa to, | cô bán xôi | /tốt_bụng/ cho mượn áo_mưa.",
+    "anticipateVi": "Mai đem /bánh_ngọt/ cảm_ơn?",
+    "usageEn": "Nos ayudó por pura _____, sin pedir nada.",
+    "usageVi": "Cô=ấy giúp tụi mình | vì lòng tốt, | chẳng đòi gì.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "hiền lành",
+      "tốt bụng",
+      "bánh ngọt"
+    ]
+  },
+  {
+    "word": "honradez",
+    "pos": "noun",
+    "ipa": "/onraˈðeθ/",
+    "meaningVi": "sự trung_thực",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": null,
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "h không đọc: | honradez đọc như onradez.",
+    "defVi": "Đức_tính | nói thật, | sống /ngay_thẳng/ với mọi người.",
+    "leadVi": "Thầy chấm nhầm | thêm điểm, | bạn /chủ_động/ báo lại.",
+    "anticipateVi": "Tràng /vỗ_tay/ vang lên?",
+    "usageEn": "Respeto mucho la _____ de mi compañero.",
+    "usageVi": "Mình rất=quý | sự trung_thực | của=bạn cùng lớp.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ngay thẳng",
+      "chủ động",
+      "vỗ tay"
+    ]
+  },
+  {
+    "word": "humor",
+    "pos": "noun",
+    "ipa": "/uˈmoɾ/",
+    "meaningVi": "khiếu hài_hước",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": null,
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Estar de buen humor | là đang vui.",
+    "defVi": "Khả_năng | khiến người khác | bật cười /thoải_mái/.",
+    "leadVi": "Mất điện giữa tiệc, | em /pha_trò/ | suốt cả tối.",
+    "anticipateVi": "Ai /tiếc_nuối/ khi đèn sáng?",
+    "usageEn": "Mi padre tiene un gran sentido del _____.",
+    "usageVi": "Bố mình | rất có | khiếu hài_hước.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thoải mái",
+      "pha trò",
+      "tiếc nuối"
+    ]
+  },
+  {
+    "word": "paciencia",
+    "pos": "noun",
+    "ipa": "/paˈθjenθja/",
+    "meaningVi": "sự kiên_nhẫn",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": null,
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Hết kiên_nhẫn | là perder la paciencia.",
+    "defVi": "Khả_năng | chờ_đợi | /bình_tĩnh/, không bực.",
+    "leadVi": "Tập thêu tranh, | bạn /tỉ_mỉ/ | từng mũi kim nhỏ.",
+    "anticipateVi": "Bức tranh /hoàn_thành/ chưa?",
+    "usageEn": "Enseñar a niños pequeños requiere mucha _____.",
+    "usageVi": "Dạy trẻ nhỏ | cần rất nhiều | kiên_nhẫn.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "bình tĩnh",
+      "tỉ mỉ",
+      "hoàn thành"
+    ]
+  },
+  {
+    "word": "rasgo",
+    "pos": "noun",
+    "ipa": "/ˈrasɣo/",
+    "meaningVi": "nét tính_cách",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los rasgos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Số nhiều los rasgos | còn là | nét mặt.",
+    "defVi": "Đặc_điểm riêng | thể_hiện | trong cách /cư_xử/.",
+    "leadVi": "Bài trắc_nghiệm | chỉ ra mình | /hướng_nội/ rõ_rệt.",
+    "anticipateVi": "Bạn_bè /gật_gù/ đồng_tình?",
+    "usageEn": "La amabilidad es su mejor _____.",
+    "usageVi": "Tử_tế là | nét tính_cách | đẹp nhất của=cô=ấy.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "cư xử",
+      "hướng nội",
+      "gật gù"
+    ]
+  },
+  {
+    "word": "debilidad",
+    "pos": "noun",
+    "ipa": "/deβiliˈðað/",
+    "meaningVi": "điểm yếu",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las debilidades",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Tener debilidad por | là rất mê | một thứ.",
+    "defVi": "Mặt /hạn_chế/ | của một người | cần luyện thêm.",
+    "leadVi": "Nghe ba lần vẫn sai, | phần nghe | là /lỗ_hổng/.",
+    "anticipateVi": "Phải /luyện_tập/ thêm nhỉ?",
+    "usageEn": "El chocolate es mi gran _____.",
+    "usageVi": "Sô_cô_la | là điểm yếu | lớn nhất của=mình.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "hạn chế",
+      "lỗ hổng",
+      "luyện tập"
+    ]
+  },
+  {
+    "word": "atrever",
+    "pos": "verb",
+    "ipa": "/atɾeˈβeɾ/",
+    "meaningVi": "dám",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo me atrevo",
+        "pretérito": "él se atrevió",
+        "participio": "atrevido",
+        "gerundio": "atreviéndose"
+      }
+    },
+    "reflexive": "atreverse",
+    "governs": "a + infinitivo",
+    "serEstar": null,
+    "tipVi": "Luôn có se | và a: | me atrevo a saltar.",
+    "defVi": "Đủ /can_đảm/ | để làm | một điều khiến mình sợ.",
+    "leadVi": "Cả nhóm run, | riêng chị /tự_tin/ | bước lên tàu_lượn.",
+    "anticipateVi": "Cả vòng /la_hét/ chứ?",
+    "usageEn": "Al final, mi hermana se va a _____ a cantar en la fiesta.",
+    "usageVi": "Rốt_cuộc, | chị mình sẽ dám | hát trong bữa tiệc.",
+    "topics": [
+      "character"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "can đảm",
+      "tự tin",
+      "la hét"
+    ]
+  },
+  {
+    "word": "ofensivo",
+    "pos": "adj",
+    "ipa": "/ofenˈsiβo/",
+    "meaningVi": "xúc_phạm",
+    "gender": null,
+    "article": null,
+    "feminine": "ofensiva",
+    "plural": "ofensivos / ofensivas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es un comentario ofensivo.",
+    "tipVi": "Trong thể_thao, | ofensivo là | tấn_công.",
+    "defVi": "Gây /khó_chịu/, | làm người khác | thấy bị coi_thường.",
+    "leadVi": "Thấy bình_luận | /thô_lỗ/ | dưới bài, mình báo_cáo ngay.",
+    "anticipateVi": "Chặn luôn /tài_khoản/?",
+    "usageEn": "Ese chiste fue _____ para muchas personas.",
+    "usageVi": "Câu đùa đó | xúc_phạm | nhiều người.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "khó chịu",
+      "thô lỗ",
+      "tài khoản"
+    ]
+  },
+  {
+    "word": "supuesto",
+    "pos": "adj",
+    "ipa": "/suˈpwesto/",
+    "meaningVi": "cái gọi là",
+    "gender": null,
+    "article": null,
+    "feminine": "supuesta",
+    "plural": "supuestos / supuestas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Đứng trước danh_từ, | ít đi với ser: | el supuesto experto.",
+    "tipVi": "Por supuesto | là tất_nhiên, | nghĩa khác hẳn.",
+    "defVi": "Được gọi | như_vậy | mà /thực_chất/ có_khi không phải.",
+    "leadVi": "Món ăn | nổi_tiếng trên mạng, | nếm thử thấy /bình_thường/.",
+    "anticipateVi": "Mất tiền /oan_uổng/ nhỉ?",
+    "usageEn": "El _____ experto no supo responder a una pregunta fácil.",
+    "usageVi": "Cái gọi là | chuyên_gia | không trả_lời nổi | một câu hỏi dễ.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thực chất",
+      "bình thường",
+      "oan uổng"
+    ]
+  },
+  {
+    "word": "abiertamente",
+    "pos": "adv",
+    "ipa": "/aβjeɾtaˈmente/",
+    "meaningVi": "công_khai",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Gốc là abierto: | thêm -mente | vào dạng giống cái.",
+    "defVi": "Nói /thẳng_thắn/, | không giấu_giếm | điều gì.",
+    "leadVi": "Họp lớp, | bạn /mạnh_dạn/ | nêu ý_kiến trước mọi người.",
+    "anticipateVi": "/Không_khí/ chùng xuống?",
+    "usageEn": "Ella habla _____ de sus problemas con sus amigos.",
+    "usageVi": "Cô=ấy nói công_khai | chuyện của=mình | với bạn_bè.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thẳng thắn",
+      "mạnh dạn",
+      "Không khí"
+    ]
+  },
+  {
+    "word": "acento",
+    "pos": "noun",
+    "ipa": "/aˈθento/",
+    "meaningVi": "chất giọng",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los acentos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Còn là | dấu nhấn | trên chữ: | á, é.",
+    "defVi": "Cách /phát_âm/ | riêng của | người một vùng.",
+    "leadVi": "Bạn mới chuyển tới | nói_chuyện | nghe /lạ_tai/ mà vui.",
+    "anticipateVi": "/Bắt_chước/ được không?",
+    "usageEn": "Mi profesor de inglés tiene un _____ muy bonito.",
+    "usageVi": "Thầy dạy tiếng Anh | có chất giọng | rất hay.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "phát âm",
+      "lạ tai",
+      "Bắt chước"
+    ]
+  },
+  {
+    "word": "disculpa",
+    "pos": "noun",
+    "ipa": "/disˈkulpa/",
+    "meaningVi": "lời xin_lỗi",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las disculpas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Xin lỗi ai | là pedir disculpas | (số nhiều).",
+    "defVi": "Lời /nhận_lỗi/ | và mong | được bỏ qua.",
+    "leadVi": "Lỡ hẹn bạn, | mình /áy_náy/ | nhắn một tràng dài.",
+    "anticipateVi": "Bạn=ấy /làm_lành/ chưa?",
+    "usageEn": "Te debo una _____ por lo de ayer.",
+    "usageVi": "Mình nợ bạn | một lời xin_lỗi | vì chuyện hôm_qua.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "nhận lỗi",
+      "áy náy",
+      "làm lành"
+    ]
+  },
+  {
+    "word": "aprobación",
+    "pos": "noun",
+    "ipa": "/apɾoβaˈθjon/",
+    "meaningVi": "sự chấp_thuận",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las aprobaciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Động_từ aprobar | còn là | thi đỗ.",
+    "defVi": "Lời đồng_ý, | /cho_phép/ | một kế_hoạch được làm.",
+    "leadVi": "Muốn đi phượt, | mình chờ | bố_mẹ /gật_đầu/.",
+    "anticipateVi": "Xách /ba_lô/ lên đường?",
+    "usageEn": "Necesito la _____ de mis padres para ir de viaje.",
+    "usageVi": "Mình cần | bố_mẹ chấp_thuận | mới được đi du_lịch.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "cho phép",
+      "gật đầu",
+      "ba lô"
+    ]
+  },
+  {
+    "word": "crítica",
+    "pos": "noun",
+    "ipa": "/ˈkɾitika/",
+    "meaningVi": "lời phê_bình",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las críticas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Người phê_bình | là el crítico.",
+    "defVi": "Lời chỉ ra | /thiếu_sót/, | điểm chưa tốt.",
+    "leadVi": "Nộp bản nháp, | em nhận | /góp_ý/ chi_chít đỏ trang.",
+    "anticipateVi": "Tối nay /chỉnh_sửa/ tới khuya?",
+    "usageEn": "No acepta bien la _____ de sus compañeros.",
+    "usageVi": "Bạn=ấy không dễ | đón_nhận | lời phê_bình của=bạn cùng lớp.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thiếu sót",
+      "góp ý",
+      "chỉnh sửa"
+    ]
+  },
+  {
+    "word": "énfasis",
+    "pos": "noun",
+    "ipa": "/ˈenfasis/",
+    "meaningVi": "sự nhấn_mạnh",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los énfasis",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Giống đực | dù tận_cùng -is: | el énfasis.",
+    "defVi": "Cách làm /nổi_bật/ | ý quan_trọng | khi nói hay viết.",
+    "leadVi": "Ôn thi cùng bạn, | mình /đánh_dấu/ | công_thức chính.",
+    "anticipateVi": "Đề thi /trúng_tủ/ không?",
+    "usageEn": "La escuela pone mucho _____ en la lectura.",
+    "usageVi": "Nhà_trường | rất nhấn_mạnh | việc đọc sách.",
+    "topics": [
+      "communication",
+      "study"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "nổi bật",
+      "đánh dấu",
+      "trúng tủ"
+    ]
+  },
+  {
+    "word": "sobre",
+    "pos": "noun",
+    "ipa": "/ˈsoβɾe/",
+    "meaningVi": "phong_bì",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los sobres",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng là | giới_từ: | sobre la mesa | là trên bàn.",
+    "defVi": "Bao giấy | để đựng | /thư_từ/ hay thiệp.",
+    "leadVi": "Gửi thiệp cảm_ơn, | mình dán | /tem_thư/ góc trên.",
+    "anticipateVi": "/Bưu_điện/ còn mở không?",
+    "usageEn": "Pon la carta en el _____ y escribe la dirección.",
+    "usageVi": "Cho lá_thư vào phong_bì | rồi ghi địa_chỉ.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thư từ",
+      "tem thư",
+      "Bưu điện"
+    ]
+  },
+  {
+    "word": "foro",
+    "pos": "noun",
+    "ipa": "/ˈfoɾo/",
+    "meaningVi": "diễn_đàn",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los foros",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Nơi mọi người | /thảo_luận/, | chia_sẻ ý_kiến.",
+    "leadVi": "Máy_tính lỗi, | bạn lên | nhóm /hỏi_đáp/ tìm cách.",
+    "anticipateVi": "Có /cao_thủ/ chỉ giúp?",
+    "usageEn": "Los estudiantes escriben sus preguntas en el _____ de la clase.",
+    "usageVi": "Sinh_viên | viết câu hỏi | lên diễn_đàn của lớp.",
+    "topics": [
+      "communication",
+      "technology"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thảo luận",
+      "hỏi đáp",
+      "cao thủ"
+    ]
+  },
+  {
+    "word": "gesto",
+    "pos": "noun",
+    "ipa": "/ˈxesto/",
+    "meaningVi": "cử_chỉ",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los gestos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Un buen gesto | còn là | một việc tử_tế.",
+    "defVi": "Động_tác tay, đầu | để /thể_hiện/ ý.",
+    "leadVi": "Ồn quá không nghe, | bạn /ra_hiệu/ | bảo mình qua.",
+    "anticipateVi": "Hiểu ý /lập_tức/ chứ?",
+    "usageEn": "Con un _____ de la mano, me dijo que entrara.",
+    "usageVi": "Bạn=ấy | ra hiệu bằng tay | bảo mình vào.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thể hiện",
+      "ra hiệu",
+      "lập tức"
+    ]
+  },
+  {
+    "word": "interacción",
+    "pos": "noun",
+    "ipa": "/inteɾakˈθjon/",
+    "meaningVi": "sự tương_tác",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las interacciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Viết hai chữ c: | interacción, không viết interación.",
+    "defVi": "Việc qua lại, | /trao_đổi/ | giữa người với người.",
+    "leadVi": "Lớp học nhóm, | ai cũng /phát_biểu/ | và hỏi lẫn nhau.",
+    "anticipateVi": "Giờ học hết /buồn_ngủ/?",
+    "usageEn": "En esta clase hay mucha _____ entre el profesor y los alumnos.",
+    "usageVi": "Lớp này | thầy và trò | tương_tác rất nhiều.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "trao đổi",
+      "phát biểu",
+      "buồn ngủ"
+    ]
+  },
+  {
+    "word": "folleto",
+    "pos": "noun",
+    "ipa": "/foˈʎeto/",
+    "meaningVi": "tờ_rơi",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los folletos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Tờ=giấy in | thông_tin, | phát /miễn_phí/.",
+    "leadVi": "Hội tân sinh_viên, | mình phát | /quảng_cáo/ câu_lạc_bộ.",
+    "anticipateVi": "Danh_sách /đăng_ký/ dài chưa?",
+    "usageEn": "En la entrada del museo te dan un _____ con el mapa.",
+    "usageVi": "Ở cửa bảo_tàng, | người ta đưa | tờ_rơi có bản_đồ.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "miễn phí",
+      "quảng cáo",
+      "đăng ký"
+    ]
+  },
+  {
+    "word": "firma",
+    "pos": "noun",
+    "ipa": "/ˈfiɾma/",
+    "meaningVi": "chữ_ký",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las firmas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Còn có nghĩa | là công_ty, hãng.",
+    "defVi": "Tên /viết_tay/ | theo kiểu riêng | của=mình.",
+    "leadVi": "Nhận bưu_kiện, | mình /nguệch_ngoạc/ | lên máy giao_hàng.",
+    "anticipateVi": "Nét /bay_bổng/ chứ?",
+    "usageEn": "Pon tu _____ al final de la página, por favor.",
+    "usageVi": "Bạn ký tên | ở cuối trang nhé.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "viết tay",
+      "nguệch ngoạc",
+      "bay bổng"
+    ]
+  },
+  {
+    "word": "eslogan",
+    "pos": "noun",
+    "ipa": "/esˈloɣan/",
+    "meaningVi": "khẩu_hiệu",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los eslóganes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Số nhiều | thêm dấu: los eslóganes.",
+    "defVi": "Câu ngắn | dễ nhớ | dùng để /kêu_gọi/ mọi người.",
+    "leadVi": "Thi cổ_động, | lớp mình | /đồng_thanh/ hô khắp sân.",
+    "anticipateVi": "Hô tới /khàn_đặc/ giọng?",
+    "usageEn": "La empresa tiene un _____ nuevo para su campaña.",
+    "usageVi": "Công_ty có | khẩu_hiệu mới | cho chiến_dịch.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "kêu gọi",
+      "đồng thanh",
+      "khàn đặc"
+    ]
+  },
+  {
+    "word": "portavoz",
+    "pos": "noun",
+    "ipa": "/poɾtaˈβoθ/",
+    "meaningVi": "người phát_ngôn",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los portavoces",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Dùng cho nữ: | la portavoz; | số nhiều portavoces.",
+    "defVi": "Người /thay_mặt/ | một tổ_chức | trả_lời báo_chí.",
+    "leadVi": "/Họp_báo/ tối qua, | mình xem | anh trả_lời bình_tĩnh.",
+    "anticipateVi": "/Câu_hỏi/ gắt quá?",
+    "usageEn": "La _____ de la empresa respondió a las preguntas de los periodistas.",
+    "usageVi": "Người phát_ngôn | của công_ty | trả_lời câu hỏi | của nhà_báo.",
+    "topics": [
+      "communication",
+      "work"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thay mặt",
+      "Họp báo",
+      "Câu hỏi"
+    ]
+  },
+  {
+    "word": "tono",
+    "pos": "noun",
+    "ipa": "/ˈtono/",
+    "meaningVi": "giọng_điệu",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los tonos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Còn là | sắc màu: | un tono azul.",
+    "defVi": "Cách nói, | độ /trầm_bổng/ | thể_hiện cảm_xúc.",
+    "leadVi": "Mẹ gọi cả họ_tên, | mình biết mẹ /nghiêm_túc/.",
+    "anticipateVi": "/Lặng_lẽ/ dọn phòng?",
+    "usageEn": "No me gusta el _____ con el que me hablas.",
+    "usageVi": "Mình không thích | giọng_điệu | bạn nói với mình.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "trầm bổng",
+      "nghiêm túc",
+      "Lặng lẽ"
+    ]
+  },
+  {
+    "word": "llamamiento",
+    "pos": "noun",
+    "ipa": "/ʎamaˈmjento/",
+    "meaningVi": "lời kêu_gọi",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los llamamientos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Kêu_gọi ai | là hacer un llamamiento a.",
+    "defVi": "Lời đề_nghị | /khẩn_thiết/ | mong mọi người giúp.",
+    "leadVi": "Mưa_lũ ven sông, | mình đăng | bài /quyên_góp/ quần_áo.",
+    "anticipateVi": "Toàn khối /hưởng_ứng/?",
+    "usageEn": "La asociación hizo un _____ para recoger ropa y comida.",
+    "usageVi": "Hội đã | kêu_gọi | quyên_góp quần_áo và đồ ăn.",
+    "topics": [
+      "communication",
+      "society"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "khẩn thiết",
+      "quyên góp",
+      "hưởng ứng"
+    ]
+  },
+  {
+    "word": "culpar",
+    "pos": "verb",
+    "ipa": "/kulˈpaɾ/",
+    "meaningVi": "đổ lỗi",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo culpo",
+        "pretérito": "él culpó",
+        "participio": "culpado",
+        "gerundio": "culpando"
+      }
+    },
+    "reflexive": null,
+    "governs": "de + sustantivo",
+    "serEstar": null,
+    "tipVi": "Đổ lỗi ai | về việc gì: | culpar a alguien de algo.",
+    "defVi": "Đẩy /trách_nhiệm/ | sang người khác | khi có chuyện.",
+    "leadVi": "Vỡ kính lớp, | cả nhóm | /chỉ_tay/ về phía em.",
+    "anticipateVi": "Cuối_cùng /sự_thật/ sáng_tỏ?",
+    "usageEn": "No es justo _____ a tu hermano de tus errores.",
+    "usageVi": "Đổ lỗi của mình | cho em_trai | là không công_bằng.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "trách nhiệm",
+      "chỉ tay",
+      "sự thật"
+    ]
+  },
+  {
+    "word": "orden",
+    "pos": "noun",
+    "ipa": "/ˈoɾðen/",
+    "meaningVi": "mệnh_lệnh",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las órdenes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "el orden | là trật_tự; | la orden | là mệnh_lệnh.",
+    "defVi": "Lời yêu_cầu | bắt_buộc | phải /làm_theo/.",
+    "leadVi": "/Huấn_luyện/ chó, | bạn hô | “ngồi” và giơ tay.",
+    "anticipateVi": "Chó chịu /nghe_lời/?",
+    "usageEn": "El perro obedece cada _____ que le doy.",
+    "usageVi": "Con=chó làm theo | mọi hiệu_lệnh | mình đưa ra.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "làm theo",
+      "Huấn luyện",
+      "nghe lời"
+    ]
+  },
+  {
+    "word": "debate",
+    "pos": "noun",
+    "ipa": "/deˈβate/",
+    "meaningVi": "cuộc tranh_luận",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los debates",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Buổi hai bên | đưa lý_lẽ | bảo_vệ /quan_điểm/.",
+    "leadVi": "Giải tranh_biện, | em chuẩn_bị | /phản_biện/ đội bạn.",
+    "anticipateVi": "/Phản_bác/ phút cuối?",
+    "usageEn": "Ayer tuvimos un _____ en clase sobre el uso del móvil.",
+    "usageVi": "Hôm_qua | lớp mình tranh_luận | về việc dùng điện_thoại.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "quan điểm",
+      "phản biện",
+      "Phản bác"
+    ]
+  },
+  {
+    "word": "excusa",
+    "pos": "noun",
+    "ipa": "/eksˈkusa/",
+    "meaningVi": "lời bào_chữa",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las excusas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Xin lỗi | dùng disculpa; | excusa là cái cớ.",
+    "defVi": "/Lý_do/ | đưa ra | để tránh bị trách.",
+    "leadVi": "Đi học muộn, | mình /viện_cớ/ | đường kẹt_xe.",
+    "anticipateVi": "Thầy /nghi_ngờ/ không?",
+    "usageEn": "Siempre tiene una _____ para llegar tarde.",
+    "usageVi": "Bạn=ấy lúc=nào cũng có | cớ để đến muộn.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Lý do",
+      "viện cớ",
+      "nghi ngờ"
+    ]
+  },
+  {
+    "word": "alabar",
+    "pos": "verb",
+    "ipa": "/alaˈβaɾ/",
+    "meaningVi": "khen_ngợi",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo alabo",
+        "pretérito": "él alabó",
+        "participio": "alabado",
+        "gerundio": "alabando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Văn nói | hay dùng | elogiar hơn.",
+    "defVi": "Nói điều tốt | về ai đó | để /ghi_nhận/ cố_gắng.",
+    "leadVi": "Họp phụ_huynh, | cô_giáo /tuyên_dương/ | em trước lớp.",
+    "anticipateVi": "Mẹ về /hớn_hở/ chưa?",
+    "usageEn": "Todos suelen _____ su forma de cocinar.",
+    "usageVi": "Ai cũng hay | khen_ngợi | tài nấu_ăn của=bạn=ấy.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ghi nhận",
+      "tuyên dương",
+      "hớn hở"
+    ]
+  },
+  {
+    "word": "susurrar",
+    "pos": "verb",
+    "ipa": "/susuˈraɾ/",
+    "meaningVi": "thì_thầm",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo susurro",
+        "pretérito": "él susurró",
+        "participio": "susurrado",
+        "gerundio": "susurrando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Có rr ở giữa: | đọc rung lưỡi | như susurrar.",
+    "defVi": "Nói rất=nhỏ, | chỉ người /sát_bên/ nghe.",
+    "leadVi": "Trong thư_viện, | mình /khẽ_khàng/ | ghé tai bạn.",
+    "anticipateVi": "Cô /thủ_thư/ nhìn sang?",
+    "usageEn": "En la biblioteca tienes que _____ para no molestar.",
+    "usageVi": "Trong thư_viện | phải thì_thầm | để không làm phiền.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "sát bên",
+      "khẽ khàng",
+      "thủ thư"
+    ]
+  },
+  {
+    "word": "asegurar",
+    "pos": "verb",
+    "ipa": "/aseɣuˈɾaɾ/",
+    "meaningVi": "cam_đoan",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo aseguro",
+        "pretérito": "él aseguró",
+        "participio": "asegurado",
+        "gerundio": "asegurando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Còn là | mua bảo_hiểm | hay khóa chặt.",
+    "defVi": "Nói /chắc_chắn/ | để người khác yên_lòng.",
+    "leadVi": "Đi phượt xa, | mình /trấn_an/ | mẹ sẽ gọi mỗi=tối.",
+    "anticipateVi": "Mẹ /yên_tâm/ chưa?",
+    "usageEn": "Te puedo _____ que la comida está fresca.",
+    "usageVi": "Mình cam_đoan | đồ ăn còn tươi.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "chắc chắn",
+      "trấn an",
+      "yên tâm"
+    ]
+  },
+  {
+    "word": "suplicar",
+    "pos": "verb",
+    "ipa": "/supliˈkaɾ/",
+    "meaningVi": "nài_nỉ",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo suplico",
+        "pretérito": "él suplicó",
+        "participio": "suplicado",
+        "gerundio": "suplicando"
+      }
+    },
+    "reflexive": null,
+    "governs": "a + persona",
+    "serEstar": null,
+    "tipVi": "c thành qu | trước e: | yo supliqué.",
+    "defVi": "Xin thật /tha_thiết/, | mong người kia đồng_ý.",
+    "leadVi": "Muốn nuôi mèo, | mình /năn_nỉ/ | mẹ suốt một tuần.",
+    "anticipateVi": "Mẹ /mềm_lòng/ chưa?",
+    "usageEn": "Le tuve que _____ a mi madre para poder adoptar un gato.",
+    "usageVi": "Mình phải nài_nỉ mẹ | mới được nhận nuôi | một con=mèo.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tha thiết",
+      "năn nỉ",
+      "mềm lòng"
+    ]
+  },
+  {
+    "word": "criticar",
+    "pos": "verb",
+    "ipa": "/kɾitiˈkaɾ/",
+    "meaningVi": "chỉ_trích",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo critico",
+        "pretérito": "él criticó",
+        "participio": "criticado",
+        "gerundio": "criticando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "c thành qu | trước e: | yo critiqué.",
+    "defVi": "Nói thẳng | /khuyết_điểm/ | của người hay việc.",
+    "leadVi": "Đăng bài hát, | bạn bị | người lạ /chê_bai/.",
+    "anticipateVi": "Thôi /mặc_kệ/ nhé?",
+    "usageEn": "No debes _____ a tu amigo delante de la clase.",
+    "usageVi": "Đừng chỉ_trích bạn mình | trước mặt cả=lớp.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "khuyết điểm",
+      "chê bai",
+      "mặc kệ"
+    ]
+  },
+  {
+    "word": "desanimar",
+    "pos": "verb",
+    "ipa": "/desaniˈmaɾ/",
+    "meaningVi": "làm nản_lòng",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo desanimo",
+        "pretérito": "él desanimó",
+        "participio": "desanimado",
+        "gerundio": "desanimando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Có se | là tự nản: | no te desanimes.",
+    "defVi": "Khiến ai đó | /chán_nản/, | không muốn làm nữa.",
+    "leadVi": "Trượt đội_tuyển, | bạn hơi /chùn_bước/ | mấy hôm.",
+    "anticipateVi": "Mùa tới /thử_sức/ tiếp?",
+    "usageEn": "No quiero _____ a nadie, aunque el examen es difícil.",
+    "usageVi": "Mình không muốn | làm ai nản_lòng, | dù bài thi khó thật.",
+    "topics": [
+      "communication",
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "chán nản",
+      "chùn bước",
+      "thử sức"
+    ]
+  },
+  {
+    "word": "enfatizar",
+    "pos": "verb",
+    "ipa": "/enfatiˈθaɾ/",
+    "meaningVi": "nhấn_mạnh",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo enfatizo",
+        "pretérito": "él enfatizó",
+        "participio": "enfatizado",
+        "gerundio": "enfatizando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "z thành c | trước e: | yo enfaticé.",
+    "defVi": "Nói rõ | để làm nổi | điều /quan_trọng/ nhất.",
+    "leadVi": "Dặn trước giờ thi, | cô /nhắc_nhở/ | mang bút_chì.",
+    "anticipateVi": "Vẫn có ai /đãng_trí/?",
+    "usageEn": "La profesora quiere _____ las ideas principales del tema.",
+    "usageVi": "Cô_giáo muốn | nhấn_mạnh | các ý chính của bài.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "quan trọng",
+      "nhắc nhở",
+      "đãng trí"
+    ]
+  },
+  {
+    "word": "ilustrar",
+    "pos": "verb",
+    "ipa": "/ilusˈtɾaɾ/",
+    "meaningVi": "minh_họa",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo ilustro",
+        "pretérito": "él ilustró",
+        "participio": "ilustrado",
+        "gerundio": "ilustrando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Còn là | vẽ tranh | cho sách.",
+    "defVi": "Dùng /ví_dụ/, hình_vẽ | để làm rõ ý.",
+    "leadVi": "Giảng hóa_học, | mình dựng | /mô_hình/ phân_tử bằng kẹo.",
+    "anticipateVi": "Học xong /nhâm_nhi/ luôn?",
+    "usageEn": "Usa fotos para _____ tus ideas en la presentación.",
+    "usageVi": "Dùng ảnh | để minh_họa ý | trong bài thuyết_trình.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ví dụ",
+      "mô hình",
+      "nhâm nhi"
+    ]
+  },
+  {
+    "word": "insinuar",
+    "pos": "verb",
+    "ipa": "/insiˈnwaɾ/",
+    "meaningVi": "ngụ_ý",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo insinúo",
+        "pretérito": "él insinuó",
+        "participio": "insinuado",
+        "gerundio": "insinuando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Có dấu | ở yo: | insinúo, tú insinúas.",
+    "defVi": "Nói /gián_tiếp/, | để người nghe | tự hiểu.",
+    "leadVi": "Mẹ hỏi | bài xong chưa, | mình /ngoan_ngoãn/ tắt máy.",
+    "anticipateVi": "Ván cờ /dang_dở/ nhỉ?",
+    "usageEn": "¿Quieres _____ que soy perezoso?",
+    "usageVi": "Bạn đang | ngụ_ý | mình lười à?",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "gián tiếp",
+      "ngoan ngoãn",
+      "dang dở"
+    ]
+  },
+  {
+    "word": "informar",
+    "pos": "verb",
+    "ipa": "/infoɾˈmaɾ/",
+    "meaningVi": "thông_báo",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo informo",
+        "pretérito": "él informó",
+        "participio": "informado",
+        "gerundio": "informando"
+      }
+    },
+    "reflexive": null,
+    "governs": "de + sustantivo",
+    "serEstar": null,
+    "tipVi": "Báo việc gì | dùng de: | informar de un cambio.",
+    "defVi": "Cho ai đó | biết /tin_tức/ | chính_thức.",
+    "leadVi": "Mưa bão, | trường /nhắn_tin/ | cho học_sinh nghỉ.",
+    "anticipateVi": "Sáng mai /ngủ_nướng/ nhé?",
+    "usageEn": "Tienes que _____ a la secretaría de tu cambio de dirección.",
+    "usageVi": "Bạn phải báo | cho văn_phòng trường | việc đổi địa_chỉ.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tin tức",
+      "nhắn tin",
+      "ngủ nướng"
+    ]
+  },
+  {
+    "word": "interactuar",
+    "pos": "verb",
+    "ipa": "/inteɾakˈtwaɾ/",
+    "meaningVi": "tương_tác",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo interactúo",
+        "pretérito": "él interactuó",
+        "participio": "interactuado",
+        "gerundio": "interactuando"
+      }
+    },
+    "reflexive": null,
+    "governs": "con + sustantivo",
+    "serEstar": null,
+    "tipVi": "Có dấu nhấn | ở yo interactúo, | tú interactúas.",
+    "defVi": "Hai bên /giao_tiếp/ | và tác_động lẫn_nhau.",
+    "leadVi": "Giờ thảo_luận, | thầy muốn | cả=lớp /trao_đổi/ với nhau.",
+    "anticipateVi": "Lớp học /sôi_nổi/ hẳn lên?",
+    "usageEn": "En esta clase, los estudiantes suelen _____ mucho entre ellos.",
+    "usageVi": "Trong lớp này, | sinh_viên thường | tương_tác với nhau rất nhiều.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "giao tiếp",
+      "trao đổi",
+      "sôi nổi"
+    ]
+  },
+  {
+    "word": "proponer",
+    "pos": "verb",
+    "ipa": "/pɾopoˈneɾ/",
+    "meaningVi": "đề_xuất",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "irregular",
+      "raíz": "yo -go : propongo",
+      "tiempos": {
+        "presente": "yo propongo",
+        "pretérito": "él propuso",
+        "participio": "propuesto",
+        "gerundio": "proponiendo"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Chia như poner: | yo propongo, | él propuso.",
+    "defVi": "Đưa ra /ý_kiến/ | để mọi người | cùng xem_xét.",
+    "leadVi": "Họp nhóm cuối_tuần, | bạn nêu | /phương_án/ đi cắm_trại.",
+    "anticipateVi": "Nhóm_trưởng /tán_thành/ chưa?",
+    "usageEn": "Te quiero _____ otro plan para el sábado.",
+    "usageVi": "Mình muốn | đề_xuất với bạn | một kế_hoạch khác cho thứ_bảy.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ý kiến",
+      "phương án",
+      "tán thành"
+    ]
+  },
+  {
+    "word": "especificar",
+    "pos": "verb",
+    "ipa": "/espeθifiˈkaɾ/",
+    "meaningVi": "nêu rõ",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo especifico",
+        "pretérito": "él especificó",
+        "participio": "especificado",
+        "gerundio": "especificando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Trước e đổi c thành qu: | yo especifiqué.",
+    "defVi": "Nói thật /cụ_thể/ | từng chi_tiết | cho người nghe rõ.",
+    "leadVi": "Đặt bánh sinh_nhật, | chị ghi | /rõ_ràng/ cỡ và màu.",
+    "anticipateVi": "Tiệm làm /đúng_ý/ chứ?",
+    "usageEn": "En el formulario hay que _____ la hora y el lugar de la reunión.",
+    "usageVi": "Trong mẫu đơn | cần nêu rõ | giờ và địa_điểm buổi họp.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "cụ thể",
+      "rõ ràng",
+      "đúng ý"
+    ]
+  },
+  {
+    "word": "jurar",
+    "pos": "verb",
+    "ipa": "/xuˈɾaɾ/",
+    "meaningVi": "thề",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo juro",
+        "pretérito": "él juró",
+        "participio": "jurado",
+        "gerundio": "jurando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Hay đi với que: | te juro que es verdad.",
+    "defVi": "Hứa /chắc_chắn/ | rằng điều mình nói | là thật.",
+    "leadVi": "Bạn nghi mình ăn vụng bánh, | mình giơ tay | /cam_đoan/.",
+    "anticipateVi": "Còn /khóe_miệng/ dính kem?",
+    "usageEn": "Puedo _____ que no he tocado tu pastel.",
+    "usageVi": "Mình dám thề | là chưa đụng | vào bánh của=bạn.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "chắc chắn",
+      "cam đoan",
+      "khóe miệng"
+    ]
+  },
+  {
+    "word": "instar",
+    "pos": "verb",
+    "ipa": "/insˈtaɾ/",
+    "meaningVi": "thúc_giục",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo insto",
+        "pretérito": "él instó",
+        "participio": "instado",
+        "gerundio": "instando"
+      }
+    },
+    "reflexive": null,
+    "governs": "a + infinitivo",
+    "serEstar": null,
+    "tipVi": "Theo sau là a: | me instó a descansar.",
+    "defVi": "Khuyên ai đó | /khẩn_thiết/ | hãy làm ngay điều gì.",
+    "leadVi": "Mình ho mãi, | mẹ /nằng_nặc/ | bắt đi khám ngay.",
+    "anticipateVi": "Còn dám /chần_chừ/ nữa?",
+    "usageEn": "Los profesores suelen _____ a los alumnos a leer más.",
+    "usageVi": "Thầy_cô thường | thúc_giục học_sinh | đọc nhiều hơn.",
+    "topics": [
+      "communication"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "khẩn thiết",
+      "nằng nặc",
+      "chần chừ"
+    ]
+  },
+  {
+    "word": "plegable",
+    "pos": "adj",
+    "ipa": "/pleˈɣaβle/",
+    "meaningVi": "gấp được",
+    "gender": null,
+    "article": null,
+    "feminine": "plegable",
+    "plural": "plegables",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | la silla es plegable.",
+    "tipVi": "Không đổi theo giống: | una mesa plegable.",
+    "defVi": "Có bản_lề | để /thu_gọn/ | khi không dùng tới.",
+    "leadVi": "Phòng_trọ chật, | mình mua | ghế xếp /tiện_lợi/.",
+    "anticipateVi": "Cất gọn sau /cánh_cửa/?",
+    "usageEn": "Compré una mesa _____ para mi habitación pequeña.",
+    "usageVi": "Mình mua | một cái=bàn gấp | cho căn_phòng nhỏ.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thu gọn",
+      "tiện lợi",
+      "cánh cửa"
+    ]
+  },
+  {
+    "word": "holgado",
+    "pos": "adj",
+    "ipa": "/olˈɣaðo/",
+    "meaningVi": "rộng_rãi",
+    "gender": null,
+    "article": null,
+    "feminine": "holgada",
+    "plural": "holgados / holgadas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Mặc vào thấy rộng | dùng estar: | me está holgado.",
+    "tipVi": null,
+    "defVi": "Quần_áo rộng, | mặc /thoải_mái/, | không bó vào người.",
+    "leadVi": "Mượn áo anh_trai, | mình mặc | /thùng_thình/ như cái=bao.",
+    "anticipateVi": "Thắt /dây_lưng/ vào chưa?",
+    "usageEn": "Para correr prefiero una camiseta _____.",
+    "usageVi": "Khi chạy_bộ, | mình thích | áo_phông rộng_rãi.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thoải mái",
+      "thùng thình",
+      "dây lưng"
+    ]
+  },
+  {
+    "word": "insignia",
+    "pos": "noun",
+    "ipa": "/inˈsiɣnja/",
+    "meaningVi": "huy_hiệu",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las insignias",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Miếng nhỏ cài áo | mang /biểu_tượng/ | của trường hay đội.",
+    "leadVi": "Đi hội_trại, | mình /sưu_tầm/ | đủ màu cài kín áo.",
+    "anticipateVi": "Ghim đầy /ba_lô/ chưa?",
+    "usageEn": "Mi hermano lleva la _____ del club en la chaqueta.",
+    "usageVi": "Anh_trai mình | đeo huy_hiệu câu_lạc_bộ | trên áo_khoác.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "biểu tượng",
+      "sưu tầm",
+      "ba lô"
+    ]
+  },
+  {
+    "word": "globo",
+    "pos": "noun",
+    "ipa": "/ˈɡloβo/",
+    "meaningVi": "bóng_bay",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los globos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng nghĩa quả địa_cầu: | el globo terrestre.",
+    "defVi": "Túi cao_su mỏng | /thổi_phồng/ lên bằng hơi.",
+    "leadVi": "Trang_trí tiệc, | mình treo | chùm /sặc_sỡ/ lên trần.",
+    "anticipateVi": "Bụp một cái, /hết_hồn/ chưa?",
+    "usageEn": "Para la fiesta compramos un _____ rojo para cada invitado.",
+    "usageVi": "Tụi mình mua | bóng_bay đỏ | cho mỗi=khách dự tiệc.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thổi phồng",
+      "sặc sỡ",
+      "hết hồn"
+    ]
+  },
+  {
+    "word": "sótano",
+    "pos": "noun",
+    "ipa": "/ˈsotano/",
+    "meaningVi": "tầng_hầm",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los sótanos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Dấu nhấn ở âm đầu: | sótano.",
+    "defVi": "Tầng nằm | dưới /mặt_đất/ | của một tòa_nhà.",
+    "leadVi": "Xuống gửi xe, | không_khí | /ẩm_thấp/ và tối.",
+    "anticipateVi": "Thiếu sáng, cần /đèn_pin/ không?",
+    "usageEn": "Guardamos las bicicletas en el _____ del edificio.",
+    "usageVi": "Tụi mình cất | xe_đạp | ở tầng_hầm tòa_nhà.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "mặt đất",
+      "ẩm thấp",
+      "đèn pin"
+    ]
+  },
+  {
+    "word": "cesta",
+    "pos": "noun",
+    "ipa": "/ˈθesta/",
+    "meaningVi": "giỏ",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las cestas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "/Đồ_đựng/ có quai, | đan bằng tre | hay nhựa.",
+    "leadVi": "Đi /dã_ngoại/, | mình xếp bánh_mì | và trái_cây vào.",
+    "anticipateVi": "Có quai /chắc_chắn/ không?",
+    "usageEn": "Llevamos una _____ con fruta y bocadillos al parque.",
+    "usageVi": "Tụi mình mang | một giỏ trái_cây | và bánh_mì ra công_viên.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Đồ đựng",
+      "dã ngoại",
+      "chắc chắn"
+    ]
+  },
+  {
+    "word": "manta",
+    "pos": "noun",
+    "ipa": "/ˈmanta/",
+    "meaningVi": "chăn",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las mantas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Tấm vải dày | đắp cho /ấm_áp/ | khi ngủ.",
+    "leadVi": "Trời trở rét, | mình /cuộn_tròn/ | xem phim cả=tối.",
+    "anticipateVi": "Chuông /báo_thức/ vô_ích rồi?",
+    "usageEn": "En invierno duermo con una _____ de lana.",
+    "usageVi": "Mùa_đông | mình ngủ | với một chiếc=chăn len.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ấm áp",
+      "cuộn tròn",
+      "báo thức"
+    ]
+  },
+  {
+    "word": "ladrillo",
+    "pos": "noun",
+    "ipa": "/laˈðɾiʎo/",
+    "meaningVi": "gạch",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los ladrillos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Khối /đất_nung/ | hình chữ_nhật | dùng để xây nhà.",
+    "leadVi": "Về quê dịp Tết, | anh phụ bố | xây lại /bờ_tường/.",
+    "anticipateVi": "Tay /phồng_rộp/ chưa đấy?",
+    "usageEn": "La casa de mis abuelos es de _____ rojo.",
+    "usageVi": "Nhà ông_bà mình | xây bằng gạch đỏ.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "đất nung",
+      "bờ tường",
+      "phồng rộp"
+    ]
+  },
+  {
+    "word": "vela",
+    "pos": "noun",
+    "ipa": "/ˈbela/",
+    "meaningVi": "nến",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las velas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng nghĩa cánh buồm: | un barco de vela.",
+    "defVi": "Thỏi sáp có bấc, | đốt lên | cho /ánh_sáng/ dịu.",
+    "leadVi": "Cúp điện tối nay, | phòng mình | /lung_linh/ ánh lửa nhỏ.",
+    "anticipateVi": "/Điều_ước/ là gì thế?",
+    "usageEn": "Encendimos una _____ porque se fue la luz.",
+    "usageVi": "Tụi mình thắp nến | vì mất điện.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ánh sáng",
+      "lung linh",
+      "Điều ước"
+    ]
+  },
+  {
+    "word": "comodidad",
+    "pos": "noun",
+    "ipa": "/komoðiˈðað/",
+    "meaningVi": "sự tiện_lợi",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las comodidades",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng nghĩa thoải_mái: | la comodidad del sofá.",
+    "defVi": "Điều giúp mọi việc | /dễ_dàng/, | đỡ mất_công.",
+    "leadVi": "Đặt món qua điện_thoại, | mình /tiết_kiệm/ | cả=buổi.",
+    "anticipateVi": "Bấm nút là /xong_xuôi/?",
+    "usageEn": "Me gusta la _____ de comprar por internet.",
+    "usageVi": "Mình thích | sự tiện_lợi | của việc mua_sắm trên mạng.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "dễ dàng",
+      "tiết kiệm",
+      "xong xuôi"
+    ]
+  },
+  {
+    "word": "mostrador",
+    "pos": "noun",
+    "ipa": "/mostɾaˈðoɾ/",
+    "meaningVi": "quầy",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los mostradores",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Mặt bàn dài | nơi nhân_viên | phục_vụ, /tính_tiền/.",
+    "leadVi": "Gọi món xong, | mình đứng | chờ chỗ /thu_ngân/.",
+    "anticipateVi": "Gọi số /thứ_tự/ chưa?",
+    "usageEn": "Paga en el _____ antes de sentarte.",
+    "usageVi": "Trả tiền | ở quầy | trước khi ngồi.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tính tiền",
+      "thu ngân",
+      "thứ tự"
+    ]
+  },
+  {
+    "word": "decoración",
+    "pos": "noun",
+    "ipa": "/dekoɾaˈθjon/",
+    "meaningVi": "đồ trang_trí",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las decoraciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Số nhiều mất dấu: | las decoraciones.",
+    "defVi": "Những món đồ | làm căn_phòng | /đẹp_đẽ/ hơn hẳn.",
+    "leadVi": "Gần Tết, | chị treo | đèn /nhấp_nháy/ quanh cửa_sổ.",
+    "anticipateVi": "Khách vào /xuýt_xoa/ chưa?",
+    "usageEn": "La _____ de la sala la hicimos nosotros.",
+    "usageVi": "Đồ trang_trí | trong phòng_khách | là tụi mình tự làm.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "đẹp đẽ",
+      "nhấp nháy",
+      "xuýt xoa"
+    ]
+  },
+  {
+    "word": "casco",
+    "pos": "noun",
+    "ipa": "/ˈkasko/",
+    "meaningVi": "mũ bảo_hiểm",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los cascos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Mũ cứng | /bảo_vệ/ đầu | khi đi xe hay làm_việc.",
+    "leadVi": "Đi xe_máy, | mình luôn | đội cho /an_toàn/.",
+    "anticipateVi": "Tóc /rối_bù/ hết rồi?",
+    "usageEn": "Siempre me pongo el _____ antes de subir a la moto.",
+    "usageVi": "Mình luôn | đội mũ bảo_hiểm | trước khi lên xe_máy.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "bảo vệ",
+      "an toàn",
+      "rối bù"
+    ]
+  },
+  {
+    "word": "gancho",
+    "pos": "noun",
+    "ipa": "/ˈɡantʃo/",
+    "meaningVi": "móc",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los ganchos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Thanh kim_loại /uốn_cong/ | gắn tường | để treo đồ.",
+    "leadVi": "Dọn phòng mới, | áo_khoác | hết vứt /bừa_bãi/.",
+    "anticipateVi": "Treo luôn /ba_lô/ được?",
+    "usageEn": "Cuelga tu chaqueta en el _____ de la puerta.",
+    "usageVi": "Treo áo_khoác | lên cái=móc | ở cửa nhé.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "uốn cong",
+      "bừa bãi",
+      "ba lô"
+    ]
+  },
+  {
+    "word": "iluminación",
+    "pos": "noun",
+    "ipa": "/iluminaˈθjon/",
+    "meaningVi": "sự chiếu_sáng",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las iluminaciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Cách bố_trí | /ánh_sáng/ | trong một căn_phòng.",
+    "leadVi": "Chụp ảnh sản_phẩm, | mình chỉnh đèn | cho thật /sáng_sủa/.",
+    "anticipateVi": "Da trông /mịn_màng/ hơn?",
+    "usageEn": "La _____ de este restaurante es muy suave.",
+    "usageVi": "Ánh_sáng | trong nhà_hàng này | rất dịu.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ánh sáng",
+      "sáng sủa",
+      "mịn màng"
+    ]
+  },
+  {
+    "word": "conjunto",
+    "pos": "noun",
+    "ipa": "/koŋˈxunto/",
+    "meaningVi": "bộ=đồ",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los conjuntos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Còn nghĩa tập_hợp, | nhóm nhạc: | un conjunto musical.",
+    "defVi": "Cả=bộ /quần_áo/ | phối sẵn | để mặc cùng nhau.",
+    "leadVi": "Đi tiệc cưới, | mình chọn | /trang_phục/ mất cả=tiếng.",
+    "anticipateVi": "Trễ giờ vì /chọn_lựa/?",
+    "usageEn": "Para la boda llevo un _____ azul de falda y chaqueta.",
+    "usageVi": "Đi đám_cưới, | mình mặc | bộ váy và áo_khoác màu xanh.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "quần áo",
+      "trang phục",
+      "chọn lựa"
+    ]
+  },
+  {
+    "word": "seda",
+    "pos": "noun",
+    "ipa": "/ˈseða/",
+    "meaningVi": "lụa",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las sedas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Loại vải mềm | và mỏng, | dệt từ /tơ_tằm/.",
+    "leadVi": "Sinh_nhật mẹ, | chị mua | chiếc=khăn /mềm_mại/ tặng.",
+    "anticipateVi": "Giặt tay cho /cẩn_thận/?",
+    "usageEn": "Mi madre tiene un pañuelo de _____ muy bonito.",
+    "usageVi": "Mẹ mình | có chiếc=khăn lụa | rất đẹp.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tơ tằm",
+      "mềm mại",
+      "cẩn thận"
+    ]
+  },
+  {
+    "word": "rascar",
+    "pos": "verb",
+    "ipa": "/rasˈkaɾ/",
+    "meaningVi": "gãi",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo rasco",
+        "pretérito": "él rascó",
+        "participio": "rascado",
+        "gerundio": "rascando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Trước e đổi c thành qu: | yo rasqué.",
+    "defVi": "Dùng móng_tay | cào lên da | cho đỡ /ngứa_ngáy/.",
+    "leadVi": "Bị muỗi đốt, | cả=tối | mình /khó_chịu/ không yên.",
+    "anticipateVi": "Xin /dầu_gió/ bôi nhé?",
+    "usageEn": "Es mejor no _____ la picadura del mosquito.",
+    "usageVi": "Tốt nhất | đừng gãi | vết muỗi đốt.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ngứa ngáy",
+      "khó chịu",
+      "dầu gió"
+    ]
+  },
+  {
+    "word": "grifo",
+    "pos": "noun",
+    "ipa": "/ˈɡɾifo/",
+    "meaningVi": "vòi_nước",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los grifos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Thứ vặn ra | là nước sạch | /tuôn_trào/ xuống bồn.",
+    "leadVi": "Đánh_răng xong, | nhớ vặn chặt | kẻo /lãng_phí/ nước.",
+    "anticipateVi": "/Nhỏ_giọt/ cả đêm à?",
+    "usageEn": "Cierra el _____ mientras te lavas los dientes.",
+    "usageVi": "Khóa vòi_nước | trong lúc đánh_răng nhé.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tuôn trào",
+      "lãng phí",
+      "Nhỏ giọt"
+    ]
+  },
+  {
+    "word": "cavar",
+    "pos": "verb",
+    "ipa": "/kaˈβaɾ/",
+    "meaningVi": "đào",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo cavo",
+        "pretérito": "él cavó",
+        "participio": "cavado",
+        "gerundio": "cavando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "/Đào_bới/ đất lên | để tạo | hố hay rãnh.",
+    "leadVi": "Trồng cây ở vườn, | mình cầm xẻng | /hì_hục/ cả=buổi.",
+    "anticipateVi": "Gặp /giun_đất/ chưa?",
+    "usageEn": "Tenemos que _____ un hoyo para plantar el árbol.",
+    "usageVi": "Tụi mình phải | đào một cái=hố | để trồng cây.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Đào bới",
+      "hì hục",
+      "giun đất"
+    ]
+  },
+  {
+    "word": "frotar",
+    "pos": "verb",
+    "ipa": "/fɾoˈtaɾ/",
+    "meaningVi": "chà_xát",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo froto",
+        "pretérito": "él frotó",
+        "participio": "frotado",
+        "gerundio": "frotando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Ấn mạnh | rồi /cọ_xát/ | nhiều lần trên bề_mặt.",
+    "leadVi": "Trời rét, | mình xoa | hai bàn_tay cho /ấm_áp/.",
+    "anticipateVi": "Vết bẩn /biến_mất/ chưa?",
+    "usageEn": "Hay que _____ la mancha con agua y jabón.",
+    "usageVi": "Phải chà vết bẩn | bằng nước | và xà_phòng.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "cọ xát",
+      "ấm áp",
+      "biến mất"
+    ]
+  },
+  {
+    "word": "resbalar",
+    "pos": "verb",
+    "ipa": "/rezβaˈlaɾ/",
+    "meaningVi": "trượt",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo resbalo",
+        "pretérito": "él resbaló",
+        "participio": "resbalado",
+        "gerundio": "resbalando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Hay dùng cả resbalarse: | me resbalé.",
+    "defVi": "Mất /thăng_bằng/ | vì bước | trên bề_mặt trơn.",
+    "leadVi": "Sàn vừa lau, | mình bước vội, | /chới_với/ suýt ngã.",
+    "anticipateVi": "Níu kịp /lan_can/ không?",
+    "usageEn": "Cuidado, puedes _____ en el suelo mojado.",
+    "usageVi": "Cẩn_thận, | bạn có_thể trượt | trên sàn ướt.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thăng bằng",
+      "chới với",
+      "lan can"
+    ]
+  },
+  {
+    "word": "derramar",
+    "pos": "verb",
+    "ipa": "/deraˈmaɾ/",
+    "meaningVi": "làm đổ",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo derramo",
+        "pretérito": "él derramó",
+        "participio": "derramado",
+        "gerundio": "derramando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Đi với de + infinitivo: | acabo de derramar.",
+    "defVi": "Vô_ý để | /chất_lỏng/ | tràn ra ngoài.",
+    "leadVi": "Học khuya, | mình gạt trúng ly | /ướt_sũng/ cả vở.",
+    "anticipateVi": "Lấy /khăn_giấy/ mau?",
+    "usageEn": "Perdón, acabo de _____ el café sobre la mesa.",
+    "usageVi": "Xin_lỗi, | mình vừa | làm đổ cà_phê ra bàn.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "chất lỏng",
+      "ướt sũng",
+      "khăn giấy"
+    ]
+  },
+  {
+    "word": "barrer",
+    "pos": "verb",
+    "ipa": "/baˈreɾ/",
+    "meaningVi": "quét",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo barro",
+        "pretérito": "él barrió",
+        "participio": "barrido",
+        "gerundio": "barriendo"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Cầm chổi | /dọn_dẹp/ rác, bụi | trên sàn_nhà.",
+    "leadVi": "Tiệc lớp tàn, | mình cầm chổi | cho sàn /sạch_sẽ/.",
+    "anticipateVi": "Chia ca /trực_nhật/ nhé?",
+    "usageEn": "Después de cenar, mi hermano suele _____ la cocina.",
+    "usageVi": "Ăn tối xong, | anh_trai mình | thường quét bếp.",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "dọn dẹp",
+      "sạch sẽ",
+      "trực nhật"
+    ]
+  },
+  {
+    "word": "envolver",
+    "pos": "verb",
+    "ipa": "/embolˈβeɾ/",
+    "meaningVi": "gói",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "irregular",
+      "raíz": "o → ue : envuelvo",
+      "tiempos": {
+        "presente": "yo envuelvo",
+        "pretérito": "él envolvió",
+        "participio": "envuelto",
+        "gerundio": "envolviendo"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Phân_từ bất_quy_tắc: | envuelto, | không envolvido.",
+    "defVi": "Lấy giấy hay vải | /phủ_kín/ | quanh một món đồ.",
+    "leadVi": "Sinh_nhật bạn_thân, | mình bọc quà | /cẩn_thận/ từng góc.",
+    "anticipateVi": "/Băng_dính/ dính tay chưa?",
+    "usageEn": "¿Me ayudas a _____ el regalo de mamá?",
+    "usageVi": "Bạn giúp mình | gói quà | cho mẹ nhé?",
+    "topics": [
+      "daily"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "phủ kín",
+      "cẩn thận",
+      "Băng dính"
+    ]
+  },
+  {
+    "word": "encantado",
+    "pos": "adj",
+    "ipa": "/eŋkanˈtaðo/",
+    "meaningVi": "rất vui",
+    "gender": null,
+    "article": null,
+    "feminine": "encantada",
+    "plural": "encantados / encantadas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "con + sustantivo",
+    "serEstar": "Thường dùng estar: | estoy encantado.",
+    "tipVi": "Lần đầu gặp ai | hay nói: | encantado de conocerte.",
+    "defVi": "/Thích_thú/ | và vui_sướng | với điều mình nhận.",
+    "leadVi": "Nhận tin trúng_tuyển, | mình /mừng_rỡ/ | ôm chầm lấy mẹ.",
+    "anticipateVi": "Gọi khoe /họ_hàng/ chưa?",
+    "usageEn": "Mis padres están _____ con la casa nueva.",
+    "usageVi": "Bố_mẹ mình | rất vui | với ngôi=nhà mới.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Thích thú",
+      "mừng rỡ",
+      "họ hàng"
+    ]
+  },
+  {
+    "word": "emocional",
+    "pos": "adj",
+    "ipa": "/emoθjoˈnal/",
+    "meaningVi": "dễ xúc_động",
+    "gender": null,
+    "article": null,
+    "feminine": "emocional",
+    "plural": "emocionales",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Tính_cách | dùng ser: | es muy emocional.",
+    "tipVi": "Số nhiều thêm -es: | emocionales.",
+    "defVi": "Dễ bộc_lộ | /tình_cảm/ | vui buồn ra bên_ngoài.",
+    "leadVi": "Lễ chia_tay khóa, | thầy /nghẹn_ngào/ | phát_biểu mãi.",
+    "anticipateVi": "Phía dưới /sụt_sịt/ chưa?",
+    "usageEn": "Mi padre es muy _____ y llora con las películas.",
+    "usageVi": "Bố mình | rất dễ xúc_động, | xem phim là khóc.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tình cảm",
+      "nghẹn ngào",
+      "sụt sịt"
+    ]
+  },
+  {
+    "word": "agradable",
+    "pos": "adj",
+    "ipa": "/aɣɾaˈðaβle/",
+    "meaningVi": "dễ_chịu",
+    "gender": null,
+    "article": null,
+    "feminine": "agradable",
+    "plural": "agradables",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es un lugar agradable.",
+    "tipVi": null,
+    "defVi": "Mang lại | cảm_giác /thoải_mái/ | khiến mình thích_thú.",
+    "leadVi": "Dã_ngoại cuối_tuần, | gió mát, | ai nấy /thư_thái/.",
+    "anticipateVi": "Ước gì /kéo_dài/ mãi?",
+    "usageEn": "Fue una tarde muy _____ en el parque.",
+    "usageVi": "Đó là | một buổi_chiều | rất dễ_chịu ở công_viên.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thoải mái",
+      "thư thái",
+      "kéo dài"
+    ]
+  },
+  {
+    "word": "encariñado",
+    "pos": "adj",
+    "ipa": "/eŋkaɾiˈɲaðo/",
+    "meaningVi": "gắn_bó",
+    "gender": null,
+    "article": null,
+    "feminine": "encariñada",
+    "plural": "encariñados / encariñadas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "con + sustantivo",
+    "serEstar": "Thường dùng estar: | estoy encariñado con él.",
+    "tipVi": "Gắn_bó với ai | dùng con: | encariñado con mi perro.",
+    "defVi": "Có tình_cảm /thân_thương/ | với ai | hay vật gì.",
+    "leadVi": "Lên đại_học, | mình vẫn giữ | gấu_bông /kỷ_niệm/.",
+    "anticipateVi": "Cũ mèm vẫn /nâng_niu/?",
+    "usageEn": "Estoy muy _____ con el perro de mis vecinos.",
+    "usageVi": "Mình rất | quý con=chó | nhà hàng_xóm.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "thân thương",
+      "kỷ niệm",
+      "nâng niu"
+    ]
+  },
+  {
+    "word": "furioso",
+    "pos": "adj",
+    "ipa": "/fuˈɾjoso/",
+    "meaningVi": "giận_dữ",
+    "gender": null,
+    "article": null,
+    "feminine": "furiosa",
+    "plural": "furiosos / furiosas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng estar: | está furioso.",
+    "tipVi": null,
+    "defVi": "/Tức_giận/ | tới mức | mặt đỏ bừng_bừng.",
+    "leadVi": "Bị chen hàng mãi, | chú /nổi_giận/ | quát ầm lên.",
+    "anticipateVi": "Đếm đến mười /bình_tâm/?",
+    "usageEn": "El entrenador estaba _____ después del partido.",
+    "usageVi": "Huấn_luyện_viên | rất giận_dữ | sau trận đấu.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Tức giận",
+      "nổi giận",
+      "bình tâm"
+    ]
+  },
+  {
+    "word": "hilarante",
+    "pos": "adj",
+    "ipa": "/ilaˈɾante/",
+    "meaningVi": "rất buồn_cười",
+    "gender": null,
+    "article": null,
+    "feminine": "hilarante",
+    "plural": "hilarantes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | la película es hilarante.",
+    "tipVi": "Chữ h không đọc: | hilarante.",
+    "defVi": "/Hài_hước/ | tới mức | không nhịn được cười.",
+    "leadVi": "Xem lại màn trượt chân, | cả=nhóm /khúc_khích/ mãi.",
+    "anticipateVi": "Chảy /nước_mắt/ luôn à?",
+    "usageEn": "La obra de teatro fue _____ de principio a fin.",
+    "usageVi": "Vở_kịch | buồn_cười | từ đầu đến cuối.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Hài hước",
+      "khúc khích",
+      "nước mắt"
+    ]
+  },
+  {
+    "word": "impresionado",
+    "pos": "adj",
+    "ipa": "/impɾesjoˈnaðo/",
+    "meaningVi": "ấn_tượng",
+    "gender": null,
+    "article": null,
+    "feminine": "impresionada",
+    "plural": "impresionados / impresionadas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "con + sustantivo",
+    "serEstar": "Thường dùng estar: | estoy impresionado.",
+    "tipVi": null,
+    "defVi": "Thấy /ngưỡng_mộ/ | vì điều gì đó | thật xuất_sắc.",
+    "leadVi": "Nghe bạn mới đánh đàn, | cả=lớp | /trầm_trồ/ khen mãi.",
+    "anticipateVi": "Xin học /bí_quyết/ không?",
+    "usageEn": "Me quedé _____ con su manera de tocar la guitarra.",
+    "usageVi": "Mình rất ấn_tượng | với cách cậu=ấy | chơi ghi_ta.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ngưỡng mộ",
+      "trầm trồ",
+      "bí quyết"
+    ]
+  },
+  {
+    "word": "apasionado",
+    "pos": "adj",
+    "ipa": "/apasjoˈnaðo/",
+    "meaningVi": "say_mê",
+    "gender": null,
+    "article": null,
+    "feminine": "apasionada",
+    "plural": "apasionados / apasionadas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "por + sustantivo",
+    "serEstar": "Tính_cách | dùng ser: | es muy apasionado.",
+    "tipVi": null,
+    "defVi": "Có cảm_xúc /mãnh_liệt/, | rất yêu_thích | một điều gì.",
+    "leadVi": "Mê thiên_văn, | cậu=ấy | /miệt_mài/ ngắm sao cả=đêm.",
+    "anticipateVi": "Mua /ống_nhòm/ chưa đấy?",
+    "usageEn": "Mi profesora es una persona muy _____ por la historia.",
+    "usageVi": "Cô_giáo mình | là người rất | say_mê lịch_sử.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "mãnh liệt",
+      "miệt mài",
+      "ống nhòm"
+    ]
+  },
+  {
+    "word": "ridículo",
+    "pos": "adj",
+    "ipa": "/riˈðikulo/",
+    "meaningVi": "lố_bịch",
+    "gender": null,
+    "article": null,
+    "feminine": "ridícula",
+    "plural": "ridículos / ridículas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es un precio ridículo.",
+    "tipVi": "Hacer el ridículo | nghĩa là | tự làm trò cười.",
+    "defVi": "Vô_lý, | /ngớ_ngẩn/ | tới mức khiến người_ta bật cười.",
+    "leadVi": "Thấy ly nước | giá trăm nghìn, | bạn /tròn_mắt/ ngạc_nhiên.",
+    "anticipateVi": "Thôi, uống /trà_đá/ nhé?",
+    "usageEn": "Pagar tanto por un café me parece _____.",
+    "usageVi": "Trả chừng ấy tiền | cho một ly cà_phê, | mình thấy thật lố_bịch.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "ngớ ngẩn",
+      "tròn mắt",
+      "trà đá"
+    ]
+  },
+  {
+    "word": "satisfecho",
+    "pos": "adj",
+    "ipa": "/satisˈfetʃo/",
+    "meaningVi": "hài_lòng",
+    "gender": null,
+    "article": null,
+    "feminine": "satisfecha",
+    "plural": "satisfechos / satisfechas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "con + sustantivo",
+    "serEstar": "Thường dùng estar: | estoy satisfecho.",
+    "tipVi": "Chia như hacer: | satisfecho, | không satisfacido.",
+    "defVi": "Thấy /mãn_nguyện/ | với kết_quả | mình đạt được.",
+    "leadVi": "Sửa bài lần ba, | mình gật_gù | rồi /yên_tâm/ nộp.",
+    "anticipateVi": "Điểm như /mong_đợi/ chứ?",
+    "usageEn": "El jefe está muy _____ con nuestro trabajo.",
+    "usageVi": "Sếp rất | hài_lòng | với công_việc của=tụi mình.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "mãn nguyện",
+      "yên tâm",
+      "mong đợi"
+    ]
+  },
+  {
+    "word": "conmocionado",
+    "pos": "adj",
+    "ipa": "/konmoθjoˈnaðo/",
+    "meaningVi": "bàng_hoàng",
+    "gender": null,
+    "article": null,
+    "feminine": "conmocionada",
+    "plural": "conmocionados / conmocionadas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "por + sustantivo",
+    "serEstar": "Thường dùng estar: | estoy conmocionado.",
+    "tipVi": null,
+    "defVi": "Ngạc_nhiên | và /choáng_váng/ | vì tin xấu bất_ngờ.",
+    "leadVi": "Nghe tin bạn chuyển trường, | mình đứng | /lặng_người/.",
+    "anticipateVi": "Sao chẳng /hé_lộ/ sớm?",
+    "usageEn": "Los alumnos quedaron _____ por el cierre repentino de su escuela.",
+    "usageVi": "Học_sinh | bàng_hoàng | vì trường đóng_cửa đột_ngột.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "choáng váng",
+      "lặng người",
+      "hé lộ"
+    ]
+  },
+  {
+    "word": "impactante",
+    "pos": "adj",
+    "ipa": "/impakˈtante/",
+    "meaningVi": "gây sốc",
+    "gender": null,
+    "article": null,
+    "feminine": "impactante",
+    "plural": "impactantes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | la noticia es impactante.",
+    "tipVi": null,
+    "defVi": "Khiến ai cũng /sửng_sốt/ | vì quá khác_thường.",
+    "leadVi": "Xem phóng_sự rác_thải, | mình /giật_mình/ | trước bãi_biển.",
+    "anticipateVi": "Bỏ /ống_hút/ nhựa nhé?",
+    "usageEn": "Las fotos del documental son muy _____.",
+    "usageVi": "Những bức=ảnh | trong phim tài_liệu | rất gây sốc.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "sửng sốt",
+      "giật mình",
+      "ống hút"
+    ]
+  },
+  {
+    "word": "comprensivo",
+    "pos": "adj",
+    "ipa": "/kompɾenˈsiβo/",
+    "meaningVi": "biết thông_cảm",
+    "gender": null,
+    "article": null,
+    "feminine": "comprensiva",
+    "plural": "comprensivos / comprensivas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "con + persona",
+    "serEstar": "Tính_cách | dùng ser: | es muy comprensivo.",
+    "tipVi": "Đừng nhầm comprensible, | nghĩa là dễ hiểu.",
+    "defVi": "Hiểu và /chia_sẻ/ | nỗi buồn | của người khác.",
+    "leadVi": "Mình nộp bài trễ, | cô /kiên_nhẫn/ | nghe lý_do.",
+    "anticipateVi": "Cô /gật_đầu/ cho qua?",
+    "usageEn": "Mi jefa fue muy _____ cuando llegué tarde.",
+    "usageVi": "Sếp mình | rất thông_cảm | khi mình đến muộn.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "chia sẻ",
+      "kiên nhẫn",
+      "gật đầu"
+    ]
+  },
+  {
+    "word": "emocionalmente",
+    "pos": "adv",
+    "ipa": "/emoθjonalˈmente/",
+    "meaningVi": "về mặt cảm_xúc",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Liên_quan tới | /tâm_trạng/ | và cảm_xúc bên_trong.",
+    "leadVi": "Sau kỳ_thi, | mình cần | thời_gian /hồi_phục/ tinh_thần.",
+    "anticipateVi": "Đi /du_lịch/ xả hơi?",
+    "usageEn": "Después de la mudanza, me sentía cansado _____.",
+    "usageVi": "Sau khi chuyển nhà, | mình thấy | mệt_mỏi về mặt cảm_xúc.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "tâm trạng",
+      "hồi phục",
+      "du lịch"
+    ]
+  },
+  {
+    "word": "enfado",
+    "pos": "noun",
+    "ipa": "/emˈfaðo/",
+    "meaningVi": "cơn giận",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los enfados",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Động_từ đi kèm: | enfadarse con alguien.",
+    "defVi": "Cảm_xúc /nóng_nảy/ | khi thấy | điều bất_công.",
+    "leadVi": "Bị chơi_xấu trên sân, | mình cố /kiềm_chế/ | cơn nóng.",
+    "anticipateVi": "Thử /hít_thở/ chậm nào?",
+    "usageEn": "Se le pasó el _____ después de hablar con su amigo.",
+    "usageVi": "Cơn giận của anh=ấy | nguôi đi | sau khi nói_chuyện với bạn.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "nóng nảy",
+      "kiềm chế",
+      "hít thở"
+    ]
+  },
+  {
+    "word": "decepción",
+    "pos": "noun",
+    "ipa": "/deθepˈθjon/",
+    "meaningVi": "nỗi thất_vọng",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las decepciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Không phải lừa_dối: | decepción là thất_vọng.",
+    "defVi": "Cảm_giác buồn | vì điều /mong_chờ/ | không đến.",
+    "leadVi": "Buổi hòa_nhạc bị hủy, | mình cầm vé | /thẫn_thờ/ mãi.",
+    "anticipateVi": "/Hoàn_tiền/ vé chứ nhỉ?",
+    "usageEn": "Perder la final fue una gran _____ para el equipo.",
+    "usageVi": "Thua trận chung_kết | là nỗi thất_vọng lớn | của cả=đội.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "mong chờ",
+      "thẫn thờ",
+      "Hoàn tiền"
+    ]
+  },
+  {
+    "word": "entusiasmo",
+    "pos": "noun",
+    "ipa": "/entuˈsjazmo/",
+    "meaningVi": "sự nhiệt_tình",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los entusiasmos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Sự hăng_say, | /hứng_thú/ | với một việc gì.",
+    "leadVi": "Vào câu_lạc_bộ, | cậu=ấy | /xung_phong/ làm mọi việc.",
+    "anticipateVi": "Giữ /phong_độ/ được lâu?",
+    "usageEn": "Los voluntarios trabajan con mucho _____.",
+    "usageVi": "Các tình_nguyện_viên | làm_việc | rất nhiệt_tình.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "hứng thú",
+      "xung phong",
+      "phong độ"
+    ]
+  },
+  {
+    "word": "alegría",
+    "pos": "noun",
+    "ipa": "/aleˈɣɾia/",
+    "meaningVi": "niềm vui",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las alegrías",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Cảm_giác /hạnh_phúc/ | tràn_đầy | trong lòng mình.",
+    "leadVi": "Đỗ đại_học, | cả=nhà | /rạng_rỡ/ ăn_mừng.",
+    "anticipateVi": "Lưu ảnh /kỷ_niệm/ nhé?",
+    "usageEn": "Sus ojos estaban llenos de _____.",
+    "usageVi": "Mắt cô=ấy | ngập_tràn niềm vui.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "hạnh phúc",
+      "rạng rỡ",
+      "kỷ niệm"
+    ]
+  },
+  {
+    "word": "motivación",
+    "pos": "noun",
+    "ipa": "/motiβaˈθjon/",
+    "meaningVi": "động_lực",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las motivaciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Lý_do | khiến mình muốn | /cố_gắng/ hơn nữa.",
+    "leadVi": "Dán ảnh trường /mơ_ước/, | mình học | thêm hai tiếng.",
+    "anticipateVi": "Đỗ thật thì /ăn_mừng/?",
+    "usageEn": "Me falta _____ para ir al gimnasio por la mañana.",
+    "usageVi": "Mình thiếu động_lực | để đi tập | vào buổi_sáng.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "cố gắng",
+      "mơ ước",
+      "ăn mừng"
+    ]
+  },
+  {
+    "word": "pesadilla",
+    "pos": "noun",
+    "ipa": "/pesaˈðiʎa/",
+    "meaningVi": "ác_mộng",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las pesadillas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Giấc mơ /đáng_sợ/ | khiến mình | giật_mình tỉnh_giấc.",
+    "leadVi": "Mơ thấy trễ giờ thi, | mình /hốt_hoảng/ | ngồi dậy.",
+    "anticipateVi": "May mà chỉ /giấc_mơ/?",
+    "usageEn": "Anoche tuve una _____ con un examen imposible.",
+    "usageVi": "Tối qua mình gặp | ác_mộng | về một bài thi quá khó.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "đáng sợ",
+      "hốt hoảng",
+      "giấc mơ"
+    ]
+  },
+  {
+    "word": "pánico",
+    "pos": "noun",
+    "ipa": "/ˈpaniko/",
+    "meaningVi": "sự hoảng_loạn",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los pánicos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Nỗi sợ /đột_ngột/ | khiến mình | không nghĩ được gì.",
+    "leadVi": "Mở túi không thấy vé, | mình /cuống_cuồng/ | lục tìm.",
+    "anticipateVi": "Khoan, /bình_tĩnh/ đã nào?",
+    "usageEn": "Cuando vi la araña, me entró el _____.",
+    "usageVi": "Thấy con=nhện, | mình hoảng_loạn.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "đột ngột",
+      "cuống cuồng",
+      "bình tĩnh"
+    ]
+  },
+  {
+    "word": "lástima",
+    "pos": "noun",
+    "ipa": "/ˈlastima/",
+    "meaningVi": "sự thương_xót",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las lástimas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Qué lástima | nghĩa là | tiếc quá.",
+    "defVi": "Cảm_giác /xót_xa/ | trước nỗi khổ | của người khác.",
+    "leadVi": "Thấy chó con /run_rẩy/ ngoài mưa, | mình bế về.",
+    "anticipateVi": "Mẹ /đồng_ý/ cho nuôi?",
+    "usageEn": "Sentí _____ por el perro que estaba solo bajo la lluvia.",
+    "usageVi": "Mình thấy thương | con=chó | đứng một_mình dưới mưa.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "xót xa",
+      "run rẩy",
+      "đồng ý"
+    ]
+  },
+  {
+    "word": "orgullo",
+    "pos": "noun",
+    "ipa": "/oɾˈɣuʎo/",
+    "meaningVi": "niềm tự_hào",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los orgullos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng nghĩa kiêu_ngạo | tùy ngữ_cảnh.",
+    "defVi": "Cảm_giác /hãnh_diện/ | vì điều | mình làm được.",
+    "leadVi": "Em_trai đoạt giải, | anh /hớn_hở/ | kể khắp xóm.",
+    "anticipateVi": "Treo /bằng_khen/ phòng_khách?",
+    "usageEn": "Mis padres hablan de mí con mucho _____.",
+    "usageVi": "Bố_mẹ nói về mình | với niềm tự_hào.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "hãnh diện",
+      "hớn hở",
+      "bằng khen"
+    ]
+  },
+  {
+    "word": "alivio",
+    "pos": "noun",
+    "ipa": "/aˈliβjo/",
+    "meaningVi": "sự nhẹ_nhõm",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los alivios",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Cảm_giác /dễ_chịu/ | khi nỗi lo | qua đi.",
+    "leadVi": "Thấy tên trong danh_sách đỗ, | mình /thở_phào/.",
+    "anticipateVi": "Giờ thì /ngủ_ngon/ rồi?",
+    "usageEn": "¡Qué _____! Encontré las llaves en la mochila.",
+    "usageVi": "Nhẹ cả người! | Mình tìm thấy | chìa_khóa trong ba_lô.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "dễ chịu",
+      "thở phào",
+      "ngủ ngon"
+    ]
+  },
+  {
+    "word": "satisfacción",
+    "pos": "noun",
+    "ipa": "/satisfakˈθjon/",
+    "meaningVi": "sự hài_lòng",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las satisfacciones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Cảm_giác vui | vì đạt được | điều mình /mong_muốn/.",
+    "leadVi": "Tự lắp xong kệ_sách, | mình ngắm | thật /khoan_khoái/.",
+    "anticipateVi": "Gửi ảnh cho /bố_mẹ/ xem?",
+    "usageEn": "Terminar el proyecto me dio una gran _____.",
+    "usageVi": "Làm xong dự_án | cho mình | cảm_giác rất hài_lòng.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "mong muốn",
+      "khoan khoái",
+      "bố mẹ"
+    ]
+  },
+  {
+    "word": "tensión",
+    "pos": "noun",
+    "ipa": "/tenˈsjon/",
+    "meaningVi": "sự căng_thẳng",
+    "gender": "f",
+    "article": "la",
+    "feminine": null,
+    "plural": "las tensiones",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng nghĩa huyết_áp: | tomar la tensión.",
+    "defVi": "Trạng_thái /áp_lực/, | bất_an | khó_chịu.",
+    "leadVi": "Phút cuối hòa, | cả=sân | /nín_thở/ chờ đá_phạt.",
+    "anticipateVi": "/Thủ_môn/ bắt được không?",
+    "usageEn": "Antes del examen final había mucha _____ en la clase.",
+    "usageVi": "Trước kỳ_thi cuối, | lớp mình | rất căng_thẳng.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "áp lực",
+      "nín thở",
+      "Thủ môn"
+    ]
+  },
+  {
+    "word": "consolar",
+    "pos": "verb",
+    "ipa": "/konsoˈlaɾ/",
+    "meaningVi": "an_ủi",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "irregular",
+      "raíz": "o → ue : consuelo",
+      "tiempos": {
+        "presente": "yo consuelo",
+        "pretérito": "él consoló",
+        "participio": "consolado",
+        "gerundio": "consolando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Đổi gốc o thành ue: | yo consuelo.",
+    "defVi": "Nói lời /nhẹ_nhàng/ | giúp ai đó | vơi bớt nỗi buồn.",
+    "leadVi": "Bạn thi trượt, | mình ngồi cạnh | /tâm_sự/ cả=tối.",
+    "anticipateVi": "Đãi /trà_sữa/ cho vui?",
+    "usageEn": "Intenté _____ a mi amiga después del partido perdido.",
+    "usageVi": "Mình cố an_ủi | bạn sau trận thua.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "nhẹ nhàng",
+      "tâm sự",
+      "trà sữa"
+    ]
+  },
+  {
+    "word": "deleite",
+    "pos": "noun",
+    "ipa": "/deˈlejte/",
+    "meaningVi": "sự thích_thú",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los deleites",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Niềm /hân_hoan/ | khi gặp | điều tuyệt_vời.",
+    "leadVi": "Nếm món phở mẹ nấu, | mình /lim_dim/ thưởng_thức.",
+    "anticipateVi": "Húp cạn /nước_dùng/ luôn?",
+    "usageEn": "Escuchar esa canción es un _____ para los oídos.",
+    "usageVi": "Nghe bài_hát ấy | thật là | sướng tai.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "hân hoan",
+      "lim dim",
+      "nước dùng"
+    ]
+  },
+  {
+    "word": "deseo",
+    "pos": "noun",
+    "ipa": "/deˈseo/",
+    "meaningVi": "mong_ước",
+    "gender": "m",
+    "article": "el",
+    "feminine": null,
+    "plural": "los deseos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Pide un deseo | nghĩa là | hãy ước đi.",
+    "defVi": "/Ý_muốn/ | mạnh_mẽ | có được điều gì.",
+    "leadVi": "Xem phim vũ_trụ, | mình /ấp_ủ/ | làm phi_hành_gia.",
+    "anticipateVi": "Học /vật_lý/ chăm hơn?",
+    "usageEn": "Cierra los ojos y pide un _____.",
+    "usageVi": "Nhắm mắt lại | và ước một điều.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "Ý muốn",
+      "ấp ủ",
+      "vật lý"
+    ]
+  },
+  {
+    "word": "lamentar",
+    "pos": "verb",
+    "ipa": "/lamenˈtaɾ/",
+    "meaningVi": "hối_tiếc",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo lamento",
+        "pretérito": "él lamentó",
+        "participio": "lamentado",
+        "gerundio": "lamentando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Lo lamento | nghĩa là | tôi rất tiếc.",
+    "defVi": "Thấy buồn | vì đã=làm | hay đã=/bỏ_lỡ/ điều gì.",
+    "leadVi": "Lỡ buổi họp_lớp, | mình xem ảnh | đầy /nuối_tiếc/.",
+    "anticipateVi": "Hứa lần sau /có_mặt/?",
+    "usageEn": "Es normal _____ las oportunidades perdidas.",
+    "usageVi": "Tiếc_nuối | những cơ_hội đã lỡ | là chuyện bình_thường.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "bỏ lỡ",
+      "nuối tiếc",
+      "có mặt"
+    ]
+  },
+  {
+    "word": "asustar",
+    "pos": "verb",
+    "ipa": "/asusˈtaɾ/",
+    "meaningVi": "làm sợ",
+    "gender": null,
+    "article": null,
+    "feminine": null,
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo asusto",
+        "pretérito": "él asustó",
+        "participio": "asustado",
+        "gerundio": "asustando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Tự mình sợ | dùng asustarse: | me asusté.",
+    "defVi": "Khiến ai đó | /giật_mình/, | thấy sợ bất_ngờ.",
+    "leadVi": "Cá tháng Tư, | mình núp | sau cửa /hù_dọa/ bạn.",
+    "anticipateVi": "Bạn /rượt_đuổi/ quanh nhà?",
+    "usageEn": "No quiero _____ a los niños con esta historia.",
+    "usageVi": "Mình không muốn | làm lũ trẻ sợ | với câu_chuyện này.",
+    "topics": [
+      "emotion"
+    ],
+    "exams": [],
+    "emphasisVi": [
+      "giật mình",
+      "hù dọa",
+      "rượt đuổi"
     ]
   }
 ]

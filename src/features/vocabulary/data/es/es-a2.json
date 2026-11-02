@@ -1,5 +1,5 @@
 {
-  "revision": "b32efac2b0a7c85aaf7e510f",
+  "revision": "e4e7ed0a0e9896c13d3dc68e",
   "name": "WordCrawler vocabulary",
   "count": 565,
   "topics": [
@@ -775,12 +775,13 @@
       "word": "preocupado",
       "shareCode": "A34",
       "meaningVi": "lo_lắng",
-      "defVi": "Trong lòng /lo_lắng/, | sợ chuyện xấu | có_thể xảy ra.",
-      "leadVi": "Mười giờ đêm | con chưa về, | mẹ gọi mãi | không được.",
-      "anticipateVi": "Đừng /nhăn_trán/ nữa!",
+      "defVi": "/Bận_tâm/, | không yên_lòng | về một chuyện chưa rõ.",
+      "leadVi": "Con về muộn, | mẹ mình | /thấp_thỏm/ ngồi chờ cửa.",
+      "anticipateVi": "Pin điện_thoại /cạn_kiệt/?",
       "emphasis": [
-        "lo lắng",
-        "gọi mãi"
+        "Bận tâm",
+        "thấp thỏm",
+        "cạn kiệt"
       ],
       "pos": "adj",
       "ipa": "/pɾeokuˈpaðo/",
@@ -793,10 +794,17 @@
       "initial": "P",
       "usage": [
         {
-          "en": "Mi padre está _____ por su trabajo.",
-          "vi": "Bố tôi | đang lo_lắng | về công_việc."
+          "en": "Estoy _____ por el examen de mañana.",
+          "vi": "Mình đang lo | về bài thi ngày_mai."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "preocupada",
+        "plural": "preocupados / preocupadas",
+        "governs": "por + sustantivo",
+        "serEstar": "Thường dùng estar: | estoy preocupado.",
+        "tipVi": "Lo về chuyện gì | dùng por: | preocupado por el examen."
+      }
     },
     {
       "id": "fresco",

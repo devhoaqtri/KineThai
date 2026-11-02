@@ -1,7 +1,7 @@
 {
-  "revision": "8bc04a4f38c9d14055ef85d4",
+  "revision": "c43b1cfa3f79f35b3b5daa0f",
   "name": "WordCrawler vocabulary",
-  "count": 354,
+  "count": 517,
   "topics": [
     "character",
     "communication",
@@ -1390,12 +1390,13 @@
       "word": "dudar",
       "shareCode": "WN0",
       "meaningVi": "nghi_ngờ",
-      "defVi": "Thấy /nghi_ngờ/, | chưa thật tin | điều đó là sự_thật.",
-      "leadVi": "/Quảng_cáo/ hứa | khỏi mọi bệnh, | ông chỉ nhíu mày.",
-      "anticipateVi": "Hừm… nghe sao_sao á!",
+      "defVi": "Không /tin_chắc/ lắm | rằng điều gì đó | là đúng.",
+      "leadVi": "Nghe tin_đồn thi hoãn, | mình vẫn | /ngờ_vực/ lắm.",
+      "anticipateVi": "Hỏi /lớp_trưởng/ cho chắc?",
       "emphasis": [
-        "nghi ngờ",
-        "nhíu mày"
+        "tin chắc",
+        "ngờ vực",
+        "lớp trưởng"
       ],
       "pos": "verb",
       "ipa": "/duˈðaɾ/",
@@ -1408,10 +1409,23 @@
       "initial": "D",
       "usage": [
         {
-          "en": "Empiezo a _____ que venga a la cena.",
-          "vi": "Tôi bắt_đầu nghi_ngờ | việc anh=ấy | sẽ đến ăn tối."
+          "en": "No tienes que _____ de tus amigos.",
+          "vi": "Bạn không cần | nghi_ngờ | bạn_bè mình."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo dudo",
+            "pretérito": "él dudó",
+            "participio": "dudado",
+            "gerundio": "dudando"
+          }
+        },
+        "governs": "de + sustantivo",
+        "tipVi": "Nghi ai | dùng de: | dudo de él."
+      }
     },
     {
       "id": "orgulloso",
@@ -1586,12 +1600,13 @@
       "word": "paciente",
       "shareCode": "R49",
       "meaningVi": "kiên_nhẫn",
-      "defVi": "Bình_tĩnh chờ_đợi, | không=/vội_vàng/ | hay cáu_gắt.",
-      "leadVi": "Con hỏi lần thứ mười, | mẹ vẫn | nhẹ_nhàng /trả_lời/.",
-      "anticipateVi": "Chậm mà chắc nhé!",
+      "defVi": "/Bình_tĩnh/ chờ_đợi | dù việc kéo_dài | khá lâu.",
+      "leadVi": "Dạy bà dùng điện_thoại, | chị /giải_thích/ | lần thứ mười.",
+      "anticipateVi": "Bà /nhắn_tin/ được chưa?",
       "emphasis": [
-        "chờ đợi",
-        "nhẹ nhàng"
+        "Bình tĩnh",
+        "giải thích",
+        "nhắn tin"
       ],
       "pos": "adj",
       "ipa": "/paˈθjente/",
@@ -1604,10 +1619,17 @@
       "initial": "P",
       "usage": [
         {
-          "en": "Hay que ser _____ cuando aprendes un idioma.",
-          "vi": "Phải kiên_nhẫn | khi học một ngoại_ngữ."
+          "en": "Mi profesora es muy _____ con los estudiantes nuevos.",
+          "vi": "Cô_giáo mình | rất=kiên_nhẫn | với sinh_viên mới."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "paciente",
+        "plural": "pacientes",
+        "governs": "con + sustantivo",
+        "serEstar": "Thường dùng ser: | es muy paciente.",
+        "tipVi": "Danh_từ | el paciente | là bệnh_nhân."
+      }
     },
     {
       "id": "puntual",
@@ -2820,13 +2842,14 @@
       "id": "compromiso",
       "word": "compromiso",
       "shareCode": "7B4",
-      "meaningVi": "sự=cam_kết",
-      "defVi": "Sự /cam_kết/ | dồn tâm_sức | theo_đuổi điều đã hứa.",
-      "leadVi": "Mười năm | chưa nghỉ buổi nào, | /đều_đặn/ tới lớp.",
-      "anticipateVi": "Hứa là làm chứ?",
+      "meaningVi": "sự cam_kết",
+      "defVi": "Lời hứa | dốc sức | /theo_đuổi/ một việc.",
+      "leadVi": "Nhận làm thủ_quỹ, | bạn /giữ_lời/ | ghi sổ suốt năm.",
+      "anticipateVi": "Cuối năm /quyết_toán/ khớp?",
       "emphasis": [
-        "cam kết",
-        "đều đặn"
+        "theo đuổi",
+        "giữ lời",
+        "quyết toán"
       ],
       "pos": "noun",
       "ipa": "/kompɾoˈmiso/",
@@ -2840,39 +2863,51 @@
       "initial": "C",
       "usage": [
         {
-          "en": "Su _____ con el equipo es total.",
-          "vi": "Sự=cam_kết của=anh=ấy | với đội | là trọn_vẹn."
+          "en": "Aprender un idioma requiere tiempo y _____.",
+          "vi": "Học ngoại_ngữ | cần thời_gian | và sự cam_kết."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los compromisos",
+        "tipVi": "Tengo un compromiso | còn là | mình đã có hẹn."
+      }
     },
     {
       "id": "consecuencia",
       "word": "consecuencia",
       "shareCode": "0W8",
       "meaningVi": "hậu_quả",
-      "defVi": "Kết_quả, | thường không hay, | do một /hành_động/ gây ra.",
-      "leadVi": "Thức trắng mấy đêm, | sáng ra mắt /thâm_quầng/, | choáng_váng.",
-      "anticipateVi": "Gieo gió | thì gặt gì?",
+      "defVi": "/Hệ_lụy/ kéo theo | sau một | việc đã làm.",
+      "leadVi": "Thức khuya cả tuần, | mình /ngủ_gật/ | trong giờ toán.",
+      "anticipateVi": "Thầy /nhắc_nhở/ chưa?",
       "emphasis": [
-        "hành động",
-        "thâm quầng"
+        "Hệ lụy",
+        "ngủ gật",
+        "nhắc nhở"
       ],
       "pos": "noun",
       "ipa": "/konseˈkwenθja/",
       "topic": "thinking",
       "topics": [
-        "thinking",
-        "society"
+        "thinking"
       ],
       "level": "B1",
       "chars": 12,
       "initial": "C",
       "usage": [
         {
-          "en": "La inundación fue una _____ de las lluvias fuertes.",
-          "vi": "Lũ_lụt | là hậu_quả | của mưa lớn."
+          "en": "Cada decisión tiene una _____.",
+          "vi": "Lựa_chọn nào | cũng có hậu_quả."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las consecuencias",
+        "tipVi": "Do đó | nói là como consecuencia."
+      }
     },
     {
       "id": "disminuir",
@@ -2908,12 +2943,13 @@
       "word": "demanda",
       "shareCode": "X8Y",
       "meaningVi": "nhu_cầu",
-      "defVi": "Mức /người_mua/ | muốn có | một loại hàng nào đó.",
-      "leadVi": "Hè nóng /đỉnh_điểm/, | quạt máy | cháy hàng khắp chợ.",
-      "anticipateVi": "/Cháy_hàng/ vì đâu?",
+      "defVi": "Mức người mua | muốn có | một /món_hàng/.",
+      "leadVi": "Gần Tết, | đơn đặt bánh | /tăng_vọt/ từng ngày.",
+      "anticipateVi": "Lò bánh /hoạt_động/ cả đêm?",
       "emphasis": [
-        "người mua",
-        "cháy hàng"
+        "món hàng",
+        "tăng vọt",
+        "hoạt động"
       ],
       "pos": "noun",
       "ipa": "/deˈmanda/",
@@ -2927,10 +2963,16 @@
       "initial": "D",
       "usage": [
         {
-          "en": "Hay mucha _____ de pisos en el centro.",
-          "vi": "Nhu_cầu thuê căn_hộ | ở trung_tâm | rất cao."
+          "en": "La _____ de enfermeras es muy alta este año.",
+          "vi": "Năm nay | nhu_cầu y_tá | rất cao."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las demandas",
+        "tipVi": "Oferta y demanda | là cung | và cầu."
+      }
     },
     {
       "id": "exagerar",
@@ -2965,28 +3007,36 @@
       "word": "flexible",
       "shareCode": "KTQ",
       "meaningVi": "linh_hoạt",
-      "defVi": "Dễ thay_đổi, | thích_ứng được | với nhiều /tình_huống/.",
-      "leadVi": "Sáng ở nhà, | chiều lên /văn_phòng/, | giờ_giấc tùy ý.",
-      "anticipateVi": "/Co_giãn/ được chứ?",
+      "defVi": "Dễ thay_đổi | để hợp với /tình_huống/.",
+      "leadVi": "Học trực_tuyến, | em tự /sắp_xếp/ | giờ nghe giảng.",
+      "anticipateVi": "Sáng /ngủ_bù/ được?",
       "emphasis": [
-        "thích ứng",
-        "giờ giấc"
+        "tình huống",
+        "sắp xếp",
+        "ngủ bù"
       ],
       "pos": "adj",
-      "ipa": "/flekˈsi.βle/",
+      "ipa": "/flekˈsiβle/",
       "topic": "work",
       "topics": [
-        "work"
+        "work",
+        "character"
       ],
       "level": "B1",
       "chars": 8,
       "initial": "F",
       "usage": [
         {
-          "en": "Mi horario es bastante _____, empiezo cuando quiero.",
-          "vi": "Lịch của=tôi | khá linh_hoạt, | muốn bắt_đầu | lúc nào cũng được."
+          "en": "En mi trabajo tengo un horario _____ y puedo empezar tarde.",
+          "vi": "Chỗ làm của=mình | giờ_giấc linh_hoạt, | mình có_thể bắt_đầu muộn."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "flexible",
+        "plural": "flexibles",
+        "serEstar": "Thường dùng ser: | mi horario es flexible.",
+        "tipVi": "Giống cái | không đổi: | una agenda flexible."
+      }
     },
     {
       "id": "inevitable",
@@ -3148,15 +3198,16 @@
       "word": "voluntario",
       "shareCode": "C8J",
       "meaningVi": "tình_nguyện_viên",
-      "defVi": "Người /tự_nguyện/ | giúp người khác | mà không lấy tiền.",
-      "leadVi": "Áo xanh khắp phố, | phát cơm | cho người vô_gia_cư.",
-      "anticipateVi": "Áo xanh | khắp phố ư?",
+      "defVi": "Người /tự_nguyện/ | giúp_đỡ | mà không nhận lương.",
+      "leadVi": "Mùa_hè, | bạn lên vùng cao | dạy học /miễn_phí/.",
+      "anticipateVi": "/Đường_đèo/ quanh_co?",
       "emphasis": [
         "tự nguyện",
-        "phát cơm"
+        "miễn phí",
+        "Đường đèo"
       ],
       "pos": "noun",
-      "ipa": "/bo.lunˈta.ɾjo/",
+      "ipa": "/bolunˈtaɾjo/",
       "topic": "society",
       "topics": [
         "society"
@@ -3166,10 +3217,16 @@
       "initial": "V",
       "usage": [
         {
-          "en": "Mi hermana trabaja de _____ en un comedor social.",
-          "vi": "Chị tôi | làm tình_nguyện_viên | ở bếp ăn từ_thiện."
+          "en": "Mi hermana trabaja como _____ en un hospital.",
+          "vi": "Chị mình | làm tình_nguyện_viên | ở bệnh_viện."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los voluntarios",
+        "tipVi": "Nữ là la voluntaria; | cũng là tính_từ: | trabajo voluntario."
+      }
     },
     {
       "id": "profundo",
@@ -12327,6 +12384,5795 @@
         "feminine": "diminuta",
         "plural": "diminutos / diminutas",
         "serEstar": "Thường dùng ser: | es un insecto diminuto."
+      }
+    },
+    {
+      "id": "gigantesco",
+      "word": "gigantesco",
+      "shareCode": "HGM",
+      "meaningVi": "khổng_lồ",
+      "defVi": "/To_lớn/ vượt xa | mức bình_thường ta hay gặp.",
+      "leadVi": "Dưới tòa cao_ốc, | mình ngửa cổ | /choáng_ngợp/.",
+      "anticipateVi": "Chụp /toàn_cảnh/ nổi không?",
+      "emphasis": [
+        "To lớn",
+        "choáng ngợp",
+        "toàn cảnh"
+      ],
+      "pos": "adj",
+      "ipa": "/xiɣanˈtesko/",
+      "topic": "perception",
+      "topics": [
+        "perception"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "En la playa construimos un castillo de arena _____.",
+          "vi": "Trên bãi_biển, | tụi=mình xây | một lâu_đài cát khổng_lồ."
+        }
+      ],
+      "grammar": {
+        "feminine": "gigantesca",
+        "plural": "gigantescos / gigantescas",
+        "serEstar": "Thường dùng ser: | el castillo es gigantesco."
+      }
+    },
+    {
+      "id": "solido",
+      "word": "sólido",
+      "shareCode": "0ER",
+      "meaningVi": "rắn_chắc",
+      "defVi": "/Cứng_cáp/, đặc_ruột, | không mềm cũng không lỏng.",
+      "leadVi": "Kê tủ sách nặng, | mình chọn | kệ gỗ /chắc_chắn/.",
+      "anticipateVi": "Ngồi lên /thoải_mái/ chứ?",
+      "emphasis": [
+        "Cứng cáp",
+        "chắc chắn",
+        "thoải mái"
+      ],
+      "pos": "adj",
+      "ipa": "/ˈsolido/",
+      "topic": "perception",
+      "topics": [
+        "perception"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "Necesitamos una mesa _____ para poner el ordenador nuevo.",
+          "vi": "Tụi=mình cần | một cái=bàn rắn_chắc | để đặt máy_tính mới."
+        }
+      ],
+      "grammar": {
+        "feminine": "sólida",
+        "plural": "sólidos / sólidas",
+        "serEstar": "Thường dùng ser: | la mesa es sólida."
+      }
+    },
+    {
+      "id": "belleza",
+      "word": "belleza",
+      "shareCode": "TE2",
+      "meaningVi": "vẻ_đẹp",
+      "defVi": "Nét /dễ_nhìn/ | khiến ai ngắm cũng thấy thích.",
+      "leadVi": "Leo núi lúc sớm, | mình ngắm | biển mây /lộng_lẫy/.",
+      "anticipateVi": "/Mê_mẩn/ quên chụp=ảnh?",
+      "emphasis": [
+        "dễ nhìn",
+        "lộng lẫy",
+        "Mê mẩn"
+      ],
+      "pos": "noun",
+      "ipa": "/beˈʎeθa/",
+      "topic": "perception",
+      "topics": [
+        "perception"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "Nos sorprendió la _____ del lago por la mañana.",
+          "vi": "Tụi=mình bất_ngờ | trước vẻ_đẹp của=hồ | vào buổi_sáng."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las bellezas"
+      }
+    },
+    {
+      "id": "borde",
+      "word": "borde",
+      "shareCode": "VH9",
+      "meaningVi": "mép",
+      "defVi": "Phần /ngoài_cùng/ | của mặt bàn, vách đá hay trang giấy.",
+      "leadVi": "Chụp=ảnh trên núi, | bạn đừng đứng | sát /vách_đá/.",
+      "anticipateVi": "Lỡ /trượt_chân/ sao?",
+      "emphasis": [
+        "ngoài cùng",
+        "vách đá",
+        "trượt chân"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈboɾðe/",
+      "topic": "perception",
+      "topics": [
+        "perception"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "No pongas el vaso en el _____ de la mesa.",
+          "vi": "Đừng đặt cốc | ở mép bàn."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los bordes",
+        "tipVi": "Sát mép | nói al borde de: | al borde de la mesa."
+      }
+    },
+    {
+      "id": "doblar",
+      "word": "doblar",
+      "shareCode": "PFX",
+      "meaningVi": "uốn_cong",
+      "defVi": "Dùng lực | làm vật thẳng | thành hình /vòng_cung/.",
+      "leadVi": "Khởi_động trước giờ chạy, | mình /uốn_dẻo/ | chạm mũi chân.",
+      "anticipateVi": "Gối kêu /răng_rắc/?",
+      "emphasis": [
+        "vòng cung",
+        "uốn dẻo",
+        "răng rắc"
+      ],
+      "pos": "verb",
+      "ipa": "/doˈβlaɾ/",
+      "topic": "perception",
+      "topics": [
+        "perception"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Para levantar la caja, tienes que _____ las rodillas.",
+          "vi": "Để nhấc thùng, | bạn phải | gập đầu_gối."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo doblo",
+            "pretérito": "él dobló",
+            "participio": "doblado",
+            "gerundio": "doblando"
+          }
+        },
+        "tipVi": "Doblar còn nghĩa | gập, rẽ: | doblar a la derecha."
+      }
+    },
+    {
+      "id": "brillar",
+      "word": "brillar",
+      "shareCode": "HJ2",
+      "meaningVi": "tỏa_sáng",
+      "defVi": "Phát ra | hay /phản_chiếu/ | ánh_sáng rực_rỡ.",
+      "leadVi": "Sáng sau cơn mưa, | mặt hồ | /lấp_lánh/ dưới nắng.",
+      "anticipateVi": "/Chói_chang/ quá nhỉ?",
+      "emphasis": [
+        "phản chiếu",
+        "lấp lánh",
+        "Chói chang"
+      ],
+      "pos": "verb",
+      "ipa": "/bɾiˈʎaɾ/",
+      "topic": "perception",
+      "topics": [
+        "perception"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "Mañana el sol va a _____ todo el día en la playa.",
+          "vi": "Ngày_mai | mặt_trời sẽ tỏa_sáng | cả=ngày trên bãi_biển."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo brillo",
+            "pretérito": "él brilló",
+            "participio": "brillado",
+            "gerundio": "brillando"
+          }
+        },
+        "tipVi": "Chữ ll | đọc gần như y: | el sol brilla."
+      }
+    },
+    {
+      "id": "pesar",
+      "word": "pesar",
+      "shareCode": "QXD",
+      "meaningVi": "cân, nặng",
+      "defVi": "Đặt đồ lên cân | để biết /trọng_lượng/ của nó.",
+      "leadVi": "Ra sân_bay, | bạn đặt hành_lý | lên /bàn_cân/.",
+      "anticipateVi": "Phải /bỏ_bớt/ đồ à?",
+      "emphasis": [
+        "trọng lượng",
+        "bàn cân",
+        "bỏ bớt"
+      ],
+      "pos": "verb",
+      "ipa": "/peˈsaɾ/",
+      "topic": "perception",
+      "topics": [
+        "perception"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "En la tienda tienes que _____ la fruta antes de pagar.",
+          "vi": "Ở cửa_hàng, | bạn phải cân trái_cây | trước khi trả tiền."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo peso",
+            "pretérito": "él pesó",
+            "participio": "pesado",
+            "gerundio": "pesando"
+          }
+        },
+        "tipVi": "Hỏi nặng bao_nhiêu: | ¿cuánto pesa?, | không dùng es."
+      }
+    },
+    {
+      "id": "cultural",
+      "word": "cultural",
+      "shareCode": "W77",
+      "meaningVi": "thuộc văn_hóa",
+      "defVi": "Liên_quan tới | /phong_tục/, | nghệ_thuật của một cộng_đồng.",
+      "leadVi": "Hội_trại trường, | lớp mình dựng | gian /truyền_thống/ quê nhà.",
+      "anticipateVi": "Có /trò_chơi/ dân_gian?",
+      "emphasis": [
+        "phong tục",
+        "truyền thống",
+        "trò chơi"
+      ],
+      "pos": "adj",
+      "ipa": "/kultuˈɾal/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "En la ciudad hay muchas actividades _____ en verano.",
+          "vi": "Thành_phố | có nhiều hoạt_động | văn_hóa vào mùa_hè."
+        }
+      ],
+      "grammar": {
+        "feminine": "cultural",
+        "plural": "culturales",
+        "serEstar": "Thường dùng ser: | es un evento cultural.",
+        "tipVi": "Giống đực, cái | như nhau: | una actividad cultural."
+      }
+    },
+    {
+      "id": "comprometido",
+      "word": "comprometido",
+      "shareCode": "N4A",
+      "meaningVi": "đã=đính_hôn",
+      "defVi": "Hai người /hứa_hôn/, | chờ ngày | tổ_chức đám_cưới.",
+      "leadVi": "Tối qua, | anh_họ mình | /cầu_hôn/ trước cả=nhà.",
+      "anticipateVi": "Mẹ mừng rơi /nước_mắt/?",
+      "emphasis": [
+        "hứa hôn",
+        "cầu hôn",
+        "nước mắt"
+      ],
+      "pos": "adj",
+      "ipa": "/kompɾomeˈtido/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 12,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Mi hermana y su novio están _____ desde el verano.",
+          "vi": "Chị mình và bạn_trai | đã đính_hôn | từ mùa_hè."
+        }
+      ],
+      "grammar": {
+        "feminine": "comprometida",
+        "plural": "comprometidos / comprometidas",
+        "serEstar": "Thường dùng estar: | están comprometidos.",
+        "tipVi": "Đính_hôn với ai | dùng con: | comprometida con él."
+      }
+    },
+    {
+      "id": "global",
+      "word": "global",
+      "shareCode": "D4Q",
+      "meaningVi": "toàn_cầu",
+      "defVi": "Liên_quan tới | cả /thế_giới/, | không riêng nơi=nào.",
+      "leadVi": "Học địa_lý, | mình đọc | về /khí_hậu/ đang nóng lên.",
+      "anticipateVi": "Mùa_hè ngày_càng /oi_bức/?",
+      "emphasis": [
+        "thế giới",
+        "khí hậu",
+        "oi bức"
+      ],
+      "pos": "adj",
+      "ipa": "/ɡloˈβal/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "nature"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "El cambio del clima es un problema _____.",
+          "vi": "Biến_đổi khí_hậu | là vấn_đề toàn_cầu."
+        }
+      ],
+      "grammar": {
+        "feminine": "global",
+        "plural": "globales",
+        "serEstar": "Thường dùng ser: | es un problema global."
+      }
+    },
+    {
+      "id": "oficial",
+      "word": "oficial",
+      "shareCode": "5HH",
+      "meaningVi": "chính_thức",
+      "defVi": "Được /công_nhận/ đúng quy_định, | không phải tin_đồn.",
+      "leadVi": "Lịch=thi đã chốt, | trường đăng | /thông_báo/ lên trang_chủ.",
+      "anticipateVi": "Hết /hồi_hộp/ chưa?",
+      "emphasis": [
+        "công nhận",
+        "thông báo",
+        "hồi hộp"
+      ],
+      "pos": "adj",
+      "ipa": "/ofiˈθjal/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "O",
+      "usage": [
+        {
+          "en": "Ya tenemos la fecha _____ del examen.",
+          "vi": "Tụi=mình | đã có ngày thi | chính_thức."
+        }
+      ],
+      "grammar": {
+        "feminine": "oficial",
+        "plural": "oficiales",
+        "serEstar": "Thường dùng ser: | la noticia es oficial."
+      }
+    },
+    {
+      "id": "romantico",
+      "word": "romántico",
+      "shareCode": "6RV",
+      "meaningVi": "lãng_mạn",
+      "defVi": "Gợi cảm_xúc /yêu_đương/ | ngọt_ngào, đẹp_đẽ.",
+      "leadVi": "Kỷ_niệm một năm, | anh đặt bàn | bên hồ /thơ_mộng/.",
+      "anticipateVi": "Nến với /hoa_hồng/?",
+      "emphasis": [
+        "yêu đương",
+        "thơ mộng",
+        "hoa hồng"
+      ],
+      "pos": "adj",
+      "ipa": "/roˈmantiko/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "emotion"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "El sábado vimos una película _____ en el cine.",
+          "vi": "Thứ_Bảy | tụi=mình xem | một bộ phim lãng_mạn ở rạp."
+        }
+      ],
+      "grammar": {
+        "feminine": "romántica",
+        "plural": "románticos / románticas",
+        "serEstar": "Thường dùng ser: | es una cena romántica."
+      }
+    },
+    {
+      "id": "injusto",
+      "word": "injusto",
+      "shareCode": "5MZ",
+      "meaningVi": "bất_công",
+      "defVi": "Không /công_bằng/, | thiên_vị | người này hơn người kia.",
+      "leadVi": "Cả nhóm ngồi chơi, | một_mình | gánh bài, thấy /ấm_ức/.",
+      "anticipateVi": "Điểm /chia_đều/ à?",
+      "emphasis": [
+        "công bằng",
+        "ấm ức",
+        "chia đều"
+      ],
+      "pos": "adj",
+      "ipa": "/inˈxusto/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "Es _____ que yo limpie la casa solo.",
+          "vi": "Thật bất_công | khi mình | dọn nhà một_mình."
+        }
+      ],
+      "grammar": {
+        "feminine": "injusta",
+        "plural": "injustos / injustas",
+        "serEstar": "Thường dùng ser: | es injusto.",
+        "tipVi": "Sau es injusto que | dùng subjuntivo: | que yo limpie."
+      }
+    },
+    {
+      "id": "occidental",
+      "word": "occidental",
+      "shareCode": "JFS",
+      "meaningVi": "thuộc phương_Tây",
+      "defVi": "Ở /phía_tây/, | hoặc mang nét | văn_hóa phương_Tây.",
+      "leadVi": "Đi ăn tối, | bạn tập | cầm /dao_nĩa/ cho quen.",
+      "anticipateVi": "Đôi đũa /nghỉ_phép/?",
+      "emphasis": [
+        "phía tây",
+        "dao nĩa",
+        "nghỉ phép"
+      ],
+      "pos": "adj",
+      "ipa": "/okθiðenˈtal/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "O",
+      "usage": [
+        {
+          "en": "Vivo en la parte _____ de la ciudad, cerca del río.",
+          "vi": "Mình sống | ở phía_tây thành_phố, | gần con=sông."
+        }
+      ],
+      "grammar": {
+        "feminine": "occidental",
+        "plural": "occidentales",
+        "serEstar": "Thường dùng ser: | la zona es occidental."
+      }
+    },
+    {
+      "id": "narrativa",
+      "word": "narrativa",
+      "shareCode": "WVF",
+      "meaningVi": "mạch_truyện",
+      "defVi": "Cách sắp_xếp | sự_việc | để /dẫn_dắt/ câu_chuyện.",
+      "leadVi": "Đọc tiểu_thuyết, | bạn thấy | quá_khứ, hiện_tại /đan_xen/.",
+      "anticipateVi": "Lật trang /cuối_cùng/ trước?",
+      "emphasis": [
+        "dẫn dắt",
+        "đan xen",
+        "cuối cùng"
+      ],
+      "pos": "noun",
+      "ipa": "/naraˈtiβa/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "La _____ de esta novela es lenta pero muy bonita.",
+          "vi": "Mạch_truyện | của cuốn tiểu_thuyết này | chậm nhưng rất hay."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las narrativas"
+      }
+    },
+    {
+      "id": "album",
+      "word": "álbum",
+      "shareCode": "GA8",
+      "meaningVi": "tuyển_tập nhạc",
+      "defVi": "Tập_hợp | nhiều bài_hát | /phát_hành/ cùng một lúc.",
+      "leadVi": "Ca_sĩ mình thích | vừa /ra_mắt/ | mười hai bài mới.",
+      "anticipateVi": "Nghe /liền_mạch/ cả=đêm?",
+      "emphasis": [
+        "phát hành",
+        "ra mắt",
+        "liền mạch"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈalβum/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "Á",
+      "usage": [
+        {
+          "en": "El nuevo _____ de mi grupo favorito tiene doce canciones.",
+          "vi": "Tuyển_tập mới | của ban_nhạc mình thích | có mười hai bài_hát."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los álbumes",
+        "tipVi": "Số nhiều | thêm -es: | los álbumes."
+      }
+    },
+    {
+      "id": "ceremonia",
+      "word": "ceremonia",
+      "shareCode": "QKN",
+      "meaningVi": "buổi=lễ",
+      "defVi": "Sự_kiện /trang_trọng/ | có trình_tự, | nghi_thức riêng.",
+      "leadVi": "Sáng /khai_giảng/, | cả=trường | đứng nghe đánh trống.",
+      "anticipateVi": "Gia_đình /rưng_rưng/?",
+      "emphasis": [
+        "trang trọng",
+        "khai giảng",
+        "rưng rưng"
+      ],
+      "pos": "noun",
+      "ipa": "/θeɾeˈmonja/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "La _____ de la boda fue en un jardín.",
+          "vi": "Lễ cưới | được tổ_chức | ngoài vườn."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las ceremonias"
+      }
+    },
+    {
+      "id": "canal",
+      "word": "canal",
+      "shareCode": "Z2V",
+      "meaningVi": "kênh",
+      "defVi": "Đường /phát_sóng/ | riêng cho chương_trình | truyền_hình, tin_tức.",
+      "leadVi": "Tối nào bố | cũng bấm /điều_khiển/ | tìm đài thể_thao.",
+      "anticipateVi": "Đủ nghìn người /đăng_ký/?",
+      "emphasis": [
+        "phát sóng",
+        "điều khiển",
+        "đăng ký"
+      ],
+      "pos": "noun",
+      "ipa": "/kaˈnal/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "¿Qué ponen en este _____ esta noche?",
+          "vi": "Tối nay | kênh này | chiếu gì vậy?"
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los canales",
+        "tipVi": "Đổi kênh | nói cambiar de canal, | có de."
+      }
+    },
+    {
+      "id": "ninez",
+      "word": "niñez",
+      "shareCode": "GWJ",
+      "meaningVi": "tuổi_thơ",
+      "defVi": "Quãng thời_gian | còn nhỏ, | trước khi /lớn_khôn/.",
+      "leadVi": "Dọn gác_xép, | gấu_bông cũ | gợi /ký_ức/ ùa về.",
+      "anticipateVi": "Giữ lại làm /kỷ_niệm/?",
+      "emphasis": [
+        "lớn khôn",
+        "ký ức",
+        "kỷ niệm"
+      ],
+      "pos": "noun",
+      "ipa": "/niˈɲeθ/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "Mi abuelo me cuenta historias de su _____ en el campo.",
+          "vi": "Ông kể mình nghe | chuyện tuổi_thơ | của ông ở quê."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "tipVi": "Tận_cùng -ez | là giống cái: | la niñez."
+      }
+    },
+    {
+      "id": "documental",
+      "word": "documental",
+      "shareCode": "D9S",
+      "meaningVi": "phim tài_liệu",
+      "defVi": "Phim ghi lại | /sự_thật/ về | đời_sống, thiên_nhiên.",
+      "leadVi": "Giọng /thuyết_minh/ | dẫn mình | xuống rạn san_hô.",
+      "anticipateVi": "Muốn học /bơi_lội/ chưa?",
+      "emphasis": [
+        "sự thật",
+        "thuyết minh",
+        "bơi lội"
+      ],
+      "pos": "noun",
+      "ipa": "/dokumenˈtal/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Anoche vimos un _____ sobre los animales del mar.",
+          "vi": "Tối qua | tụi=mình xem | phim tài_liệu về động_vật biển."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los documentales",
+        "tipVi": "Danh_từ giống đực: | un documental, | không dùng una."
+      }
+    },
+    {
+      "id": "tambor",
+      "word": "tambor",
+      "shareCode": "6V1",
+      "meaningVi": "trống",
+      "defVi": "/Nhạc_cụ/ gõ bằng dùi, | giữ nhịp | cho cả=bài.",
+      "leadVi": "Tập văn_nghệ, | bạn gõ | nhịp /dồn_dập/ cả buổi.",
+      "anticipateVi": "Hàng_xóm /phàn_nàn/ chưa?",
+      "emphasis": [
+        "Nhạc cụ",
+        "dồn dập",
+        "phàn nàn"
+      ],
+      "pos": "noun",
+      "ipa": "/tamˈboɾ/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Mi primo toca el _____ en un grupo de música.",
+          "vi": "Anh_họ mình | chơi trống | trong một ban_nhạc."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los tambores"
+      }
+    },
+    {
+      "id": "entretenimiento",
+      "word": "entretenimiento",
+      "shareCode": "964",
+      "meaningVi": "giải_trí",
+      "defVi": "Hoạt_động giúp | đầu_óc /thư_giãn/ | sau giờ làm.",
+      "leadVi": "Thi xong, | mình tải | mấy bộ /phim_hài/.",
+      "anticipateVi": "Xem /xuyên_đêm/ luôn?",
+      "emphasis": [
+        "thư giãn",
+        "phim hài",
+        "xuyên đêm"
+      ],
+      "pos": "noun",
+      "ipa": "/entɾeteniˈmjento/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 15,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Para mí, leer es el mejor _____ en vacaciones.",
+          "vi": "Với mình, | đọc sách | là cách giải_trí tốt nhất | trong kỳ nghỉ."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los entretenimientos"
+      }
+    },
+    {
+      "id": "episodio",
+      "word": "episodio",
+      "shareCode": "K3P",
+      "meaningVi": "tập phim",
+      "defVi": "Một phần | của=loạt /chương_trình/ | chiếu theo kỳ.",
+      "leadVi": "Hết giờ học, | mình ngồi chờ | phim mới /lên_sóng/.",
+      "anticipateVi": "/Kết_thúc/ bỏ_ngỏ?",
+      "emphasis": [
+        "chương trình",
+        "lên sóng",
+        "Kết thúc"
+      ],
+      "pos": "noun",
+      "ipa": "/epiˈsoðjo/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Esta noche ponen el último _____ de la serie.",
+          "vi": "Tối nay | chiếu tập cuối | của loạt phim."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los episodios"
+      }
+    },
+    {
+      "id": "exposicion",
+      "word": "exposición",
+      "shareCode": "AG0",
+      "meaningVi": "triển_lãm",
+      "defVi": "Sự_kiện /trưng_bày/ | tranh, ảnh | cho mọi=người đến xem.",
+      "leadVi": "Cuối_tuần, | mình dạo | /phòng_tranh/ ngắm ảnh biển.",
+      "anticipateVi": "Cổng vào /miễn_phí/ chứ?",
+      "emphasis": [
+        "trưng bày",
+        "phòng tranh",
+        "miễn phí"
+      ],
+      "pos": "noun",
+      "ipa": "/eksposiˈθjon/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Hay una _____ de fotos en el museo.",
+          "vi": "Bảo_tàng | đang có | triển_lãm ảnh."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las exposiciones",
+        "tipVi": "Tận_cùng -ción | là giống cái: | la exposición."
+      }
+    },
+    {
+      "id": "bandera",
+      "word": "bandera",
+      "shareCode": "FXG",
+      "meaningVi": "cờ",
+      "defVi": "Mảnh vải màu | treo trên cột | làm /biểu_tượng/ chung.",
+      "leadVi": "Ra bãi_biển, | thấy tấm vải đỏ | /tung_bay/ trên cột.",
+      "anticipateVi": "/Báo_hiệu/ gì đây?",
+      "emphasis": [
+        "biểu tượng",
+        "tung bay",
+        "Báo hiệu"
+      ],
+      "pos": "noun",
+      "ipa": "/banˈdeɾa/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "Cuando hay _____ roja en la playa, no puedes nadar.",
+          "vi": "Khi bãi_biển | treo cờ đỏ, | bạn không được bơi."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las banderas"
+      }
+    },
+    {
+      "id": "amistad",
+      "word": "amistad",
+      "shareCode": "SPX",
+      "meaningVi": "tình_bạn",
+      "defVi": "Mối quan_hệ | /thân_thiết/, | tin_cậy giữa bạn_bè.",
+      "leadVi": "Chuyển trường rồi, | hai đứa | vẫn /gắn_bó/ như xưa.",
+      "anticipateVi": "/Bí_mật/ kể hết chưa?",
+      "emphasis": [
+        "thân thiết",
+        "gắn bó",
+        "Bí mật"
+      ],
+      "pos": "noun",
+      "ipa": "/amisˈtað/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Nuestra _____ empezó en el primer año del colegio.",
+          "vi": "Tình_bạn | của tụi=mình | bắt_đầu từ năm lớp một."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las amistades",
+        "tipVi": "Tận_cùng -tad | là giống cái: | la amistad."
+      }
+    },
+    {
+      "id": "generacion",
+      "word": "generación",
+      "shareCode": "4DV",
+      "meaningVi": "thế_hệ",
+      "defVi": "Những người | cùng /lứa_tuổi/, | lớn lên cùng một thời.",
+      "leadVi": "Cuối_tuần, | ông_bà, bố_mẹ | và tụi=mình /quây_quần/.",
+      "anticipateVi": "Khác /quan_niệm/ chút nhỉ?",
+      "emphasis": [
+        "lứa tuổi",
+        "quây quần",
+        "quan niệm"
+      ],
+      "pos": "noun",
+      "ipa": "/xeneɾaˈθjon/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "La _____ de mis abuelos no tenía móvil.",
+          "vi": "Thế_hệ ông_bà mình | không có | điện_thoại di_động."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las generaciones"
+      }
+    },
+    {
+      "id": "caballero",
+      "word": "caballero",
+      "shareCode": "1C7",
+      "meaningVi": "quý_ông",
+      "defVi": "Người đàn_ông | /lịch_sự/, | cư_xử tử_tế.",
+      "leadVi": "Trên xe_buýt, | anh=ấy /nhã_nhặn/ | nhường ghế cụ bà.",
+      "anticipateVi": "Được /cảm_ơn/ chưa?",
+      "emphasis": [
+        "lịch sự",
+        "nhã nhặn",
+        "cảm ơn"
+      ],
+      "pos": "noun",
+      "ipa": "/kaβaˈʎeɾo/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "character"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Mi abuelo es un verdadero _____: siempre es amable con todos.",
+          "vi": "Ông mình | là một quý_ông thực_thụ, | lúc=nào cũng tử_tế."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los caballeros",
+        "tipVi": "Biển nhà vệ_sinh nam | thường ghi chữ Caballeros."
+      }
+    },
+    {
+      "id": "titular",
+      "word": "titular",
+      "shareCode": "YNS",
+      "meaningVi": "dòng tít",
+      "defVi": "Hàng chữ /in_đậm/ | ở đầu bài_báo, | rất nổi_bật.",
+      "leadVi": "Lướt báo sáng, | mình chỉ đọc | /tiêu_đề/ cho nhanh.",
+      "anticipateVi": "Trường /nghỉ_học/ không?",
+      "emphasis": [
+        "in đậm",
+        "tiêu đề",
+        "nghỉ học"
+      ],
+      "pos": "noun",
+      "ipa": "/tituˈlaɾ/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "El _____ de hoy habla del nuevo estadio.",
+          "vi": "Tít báo hôm_nay | nói về | sân_vận_động mới."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los titulares",
+        "tipVi": "Còn nghĩa | chủ tài_khoản: | el titular de la cuenta."
+      }
+    },
+    {
+      "id": "anfitrion",
+      "word": "anfitrión",
+      "shareCode": "H0H",
+      "meaningVi": "chủ_nhà",
+      "defVi": "Người /đón_tiếp/ | và lo cho khách | đến chơi.",
+      "leadVi": "Tiệc ở nhà, | mình /tiếp_đãi/ | cả=lớp chu_đáo.",
+      "anticipateVi": "Ai /dọn_dẹp/ sau tiệc?",
+      "emphasis": [
+        "đón tiếp",
+        "tiếp đãi",
+        "dọn dẹp"
+      ],
+      "pos": "noun",
+      "ipa": "/amfiˈtɾjon/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "El _____ nos recibió en la puerta con una sonrisa.",
+          "vi": "Chủ_nhà | đón tụi=mình ở cửa | với nụ_cười."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los anfitriones",
+        "tipVi": "Chủ nhà nữ | là la anfitriona."
+      }
+    },
+    {
+      "id": "identidad",
+      "word": "identidad",
+      "shareCode": "Y58",
+      "meaningVi": "danh_tính",
+      "defVi": "/Thông_tin/ | cho biết | một người thật_sự là ai.",
+      "leadVi": "Tác_giả ký /bút_danh/, | cả=lớp | đoán mãi chưa ra.",
+      "anticipateVi": "/Lộ_diện/ khi nào?",
+      "emphasis": [
+        "Thông tin",
+        "bút danh",
+        "Lộ diện"
+      ],
+      "pos": "noun",
+      "ipa": "/iðentiˈðað/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "Nadie sabe la _____ del chico que escribió la carta.",
+          "vi": "Không ai biết | danh_tính của chàng trai | đã viết lá=thư."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las identidades"
+      }
+    },
+    {
+      "id": "literatura",
+      "word": "literatura",
+      "shareCode": "7RP",
+      "meaningVi": "văn_học",
+      "defVi": "Các /tác_phẩm/ | thơ, truyện, kịch | có giá_trị nghệ_thuật.",
+      "leadVi": "Ôn thi, | mình đọc lại | mấy /tiểu_thuyết/ kinh_điển.",
+      "anticipateVi": "Thuộc lòng /trích_đoạn/ chưa?",
+      "emphasis": [
+        "tác phẩm",
+        "tiểu thuyết",
+        "trích đoạn"
+      ],
+      "pos": "noun",
+      "ipa": "/liteɾaˈtuɾa/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "study"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "L",
+      "usage": [
+        {
+          "en": "Mi hermana estudia _____ en la universidad.",
+          "vi": "Chị mình | học văn_học | ở trường đại_học."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las literaturas"
+      }
+    },
+    {
+      "id": "matrimonio",
+      "word": "matrimonio",
+      "shareCode": "PKZ",
+      "meaningVi": "hôn_nhân",
+      "defVi": "Sự /gắn_kết/ | chính_thức | giữa vợ và chồng.",
+      "leadVi": "Ba mươi năm bên nhau, | ông_bà | chụp lại /ảnh_cưới/.",
+      "anticipateVi": "/Váy_cưới/ còn vừa?",
+      "emphasis": [
+        "gắn kết",
+        "ảnh cưới",
+        "Váy cưới"
+      ],
+      "pos": "noun",
+      "ipa": "/matɾiˈmonjo/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "El _____ de mis abuelos dura ya cincuenta años.",
+          "vi": "Cuộc hôn_nhân | của ông_bà mình | đã kéo_dài năm mươi năm."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los matrimonios",
+        "tipVi": "Còn chỉ | cặp vợ chồng: | un matrimonio joven."
+      }
+    },
+    {
+      "id": "actuacion",
+      "word": "actuación",
+      "shareCode": "J09",
+      "meaningVi": "màn trình_diễn",
+      "defVi": "Phần /biểu_diễn/ | hát, múa | trước đông khán_giả.",
+      "leadVi": "Văn_nghệ trường, | lớp mình nhảy | /đồng_đều/ từng nhịp.",
+      "anticipateVi": "Quên /động_tác/ không?",
+      "emphasis": [
+        "biểu diễn",
+        "đồng đều",
+        "động tác"
+      ],
+      "pos": "noun",
+      "ipa": "/aktwaˈθjon/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "La _____ del grupo en el festival fue increíble.",
+          "vi": "Màn trình_diễn | của ban_nhạc ở lễ_hội | thật tuyệt."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las actuaciones"
+      }
+    },
+    {
+      "id": "fotografo",
+      "word": "fotógrafo",
+      "shareCode": "FDK",
+      "meaningVi": "nhiếp_ảnh_gia",
+      "defVi": "Người cầm máy, | dùng /ống_kính/ | ghi lại khoảnh_khắc.",
+      "leadVi": "Lễ ra trường, | mình nhận | /bấm_máy/ cho cả=khóa.",
+      "anticipateVi": "Mọi=người /tạo_dáng/ nào?",
+      "emphasis": [
+        "ống kính",
+        "bấm máy",
+        "tạo dáng"
+      ],
+      "pos": "noun",
+      "ipa": "/foˈtoɣɾafo/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "work"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "En la fiesta, el _____ nos pidió sonreír.",
+          "vi": "Ở bữa tiệc, | thợ ảnh | bảo tụi=mình cười."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los fotógrafos",
+        "tipVi": "Nữ là la fotógrafa; | ảnh là la foto."
+      }
+    },
+    {
+      "id": "trama",
+      "word": "trama",
+      "shareCode": "XKK",
+      "meaningVi": "cốt_truyện",
+      "defVi": "Chuỗi /tình_tiết/ chính | tạo nên câu_chuyện.",
+      "leadVi": "Xem phim, | bạn đoán | trước /kết_cục/ từ giữa phim.",
+      "anticipateVi": "Lỡ miệng /tiết_lộ/?",
+      "emphasis": [
+        "tình tiết",
+        "kết cục",
+        "tiết lộ"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈtɾama/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "La _____ de la película es difícil de seguir.",
+          "vi": "Cốt_truyện phim | khó theo_dõi."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las tramas"
+      }
+    },
+    {
+      "id": "poema",
+      "word": "poema",
+      "shareCode": "87A",
+      "meaningVi": "bài=thơ",
+      "defVi": "Bài viết | có vần nhịp, | /gửi_gắm/ cảm_xúc.",
+      "leadVi": "Ngày Nhà_giáo, | mình viết | mấy câu /lục_bát/ tặng cô.",
+      "anticipateVi": "Cô đọc /rơm_rớm/?",
+      "emphasis": [
+        "gửi gắm",
+        "lục bát",
+        "rơm rớm"
+      ],
+      "pos": "noun",
+      "ipa": "/poˈema/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Escribí un _____ corto para mi madre.",
+          "vi": "Mình viết | một bài=thơ ngắn | tặng mẹ."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los poemas",
+        "tipVi": "Tận_cùng -a | nhưng giống đực: | el poema."
+      }
+    },
+    {
+      "id": "poeta",
+      "word": "poeta",
+      "shareCode": "F0Z",
+      "meaningVi": "nhà_thơ",
+      "defVi": "Người /sáng_tác/ | những=bài | có vần_điệu.",
+      "leadVi": "Giờ văn, | mình tìm_hiểu | đời một /thi_sĩ/ nổi_tiếng.",
+      "anticipateVi": "/Cảm_hứng/ tới chưa?",
+      "emphasis": [
+        "sáng tác",
+        "thi sĩ",
+        "Cảm hứng"
+      ],
+      "pos": "noun",
+      "ipa": "/poˈeta/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "¿Quién es tu _____ favorito?",
+          "vi": "Nhà_thơ bạn thích nhất | là ai?"
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los poetas",
+        "tipVi": "Tận_cùng -a | vẫn là el poeta."
+      }
+    },
+    {
+      "id": "poesia",
+      "word": "poesía",
+      "shareCode": "5AW",
+      "meaningVi": "thơ_ca",
+      "defVi": "Thể_loại /văn_chương/ | dùng vần, nhịp_điệu.",
+      "leadVi": "Câu_lạc_bộ đọc sách, | bạn ngâm | vài câu /ca_dao/.",
+      "anticipateVi": "Cả phòng /lặng_im/?",
+      "emphasis": [
+        "văn chương",
+        "ca dao",
+        "lặng im"
+      ],
+      "pos": "noun",
+      "ipa": "/poeˈsia/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "No leo mucha _____, pero me gusta escucharla.",
+          "vi": "Mình không đọc | nhiều thơ, | nhưng thích nghe."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las poesías",
+        "tipVi": "Poesía là thơ nói_chung; | một bài là poema."
+      }
+    },
+    {
+      "id": "retrato",
+      "word": "retrato",
+      "shareCode": "TC9",
+      "meaningVi": "chân_dung",
+      "defVi": "Tranh vẽ | hay ảnh chụp | /khuôn_mặt/ một người.",
+      "leadVi": "Sinh_nhật mẹ, | mình vẽ | mẹ bằng /chì_than/.",
+      "anticipateVi": "Mẹ treo /phòng_khách/?",
+      "emphasis": [
+        "khuôn mặt",
+        "chì than",
+        "phòng khách"
+      ],
+      "pos": "noun",
+      "ipa": "/reˈtɾato/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "En la pared hay un _____ de mi abuela.",
+          "vi": "Trên tường | có bức chân_dung | của bà mình."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los retratos"
+      }
+    },
+    {
+      "id": "princesa",
+      "word": "princesa",
+      "shareCode": "RXG",
+      "meaningVi": "công_chúa",
+      "defVi": "/Con_gái/ của vua | hay vợ của hoàng_tử.",
+      "leadVi": "Lễ_hội hóa_trang, | bạn đội | /vương_miện/ lấp_lánh.",
+      "anticipateVi": "/Hoàng_tử/ tới chưa?",
+      "emphasis": [
+        "Con gái",
+        "vương miện",
+        "Hoàng tử"
+      ],
+      "pos": "noun",
+      "ipa": "/pɾinˈθesa/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "En el cuento, la _____ tiene un caballo blanco.",
+          "vi": "Trong truyện, | công_chúa | có một con=ngựa trắng."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las princesas",
+        "tipVi": "Nam là el príncipe: | hoàng_tử."
+      }
+    },
+    {
+      "id": "productor",
+      "word": "productor",
+      "shareCode": "16Y",
+      "meaningVi": "nhà sản_xuất",
+      "defVi": "Người lo tiền, | /tổ_chức/ | mọi=việc để làm phim.",
+      "leadVi": "Học truyền_thông, | mình thực_tập | ở /hãng_phim/ nhỏ.",
+      "anticipateVi": "Gọi /tài_trợ/ cả=ngày?",
+      "emphasis": [
+        "tổ chức",
+        "hãng phim",
+        "tài trợ"
+      ],
+      "pos": "noun",
+      "ipa": "/pɾoðukˈtoɾ/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "work"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "El _____ encontró dinero para hacer la película.",
+          "vi": "Nhà sản_xuất | tìm được tiền | để làm phim."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los productores",
+        "tipVi": "Nữ là la productora."
+      }
+    },
+    {
+      "id": "escultura",
+      "word": "escultura",
+      "shareCode": "PJ5",
+      "meaningVi": "tượng điêu_khắc",
+      "defVi": "Tác_phẩm /đục_đẽo/ | từ đá, gỗ | hay kim_loại.",
+      "leadVi": "Ở xưởng gỗ, | /nghệ_nhân/ | gõ đục suốt buổi.",
+      "anticipateVi": "/Tỉ_mỉ/ từng nét?",
+      "emphasis": [
+        "đục đẽo",
+        "nghệ nhân",
+        "Tỉ mỉ"
+      ],
+      "pos": "noun",
+      "ipa": "/eskulˈtuɾa/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "En el parque hay una _____ de piedra muy alta.",
+          "vi": "Trong công_viên | có một tượng đá | rất cao."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las esculturas"
+      }
+    },
+    {
+      "id": "estatua",
+      "word": "estatua",
+      "shareCode": "X86",
+      "meaningVi": "tượng",
+      "defVi": "Hình người, | con vật | bằng đá, /bất_động/ giữa công_viên.",
+      "leadVi": "Ra quảng_trường, | mình chụp | /kỷ_niệm/ bên ngựa đá.",
+      "anticipateVi": "Khoác /rêu_phong/ rồi à?",
+      "emphasis": [
+        "bất động",
+        "kỷ niệm",
+        "rêu phong"
+      ],
+      "pos": "noun",
+      "ipa": "/esˈtatwa/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Hay una _____ de un caballo en la plaza.",
+          "vi": "Quảng_trường | có tượng | một con=ngựa."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las estatuas"
+      }
+    },
+    {
+      "id": "estudio",
+      "word": "estudio",
+      "shareCode": "D91",
+      "meaningVi": "phòng thu",
+      "defVi": "Phòng /cách_âm/ | để thu giọng, | quay phim, chụp=ảnh.",
+      "leadVi": "Ra bài đầu_tay, | bạn đứng | /thu_âm/ suốt đêm.",
+      "anticipateVi": "Giọng /khàn_đặc/ chưa?",
+      "emphasis": [
+        "cách âm",
+        "thu âm",
+        "khàn đặc"
+      ],
+      "pos": "noun",
+      "ipa": "/esˈtuðjo/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Mi amigo tiene un _____ de música en casa.",
+          "vi": "Bạn mình | có phòng thu nhạc | ở nhà."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los estudios",
+        "tipVi": "Cũng chỉ | căn_hộ một phòng: | vivo en un estudio."
+      }
+    },
+    {
+      "id": "televidente",
+      "word": "televidente",
+      "shareCode": "BKV",
+      "meaningVi": "người=xem truyền_hình",
+      "defVi": "Người /theo_dõi/ | chương_trình | trên truyền_hình.",
+      "leadVi": "Đêm chung_kết, | cả=nhà | dán mắt vào /màn_hình/.",
+      "anticipateVi": "Bỏng_ngô /sẵn_sàng/ chưa?",
+      "emphasis": [
+        "theo dõi",
+        "màn hình",
+        "sẵn sàng"
+      ],
+      "pos": "noun",
+      "ipa": "/teleβiˈðente/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Ningún _____ quiere ver anuncios tan largos.",
+          "vi": "Không người=xem nào | muốn xem | quảng_cáo dài như thế."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los televidentes",
+        "tipVi": "Nam, nữ | đều là televidente: | el, la televidente."
+      }
+    },
+    {
+      "id": "juventud",
+      "word": "juventud",
+      "shareCode": "CSW",
+      "meaningVi": "tuổi_trẻ",
+      "defVi": "Quãng đời | đầy /năng_lượng/ | trước khi trưởng_thành.",
+      "leadVi": "Xem ảnh cũ, | thấy bố | thời /sinh_viên/ tóc dày.",
+      "anticipateVi": "Bố /phong_độ/ chưa?",
+      "emphasis": [
+        "năng lượng",
+        "sinh viên",
+        "phong độ"
+      ],
+      "pos": "noun",
+      "ipa": "/xuβenˈtuð/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "J",
+      "usage": [
+        {
+          "en": "Mi abuelo pasó su _____ en el campo.",
+          "vi": "Ông mình | trải_qua tuổi_trẻ | ở nông_thôn."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las juventudes"
+      }
+    },
+    {
+      "id": "prensa",
+      "word": "prensa",
+      "shareCode": "E51",
+      "meaningVi": "báo_chí",
+      "defVi": "Các tờ=báo | cùng /phóng_viên/ | đưa tin hằng_ngày.",
+      "leadVi": "Đội_tuyển về, | /máy_ảnh/ | chớp liên_hồi ở sân_bay.",
+      "anticipateVi": "Chen lên xin /chữ_ký/?",
+      "emphasis": [
+        "phóng viên",
+        "máy ảnh",
+        "chữ ký"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈpɾensa/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "La _____ hizo muchas preguntas a la cantante.",
+          "vi": "Báo_chí | hỏi nữ ca_sĩ | rất nhiều câu_hỏi."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "tipVi": "Họp báo | là rueda de prensa."
+      }
+    },
+    {
+      "id": "respeto",
+      "word": "respeto",
+      "shareCode": "THW",
+      "meaningVi": "sự tôn_trọng",
+      "defVi": "Thái_độ /coi_trọng/, | cư_xử đúng_mực | với người khác.",
+      "leadVi": "Gặp thầy cũ, | mình cúi chào | thật /lễ_phép/.",
+      "anticipateVi": "Thầy /xúc_động/ chứ?",
+      "emphasis": [
+        "coi trọng",
+        "lễ phép",
+        "xúc động"
+      ],
+      "pos": "noun",
+      "ipa": "/resˈpeto/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Debemos tratar a los mayores con _____.",
+          "vi": "Mình nên | đối_xử với người lớn tuổi | bằng sự tôn_trọng."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los respetos",
+        "tipVi": "Tôn_trọng ai: | respeto por alguien."
+      }
+    },
+    {
+      "id": "divertir",
+      "word": "divertir",
+      "shareCode": "SFD",
+      "meaningVi": "làm vui",
+      "defVi": "Làm người khác | /vui_vẻ/, | quên đi buồn_chán.",
+      "leadVi": "Tiệc lớp, | bạn diễn | /ảo_thuật/ cho cả=lớp cười.",
+      "anticipateVi": "Lộ /mánh_lới/ không?",
+      "emphasis": [
+        "vui vẻ",
+        "ảo thuật",
+        "mánh lới"
+      ],
+      "pos": "verb",
+      "ipa": "/diβeɾˈtiɾ/",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Mi hermano sabe _____ a todos con sus historias.",
+          "vi": "Anh mình | biết cách làm mọi=người vui | bằng những câu_chuyện."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "e → ie : divierto",
+          "tiempos": {
+            "presente": "yo divierto",
+            "pretérito": "él divirtió",
+            "participio": "divertido",
+            "gerundio": "divirtiendo"
+          }
+        },
+        "tipVi": "Tự thấy vui | là divertirse: | me divierto mucho."
+      }
+    },
+    {
+      "id": "academico",
+      "word": "académico",
+      "shareCode": "A35",
+      "meaningVi": "học_thuật",
+      "defVi": "Liên_quan việc học | và /nghiên_cứu/ | ở trường.",
+      "leadVi": "Năm nhất, | mình tập | viết /tiểu_luận/ có trích nguồn.",
+      "anticipateVi": "/Trình_bày/ chuẩn chưa?",
+      "emphasis": [
+        "nghiên cứu",
+        "tiểu luận",
+        "Trình bày"
+      ],
+      "pos": "adj",
+      "ipa": "/akaˈðemiko/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Este año quiero mejorar mis resultados _____.",
+          "vi": "Năm nay | mình muốn cải_thiện | kết_quả học_tập."
+        }
+      ],
+      "grammar": {
+        "feminine": "académica",
+        "plural": "académicos / académicas",
+        "serEstar": "Thường dùng ser: | es un texto académico."
+      }
+    },
+    {
+      "id": "avanzado",
+      "word": "avanzado",
+      "shareCode": "BJH",
+      "meaningVi": "nâng_cao",
+      "defVi": "Ở /trình_độ/ cao, | vượt mức cơ_bản.",
+      "leadVi": "Lên lớp mười một, | mình chọn | lớp toán /chuyên_sâu/.",
+      "anticipateVi": "/Bài_tập/ khó_nhằn?",
+      "emphasis": [
+        "trình độ",
+        "chuyên sâu",
+        "Bài tập"
+      ],
+      "pos": "adj",
+      "ipa": "/aβanˈθaðo/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Este curso de inglés es para alumnos de nivel _____.",
+          "vi": "Khóa tiếng Anh này | dành cho học_viên | trình_độ nâng_cao."
+        }
+      ],
+      "grammar": {
+        "feminine": "avanzada",
+        "plural": "avanzados / avanzadas",
+        "serEstar": "Thường dùng ser: | el nivel es avanzado."
+      }
+    },
+    {
+      "id": "educativo",
+      "word": "educativo",
+      "shareCode": "FQF",
+      "meaningVi": "có tính giáo_dục",
+      "defVi": "Giúp người xem | học thêm /kiến_thức/ mới.",
+      "leadVi": "Cuối_tuần, | mình rủ em | xem chương_trình /bổ_ích/.",
+      "anticipateVi": "Vừa chơi vừa /học_hỏi/?",
+      "emphasis": [
+        "kiến thức",
+        "bổ ích",
+        "học hỏi"
+      ],
+      "pos": "adj",
+      "ipa": "/eðukaˈtiβo/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Mis padres solo compran juegos _____ para mi hermano.",
+          "vi": "Bố_mẹ mình | chỉ mua trò_chơi có tính giáo_dục | cho em trai."
+        }
+      ],
+      "grammar": {
+        "feminine": "educativa",
+        "plural": "educativos / educativas",
+        "serEstar": "Thường dùng ser: | el juego es educativo.",
+        "tipVi": "Educativo là giúp học; | educado là lịch_sự."
+      }
+    },
+    {
+      "id": "primario",
+      "word": "primario",
+      "shareCode": "8AB",
+      "meaningVi": "chủ_yếu",
+      "defVi": "/Quan_trọng/ nhất, | đứng ở | vị_trí hàng_đầu.",
+      "leadVi": "Chọn ngành, | mình coi | /đam_mê/ là điều trước_hết.",
+      "anticipateVi": "/Lương_bổng/ để sau?",
+      "emphasis": [
+        "Quan trọng",
+        "đam mê",
+        "Lương bổng"
+      ],
+      "pos": "adj",
+      "ipa": "/pɾiˈmaɾjo/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "El objetivo _____ del club es ayudar a los estudiantes nuevos.",
+          "vi": "Mục_tiêu chủ_yếu | của câu_lạc_bộ | là giúp sinh_viên mới."
+        }
+      ],
+      "grammar": {
+        "feminine": "primaria",
+        "plural": "primarios / primarias",
+        "serEstar": "Thường dùng ser: | el objetivo es primario.",
+        "tipVi": "Trường tiểu_học | là escuela primaria."
+      }
+    },
+    {
+      "id": "secundario",
+      "word": "secundario",
+      "shareCode": "WZ4",
+      "meaningVi": "thứ_yếu",
+      "defVi": "Không phải /chủ_chốt/, | chỉ đứng | sau điều chính.",
+      "leadVi": "Ôn thi, | mình xếp | /môn_phụ/ xuống cuối_cùng.",
+      "anticipateVi": "Mong /trúng_tủ/ à?",
+      "emphasis": [
+        "chủ chốt",
+        "môn phụ",
+        "trúng tủ"
+      ],
+      "pos": "adj",
+      "ipa": "/sekunˈdaɾjo/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "En la película, él tiene un papel _____.",
+          "vi": "Trong phim, | anh=ấy | đóng vai phụ."
+        }
+      ],
+      "grammar": {
+        "feminine": "secundaria",
+        "plural": "secundarios / secundarias",
+        "serEstar": "Thường dùng ser: | es un papel secundario.",
+        "tipVi": "Tác_dụng phụ | là efectos secundarios."
+      }
+    },
+    {
+      "id": "campus",
+      "word": "campus",
+      "shareCode": "A5H",
+      "meaningVi": "khuôn_viên trường",
+      "defVi": "Đất, nhà, sân_bãi | thuộc một /đại_học/ lớn.",
+      "leadVi": "Ngày nhập_học, | mình lạc | giữa hai dãy /giảng_đường/.",
+      "anticipateVi": "Mở /định_vị/ chưa?",
+      "emphasis": [
+        "đại học",
+        "giảng đường",
+        "định vị"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈkampus/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "La biblioteca está en el centro del _____.",
+          "vi": "Thư_viện | nằm giữa | khuôn_viên trường."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los campus",
+        "tipVi": "Số nhiều | không đổi: | los campus."
+      }
+    },
+    {
+      "id": "definicion",
+      "word": "definición",
+      "shareCode": "8WZ",
+      "meaningVi": "định_nghĩa",
+      "defVi": "Lời /giải_thích/ | ý_nghĩa của một từ.",
+      "leadVi": "Gặp từ mới, | mình mở /từ_điển/ | tra ngay.",
+      "anticipateVi": "/Ghi_chép/ vào sổ chưa?",
+      "emphasis": [
+        "giải thích",
+        "từ điển",
+        "Ghi chép"
+      ],
+      "pos": "noun",
+      "ipa": "/definiˈθjon/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Busca la _____ de esta palabra en el diccionario.",
+          "vi": "Hãy tra | định_nghĩa của từ này | trong từ_điển."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las definiciones"
+      }
+    },
+    {
+      "id": "diagrama",
+      "word": "diagrama",
+      "shareCode": "TV9",
+      "meaningVi": "sơ_đồ",
+      "defVi": "Hình vẽ /minh_họa/ | cho thấy | cách mọi thứ vận_hành.",
+      "leadVi": "Học sinh_học, | mình vẽ | vòng /tuần_hoàn/ của nước.",
+      "anticipateVi": "/Bút_màu/ đủ chưa?",
+      "emphasis": [
+        "minh họa",
+        "tuần hoàn",
+        "Bút màu"
+      ],
+      "pos": "noun",
+      "ipa": "/djaˈɣɾama/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "El _____ explica cómo crece una planta.",
+          "vi": "Sơ_đồ | cho thấy | cây lớn lên thế=nào."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los diagramas",
+        "tipVi": "Tận_cùng -a | nhưng giống đực: | el diagrama."
+      }
+    },
+    {
+      "id": "laboratorio",
+      "word": "laboratorio",
+      "shareCode": "7BP",
+      "meaningVi": "phòng thí_nghiệm",
+      "defVi": "Căn_phòng có /dụng_cụ/ | để làm thí_nghiệm.",
+      "leadVi": "Giờ hóa, | mình đeo | kính bảo_hộ, /găng_tay/.",
+      "anticipateVi": "Ống_nghiệm /sủi_bọt/?",
+      "emphasis": [
+        "dụng cụ",
+        "găng tay",
+        "sủi bọt"
+      ],
+      "pos": "noun",
+      "ipa": "/laβoɾaˈtoɾjo/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "L",
+      "usage": [
+        {
+          "en": "Hoy tenemos clase de química en el _____.",
+          "vi": "Hôm_nay | tụi=mình học hóa | trong phòng thí_nghiệm."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los laboratorios"
+      }
+    },
+    {
+      "id": "porcentaje",
+      "word": "porcentaje",
+      "shareCode": "9MR",
+      "meaningVi": "tỷ_lệ phần_trăm",
+      "defVi": "Phần tính trên | /tổng_số/ | quy về một trăm.",
+      "leadVi": "Làm khảo_sát, | mình thấy | /đa_số/ bạn thức_khuya.",
+      "anticipateVi": "Vẽ /biểu_đồ/ tròn?",
+      "emphasis": [
+        "tổng số",
+        "đa số",
+        "biểu đồ"
+      ],
+      "pos": "noun",
+      "ipa": "/poɾθenˈtaxe/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Un _____ alto de alumnos aprobó el examen.",
+          "vi": "Tỷ_lệ học_sinh | qua bài kiểm_tra | khá cao."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los porcentajes",
+        "tipVi": "Tận_cùng -aje | là giống đực: | el porcentaje."
+      }
+    },
+    {
+      "id": "titulacion",
+      "word": "titulación",
+      "shareCode": "BX4",
+      "meaningVi": "bằng_cấp",
+      "defVi": "Giấy_tờ /chứng_nhận/ | mình đã học | đủ trình_độ.",
+      "leadVi": "Xin dạy thêm, | mình nộp | /chứng_chỉ/ tiếng Anh.",
+      "anticipateVi": "/Phỏng_vấn/ khi nào?",
+      "emphasis": [
+        "chứng nhận",
+        "chứng chỉ",
+        "Phỏng vấn"
+      ],
+      "pos": "noun",
+      "ipa": "/titulaˈθjon/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "work"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Para este trabajo necesitas una _____ de profesor.",
+          "vi": "Công_việc này | cần bằng sư_phạm."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las titulaciones"
+      }
+    },
+    {
+      "id": "estadistica",
+      "word": "estadística",
+      "shareCode": "GXR",
+      "meaningVi": "số_liệu thống_kê",
+      "defVi": "Con số /thu_thập/ | để mô_tả | một hiện_tượng.",
+      "leadVi": "Thuyết_trình, | mình dẫn | lượng /rác_thải/ nhựa mỗi=năm.",
+      "anticipateVi": "/Khán_phòng/ ồ lên?",
+      "emphasis": [
+        "thu thập",
+        "rác thải",
+        "Khán phòng"
+      ],
+      "pos": "noun",
+      "ipa": "/estaˈðistika/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Esta _____ muestra que más gente va en bici.",
+          "vi": "Số_liệu này | cho thấy | nhiều người đạp=xe hơn."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las estadísticas",
+        "tipVi": "Môn học | cũng là la estadística."
+      }
+    },
+    {
+      "id": "resumen",
+      "word": "resumen",
+      "shareCode": "BAK",
+      "meaningVi": "bản tóm_tắt",
+      "defVi": "Phần ngắn_gọn | nêu /ý_chính/ của bài.",
+      "leadVi": "Không kịp đọc, | mình nhờ bạn | gửi /dàn_ý/.",
+      "anticipateVi": "/Gạch_chân/ ý chính?",
+      "emphasis": [
+        "ý chính",
+        "dàn ý",
+        "Gạch chân"
+      ],
+      "pos": "noun",
+      "ipa": "/reˈsumen/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Escribe un _____ corto del cuento.",
+          "vi": "Hãy viết | bản tóm_tắt ngắn | của câu_chuyện."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los resúmenes",
+        "tipVi": "Số nhiều | thêm dấu: | los resúmenes."
+      }
+    },
+    {
+      "id": "teoria",
+      "word": "teoría",
+      "shareCode": "738",
+      "meaningVi": "lý_thuyết",
+      "defVi": "Hệ_thống /ý_tưởng/ | giải_thích | một hiện_tượng.",
+      "leadVi": "Học bơi, | mình đọc sách | trước khi /thực_hành/.",
+      "anticipateVi": "/Xuống_nước/ mới run?",
+      "emphasis": [
+        "ý tưởng",
+        "thực hành",
+        "Xuống nước"
+      ],
+      "pos": "noun",
+      "ipa": "/teoˈɾia/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Su _____ sobre el clima resultó correcta.",
+          "vi": "Lý_thuyết của ông=ấy | về khí_hậu | hóa_ra đúng."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las teorías",
+        "tipVi": "Theo lý_thuyết | là en teoría."
+      }
+    },
+    {
+      "id": "graduar",
+      "word": "graduar",
+      "shareCode": "4K8",
+      "meaningVi": "tốt_nghiệp",
+      "defVi": "/Hoàn_thành/ chương_trình học | rồi nhận bằng.",
+      "leadVi": "Sau bốn năm, | mình khoác | áo /cử_nhân/ chụp=ảnh.",
+      "anticipateVi": "Đơn /xin_việc/ gửi đâu?",
+      "emphasis": [
+        "Hoàn thành",
+        "cử nhân",
+        "xin việc"
+      ],
+      "pos": "verb",
+      "ipa": "/ɡɾaˈðwaɾ/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "Mi hermana se va a _____ en junio.",
+          "vi": "Chị mình | sẽ tốt_nghiệp | vào tháng sáu."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "raíz": "u → ú : me gradúo",
+          "tiempos": {
+            "presente": "yo me gradúo",
+            "pretérito": "él se graduó",
+            "participio": "graduado",
+            "gerundio": "graduándose"
+          }
+        },
+        "reflexive": "graduarse",
+        "governs": "en + sustantivo",
+        "tipVi": "Có dấu | ở ngôi yo: | me gradúo en junio."
+      }
+    },
+    {
+      "id": "resaltar",
+      "word": "resaltar",
+      "shareCode": "PAA",
+      "meaningVi": "làm nổi_bật",
+      "defVi": "/Đánh_dấu/ | phần quan_trọng | cho dễ nhìn thấy.",
+      "leadVi": "Ôn sinh_học, | mình tô | bút /dạ_quang/ vàng.",
+      "anticipateVi": "Kín trang /vàng_chóe/?",
+      "emphasis": [
+        "Đánh dấu",
+        "dạ quang",
+        "vàng chóe"
+      ],
+      "pos": "verb",
+      "ipa": "/resalˈtaɾ/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "El profesor quiere _____ las ideas más importantes del texto.",
+          "vi": "Thầy muốn | làm nổi_bật | những ý quan_trọng nhất của bài."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo resalto",
+            "pretérito": "él resaltó",
+            "participio": "resaltado",
+            "gerundio": "resaltando"
+          }
+        }
+      }
+    },
+    {
+      "id": "educar",
+      "word": "educar",
+      "shareCode": "P2H",
+      "meaningVi": "giáo_dục",
+      "defVi": "Dạy_dỗ, | /rèn_luyện/ | để người khác trưởng_thành.",
+      "leadVi": "Dự_án nhóm, | mình hướng_dẫn | cả=xóm /phân_loại/ rác.",
+      "anticipateVi": "Cả khu /hưởng_ứng/ chứ?",
+      "emphasis": [
+        "rèn luyện",
+        "phân loại",
+        "hưởng ứng"
+      ],
+      "pos": "verb",
+      "ipa": "/eðuˈkaɾ/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Los padres quieren _____ bien a sus hijos.",
+          "vi": "Bố_mẹ nào cũng | muốn giáo_dục con | thật tốt."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo educo",
+            "pretérito": "él educó",
+            "participio": "educado",
+            "gerundio": "educando"
+          }
+        },
+        "tipVi": "Quá_khứ yo | đổi c thành qu: | yo eduqué."
+      }
+    },
+    {
+      "id": "examinar",
+      "word": "examinar",
+      "shareCode": "D2D",
+      "meaningVi": "xem_xét kỹ",
+      "defVi": "Nhìn thật /cẩn_thận/ | để tìm ra | từng chi_tiết nhỏ.",
+      "leadVi": "Trước kỳ thi, | thầy /kiểm_tra/ | từng trang vở ghi.",
+      "anticipateVi": "Liệu có /đáng_ngại/ không?",
+      "emphasis": [
+        "cẩn thận",
+        "kiểm tra",
+        "đáng ngại"
+      ],
+      "pos": "verb",
+      "ipa": "/eksamiˈnaɾ/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "health"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "El médico va a _____ tu garganta.",
+          "vi": "Bác_sĩ sẽ | khám họng cho bạn."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo examino",
+            "pretérito": "él examinó",
+            "participio": "examinado",
+            "gerundio": "examinando"
+          }
+        },
+        "tipVi": "Khám bệnh | cũng dùng examinar: | examinar a un paciente."
+      }
+    },
+    {
+      "id": "repasar",
+      "word": "repasar",
+      "shareCode": "90F",
+      "meaningVi": "ôn_tập",
+      "defVi": "/Ôn_luyện/ lại | bài đã học | trước ngày kiểm_tra.",
+      "leadVi": "Tuần thi, | mình /học_thuộc/ | công_thức dán khắp bàn.",
+      "anticipateVi": "Kịp /đề_cương/ chưa?",
+      "emphasis": [
+        "Ôn luyện",
+        "học thuộc",
+        "đề cương"
+      ],
+      "pos": "verb",
+      "ipa": "/repaˈsaɾ/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Esta noche tengo que _____ para el examen de mañana.",
+          "vi": "Tối nay | mình phải ôn_tập | cho bài thi ngày_mai."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo repaso",
+            "pretérito": "él repasó",
+            "participio": "repasado",
+            "gerundio": "repasando"
+          }
+        },
+        "tipVi": "Ôn bài | là repasar; | revisar là kiểm_tra lại."
+      }
+    },
+    {
+      "id": "ia",
+      "word": "IA",
+      "shareCode": "RBP",
+      "meaningVi": "trí_tuệ nhân_tạo",
+      "defVi": "Máy_tính | biết học | và /suy_luận/ gần giống người.",
+      "leadVi": "Bí ý_tưởng, | mình nhờ | /trợ_lý/ ảo gợi dàn_ý.",
+      "anticipateVi": "Chép /nguyên_văn/ à?",
+      "emphasis": [
+        "suy luận",
+        "trợ lý",
+        "nguyên văn"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈia/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 2,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "La _____ puede escribir un correo en pocos segundos.",
+          "vi": "Trí_tuệ nhân_tạo | viết xong một bức thư | trong vài giây."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las IA",
+        "tipVi": "Viết_tắt | của inteligencia artificial, | giống cái: | la IA."
+      }
+    },
+    {
+      "id": "pila",
+      "word": "pila",
+      "shareCode": "3H0",
+      "meaningVi": "pin",
+      "defVi": "Vật /tích_trữ/ điện | để đồ_dùng | chạy được lâu.",
+      "leadVi": "Đồng_hồ treo tường | đứng kim, | chắc /cạn_kiệt/ rồi.",
+      "anticipateVi": "Lắp /ngược_chiều/ à?",
+      "emphasis": [
+        "tích trữ",
+        "cạn kiệt",
+        "ngược chiều"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈpila/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 4,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Mi reloj no funciona; necesita una _____ nueva.",
+          "vi": "Đồng_hồ của=mình | không chạy, | cần thay pin mới."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las pilas",
+        "tipVi": "Pin điện_thoại | thường gọi là batería; | pila là pin tiểu."
+      }
+    },
+    {
+      "id": "contenido",
+      "word": "contenido",
+      "shareCode": "2PE",
+      "meaningVi": "nội_dung",
+      "defVi": "Phần chữ, | hình_ảnh | được /đăng_tải/ trên mạng.",
+      "leadVi": "Lập kênh nấu_ăn, | bạn nghĩ | /chủ_đề/ đăng mỗi=tuần.",
+      "anticipateVi": "Cạn /ý_tưởng/ chưa?",
+      "emphasis": [
+        "đăng tải",
+        "chủ đề",
+        "ý tưởng"
+      ],
+      "pos": "noun",
+      "ipa": "/konteˈnido/",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "study"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "El _____ de este curso es muy útil para los estudiantes.",
+          "vi": "Nội_dung | khóa_học này | rất bổ_ích cho sinh_viên."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los contenidos"
+      }
+    },
+    {
+      "id": "archivo",
+      "word": "archivo",
+      "shareCode": "BVG",
+      "meaningVi": "tệp_tin",
+      "defVi": "Gói /dữ_liệu/ | được lưu | trong máy_tính.",
+      "leadVi": "Nộp bài trực_tuyến, | mình /đính_kèm/ | bản báo_cáo.",
+      "anticipateVi": "Gửi nhầm /bản_nháp/?",
+      "emphasis": [
+        "dữ liệu",
+        "đính kèm",
+        "bản nháp"
+      ],
+      "pos": "noun",
+      "ipa": "/aɾˈtʃiβo/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Guarda el _____ antes de apagar el ordenador.",
+          "vi": "Lưu tệp lại | trước khi tắt máy_tính."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los archivos",
+        "tipVi": "Đính_kèm tệp | là adjuntar un archivo."
+      }
+    },
+    {
+      "id": "teclado",
+      "word": "teclado",
+      "shareCode": "3KX",
+      "meaningVi": "bàn_phím",
+      "defVi": "Bộ /nút_bấm/ | có chữ, số | để gõ vào máy.",
+      "leadVi": "Làm=bài đêm, | mình gõ | /lách_cách/ khắp phòng.",
+      "anticipateVi": "Bạn cùng phòng /trằn_trọc/?",
+      "emphasis": [
+        "nút bấm",
+        "lách cách",
+        "trằn trọc"
+      ],
+      "pos": "noun",
+      "ipa": "/teˈklado/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Escribo más rápido con este _____ nuevo.",
+          "vi": "Mình gõ nhanh hơn | với bàn_phím mới này."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los teclados"
+      }
+    },
+    {
+      "id": "podcast",
+      "word": "podcast",
+      "shareCode": "252",
+      "meaningVi": "chương_trình nghe",
+      "defVi": "Chương_trình /âm_thanh/ | phát trên mạng | theo từng kỳ.",
+      "leadVi": "Chạy_bộ sáng, | mình nghe | hai người /trò_chuyện/ về sách.",
+      "anticipateVi": "Bật /tốc_độ/ gấp đôi?",
+      "emphasis": [
+        "âm thanh",
+        "trò chuyện",
+        "tốc độ"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈpodkast/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Escucho un _____ sobre ciencia cuando voy en autobús.",
+          "vi": "Mình nghe | chương_trình khoa_học | khi đi xe_buýt."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los podcasts",
+        "tipVi": "Số_nhiều | thêm s: | los podcasts."
+      }
+    },
+    {
+      "id": "impresion",
+      "word": "impresión",
+      "shareCode": "TXM",
+      "meaningVi": "việc in_ấn",
+      "defVi": "Việc đưa chữ, | hình_ảnh lên giấy | bằng /máy_in/.",
+      "leadVi": "Sát giờ nộp, | mình chờ | tiệm /phô_tô/ chạy đồ_án.",
+      "anticipateVi": "Mực in /nhòe_nhoẹt/ à?",
+      "emphasis": [
+        "máy in",
+        "phô tô",
+        "nhòe nhoẹt"
+      ],
+      "pos": "noun",
+      "ipa": "/impɾeˈsjon/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "La _____ del libro tarda dos semanas.",
+          "vi": "In cuốn=sách này | mất hai tuần."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las impresiones",
+        "tipVi": "Cũng nghĩa | ấn_tượng: | dar buena impresión."
+      }
+    },
+    {
+      "id": "robot",
+      "word": "robot",
+      "shareCode": "YZA",
+      "meaningVi": "người_máy",
+      "defVi": "Cỗ máy /tự_động/ | làm_việc | theo chương_trình cài sẵn.",
+      "leadVi": "Cuộc thi trường, | đội mình | /lập_trình/ xe dò đường.",
+      "anticipateVi": "Bị /trục_trặc/ giữa_chừng?",
+      "emphasis": [
+        "tự động",
+        "lập trình",
+        "trục trặc"
+      ],
+      "pos": "noun",
+      "ipa": "/roˈβot/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "En la fábrica, un _____ hace el trabajo más difícil.",
+          "vi": "Trong nhà_máy, | một người_máy | làm việc khó nhất."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los robots"
+      }
+    },
+    {
+      "id": "software",
+      "word": "software",
+      "shareCode": "1F8",
+      "meaningVi": "phần_mềm",
+      "defVi": "/Chương_trình/ chạy | trên máy_tính, | điện_thoại.",
+      "leadVi": "Làm đồ_án, | mình cài | /ứng_dụng/ dựng phim mới.",
+      "anticipateVi": "Ổ cứng /đầy_ắp/ chưa?",
+      "emphasis": [
+        "Chương trình",
+        "ứng dụng",
+        "đầy ắp"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈsofwer/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "Necesito un _____ nuevo para hacer vídeos.",
+          "vi": "Mình cần | phần_mềm mới | để dựng phim."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los software",
+        "tipVi": "Số_nhiều | giữ nguyên: | los software."
+      }
+    },
+    {
+      "id": "cinta",
+      "word": "cinta",
+      "shareCode": "BS1",
+      "meaningVi": "băng_dính",
+      "defVi": "Dải nhựa mỏng | một mặt /kết_dính/ | để dán đồ.",
+      "leadVi": "Chuyển phòng_trọ, | bạn /niêm_phong/ | từng thùng đồ.",
+      "anticipateVi": "Cái=kéo lại /biến_mất/?",
+      "emphasis": [
+        "kết dính",
+        "niêm phong",
+        "biến mất"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈθinta/",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Cierra la caja con _____ antes de enviarla.",
+          "vi": "Dán thùng | bằng băng_dính | trước khi gửi."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las cintas",
+        "tipVi": "Đầy_đủ là | cinta adhesiva; | cinta cũng là ruy_băng."
+      }
+    },
+    {
+      "id": "acceso",
+      "word": "acceso",
+      "shareCode": "RD6",
+      "meaningVi": "quyền truy_cập",
+      "defVi": "Khả_năng vào | và dùng | một /hệ_thống/ trên mạng.",
+      "leadVi": "Quên /mật_khẩu/, | em không | mở được trang học.",
+      "anticipateVi": "Bấm /khôi_phục/ thử chưa?",
+      "emphasis": [
+        "hệ thống",
+        "mật khẩu",
+        "khôi phục"
+      ],
+      "pos": "noun",
+      "ipa": "/akˈθeso/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Los estudiantes tienen _____ gratis a internet en la biblioteca.",
+          "vi": "Sinh_viên | được vào mạng | miễn_phí ở thư_viện."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los accesos",
+        "tipVi": "Vào được gì | dùng a: | tener acceso a internet."
+      }
+    },
+    {
+      "id": "actualizacion",
+      "word": "actualización",
+      "shareCode": "6C9",
+      "meaningVi": "bản cập_nhật",
+      "defVi": "Phiên_bản mới hơn, | sửa lỗi | hay thêm /tính_năng/.",
+      "leadVi": "Mở điện_thoại, | mình phải | chờ /nâng_cấp/ hệ_điều_hành.",
+      "anticipateVi": "Thanh tiến_trình /đứng_yên/ mãi?",
+      "emphasis": [
+        "tính năng",
+        "nâng cấp",
+        "đứng yên"
+      ],
+      "pos": "noun",
+      "ipa": "/aktwaliθaˈθjon/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 13,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Mi móvil necesita una _____ para funcionar mejor.",
+          "vi": "Điện_thoại mình | cần cập_nhật | để chạy tốt hơn."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las actualizaciones"
+      }
+    },
+    {
+      "id": "escanear",
+      "word": "escanear",
+      "shareCode": "996",
+      "meaningVi": "quét",
+      "defVi": "Dùng máy | đọc hình_ảnh | hay /mã_vạch/ trên giấy.",
+      "leadVi": "Thanh_toán ở căng_tin, | mình đưa máy | /nhận_diện/ mã.",
+      "anticipateVi": "/Thanh_toán/ xong liền?",
+      "emphasis": [
+        "mã vạch",
+        "nhận diện",
+        "Thanh toán"
+      ],
+      "pos": "verb",
+      "ipa": "/eskaneˈaɾ/",
+      "topic": "technology",
+      "topics": [
+        "technology"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Puedes _____ el código con tu móvil.",
+          "vi": "Bạn có_thể | quét mã | bằng điện_thoại."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo escaneo",
+            "pretérito": "él escaneó",
+            "participio": "escaneado",
+            "gerundio": "escaneando"
+          }
+        }
+      }
+    },
+    {
+      "id": "complejo",
+      "word": "complejo",
+      "shareCode": "STA",
+      "meaningVi": "phức_tạp",
+      "defVi": "Gồm nhiều phần | /đan_xen/ nhau, | khó hiểu hay khó làm.",
+      "leadVi": "Đề toán cuối=kỳ | /rắc_rối/, | cả=lớp ngồi im.",
+      "anticipateVi": "Cần thêm /gợi_ý/ không?",
+      "emphasis": [
+        "đan xen",
+        "rắc rối",
+        "gợi ý"
+      ],
+      "pos": "adj",
+      "ipa": "/komˈplexo/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Este problema de matemáticas es más _____ de lo que parece.",
+          "vi": "Bài toán này | phức_tạp hơn | mình tưởng."
+        }
+      ],
+      "grammar": {
+        "feminine": "compleja",
+        "plural": "complejos / complejas",
+        "serEstar": "Thường dùng ser: | el problema es complejo."
+      }
+    },
+    {
+      "id": "imaginario",
+      "word": "imaginario",
+      "shareCode": "WZS",
+      "meaningVi": "không có thật",
+      "defVi": "Chỉ /tồn_tại/ | trong đầu_óc | con_người.",
+      "leadVi": "Hồi nhỏ, | mình có | một người bạn /vô_hình/.",
+      "anticipateVi": "Giờ còn /trò_chuyện/ không?",
+      "emphasis": [
+        "tồn tại",
+        "vô hình",
+        "trò chuyện"
+      ],
+      "pos": "adj",
+      "ipa": "/imaxiˈnaɾjo/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "Esta historia pasa en un mundo _____ lleno de animales que hablan.",
+          "vi": "Câu_chuyện này | diễn ra trong | một thế_giới tưởng_tượng | đầy thú biết nói."
+        }
+      ],
+      "grammar": {
+        "feminine": "imaginaria",
+        "plural": "imaginarios / imaginarias",
+        "serEstar": "Thường dùng ser: | es un mundo imaginario."
+      }
+    },
+    {
+      "id": "analisis",
+      "word": "análisis",
+      "shareCode": "NQX",
+      "meaningVi": "sự phân_tích",
+      "defVi": "Việc /mổ_xẻ/ vấn_đề | để hiểu sâu | từng phần.",
+      "leadVi": "Sau trận thua, | đội /đánh_giá/ | lại từng pha=bóng.",
+      "anticipateVi": "Lỗi ở /hàng_thủ/?",
+      "emphasis": [
+        "mổ xẻ",
+        "đánh giá",
+        "hàng thủ"
+      ],
+      "pos": "noun",
+      "ipa": "/aˈnalisis/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Hicimos un _____ de los resultados del examen.",
+          "vi": "Tụi mình | phân_tích | kết_quả bài thi."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los análisis",
+        "tipVi": "Số_nhiều | giữ nguyên: | los análisis."
+      }
+    },
+    {
+      "id": "creencia",
+      "word": "creencia",
+      "shareCode": "Z47",
+      "meaningVi": "niềm_tin",
+      "defVi": "Điều mình | luôn cho là | /đúng_đắn/ và có thật.",
+      "leadVi": "Thua ba trận, | cả=đội vẫn | /tin_tưởng/ chiến_thắng.",
+      "anticipateVi": "Trận cuối /ngược_dòng/?",
+      "emphasis": [
+        "đúng đắn",
+        "tin tưởng",
+        "ngược dòng"
+      ],
+      "pos": "noun",
+      "ipa": "/kɾeˈenθja/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Tengo la _____ de que el esfuerzo siempre da resultados.",
+          "vi": "Mình tin rằng | nỗ_lực | luôn mang lại kết_quả."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las creencias"
+      }
+    },
+    {
+      "id": "pista",
+      "word": "pista",
+      "shareCode": "N8F",
+      "meaningVi": "manh_mối",
+      "defVi": "/Dấu_hiệu/ nhỏ | giúp mình | tìm ra lời_giải.",
+      "leadVi": "Chơi giải_đố, | mình lần | theo từng /gợi_ý/ nhỏ.",
+      "anticipateVi": "Giải được /mật_mã/ chưa?",
+      "emphasis": [
+        "Dấu hiệu",
+        "gợi ý",
+        "mật mã"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈpista/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Dame una _____, no sé la respuesta.",
+          "vi": "Gợi_ý cho mình | một chút, | mình không biết đáp_án."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las pistas",
+        "tipVi": "Cũng nghĩa | sân, đường_băng: | pista de tenis."
+      }
+    },
+    {
+      "id": "comparacion",
+      "word": "comparación",
+      "shareCode": "ME3",
+      "meaningVi": "sự so_sánh",
+      "defVi": "Việc đặt hai thứ | gần nhau | để thấy /khác_biệt/.",
+      "leadVi": "Mua tai_nghe, | mình /cân_nhắc/ | giữa hai mẫu.",
+      "anticipateVi": "Bản /cao_cấp/ đáng tiền?",
+      "emphasis": [
+        "khác biệt",
+        "cân nhắc",
+        "cao cấp"
+      ],
+      "pos": "noun",
+      "ipa": "/kompaɾaˈθjon/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Esta _____ entre los dos móviles me ayudó a elegir.",
+          "vi": "So_sánh | hai chiếc điện_thoại | giúp mình chọn được."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las comparaciones"
+      }
+    },
+    {
+      "id": "conclusion",
+      "word": "conclusión",
+      "shareCode": "82G",
+      "meaningVi": "kết_luận",
+      "defVi": "Ý cuối_cùng | được /đúc_kết/ | sau khi xem_xét.",
+      "leadVi": "Viết nghị_luận, | mình /tổng_kết/ | ý ở đoạn cuối.",
+      "anticipateVi": "Đủ /thuyết_phục/ chưa?",
+      "emphasis": [
+        "đúc kết",
+        "tổng kết",
+        "thuyết phục"
+      ],
+      "pos": "noun",
+      "ipa": "/koŋkluˈsjon/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Después de leer todo, llegamos a una _____ clara.",
+          "vi": "Đọc xong hết, | tụi mình | đi đến kết_luận rõ_ràng."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las conclusiones",
+        "tipVi": "Đi đến kết_luận | là llegar a una conclusión."
+      }
+    },
+    {
+      "id": "inteligencia",
+      "word": "inteligencia",
+      "shareCode": "DZV",
+      "meaningVi": "trí thông_minh",
+      "defVi": "Khả_năng /học_hỏi/, | hiểu và | suy_nghĩ nhanh_nhạy.",
+      "leadVi": "Đứa bạn /sáng_dạ/, | nghe giảng | một lần là hiểu.",
+      "anticipateVi": "/Thần_đồng/ lớp mình?",
+      "emphasis": [
+        "học hỏi",
+        "sáng dạ",
+        "Thần đồng"
+      ],
+      "pos": "noun",
+      "ipa": "/inteliˈxenθja/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 12,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "Algunos animales muestran una gran _____.",
+          "vi": "Vài loài vật | thể_hiện | trí thông_minh cao."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las inteligencias",
+        "tipVi": "Trí_tuệ nhân_tạo | là inteligencia artificial."
+      }
+    },
+    {
+      "id": "intencion",
+      "word": "intención",
+      "shareCode": "DQM",
+      "meaningVi": "ý_định",
+      "defVi": "Điều mình | /dự_tính/ | sẽ làm trong thời_gian tới.",
+      "leadVi": "Mua thẻ tập, | anh /quyết_tâm/ | đi đều mỗi=sáng.",
+      "anticipateVi": "Giữ được /lời_hứa/ chứ?",
+      "emphasis": [
+        "dự tính",
+        "quyết tâm",
+        "lời hứa"
+      ],
+      "pos": "noun",
+      "ipa": "/intenˈθjon/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "No tengo la _____ de cambiar de trabajo.",
+          "vi": "Mình không có | ý_định | đổi việc."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las intenciones",
+        "tipVi": "Có ý_định | là tener la intención de + infinitivo."
+      }
+    },
+    {
+      "id": "misterio",
+      "word": "misterio",
+      "shareCode": "6KP",
+      "meaningVi": "điều bí_ẩn",
+      "defVi": "Chuyện khó hiểu, | chưa ai /giải_thích/ được.",
+      "leadVi": "Đồ ăn trong tủ_lạnh | /biến_mất/ | mà chẳng ai nhận.",
+      "anticipateVi": "Nghi cả /hàng_xóm/ à?",
+      "emphasis": [
+        "giải thích",
+        "biến mất",
+        "hàng xóm"
+      ],
+      "pos": "noun",
+      "ipa": "/misˈteɾjo/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "Nadie sabe la respuesta; es un _____.",
+          "vi": "Chẳng ai biết | câu trả_lời; | đó là điều bí_ẩn."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los misterios"
+      }
+    },
+    {
+      "id": "prediccion",
+      "word": "predicción",
+      "shareCode": "FVR",
+      "meaningVi": "lời dự_đoán",
+      "defVi": "Điều /tiên_đoán/ | về chuyện | sắp xảy_ra trong tương_lai.",
+      "leadVi": "Trước chung_kết, | mình /phỏng_đoán/ | đội=nhà thắng.",
+      "anticipateVi": "Đoán /chuẩn_xác/ chứ?",
+      "emphasis": [
+        "tiên đoán",
+        "phỏng đoán",
+        "chuẩn xác"
+      ],
+      "pos": "noun",
+      "ipa": "/pɾeðikˈθjon/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Mi _____ sobre el partido fue correcta.",
+          "vi": "Mình dự_đoán | trận đấu | đúng phóc."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las predicciones"
+      }
+    },
+    {
+      "id": "realidad",
+      "word": "realidad",
+      "shareCode": "KKA",
+      "meaningVi": "thực_tế",
+      "defVi": "Thế_giới | /thật_sự/ | đang có quanh ta.",
+      "leadVi": "Xem ảnh /lung_linh/, | tới nơi | mới thấy khác xa.",
+      "anticipateVi": "Ảnh /chỉnh_sửa/ quá tay?",
+      "emphasis": [
+        "thật sự",
+        "lung linh",
+        "chỉnh sửa"
+      ],
+      "pos": "noun",
+      "ipa": "/realiˈðad/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Las fotos eran bonitas, pero la _____ era diferente.",
+          "vi": "Ảnh thì đẹp, | nhưng thực_tế | lại khác."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las realidades",
+        "tipVi": "En realidad | nghĩa là | thật ra."
+      }
+    },
+    {
+      "id": "verdad",
+      "word": "verdad",
+      "shareCode": "YXM",
+      "meaningVi": "sự thật",
+      "defVi": "Điều /đúng_đắn/ | với những=gì | đã xảy_ra.",
+      "leadVi": "Làm vỡ bình hoa, | mình /thú_nhận/ | lỗi với mẹ.",
+      "anticipateVi": "Mẹ /tha_thứ/ chưa?",
+      "emphasis": [
+        "đúng đắn",
+        "thú nhận",
+        "tha thứ"
+      ],
+      "pos": "noun",
+      "ipa": "/beɾˈðad/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "V",
+      "usage": [
+        {
+          "en": "Siempre tienes que decir la _____.",
+          "vi": "Bạn luôn phải | nói sự thật."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las verdades",
+        "tipVi": "Cuối câu, ¿verdad? | nghĩa là | đúng không?"
+      }
+    },
+    {
+      "id": "contraste",
+      "word": "contraste",
+      "shareCode": "YDS",
+      "meaningVi": "sự đối_lập",
+      "defVi": "Khác_biệt /rõ_rệt/ | giữa hai thứ | đặt cạnh nhau.",
+      "leadVi": "Vẽ bìa sách, | chị /phối_màu/ | nền đen chữ vàng.",
+      "anticipateVi": "Nhìn xa /nổi_bật/?",
+      "emphasis": [
+        "rõ rệt",
+        "phối màu",
+        "nổi bật"
+      ],
+      "pos": "noun",
+      "ipa": "/konˈtɾaste/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Me gusta el _____ entre el mar azul y la arena blanca.",
+          "vi": "Mình thích | sự tương_phản | giữa biển xanh và cát trắng."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los contrastes",
+        "tipVi": "En contraste con | là trái với."
+      }
+    },
+    {
+      "id": "confundir",
+      "word": "confundir",
+      "shareCode": "XZE",
+      "meaningVi": "làm bối_rối",
+      "defVi": "Khiến người khác | /rối_trí/, | không hiểu rõ_ràng.",
+      "leadVi": "Hai bạn sinh_đôi, | mình /nhầm_lẫn/ | suốt cả=học_kỳ.",
+      "anticipateVi": "/Phân_biệt/ nhờ nốt_ruồi?",
+      "emphasis": [
+        "rối trí",
+        "nhầm lẫn",
+        "Phân biệt"
+      ],
+      "pos": "verb",
+      "ipa": "/komfunˈdiɾ/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Estas dos palabras suelen _____ a los estudiantes.",
+          "vi": "Hai từ này | hay làm | học_sinh rối."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo confundo",
+            "pretérito": "él confundió",
+            "participio": "confundido",
+            "gerundio": "confundiendo"
+          }
+        },
+        "tipVi": "Nhầm A với B | là confundir A con B."
+      }
+    },
+    {
+      "id": "definir",
+      "word": "definir",
+      "shareCode": "2CN",
+      "meaningVi": "định_nghĩa",
+      "defVi": "/Giải_nghĩa/ rõ | một từ | hay khái_niệm.",
+      "leadVi": "Thi vấn_đáp, | thầy hỏi | ý_nghĩa /thuật_ngữ/.",
+      "anticipateVi": "/Ấp_úng/ mất mấy giây?",
+      "emphasis": [
+        "Giải nghĩa",
+        "thuật ngữ",
+        "Ấp úng"
+      ],
+      "pos": "verb",
+      "ipa": "/defiˈniɾ/",
+      "topic": "thinking",
+      "topics": [
+        "thinking",
+        "study"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "¿Puedes _____ esta palabra con otras palabras?",
+          "vi": "Bạn định_nghĩa | từ này | bằng từ khác được không?"
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo defino",
+            "pretérito": "él definió",
+            "participio": "definido",
+            "gerundio": "definiendo"
+          }
+        }
+      }
+    },
+    {
+      "id": "pretender",
+      "word": "pretender",
+      "shareCode": "6P7",
+      "meaningVi": "dự_định",
+      "defVi": "Có /ý_muốn/ | làm gì | trong thời_gian tới.",
+      "leadVi": "Hè này, | bạn /dự_trù/ | học thêm khóa bơi.",
+      "anticipateVi": "/Khai_giảng/ tháng mấy?",
+      "emphasis": [
+        "ý muốn",
+        "dự trù",
+        "Khai giảng"
+      ],
+      "pos": "verb",
+      "ipa": "/pɾetenˈdeɾ/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Puedes _____ terminarlo todo hoy, pero no es fácil.",
+          "vi": "Bạn có_thể | định làm xong hết hôm_nay, | nhưng không dễ."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo pretendo",
+            "pretérito": "él pretendió",
+            "participio": "pretendido",
+            "gerundio": "pretendiendo"
+          }
+        },
+        "tipVi": "Pretender không phải | giả_vờ; | giả_vờ là fingir."
+      }
+    },
+    {
+      "id": "demostrar",
+      "word": "demostrar",
+      "shareCode": "7W6",
+      "meaningVi": "chứng_minh",
+      "defVi": "Đưa /bằng_chứng/ | cho thấy | điều gì là đúng.",
+      "leadVi": "Ai cũng nghi, | mình /thực_hành/ | cho cả=lớp xem.",
+      "anticipateVi": "Ai còn /thắc_mắc/ không?",
+      "emphasis": [
+        "bằng chứng",
+        "thực hành",
+        "thắc mắc"
+      ],
+      "pos": "verb",
+      "ipa": "/demosˈtɾaɾ/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Con este experimento podemos _____ que la teoría es correcta.",
+          "vi": "Thí_nghiệm này | giúp chứng_minh | lý_thuyết là đúng."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "o → ue : demuestro",
+          "tiempos": {
+            "presente": "yo demuestro",
+            "pretérito": "él demostró",
+            "participio": "demostrado",
+            "gerundio": "demostrando"
+          }
+        },
+        "tipVi": "Đổi o thành ue: | demuestro, nhưng demostró."
+      }
+    },
+    {
+      "id": "reflexionar",
+      "word": "reflexionar",
+      "shareCode": "Y0M",
+      "meaningVi": "suy_ngẫm",
+      "defVi": "/Nghĩ_ngợi/ thật kỹ | về những=điều | đã qua.",
+      "leadVi": "Cuối năm, | mình ngồi | /chiêm_nghiệm/ lại cả=năm.",
+      "anticipateVi": "/Thay_đổi/ được chứ?",
+      "emphasis": [
+        "Nghĩ ngợi",
+        "chiêm nghiệm",
+        "Thay đổi"
+      ],
+      "pos": "verb",
+      "ipa": "/refleksjoˈnaɾ/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Antes de decidir, necesito _____ sobre mis errores.",
+          "vi": "Trước khi quyết_định, | mình cần | suy_ngẫm về lỗi của=mình."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo reflexiono",
+            "pretérito": "él reflexionó",
+            "participio": "reflexionado",
+            "gerundio": "reflexionando"
+          }
+        },
+        "governs": "sobre + sustantivo",
+        "tipVi": "Đi với sobre; | còn reflejar | là phản_chiếu."
+      }
+    },
+    {
+      "id": "relacionar",
+      "word": "relacionar",
+      "shareCode": "JV6",
+      "meaningVi": "liên_hệ",
+      "defVi": "Nhận_thấy | sự /liên_quan/ | giữa hai điều với nhau.",
+      "leadVi": "Học sử, | mình /kết_nối/ | từng sự_kiện với nhau.",
+      "anticipateVi": "Nối /mũi_tên/ khắp trang?",
+      "emphasis": [
+        "liên quan",
+        "kết nối",
+        "mũi tên"
+      ],
+      "pos": "verb",
+      "ipa": "/relaθjoˈnaɾ/",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Es fácil _____ esta canción con el verano.",
+          "vi": "Dễ liên_tưởng | bài hát này | với mùa_hè."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo relaciono",
+            "pretérito": "él relacionó",
+            "participio": "relacionado",
+            "gerundio": "relacionando"
+          }
+        },
+        "governs": "con + sustantivo",
+        "tipVi": "Nối A với B | là relacionar A con B."
+      }
+    },
+    {
+      "id": "continuo",
+      "word": "continuo",
+      "shareCode": "GKV",
+      "meaningVi": "liên_tục",
+      "defVi": "Kéo_dài mãi, | không hề | bị /ngắt_quãng/.",
+      "leadVi": "Mưa /dầm_dề/ | suốt ba ngày, | đồ phơi chẳng khô.",
+      "anticipateVi": "Quần_áo /ẩm_mốc/ hết?",
+      "emphasis": [
+        "ngắt quãng",
+        "dầm dề",
+        "ẩm mốc"
+      ],
+      "pos": "adj",
+      "ipa": "/konˈtinwo/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "El ruido _____ de la calle no me deja dormir.",
+          "vi": "Tiếng ồn | liên_tục ngoài đường | khiến mình không ngủ được."
+        }
+      ],
+      "grammar": {
+        "feminine": "continua",
+        "plural": "continuos / continuas",
+        "serEstar": "Thường dùng ser: | el ruido es continuo.",
+        "tipVi": "Đừng nhầm | với continúo: | tôi tiếp_tục."
+      }
+    },
+    {
+      "id": "actual",
+      "word": "actual",
+      "shareCode": "E2F",
+      "meaningVi": "hiện_tại",
+      "defVi": "Đang có /hiệu_lực/ | hay diễn ra | lúc này.",
+      "leadVi": "Hỏi giá điện_thoại, | mình xem | bảng giá /cập_nhật/.",
+      "anticipateVi": "Giá /nhảy_vọt/ rồi à?",
+      "emphasis": [
+        "hiệu lực",
+        "cập nhật",
+        "nhảy vọt"
+      ],
+      "pos": "adj",
+      "ipa": "/akˈtwal/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "El precio _____ de este móvil es muy alto.",
+          "vi": "Giá hiện_tại | của điện_thoại này | rất cao."
+        }
+      ],
+      "grammar": {
+        "feminine": "actual",
+        "plural": "actuales",
+        "serEstar": "Thường dùng ser: | es el precio actual.",
+        "tipVi": "Actual là hiện_tại, | không phải thật_sự."
+      }
+    },
+    {
+      "id": "historico",
+      "word": "histórico",
+      "shareCode": "FMD",
+      "meaningVi": "trọng_đại",
+      "defVi": "Quan_trọng, | được /ghi_nhớ/ | lâu_dài về sau.",
+      "leadVi": "Đội_tuyển vô_địch, | mình xem | /khoảnh_khắc/ ấy tại sân.",
+      "anticipateVi": "Hét tới /khản_đặc/ luôn?",
+      "emphasis": [
+        "ghi nhớ",
+        "khoảnh khắc",
+        "khản đặc"
+      ],
+      "pos": "adj",
+      "ipa": "/isˈtoɾiko/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "Ganar la final fue un momento _____ para el equipo.",
+          "vi": "Thắng trận chung_kết | là khoảnh_khắc | trọng_đại của đội."
+        }
+      ],
+      "grammar": {
+        "feminine": "histórica",
+        "plural": "históricos / históricas",
+        "serEstar": "Thường dùng ser: | fue un día histórico.",
+        "tipVi": "Có h câm | ở đầu từ histórico."
+      }
+    },
+    {
+      "id": "inmediato",
+      "word": "inmediato",
+      "shareCode": "BDW",
+      "meaningVi": "ngay lập_tức",
+      "defVi": "Xảy_ra liền, | không có chút /chậm_trễ/.",
+      "leadVi": "Nhắn hỏi bài, | bạn=ấy | trả_lời /tức_thì/.",
+      "anticipateVi": "Lúc=nào cũng /trực_tuyến/?",
+      "emphasis": [
+        "chậm trễ",
+        "tức thì",
+        "trực tuyến"
+      ],
+      "pos": "adj",
+      "ipa": "/inmeˈðjato/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "I",
+      "usage": [
+        {
+          "en": "El cambio fue _____: todos lo vimos.",
+          "vi": "Thay_đổi | diễn ra tức_thì: | ai cũng thấy."
+        }
+      ],
+      "grammar": {
+        "feminine": "inmediata",
+        "plural": "inmediatos / inmediatas",
+        "serEstar": "Thường dùng ser: | la respuesta fue inmediata.",
+        "tipVi": "De inmediato | nghĩa là | ngay lập_tức."
+      }
+    },
+    {
+      "id": "ultimo",
+      "word": "último",
+      "shareCode": "GQH",
+      "meaningVi": "mới nhất",
+      "defVi": "Vừa được /ra_mắt/, | gần đây hơn | mọi phiên_bản khác.",
+      "leadVi": "Ra cửa_hàng, | mình thử | mẫu điện_thoại /đời_mới/.",
+      "anticipateVi": "Giá đắt /chóng_mặt/?",
+      "emphasis": [
+        "ra mắt",
+        "đời mới",
+        "chóng mặt"
+      ],
+      "pos": "adj",
+      "ipa": "/ˈultimo/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "Ú",
+      "usage": [
+        {
+          "en": "¿Has escuchado el _____ disco de ese grupo?",
+          "vi": "Bạn nghe | đĩa nhạc mới nhất | của nhóm đó chưa?"
+        }
+      ],
+      "grammar": {
+        "feminine": "última",
+        "plural": "últimos / últimas",
+        "serEstar": "Thường dùng ser: | es el último modelo.",
+        "tipVi": "Hay đứng trước | danh_từ, | cũng nghĩa cuối_cùng."
+      }
+    },
+    {
+      "id": "previo",
+      "word": "previo",
+      "shareCode": "N65",
+      "meaningVi": "trước đó",
+      "defVi": "Có hoặc xảy_ra | ngay trước | một /sự_việc/ khác.",
+      "leadVi": "Trước buổi phỏng_vấn, | mình /chuẩn_bị/ | kỹ từng câu.",
+      "anticipateVi": "Run tới mức /mất_ngủ/?",
+      "emphasis": [
+        "sự việc",
+        "chuẩn bị",
+        "mất ngủ"
+      ],
+      "pos": "adj",
+      "ipa": "/ˈpɾeβjo/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Para este curso no necesitas ningún conocimiento _____.",
+          "vi": "Khóa_học này | không cần | kiến_thức có trước."
+        }
+      ],
+      "grammar": {
+        "feminine": "previa",
+        "plural": "previos / previas",
+        "serEstar": "Thường dùng ser, | hay đứng sau danh_từ: | un paso previo."
+      }
+    },
+    {
+      "id": "repetido",
+      "word": "repetido",
+      "shareCode": "HBH",
+      "meaningVi": "lặp lại",
+      "defVi": "/Trùng_lặp/, | xuất_hiện | hết lần này đến lần khác.",
+      "leadVi": "Bài hát hôm_nay | phát /liên_hồi/ | trên mọi quán.",
+      "anticipateVi": "Hát /thuộc_lòng/ chưa?",
+      "emphasis": [
+        "Trùng lặp",
+        "liên hồi",
+        "thuộc lòng"
+      ],
+      "pos": "adj",
+      "ipa": "/repeˈtido/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Tengo un libro _____; ¿lo quieres?",
+          "vi": "Mình có | một cuốn=sách bị trùng; | bạn lấy không?"
+        }
+      ],
+      "grammar": {
+        "feminine": "repetida",
+        "plural": "repetidos / repetidas",
+        "serEstar": "Dùng cả ser | lẫn estar: | es repetido, | está repetido."
+      }
+    },
+    {
+      "id": "repentino",
+      "word": "repentino",
+      "shareCode": "NEA",
+      "meaningVi": "đột_ngột",
+      "defVi": "Xảy_ra nhanh, | /bất_ngờ/, | không ai kịp phản_ứng.",
+      "leadVi": "Đang đạp xe, | bạn gặp | cơn /mưa_rào/ trút xuống.",
+      "anticipateVi": "Trú dưới /mái_hiên/?",
+      "emphasis": [
+        "bất ngờ",
+        "mưa rào",
+        "mái hiên"
+      ],
+      "pos": "adj",
+      "ipa": "/repenˈtino/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "El cambio _____ del tiempo nos sorprendió en la playa.",
+          "vi": "Thời_tiết đổi đột_ngột | khiến tụi mình bất_ngờ | ở bãi biển."
+        }
+      ],
+      "grammar": {
+        "feminine": "repentina",
+        "plural": "repentinos / repentinas",
+        "serEstar": "Thường dùng ser: | el cambio fue repentino."
+      }
+    },
+    {
+      "id": "actualmente",
+      "word": "actualmente",
+      "shareCode": "TEW",
+      "meaningVi": "hiện_nay",
+      "defVi": "Vào /giai_đoạn/ | đang diễn ra | ngay lúc này.",
+      "leadVi": "Năm ba, | chị /tạm_thời/ | làm thêm ở hiệu_sách.",
+      "anticipateVi": "Lương /trang_trải/ đủ chứ?",
+      "emphasis": [
+        "giai đoạn",
+        "tạm thời",
+        "trang trải"
+      ],
+      "pos": "adv",
+      "ipa": "/aktwalˈmente/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Mi hermana _____ trabaja en una librería.",
+          "vi": "Chị mình | hiện_nay làm ở | hiệu_sách."
+        }
+      ],
+      "grammar": {
+        "tipVi": "Actualmente là hiện_nay, | không phải thật=ra."
+      }
+    },
+    {
+      "id": "frecuentemente",
+      "word": "frecuentemente",
+      "shareCode": "E13",
+      "meaningVi": "thường_xuyên",
+      "defVi": "/Liên_tục/ lặp lại, | cách nhau | không bao_lâu.",
+      "leadVi": "Mùa thi, | mình /lui_tới/ | thư_viện gần như mỗi=ngày.",
+      "anticipateVi": "/Thủ_thư/ quen mặt?",
+      "emphasis": [
+        "Liên tục",
+        "lui tới",
+        "Thủ thư"
+      ],
+      "pos": "adv",
+      "ipa": "/fɾekwenteˈmente/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 14,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "Mis abuelos nos visitan _____.",
+          "vi": "Ông_bà | thường_xuyên | ghé thăm nhà mình."
+        }
+      ],
+      "grammar": {
+        "tipVi": "Văn_nói | hay dùng | con frecuencia."
+      }
+    },
+    {
+      "id": "originalmente",
+      "word": "originalmente",
+      "shareCode": "FE1",
+      "meaningVi": "ban_đầu",
+      "defVi": "Lúc /khởi_đầu/, | trước khi | có thay_đổi.",
+      "leadVi": "Mới nhập_học, | bạn /dự_tính/ | theo ngành y.",
+      "anticipateVi": "Giờ lại /mê_mẩn/ thiết_kế?",
+      "emphasis": [
+        "khởi đầu",
+        "dự tính",
+        "mê mẩn"
+      ],
+      "pos": "adv",
+      "ipa": "/oɾixinalˈmente/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 13,
+      "initial": "O",
+      "usage": [
+        {
+          "en": "Esta casa era _____ blanca, pero ahora es azul.",
+          "vi": "Ngôi nhà này | ban_đầu màu trắng, | giờ thì xanh."
+        }
+      ]
+    },
+    {
+      "id": "anteriormente",
+      "word": "anteriormente",
+      "shareCode": "0XB",
+      "meaningVi": "trước_đây",
+      "defVi": "Ở /quá_khứ/, | trước thời_điểm | đang nói.",
+      "leadVi": "/Hồi_trước/ mình | học trường cũ, | giờ đã chuyển.",
+      "anticipateVi": "Còn /liên_lạc/ bạn xưa?",
+      "emphasis": [
+        "quá khứ",
+        "Hồi trước",
+        "liên lạc"
+      ],
+      "pos": "adv",
+      "ipa": "/anteɾjoɾˈmente/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 13,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Mi madre trabajaba _____ en un hospital.",
+          "vi": "Trước_đây | mẹ mình | làm ở bệnh_viện."
+        }
+      ]
+    },
+    {
+      "id": "regularmente",
+      "word": "regularmente",
+      "shareCode": "KC4",
+      "meaningVi": "đều_đặn",
+      "defVi": "Theo lịch /cố_định/, | lặp lại | thường_xuyên.",
+      "leadVi": "/Thói_quen/ mỗi=sáng | của mình | là chạy quanh hồ.",
+      "anticipateVi": "Thể_lực /cải_thiện/ chưa?",
+      "emphasis": [
+        "cố định",
+        "Thói quen",
+        "cải thiện"
+      ],
+      "pos": "adv",
+      "ipa": "/reɣulaɾˈmente/",
+      "topic": "time",
+      "topics": [
+        "time",
+        "health"
+      ],
+      "level": "B1",
+      "chars": 12,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Es bueno hacer ejercicio _____.",
+          "vi": "Tập_thể_dục đều_đặn | rất tốt."
+        }
+      ],
+      "grammar": {
+        "tipVi": "Cũng có nghĩa | tạm được, | bình_thường."
+      }
+    },
+    {
+      "id": "decada",
+      "word": "década",
+      "shareCode": "KHS",
+      "meaningVi": "thập_kỷ",
+      "defVi": "/Thập_niên/, | quãng thời_gian | dài mười năm.",
+      "leadVi": "/Họp_lớp/ sau mười năm, | mình suýt | không nhận ra ai.",
+      "anticipateVi": "Ai đã /thành_đạt/ rồi?",
+      "emphasis": [
+        "Thập niên",
+        "Họp lớp",
+        "thành đạt"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈdekaða/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Los precios han subido mucho en la última _____.",
+          "vi": "Giá_cả | tăng nhiều | trong thập_kỷ qua."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las décadas",
+        "tipVi": "Thập_niên 90 | là los años noventa."
+      }
+    },
+    {
+      "id": "ocasion",
+      "word": "ocasión",
+      "shareCode": "QMP",
+      "meaningVi": "dịp",
+      "defVi": "Thời_điểm | diễn ra | một /sự_kiện/ đặc_biệt.",
+      "leadVi": "Lễ /tốt_nghiệp/ của=chị, | cả nhà | diện đồ đẹp.",
+      "anticipateVi": "Ảnh /kỷ_niệm/ đẹp chứ?",
+      "emphasis": [
+        "sự kiện",
+        "tốt nghiệp",
+        "kỷ niệm"
+      ],
+      "pos": "noun",
+      "ipa": "/okaˈsjon/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "O",
+      "usage": [
+        {
+          "en": "Una boda es una _____ especial para la familia.",
+          "vi": "Đám_cưới | là dịp đặc_biệt | với cả nhà."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las ocasiones",
+        "tipVi": "De ocasión | là đồ cũ | giá hời."
+      }
+    },
+    {
+      "id": "rato",
+      "word": "rato",
+      "shareCode": "3PJ",
+      "meaningVi": "chốc_lát",
+      "defVi": "Một quãng | thời_gian /ngắn_ngủi/ | không cố_định.",
+      "leadVi": "Học mệt, | bạn /chợp_mắt/ | ngoài ban_công.",
+      "anticipateVi": "Nhớ đặt /báo_thức/ nha?",
+      "emphasis": [
+        "ngắn ngủi",
+        "chợp mắt",
+        "báo thức"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈrato/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 4,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Espera aquí un _____, ahora vuelvo.",
+          "vi": "Đợi ở đây | một lát, | mình quay lại ngay."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los ratos",
+        "tipVi": "Hay nói | un rato: | một lúc."
+      }
+    },
+    {
+      "id": "apresurar",
+      "word": "apresurar",
+      "shareCode": "6VH",
+      "meaningVi": "vội_vàng",
+      "defVi": "/Tất_bật/ làm nhanh | vì sợ | không kịp giờ.",
+      "leadVi": "Chuông reo, | mình /hối_hả/ | chạy lên cầu_thang.",
+      "anticipateVi": "Kịp /điểm_danh/ không?",
+      "emphasis": [
+        "Tất bật",
+        "hối hả",
+        "điểm danh"
+      ],
+      "pos": "verb",
+      "ipa": "/apɾesuˈɾaɾ/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Nos tenemos que _____ o vamos a perder el autobús.",
+          "vi": "Tụi mình phải | khẩn_trương | kẻo lỡ xe_buýt."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo me apresuro",
+            "pretérito": "él se apresuró",
+            "participio": "apresurado",
+            "gerundio": "apresurándose"
+          }
+        },
+        "reflexive": "apresurarse",
+        "tipVi": "Luôn có se: | me apresuro; | văn_nói | hay dùng darse prisa."
+      }
+    },
+    {
+      "id": "oriental",
+      "word": "oriental",
+      "shareCode": "RXS",
+      "meaningVi": "phía đông",
+      "defVi": "Nằm ở hướng | nơi /mặt_trời/ | mọc lên mỗi=sáng.",
+      "leadVi": "Nghỉ lễ, | cả nhóm | ra biển ngắm /bình_minh/.",
+      "anticipateVi": "Dậy từ /tinh_mơ/ à?",
+      "emphasis": [
+        "mặt trời",
+        "bình minh",
+        "tinh mơ"
+      ],
+      "pos": "adj",
+      "ipa": "/oɾjenˈtal/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "O",
+      "usage": [
+        {
+          "en": "Vivimos en la parte _____ de la ciudad.",
+          "vi": "Tụi mình sống | ở phía đông | thành_phố."
+        }
+      ],
+      "grammar": {
+        "feminine": "oriental",
+        "plural": "orientales",
+        "serEstar": "Thường dùng ser, | hay đứng sau danh_từ: | la zona oriental."
+      }
+    },
+    {
+      "id": "norteno",
+      "word": "norteño",
+      "shareCode": "CF5",
+      "meaningVi": "phía bắc",
+      "defVi": "Nằm về hướng | /la_bàn/ chỉ | khi kim đứng_yên.",
+      "leadVi": "Nghỉ đông, | mình lên | vùng núi xa ngắm /băng_tuyết/.",
+      "anticipateVi": "Áo /giữ_nhiệt/ đủ chưa?",
+      "emphasis": [
+        "la bàn",
+        "băng tuyết",
+        "giữ nhiệt"
+      ],
+      "pos": "adj",
+      "ipa": "/noɾˈteɲo/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "En el pueblo _____ hace mucho frío en invierno.",
+          "vi": "Ở ngôi làng phía bắc, | mùa_đông | rất lạnh."
+        }
+      ],
+      "grammar": {
+        "feminine": "norteña",
+        "plural": "norteños / norteñas",
+        "serEstar": "Thường dùng ser: | es un pueblo norteño."
+      }
+    },
+    {
+      "id": "remoto",
+      "word": "remoto",
+      "shareCode": "J0Y",
+      "meaningVi": "hẻo_lánh",
+      "defVi": "/Xa_xôi/, | ít người | qua lại thăm_viếng.",
+      "leadVi": "Tình_nguyện mùa_hè, | mình lên | bản /heo_hút/ trên núi.",
+      "anticipateVi": "Cả tuần /ngoại_tuyến/ à?",
+      "emphasis": [
+        "Xa xôi",
+        "heo hút",
+        "ngoại tuyến"
+      ],
+      "pos": "adj",
+      "ipa": "/reˈmoto/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Mi tía vive en un pueblo _____ de la montaña.",
+          "vi": "Dì mình sống | ở một ngôi làng | hẻo_lánh trên núi."
+        }
+      ],
+      "grammar": {
+        "feminine": "remota",
+        "plural": "remotos / remotas",
+        "serEstar": "Thường dùng ser: | es un lugar remoto.",
+        "tipVi": "Điều_khiển từ xa | là el control remoto."
+      }
+    },
+    {
+      "id": "alojamiento",
+      "word": "alojamiento",
+      "shareCode": "WE2",
+      "meaningVi": "chỗ ở",
+      "defVi": "Nơi nghỉ_ngơi | khi đi /du_lịch/ | hay công_tác.",
+      "leadVi": "Đi chơi xa, | mình đặt | phòng /nhà_nghỉ/ gần chợ.",
+      "anticipateVi": "Có /bữa_sáng/ kèm không?",
+      "emphasis": [
+        "du lịch",
+        "nhà nghỉ",
+        "bữa sáng"
+      ],
+      "pos": "noun",
+      "ipa": "/aloxaˈmjento/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "El precio incluye el _____ y la comida.",
+          "vi": "Giá đã gồm | chỗ ở | và bữa_ăn."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los alojamientos"
+      }
+    },
+    {
+      "id": "llegada",
+      "word": "llegada",
+      "shareCode": "3EE",
+      "meaningVi": "lúc đến nơi",
+      "defVi": "/Thời_điểm/ | ai đó | vừa tới nơi cần đi.",
+      "leadVi": "Tàu vừa /cập_bến/, | mình nhắn | báo mẹ ngay.",
+      "anticipateVi": "Mẹ ra cổng /chờ_đợi/?",
+      "emphasis": [
+        "Thời điểm",
+        "cập bến",
+        "chờ đợi"
+      ],
+      "pos": "noun",
+      "ipa": "/ʎeˈɣaða/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "L",
+      "usage": [
+        {
+          "en": "La _____ del tren es a las ocho.",
+          "vi": "Tàu đến | lúc tám giờ."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las llegadas",
+        "tipVi": "Trái nghĩa | là la salida."
+      }
+    },
+    {
+      "id": "atraccion",
+      "word": "atracción",
+      "shareCode": "XBY",
+      "meaningVi": "điểm tham_quan",
+      "defVi": "Nơi thú_vị | thu_hút | nhiều /du_khách/.",
+      "leadVi": "Đi biển, | anh chèo thuyền | vào /hang_động/ lung_linh.",
+      "anticipateVi": "Giá vé /đắt_đỏ/ không?",
+      "emphasis": [
+        "du khách",
+        "hang động",
+        "đắt đỏ"
+      ],
+      "pos": "noun",
+      "ipa": "/atɾakˈθjon/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "El museo es la _____ más visitada de la ciudad.",
+          "vi": "Bảo_tàng | là điểm tham_quan | đông khách nhất thành_phố."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las atracciones",
+        "tipVi": "Las atracciones | còn là | trò_chơi ở công_viên."
+      }
+    },
+    {
+      "id": "capitan",
+      "word": "capitán",
+      "shareCode": "PTB",
+      "meaningVi": "đội_trưởng",
+      "defVi": "Người đứng_đầu, | /dẫn_dắt/ | cả một đội.",
+      "leadVi": "Trước trận, | mình /hô_hào/ | đồng_đội vào sân.",
+      "anticipateVi": "Đá /phạt_đền/ luôn chứ?",
+      "emphasis": [
+        "dẫn dắt",
+        "hô hào",
+        "phạt đền"
+      ],
+      "pos": "noun",
+      "ipa": "/kapiˈtan/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Mi hermano es el _____ del equipo de fútbol.",
+          "vi": "Anh mình | là đội_trưởng | đội bóng."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los capitanes",
+        "tipVi": "Số_nhiều | mất dấu: | los capitanes."
+      }
+    },
+    {
+      "id": "salida",
+      "word": "salida",
+      "shareCode": "FC6",
+      "meaningVi": "sự khởi_hành",
+      "defVi": "Lúc /lên_đường/ | rời khỏi nơi | mình đang ở.",
+      "leadVi": "Chuyến sáu giờ, | mình ra | /sân_bay/ từ bốn giờ.",
+      "anticipateVi": "/Gật_gà/ ở cổng?",
+      "emphasis": [
+        "lên đường",
+        "sân bay",
+        "Gật gà"
+      ],
+      "pos": "noun",
+      "ipa": "/saˈliða/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "La _____ es a las nueve de la mañana.",
+          "vi": "Giờ khởi_hành | là chín giờ sáng."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las salidas",
+        "tipVi": "Cũng nghĩa | lối ra: | la salida de emergencia."
+      }
+    },
+    {
+      "id": "expedicion",
+      "word": "expedición",
+      "shareCode": "1Z2",
+      "meaningVi": "cuộc thám_hiểm",
+      "defVi": "Chuyến đi dài | có mục_đích | /khám_phá/ vùng mới.",
+      "leadVi": "Câu_lạc_bộ leo núi | /cắm_trại/ | suốt ba ngày.",
+      "anticipateVi": "Cõng /ba_lô/ nặng?",
+      "emphasis": [
+        "khám phá",
+        "cắm trại",
+        "ba lô"
+      ],
+      "pos": "noun",
+      "ipa": "/ekspeðiˈθjon/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "La _____ a la montaña duró dos semanas.",
+          "vi": "Chuyến thám_hiểm núi | kéo_dài hai tuần."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las expediciones"
+      }
+    },
+    {
+      "id": "combustible",
+      "word": "combustible",
+      "shareCode": "MJ7",
+      "meaningVi": "nhiên_liệu",
+      "defVi": "Chất được /đốt_cháy/ | để tạo | năng_lượng.",
+      "leadVi": "Đường đèo vắng, | mình canh | /bình_xăng/ sắp cạn.",
+      "anticipateVi": "Đẩy xe /vất_vả/ lắm?",
+      "emphasis": [
+        "đốt cháy",
+        "bình xăng",
+        "vất vả"
+      ],
+      "pos": "noun",
+      "ipa": "/kombusˈtiβle/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "El coche casi no tiene _____.",
+          "vi": "Xe gần hết | nhiên_liệu rồi."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los combustibles",
+        "tipVi": "Cũng là tính_từ: | dễ cháy."
+      }
+    },
+    {
+      "id": "helicoptero",
+      "word": "helicóptero",
+      "shareCode": "T2S",
+      "meaningVi": "trực_thăng",
+      "defVi": "Máy_bay | có /cánh_quạt/ lớn | quay trên nóc.",
+      "leadVi": "Ở bờ biển, | mình thấy | máy_bay /lơ_lửng/ một chỗ.",
+      "anticipateVi": "/Tiếng_ồn/ rung kính?",
+      "emphasis": [
+        "cánh quạt",
+        "lơ lửng",
+        "Tiếng ồn"
+      ],
+      "pos": "noun",
+      "ipa": "/eliˈkoptero/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "H",
+      "usage": [
+        {
+          "en": "Un _____ vuela sobre la playa.",
+          "vi": "Một chiếc trực_thăng | bay trên bãi biển."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los helicópteros",
+        "tipVi": "Từ này | có h câm ở đầu."
+      }
+    },
+    {
+      "id": "ubicacion",
+      "word": "ubicación",
+      "shareCode": "4ZJ",
+      "meaningVi": "vị_trí",
+      "defVi": "Chỗ /chính_xác/ | một nơi hay vật | đang nằm.",
+      "leadVi": "Đi sinh_nhật bạn, | mình gửi | /định_vị/ cho tài_xế.",
+      "anticipateVi": "Tài_xế /lạc_đường/ không?",
+      "emphasis": [
+        "chính xác",
+        "định vị",
+        "lạc đường"
+      ],
+      "pos": "noun",
+      "ipa": "/uβikaˈθjon/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "U",
+      "usage": [
+        {
+          "en": "El hotel tiene una _____ perfecta, cerca de la playa.",
+          "vi": "Khách_sạn | có vị_trí tuyệt_vời, | gần biển."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las ubicaciones"
+      }
+    },
+    {
+      "id": "camino",
+      "word": "camino",
+      "shareCode": "9NM",
+      "meaningVi": "lối đi",
+      "defVi": "Đường nhỏ, hẹp | dành cho | người /đi_bộ/.",
+      "leadVi": "Leo đồi chè, | mình men | theo /đường_mòn/ nhỏ.",
+      "anticipateVi": "Giày /lấm_lem/ bùn đất?",
+      "emphasis": [
+        "đi bộ",
+        "đường mòn",
+        "lấm lem"
+      ],
+      "pos": "noun",
+      "ipa": "/kaˈmino/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Sigue este _____ para llegar al lago.",
+          "vi": "Đi theo lối này | để tới hồ."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los caminos",
+        "tipVi": "En el camino | nghĩa là | trên đường đi."
+      }
+    },
+    {
+      "id": "puerto",
+      "word": "puerto",
+      "shareCode": "YFD",
+      "meaningVi": "bến_cảng",
+      "defVi": "Nơi /tàu_thuyền/ | cập bờ | để bốc hàng.",
+      "leadVi": "Ra bờ biển, | mình thấy | /cần_cẩu/ nhấc thùng hàng.",
+      "anticipateVi": "Còi tàu /inh_ỏi/ chứ?",
+      "emphasis": [
+        "tàu thuyền",
+        "cần cẩu",
+        "inh ỏi"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈpweɾto/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "El barco está en el _____ dos días.",
+          "vi": "Con=tàu | ở cảng hai ngày."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los puertos",
+        "tipVi": "Puerta là cửa; | puerto là cảng."
+      }
+    },
+    {
+      "id": "reserva",
+      "word": "reserva",
+      "shareCode": "RJ3",
+      "meaningVi": "sự đặt chỗ",
+      "defVi": "Việc /đăng_ký/ | chỗ ngồi, | phòng hay vé từ trước.",
+      "leadVi": "Sinh_nhật mẹ, | mình /liên_hệ/ | nhà_hàng giữ bàn.",
+      "anticipateVi": "Bàn cạnh /cửa_sổ/?",
+      "emphasis": [
+        "đăng ký",
+        "liên hệ",
+        "cửa sổ"
+      ],
+      "pos": "noun",
+      "ipa": "/reˈseɾβa/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Tengo una _____ para dos personas a las ocho.",
+          "vi": "Mình có | đặt bàn | cho hai người lúc tám giờ."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las reservas",
+        "tipVi": "Cũng nghĩa | dự_trữ, | khu bảo_tồn."
+      }
+    },
+    {
+      "id": "marinero",
+      "word": "marinero",
+      "shareCode": "28Z",
+      "meaningVi": "thủy_thủ",
+      "defVi": "Người làm_việc | trên tàu_thuyền | ngoài /biển_khơi/.",
+      "leadVi": "Chú mình | /lênh_đênh/ trên biển | sáu tháng mới về.",
+      "anticipateVi": "Da /rám_nắng/ hết chưa?",
+      "emphasis": [
+        "biển khơi",
+        "lênh đênh",
+        "rám nắng"
+      ],
+      "pos": "noun",
+      "ipa": "/maɾiˈneɾo/",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "work"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "M",
+      "usage": [
+        {
+          "en": "El _____ pasa muchos meses en el mar.",
+          "vi": "Người thủy_thủ | ở trên biển | nhiều tháng."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los marineros",
+        "tipVi": "Nữ là marinera."
+      }
+    },
+    {
+      "id": "neumatico",
+      "word": "neumático",
+      "shareCode": "0Z2",
+      "meaningVi": "lốp xe",
+      "defVi": "Vòng /cao_su/ | bơm hơi | bọc ngoài bánh xe.",
+      "leadVi": "Đạp xe đi học, | mình cán đinh | /xì_hơi/ giữa đường.",
+      "anticipateVi": "/Cuốc_bộ/ mấy cây_số?",
+      "emphasis": [
+        "cao su",
+        "xì hơi",
+        "Cuốc bộ"
+      ],
+      "pos": "noun",
+      "ipa": "/newˈmatiko/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "Tengo que cambiar un _____ del coche.",
+          "vi": "Mình phải thay | một lốp xe ô_tô."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los neumáticos"
+      }
+    },
+    {
+      "id": "explorar",
+      "word": "explorar",
+      "shareCode": "EZ7",
+      "meaningVi": "khám_phá",
+      "defVi": "Đi khắp nơi | để tìm_hiểu | những=vùng còn /mới_mẻ/.",
+      "leadVi": "Tới phố_cổ, | mình /lang_thang/ | khắp các hẻm nhỏ.",
+      "anticipateVi": "Gặp quán /bí_mật/ nào?",
+      "emphasis": [
+        "mới mẻ",
+        "lang thang",
+        "bí mật"
+      ],
+      "pos": "verb",
+      "ipa": "/eksploˈɾaɾ/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Hoy vamos a _____ el centro de la ciudad.",
+          "vi": "Hôm_nay | tụi mình | khám_phá trung_tâm thành_phố."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo exploro",
+            "pretérito": "él exploró",
+            "participio": "explorado",
+            "gerundio": "explorando"
+          }
+        }
+      }
+    },
+    {
+      "id": "abrochar",
+      "word": "abrochar",
+      "shareCode": "FWT",
+      "meaningVi": "cài",
+      "defVi": "Gài khuy, | khóa dây | cho thật /chắc_chắn/.",
+      "leadVi": "Máy_bay rung lắc, | mình /siết_chặt/ | dây an_toàn.",
+      "anticipateVi": "Tim đập /thình_thịch/?",
+      "emphasis": [
+        "chắc chắn",
+        "siết chặt",
+        "thình thịch"
+      ],
+      "pos": "verb",
+      "ipa": "/aβɾoˈtʃaɾ/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "En el coche, hay que _____ el cinturón siempre.",
+          "vi": "Đi ô_tô | luôn phải | thắt dây an_toàn."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo abrocho",
+            "pretérito": "él abrochó",
+            "participio": "abrochado",
+            "gerundio": "abrochando"
+          }
+        },
+        "tipVi": "Tự thắt dây | thì có se: | me abrocho el cinturón."
+      }
+    },
+    {
+      "id": "ubicar",
+      "word": "ubicar",
+      "shareCode": "2KN",
+      "meaningVi": "xác_định vị_trí",
+      "defVi": "/Xác_định/ chính_xác | nơi một vật | đang nằm.",
+      "leadVi": "Mất tai_nghe, | chị mở | /ứng_dụng/ dò thiết_bị.",
+      "anticipateVi": "Dưới /gầm_giường/ à?",
+      "emphasis": [
+        "Xác định",
+        "ứng dụng",
+        "gầm giường"
+      ],
+      "pos": "verb",
+      "ipa": "/uβiˈkaɾ/",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "U",
+      "usage": [
+        {
+          "en": "¿Puedes _____ el pueblo en este mapa?",
+          "vi": "Bạn tìm được | ngôi làng | trên bản_đồ này không?"
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo ubico",
+            "pretérito": "él ubicó",
+            "participio": "ubicado",
+            "gerundio": "ubicando"
+          }
+        },
+        "tipVi": "Quá_khứ ngôi yo | đổi c thành qu, | thành ubiqué."
+      }
+    },
+    {
+      "id": "experimentado",
+      "word": "experimentado",
+      "shareCode": "9DN",
+      "meaningVi": "có kinh_nghiệm",
+      "defVi": "Đã=làm | nhiều năm, | rất=/thành_thạo/ công_việc.",
+      "leadVi": "Làm bếp mười năm, | anh nấu món nào | cũng /điêu_luyện/.",
+      "anticipateVi": "Tay_nghề /lão_luyện/ cỡ nào?",
+      "emphasis": [
+        "thành thạo",
+        "điêu luyện",
+        "lão luyện"
+      ],
+      "pos": "adj",
+      "ipa": "/eksperimenˈtado/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 13,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Para subir esa montaña, vamos con un guía muy _____.",
+          "vi": "Để leo | ngọn núi đó, | tụi mình đi với | một hướng_dẫn_viên | rất có kinh_nghiệm."
+        }
+      ],
+      "grammar": {
+        "feminine": "experimentada",
+        "plural": "experimentados / experimentadas",
+        "serEstar": "Thường dùng ser: | es un guía experimentado.",
+        "tipVi": "Đừng nhầm | với experimental | là thử_nghiệm."
+      }
+    },
+    {
+      "id": "calificado",
+      "word": "calificado",
+      "shareCode": "DCQ",
+      "meaningVi": "đủ trình_độ",
+      "defVi": "Có bằng_cấp, | /kỹ_năng/ cần cho công_việc.",
+      "leadVi": "Tuyển gia_sư, | trung_tâm chỉ nhận | người có /chứng_chỉ/.",
+      "anticipateVi": "Dạy /dễ_hiểu/ chứ?",
+      "emphasis": [
+        "kỹ năng",
+        "chứng chỉ",
+        "dễ hiểu"
+      ],
+      "pos": "adj",
+      "ipa": "/kalifiˈkado/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "En esta escuela solo trabajan profesores _____.",
+          "vi": "Ở trường này | chỉ có | giáo_viên đủ trình_độ."
+        }
+      ],
+      "grammar": {
+        "feminine": "calificada",
+        "plural": "calificados / calificadas",
+        "serEstar": "Dùng cả ser | lẫn estar: | es calificado, | está calificado.",
+        "tipVi": "Cũng gặp dạng cualificado, | cùng một nghĩa."
+      }
+    },
+    {
+      "id": "jubilado",
+      "word": "jubilado",
+      "shareCode": "N7H",
+      "meaningVi": "đã=nghỉ_hưu",
+      "defVi": "Đã=thôi | đi=làm | vì tới /tuổi_già/.",
+      "leadVi": "Hết đi=làm, | ông /thảnh_thơi/ | tưới cây mỗi=sáng.",
+      "anticipateVi": "Tập /dưỡng_sinh/ cùng hàng_xóm?",
+      "emphasis": [
+        "tuổi già",
+        "thảnh thơi",
+        "dưỡng sinh"
+      ],
+      "pos": "adj",
+      "ipa": "/xubiˈlado/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "J",
+      "usage": [
+        {
+          "en": "Mi abuelo está _____ y ahora tiene mucho tiempo libre.",
+          "vi": "Ông mình | đã=nghỉ_hưu | và giờ có nhiều | thời_gian rảnh."
+        }
+      ],
+      "grammar": {
+        "feminine": "jubilada",
+        "plural": "jubilados / jubiladas",
+        "serEstar": "Dùng cả ser | lẫn estar: | soy jubilado, | estoy jubilado.",
+        "tipVi": "Dùng làm danh_từ được: | los jubilados del barrio."
+      }
+    },
+    {
+      "id": "desempleado",
+      "word": "desempleado",
+      "shareCode": "VM4",
+      "meaningVi": "thất_nghiệp",
+      "defVi": "Không có | /việc_làm/ | dù muốn đi=làm.",
+      "leadVi": "Công_ty đóng=cửa, | anh gửi /hồ_sơ/ | khắp nơi.",
+      "anticipateVi": "Chờ điện /phỏng_vấn/?",
+      "emphasis": [
+        "việc làm",
+        "hồ sơ",
+        "phỏng vấn"
+      ],
+      "pos": "adj",
+      "ipa": "/desempleˈado/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Mi vecino lleva tres meses _____, pero tiene una entrevista mañana.",
+          "vi": "Anh hàng_xóm | thất_nghiệp ba tháng rồi, | nhưng mai có | buổi phỏng_vấn."
+        }
+      ],
+      "grammar": {
+        "feminine": "desempleada",
+        "plural": "desempleados / desempleadas",
+        "serEstar": "Thường dùng estar: | estoy desempleado.",
+        "tipVi": "Ở nhiều nơi | còn nói parado: | estoy parado."
+      }
+    },
+    {
+      "id": "logro",
+      "word": "logro",
+      "shareCode": "FGE",
+      "meaningVi": "thành_tích",
+      "defVi": "/Thành_quả/ | đáng tự_hào | có được nhờ cố_gắng lâu.",
+      "leadVi": "Tổng_kết năm, | mình nhận | /giấy_khen/ học_sinh giỏi.",
+      "anticipateVi": "Treo ngay /phòng_khách/?",
+      "emphasis": [
+        "Thành quả",
+        "giấy khen",
+        "phòng khách"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈloɣɾo/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "L",
+      "usage": [
+        {
+          "en": "Aprobar todos los exámenes fue un gran _____ para mí.",
+          "vi": "Qua hết | mọi bài thi | là một thành_tích lớn | với mình."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los logros",
+        "tipVi": "Động_từ cùng gốc | là lograr: | lograr un sueño."
+      }
+    },
+    {
+      "id": "agente",
+      "word": "agente",
+      "shareCode": "W1C",
+      "meaningVi": "người đại_diện",
+      "defVi": "Người /trung_gian/ | lo việc | giúp khách_hàng.",
+      "leadVi": "Tìm phòng_trọ, | mình nhờ | /môi_giới/ dẫn đi xem.",
+      "anticipateVi": "Phí /dịch_vụ/ bao_nhiêu?",
+      "emphasis": [
+        "trung gian",
+        "môi giới",
+        "dịch vụ"
+      ],
+      "pos": "noun",
+      "ipa": "/aˈxente/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "El _____ de viajes nos encontró un hotel barato cerca de la playa.",
+          "vi": "Người bên | đại_lý du_lịch | tìm cho tụi mình | khách_sạn rẻ gần biển."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los agentes",
+        "tipVi": "Đàn_ông | hay phụ_nữ | đều nói agente: | el agente, la agente."
+      }
+    },
+    {
+      "id": "competidor",
+      "word": "competidor",
+      "shareCode": "YKV",
+      "meaningVi": "đối_thủ",
+      "defVi": "Người cùng /tranh_tài/ | để giành giải | hay khách_hàng.",
+      "leadVi": "Vòng chung_kết, | bạn /đối_đầu/ | đội mạnh trường bên.",
+      "anticipateVi": "/Ganh_đua/ sòng_phẳng?",
+      "emphasis": [
+        "tranh tài",
+        "đối đầu",
+        "Ganh đua"
+      ],
+      "pos": "noun",
+      "ipa": "/kompetiˈðoɾ/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "Ese _____ corre muy rápido y va a ser difícil ganar.",
+          "vi": "Đối_thủ đó | chạy rất nhanh, | khó mà thắng."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los competidores",
+        "tipVi": "Nữ là competidora: | una competidora fuerte."
+      }
+    },
+    {
+      "id": "deber",
+      "word": "deber",
+      "shareCode": "45Y",
+      "meaningVi": "bổn_phận",
+      "defVi": "Việc mình phải làm | theo /nghĩa_vụ/ được giao.",
+      "leadVi": "/Trực_nhật/ hôm_nay, | mình lau bảng, | kê lại bàn.",
+      "anticipateVi": "Bảng đã /sạch_sẽ/ chưa?",
+      "emphasis": [
+        "nghĩa vụ",
+        "Trực nhật",
+        "sạch sẽ"
+      ],
+      "pos": "noun",
+      "ipa": "/deˈβeɾ/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "Estudiar es el primer _____ de un estudiante.",
+          "vi": "Học là | bổn_phận đầu_tiên | của học_sinh."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los deberes",
+        "tipVi": "Số nhiều los deberes | còn là | bài_tập về nhà."
+      }
+    },
+    {
+      "id": "esfuerzo",
+      "word": "esfuerzo",
+      "shareCode": "977",
+      "meaningVi": "nỗ_lực",
+      "defVi": "Sức_lực mình dồn vào | để /cố_gắng/ làm tốt.",
+      "leadVi": "Tập đàn ba tháng, | bạn /kiên_trì/ | đánh trọn một bài.",
+      "anticipateVi": "Ngón_tay /phồng_rộp/ chưa?",
+      "emphasis": [
+        "cố gắng",
+        "kiên trì",
+        "phồng rộp"
+      ],
+      "pos": "noun",
+      "ipa": "/esˈfweɾθo/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Con un poco más de _____, vas a aprobar el examen.",
+          "vi": "Chỉ cần | nỗ_lực thêm một_chút, | bạn sẽ đỗ kỳ thi."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los esfuerzos",
+        "tipVi": "Hay đi với hacer: | hacer un esfuerzo."
+      }
+    },
+    {
+      "id": "empleo",
+      "word": "empleo",
+      "shareCode": "134",
+      "meaningVi": "việc_làm",
+      "defVi": "Công_việc có /tiền_lương/ | và hợp_đồng rõ_ràng.",
+      "leadVi": "Ra trường hai tháng, | chị ký | /hợp_đồng/ đầu_tiên.",
+      "anticipateVi": "Lương đầu_tiên định /tiêu_xài/ gì?",
+      "emphasis": [
+        "tiền lương",
+        "hợp đồng",
+        "tiêu xài"
+      ],
+      "pos": "noun",
+      "ipa": "/emˈpleo/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "Después de la universidad, encontró _____ en un hotel.",
+          "vi": "Học xong đại_học, | anh=ấy tìm được | việc_làm ở một khách_sạn."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los empleos",
+        "tipVi": "Tìm việc | nói gọn: | buscar empleo."
+      }
+    },
+    {
+      "id": "gestion",
+      "word": "gestión",
+      "shareCode": "VY4",
+      "meaningVi": "quản_lý",
+      "defVi": "Việc /điều_hành/, | tổ_chức người và công_việc.",
+      "leadVi": "Làm lớp_trưởng, | mình /phân_công/ | việc cho từng tổ.",
+      "anticipateVi": "Tổ nào cũng /răm_rắp/?",
+      "emphasis": [
+        "điều hành",
+        "phân công",
+        "răm rắp"
+      ],
+      "pos": "noun",
+      "ipa": "/xesˈtjon/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "Ella se encarga de la _____ del restaurante desde el año pasado.",
+          "vi": "Cô=ấy phụ_trách | việc quản_lý nhà_hàng | từ năm ngoái."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las gestiones",
+        "tipVi": "Số nhiều | mất dấu: | gestión thành gestiones."
+      }
+    },
+    {
+      "id": "organizador",
+      "word": "organizador",
+      "shareCode": "45C",
+      "meaningVi": "người tổ_chức",
+      "defVi": "Người lên /kế_hoạch/ | và lo cho sự_kiện.",
+      "leadVi": "Trước đêm nhạc, | mình /tất_bật/ | kiểm_tra loa, đèn.",
+      "anticipateVi": "Xong việc mới /thở_phào/?",
+      "emphasis": [
+        "kế hoạch",
+        "tất bật",
+        "thở phào"
+      ],
+      "pos": "noun",
+      "ipa": "/oɾɣaniθaˈðoɾ/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 11,
+      "initial": "O",
+      "usage": [
+        {
+          "en": "El _____ de la fiesta nos dio las gracias por venir.",
+          "vi": "Người tổ_chức | bữa tiệc | cảm_ơn tụi mình | đã đến."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los organizadores",
+        "tipVi": "Nữ là organizadora: | la organizadora del viaje."
+      }
+    },
+    {
+      "id": "planificacion",
+      "word": "planificación",
+      "shareCode": "BNH",
+      "meaningVi": "việc lập kế_hoạch",
+      "defVi": "/Sắp_xếp/ trước | từng bước | cần làm sau đó.",
+      "leadVi": "Trước chuyến đi biển, | mình lập | /lịch_trình/ từng ngày.",
+      "anticipateVi": "Có /phương_án/ dự_phòng chưa?",
+      "emphasis": [
+        "Sắp xếp",
+        "lịch trình",
+        "phương án"
+      ],
+      "pos": "noun",
+      "ipa": "/planifikaˈθjon/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 13,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Con una buena _____, el viaje fue mucho más fácil.",
+          "vi": "Nhờ lên kế_hoạch tốt, | chuyến đi | dễ_dàng hơn nhiều."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las planificaciones",
+        "tipVi": "Động_từ gốc | là planificar: | planificar un viaje."
+      }
+    },
+    {
+      "id": "produccion",
+      "word": "producción",
+      "shareCode": "1Y9",
+      "meaningVi": "sản_xuất",
+      "defVi": "Việc làm ra | /hàng_hóa/ với số_lượng lớn.",
+      "leadVi": "Tham_quan nhà_máy, | mình xem | /dây_chuyền/ đóng chai.",
+      "anticipateVi": "Chai nối chai /liên_tục/?",
+      "emphasis": [
+        "hàng hóa",
+        "dây chuyền",
+        "liên tục"
+      ],
+      "pos": "noun",
+      "ipa": "/pɾoðukˈθjon/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 10,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "La _____ de café en esta zona ha crecido mucho.",
+          "vi": "Việc sản_xuất cà_phê | ở vùng này | đã tăng mạnh."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las producciones",
+        "tipVi": "Viết hai chữ c | trong producción, | không phải produción."
+      }
+    },
+    {
+      "id": "profesion",
+      "word": "profesión",
+      "shareCode": "48G",
+      "meaningVi": "nghề_nghiệp",
+      "defVi": "Công_việc cần | học lâu và có /chuyên_môn/.",
+      "leadVi": "/Hướng_nghiệp/ lớp mười hai, | mình chọn | ngành dược.",
+      "anticipateVi": "Mơ làm /dược_sĩ/ à?",
+      "emphasis": [
+        "chuyên môn",
+        "Hướng nghiệp",
+        "dược sĩ"
+      ],
+      "pos": "noun",
+      "ipa": "/pɾofeˈsjon/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "Mi madre es médica y le gusta mucho su _____.",
+          "vi": "Mẹ mình là bác_sĩ | và rất yêu | nghề của=mẹ."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las profesiones",
+        "tipVi": "Hỏi nghề | thì nói: | ¿Cuál es tu profesión?"
+      }
+    },
+    {
+      "id": "responsabilidad",
+      "word": "responsabilidad",
+      "shareCode": "3F4",
+      "meaningVi": "trách_nhiệm",
+      "defVi": "Việc mình phải lo | và /gánh_vác/ | khi có chuyện.",
+      "leadVi": "Nuôi chó, | anh tự /chăm_lo/ | cho nó ăn mỗi=chiều.",
+      "anticipateVi": "Trời mưa vẫn /đều_đặn/?",
+      "emphasis": [
+        "gánh vác",
+        "chăm lo",
+        "đều đặn"
+      ],
+      "pos": "noun",
+      "ipa": "/responsaβiliˈðað/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 15,
+      "initial": "R",
+      "usage": [
+        {
+          "en": "Cuidar las plantas de la oficina es _____ de todos.",
+          "vi": "Chăm cây | trong văn_phòng | là trách_nhiệm | của=mọi người."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las responsabilidades",
+        "tipVi": "Chịu trách_nhiệm | nói là | asumir la responsabilidad."
+      }
+    },
+    {
+      "id": "sirviente",
+      "word": "sirviente",
+      "shareCode": "4HE",
+      "meaningVi": "người hầu",
+      "defVi": "Người /phục_vụ/ | việc_nhà | cho nhà giàu thời xưa.",
+      "leadVi": "Xem=phim cổ_trang, | mình để_ý | vai /a_hoàn/.",
+      "anticipateVi": "Cả phim chỉ /cúi_đầu/?",
+      "emphasis": [
+        "phục vụ",
+        "a hoàn",
+        "cúi đầu"
+      ],
+      "pos": "noun",
+      "ipa": "/siɾˈβjente/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "En la película, el _____ abre la puerta del castillo.",
+          "vi": "Trong phim, | người hầu | mở cửa lâu_đài."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los sirvientes",
+        "tipVi": "Nữ là sirvienta: | la sirvienta de la casa."
+      }
+    },
+    {
+      "id": "turno",
+      "word": "turno",
+      "shareCode": "9A0",
+      "meaningVi": "ca làm",
+      "defVi": "Khoảng giờ làm | được /luân_phiên/ | giữa các nhân_viên.",
+      "leadVi": "/Làm_thêm/ quán trà, | mình đăng_ký | giờ tối thứ_Bảy.",
+      "anticipateVi": "Đổi ca với /đồng_nghiệp/?",
+      "emphasis": [
+        "luân phiên",
+        "Làm thêm",
+        "đồng nghiệp"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈtuɾno/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 5,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Esta semana trabajo en el _____ de noche.",
+          "vi": "Tuần này | mình làm | ca đêm."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los turnos",
+        "tipVi": "Còn có nghĩa lượt: | es tu turno."
+      }
+    },
+    {
+      "id": "tecnica",
+      "word": "técnica",
+      "shareCode": "X1F",
+      "meaningVi": "kỹ_thuật",
+      "defVi": "Cách làm riêng | cần /luyện_tập/ mới giỏi.",
+      "leadVi": "Học bơi ếch, | bạn tập | /động_tác/ chân theo nhịp.",
+      "anticipateVi": "Hít_thở /nhịp_nhàng/ chưa?",
+      "emphasis": [
+        "luyện tập",
+        "động tác",
+        "nhịp nhàng"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈteknika/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "T",
+      "usage": [
+        {
+          "en": "Mi entrenador me enseñó una _____ para respirar mejor al nadar.",
+          "vi": "Huấn_luyện_viên | dạy mình | một kỹ_thuật | để thở tốt hơn khi bơi."
+        }
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las técnicas",
+        "tipVi": "Đừng nhầm | với el técnico | là thợ kỹ_thuật."
+      }
+    },
+    {
+      "id": "desempleo",
+      "word": "desempleo",
+      "shareCode": "HBG",
+      "meaningVi": "nạn thất_nghiệp",
+      "defVi": "Khi nhiều người | muốn làm | mà thiếu /việc_làm/.",
+      "leadVi": "Kinh_tế chững lại, | nhiều công_ty | /cắt_giảm/ nhân_sự.",
+      "anticipateVi": "Học thêm /ngoại_ngữ/ cho chắc?",
+      "emphasis": [
+        "việc làm",
+        "cắt giảm",
+        "ngoại ngữ"
+      ],
+      "pos": "noun",
+      "ipa": "/desemˈpleo/",
+      "topic": "work",
+      "topics": [
+        "work",
+        "society"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "D",
+      "usage": [
+        {
+          "en": "El _____ entre los jóvenes ha bajado este año.",
+          "vi": "Tỉ_lệ thất_nghiệp | ở người trẻ | năm nay đã giảm."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "tipVi": "Ở nhiều nơi | gọi là | el paro."
+      }
+    },
+    {
+      "id": "sindicato",
+      "word": "sindicato",
+      "shareCode": "SY4",
+      "meaningVi": "công_đoàn",
+      "defVi": "Tổ_chức | bảo_vệ | /quyền_lợi/ người lao_động.",
+      "leadVi": "Dịp Tết, | công_nhân | nhận quà từ /tổ_chức/ nhà_máy.",
+      "anticipateVi": "Hộp bánh /to_đùng/?",
+      "emphasis": [
+        "quyền lợi",
+        "tổ chức",
+        "to đùng"
+      ],
+      "pos": "noun",
+      "ipa": "/sindiˈkato/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 9,
+      "initial": "S",
+      "usage": [
+        {
+          "en": "Mi tío trabaja en una fábrica y está en el _____.",
+          "vi": "Chú mình | làm ở nhà_máy | và tham_gia | công_đoàn."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los sindicatos",
+        "tipVi": "Không phải unión: | công_đoàn là | el sindicato."
+      }
+    },
+    {
+      "id": "guarda",
+      "word": "guarda",
+      "shareCode": "QDV",
+      "meaningVi": "người bảo_vệ",
+      "defVi": "Người /canh_gác/, | giữ an_toàn cho một nơi.",
+      "leadVi": "Nửa_đêm, | chú ở cổng | vẫn /tuần_tra/ quanh khu.",
+      "anticipateVi": "Cả đêm /tỉnh_táo/ à?",
+      "emphasis": [
+        "canh gác",
+        "tuần tra",
+        "tỉnh táo"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈɡwaɾða/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 6,
+      "initial": "G",
+      "usage": [
+        {
+          "en": "El _____ del parque cierra la puerta a las diez.",
+          "vi": "Người bảo_vệ công_viên | khóa cổng | lúc mười giờ."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los guardas",
+        "tipVi": "Nữ vẫn là guarda: | la guarda del parque."
+      }
+    },
+    {
+      "id": "ascender",
+      "word": "ascender",
+      "shareCode": "CC9",
+      "meaningVi": "thăng_chức",
+      "defVi": "/Cất_nhắc/ ai | lên vị_trí cao hơn | trong công_ty.",
+      "leadVi": "Làm chăm hai năm, | anh lên làm /trưởng_nhóm/.",
+      "anticipateVi": "Thết cả phòng /liên_hoan/?",
+      "emphasis": [
+        "Cất nhắc",
+        "trưởng nhóm",
+        "liên hoan"
+      ],
+      "pos": "verb",
+      "ipa": "/asθenˈdeɾ/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 8,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Después de dos años, la empresa la va a _____ a jefa.",
+          "vi": "Sau hai năm, | công_ty | sắp thăng_chức cô=ấy | lên làm sếp."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "e → ie : asciendo",
+          "tiempos": {
+            "presente": "yo asciendo",
+            "pretérito": "él ascendió",
+            "participio": "ascendido",
+            "gerundio": "ascendiendo"
+          }
+        },
+        "governs": "a + sustantivo",
+        "tipVi": "Nhớ giữ chữ c | sau s: | asciendo, ascendió."
+      }
+    },
+    {
+      "id": "jubilar",
+      "word": "jubilar",
+      "shareCode": "XHG",
+      "meaningVi": "nghỉ_hưu",
+      "defVi": "Thôi làm_việc | khi lớn_tuổi, | về /an_hưởng/ tuổi_già.",
+      "leadVi": "Sang năm, | bà rời /bục_giảng/ sau ba mươi năm.",
+      "anticipateVi": "Trò=cũ kéo về /chia_tay/?",
+      "emphasis": [
+        "an hưởng",
+        "bục giảng",
+        "chia tay"
+      ],
+      "pos": "verb",
+      "ipa": "/xubiˈlaɾ/",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "B1",
+      "chars": 7,
+      "initial": "J",
+      "usage": [
+        {
+          "en": "Mi abuela se va a _____ el año que viene.",
+          "vi": "Bà mình | sẽ nghỉ_hưu | vào năm sau."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo me jubilo",
+            "pretérito": "él se jubiló",
+            "participio": "jubilado",
+            "gerundio": "jubilándose"
+          }
+        },
+        "reflexive": "jubilarse",
+        "tipVi": "Nghỉ_hưu cần se: | mi madre se jubiló."
       }
     }
   ]

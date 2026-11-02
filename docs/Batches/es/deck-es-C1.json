@@ -214,22 +214,38 @@
     "word": "interrumpir",
     "pos": "verb",
     "ipa": "/inteɾumˈpiɾ/",
-    "meaningVi": "ngắt lời",
+    "meaningVi": "ngắt_lời",
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Bỗng chen ngang | khi người khác | đang=nói hoặc làm việc.",
-    "leadVi": "Thầy giảng chưa hết câu, | cậu đã=giơ tay | cắt_lời.",
-    "anticipateVi": "Xen vô | làm chi?",
-    "usageEn": "Perdona, no quería _____ tu llamada.",
-    "usageVi": "Xin_lỗi, | tôi không định cắt ngang | cuộc_gọi của=bạn.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo interrumpo",
+        "pretérito": "él interrumpió",
+        "participio": "interrumpido",
+        "gerundio": "interrumpiendo"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Viết hai chữ r: | interrumpir.",
+    "defVi": "/Chen_ngang/ vào | khi người khác | đang=nói.",
+    "leadVi": "Mình đang kể dở, | cậu=ấy | /cắt_ngang/ hỏi chuyện khác.",
+    "anticipateVi": "Để mình nói /trọn_vẹn/ đã?",
+    "usageEn": "No me gusta _____ a nadie cuando habla.",
+    "usageVi": "Mình không thích | ngắt_lời ai | khi người_ta đang nói.",
     "topics": [
       "communication"
     ],
     "exams": [],
     "emphasisVi": [
-      "chen ngang",
-      "cắt lời"
+      "Chen ngang",
+      "cắt ngang",
+      "trọn vẹn"
     ]
   },
   {
@@ -874,24 +890,30 @@
   {
     "word": "obvio",
     "pos": "adj",
-    "ipa": "/ˈoβ.βjo/",
+    "ipa": "/ˈoβjo/",
     "meaningVi": "rõ_ràng, hiển_nhiên",
     "gender": null,
     "article": null,
     "feminine": "obvia",
-    "defVi": "Rõ_ràng, | ai nhìn cũng thấy | hay hiểu ngay.",
-    "leadVi": "Mặt đỏ, | nói lắp, | ai cũng biết | cậu đang=nói_dối.",
-    "anticipateVi": "Lộ_liễu quá chưa?",
-    "usageEn": "Era _____ que el niño tenía sueño.",
-    "usageVi": "Rõ_ràng là | thằng bé buồn_ngủ.",
+    "plural": "obvios / obvias",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es obvio.",
+    "tipVi": null,
+    "defVi": "Dễ thấy, | dễ hiểu, | ai cũng /nhận_ra/ ngay.",
+    "leadVi": "Mắt /đỏ_hoe/, | mình vẫn chối | là không khóc.",
+    "anticipateVi": "Đám bạn /phì_cười/?",
+    "usageEn": "El error era tan _____ que todos lo vieron.",
+    "usageVi": "Lỗi sai | rõ_ràng tới mức | ai cũng thấy.",
     "topics": [
-      "perception",
       "thinking"
     ],
     "exams": [],
     "emphasisVi": [
-      "Rõ ràng",
-      "nói lắp"
+      "nhận ra",
+      "đỏ hoe",
+      "phì cười"
     ]
   },
   {
@@ -1038,24 +1060,30 @@
   {
     "word": "tendencia",
     "pos": "noun",
-    "ipa": "/tenˈden.θja/",
+    "ipa": "/tenˈdenθja/",
     "meaningVi": "xu_hướng, khuynh_hướng",
     "gender": "f",
     "article": "la",
     "feminine": null,
-    "defVi": "Khuynh_hướng | thường hành_động | theo một kiểu nào đó.",
-    "leadVi": "Cứ căng_thẳng là | cô lại cắn móng tay.",
-    "anticipateVi": "Lại thế nữa rồi?",
-    "usageEn": "Mi hermano tiene _____ a llegar tarde.",
-    "usageVi": "Em trai tôi | có xu_hướng đến muộn.",
+    "plural": "las tendencias",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Có xu_hướng làm gì: | tener tendencia a + infinitivo.",
+    "defVi": "Hướng /thay_đổi/ | được nhiều người | cùng làm theo.",
+    "leadVi": "Mạng rộ /trào_lưu/, | mình tập | điệu nhảy mới.",
+    "anticipateVi": "/Lượt_xem/ tăng vọt?",
+    "usageEn": "Los vídeos cortos son una _____ muy fuerte entre los jóvenes.",
+    "usageVi": "Phim ngắn | là xu_hướng rất mạnh | trong giới trẻ.",
     "topics": [
-      "character",
-      "thinking"
+      "society"
     ],
     "exams": [],
     "emphasisVi": [
-      "Khuynh hướng",
-      "cắn móng"
+      "thay đổi",
+      "trào lưu",
+      "Lượt xem"
     ]
   },
   {
@@ -1245,24 +1273,30 @@
   {
     "word": "convincente",
     "pos": "adj",
-    "ipa": "/kom.binˈθen.te/",
+    "ipa": "/kombinˈθente/",
     "meaningVi": "thuyết_phục",
     "gender": null,
     "article": null,
     "feminine": "convincente",
-    "defVi": "Thuyết_phục mạnh, | khiến người ta | không_thể làm_ngơ.",
-    "leadVi": "Lật trang đầu, | cuốn_hút đến mức | thức trắng đọc hết.",
-    "anticipateVi": "Cuốn_hút tới mức nào?",
-    "usageEn": "No encontró ninguna excusa _____.",
-    "usageVi": "Anh=ấy | không tìm được | lý_do nào thuyết_phục.",
+    "plural": "convincentes",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | su respuesta fue convincente.",
+    "tipVi": "Động_từ | là convencer: | me convenció.",
+    "defVi": "Khiến người nghe | /tin_tưởng/ | là thật, là đúng.",
+    "leadVi": "Tranh_biện, | mình đưa | ba /số_liệu/ rõ_ràng.",
+    "anticipateVi": "Đội bạn /cứng_họng/?",
+    "usageEn": "Su explicación fue tan _____ que todos la creímos.",
+    "usageVi": "Lời giải_thích | thuyết_phục tới mức | ai cũng tin.",
     "topics": [
-      "thinking",
       "communication"
     ],
     "exams": [],
     "emphasisVi": [
-      "làm ngơ",
-      "thức trắng"
+      "tin tưởng",
+      "số liệu",
+      "cứng họng"
     ]
   },
   {
