@@ -2312,24 +2312,31 @@
   {
     "word": "auténtico",
     "pos": "adj",
-    "ipa": "/awˈten.ti.ko/",
+    "ipa": "/awˈtentiko/",
     "meaningVi": "thật, chính_hiệu",
     "gender": null,
     "article": null,
     "feminine": "auténtica",
-    "defVi": "Thật sự, | không giả_tạo hay pha_trộn.",
-    "leadVi": "Ánh mắt rưng_rưng ấy | chẳng phải diễn | chút nào.",
-    "anticipateVi": "Hàng thật hay giả?",
-    "usageEn": "Este reloj es _____, no una copia.",
-    "usageVi": "Chiếc đồng_hồ này | là thật, | không phải hàng nhái.",
+    "plural": "auténticos / auténticas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es un bolso auténtico.",
+    "tipVi": null,
+    "defVi": "Hàng /chính_hiệu/, | đúng nguồn_gốc, | không phải đồ giả.",
+    "leadVi": "Quán nhỏ | nấu phở | đúng /công_thức/ của bà.",
+    "anticipateVi": "Vừa nếm đã /nhận_ra/?",
+    "usageEn": "Mi abuela hace un pan muy _____, como el de antes.",
+    "usageVi": "Bà mình | làm bánh_mì rất chuẩn vị, | đúng kiểu ngày_xưa.",
     "topics": [
-      "character",
-      "general"
+      "perception",
+      "daily"
     ],
     "exams": [],
     "emphasisVi": [
-      "giả tạo",
-      "rưng rưng"
+      "chính hiệu",
+      "công thức",
+      "nhận ra"
     ]
   },
   {
@@ -3085,23 +3092,39 @@
   {
     "word": "coincidir",
     "pos": "verb",
-    "ipa": "/ko.in.θiˈðiɾ/",
+    "ipa": "/koinθiˈðiɾ/",
     "meaningVi": "trùng, trùng_hợp",
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Xảy ra | cùng một lúc | một_cách tình_cờ.",
-    "leadVi": "Sinh_nhật trùng đúng | ngày khai_trương cửa_hàng.",
-    "anticipateVi": "Trùng_hợp | ghê nhỉ?",
-    "usageEn": "Mis vacaciones van a _____ con las fiestas del pueblo.",
-    "usageVi": "Kỳ nghỉ của=tôi | sẽ trùng | với lễ_hội của=làng.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo coincido",
+        "pretérito": "él coincidió",
+        "participio": "coincidido",
+        "gerundio": "coincidiendo"
+      }
+    },
+    "reflexive": null,
+    "governs": "con + sustantivo",
+    "serEstar": null,
+    "tipVi": "Còn nghĩa | đồng_ý: | coincido contigo.",
+    "defVi": "Hai việc /ăn_khớp/ | về thời_gian | hay địa_điểm.",
+    "leadVi": "Năm nay, | sinh_nhật bạn | /tình_cờ/ đúng ngày khai_giảng.",
+    "anticipateVi": "Nhận quà /gấp_đôi/ nhé?",
+    "usageEn": "Mis vacaciones van a _____ con las de mi hermano.",
+    "usageVi": "Kỳ nghỉ của=mình | sẽ trùng với kỳ nghỉ | của anh_trai.",
     "topics": [
       "time"
     ],
     "exams": [],
     "emphasisVi": [
+      "ăn khớp",
       "tình cờ",
-      "khai trương"
+      "gấp đôi"
     ]
   },
   {
@@ -3173,19 +3196,34 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Tạo điều_kiện | để việc gì | diễn_ra dễ_dàng hơn.",
-    "leadVi": "Có cầu mới, | hàng_hóa hai bờ | qua lại thuận_tiện.",
-    "anticipateVi": "Ai mở đường đây?",
-    "usageEn": "Esta aplicación puede _____ tus compras diarias.",
-    "usageVi": "Ứng_dụng này | có_thể giúp việc mua_sắm | hằng ngày của=bạn | dễ_dàng hơn.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo facilito",
+        "pretérito": "él facilitó",
+        "participio": "facilitado",
+        "gerundio": "facilitando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Còn nghĩa | đưa cho: | facilitar los datos.",
+    "defVi": "Giúp công_việc | của người=khác | diễn ra /thuận_lợi/ hơn.",
+    "leadVi": "Có thang_máy, | khách mang hành_lý | lên /dễ_dàng/ hơn.",
+    "anticipateVi": "Đỡ /vất_vả/ hẳn nhỉ?",
+    "usageEn": "Este mapa puede _____ tu primera visita a la ciudad.",
+    "usageVi": "Tấm=bản_đồ này | giúp lần=đầu bạn | đến thành_phố | thuận_lợi hơn.",
     "topics": [
-      "work",
-      "technology"
+      "work"
     ],
     "exams": [],
     "emphasisVi": [
-      "điều kiện",
-      "cầu mới"
+      "thuận lợi",
+      "dễ dàng",
+      "vất vả"
     ]
   },
   {

@@ -1,5 +1,5 @@
 {
-  "revision": "8615b3946c50e642b0c7d9b6",
+  "revision": "56485187273b302312c68ced",
   "name": "WordCrawler vocabulary",
   "count": 862,
   "topics": [
@@ -2765,29 +2765,35 @@
       "word": "auténtico",
       "shareCode": "APF",
       "meaningVi": "thật, chính_hiệu",
-      "defVi": "Thật sự, | không giả_tạo hay /pha_trộn/.",
-      "leadVi": "Ánh mắt /rưng_rưng/ ấy | chẳng phải diễn | chút nào.",
-      "anticipateVi": "Hàng thật hay giả?",
+      "defVi": "Hàng /chính_hiệu/, | đúng nguồn_gốc, | không phải đồ giả.",
+      "leadVi": "Quán nhỏ | nấu phở | đúng /công_thức/ của bà.",
+      "anticipateVi": "Vừa nếm đã /nhận_ra/?",
       "emphasis": [
-        "giả tạo",
-        "rưng rưng"
+        "chính hiệu",
+        "công thức",
+        "nhận ra"
       ],
       "pos": "adj",
-      "ipa": "/awˈten.ti.ko/",
-      "topic": "character",
+      "ipa": "/awˈtentiko/",
+      "topic": "perception",
       "topics": [
-        "character",
-        "general"
+        "perception",
+        "daily"
       ],
       "level": "B2",
       "chars": 9,
       "initial": "A",
       "usage": [
         {
-          "en": "Este reloj es _____, no una copia.",
-          "vi": "Chiếc đồng_hồ này | là thật, | không phải hàng nhái."
+          "en": "Mi abuela hace un pan muy _____, como el de antes.",
+          "vi": "Bà mình | làm bánh_mì rất chuẩn vị, | đúng kiểu ngày_xưa."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "auténtica",
+        "plural": "auténticos / auténticas",
+        "serEstar": "Thường dùng ser: | es un bolso auténtico."
+      }
     },
     {
       "id": "identificar",
@@ -3655,15 +3661,16 @@
       "word": "coincidir",
       "shareCode": "ZFK",
       "meaningVi": "trùng, trùng_hợp",
-      "defVi": "Xảy ra | cùng một lúc | một_cách /tình_cờ/.",
-      "leadVi": "Sinh_nhật trùng đúng | ngày khai_trương /cửa_hàng/.",
-      "anticipateVi": "/Trùng_hợp/ | ghê nhỉ?",
+      "defVi": "Hai việc /ăn_khớp/ | về thời_gian | hay địa_điểm.",
+      "leadVi": "Năm nay, | sinh_nhật bạn | /tình_cờ/ đúng ngày khai_giảng.",
+      "anticipateVi": "Nhận quà /gấp_đôi/ nhé?",
       "emphasis": [
+        "ăn khớp",
         "tình cờ",
-        "khai trương"
+        "gấp đôi"
       ],
       "pos": "verb",
-      "ipa": "/ko.in.θiˈðiɾ/",
+      "ipa": "/koinθiˈðiɾ/",
       "topic": "time",
       "topics": [
         "time"
@@ -3673,10 +3680,23 @@
       "initial": "C",
       "usage": [
         {
-          "en": "Mis vacaciones van a _____ con las fiestas del pueblo.",
-          "vi": "Kỳ nghỉ của=tôi | sẽ trùng | với lễ_hội của=làng."
+          "en": "Mis vacaciones van a _____ con las de mi hermano.",
+          "vi": "Kỳ nghỉ của=mình | sẽ trùng với kỳ nghỉ | của anh_trai."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo coincido",
+            "pretérito": "él coincidió",
+            "participio": "coincidido",
+            "gerundio": "coincidiendo"
+          }
+        },
+        "governs": "con + sustantivo",
+        "tipVi": "Còn nghĩa | đồng_ý: | coincido contigo."
+      }
     },
     {
       "id": "deducir",
@@ -3752,29 +3772,41 @@
       "word": "facilitar",
       "shareCode": "X4X",
       "meaningVi": "tạo điều_kiện, giúp dễ_dàng",
-      "defVi": "Tạo /điều_kiện/ | để việc gì | diễn_ra dễ_dàng hơn.",
-      "leadVi": "Có cầu mới, | /hàng_hóa/ hai bờ | qua lại thuận_tiện.",
-      "anticipateVi": "Ai mở đường đây?",
+      "defVi": "Giúp công_việc | của người=khác | diễn ra /thuận_lợi/ hơn.",
+      "leadVi": "Có thang_máy, | khách mang hành_lý | lên /dễ_dàng/ hơn.",
+      "anticipateVi": "Đỡ /vất_vả/ hẳn nhỉ?",
       "emphasis": [
-        "điều kiện",
-        "cầu mới"
+        "thuận lợi",
+        "dễ dàng",
+        "vất vả"
       ],
       "pos": "verb",
       "ipa": "/faθiliˈtaɾ/",
       "topic": "work",
       "topics": [
-        "work",
-        "technology"
+        "work"
       ],
       "level": "B2",
       "chars": 9,
       "initial": "F",
       "usage": [
         {
-          "en": "Esta aplicación puede _____ tus compras diarias.",
-          "vi": "Ứng_dụng này | có_thể giúp việc mua_sắm | hằng ngày của=bạn | dễ_dàng hơn."
+          "en": "Este mapa puede _____ tu primera visita a la ciudad.",
+          "vi": "Tấm=bản_đồ này | giúp lần=đầu bạn | đến thành_phố | thuận_lợi hơn."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo facilito",
+            "pretérito": "él facilitó",
+            "participio": "facilitado",
+            "gerundio": "facilitando"
+          }
+        },
+        "tipVi": "Còn nghĩa | đưa cho: | facilitar los datos."
+      }
     },
     {
       "id": "hip-tesis",

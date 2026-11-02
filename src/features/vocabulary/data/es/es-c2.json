@@ -1,5 +1,5 @@
 {
-  "revision": "9144448b4320a57687550d4f",
+  "revision": "5bc3ea15acb5344700cb4fac",
   "name": "WordCrawler vocabulary",
   "count": 32,
   "topics": [
@@ -510,58 +510,68 @@
       "word": "estético",
       "shareCode": "ETV",
       "meaningVi": "thẩm_mỹ",
-      "defVi": "Liên_quan đến cái_đẹp | và cảm_nhận /nghệ_thuật/.",
-      "leadVi": "Căn_phòng tối_giản, | /ánh_sáng/ dịu, | từng góc như tranh.",
-      "anticipateVi": "/Đẹp_mắt/ | cỡ nào?",
+      "defVi": "Liên_quan tới | /cái_đẹp/ | và vẻ ngoài đẹp_mắt.",
+      "leadVi": "Mình bày | góc học_tập | sao cho /hài_hòa/.",
+      "anticipateVi": "Ưng /bố_cục/ chưa?",
       "emphasis": [
         "cái đẹp",
-        "tối giản"
+        "hài hòa",
+        "bố cục"
       ],
       "pos": "adj",
-      "ipa": "/esˈte.ti.ko/",
+      "ipa": "/esˈtetiko/",
       "topic": "perception",
       "topics": [
-        "perception",
-        "society"
+        "perception"
       ],
       "level": "C2",
       "chars": 8,
       "initial": "E",
       "usage": [
         {
-          "en": "El diseño es práctico, pero también muy _____.",
-          "vi": "Thiết_kế tiện_dụng, | nhưng cũng rất=thẩm_mỹ."
+          "en": "Para mí, el aspecto _____ de la casa es tan importante como la comodidad.",
+          "vi": "Với mình, | vẻ thẩm_mỹ của ngôi nhà | quan_trọng | như sự=tiện_nghi."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "estética",
+        "plural": "estéticos / estéticas",
+        "serEstar": "Thường dùng ser: | es una cuestión estética."
+      }
     },
     {
       "id": "arbitrario",
       "word": "arbitrario",
       "shareCode": "FTT",
       "meaningVi": "tùy_tiện",
-      "defVi": "/Tùy_tiện/, | dựa vào ý_thích | chứ không | theo lý_lẽ.",
-      "leadVi": "Sếp đổi luật | theo /tâm_trạng/ | mỗi sáng thứ hai.",
-      "anticipateVi": "/Tùy_hứng/ | thế à?",
+      "defVi": "Chọn bừa, | không dựa trên | lý_do hay /quy_tắc/.",
+      "leadVi": "Nhóm /bốc_thăm/ | người=lên | thuyết_trình trước.",
+      "anticipateVi": "/Hên_xui/ thôi mà?",
       "emphasis": [
-        "Tùy tiện",
-        "tâm trạng"
+        "quy tắc",
+        "bốc thăm",
+        "Hên xui"
       ],
       "pos": "adj",
-      "ipa": "/aɾ.βiˈtɾa.ɾjo/",
+      "ipa": "/aɾβiˈtɾaɾjo/",
       "topic": "thinking",
       "topics": [
-        "thinking",
-        "society"
+        "thinking"
       ],
       "level": "C2",
       "chars": 10,
       "initial": "A",
       "usage": [
         {
-          "en": "El castigo fue totalmente _____.",
-          "vi": "Hình_phạt đó | hoàn_toàn tùy_tiện."
+          "en": "La nota del examen parece _____, sin ningún criterio claro.",
+          "vi": "Điểm bài thi | có_vẻ tùy_tiện, | không theo tiêu_chí nào rõ_ràng."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "arbitraria",
+        "plural": "arbitrarios / arbitrarias",
+        "serEstar": "Thường dùng ser: | la decisión es arbitraria."
+      }
     },
     {
       "id": "concienzudo",
@@ -684,29 +694,34 @@
       "word": "empírico",
       "shareCode": "Z90",
       "meaningVi": "thực_nghiệm",
-      "defVi": "Dựa trên | /quan_sát/ | và thí_nghiệm thực_tế.",
-      "leadVi": "Không đoán mò, | nhà_khoa_học | đo_đạc từng /con_số/.",
-      "anticipateVi": "Thử rồi mới biết?",
+      "defVi": "Dựa vào /quan_sát/ | và thí_nghiệm, | không phải đoán.",
+      "leadVi": "Bạn đo | cây đậu mỗi sáng | để có /số_liệu/ thật.",
+      "anticipateVi": "Sổ /thí_nghiệm/ dày lên?",
       "emphasis": [
-        "thí nghiệm",
-        "đoán mò"
+        "quan sát",
+        "số liệu",
+        "thí nghiệm"
       ],
       "pos": "adj",
       "ipa": "/emˈpiɾiko/",
       "topic": "study",
       "topics": [
-        "study",
-        "thinking"
+        "study"
       ],
       "level": "C2",
       "chars": 8,
       "initial": "E",
       "usage": [
         {
-          "en": "Necesitamos un estudio _____ antes de decidir.",
-          "vi": "Chúng_ta cần | một nghiên_cứu thực_nghiệm | trước khi quyết_định."
+          "en": "Necesitamos datos _____ antes de sacar conclusiones.",
+          "vi": "Chúng_ta cần | dữ_liệu thực_nghiệm | trước_khi kết_luận."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "empírica",
+        "plural": "empíricos / empíricas",
+        "serEstar": "Thường dùng ser: | el método es empírico."
+      }
     },
     {
       "id": "factible",
@@ -961,29 +976,34 @@
       "word": "viable",
       "shareCode": "R57",
       "meaningVi": "khả_thi",
-      "defVi": "Có_thể tồn_tại | hoặc /vận_hành/ thành_công | lâu dài.",
-      "leadVi": "Tính đi tính lại, | /mô_hình/ này | vẫn sinh lời.",
-      "anticipateVi": "Trụ được | lâu không?",
+      "defVi": "Có_thể làm được | và có khả_năng /thành_công/ thật.",
+      "leadVi": "Tính kỹ chi_phí, | thầy khen | kế_hoạch /hợp_lý/.",
+      "anticipateVi": "Vậy là /bắt_tay/ làm luôn?",
       "emphasis": [
-        "tồn tại",
-        "sinh lời"
+        "thành công",
+        "hợp lý",
+        "bắt tay"
       ],
       "pos": "adj",
       "ipa": "/ˈbjaβle/",
-      "topic": "work",
+      "topic": "thinking",
       "topics": [
-        "work",
-        "money"
+        "thinking"
       ],
       "level": "C2",
       "chars": 6,
       "initial": "V",
       "usage": [
         {
-          "en": "El proyecto no es _____ sin más dinero.",
-          "vi": "Dự_án | không khả_thi | nếu không có thêm tiền."
+          "en": "Con este presupuesto, el proyecto no es _____.",
+          "vi": "Với ngân_sách này, | dự_án không khả_thi."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "viable",
+        "plural": "viables",
+        "serEstar": "Thường dùng ser: | el plan es viable."
+      }
     },
     {
       "id": "discernir",
