@@ -53,18 +53,34 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Đem đồ bị hư | sửa_chữa lại | cho dùng được.",
-    "leadVi": "Xe thủng lốp | giữa đường, | may có tiệm vá | ngay góc.",
-    "anticipateVi": "Đưa cờ_lê đây!",
-    "usageEn": "El técnico viene mañana a _____ la lavadora.",
-    "usageVi": "Mai thợ đến | sửa máy giặt.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo reparo",
+        "pretérito": "él reparó",
+        "participio": "reparado",
+        "gerundio": "reparando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Làm đồ hỏng | /hoạt_động/ trở_lại | như lúc mới mua.",
+    "leadVi": "Máy_tính /trục_trặc/, | mình mang ra | tiệm đầu ngõ.",
+    "anticipateVi": "Chờ ba ngày, | /nóng_lòng/ chưa?",
+    "usageEn": "Este señor puede _____ tu ordenador hoy.",
+    "usageVi": "Chú này | sửa được máy_tính của=bạn | ngay hôm_nay.",
     "topics": [
       "daily"
     ],
     "exams": [],
     "emphasisVi": [
-      "sửa chữa",
-      "tiệm vá"
+      "hoạt động",
+      "trục trặc",
+      "nóng lòng"
     ]
   },
   {
@@ -456,24 +472,39 @@
   {
     "word": "permitir",
     "pos": "verb",
-    "ipa": "/peɾ.miˈtiɾ/",
+    "ipa": "/peɾmiˈtiɾ/",
     "meaningVi": "cho_phép",
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Cho_phép ai đó | làm điều gì | mà không=ngăn_cản.",
-    "leadVi": "Cánh cổng mở ra | khi=người gác | bảo được=vào.",
-    "anticipateVi": "Được hay không=được nhỉ?",
-    "usageEn": "El profesor no suele _____ el móvil en clase.",
-    "usageVi": "Thầy giáo | thường không cho_phép | dùng điện_thoại trong lớp.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo permito",
+        "pretérito": "él permitió",
+        "participio": "permitido",
+        "gerundio": "permitiendo"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Không cần a | trước động_từ: | me permite salir.",
+    "defVi": "/Đồng_ý/ | để ai đó làm điều họ muốn.",
+    "leadVi": "Đi trại_hè, | mẹ /gật_đầu/ | duyệt em đi ba ngày.",
+    "anticipateVi": "/Năn_nỉ/ cả tuần mới gật?",
+    "usageEn": "¿Tu madre te va a _____ ir al campamento?",
+    "usageVi": "Mẹ bạn | có cho_phép bạn | đi trại_hè không?",
     "topics": [
-      "daily",
-      "society"
+      "general"
     ],
     "exams": [],
     "emphasisVi": [
-      "Cho phép",
-      "mở ra"
+      "Đồng ý",
+      "gật đầu",
+      "Năn nỉ"
     ]
   },
   {
@@ -507,19 +538,26 @@
     "gender": "f",
     "article": "la",
     "feminine": null,
-    "defVi": "Thời_điểm thuận_lợi | để=làm được=điều | mình mong_muốn.",
-    "leadVi": "Cánh_cửa | chỉ=hé mở một lần, | phải nắm lấy ngay.",
-    "anticipateVi": "Lỡ dịp này thì tiếc?",
-    "usageEn": "No pierdas esta _____ de estudiar en el extranjero.",
-    "usageVi": "Đừng bỏ lỡ | cơ_hội du_học này.",
+    "plural": "las oportunidades",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Đi với de | + nguyên_mẫu: | la oportunidad de viajar.",
+    "defVi": "Dịp /thuận_lợi/ | để làm | điều mình mong muốn.",
+    "leadVi": "Trường mở | suất học_bổng, | chị /tận_dụng/ liền.",
+    "anticipateVi": "Chậm chân, /tiếc_nuối/ không?",
+    "usageEn": "Este viaje es una buena _____ para aprender.",
+    "usageVi": "Chuyến đi này | là cơ_hội tốt | để học_hỏi.",
     "topics": [
-      "work",
-      "general"
+      "general",
+      "work"
     ],
     "exams": [],
     "emphasisVi": [
       "thuận lợi",
-      "nắm lấy"
+      "tận dụng",
+      "tiếc nuối"
     ]
   },
   {
@@ -912,24 +950,30 @@
   {
     "word": "estrategia",
     "pos": "noun",
-    "ipa": "/es.tɾaˈte.xja/",
+    "ipa": "/estɾaˈtexja/",
     "meaningVi": "chiến_lược",
     "gender": "f",
     "article": "la",
     "feminine": null,
-    "defVi": "Kế_hoạch tổng_thể | để đạt mục_tiêu | lâu dài.",
-    "leadVi": "Huấn_luyện_viên | vẽ sơ_đồ, | sắp vị_trí cầu_thủ.",
-    "anticipateVi": "Đường đi nước bước?",
-    "usageEn": "El entrenador cambió de _____ en el segundo tiempo.",
-    "usageVi": "Huấn_luyện_viên | đổi chiến_lược | ở hiệp hai.",
+    "plural": "las estrategias",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Có e ở đầu: | estrategia, | không viết strategia.",
+    "defVi": "Kế_hoạch | /dài_hơi/ | để đạt mục_tiêu lớn.",
+    "leadVi": "Ôn thi, | em /tính_toán/ | chia đề_cương ba vòng.",
+    "anticipateVi": "Vòng cuối, /thuộc_lòng/?",
+    "usageEn": "Nuestro equipo necesita una nueva _____.",
+    "usageVi": "Đội tụi mình | cần một chiến_lược mới.",
     "topics": [
-      "work",
       "thinking"
     ],
     "exams": [],
     "emphasisVi": [
-      "tổng thể",
-      "sơ đồ"
+      "dài hơi",
+      "tính toán",
+      "thuộc lòng"
     ]
   },
   {

@@ -487,7 +487,7 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
           : [],
     );
   // A ratchet: lower it as decks improve, never raise it to let a deck through.
-  const MAX_DARK_CLUE_PAGES = 7116;
+  const MAX_DARK_CLUE_PAGES = 6914;
   const CONJUNCTIONS = new Set(["và", "hoặc", "nhưng"]);
   const CLUE_FIELD: Record<string, string> = {
     lead: "leadVi",
