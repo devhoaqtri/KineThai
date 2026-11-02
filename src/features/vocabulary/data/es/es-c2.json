@@ -1,5 +1,5 @@
 {
-  "revision": "bb371d719422d441169ebc29",
+  "revision": "aa2c5a2faaedb992ed3e5dbc",
   "name": "WordCrawler vocabulary",
   "count": 32,
   "topics": [
@@ -379,29 +379,44 @@
       "word": "contribuir",
       "shareCode": "6RG",
       "meaningVi": "đóng_góp",
-      "defVi": "Góp sức, góp tiền | hoặc /ý_tưởng/ | vào việc chung.",
-      "leadVi": "Mỗi nhà một ít, | cả xóm dựng được | nhà /văn_hóa/.",
-      "anticipateVi": "Mỗi người góp gì?",
+      "defVi": "Góp tiền | hay /công_sức/ | vào một việc chung.",
+      "leadVi": "Quỹ lớp mua quà cô, | mình /góp_phần/ | tiền làm_thêm.",
+      "anticipateVi": "Mở /heo_đất/ ngay chứ?",
       "emphasis": [
-        "việc chung",
-        "cả xóm"
+        "công sức",
+        "góp phần",
+        "heo đất"
       ],
       "pos": "verb",
       "ipa": "/kontɾiˈβwiɾ/",
       "topic": "society",
       "topics": [
         "society",
-        "work"
+        "money"
       ],
       "level": "C2",
       "chars": 10,
       "initial": "C",
       "usage": [
         {
-          "en": "Todos queremos _____ a mejorar el barrio.",
-          "vi": "Ai cũng muốn đóng_góp | để khu phố | tốt hơn."
+          "en": "Todos podemos _____ a mantener limpia la playa.",
+          "vi": "Ai cũng có_thể | đóng_góp | để giữ bãi_biển sạch."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "i → y : contribuyo",
+          "tiempos": {
+            "presente": "yo contribuyo",
+            "pretérito": "él contribuyó",
+            "participio": "contribuido",
+            "gerundio": "contribuyendo"
+          }
+        },
+        "governs": "a + sustantivo",
+        "tipVi": "Thêm y | khi chia: | contribuyo, contribuyó."
+      }
     },
     {
       "id": "estimar",

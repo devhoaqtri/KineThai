@@ -1,5 +1,5 @@
 {
-  "revision": "4db52aa12892d3ec40067103",
+  "revision": "4c0c11a5638c226b9305fc41",
   "name": "WordCrawler vocabulary",
   "count": 93,
   "topics": [
@@ -931,29 +931,34 @@
       "word": "polémico",
       "shareCode": "0YC",
       "meaningVi": "gây tranh_cãi",
-      "defVi": "Gây ra | nhiều ý_kiến /trái_ngược/ | và tranh_cãi.",
-      "leadVi": "Bài vừa đăng, | /bình_luận/ | chia hai phe | cãi nảy lửa.",
-      "anticipateVi": "Phe nào đúng đây?",
+      "defVi": "Khiến dư_luận /bất_đồng/, | ý_kiến | trái_ngược nhau.",
+      "leadVi": "Bàn chuyện cấm điện_thoại, | lớp bạn | /tranh_luận/ nảy_lửa.",
+      "anticipateVi": "Cô /chủ_nhiệm/ phân_xử?",
       "emphasis": [
-        "tranh cãi",
-        "nảy lửa"
+        "bất đồng",
+        "tranh luận",
+        "chủ nhiệm"
       ],
       "pos": "adj",
       "ipa": "/poˈlemiko/",
       "topic": "society",
       "topics": [
-        "society",
-        "communication"
+        "society"
       ],
       "level": "C1",
       "chars": 8,
       "initial": "P",
       "usage": [
         {
-          "en": "El final del partido fue muy _____.",
-          "vi": "Kết_thúc trận_đấu | rất gây tranh_cãi."
+          "en": "Es un tema _____ entre los estudiantes.",
+          "vi": "Đó là chủ_đề | gây tranh_cãi | trong sinh_viên."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "polémica",
+        "plural": "polémicos / polémicas",
+        "serEstar": "Thường dùng ser: | el tema es polémico."
+      }
     },
     {
       "id": "crucial",
@@ -1035,29 +1040,41 @@
       "word": "evaluar",
       "shareCode": "BHY",
       "meaningVi": "đánh_giá",
-      "defVi": "/Cân_nhắc/ kỹ | để đánh_giá | tốt xấu hay giá_trị.",
-      "leadVi": "Đọc xong hồ_sơ, | hội_đồng chấm điểm | từng /ứng_viên/.",
-      "anticipateVi": "Chấm thang mấy điểm?",
+      "defVi": "Xem_xét kỹ | để biết | /mức_độ/, giá_trị.",
+      "leadVi": "Sau trận, | thầy thể_dục | chấm /sức_bền/ bạn.",
+      "anticipateVi": "Chân /rã_rời/ chưa?",
       "emphasis": [
-        "Cân nhắc",
-        "chấm điểm"
+        "mức độ",
+        "sức bền",
+        "rã rời"
       ],
       "pos": "verb",
-      "ipa": "/e.βaˈlwaɾ/",
+      "ipa": "/eβaˈlwaɾ/",
       "topic": "thinking",
       "topics": [
-        "thinking",
-        "work"
+        "thinking"
       ],
       "level": "C1",
       "chars": 7,
       "initial": "E",
       "usage": [
         {
-          "en": "Un experto va a _____ el estado de la casa.",
-          "vi": "Một chuyên_gia | sẽ đánh_giá | tình_trạng ngôi_nhà."
+          "en": "El profesor va a _____ nuestra forma de hablar.",
+          "vi": "Thầy sẽ đánh_giá | khả_năng nói của bọn mình."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo evalúo",
+            "pretérito": "él evaluó",
+            "participio": "evaluado",
+            "gerundio": "evaluando"
+          }
+        },
+        "tipVi": "Có dấu | ở ngôi yo: | evalúo, evalúas."
+      }
     },
     {
       "id": "garantizar",
@@ -1093,29 +1110,41 @@
       "word": "justificar",
       "shareCode": "VGH",
       "meaningVi": "biện_minh",
-      "defVi": "Đưa ra /lý_do/ | để chứng_tỏ | việc làm là đúng.",
-      "leadVi": "Bị hỏi | vì sao đến muộn, | cậu kể một tràng dài.",
-      "anticipateVi": "/Lý_lẽ/ đâu nào?",
+      "defVi": "Đưa ra | /lý_do/ | để chứng_tỏ là đúng.",
+      "leadVi": "Đi học trễ, | chị kể | xe_buýt /trục_trặc/ giữa đường.",
+      "anticipateVi": "Thầy /chấp_nhận/ không?",
       "emphasis": [
         "lý do",
-        "tràng dài"
+        "trục trặc",
+        "chấp nhận"
       ],
       "pos": "verb",
-      "ipa": "/xus.ti.fiˈkaɾ/",
+      "ipa": "/xustifiˈkaɾ/",
       "topic": "thinking",
       "topics": [
-        "thinking",
-        "communication"
+        "thinking"
       ],
       "level": "C1",
       "chars": 10,
       "initial": "J",
       "usage": [
         {
-          "en": "No intentes _____ tu mala actitud.",
-          "vi": "Đừng cố biện_minh | cho thái_độ tệ | của=bạn."
+          "en": "No intentes _____ tu error; mejor pide perdón.",
+          "vi": "Đừng cố biện_minh cho lỗi; | xin_lỗi thì hơn."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo justifico",
+            "pretérito": "él justificó",
+            "participio": "justificado",
+            "gerundio": "justificando"
+          }
+        },
+        "tipVi": "Trước e đổi c | thành qu: justifiqué."
+      }
     },
     {
       "id": "obvio",
@@ -1283,28 +1312,42 @@
       "word": "restringir",
       "shareCode": "1H1",
       "meaningVi": "hạn_chế",
-      "defVi": "Giới_hạn | số_lượng, /phạm_vi/ | hay quyền làm điều gì.",
-      "leadVi": "Biển ghi rõ: | xe tải | không được vào | giờ /cao_điểm/.",
-      "anticipateVi": "Cấm tới đâu?",
+      "defVi": "Không cho /vượt_quá/ | một mức | đã đặt ra.",
+      "leadVi": "Mùa ôn_thi, | mình tự | /khống_chế/ giờ lướt mạng.",
+      "anticipateVi": "Đặt /mật_khẩu/ cho máy?",
       "emphasis": [
-        "Giới hạn",
-        "cao điểm"
+        "vượt quá",
+        "khống chế",
+        "mật khẩu"
       ],
       "pos": "verb",
-      "ipa": "/res.tɾinˈxiɾ/",
+      "ipa": "/restɾinˈxiɾ/",
       "topic": "society",
       "topics": [
-        "society"
+        "society",
+        "study"
       ],
       "level": "C1",
       "chars": 10,
       "initial": "R",
       "usage": [
         {
-          "en": "El médico me pidió _____ el consumo de sal.",
-          "vi": "Bác_sĩ bảo tôi | hạn_chế ăn muối."
+          "en": "El colegio quiere _____ el uso del móvil en clase.",
+          "vi": "Trường muốn | hạn_chế | dùng điện_thoại trong lớp."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo restrinjo",
+            "pretérito": "él restringió",
+            "participio": "restringido",
+            "gerundio": "restringiendo"
+          }
+        },
+        "tipVi": "g thành j | trước o: | yo restrinjo."
+      }
     },
     {
       "id": "estrategia",
@@ -1410,29 +1453,35 @@
       "word": "reputación",
       "shareCode": "Z7B",
       "meaningVi": "danh_tiếng, tiếng_tăm",
-      "defVi": "Cách mọi người | đánh_giá và /nhìn_nhận/ | về ai đó.",
-      "leadVi": "/Quán_phở/ ba đời, | tiếng lành đồn khắp phố.",
-      "anticipateVi": "Tiếng lành | đồn xa?",
+      "defVi": "Tiếng tốt, tiếng xấu | mà ai cũng /đánh_giá/ về bạn.",
+      "leadVi": "Quán phở đầu ngõ | /nổi_danh/ | suốt mười năm nay.",
+      "anticipateVi": "Một lần /sơ_suất/ là mất?",
       "emphasis": [
-        "nhìn nhận",
-        "tiếng lành"
+        "đánh giá",
+        "nổi danh",
+        "sơ suất"
       ],
       "pos": "noun",
-      "ipa": "/re.pu.taˈθjon/",
+      "ipa": "/reputaˈθjon/",
       "topic": "society",
       "topics": [
-        "society",
-        "work"
+        "society"
       ],
       "level": "C1",
       "chars": 10,
       "initial": "R",
       "usage": [
         {
-          "en": "Ese hotel tiene muy mala _____.",
-          "vi": "Khách_sạn đó | có tiếng rất=xấu."
+          "en": "Ese restaurante tiene muy buena _____ en el barrio.",
+          "vi": "Nhà_hàng đó | rất có danh_tiếng | trong khu_phố."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las reputaciones",
+        "tipVi": "Hay đi với buena, mala: | tener buena reputación."
+      }
     },
     {
       "id": "acumular",
@@ -1767,29 +1816,34 @@
       "word": "deliberado",
       "shareCode": "S0T",
       "meaningVi": "cố_ý",
-      "defVi": "Cố_ý, | được /tính_toán/ kỹ | chứ không phải tình_cờ.",
-      "leadVi": "Cái va nhẹ ấy | đâu /vô_tình/, | cậu=ta tính sẵn.",
-      "anticipateVi": "/Tình_cờ/ | hay cố_ý?",
+      "defVi": "Được làm | có /chủ_đích/, | không phải tình_cờ.",
+      "leadVi": "/Chủ_động/ tắt chuông, | bạn muốn | tập_trung học.",
+      "anticipateVi": "/Tĩnh_lặng/ cả buổi?",
       "emphasis": [
-        "tính toán",
-        "tính sẵn"
+        "chủ đích",
+        "Chủ động",
+        "Tĩnh lặng"
       ],
       "pos": "adj",
       "ipa": "/deliβeˈɾaðo/",
       "topic": "thinking",
       "topics": [
-        "thinking",
-        "character"
+        "thinking"
       ],
       "level": "C1",
       "chars": 10,
       "initial": "D",
       "usage": [
         {
-          "en": "Fue un intento _____ de engañar al profesor.",
-          "vi": "Đó là một nỗ_lực cố_ý | để lừa thầy_giáo."
+          "en": "Su silencio fue _____: no quería hablar.",
+          "vi": "Sự=im_lặng của anh=ấy | là cố_ý: | anh không muốn nói."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "deliberada",
+        "plural": "deliberados / deliberadas",
+        "serEstar": "Thường dùng ser: | fue deliberado."
+      }
     },
     {
       "id": "deteriorar",
@@ -2146,29 +2200,35 @@
       "word": "innovador",
       "shareCode": "Q3A",
       "meaningVi": "đổi_mới, sáng_tạo",
-      "defVi": "/Đổi_mới/, | mang ý_tưởng hay cách làm | chưa từng có.",
-      "leadVi": "Chiếc_xe | chạy bằng nước, | ai mà nghĩ ra được?",
-      "anticipateVi": "/Ý_tưởng/ | mới toanh?",
+      "defVi": "Có ý_tưởng /mới_mẻ/, | khác cách=làm cũ.",
+      "leadVi": "Thi khoa_học, | mình /phát_minh/ | máy tưới cây tự_động.",
+      "anticipateVi": "Giám_khảo /trầm_trồ/ chưa?",
       "emphasis": [
-        "Đổi mới",
-        "nghĩ ra"
+        "mới mẻ",
+        "phát minh",
+        "trầm trồ"
       ],
       "pos": "adj",
       "ipa": "/inoβaˈðoɾ/",
       "topic": "technology",
       "topics": [
         "technology",
-        "work"
+        "thinking"
       ],
       "level": "C1",
       "chars": 9,
       "initial": "I",
       "usage": [
         {
-          "en": "Han lanzado un diseño muy _____ para bicicletas.",
-          "vi": "Họ đã ra_mắt | một thiết_kế xe_đạp | rất sáng_tạo."
+          "en": "La empresa presentó un proyecto muy _____.",
+          "vi": "Công_ty | giới_thiệu | một dự_án rất sáng_tạo."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "innovadora",
+        "plural": "innovadores / innovadoras",
+        "serEstar": "Thường dùng ser: | es una idea innovadora."
+      }
     },
     {
       "id": "integridad",
@@ -2318,12 +2378,13 @@
       "word": "noción",
       "shareCode": "T39",
       "meaningVi": "khái_niệm, ý_niệm",
-      "defVi": "/Ý_niệm/ | hay quan_niệm chung | về một điều.",
-      "leadVi": "Cứ nghĩ ở /thành_phố/ | ai cũng giàu, | thực ra không.",
-      "anticipateVi": "Bạn /hình_dung/ thế nào?",
+      "defVi": "Hình_dung /sơ_lược/ | về một chủ_đề nào.",
+      "leadVi": "Hồi nhỏ, | mình /đinh_ninh/ | nuốt hạt sẽ mọc cây.",
+      "anticipateVi": "Nội /phì_cười/?",
       "emphasis": [
-        "quan niệm",
-        "thực ra"
+        "sơ lược",
+        "đinh ninh",
+        "phì cười"
       ],
       "pos": "noun",
       "ipa": "/noˈθjon/",
@@ -2336,10 +2397,16 @@
       "initial": "N",
       "usage": [
         {
-          "en": "Con tanto trabajo, perdí la _____ del tiempo.",
-          "vi": "Làm_việc nhiều quá, | tôi mất khái_niệm thời_gian."
+          "en": "Solo tengo una _____ básica de química.",
+          "vi": "Mình chỉ có | hiểu_biết sơ_sài về hóa_học."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las nociones",
+        "tipVi": "Số_nhiều nociones | là kiến_thức cơ_bản."
+      }
     },
     {
       "id": "matiz",
@@ -2807,29 +2874,40 @@
       "word": "percibir",
       "shareCode": "PGZ",
       "meaningVi": "nhìn_nhận, cảm_nhận",
-      "defVi": "/Nhận_thức/ | hay nhìn_nhận một điều | theo cách riêng.",
-      "leadVi": "Cùng cơn mưa, | người thấy buồn, | người thấy /lãng_mạn/.",
-      "anticipateVi": "Bạn /cảm_thấy/ ra sao?",
+      "defVi": "Nhận ra điều=gì | nhờ mắt, tai | hay /giác_quan/ khác.",
+      "leadVi": "Bước vào phòng_thi, | bạn /cảm_thấy/ | không_khí căng.",
+      "anticipateVi": "Sống lưng /ớn_lạnh/?",
       "emphasis": [
-        "Nhận thức",
-        "lãng mạn"
+        "giác quan",
+        "cảm thấy",
+        "ớn lạnh"
       ],
       "pos": "verb",
       "ipa": "/peɾθiˈβiɾ/",
       "topic": "perception",
       "topics": [
-        "perception",
-        "thinking"
+        "perception"
       ],
       "level": "C1",
       "chars": 8,
       "initial": "P",
       "usage": [
         {
-          "en": "Los clientes suelen _____ esta marca como cara.",
-          "vi": "Khách_hàng | thường nhìn_nhận thương_hiệu này | là đắt."
+          "en": "Al entrar, pude _____ un olor a pan recién hecho.",
+          "vi": "Vừa bước vào, | mình nhận_thấy | mùi bánh_mì mới nướng."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo percibo",
+            "pretérito": "él percibió",
+            "participio": "percibido",
+            "gerundio": "percibiendo"
+          }
+        }
+      }
     },
     {
       "id": "aliviar",

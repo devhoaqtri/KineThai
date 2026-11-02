@@ -301,19 +301,35 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Góp sức, góp tiền | hoặc ý_tưởng | vào việc chung.",
-    "leadVi": "Mỗi nhà một ít, | cả xóm dựng được | nhà văn_hóa.",
-    "anticipateVi": "Mỗi người góp gì?",
-    "usageEn": "Todos queremos _____ a mejorar el barrio.",
-    "usageVi": "Ai cũng muốn đóng_góp | để khu phố | tốt hơn.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "irregular",
+      "raíz": "i → y : contribuyo",
+      "tiempos": {
+        "presente": "yo contribuyo",
+        "pretérito": "él contribuyó",
+        "participio": "contribuido",
+        "gerundio": "contribuyendo"
+      }
+    },
+    "reflexive": null,
+    "governs": "a + sustantivo",
+    "serEstar": null,
+    "tipVi": "Thêm y | khi chia: | contribuyo, contribuyó.",
+    "defVi": "Góp tiền | hay /công_sức/ | vào một việc chung.",
+    "leadVi": "Quỹ lớp mua quà cô, | mình /góp_phần/ | tiền làm_thêm.",
+    "anticipateVi": "Mở /heo_đất/ ngay chứ?",
+    "usageEn": "Todos podemos _____ a mantener limpia la playa.",
+    "usageVi": "Ai cũng có_thể | đóng_góp | để giữ bãi_biển sạch.",
     "topics": [
       "society",
-      "work"
+      "money"
     ],
     "exams": [],
     "emphasisVi": [
-      "việc chung",
-      "cả xóm"
+      "công sức",
+      "góp phần",
+      "heo đất"
     ]
   },
   {
