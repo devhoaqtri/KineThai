@@ -1,5 +1,5 @@
 {
-  "revision": "d090f5db95ea89df830acb22",
+  "revision": "65cd32e6dc82eab7f1b526b4",
   "name": "WordCrawler vocabulary",
   "count": 642,
   "topics": [
@@ -127,7 +127,7 @@
       "id": "desayuno",
       "word": "desayuno",
       "shareCode": "X0T",
-      "meaningVi": "bữa sáng",
+      "meaningVi": "bữa_sáng",
       "defVi": "/Bữa_ăn/ đầu_tiên trong ngày | trước_khi đi_học.",
       "leadVi": "Sáu giờ, mẹ bày | /điểm_tâm/ bánh_mì với sữa.",
       "anticipateVi": "Ngủ_quên, /vội_vã/ bỏ bữa?",
@@ -191,14 +191,14 @@
         "gender": "f",
         "article": "la",
         "plural": "las cocinas",
-        "tipVi": "Còn nghĩa | bếp nấu | và cách nấu_ăn."
+        "tipVi": "Còn nghĩa | bếp nấu | và cách=nấu_ăn."
       }
     },
     {
       "id": "vacaciones",
       "word": "vacaciones",
       "shareCode": "TG8",
-      "meaningVi": "kỳ nghỉ",
+      "meaningVi": "kỳ_nghỉ",
       "defVi": "Khoảng nghỉ học | hay nghỉ việc | để /du_lịch/, vui_chơi.",
       "leadVi": "/Nghỉ_hè/ hai tháng, em | về quê phụ bà bán hàng.",
       "anticipateVi": "Hai tháng ở quê, /rám_nắng/?",
@@ -227,7 +227,7 @@
         "gender": "f",
         "article": "las",
         "plural": "las vacaciones",
-        "tipVi": "Luôn dùng | số nhiều: | las vacaciones."
+        "tipVi": "Luôn dùng | số_nhiều: | las vacaciones."
       }
     },
     {
@@ -263,7 +263,7 @@
       "word": "biblioteca",
       "shareCode": "VY1",
       "meaningVi": "thư_viện",
-      "defVi": "Nơi /cất_giữ/ nhiều sách | cho mọi người | đọc và mượn.",
+      "defVi": "Nơi=/cất_giữ/ nhiều sách | cho mọi người | đọc và mượn.",
       "leadVi": "Mùa thi, bạn | ôn bài | trong /phòng_đọc/ yên_tĩnh.",
       "anticipateVi": "/Yên_ắng/ đến nghe lật trang?",
       "emphasis": [
@@ -290,7 +290,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las bibliotecas",
-        "tipVi": "Không phải hiệu sách: | hiệu sách là librería."
+        "tipVi": "Không phải hiệu_sách: | hiệu_sách là librería."
       }
     },
     {
@@ -327,7 +327,7 @@
       "word": "aeropuerto",
       "shareCode": "SGF",
       "meaningVi": "sân_bay",
-      "defVi": "Nơi máy_bay /cất_cánh/ | và hạ_cánh | mỗi ngày.",
+      "defVi": "Nơi=máy_bay /cất_cánh/ | và hạ_cánh | mỗi ngày.",
       "leadVi": "Bay sớm, em | ngồi /phòng_chờ/ | từ bốn giờ sáng.",
       "anticipateVi": "/Ngủ_gật/ trên ghế chờ?",
       "emphasis": [
@@ -395,8 +395,8 @@
       "id": "llegar",
       "word": "llegar",
       "shareCode": "9ZG",
-      "meaningVi": "đến nơi",
-      "defVi": "Đi hết /chặng_đường/ | và có_mặt | ở nơi cần tới.",
+      "meaningVi": "đến_nơi",
+      "defVi": "Đi hết /chặng_đường/ | và có_mặt | ở nơi=cần tới.",
       "leadVi": "Xe khách /cập_bến/ | lúc nửa_đêm, | mình gọi bạn ra.",
       "anticipateVi": "/Khuya_khoắt/, ai ra đón?",
       "emphasis": [
@@ -438,29 +438,42 @@
       "word": "esperar",
       "shareCode": "CNY",
       "meaningVi": "chờ, đợi",
-      "defVi": "Nán lại /chờ_đợi/ | cho tới khi | người mình mong đến.",
-      "leadVi": "Đặt đồ_ăn xong, | /sốt_ruột/ | mở ứng_dụng xem mãi.",
-      "anticipateVi": "Khoan, chút nữa thôi!",
+      "defVi": "Tin và mong | /may_mắn/ sẽ=đến với mình.",
+      "leadVi": "Nộp hồ_sơ học_bổng xong, | em /mong_mỏi/ từng ngày.",
+      "anticipateVi": "Chờ mỏi mắt, vẫn /lạc_quan/?",
       "emphasis": [
-        "chờ đợi",
-        "sốt ruột"
+        "may mắn",
+        "mong mỏi",
+        "lạc quan"
       ],
       "pos": "verb",
       "ipa": "/espeˈɾaɾ/",
-      "topic": "time",
+      "topic": "emotion",
       "topics": [
-        "time",
-        "daily"
+        "emotion",
+        "thinking"
       ],
       "level": "A1",
       "chars": 7,
       "initial": "E",
       "usage": [
         {
-          "en": "Tenemos que _____ media hora para entrar al museo.",
-          "vi": "Chúng_tôi | phải đợi nửa tiếng | mới được vào bảo_tàng."
+          "en": "Siempre hay que _____ que mañana sea un día mejor.",
+          "vi": "Hãy luôn | hy_vọng | ngày_mai tốt hơn."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo espero",
+            "pretérito": "él esperó",
+            "participio": "esperado",
+            "gerundio": "esperando"
+          }
+        },
+        "tipVi": "Esperar | vừa là hy_vọng | vừa là chờ: | espero el autobús."
+      }
     },
     {
       "id": "creer",
@@ -645,7 +658,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los libros",
-        "tipVi": "Librería là hiệu sách, | không phải thư_viện."
+        "tipVi": "Librería là hiệu_sách, | không phải thư_viện."
       }
     },
     {
@@ -687,7 +700,7 @@
       "word": "hermano",
       "shareCode": "58R",
       "meaningVi": "anh_trai, em_trai",
-      "defVi": "Người con_trai | cùng /bố_mẹ/ sinh ra với mình.",
+      "defVi": "Người=con_trai | cùng /bố_mẹ/ sinh ra với mình.",
       "leadVi": "Thi xong, em | được /anh_ruột/ chở đi ăn_mừng.",
       "anticipateVi": "Hay /cãi_nhau/ | mà vẫn thương?",
       "emphasis": [
@@ -714,7 +727,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los hermanos",
-        "tipVi": "Số_nhiều hermanos | là anh_chị_em nói chung."
+        "tipVi": "Số_nhiều hermanos | là anh_chị_em nói_chung."
       }
     },
     {
@@ -749,7 +762,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los autobuses",
-        "tipVi": "Số nhiều | mất dấu: | los autobuses."
+        "tipVi": "Số_nhiều | mất dấu: | los autobuses."
       }
     },
     {
@@ -757,7 +770,7 @@
       "word": "coche",
       "shareCode": "Q6Y",
       "meaningVi": "ô_tô",
-      "defVi": "Xe có /động_cơ/, | bốn bánh, | chở vài người đi xa.",
+      "defVi": "Xe có /động_cơ/, | bốn bánh, | chở vài người=đi xa.",
       "leadVi": "Về quê ăn Tết, | cả nhà | chất đồ lên /xe_hơi/.",
       "anticipateVi": "Đồ chất /đầy_ắp/, đủ chỗ ngồi?",
       "emphasis": [
@@ -911,7 +924,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los relojes",
-        "tipVi": "Số nhiều | thêm -es: | los relojes."
+        "tipVi": "Số_nhiều | thêm -es: | los relojes."
       }
     },
     {
@@ -919,7 +932,7 @@
       "word": "frío",
       "shareCode": "4FS",
       "meaningVi": "lạnh",
-      "defVi": "/Nhiệt_độ/ thấp | khiến người run và muốn mặc thêm.",
+      "defVi": "/Nhiệt_độ/ thấp | khiến người=run và muốn mặc thêm.",
       "leadVi": "/Gió_mùa/ về, | mình trùm hai lớp áo | đi học.",
       "anticipateVi": "Hai lớp áo | mà vẫn /run_rẩy/?",
       "emphasis": [
@@ -1099,7 +1112,7 @@
             "gerundio": "bebiendo"
           }
         },
-        "tipVi": "Uống nói chung | dùng beber, | gọi đồ uống | hay dùng tomar."
+        "tipVi": "Uống nói_chung | dùng beber, | gọi đồ_uống | hay dùng tomar."
       }
     },
     {
@@ -1134,7 +1147,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los ojos",
-        "tipVi": "¡Ojo! | còn nghĩa là | coi_chừng."
+        "tipVi": "¡Ojo! | còn nghĩa_là | coi_chừng."
       }
     },
     {
@@ -1142,8 +1155,8 @@
       "word": "familia",
       "shareCode": "8RA",
       "meaningVi": "gia_đình",
-      "defVi": "Những=người /ruột_thịt/ | sống cùng và thương nhau.",
-      "leadVi": "Tết đến, bạn | về nhà /quây_quần/ | bên bố_mẹ, em.",
+      "defVi": "Những=người=/ruột_thịt/ | sống cùng và thương nhau.",
+      "leadVi": "Tết đến, bạn | về nhà=/quây_quần/ | bên bố_mẹ, em.",
       "anticipateVi": "/Mâm_cơm/ đông_đủ, ấm chưa?",
       "emphasis": [
         "ruột thịt",
@@ -1177,7 +1190,7 @@
       "word": "padre",
       "shareCode": "7MF",
       "meaningVi": "cha",
-      "defVi": "Người đàn_ông | sinh ra và /nuôi_nấng/ con.",
+      "defVi": "Người=đàn_ông | sinh ra và /nuôi_nấng/ con.",
       "leadVi": "Thi đỗ, | mình gọi ngay cho người | /trụ_cột/ của nhà.",
       "anticipateVi": "Ít nói | nhưng /âm_thầm/ lo?",
       "emphasis": [
@@ -1276,8 +1289,8 @@
       "word": "amigo",
       "shareCode": "PKK",
       "meaningVi": "bạn",
-      "defVi": "Người mình quý | và hay /chia_sẻ/ chuyện vui buồn.",
-      "leadVi": "Năm nhất, | mình gặp ngay | người /tri_kỷ/ cùng phòng.",
+      "defVi": "Người=mình quý | và hay /chia_sẻ/ chuyện vui buồn.",
+      "leadVi": "Năm nhất, | mình gặp ngay | người=/tri_kỷ/ cùng phòng.",
       "anticipateVi": "Gặp một lần, | /thân_thiết/ luôn?",
       "emphasis": [
         "chia sẻ",
@@ -1417,7 +1430,7 @@
       "word": "ayudar",
       "shareCode": "RE0",
       "meaningVi": "giúp_đỡ",
-      "defVi": "Góp sức /hỗ_trợ/ | để người khác | làm việc dễ hơn.",
+      "defVi": "Góp sức /hỗ_trợ/ | để người=khác | làm việc dễ hơn.",
       "leadVi": "Chuyển trọ, | cả nhóm /phụ_giúp/ | khiêng tủ cho bạn.",
       "anticipateVi": "Khiêng xong, đãi /trà_sữa/?",
       "emphasis": [
@@ -1451,7 +1464,7 @@
           }
         },
         "governs": "a + persona",
-        "tipVi": "Người được giúp | cần a: | ayudo a mi madre."
+        "tipVi": "Người=được giúp | cần a: | ayudo a mi madre."
       }
     },
     {
@@ -1495,7 +1508,7 @@
       "word": "casa",
       "shareCode": "XMV",
       "meaningVi": "ngôi=nhà",
-      "defVi": "Công_trình nơi một gia_đình | /sinh_sống/ hằng_ngày.",
+      "defVi": "Công_trình nơi=một gia_đình | /sinh_sống/ hằng_ngày.",
       "leadVi": "Mái_ngói đỏ ở quê | là /tổ_ấm/ bạn lớn lên.",
       "anticipateVi": "Đi xa mấy cũng /bồi_hồi/?",
       "emphasis": [
@@ -1531,7 +1544,7 @@
       "shareCode": "1G5",
       "meaningVi": "chìa_khóa",
       "defVi": "Vật nhỏ bằng /kim_loại/ | dùng mở ổ cửa.",
-      "leadVi": "Về muộn, em lục /ba_lô/ | tìm thứ mở phòng_trọ.",
+      "leadVi": "Về muộn, em lục /ba_lô/ | tìm thứ=mở phòng_trọ.",
       "anticipateVi": "Lục tung túi, vẫn /biệt_tăm/?",
       "emphasis": [
         "kim loại",
@@ -1637,7 +1650,7 @@
       "word": "dinero",
       "shareCode": "SET",
       "meaningVi": "tiền",
-      "defVi": "Thứ dùng để | /mua_bán/, trả cho hàng_hóa.",
+      "defVi": "Thứ=dùng để | /mua_bán/, trả cho hàng_hóa.",
       "leadVi": "Đầu tháng, | tôi chia lương làm_thêm | vào ba /phong_bì/.",
       "anticipateVi": "Giữa tháng, | ví /rỗng_tuếch/?",
       "emphasis": [
@@ -1699,7 +1712,7 @@
       "word": "madre",
       "shareCode": "HTD",
       "meaningVi": "mẹ",
-      "defVi": "Người đã /sinh_thành/ | và nuôi_nấng | mình khôn_lớn.",
+      "defVi": "Người=đã /sinh_thành/ | và nuôi_nấng | mình khôn_lớn.",
       "leadVi": "Họp /phụ_huynh/, | má bạn | ghi_chép kín sổ.",
       "anticipateVi": "Nghe giọng má, /nhớ_nhà/ liền?",
       "emphasis": [
@@ -1727,7 +1740,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las madres",
-        "tipVi": "Số nhiều padres | là bố_mẹ, | không chỉ các ông bố."
+        "tipVi": "Số_nhiều padres | là bố_mẹ, | không chỉ các ông bố."
       }
     },
     {
@@ -1806,7 +1819,7 @@
       "word": "noche",
       "shareCode": "SEF",
       "meaningVi": "ban_đêm",
-      "defVi": "Khoảng thời_gian | trời tối, | mọi người /yên_giấc/.",
+      "defVi": "Khoảng thời_gian | trời tối, | mọi người=/yên_giấc/.",
       "leadVi": "Đêm ở ký_túc_xá, | bạn ngắm /bầu_trời/ đầy sao.",
       "anticipateVi": "/Khuya_khoắt/ | mắt cay chưa?",
       "emphasis": [
@@ -1868,7 +1881,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las narices",
-        "tipVi": "Số nhiều đổi z | thành c: | las narices."
+        "tipVi": "Số_nhiều đổi z | thành c: | las narices."
       }
     },
     {
@@ -2173,7 +2186,7 @@
       "word": "escuela",
       "shareCode": "MV7",
       "meaningVi": "trường_học",
-      "defVi": "Nơi thầy_cô | /giảng_dạy/ | cho học_sinh mỗi ngày.",
+      "defVi": "Nơi=thầy_cô | /giảng_dạy/ | cho học_sinh mỗi ngày.",
       "leadVi": "Ghé thăm trường cấp ba cũ, | bạn gặp | thầy /chủ_nhiệm/.",
       "anticipateVi": "Sân cũ, /ký_ức/ ùa về?",
       "emphasis": [
@@ -2277,7 +2290,7 @@
       "word": "tienda",
       "shareCode": "3F9",
       "meaningVi": "cửa_hàng",
-      "defVi": "Nơi /bày_bán/ | hàng_hóa cho khách tới mua.",
+      "defVi": "Nơi=/bày_bán/ | hàng_hóa cho khách tới mua.",
       "leadVi": "Gần ký_túc_xá | có tiệm /tạp_hóa/ | mở tới khuya.",
       "anticipateVi": "Khuya rồi | còn /mở_cửa/?",
       "emphasis": [
@@ -2305,7 +2318,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las tiendas",
-        "tipVi": "Tienda | còn nghĩa | là cái lều."
+        "tipVi": "Tienda | còn nghĩa | là cái=lều."
       }
     },
     {
@@ -2353,7 +2366,7 @@
       "word": "hermana",
       "shareCode": "DH4",
       "meaningVi": "chị_gái, em_gái",
-      "defVi": "Người /con_gái/ | cùng cha_mẹ | sinh ra với mình.",
+      "defVi": "Người=/con_gái/ | cùng cha_mẹ | sinh ra với mình.",
       "leadVi": "Lên thành_phố học, | bạn ở chung | với chị /ruột_thịt/.",
       "anticipateVi": "Chung tủ đồ, mượn /thoải_mái/?",
       "emphasis": [
@@ -2431,7 +2444,7 @@
       "word": "pequeño",
       "shareCode": "KKQ",
       "meaningVi": "nhỏ",
-      "defVi": "Có kích_thước /tí_hon/ | so với thứ cùng loại.",
+      "defVi": "Có kích_thước /tí_hon/ | so với thứ=cùng loại.",
       "leadVi": "Ban_công phòng_trọ, | mình trồng chậu xương_rồng /bé_xíu/.",
       "anticipateVi": "Bé bằng /nắm_tay/, nuôi sống nổi?",
       "emphasis": [
@@ -2492,7 +2505,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las canciones",
-        "tipVi": "Số nhiều mất dấu: | canción, canciones."
+        "tipVi": "Số_nhiều mất dấu: | canción, canciones."
       }
     },
     {
@@ -2574,7 +2587,7 @@
       "id": "mesa",
       "word": "mesa",
       "shareCode": "1HE",
-      "meaningVi": "cái bàn",
+      "meaningVi": "cái=bàn",
       "defVi": "Đồ có /mặt_phẳng/ | và chân để đặt đồ lên.",
       "leadVi": "Học xong, bạn cất | sách_vở vào /ngăn_kéo/ ngay.",
       "anticipateVi": "Kê ở đâu cho /vừa_vặn/ nhỉ?",
@@ -2609,7 +2622,7 @@
       "word": "profesor",
       "shareCode": "EP2",
       "meaningVi": "giáo_viên",
-      "defVi": "Người /đứng_lớp/ | dạy kiến_thức | cho học_trò.",
+      "defVi": "Người=/đứng_lớp/ | dạy kiến_thức | cho học_trò.",
       "leadVi": "Ngày /Nhà_giáo/, | lớp bạn | tặng thầy bó hoa.",
       "anticipateVi": "Thầy /cảm_động/, cả lớp vỗ_tay?",
       "emphasis": [
@@ -2804,7 +2817,7 @@
       "usage": [
         {
           "en": "Vivimos en una casa muy _____.",
-          "vi": "Bọn=mình sống | trong một ngôi=nhà rất to."
+          "vi": "Bọn=mình sống | trong một ngôi=nhà=rất to."
         }
       ],
       "grammar": {
@@ -2846,7 +2859,7 @@
         "feminine": "roja",
         "plural": "rojos / rojas",
         "serEstar": "Thường dùng ser: | la manzana es roja.",
-        "tipVi": "Đỏ mặt vì ngượng | nói ponerse rojo."
+        "tipVi": "Đỏ_mặt vì ngượng | nói ponerse rojo."
       }
     },
     {
@@ -2895,7 +2908,7 @@
       "word": "banco",
       "shareCode": "ADW",
       "meaningVi": "ngân_hàng",
-      "defVi": "Nơi /cất_giữ/ tiền, | cho vay | và chuyển_khoản.",
+      "defVi": "Nơi=/cất_giữ/ tiền, | cho vay | và chuyển_khoản.",
       "leadVi": "Đầu tháng, em | ra quầy mở /tài_khoản/ sinh_viên.",
       "anticipateVi": "Lấy số chờ, | /mỏi_mòn/ chưa?",
       "emphasis": [
@@ -2930,7 +2943,7 @@
       "word": "playa",
       "shareCode": "XXX",
       "meaningVi": "bãi_biển",
-      "defVi": "Dải cát ven /bờ_biển/, | nơi sóng vỗ | vào mỗi=ngày.",
+      "defVi": "Dải cát ven /bờ_biển/, | nơi=sóng vỗ | vào mỗi=ngày.",
       "leadVi": "Nghỉ_hè, cả nhóm | /vui_chơi/ trên cát | rồi nhảy sóng.",
       "anticipateVi": "Cát dính đầy chân, /mặc_kệ/?",
       "emphasis": [
@@ -3007,7 +3020,7 @@
       "shareCode": "B4A",
       "meaningVi": "anh_họ, em_họ",
       "defVi": "Con của cô, dì | hay chú, bác | trong /họ_hàng/.",
-      "leadVi": "Tết về quê, | mình /tụ_tập/ | cả chục đứa nhà bác.",
+      "leadVi": "Tết về quê, | mình /tụ_tập/ | cả chục đứa nhà=bác.",
       "anticipateVi": "Đông thế, | /nhận_mặt/ nổi không?",
       "emphasis": [
         "họ hàng",
@@ -3104,7 +3117,7 @@
         "feminine": "difícil",
         "plural": "difíciles",
         "serEstar": "Thường dùng ser: | el examen es difícil.",
-        "tipVi": "Số nhiều vẫn giữ dấu: | difíciles."
+        "tipVi": "Số_nhiều vẫn giữ dấu: | difíciles."
       }
     },
     {
@@ -3246,7 +3259,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los exámenes",
-        "tipVi": "Số nhiều thêm dấu: | exámenes."
+        "tipVi": "Số_nhiều thêm dấu: | exámenes."
       }
     },
     {
@@ -3317,7 +3330,7 @@
       "word": "hospital",
       "shareCode": "MGB",
       "meaningVi": "bệnh_viện",
-      "defVi": "Nơi lớn | khám và /điều_trị/ | cho người bị ốm.",
+      "defVi": "Nơi=lớn | khám và /điều_trị/ | cho người=bị ốm.",
       "leadVi": "/Thăm_bệnh/ bạn cùng phòng, | cả nhóm mang hoa_quả.",
       "anticipateVi": "Thăm một lát, | bạn /tươi_tỉnh/ hẳn?",
       "emphasis": [
@@ -3501,7 +3514,7 @@
       "word": "museo",
       "shareCode": "3FD",
       "meaningVi": "bảo_tàng",
-      "defVi": "Nơi /trưng_bày/ đồ cổ, | tranh hay hiện_vật.",
+      "defVi": "Nơi=/trưng_bày/ đồ cổ, | tranh hay hiện_vật.",
       "leadVi": "Chuyến tham_quan, | lớp em | xem /hiện_vật/ thời đồ đá.",
       "anticipateVi": "Ngắm /cổ_vật/, quên giờ?",
       "emphasis": [
@@ -3571,7 +3584,7 @@
       "word": "restaurante",
       "shareCode": "MTA",
       "meaningVi": "nhà_hàng",
-      "defVi": "Nơi /phục_vụ/ món | cho khách ngồi ăn, trả tiền.",
+      "defVi": "Nơi=/phục_vụ/ món | cho khách ngồi ăn, trả tiền.",
       "leadVi": "Mừng bố_mẹ, anh | đặt chỗ ở quán /sang_trọng/.",
       "anticipateVi": "Đông khách thế, /chờ_đợi/ bao_lâu?",
       "emphasis": [
@@ -3641,7 +3654,7 @@
       "word": "vender",
       "shareCode": "E01",
       "meaningVi": "bán",
-      "defVi": "Đưa hàng_hóa | cho người mua | để /kiếm_lời/.",
+      "defVi": "Đưa hàng_hóa | cho người=mua | để /kiếm_lời/.",
       "leadVi": "Hết năm_học, | tôi /rao_vặt/ | sách cũ cho khóa dưới.",
       "anticipateVi": "Rao một hôm, | /sạch_bách/?",
       "emphasis": [
@@ -3785,7 +3798,7 @@
       "word": "tímido",
       "shareCode": "HNH",
       "meaningVi": "nhút_nhát",
-      "defVi": "Ngại tiếp_xúc, | /rụt_rè/ | trước người lạ.",
+      "defVi": "Ngại tiếp_xúc, | /rụt_rè/ | trước người=lạ.",
       "leadVi": "Ngày đầu lớp mới, | mình /ngại_ngùng/ | ít nói hẳn.",
       "anticipateVi": "Ai /bắt_chuyện/ trước?",
       "emphasis": [
@@ -3819,7 +3832,7 @@
       "word": "interesado",
       "shareCode": "7PH",
       "meaningVi": "quan_tâm",
-      "defVi": "Thấy /hứng_thú/ | và muốn tìm_hiểu thêm về điều gì.",
+      "defVi": "Thấy /hứng_thú/ | và muốn tìm_hiểu thêm về điều=gì.",
       "leadVi": "Nghe giới_thiệu khóa nhạc, | bạn /háo_hức/ hỏi lịch học.",
       "anticipateVi": "Mới nghe qua đã /tò_mò/?",
       "emphasis": [
@@ -3848,7 +3861,7 @@
         "plural": "interesados / interesadas",
         "governs": "en + sustantivo",
         "serEstar": "Thường dùng estar: | estoy interesado.",
-        "tipVi": "Quan_tâm điều gì | dùng en: | interesado en el arte."
+        "tipVi": "Quan_tâm điều=gì | dùng en: | interesado en el arte."
       }
     },
     {
@@ -3892,7 +3905,7 @@
       "word": "detalle",
       "shareCode": "5X0",
       "meaningVi": "chi_tiết",
-      "defVi": "Phần nhỏ | trong tổng_thể mà người /tinh_mắt/ mới thấy.",
+      "defVi": "Phần nhỏ | trong tổng_thể mà người=/tinh_mắt/ mới thấy.",
       "leadVi": "Bạn soát bài nhóm, | sửa từng /dấu_phẩy/ nhỏ xíu.",
       "anticipateVi": "Soi từng li, /kỹ_tính/ quá?",
       "emphasis": [
@@ -3927,7 +3940,7 @@
       "id": "interes",
       "word": "interés",
       "shareCode": "CP2",
-      "meaningVi": "sự quan_tâm",
+      "meaningVi": "sự=quan_tâm",
       "defVi": "/Cảm_giác/ muốn biết thêm | về một chuyện hay một môn.",
       "leadVi": "Xem phim tài_liệu xong, | em /say_mê/ thiên_văn hẳn.",
       "anticipateVi": "Từ tò_mò thành /đam_mê/ luôn?",
@@ -3964,7 +3977,7 @@
       "word": "comprobar",
       "shareCode": "J4Z",
       "meaningVi": "kiểm_tra",
-      "defVi": "/Rà_soát/ cho chắc | mọi thứ đã=đúng chưa.",
+      "defVi": "/Rà_soát/ cho chắc | mọi thứ=đã=đúng chưa.",
       "leadVi": "Trước_khi nộp bài, | bạn /đối_chiếu/ từng đáp_án.",
       "anticipateVi": "Nộp rồi mới /phát_hiện/ sai?",
       "emphasis": [
@@ -4007,7 +4020,7 @@
       "word": "escuchar",
       "shareCode": "6CB",
       "meaningVi": "lắng_nghe",
-      "defVi": "/Tập_trung/ đôi=tai | để hiểu điều người khác nói.",
+      "defVi": "/Tập_trung/ đôi=tai | để hiểu điều=người=khác nói.",
       "leadVi": "Bạn cùng phòng tâm_sự, | anh ngồi /chăm_chú/ suốt.",
       "anticipateVi": "Nghe xong, /nhập_tâm/ được mấy câu?",
       "emphasis": [
@@ -4121,7 +4134,7 @@
       "word": "querido",
       "shareCode": "M29",
       "meaningVi": "thân_mến",
-      "defVi": "Lời gọi /thân_thương/ | dành cho người mình quý.",
+      "defVi": "Lời gọi /thân_thương/ | dành cho người=mình quý.",
       "leadVi": "Viết thư cảm_ơn thầy, | em mở_đầu thật /trìu_mến/.",
       "anticipateVi": "Đầu thư, /xưng_hô/ sao cho ấm?",
       "emphasis": [
@@ -4157,8 +4170,8 @@
       "word": "bienvenido",
       "shareCode": "MXG",
       "meaningVi": "được chào_đón",
-      "defVi": "Được người khác /đón_nhận/ | vui_vẻ, thấy như ở nhà.",
-      "leadVi": "Lần đầu ghé nhà bạn, | tôi được mời cơm /nhiệt_tình/.",
+      "defVi": "Được người=khác /đón_nhận/ | vui_vẻ, thấy như ở nhà.",
+      "leadVi": "Lần đầu ghé nhà=bạn, | tôi được mời cơm /nhiệt_tình/.",
       "anticipateVi": "Khách lạ mà /niềm_nở/ thế?",
       "emphasis": [
         "đón nhận",
@@ -4178,7 +4191,7 @@
       "usage": [
         {
           "en": "En nuestra casa siempre eres _____.",
-          "vi": "Nhà mình | lúc=nào cũng | chào_đón bạn."
+          "vi": "Nhà=mình | lúc=nào cũng | chào_đón bạn."
         }
       ],
       "grammar": {
@@ -4264,7 +4277,7 @@
       "id": "conversacion",
       "word": "conversación",
       "shareCode": "VYA",
-      "meaningVi": "cuộc trò_chuyện",
+      "meaningVi": "cuộc=trò_chuyện",
       "defVi": "Lúc hai hay nhiều người | /trò_chuyện/ cùng_nhau.",
       "leadVi": "Ngồi quán cà_phê, hai đứa | /tán_gẫu/ quên cả giờ.",
       "anticipateVi": "Mới chào nhau, đã=/hết_veo/ buổi?",
@@ -4286,7 +4299,7 @@
       "usage": [
         {
           "en": "Ayer tuve una _____ muy larga con mi abuela.",
-          "vi": "Hôm_qua | mình có | một cuộc trò_chuyện | rất dài với bà."
+          "vi": "Hôm_qua | mình có | một cuộc=trò_chuyện | rất dài với bà."
         }
       ],
       "grammar": {
@@ -4300,7 +4313,7 @@
       "id": "descripcion",
       "word": "descripción",
       "shareCode": "85S",
-      "meaningVi": "sự mô_tả",
+      "meaningVi": "sự=mô_tả",
       "defVi": "Lời kể rõ | /hình_dáng/, màu_sắc của một thứ.",
       "leadVi": "Mất áo_khoác, mình kể | /kỹ_càng/ màu và cỡ.",
       "anticipateVi": "Tả kỹ thế, /hình_dung/ ra chưa?",
@@ -4322,7 +4335,7 @@
       "usage": [
         {
           "en": "En el examen hay que escribir una _____ de tu casa.",
-          "vi": "Trong bài thi | phải viết | một bài mô_tả | ngôi=nhà của=mình."
+          "vi": "Trong bài thi | phải viết | một bài mô_tả | ngôi=nhà=của=mình."
         }
       ],
       "grammar": {
@@ -4338,7 +4351,7 @@
       "shareCode": "5T9",
       "meaningVi": "đoạn hội_thoại",
       "defVi": "Lời qua tiếng lại | giữa các=/nhân_vật/ trong phim.",
-      "leadVi": "Giờ ngoại_ngữ, hai bạn | /đóng_vai/ khách và người bán.",
+      "leadVi": "Giờ ngoại_ngữ, hai bạn | /đóng_vai/ khách và người=bán.",
       "anticipateVi": "Lên sân_khấu, /cứng_họng/ hả?",
       "emphasis": [
         "nhân vật",
@@ -4358,7 +4371,7 @@
       "usage": [
         {
           "en": "En clase leemos un _____ entre dos amigos.",
-          "vi": "Trên lớp | chúng_mình đọc | đoạn hội_thoại | giữa hai người bạn."
+          "vi": "Trên lớp | chúng_mình đọc | đoạn hội_thoại | giữa hai người=bạn."
         }
       ],
       "grammar": {
@@ -4409,7 +4422,7 @@
       "word": "información",
       "shareCode": "FM1",
       "meaningVi": "thông_tin",
-      "defVi": "Những=điều cần biết | mà mình /tra_cứu/ về một việc.",
+      "defVi": "Những=điều=cần biết | mà mình /tra_cứu/ về một việc.",
       "leadVi": "Trước buổi phỏng_vấn, | tôi /tìm_hiểu/ kỹ về quán.",
       "anticipateVi": "Tra một lúc, /ngập_tràn/ cả trang?",
       "emphasis": [
@@ -4445,9 +4458,9 @@
       "word": "idioma",
       "shareCode": "4MK",
       "meaningVi": "ngôn_ngữ",
-      "defVi": "/Tiếng_nói/ và chữ_viết | mà người một nước dùng.",
+      "defVi": "/Tiếng_nói/ và chữ_viết | mà người=một nước dùng.",
       "leadVi": "Câu_lạc_bộ /ngoại_ngữ/ | dạy mình vài câu chào mới.",
-      "anticipateVi": "Nói ba thứ tiếng, /lẫn_lộn/ không?",
+      "anticipateVi": "Nói ba thứ=tiếng, /lẫn_lộn/ không?",
       "emphasis": [
         "Tiếng nói",
         "ngoại ngữ",
@@ -4838,7 +4851,7 @@
       "word": "respuesta",
       "shareCode": "N02",
       "meaningVi": "câu trả_lời",
-      "defVi": "Điều mình nói hay viết | để /hồi_đáp/ một câu_hỏi.",
+      "defVi": "Điều=mình nói hay viết | để /hồi_đáp/ một câu_hỏi.",
       "leadVi": "Thầy vừa hỏi xong, | em /nhanh_nhảu/ đáp liền.",
       "anticipateVi": "Nhanh thế, /chính_xác/ chưa?",
       "emphasis": [
@@ -4874,7 +4887,7 @@
       "shareCode": "9VG",
       "meaningVi": "gọi=điện",
       "defVi": "Bấm số | để /nói_chuyện/ với ai qua điện_thoại.",
-      "leadVi": "Xa nhà tuần đầu, | tối nào anh cũng /hỏi_thăm/ mẹ.",
+      "leadVi": "Xa nhà=tuần đầu, | tối nào anh cũng /hỏi_thăm/ mẹ.",
       "anticipateVi": "Bấm số rồi lại /chần_chừ/?",
       "emphasis": [
         "nói chuyện",
@@ -4951,7 +4964,7 @@
       "shareCode": "TSF",
       "meaningVi": "thư_từ",
       "defVi": "Thư và gói hàng | được gửi qua /bưu_điện/.",
-      "leadVi": "Sáng nay, /bưu_tá/ | ghé cổng nhà mình đưa thư.",
+      "leadVi": "Sáng nay, /bưu_tá/ | ghé cổng nhà=mình đưa thư.",
       "anticipateVi": "Ngóng mãi, /bưu_kiện/ đâu rồi?",
       "emphasis": [
         "bưu điện",
@@ -4986,7 +4999,7 @@
       "word": "preguntar",
       "shareCode": "X90",
       "meaningVi": "hỏi",
-      "defVi": "Nói ra điều | mình /thắc_mắc/ để người khác đáp.",
+      "defVi": "Nói ra điều | mình /thắc_mắc/ để người=khác đáp.",
       "leadVi": "Chưa rõ bài, em | /mạnh_dạn/ xin thầy giảng lại.",
       "anticipateVi": "Đang /băn_khoăn/ à, nói đi?",
       "emphasis": [
@@ -5021,7 +5034,7 @@
           }
         },
         "governs": "a + persona",
-        "tipVi": "Hỏi để biết | là preguntar, | xin thứ gì | là pedir."
+        "tipVi": "Hỏi để biết | là preguntar, | xin thứ=gì | là pedir."
       }
     },
     {
@@ -5029,7 +5042,7 @@
       "word": "presentar",
       "shareCode": "B05",
       "meaningVi": "giới_thiệu",
-      "defVi": "Nói tên | để hai người chưa /quen_biết/ nhau.",
+      "defVi": "Nói tên | để hai người=chưa /quen_biết/ nhau.",
       "leadVi": "Tiệc lớp, em | giúp bạn mới /làm_quen/ cả nhóm.",
       "anticipateVi": "Đứng giữa hai người, /lúng_túng/?",
       "emphasis": [
@@ -5072,7 +5085,7 @@
       "word": "mentir",
       "shareCode": "Q7F",
       "meaningVi": "nói_dối",
-      "defVi": "Nói điều không=đúng | /sự_thật/ để người khác tin.",
+      "defVi": "Nói điều=không=đúng | /sự_thật/ để người=khác tin.",
       "leadVi": "Quên làm=bài, bạn | vẫn /thú_nhận/ thật với cô.",
       "anticipateVi": "/Thật_thà/ hay bịa, chọn lẹ?",
       "emphasis": [
@@ -5115,7 +5128,7 @@
       "word": "decir",
       "shareCode": "H6B",
       "meaningVi": "nói",
-      "defVi": "Thốt ra lời | để người bên_cạnh /nghe_thấy/.",
+      "defVi": "Thốt ra lời | để người=bên_cạnh /nghe_thấy/.",
       "leadVi": "Vào lớp muộn, | em /lễ_phép/ chào cô một câu.",
       "anticipateVi": "Chào một tiếng mà /ngập_ngừng/?",
       "emphasis": [
@@ -5158,7 +5171,7 @@
       "word": "hablar",
       "shareCode": "NQ4",
       "meaningVi": "nói",
-      "defVi": "Dùng giọng | để /diễn_đạt/ bằng một thứ tiếng.",
+      "defVi": "Dùng giọng | để /diễn_đạt/ bằng một thứ=tiếng.",
       "leadVi": "Gặp du_khách hỏi đường, | chị đáp /trôi_chảy/ ngoại_ngữ.",
       "anticipateVi": "Run tim, nhưng vẫn /mở_miệng/?",
       "emphasis": [
@@ -5179,7 +5192,7 @@
       "usage": [
         {
           "en": "Mi compañera de clase puede _____ tres idiomas.",
-          "vi": "Cô bạn cùng lớp | nói được | ba thứ tiếng."
+          "vi": "Cô bạn cùng lớp | nói được | ba thứ=tiếng."
         }
       ],
       "grammar": {
@@ -5279,7 +5292,7 @@
       "word": "luz",
       "shareCode": "81D",
       "meaningVi": "ánh_sáng, đèn",
-      "defVi": "Thứ giúp mắt nhìn rõ | trong /bóng_tối/.",
+      "defVi": "Thứ=giúp mắt nhìn rõ | trong /bóng_tối/.",
       "leadVi": "Sáng sớm, nắng /chiếu_rọi/ | qua khe rèm cửa_sổ.",
       "anticipateVi": "/Tối_om/, cả phòng cuống lên?",
       "emphasis": [
@@ -5792,7 +5805,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las aficiones",
-        "tipVi": "Còn nghĩa | người hâm_mộ: | la afición del equipo."
+        "tipVi": "Còn nghĩa | người=hâm_mộ: | la afición del equipo."
       }
     },
     {
@@ -5904,7 +5917,7 @@
       "word": "piscina",
       "shareCode": "2PF",
       "meaningVi": "bể_bơi",
-      "defVi": "Hồ nước xây | để mọi=người vào /lặn_ngụp/.",
+      "defVi": "Hồ nước xây | để mọi=người=vào /lặn_ngụp/.",
       "leadVi": "Chiều hè oi_bức, em | rủ bạn đi /giải_nhiệt/.",
       "anticipateVi": "/Nhảy_ùm/ một cái, mát_rượi?",
       "emphasis": [
@@ -5941,7 +5954,7 @@
       "meaningVi": "căn_phòng",
       "defVi": "Khoảng /không_gian/ | có tường bao trong nhà.",
       "leadVi": "Năm nhất, mình ở chung | chỗ /chật_hẹp/ với ba bạn.",
-      "anticipateVi": "Bốn người một chỗ, /chen_chúc/ không?",
+      "anticipateVi": "Bốn người=một chỗ, /chen_chúc/ không?",
       "emphasis": [
         "không gian",
         "chật hẹp",
@@ -6183,7 +6196,7 @@
       "id": "bano",
       "word": "baño",
       "shareCode": "XFK",
-      "meaningVi": "nhà vệ_sinh",
+      "meaningVi": "nhà=vệ_sinh",
       "defVi": "Căn_phòng nhỏ | để /vệ_sinh/ và rửa tay.",
       "leadVi": "Giờ ra chơi, hàng dài | xếp trước cửa /phòng_tắm/ chung.",
       "anticipateVi": "/Gấp_gáp/ lắm, cửa nào đây?",
@@ -6205,7 +6218,7 @@
       "usage": [
         {
           "en": "Perdón, ¿dónde está el _____?",
-          "vi": "Xin_lỗi, | nhà vệ_sinh ở đâu ạ?"
+          "vi": "Xin_lỗi, | nhà=vệ_sinh ở đâu ạ?"
         }
       ],
       "grammar": {
@@ -6253,7 +6266,7 @@
       "id": "descanso",
       "word": "descanso",
       "shareCode": "88A",
-      "meaningVi": "giờ nghỉ",
+      "meaningVi": "giờ_nghỉ",
       "defVi": "Khoảng thời_gian ngắn | để /nghỉ_ngơi/ giữa giờ học.",
       "leadVi": "Hết tiết hai, cả lớp | ùa ra sân /giải_lao/.",
       "anticipateVi": "Mười phút thôi mà /quý_giá/ thế?",
@@ -6410,7 +6423,7 @@
       "word": "cortar",
       "shareCode": "70Z",
       "meaningVi": "cắt",
-      "defVi": "Dùng dao hay kéo | /tách_rời/ một thứ thành phần nhỏ.",
+      "defVi": "Dùng dao hay kéo | /tách_rời/ một thứ=thành=phần nhỏ.",
       "leadVi": "Sắp thi vấn_đáp, mình | ra tiệm /hớt_tóc/ cho gọn.",
       "anticipateVi": "Thái mỏng_tang, /khéo_tay/ vậy à?",
       "emphasis": [
@@ -6492,7 +6505,7 @@
       "word": "sentar",
       "shareCode": "6X5",
       "meaningVi": "ngồi",
-      "defVi": "Hạ người xuống ghế | để /nghỉ_chân/ một lúc.",
+      "defVi": "Hạ người=xuống ghế | để /nghỉ_chân/ một lúc.",
       "leadVi": "Vào lớp muộn, mình | /lặng_lẽ/ tìm ghế cuối.",
       "anticipateVi": "Hàng ghế đầu, ai /xung_phong/?",
       "emphasis": [
@@ -6632,7 +6645,7 @@
         "feminine": "emocionante",
         "plural": "emocionantes",
         "serEstar": "Thường dùng ser: | el partido es emocionante.",
-        "tipVi": "Emocionante | là gây hồi_hộp; | emocionado | là người đang hồi_hộp."
+        "tipVi": "Emocionante | là gây hồi_hộp; | emocionado | là người=đang hồi_hộp."
       }
     },
     {
@@ -6710,7 +6723,7 @@
       "word": "favorito",
       "shareCode": "GDN",
       "meaningVi": "yêu_thích",
-      "defVi": "Được /ưa_chuộng/ nhất | so_với những=thứ cùng loại.",
+      "defVi": "Được /ưa_chuộng/ nhất | so_với những=thứ=cùng loại.",
       "leadVi": "Gọi đồ_uống, mình | /trung_thành/ với trà đào.",
       "anticipateVi": "Đổi món một lần, /mạo_hiểm/ chứ?",
       "emphasis": [
@@ -6780,7 +6793,7 @@
       "word": "diversión",
       "shareCode": "4D1",
       "meaningVi": "niềm_vui",
-      "defVi": "Thời_gian /thoải_mái/ | khi làm điều mình thích.",
+      "defVi": "Thời_gian /thoải_mái/ | khi làm điều=mình thích.",
       "leadVi": "Đêm lửa_trại, cả lớp | /hát_hò/, chơi trò đến khuya.",
       "anticipateVi": "Khuya rồi, /mải_mê/ chưa chịu tan?",
       "emphasis": [
@@ -6816,9 +6829,9 @@
       "word": "amar",
       "shareCode": "18T",
       "meaningVi": "yêu",
-      "defVi": "Quý và /gắn_bó/ | rất=sâu với ai hay điều gì.",
-      "leadVi": "Xa nhà đi_học, em | /nhớ_thương/ mẹ từng bữa_cơm.",
-      "anticipateVi": "Thương nhà đến thế, /thật_lòng/ à?",
+      "defVi": "Quý và /gắn_bó/ | rất=sâu với ai hay điều=gì.",
+      "leadVi": "Xa nhà=đi_học, em | /nhớ_thương/ mẹ từng bữa_cơm.",
+      "anticipateVi": "Thương nhà=đến thế, /thật_lòng/ à?",
       "emphasis": [
         "gắn bó",
         "nhớ thương",
@@ -6858,7 +6871,7 @@
       "shareCode": "BQ9",
       "meaningVi": "cảm_thấy",
       "defVi": "Nhận_ra trong người | một /cảm_giác/ nóng, lạnh hay đau.",
-      "leadVi": "Sau buổi chạy sáng, | tôi thấy người /khoan_khoái/.",
+      "leadVi": "Sau buổi chạy sáng, | tôi thấy người=/khoan_khoái/.",
       "anticipateVi": "Chạy xong, /nhẹ_nhõm/ cả người?",
       "emphasis": [
         "cảm giác",
@@ -6920,7 +6933,7 @@
       "usage": [
         {
           "en": "Es normal _____ el frío del invierno.",
-          "vi": "Ghét cái lạnh mùa_đông | là chuyện bình_thường."
+          "vi": "Ghét cái=lạnh mùa_đông | là chuyện bình_thường."
         }
       ],
       "grammar": {
@@ -6940,7 +6953,7 @@
       "word": "gustar",
       "shareCode": "FB7",
       "meaningVi": "thích",
-      "defVi": "Thấy /ưng_ý/ | và muốn có hay làm điều gì.",
+      "defVi": "Thấy /ưng_ý/ | và muốn có hay làm điều=gì.",
       "leadVi": "Rảnh là bạn | /mê_mẩn/ ghé tiệm sách quen.",
       "anticipateVi": "Ghé hoài, chưa /chán_ngán/ sao?",
       "emphasis": [
@@ -6974,7 +6987,7 @@
           }
         },
         "governs": "a + persona",
-        "tipVi": "Thứ được thích | làm chủ_ngữ: | me gustan los gatos."
+        "tipVi": "Thứ=được thích | làm chủ_ngữ: | me gustan los gatos."
       }
     },
     {
@@ -6982,7 +6995,7 @@
       "word": "querer",
       "shareCode": "2CW",
       "meaningVi": "muốn",
-      "defVi": "/Ao_ước/ có | hay được làm một điều gì.",
+      "defVi": "/Ao_ước/ có | hay được làm một điều=gì.",
       "leadVi": "Đi ngang tiệm bánh, | tôi /thèm_thuồng/ chiếc=bánh kem dâu.",
       "anticipateVi": "Nhìn thôi đã=chảy /nước_miếng/?",
       "emphasis": [
@@ -7338,8 +7351,8 @@
       "id": "cena",
       "word": "cena",
       "shareCode": "JMQ",
-      "meaningVi": "bữa tối",
-      "defVi": "Lần ăn chính | vào cuối ngày, thường cả nhà /quây_quần/.",
+      "meaningVi": "bữa_tối",
+      "defVi": "Lần ăn chính | vào cuối ngày, thường cả nhà=/quây_quần/.",
       "leadVi": "Bảy giờ tối, cả phòng | /sum_họp/ quanh nồi cơm.",
       "anticipateVi": "Ai nấu, ai dọn, /phân_công/ chưa?",
       "emphasis": [
@@ -7374,7 +7387,7 @@
       "word": "plato",
       "shareCode": "T3R",
       "meaningVi": "món_ăn",
-      "defVi": "Thứ được /nấu_nướng/ | rồi dọn lên mâm.",
+      "defVi": "Thứ=được /nấu_nướng/ | rồi dọn lên mâm.",
       "leadVi": "Tiệc lớp, mỗi=người | mang một /đặc_sản/ quê_nhà.",
       "anticipateVi": "Món nào /hết_veo/ trước_tiên?",
       "emphasis": [
@@ -7401,7 +7414,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los platos",
-        "tipVi": "Plato | còn nghĩa_là cái đĩa: | lavar los platos."
+        "tipVi": "Plato | còn nghĩa_là cái=đĩa: | lavar los platos."
       }
     },
     {
@@ -7409,7 +7422,7 @@
       "word": "comida",
       "shareCode": "81R",
       "meaningVi": "đồ_ăn",
-      "defVi": "Thứ ăn vào | để cơ_thể có /năng_lượng/ mỗi=ngày.",
+      "defVi": "Thứ=ăn vào | để cơ_thể có /năng_lượng/ mỗi=ngày.",
       "leadVi": "Sau giờ học, cả nhóm | kéo nhau ra phố /ẩm_thực/.",
       "anticipateVi": "Bụng réo, /nhịn_đói/ nổi không?",
       "emphasis": [
@@ -7513,35 +7526,36 @@
       "id": "carne",
       "word": "carne",
       "shareCode": "9FQ",
-      "meaningVi": "thịt",
-      "defVi": "Món giàu /chất_đạm/ | lấy từ gà, lợn hay bò.",
-      "leadVi": "Lẩu ở phòng_trọ, | anh nhúng từng lát bò /mỏng_tang/.",
-      "anticipateVi": "Nhúng thật nhanh, /mềm_mại/ chưa?",
+      "meaningVi": "thẻ",
+      "defVi": "Tấm nhựa có ảnh, tên | để /chứng_minh/ | bạn là ai.",
+      "leadVi": "Vào thư_viện, | cứ quẹt | tấm /sinh_viên/ là xong.",
+      "anticipateVi": "Lỡ /bỏ_quên/ thì sao đây?",
       "emphasis": [
-        "chất đạm",
-        "mỏng tang",
-        "mềm mại"
+        "chứng minh",
+        "sinh viên",
+        "bỏ quên"
       ],
       "pos": "noun",
-      "ipa": "/ˈkaɾne/",
-      "topic": "food",
+      "ipa": "/kaɾˈne/",
+      "topic": "study",
       "topics": [
-        "food"
+        "study",
+        "daily"
       ],
       "level": "A1",
       "chars": 5,
       "initial": "C",
       "usage": [
         {
-          "en": "No como mucha _____ roja.",
-          "vi": "Mình không ăn | nhiều thịt đỏ."
+          "en": "Para entrar en la biblioteca hay que llevar el _____ de estudiante.",
+          "vi": "Muốn vào thư_viện | phải mang | thẻ sinh_viên."
         }
       ],
       "grammar": {
-        "gender": "f",
-        "article": "la",
-        "plural": "las carnes",
-        "tipVi": "Đuôi -e | nhưng giống_cái: | la carne."
+        "gender": "m",
+        "article": "el",
+        "plural": "los carnés",
+        "tipVi": "Cũng viết carnet; | carné de conducir | là bằng_lái."
       }
     },
     {
@@ -7967,7 +7981,7 @@
       "word": "camarero",
       "shareCode": "FYY",
       "meaningVi": "bồi_bàn",
-      "defVi": "Người /phục_vụ/ | mang món ra bàn cho khách ở quán.",
+      "defVi": "Người=/phục_vụ/ | mang món ra bàn cho khách ở quán.",
       "leadVi": "Ca tối ở quán, | mình /bưng_bê/ chạy khắp sảnh.",
       "anticipateVi": "Bưng ba khay, /thăng_bằng/ nổi?",
       "emphasis": [
@@ -7995,7 +8009,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los camareros",
-        "tipVi": "Người phục_vụ nữ | là la camarera."
+        "tipVi": "Người=phục_vụ nữ | là la camarera."
       }
     },
     {
@@ -8003,7 +8017,7 @@
       "word": "mejor",
       "shareCode": "FN7",
       "meaningVi": "tốt hơn, tốt nhất",
-      "defVi": "/Vượt_trội/ hơn tất_cả | thứ cùng loại.",
+      "defVi": "/Vượt_trội/ hơn tất_cả | thứ=cùng loại.",
       "leadVi": "Hội thi văn_nghệ, | tiết_mục lớp mình /xuất_sắc/ nhất.",
       "anticipateVi": "Đứng đầu cả khối, /ngỡ_ngàng/ chưa?",
       "emphasis": [
@@ -8030,7 +8044,7 @@
         "feminine": "mejor",
         "plural": "mejores",
         "serEstar": "Thường dùng ser: | es el mejor.",
-        "tipVi": "Có el, la phía trước | mới là nhất: | el mejor amigo."
+        "tipVi": "Có el, la phía_trước | mới là nhất: | el mejor amigo."
       }
     },
     {
@@ -8101,7 +8115,7 @@
         "feminine": "llena",
         "plural": "llenos / llenas",
         "serEstar": "Thường dùng estar: | el autobús está lleno.",
-        "tipVi": "Đầy cái gì | dùng de: | lleno de agua."
+        "tipVi": "Đầy cái=gì | dùng de: | lleno de agua."
       }
     },
     {
@@ -8109,7 +8123,7 @@
       "word": "bueno",
       "shareCode": "FAR",
       "meaningVi": "tốt",
-      "defVi": "Đạt yêu_cầu | khiến người khác /hài_lòng/.",
+      "defVi": "Đạt yêu_cầu | khiến người=khác /hài_lòng/.",
       "leadVi": "Bài thuyết_trình nhóm | được thầy /khen_ngợi/ trước lớp.",
       "anticipateVi": "Một lời khen, /phấn_chấn/ cả ngày?",
       "emphasis": [
@@ -8144,7 +8158,7 @@
       "word": "alto",
       "shareCode": "85F",
       "meaningVi": "cao",
-      "defVi": "Cách xa /mặt_đất/ | tính từ dưới lên.",
+      "defVi": "Cách=xa /mặt_đất/ | tính từ dưới lên.",
       "leadVi": "Leo tới /đỉnh_núi/, | cả nhóm ngắm mây dưới chân.",
       "anticipateVi": "Ngó xuống thôi, /chóng_mặt/ chưa?",
       "emphasis": [
@@ -8179,9 +8193,9 @@
       "word": "principal",
       "shareCode": "J75",
       "meaningVi": "chính",
-      "defVi": "/Quan_trọng/ hơn hết | trong nhiều thứ cùng loại.",
+      "defVi": "/Quan_trọng/ hơn hết | trong nhiều thứ=cùng loại.",
       "leadVi": "Mùa thi, | việc /chủ_yếu/ của=mình là ôn bài.",
-      "anticipateVi": "Giữa chục việc, /ưu_tiên/ cái gì?",
+      "anticipateVi": "Giữa chục việc, /ưu_tiên/ cái=gì?",
       "emphasis": [
         "Quan trọng",
         "chủ yếu",
@@ -8241,7 +8255,7 @@
         "feminine": "nueva",
         "plural": "nuevos / nuevas",
         "serEstar": "Thường dùng ser: | el coche es nuevo.",
-        "tipVi": "Đứng trước danh_từ | lại là cái khác: | mi nuevo piso."
+        "tipVi": "Đứng trước danh_từ | lại là cái=khác: | mi nuevo piso."
       }
     },
     {
@@ -8284,7 +8298,7 @@
       "word": "otro",
       "shareCode": "H24",
       "meaningVi": "khác",
-      "defVi": "Không=phải cái | đang nhắc tới mà là cái /còn_lại/.",
+      "defVi": "Không=phải cái | đang nhắc tới mà là cái=/còn_lại/.",
       "leadVi": "Bàn này ồn quá, | mình /đổi_chỗ/ sang bàn bên kia.",
       "anticipateVi": "Bên này /chật_chội/, sang bên kia?",
       "emphasis": [
@@ -8387,7 +8401,7 @@
       "id": "similar",
       "word": "similar",
       "shareCode": "B92",
-      "meaningVi": "giống nhau",
+      "meaningVi": "giống_nhau",
       "defVi": "Có nhiều nét /tương_đồng/ | nhưng chưa hẳn y_hệt.",
       "leadVi": "Hai bài luận cùng đề, | ý chính /na_ná/ nhau.",
       "anticipateVi": "Đọc lướt qua, /lẫn_lộn/ chưa?",
@@ -8416,7 +8430,7 @@
         "plural": "similares",
         "governs": "a + sustantivo",
         "serEstar": "Thường dùng ser: | son muy similares.",
-        "tipVi": "Giống cái gì | dùng a: | similar a la mía."
+        "tipVi": "Giống_cái gì | dùng a: | similar a la mía."
       }
     },
     {
@@ -8425,7 +8439,7 @@
       "shareCode": "W1S",
       "meaningVi": "đặc_biệt",
       "defVi": "/Nổi_bật/ hơn thường_ngày | và có ý_nghĩa riêng.",
-      "leadVi": "Sinh_nhật mười tám, | cả nhà làm tiệc /bất_ngờ/.",
+      "leadVi": "Sinh_nhật mười tám, | cả nhà=làm tiệc /bất_ngờ/.",
       "anticipateVi": "Bất_ngờ đến /rưng_rưng/?",
       "emphasis": [
         "Nổi bật",
@@ -8558,7 +8572,7 @@
         "feminine": "dura",
         "plural": "duros / duras",
         "serEstar": "ser duro: vất_vả | estar duro: bị cứng (bánh_mì).",
-        "tipVi": "Việc khó nói chung | dùng difícil; | duro là nặng_nhọc."
+        "tipVi": "Việc khó nói_chung | dùng difícil; | duro là nặng_nhọc."
       }
     },
     {
@@ -8654,7 +8668,7 @@
       "usage": [
         {
           "en": "El baño está a la _____.",
-          "vi": "Nhà_vệ_sinh | nằm bên trái."
+          "vi": "Nhà=vệ_sinh | nằm bên trái."
         }
       ],
       "grammar": {
@@ -8744,7 +8758,7 @@
       "word": "también",
       "shareCode": "JQ9",
       "meaningVi": "cũng",
-      "defVi": "Báo rằng | điều sau /tương_tự/ điều vừa nói.",
+      "defVi": "Báo rằng | điều=sau /tương_tự/ điều=vừa nói.",
       "leadVi": "Giỏi toán, | mình /đồng_thời/ chơi ghi_ta rất=hay.",
       "anticipateVi": "Giỏi đủ đường, có /bí_quyết/?",
       "emphasis": [
@@ -8775,7 +8789,7 @@
       "id": "detras",
       "word": "detrás",
       "shareCode": "XKW",
-      "meaningVi": "phía sau",
+      "meaningVi": "phía_sau",
       "defVi": "Ở phía /sau_lưng/, | ngược với hướng mình đang=nhìn.",
       "leadVi": "Chạy giải trường, | mình /bám_đuổi/ sát lưng bạn dẫn_đầu.",
       "anticipateVi": "Ngoảnh lại, ai /lấp_ló/ đấy?",
@@ -8800,7 +8814,7 @@
         }
       ],
       "grammar": {
-        "tipVi": "Sau cái gì | phải có de: | detrás de la casa."
+        "tipVi": "Sau cái=gì | phải có de: | detrás de la casa."
       }
     },
     {
@@ -8808,7 +8822,7 @@
       "word": "incluso",
       "shareCode": "P6F",
       "meaningVi": "thậm_chí",
-      "defVi": "/Nhấn_mạnh/ | điều bất_ngờ hơn cả mong_đợi.",
+      "defVi": "/Nhấn_mạnh/ | điều=bất_ngờ hơn cả mong_đợi.",
       "leadVi": "/Ngay_cả/ chủ_nhật, | anh=ấy vẫn ôn bài.",
       "anticipateVi": "Đến ăn cũng quên, /mải_mê/ thế?",
       "emphasis": [
@@ -8894,7 +8908,7 @@
         }
       ],
       "grammar": {
-        "tipVi": "Câu hỏi | luôn có dấu: | ¿cómo estás?"
+        "tipVi": "Câu_hỏi | luôn có dấu: | ¿cómo estás?"
       }
     },
     {
@@ -8991,7 +9005,7 @@
         }
       ],
       "grammar": {
-        "tipVi": "Ngoài cái gì | cần de: | fuera de casa."
+        "tipVi": "Ngoài cái=gì | cần de: | fuera de casa."
       }
     },
     {
@@ -9031,7 +9045,7 @@
       "word": "realmente",
       "shareCode": "1Y5",
       "meaningVi": "thật_sự",
-      "defVi": "Nhấn_mạnh | rằng điều nói ra là /sự_thật/.",
+      "defVi": "Nhấn_mạnh | rằng điều=nói ra là /sự_thật/.",
       "leadVi": "Đỗ đại_học, | mình véo tay xem /nằm_mơ/ không.",
       "anticipateVi": "Đùa hay /nghiêm_túc/ đấy?",
       "emphasis": [
@@ -9092,7 +9106,7 @@
       "word": "ahí",
       "shareCode": "0Z8",
       "meaningVi": "ở đó",
-      "defVi": "Chỉ chỗ | /cách_xa/ người nói một_chút.",
+      "defVi": "Chỉ chỗ | /cách_xa/ người=nói một_chút.",
       "leadVi": "Hỏi bến xe_buýt, | bác /chỉ_tay/ về góc phố.",
       "anticipateVi": "Theo tay chỉ, /nhận_ra/ chưa?",
       "emphasis": [
@@ -9116,7 +9130,7 @@
         }
       ],
       "grammar": {
-        "tipVi": "Ahí gần người nghe, | allí thì xa hẳn."
+        "tipVi": "Ahí gần người=nghe, | allí thì xa hẳn."
       }
     },
     {
@@ -9213,7 +9227,7 @@
         }
       ],
       "grammar": {
-        "tipVi": "Câu hỏi | viết dónde có dấu: | ¿dónde vives?"
+        "tipVi": "Câu_hỏi | viết dónde có dấu: | ¿dónde vives?"
       }
     },
     {
@@ -9257,7 +9271,7 @@
       "word": "mitad",
       "shareCode": "8PP",
       "meaningVi": "một nửa",
-      "defVi": "Phần có được | khi /chia_đôi/ một thứ cho đều.",
+      "defVi": "Phần có được | khi /chia_đôi/ một thứ=cho đều.",
       "leadVi": "Ổ bánh_mì to, | mình /bẻ_đôi/ cho bạn cùng phòng.",
       "anticipateVi": "Bẻ xong, /công_bằng/ chưa?",
       "emphasis": [
@@ -9320,7 +9334,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las filas",
-        "tipVi": "Xếp hàng | nói hacer fila | hay hacer cola."
+        "tipVi": "Xếp_hàng | nói hacer fila | hay hacer cola."
       }
     },
     {
@@ -9433,7 +9447,7 @@
       "word": "par",
       "shareCode": "ABE",
       "meaningVi": "đôi",
-      "defVi": "Hai thứ giống nhau | /kết_hợp/ thành một bộ.",
+      "defVi": "Hai thứ=giống_nhau | /kết_hợp/ thành một bộ.",
       "leadVi": "Hai chiếc giày | luôn đi /song_hành/ cùng nhau.",
       "anticipateVi": "Mất một chiếc, /cô_đơn/ ghê?",
       "emphasis": [
@@ -9469,7 +9483,7 @@
       "word": "parte",
       "shareCode": "79Z",
       "meaningVi": "phần",
-      "defVi": "Một mảng | trong cái /tổng_thể/ lớn hơn nó.",
+      "defVi": "Một mảng | trong cái=/tổng_thể/ lớn hơn nó.",
       "leadVi": "Làm thuyết_trình, | cả nhóm /phân_chia/ mỗi=bạn một mục.",
       "anticipateVi": "Ghép lại đủ, /trọn_vẹn/ chưa?",
       "emphasis": [
@@ -9504,7 +9518,7 @@
       "word": "pedazo",
       "shareCode": "657",
       "meaningVi": "miếng",
-      "defVi": "Phần được cắt | hay /tách_rời/ ra từ thứ lớn.",
+      "defVi": "Phần được cắt | hay /tách_rời/ ra từ thứ=lớn.",
       "leadVi": "Bộ tranh /mảnh_ghép/ | còn thiếu đúng một góc.",
       "anticipateVi": "Bánh ngon thế, /nhâm_nhi/ từng lát?",
       "emphasis": [
@@ -9567,14 +9581,14 @@
         "gender": "m",
         "article": "el",
         "plural": "los lugares",
-        "tipVi": "Diễn ra | nói tener lugar: | la fiesta tiene lugar hoy."
+        "tipVi": "Diễn_ra | nói tener lugar: | la fiesta tiene lugar hoy."
       }
     },
     {
       "id": "punto",
       "word": "punto",
       "shareCode": "P8E",
-      "meaningVi": "điểm, ý chính",
+      "meaningVi": "điểm, ý_chính",
       "defVi": "Ý /quan_trọng/ | trong lời nói hay bài viết.",
       "leadVi": "Thuyết_trình xong, thầy | khen bạn nói rõ /trọng_tâm/.",
       "anticipateVi": "Dài dòng mà /trúng_đích/ chưa?",
@@ -9603,7 +9617,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los puntos",
-        "tipVi": "Đúng giờ | là en punto: | a las tres en punto."
+        "tipVi": "Đúng_giờ | là en punto: | a las tres en punto."
       }
     },
     {
@@ -9702,7 +9716,7 @@
       "usage": [
         {
           "en": "¿Qué es esa _____ en la mesa?",
-          "vi": "Thứ gì | trên bàn kia vậy?"
+          "vi": "Thứ=gì | trên bàn kia vậy?"
         }
       ],
       "grammar": {
@@ -9749,7 +9763,7 @@
             "gerundio": "cambiando"
           }
         },
-        "tipVi": "Đổi sang cái khác | thường thêm de: | cambiar de casa."
+        "tipVi": "Đổi sang cái=khác | thường thêm de: | cambiar de casa."
       }
     },
     {
@@ -9791,7 +9805,7 @@
       "id": "pedir",
       "word": "pedir",
       "shareCode": "64T",
-      "meaningVi": "gọi món, đặt hàng",
+      "meaningVi": "gọi món, đặt_hàng",
       "defVi": "/Yêu_cầu/ quán | mang món hay hàng tới cho mình.",
       "leadVi": "Vào quán, | mình xem /thực_đơn/ | rồi gọi phở.",
       "anticipateVi": "Gọi xong rồi, | /sốt_ruột/ chờ món?",
@@ -9835,7 +9849,7 @@
       "word": "mostrar",
       "shareCode": "0WS",
       "meaningVi": "cho xem",
-      "defVi": "Đưa ra | để người khác /nhìn_thấy/ rõ_ràng.",
+      "defVi": "Đưa ra | để người=khác /nhìn_thấy/ rõ_ràng.",
       "leadVi": "Ngày hội lớp, | nhóm em /trưng_bày/ | tranh vẽ ở sảnh.",
       "anticipateVi": "Giấu mãi, | giờ mới /tiết_lộ/?",
       "emphasis": [
@@ -10042,7 +10056,7 @@
       "word": "traer",
       "shareCode": "Y5H",
       "meaningVi": "mang đến",
-      "defVi": "Từ chỗ khác | /mang_vác/ đồ | tới nơi này.",
+      "defVi": "Từ chỗ khác | /mang_vác/ đồ | tới nơi=này.",
       "leadVi": "Đi dã_ngoại, | mỗi=bạn /đóng_góp/ | một món ăn.",
       "anticipateVi": "Nhớ /đồ_nghề/ chưa đấy?",
       "emphasis": [
@@ -10127,7 +10141,7 @@
       "word": "venir",
       "shareCode": "G00",
       "meaningVi": "đến",
-      "defVi": "/Di_chuyển/ | về phía người đang=nói hay chờ.",
+      "defVi": "/Di_chuyển/ | về phía người=đang=nói hay chờ.",
       "leadVi": "Tiệc sinh_nhật, | bạn_bè lần_lượt /ghé_thăm/ phòng mình.",
       "anticipateVi": "Hẹn bảy giờ, ai /đúng_hẹn/?",
       "emphasis": [
@@ -10169,7 +10183,7 @@
       "word": "crear",
       "shareCode": "344",
       "meaningVi": "tạo ra",
-      "defVi": "/Làm_nên/ | một thứ mới chưa_từng có.",
+      "defVi": "/Làm_nên/ | một thứ=mới chưa_từng có.",
       "leadVi": "Câu_lạc_bộ | /sáng_tác/ | trò_chơi bàn cờ mới.",
       "anticipateVi": "Từ con_số không, | ra /tác_phẩm/?",
       "emphasis": [
@@ -10244,15 +10258,15 @@
             "gerundio": "cayendo"
           }
         },
-        "tipVi": "Người ngã | thường dùng caerse: | me caí."
+        "tipVi": "Người=ngã | thường dùng caerse: | me caí."
       }
     },
     {
       "id": "encontrar",
       "word": "encontrar",
       "shareCode": "9N5",
-      "meaningVi": "tìm thấy",
-      "defVi": "Cuối_cùng /phát_hiện/ | thứ mình đang mất_công kiếm.",
+      "meaningVi": "tìm_thấy",
+      "defVi": "Cuối_cùng /phát_hiện/ | thứ=mình đang mất_công kiếm.",
       "leadVi": "Lục ba_lô mãi, | thẻ sinh_viên | /hóa_ra/ nằm đáy.",
       "anticipateVi": "Tưởng mất rồi, | /thở_phào/ chưa?",
       "emphasis": [
@@ -10293,7 +10307,7 @@
       "id": "seguir",
       "word": "seguir",
       "shareCode": "MBJ",
-      "meaningVi": "đi theo",
+      "meaningVi": "đi_theo",
       "defVi": "Bước /phía_sau/ | ai đó, | cùng đi một hướng.",
       "leadVi": "Lần đầu leo núi, | cả nhóm /bám_sát/ anh hướng_dẫn.",
       "anticipateVi": "Tụt lại sau, | /lạc_đường/ thì sao?",
@@ -10337,7 +10351,7 @@
       "word": "dar",
       "shareCode": "E5J",
       "meaningVi": "đưa, cho",
-      "defVi": "/Trao_tay/ | một thứ của=mình | cho người khác.",
+      "defVi": "/Trao_tay/ | một thứ=của=mình | cho người=khác.",
       "leadVi": "Ngày Nhà_giáo, | lớp mình /trao_tặng/ | cô một bó hoa.",
       "anticipateVi": "Trao tận tay, /run_run/?",
       "emphasis": [
@@ -10379,7 +10393,7 @@
       "word": "ir",
       "shareCode": "NE6",
       "meaningVi": "đi",
-      "defVi": "/Di_chuyển/ | từ chỗ này tới nơi khác.",
+      "defVi": "/Di_chuyển/ | từ chỗ này tới nơi=khác.",
       "leadVi": "Sáng thứ_hai, | em bắt xe_buýt | /lên_đường/ tới trường.",
       "anticipateVi": "Trễ chuyến, | /đuổi_theo/ nổi?",
       "emphasis": [
@@ -10414,7 +10428,7 @@
             "gerundio": "yendo"
           }
         },
-        "tipVi": "Quá_khứ fue | giống hệt ser."
+        "tipVi": "Quá_khứ fue | giống_hệt ser."
       }
     },
     {
@@ -10463,7 +10477,7 @@
       "word": "tener",
       "shareCode": "AP3",
       "meaningVi": "có",
-      "defVi": "/Sở_hữu/ | một thứ thuộc về riêng bản_thân mình.",
+      "defVi": "/Sở_hữu/ | một thứ=thuộc về riêng bản_thân mình.",
       "leadVi": "Mở ví ra, | mình còn /vỏn_vẹn/ | hai tờ tiền.",
       "anticipateVi": "Đủ cả chưa, | hay còn /thiếu_sót/?",
       "emphasis": [
@@ -10632,7 +10646,7 @@
       "word": "hacer",
       "shareCode": "8PM",
       "meaningVi": "làm",
-      "defVi": "/Tạo_nên/ | một thứ bằng tay hay công_cụ.",
+      "defVi": "/Tạo_nên/ | một thứ=bằng tay hay công_cụ.",
       "leadVi": "Ngày của=mẹ, | chị /tự_tay/ | nướng bánh tặng mẹ.",
       "anticipateVi": "/Méo_xẹo/ mà mẹ khen ngon?",
       "emphasis": [
@@ -10673,7 +10687,7 @@
       "id": "mudar",
       "word": "mudar",
       "shareCode": "TRY",
-      "meaningVi": "chuyển nhà",
+      "meaningVi": "chuyển_nhà",
       "defVi": "Dọn đồ_đạc | sang chỗ ở mới | để /sinh_sống/.",
       "leadVi": "Năm hai, | tôi /dọn_nhà/ | ra phòng_trọ gần trường.",
       "anticipateVi": "Đồ_đạc /lỉnh_kỉnh/, | xếp sao vừa?",
@@ -10710,7 +10724,7 @@
         },
         "reflexive": "mudarse",
         "governs": "a + sustantivo",
-        "tipVi": "Chuyển nhà | luôn cần se: | me mudo."
+        "tipVi": "Chuyển_nhà | luôn cần se: | me mudo."
       }
     },
     {
@@ -10801,7 +10815,7 @@
       "word": "usar",
       "shareCode": "SRG",
       "meaningVi": "dùng",
-      "defVi": "Đem một thứ ra | /tận_dụng/ | cho việc mình cần.",
+      "defVi": "Đem một thứ=ra | /tận_dụng/ | cho việc mình cần.",
       "leadVi": "Ôn từ_vựng, | tôi /sử_dụng/ | thẻ ghi_nhớ mỗi=tối.",
       "anticipateVi": "Mua về rồi | /bỏ_xó/ à?",
       "emphasis": [
@@ -10842,7 +10856,7 @@
       "word": "gordo",
       "shareCode": "ZNG",
       "meaningVi": "béo",
-      "defVi": "Nặng cân, | nhiều mỡ | như chú=mèo /phốp_pháp/ nhà mình.",
+      "defVi": "Nặng cân, | nhiều mỡ | như chú=mèo /phốp_pháp/ nhà=mình.",
       "leadVi": "Chú=mèo của=phòng_trọ | ăn suốt nên /mũm_mĩm/.",
       "anticipateVi": "Ăn rồi nằm, | /ục_ịch/ chưa?",
       "emphasis": [
@@ -10862,7 +10876,7 @@
       "usage": [
         {
           "en": "Nuestro gato está muy _____ porque come mucho.",
-          "vi": "Con=mèo nhà mình | rất béo | vì ăn nhiều."
+          "vi": "Con=mèo nhà=mình | rất béo | vì ăn nhiều."
         }
       ],
       "grammar": {
@@ -10938,7 +10952,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los balones",
-        "tipVi": "Số nhiều | mất dấu: | los balones."
+        "tipVi": "Số_nhiều | mất dấu: | los balones."
       }
     },
     {
@@ -11016,7 +11030,7 @@
       "word": "doctor",
       "shareCode": "VV4",
       "meaningVi": "bác_sĩ",
-      "defVi": "Người khám | và /chữa_bệnh/ cho mọi=người.",
+      "defVi": "Người=khám | và /chữa_bệnh/ cho mọi=người.",
       "leadVi": "Bị ho mãi, | em đi /phòng_khám/ | gần ký_túc_xá.",
       "anticipateVi": "Khám xong, | /nhẹ_nhõm/ hẳn?",
       "emphasis": [
@@ -11072,7 +11086,7 @@
       "usage": [
         {
           "en": "Mi gato tiene una _____ blanca y otra negra.",
-          "vi": "Con=mèo nhà mình | có một tai trắng | và một tai đen."
+          "vi": "Con=mèo nhà=mình | có một tai trắng | và một tai đen."
         }
       ],
       "grammar": {
@@ -11087,7 +11101,7 @@
       "word": "cara",
       "shareCode": "A9S",
       "meaningVi": "khuôn_mặt",
-      "defVi": "Nơi người khác | /nhận_diện/ mình | với mắt, mũi, miệng.",
+      "defVi": "Nơi=người=khác | /nhận_diện/ mình | với mắt, mũi, miệng.",
       "leadVi": "Sáng dậy, mình | vốc nước mát cho /tỉnh_ngủ/.",
       "anticipateVi": "Soi gương, | /ngái_ngủ/ chưa?",
       "emphasis": [
@@ -11150,7 +11164,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los pies",
-        "tipVi": "Đi bộ | là ir a pie, | không dùng con."
+        "tipVi": "Đi_bộ | là ir a pie, | không dùng con."
       }
     },
     {
@@ -11192,8 +11206,8 @@
       "id": "gimnasio",
       "word": "gimnasio",
       "shareCode": "GY3",
-      "meaningVi": "phòng tập",
-      "defVi": "Nơi có máy | để rèn sức và /cơ_bắp/.",
+      "meaningVi": "phòng_tập",
+      "defVi": "Nơi=có máy | để rèn sức và /cơ_bắp/.",
       "leadVi": "Sau giờ_học, | em ghé chỗ tập | /rèn_luyện/ thể_lực.",
       "anticipateVi": "Mới tuần đầu, /ê_ẩm/ hết?",
       "emphasis": [
@@ -11227,7 +11241,7 @@
       "word": "cabello",
       "shareCode": "NSP",
       "meaningVi": "tóc",
-      "defVi": "Thứ mọc | trên đầu người, | /mềm_mượt/ dài hay ngắn.",
+      "defVi": "Thứ=mọc | trên đầu người, | /mềm_mượt/ dài hay ngắn.",
       "leadVi": "Trước lễ tốt_nghiệp, | bạn ra tiệm | /cắt_tỉa/ gọn_gàng.",
       "anticipateVi": "Cắt xong, | /lạ_lẫm/ chưa?",
       "emphasis": [
@@ -11255,7 +11269,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los cabellos",
-        "tipVi": "Nói thường ngày | hay dùng pelo | hơn cabello."
+        "tipVi": "Nói thường_ngày | hay dùng pelo | hơn cabello."
       }
     },
     {
@@ -11366,7 +11380,7 @@
       "word": "enfermera",
       "shareCode": "830",
       "meaningVi": "y_tá",
-      "defVi": "Người /chăm_sóc/ | bệnh_nhân, giúp bác_sĩ.",
+      "defVi": "Người=/chăm_sóc/ | bệnh_nhân, giúp bác_sĩ.",
       "leadVi": "/Ca_trực/ đêm, chị | đi đo nhiệt_độ từng giường.",
       "anticipateVi": "/Thức_trắng/ cả đêm, vẫn tươi?",
       "emphasis": [
@@ -11401,8 +11415,8 @@
       "id": "jugador",
       "word": "jugador",
       "shareCode": "EA3",
-      "meaningVi": "cầu_thủ, người chơi",
-      "defVi": "Người /tham_gia/ | một môn thể_thao hay trò_chơi.",
+      "meaningVi": "cầu_thủ, người=chơi",
+      "defVi": "Người=/tham_gia/ | một môn thể_thao hay trò_chơi.",
       "leadVi": "Đội bóng của=khoa | có bạn đá /tiền_đạo/.",
       "anticipateVi": "Ba trận liền | /ghi_bàn/?",
       "emphasis": [
@@ -11506,7 +11520,7 @@
       "shareCode": "YS1",
       "meaningVi": "tập_luyện, bài_tập",
       "defVi": "/Vận_động/ cơ_thể | đều_đặn cho khỏe.",
-      "leadVi": "Mỗi=sáng, anh | /chống_đẩy/ hai mươi cái trước khi học.",
+      "leadVi": "Mỗi=sáng, anh | /chống_đẩy/ hai mươi cái=trước_khi học.",
       "anticipateVi": "Vừa khởi_động, | /đuối_sức/ rồi?",
       "emphasis": [
         "Vận động",
@@ -11540,7 +11554,7 @@
       "word": "partido",
       "shareCode": "CK4",
       "meaningVi": "trận_đấu",
-      "defVi": "Cuộc /so_tài/ | giữa hai đội hay hai người.",
+      "defVi": "Cuộc=/so_tài/ | giữa hai đội hay hai người.",
       "leadVi": "Cả ký_túc_xá | tụ lại | xem bóng_đá /trực_tiếp/.",
       "anticipateVi": "Hòa đến phút cuối, /nghẹt_thở/?",
       "emphasis": [
@@ -11575,7 +11589,7 @@
       "word": "pobre",
       "shareCode": "NP7",
       "meaningVi": "nghèo",
-      "defVi": "Thiếu tiền, | /thiếu_thốn/ | nhiều thứ cần dùng hằng_ngày.",
+      "defVi": "Thiếu tiền, | /thiếu_thốn/ | nhiều thứ=cần dùng hằng_ngày.",
       "leadVi": "Đi tình_nguyện, | nhóm em góp sách | cho bản /khó_khăn/.",
       "anticipateVi": "Góp tay một_chút, | /ấm_lòng/?",
       "emphasis": [
@@ -11603,7 +11617,7 @@
         "feminine": "pobre",
         "plural": "pobres",
         "serEstar": "Thường dùng ser: | es pobre.",
-        "tipVi": "Đứng trước danh_từ | nghĩa là tội_nghiệp: | el pobre gato."
+        "tipVi": "Đứng trước danh_từ | nghĩa_là tội_nghiệp: | el pobre gato."
       }
     },
     {
@@ -11631,7 +11645,7 @@
       "usage": [
         {
           "en": "Mi tío es _____ y tiene una casa muy grande.",
-          "vi": "Chú mình | giàu lắm, | có căn nhà rất to."
+          "vi": "Chú mình | giàu lắm, | có căn nhà=rất to."
         }
       ],
       "grammar": {
@@ -11714,7 +11728,7 @@
       "word": "cliente",
       "shareCode": "61X",
       "meaningVi": "khách_hàng",
-      "defVi": "Người tới | mua=đồ hay dùng /dịch_vụ/.",
+      "defVi": "Người=tới | mua=đồ hay dùng /dịch_vụ/.",
       "leadVi": "Làm_thêm quán trà_sữa, | mình /niềm_nở/ | chào từng người.",
       "anticipateVi": "Đông_nghịt mà vẫn /tươi_cười/?",
       "emphasis": [
@@ -11777,7 +11791,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los dólares",
-        "tipVi": "Số nhiều | thêm -es: | los dólares."
+        "tipVi": "Số_nhiều | thêm -es: | los dólares."
       }
     },
     {
@@ -11819,7 +11833,7 @@
       "id": "libra",
       "word": "libra",
       "shareCode": "TKR",
-      "meaningVi": "đồng bảng",
+      "meaningVi": "đồng_bảng",
       "defVi": "Một /tiền_tệ/ | có tên trùng | đơn_vị đo cân_nặng.",
       "leadVi": "Giá ghi | ký_hiệu lạ, | mình /quy_đổi/ ra tiền đồng.",
       "anticipateVi": "Quy ra tiền đồng, | /giật_mình/?",
@@ -11926,7 +11940,7 @@
       "word": "costar",
       "shareCode": "869",
       "meaningVi": "có giá",
-      "defVi": "Cần một khoản /chi_phí/ | khi mua | hay dùng thứ gì.",
+      "defVi": "Cần một khoản /chi_phí/ | khi mua | hay dùng thứ=gì.",
       "leadVi": "Vé xe về quê dịp Tết | đắt gấp đôi /ngày_thường/.",
       "anticipateVi": "Nghe giá xong, | /choáng_váng/?",
       "emphasis": [
@@ -12049,7 +12063,7 @@
       "word": "natural",
       "shareCode": "AWC",
       "meaningVi": "tự_nhiên",
-      "defVi": "Có sẵn | trong /thiên_nhiên/, không do người làm.",
+      "defVi": "Có sẵn | trong /thiên_nhiên/, không do người=làm.",
       "leadVi": "Leo núi, | cả nhóm vốc nước | suối /nguyên_chất/.",
       "anticipateVi": "Không=/pha_chế/, ngon hơn?",
       "emphasis": [
@@ -12154,7 +12168,7 @@
       "word": "aire",
       "shareCode": "NDY",
       "meaningVi": "không_khí",
-      "defVi": "Thứ vô_hình | quanh ta mà ta /hít_thở/ mỗi=ngày.",
+      "defVi": "Thứ=vô_hình | quanh ta mà ta /hít_thở/ mỗi=ngày.",
       "leadVi": "Lên núi sớm, | mình hít một hơi thật sâu, | /mát_lịm/.",
       "anticipateVi": "/Trong_lành/ đến muốn ở luôn?",
       "emphasis": [
@@ -12182,7 +12196,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los aires",
-        "tipVi": "Ngoài trời | nói al aire libre."
+        "tipVi": "Ngoài_trời | nói al aire libre."
       }
     },
     {
@@ -12292,7 +12306,7 @@
       "word": "fuego",
       "shareCode": "VMH",
       "meaningVi": "lửa",
-      "defVi": "Thứ ánh_sáng nóng | /bập_bùng/ bốc lên từ củi khô.",
+      "defVi": "Thứ=ánh_sáng nóng | /bập_bùng/ bốc lên từ củi khô.",
       "leadVi": "Đêm cắm_trại, | cả lớp quây quanh đống củi /sưởi_ấm/.",
       "anticipateVi": "Nướng khoai, | /thơm_lừng/ chưa?",
       "emphasis": [
@@ -12459,7 +12473,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los ratones",
-        "tipVi": "Chuột máy_tính | cũng gọi là ratón."
+        "tipVi": "Chuột máy_tính | cũng gọi_là ratón."
       }
     },
     {
@@ -12494,7 +12508,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los cerdos",
-        "tipVi": "Thịt lợn | gọi là carne de cerdo."
+        "tipVi": "Thịt lợn | gọi_là carne de cerdo."
       }
     },
     {
@@ -12634,7 +12648,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las aldeas",
-        "tipVi": "Làng lớn hơn | thường gọi là pueblo."
+        "tipVi": "Làng lớn hơn | thường gọi_là pueblo."
       }
     },
     {
@@ -12714,7 +12728,7 @@
       "word": "caluroso",
       "shareCode": "AMN",
       "meaningVi": "nóng_nực",
-      "defVi": "Nhiệt_độ cao | khiến người /nhễ_nhại/ mồ_hôi.",
+      "defVi": "Nhiệt_độ cao | khiến người=/nhễ_nhại/ mồ_hôi.",
       "leadVi": "Trưa tháng sáu, | mình bật quạt hết=cỡ | vẫn /oi_bức/.",
       "anticipateVi": "Nắng thế này, | thèm /nước_đá/?",
       "emphasis": [
@@ -12741,7 +12755,7 @@
         "feminine": "calurosa",
         "plural": "calurosos / calurosas",
         "serEstar": "Thường dùng ser: | es un día caluroso.",
-        "tipVi": "Tả ngày | hay mùa nóng; | đồ ăn nóng | dùng caliente."
+        "tipVi": "Tả ngày | hay mùa nóng; | đồ_ăn nóng | dùng caliente."
       }
     },
     {
@@ -12776,7 +12790,7 @@
         "feminine": "corta",
         "plural": "cortos / cortas",
         "serEstar": "Thường dùng ser: | la película es corta.",
-        "tipVi": "Người thấp | là bajo, | không phải corto."
+        "tipVi": "Người=thấp | là bajo, | không phải corto."
       }
     },
     {
@@ -13131,7 +13145,7 @@
       "word": "estilo",
       "shareCode": "N9Q",
       "meaningVi": "phong_cách",
-      "defVi": "Cách /ăn_mặc/ | hay làm riêng của mỗi người.",
+      "defVi": "Cách=/ăn_mặc/ | hay làm riêng của mỗi người.",
       "leadVi": "Đi học, | anh=ấy chuộng sơ_mi rộng | rất /cá_tính/.",
       "anticipateVi": "Mặc vậy | mà vẫn /sành_điệu/?",
       "emphasis": [
@@ -13165,7 +13179,7 @@
       "word": "sonido",
       "shareCode": "V59",
       "meaningVi": "âm_thanh",
-      "defVi": "Thứ tai ta /cảm_nhận/ được, | như tiếng nhạc, tiếng gió.",
+      "defVi": "Thứ=tai ta /cảm_nhận/ được, | như tiếng nhạc, tiếng gió.",
       "leadVi": "Đêm ở quê, | mình nghe dế kêu /rỉ_rả/ ngoài vườn.",
       "anticipateVi": "/Yên_tĩnh/ đến nghe rõ từng tiếng?",
       "emphasis": [
@@ -13199,7 +13213,7 @@
       "word": "mirar",
       "shareCode": "Z88",
       "meaningVi": "xem",
-      "defVi": "Nhìn /chăm_chú/ | một thứ trong một lúc.",
+      "defVi": "Nhìn /chăm_chú/ | một thứ=trong một lúc.",
       "leadVi": "Tối thứ_bảy, | cả phòng /chăm_chăm/ dõi theo trận bóng.",
       "anticipateVi": "Hết tập này, | /háo_hức/ tập sau?",
       "emphasis": [
@@ -13283,9 +13297,9 @@
       "word": "ver",
       "shareCode": "8MM",
       "meaningVi": "thấy",
-      "defVi": "Nhận ra bằng mắt | một thứ ở /trước_mặt/.",
+      "defVi": "Nhận ra bằng mắt | một thứ=ở /trước_mặt/.",
       "leadVi": "Từ cửa_sổ phòng, | mình trông /rõ_ràng/ dãy núi xa.",
-      "anticipateVi": "Đeo kính mới, | mọi thứ /tỏ_tường/?",
+      "anticipateVi": "Đeo kính mới, | mọi thứ=/tỏ_tường/?",
       "emphasis": [
         "trước mặt",
         "rõ ràng",
@@ -13303,7 +13317,7 @@
       "usage": [
         {
           "en": "Desde mi casa puedo _____ el mar.",
-          "vi": "Từ nhà mình | có_thể thấy biển."
+          "vi": "Từ nhà=mình | có_thể thấy biển."
         }
       ],
       "grammar": {
@@ -13325,8 +13339,8 @@
       "word": "local",
       "shareCode": "F0K",
       "meaningVi": "địa_phương",
-      "defVi": "Thuộc về | /khu_vực/ gần nơi mình sống.",
-      "leadVi": "Đi du_lịch, | mình hỏi người /bản_địa/ quán ngon.",
+      "defVi": "Thuộc về | /khu_vực/ gần nơi=mình sống.",
+      "leadVi": "Đi du_lịch, | mình hỏi người=/bản_địa/ quán ngon.",
       "anticipateVi": "Món /đặc_sản/ này, | thử chưa?",
       "emphasis": [
         "khu vực",
@@ -13433,7 +13447,7 @@
       "word": "actor",
       "shareCode": "BQB",
       "meaningVi": "diễn_viên",
-      "defVi": "Người /đóng_vai/ | trong phim hay vở kịch.",
+      "defVi": "Người=/đóng_vai/ | trong phim hay vở kịch.",
       "leadVi": "Câu_lạc_bộ kịch trường | chọn bạn vào /vai_chính/.",
       "anticipateVi": "Lên sân_khấu, run /lời_thoại/?",
       "emphasis": [
@@ -13469,7 +13483,7 @@
       "word": "adulto",
       "shareCode": "5EW",
       "meaningVi": "người_lớn",
-      "defVi": "Người đã=/trưởng_thành/ | đủ tuổi tự lo cho mình.",
+      "defVi": "Người=đã=/trưởng_thành/ | đủ tuổi tự lo cho mình.",
       "leadVi": "Đủ tuổi đi làm, | bạn tự lo /chi_tiêu/ mỗi=tháng.",
       "anticipateVi": "Tròn tuổi rồi, | thấy /chín_chắn/ chưa?",
       "emphasis": [
@@ -13504,7 +13518,7 @@
       "word": "arte",
       "shareCode": "KBY",
       "meaningVi": "nghệ_thuật",
-      "defVi": "Tranh, nhạc, múa | do người /sáng_tạo/ để thưởng_thức.",
+      "defVi": "Tranh, nhạc, múa | do người=/sáng_tạo/ để thưởng_thức.",
       "leadVi": "Ghé bảo_tàng cuối_tuần, | em ngắm /tác_phẩm/ sơn_mài.",
       "anticipateVi": "Ngắm hoài | vẫn chưa /thấu_hiểu/?",
       "emphasis": [
@@ -13541,7 +13555,7 @@
       "shareCode": "VY0",
       "meaningVi": "cô, dì",
       "defVi": "Chị hay /em_gái/ | của=bố hoặc mẹ mình.",
-      "leadVi": "Lên thành_phố học, | tôi /ở_nhờ/ nhà em_gái mẹ.",
+      "leadVi": "Lên thành_phố học, | tôi /ở_nhờ/ nhà=em_gái mẹ.",
       "anticipateVi": "Ở nhờ, | được /chiều_chuộng/ chứ?",
       "emphasis": [
         "em gái",
@@ -13560,7 +13574,7 @@
       "usage": [
         {
           "en": "Mi _____ vive cerca de mi casa.",
-          "vi": "Cô mình | sống gần nhà mình."
+          "vi": "Cô mình | sống gần nhà=mình."
         }
       ],
       "grammar": {
@@ -13610,7 +13624,7 @@
       "word": "novio",
       "shareCode": "JCW",
       "meaningVi": "bạn_trai",
-      "defVi": "Người con_trai | đang=/hẹn_hò/, yêu_đương với mình.",
+      "defVi": "Người=con_trai | đang=/hẹn_hò/, yêu_đương với mình.",
       "leadVi": "Sinh_nhật, | /người_yêu/ đến đón | với bó hướng_dương.",
       "anticipateVi": "/Giới_thiệu/ với nhà, | ngại không?",
       "emphasis": [
@@ -13821,8 +13835,8 @@
       "word": "papá",
       "shareCode": "PCD",
       "meaningVi": "bố",
-      "defVi": "Cách gọi thân | người /đàn_ông/ sinh ra mình.",
-      "leadVi": "Ngày nhập_học, | người chở bạn lên trường | /dặn_dò/ mãi.",
+      "defVi": "Cách=gọi thân | người=/đàn_ông/ sinh ra mình.",
+      "leadVi": "Ngày nhập_học, | người=chở bạn lên trường | /dặn_dò/ mãi.",
       "anticipateVi": "Dặn đi dặn lại, | /lo_lắng/ thế?",
       "emphasis": [
         "đàn ông",
@@ -13856,8 +13870,8 @@
       "word": "bailarín",
       "shareCode": "JX8",
       "meaningVi": "vũ_công",
-      "defVi": "Người biểu_diễn | /vũ_đạo/ theo tiếng nhạc.",
-      "leadVi": "Đội múa của=khoa | có em xoay người /uyển_chuyển/.",
+      "defVi": "Người=biểu_diễn | /vũ_đạo/ theo tiếng nhạc.",
+      "leadVi": "Đội múa của=khoa | có em xoay người=/uyển_chuyển/.",
       "anticipateVi": "Xoay mấy vòng | mà chẳng /choáng_váng/?",
       "emphasis": [
         "vũ đạo",
@@ -13919,7 +13933,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las hijas",
-        "tipVi": "Con trai là hijo; | hijos là con_cái nói chung."
+        "tipVi": "Con_trai là hijo; | hijos là con_cái nói_chung."
       }
     },
     {
@@ -13995,7 +14009,7 @@
       "id": "nina",
       "word": "niña",
       "shareCode": "HJW",
-      "meaningVi": "cô bé",
+      "meaningVi": "cô_bé",
       "defVi": "Đứa trẻ thuộc /phái_nữ/, | còn nhỏ, | chưa lớn.",
       "leadVi": "Lớp vẽ hè, | đứa nhỏ tóc tết | vẽ cực /khéo_léo/.",
       "anticipateVi": "Nhỏ_nhắn mà /lém_lỉnh/ thế?",
@@ -14031,7 +14045,7 @@
       "word": "novia",
       "shareCode": "GBX",
       "meaningVi": "bạn_gái",
-      "defVi": "Người con_gái | mình đang /yêu_đương/ | và hẹn_hò.",
+      "defVi": "Người=con_gái | mình đang /yêu_đương/ | và hẹn_hò.",
       "leadVi": "Ngày lễ tình_nhân, | mình xếp hạc giấy tặng /người_thương/.",
       "anticipateVi": "Xếp trăm con hạc, | /kiên_nhẫn/ chưa?",
       "emphasis": [
@@ -14067,7 +14081,7 @@
       "word": "abuelo",
       "shareCode": "TWX",
       "meaningVi": "ông",
-      "defVi": "Người /đàn_ông/ | đã sinh ra bố hay mẹ mình.",
+      "defVi": "Người=/đàn_ông/ | đã sinh ra bố hay mẹ mình.",
       "leadVi": "Về quê, | mình ngồi đánh /cờ_tướng/ cùng cụ.",
       "anticipateVi": "Đấu cả chiều, | /thua_cuộc/ hoài?",
       "emphasis": [
@@ -14102,7 +14116,7 @@
       "word": "abuela",
       "shareCode": "QA8",
       "meaningVi": "bà",
-      "defVi": "Người /phụ_nữ/ | đã sinh ra bố hay mẹ mình.",
+      "defVi": "Người=/phụ_nữ/ | đã sinh ra bố hay mẹ mình.",
       "leadVi": "Hè về quê_ngoại, bạn | được ăn /bánh_xèo/ thơm_phức.",
       "anticipateVi": "Ăn ba bát | vẫn /thòm_thèm/?",
       "emphasis": [
@@ -14171,7 +14185,7 @@
       "word": "marido",
       "shareCode": "67X",
       "meaningVi": "chồng",
-      "defVi": "Người đàn_ông đã=cưới, | /bạn_đời/ | của một phụ_nữ.",
+      "defVi": "Người=đàn_ông đã=cưới, | /bạn_đời/ | của một phụ_nữ.",
       "leadVi": "Chị_họ bạn | dắt /ông_xã/ | về ra_mắt cả nhà.",
       "anticipateVi": "/Ra_mắt/ họ_hàng, hồi_hộp lắm?",
       "emphasis": [
@@ -14206,7 +14220,7 @@
       "word": "hombre",
       "shareCode": "YTR",
       "meaningVi": "đàn_ông",
-      "defVi": "Người /nam_giới/ | đã=lớn, | đủ tuổi trưởng_thành.",
+      "defVi": "Người=/nam_giới/ | đã=lớn, | đủ tuổi trưởng_thành.",
       "leadVi": "Trạm xe_buýt đông, | chú /trung_niên/ | nhường ghế cho bạn.",
       "anticipateVi": "/Lịch_sự/ vậy, ai chẳng quý?",
       "emphasis": [
@@ -14226,7 +14240,7 @@
       "usage": [
         {
           "en": "Ese _____ alto es mi profesor.",
-          "vi": "Người đàn_ông cao kia | là thầy mình."
+          "vi": "Người=đàn_ông cao kia | là thầy mình."
         }
       ],
       "grammar": {
@@ -14241,7 +14255,7 @@
       "word": "miembro",
       "shareCode": "M1T",
       "meaningVi": "thành_viên",
-      "defVi": "Người được /kết_nạp/ | vào nhóm | hay câu_lạc_bộ.",
+      "defVi": "Người=được /kết_nạp/ | vào nhóm | hay câu_lạc_bộ.",
       "leadVi": "Vào đội_bóng, | bạn được phát | thẻ /hội_viên/.",
       "anticipateVi": "Có thẻ rồi, /tự_hào/ chưa?",
       "emphasis": [
@@ -14276,7 +14290,7 @@
       "word": "mamá",
       "shareCode": "BX2",
       "meaningVi": "mẹ",
-      "defVi": "Cách gọi /thân_mật/ | người phụ_nữ | đã=sinh ra mình.",
+      "defVi": "Cách=gọi /thân_mật/ | người=phụ_nữ | đã=sinh ra mình.",
       "leadVi": "Về nhà, | cậu sinh_viên | /nũng_nịu/ đòi má nấu canh.",
       "anticipateVi": "Má khen một câu, /sướng_rơn/?",
       "emphasis": [
@@ -14296,7 +14310,7 @@
       "usage": [
         {
           "en": "¡Hola, _____! Ya estoy en casa.",
-          "vi": "Con chào má, | con về nhà rồi!"
+          "vi": "Con chào má, | con về nhà=rồi!"
         }
       ],
       "grammar": {
@@ -14346,7 +14360,7 @@
       "word": "compañero",
       "shareCode": "J3Q",
       "meaningVi": "bạn cùng nhóm",
-      "defVi": "Người /sát_cánh/ | cùng mình | trong học_tập hay công_việc.",
+      "defVi": "Người=/sát_cánh/ | cùng mình | trong học_tập hay công_việc.",
       "leadVi": "Giờ tiếng Anh, | cô cho bạn | /bắt_cặp/ luyện nói.",
       "anticipateVi": "Ghép đôi /ăn_ý/, nói trôi?",
       "emphasis": [
@@ -14381,7 +14395,7 @@
       "id": "fiesta",
       "word": "fiesta",
       "shareCode": "968",
-      "meaningVi": "bữa tiệc",
+      "meaningVi": "bữa_tiệc",
       "defVi": "Buổi /tụ_họp/ | có đồ_ăn, | âm_nhạc và bạn_bè.",
       "leadVi": "Sinh_nhật bạn_thân, | cả nhóm | góp tiền /trang_trí/.",
       "anticipateVi": "Thổi nến xong, /điều_ước/ gì?",
@@ -14402,7 +14416,7 @@
       "usage": [
         {
           "en": "El sábado hay una _____ en mi casa.",
-          "vi": "Thứ_bảy này | nhà mình có tiệc."
+          "vi": "Thứ_bảy này | nhà=mình có tiệc."
         }
       ],
       "grammar": {
@@ -14443,7 +14457,7 @@
       "grammar": {
         "gender": "f",
         "article": "la",
-        "tipVi": "Danh_từ số ít: | la gente es amable, | không dùng son."
+        "tipVi": "Danh_từ số_ít: | la gente es amable, | không dùng son."
       }
     },
     {
@@ -14471,7 +14485,7 @@
       "usage": [
         {
           "en": "Mi abuela es una _____ muy alegre.",
-          "vi": "Bà mình | là người rất vui_vẻ."
+          "vi": "Bà mình | là người=rất vui_vẻ."
         }
       ],
       "grammar": {
@@ -14556,7 +14570,7 @@
       "word": "regla",
       "shareCode": "QS7",
       "meaningVi": "quy_tắc",
-      "defVi": "Điều /quy_định/ | mà cả nhóm | phải cùng làm theo.",
+      "defVi": "Điều=/quy_định/ | mà cả nhóm | phải cùng làm theo.",
       "leadVi": "Ký_túc_xá dán /nội_quy/: | mười một giờ | khóa cổng.",
       "anticipateVi": "Lỡ /vi_phạm/, phạt gì đây?",
       "emphasis": [
@@ -14583,7 +14597,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las reglas",
-        "tipVi": "Còn nghĩa cái thước kẻ: | una regla de plástico."
+        "tipVi": "Còn nghĩa cái=thước_kẻ: | una regla de plástico."
       }
     },
     {
@@ -14591,7 +14605,7 @@
       "word": "cantante",
       "shareCode": "RYT",
       "meaningVi": "ca_sĩ",
-      "defVi": "Người /biểu_diễn/ | bằng giọng hát | trước khán_giả.",
+      "defVi": "Người=/biểu_diễn/ | bằng giọng hát | trước khán_giả.",
       "leadVi": "Đêm văn_nghệ, | /giọng_ca/ chính | khiến cả sân vỗ_tay.",
       "anticipateVi": "Lên nốt cao, nổi /da_gà/?",
       "emphasis": [
@@ -14612,7 +14626,7 @@
       "usage": [
         {
           "en": "Esta _____ canta en muchos idiomas.",
-          "vi": "Nữ ca_sĩ này | hát bằng nhiều thứ tiếng."
+          "vi": "Nữ ca_sĩ này | hát bằng nhiều thứ=tiếng."
         }
       ],
       "grammar": {
@@ -14654,7 +14668,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los hijos",
-        "tipVi": "Số nhiều los hijos | có_thể là con | cả trai lẫn gái."
+        "tipVi": "Số_nhiều los hijos | có_thể là con | cả trai lẫn gái."
       }
     },
     {
@@ -14662,7 +14676,7 @@
       "word": "adolescente",
       "shareCode": "DN9",
       "meaningVi": "thiếu_niên",
-      "defVi": "Người ở /độ_tuổi/ | giữa trẻ_con | và người_lớn.",
+      "defVi": "Người=ở /độ_tuổi/ | giữa trẻ_con | và người_lớn.",
       "leadVi": "Học lớp mười, | bạn /vỡ_giọng/ | và cao vọt hẳn.",
       "anticipateVi": "Nói câu nào cũng /khàn_khàn/?",
       "emphasis": [
@@ -14697,7 +14711,7 @@
       "word": "pueblo",
       "shareCode": "0RQ",
       "meaningVi": "thị_trấn",
-      "defVi": "Nơi /dân_cư/ | lớn hơn làng | nhưng nhỏ hơn thành_phố.",
+      "defVi": "Nơi=/dân_cư/ | lớn hơn làng | nhưng nhỏ hơn thành_phố.",
       "leadVi": "Nghỉ hè, bạn | về /phố_huyện/ | ăn bánh_cuốn đầu chợ.",
       "anticipateVi": "Phố nhỏ, ai cũng /quen_mặt/?",
       "emphasis": [
@@ -14760,7 +14774,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los tíos",
-        "tipVi": "Số nhiều los tíos | là cả cô lẫn chú."
+        "tipVi": "Số_nhiều los tíos | là cả cô lẫn chú."
       }
     },
     {
@@ -14768,7 +14782,7 @@
       "word": "esposa",
       "shareCode": "QBE",
       "meaningVi": "vợ",
-      "defVi": "Người phụ_nữ | đã=kết_hôn, | /bạn_đời/ của chồng.",
+      "defVi": "Người=phụ_nữ | đã=kết_hôn, | /bạn_đời/ của chồng.",
       "leadVi": "Thầy chủ_nhiệm | khoe /bà_xã/ | nấu chè mang lên lớp.",
       "anticipateVi": "Chè ngon, cả lớp /tấm_tắc/?",
       "emphasis": [
@@ -14803,7 +14817,7 @@
       "word": "mujer",
       "shareCode": "GN7",
       "meaningVi": "phụ_nữ",
-      "defVi": "Người /nữ_giới/ | đã=lớn, | đủ tuổi trưởng_thành.",
+      "defVi": "Người=/nữ_giới/ | đã=lớn, | đủ tuổi trưởng_thành.",
       "leadVi": "Mùng tám tháng ba, | lớp tặng hoa | /chị_em/ trong lớp.",
       "anticipateVi": "Hoa nhận đầy tay, /rạng_rỡ/?",
       "emphasis": [
@@ -14823,14 +14837,14 @@
       "usage": [
         {
           "en": "La _____ del vestido rojo es mi tía.",
-          "vi": "Người phụ_nữ mặc váy đỏ | là dì mình."
+          "vi": "Người=phụ_nữ mặc váy đỏ | là dì mình."
         }
       ],
       "grammar": {
         "gender": "f",
         "article": "la",
         "plural": "las mujeres",
-        "tipVi": "Còn nghĩa là vợ: | es mi mujer."
+        "tipVi": "Còn nghĩa_là vợ: | es mi mujer."
       }
     },
     {
@@ -14907,7 +14921,7 @@
             "gerundio": "pintando"
           }
         },
-        "tipVi": "Vẽ bằng bút chì | là dibujar, | bằng màu là pintar."
+        "tipVi": "Vẽ bằng bút_chì | là dibujar, | bằng màu là pintar."
       }
     },
     {
@@ -14992,7 +15006,7 @@
       "id": "aula",
       "word": "aula",
       "shareCode": "N0F",
-      "meaningVi": "phòng học",
+      "meaningVi": "phòng_học",
       "defVi": "Căn_phòng | có /bàn_ghế/ và bảng | để học.",
       "leadVi": "Trực_nhật sớm, | bạn lau | /bục_giảng/ và bảng_đen.",
       "anticipateVi": "Bụi phấn bay, /hắt_xì/?",
@@ -15055,7 +15069,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los cursos",
-        "tipVi": "Còn nghĩa năm học: | estoy en segundo curso."
+        "tipVi": "Còn nghĩa năm_học: | estoy en segundo curso."
       }
     },
     {
@@ -15124,7 +15138,7 @@
       "grammar": {
         "gender": "f",
         "article": "la",
-        "tipVi": "Tên môn học | không cần mạo_từ: | estudio geografía."
+        "tipVi": "Tên môn_học | không cần mạo_từ: | estudio geografía."
       }
     },
     {
@@ -15159,7 +15173,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las tareas",
-        "tipVi": "Còn nghĩa việc nhà: | las tareas de casa."
+        "tipVi": "Còn nghĩa việc_nhà: | las tareas de casa."
       }
     },
     {
@@ -15194,7 +15208,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las lecciones",
-        "tipVi": "Số nhiều mất dấu: | lección, lecciones."
+        "tipVi": "Số_nhiều mất dấu: | lección, lecciones."
       }
     },
     {
@@ -15229,7 +15243,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las notas",
-        "tipVi": "Còn nghĩa điểm số: | saqué buena nota."
+        "tipVi": "Còn nghĩa điểm_số: | saqué buena nota."
       }
     },
     {
@@ -15341,7 +15355,7 @@
       "id": "parrafo",
       "word": "párrafo",
       "shareCode": "NGW",
-      "meaningVi": "đoạn văn",
+      "meaningVi": "đoạn_văn",
       "defVi": "Nhóm câu | cùng nói một ý, | mở đầu bằng /xuống_dòng/.",
       "leadVi": "Viết luận, | bạn nhớ /thụt_lề/ | đầu mỗi ý.",
       "anticipateVi": "Một khối chữ, /rối_mắt/ không?",
@@ -15376,7 +15390,7 @@
       "id": "pluma",
       "word": "pluma",
       "shareCode": "R2G",
-      "meaningVi": "bút mực",
+      "meaningVi": "bút_mực",
       "defVi": "Loại bút | có /ngòi_bút/ | chấm hay bơm mực.",
       "leadVi": "Luyện chữ đẹp, | bạn tập | /nắn_nót/ từng nét.",
       "anticipateVi": "Mực lem tay, /tèm_lem/?",
@@ -15411,7 +15425,7 @@
       "id": "lapiz",
       "word": "lápiz",
       "shareCode": "JYM",
-      "meaningVi": "bút chì",
+      "meaningVi": "bút_chì",
       "defVi": "Loại bút | có lõi /than_chì/ | viết xong dễ tẩy.",
       "leadVi": "Thi /trắc_nghiệm/, | bạn gọt sẵn | ba cây bút.",
       "anticipateVi": "Gãy ngòi, /hoảng_hốt/ chưa?",
@@ -15439,7 +15453,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los lápices",
-        "tipVi": "Số nhiều đổi z thành c: | lápices."
+        "tipVi": "Số_nhiều đổi z thành c: | lápices."
       }
     },
     {
@@ -15482,8 +15496,8 @@
       "id": "pregunta",
       "word": "pregunta",
       "shareCode": "D17",
-      "meaningVi": "câu hỏi",
-      "defVi": "Lời nói ra | để /thắc_mắc/ | điều mình chưa biết.",
+      "meaningVi": "câu_hỏi",
+      "defVi": "Lời nói ra | để /thắc_mắc/ | điều=mình chưa biết.",
       "leadVi": "Cuối buổi, bạn | /phát_biểu/ | hỏi thầy về bài_tập.",
       "anticipateVi": "Tay giơ lên, /bối_rối/?",
       "emphasis": [
@@ -15511,16 +15525,16 @@
         "gender": "f",
         "article": "la",
         "plural": "las preguntas",
-        "tipVi": "Đặt câu hỏi | là hacer una pregunta."
+        "tipVi": "Đặt câu_hỏi | là hacer una pregunta."
       }
     },
     {
       "id": "lector",
       "word": "lector",
       "shareCode": "X46",
-      "meaningVi": "người đọc",
+      "meaningVi": "người=đọc",
       "defVi": "/Độc_giả/ | của sách, | báo hay một trang mạng.",
-      "leadVi": "Trang nấu_ăn | của bạn | có nghìn người /theo_dõi/.",
+      "leadVi": "Trang nấu_ăn | của bạn | có nghìn người=/theo_dõi/.",
       "anticipateVi": "Thư khen gửi về, /phấn_khởi/?",
       "emphasis": [
         "Độc giả",
@@ -15692,7 +15706,7 @@
       "word": "estudiante",
       "shareCode": "D5M",
       "meaningVi": "học_sinh, sinh_viên",
-      "defVi": "Người đang /đi_học/ | ở trường | hay đại_học.",
+      "defVi": "Người=đang /đi_học/ | ở trường | hay đại_học.",
       "leadVi": "Mùa thi, | cả ký_túc_xá | /miệt_mài/ ôn bài.",
       "anticipateVi": "Ôn suốt đêm, /tỉnh_táo/ không?",
       "emphasis": [
@@ -15726,7 +15740,7 @@
       "id": "asignatura",
       "word": "asignatura",
       "shareCode": "7NJ",
-      "meaningVi": "môn học",
+      "meaningVi": "môn_học",
       "defVi": "Một /lĩnh_vực/ | được dạy riêng | như toán hay văn.",
       "leadVi": "Đầu học_kỳ, | bạn /đắn_đo/ | giữa hóa và sinh.",
       "anticipateVi": "Chọn mãi, vẫn /phân_vân/?",
@@ -15754,7 +15768,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las asignaturas",
-        "tipVi": "Còn gọi là materia: | mi materia favorita."
+        "tipVi": "Còn gọi_là materia: | mi materia favorita."
       }
     },
     {
@@ -15762,7 +15776,7 @@
       "word": "título",
       "shareCode": "7CA",
       "meaningVi": "tiêu_đề",
-      "defVi": "Cái tên | /khái_quát/ | nội_dung sách, bài hay phim.",
+      "defVi": "Cái=tên | /khái_quát/ | nội_dung sách, bài hay phim.",
       "leadVi": "Làm báo_cáo, | bạn nghĩ mãi | /tên_gọi/ cho trang đầu.",
       "anticipateVi": "Nghĩ mãi, vẫn chưa /ưng_ý/?",
       "emphasis": [
@@ -15797,7 +15811,7 @@
       "word": "tema",
       "shareCode": "6JC",
       "meaningVi": "chủ_đề",
-      "defVi": "Điều chính | mà bài nói | hay bài viết /đề_cập/.",
+      "defVi": "Điều=chính | mà bài nói | hay bài viết /đề_cập/.",
       "leadVi": "Thi nói, | bạn bốc trúng | /đề_tài/ về du_lịch.",
       "anticipateVi": "Trúng đề quen, /mừng_rơn/?",
       "emphasis": [
@@ -15976,7 +15990,7 @@
             "gerundio": "dibujando"
           }
         },
-        "tipVi": "Khác pintar: | dibujar là vẽ nét, | thường bằng bút chì."
+        "tipVi": "Khác pintar: | dibujar là vẽ nét, | thường bằng bút_chì."
       }
     },
     {
@@ -16108,7 +16122,7 @@
       "word": "enseñar",
       "shareCode": "YPM",
       "meaningVi": "dạy",
-      "defVi": "/Truyền_đạt/ kiến_thức | hay kỹ_năng | cho người khác.",
+      "defVi": "/Truyền_đạt/ kiến_thức | hay kỹ_năng | cho người=khác.",
       "leadVi": "Hè tình_nguyện, | bạn /kèm_cặp/ | học_trò vùng cao.",
       "anticipateVi": "Kèm cả hè, /quyến_luyến/?",
       "emphasis": [
@@ -16151,7 +16165,7 @@
       "word": "blog",
       "shareCode": "CF1",
       "meaningVi": "nhật_ký mạng",
-      "defVi": "Trang /trực_tuyến/ | nơi một người | viết bài chia_sẻ.",
+      "defVi": "Trang /trực_tuyến/ | nơi=một người | viết bài chia_sẻ.",
       "leadVi": "Mỗi tuần, | bạn /đăng_tải/ | cảm_nghĩ về món ngon.",
       "anticipateVi": "Đăng đều, /lượt_xem/ tăng?",
       "emphasis": [
@@ -16178,7 +16192,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los blogs",
-        "tipVi": "Số nhiều chỉ thêm s: | los blogs."
+        "tipVi": "Số_nhiều chỉ thêm s: | los blogs."
       }
     },
     {
@@ -16220,7 +16234,7 @@
       "id": "cd",
       "word": "CD",
       "shareCode": "WN7",
-      "meaningVi": "đĩa nhạc",
+      "meaningVi": "đĩa_nhạc",
       "defVi": "Chiếc đĩa tròn /sáng_bóng/ | chứa nhạc | hay dữ_liệu.",
       "leadVi": "Dọn tủ cũ, | bạn thấy đĩa | /ca_nhạc/ thời xưa.",
       "anticipateVi": "Đĩa xưa, /hoài_niệm/ ghê?",
@@ -16248,7 +16262,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los CD",
-        "tipVi": "Số nhiều giữ nguyên: | los CD."
+        "tipVi": "Số_nhiều giữ_nguyên: | los CD."
       }
     },
     {
@@ -16318,7 +16332,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los DVD",
-        "tipVi": "Số nhiều giữ nguyên: | los DVD."
+        "tipVi": "Số_nhiều giữ_nguyên: | los DVD."
       }
     },
     {
@@ -16326,7 +16340,7 @@
       "word": "internet",
       "shareCode": "JS6",
       "meaningVi": "mạng toàn_cầu",
-      "defVi": "/Mạng_lưới/ | nối các máy | khắp nơi với nhau.",
+      "defVi": "/Mạng_lưới/ | nối các máy | khắp nơi=với nhau.",
       "leadVi": "Phòng trọ /chập_chờn/ sóng, | cả nhóm | ra quán cà_phê.",
       "anticipateVi": "Một ngày /ngoại_tuyến/, chịu nổi?",
       "emphasis": [
@@ -16449,14 +16463,14 @@
       "usage": [
         {
           "en": "Tenemos un _____ nuevo en el salón.",
-          "vi": "Nhà mình | có ti_vi mới | ở phòng_khách."
+          "vi": "Nhà=mình | có ti_vi mới | ở phòng_khách."
         }
       ],
       "grammar": {
         "gender": "m",
         "article": "el",
         "plural": "los televisores",
-        "tipVi": "Televisor là cái máy, | televisión là truyền_hình."
+        "tipVi": "Televisor là cái=máy, | televisión là truyền_hình."
       }
     },
     {
@@ -16499,7 +16513,7 @@
       "word": "falso",
       "shareCode": "GQG",
       "meaningVi": "sai, giả",
-      "defVi": "Không khớp | với /sự_thật/ | hay điều có thật.",
+      "defVi": "Không khớp | với /sự_thật/ | hay điều=có thật.",
       "leadVi": "Lướt mạng, | bạn gặp | /tin_đồn/ về lịch nghỉ Tết.",
       "anticipateVi": "Chưa /kiểm_chứng/, chia_sẻ vội?",
       "emphasis": [
@@ -16604,7 +16618,7 @@
       "word": "posible",
       "shareCode": "0B1",
       "meaningVi": "có_thể",
-      "defVi": "Có cách làm được, | hoàn_toàn /khả_thi/ | nếu cố.",
+      "defVi": "Có cách=làm được, | hoàn_toàn /khả_thi/ | nếu cố.",
       "leadVi": "Đề_án khó, | cả=nhóm vẫn thấy | /cơ_hội/ kịp hạn.",
       "anticipateVi": "Còn một tuần, | /xoay_xở/ kịp chứ?",
       "emphasis": [
@@ -16708,7 +16722,7 @@
       "word": "cierto",
       "shareCode": "QN9",
       "meaningVi": "đúng sự_thật",
-      "defVi": "Khớp với | điều đã=xảy_ra, | không hề /bịa_đặt/.",
+      "defVi": "Khớp với | điều=đã=xảy_ra, | không hề /bịa_đặt/.",
       "leadVi": "Tin trường nghỉ sớm | hóa_ra /chính_xác/, | cả lớp reo.",
       "anticipateVi": "/Sự_thật/ | hay chỉ tin_đồn?",
       "emphasis": [
@@ -16728,7 +16742,7 @@
       "usage": [
         {
           "en": "Lo que dice el profesor es _____: mañana no hay clase.",
-          "vi": "Điều thầy nói | là thật: | mai không có tiết."
+          "vi": "Điều=thầy nói | là thật: | mai không có tiết."
         }
       ],
       "grammar": {
@@ -16809,7 +16823,7 @@
       "word": "probablemente",
       "shareCode": "H7G",
       "meaningVi": "rất có_thể",
-      "defVi": "Nhiều /khả_năng/ | điều đó xảy_ra, | gần_như chắc.",
+      "defVi": "Nhiều /khả_năng/ | điều=đó xảy_ra, | gần_như chắc.",
       "leadVi": "Mây đen kéo tới, | mình /dự_đoán/ | chiều=nay mưa to.",
       "anticipateVi": "Mang ô sẵn, | /đề_phòng/ mưa?",
       "emphasis": [
@@ -16838,7 +16852,7 @@
       "word": "diferencia",
       "shareCode": "0SY",
       "meaningVi": "khác_biệt",
-      "defVi": "Điểm không /giống_nhau/ | giữa hai thứ với nhau.",
+      "defVi": "Điểm không /giống_nhau/ | giữa hai thứ=với nhau.",
       "leadVi": "So hai bức ảnh, | mình tìm ra | năm chỗ /chênh_lệch/.",
       "anticipateVi": "Soi kỹ, | vẫn /bỏ_sót/ một?",
       "emphasis": [
@@ -16873,7 +16887,7 @@
       "word": "hecho",
       "shareCode": "V6E",
       "meaningVi": "sự_thật",
-      "defVi": "Điều chắc_chắn đúng | và /kiểm_chứng/ được.",
+      "defVi": "Điều=chắc_chắn đúng | và /kiểm_chứng/ được.",
       "leadVi": "Viết luận, | chị dẫn /bằng_chứng/ | từ nguồn tin_cậy.",
       "anticipateVi": "Có /số_liệu/, ai cãi?",
       "emphasis": [
@@ -16928,7 +16942,7 @@
       "usage": [
         {
           "en": "¡Qué buena _____! Vamos a hacer una fiesta en casa.",
-          "vi": "Ý_tưởng hay quá! | Mình tổ_chức tiệc ở nhà nhé."
+          "vi": "Ý_tưởng hay quá! | Mình tổ_chức tiệc ở nhà=nhé."
         }
       ],
       "grammar": {
@@ -16942,7 +16956,7 @@
       "word": "problema",
       "shareCode": "38Q",
       "meaningVi": "vấn_đề",
-      "defVi": "Điều /khó_khăn/ | cần tìm cách giải_quyết.",
+      "defVi": "Điều=/khó_khăn/ | cần tìm cách=giải_quyết.",
       "leadVi": "Máy_tính /trục_trặc/ | trước giờ nộp, | em cuống_cuồng.",
       "anticipateVi": "Mất=hết bài, | /cứu_vãn/ kịp?",
       "emphasis": [
@@ -16977,7 +16991,7 @@
       "word": "razón",
       "shareCode": "RPY",
       "meaningVi": "lý_do",
-      "defVi": "Điều /giải_thích/ | vì sao việc xảy_ra.",
+      "defVi": "Điều=/giải_thích/ | vì sao việc xảy_ra.",
       "leadVi": "Đến muộn, mình | /trình_bày/ | chuyện xe hỏng giữa đường.",
       "anticipateVi": "Xe hỏng thật, | thầy có /tin_tưởng/?",
       "emphasis": [
@@ -17004,7 +17018,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las razones",
-        "tipVi": "tener razón | nghĩa là nói đúng, | không phải có lý_do."
+        "tipVi": "tener razón | nghĩa_là nói đúng, | không phải có lý_do."
       }
     },
     {
@@ -17053,7 +17067,7 @@
       "word": "saber",
       "shareCode": "7EY",
       "meaningVi": "biết",
-      "defVi": "Có /thông_tin/ | hay hiểu về điều gì.",
+      "defVi": "Có /thông_tin/ | hay hiểu về điều=gì.",
       "leadVi": "Hỏi đường ở chợ, | bà bán rau /thông_thạo/ | từng ngõ.",
       "anticipateVi": "Đường nào cũng /thuộc_lòng/?",
       "emphasis": [
@@ -17138,8 +17152,8 @@
       "word": "entender",
       "shareCode": "3WV",
       "meaningVi": "hiểu",
-      "defVi": "Nắm được | /ý_nghĩa/ | của=điều nghe hay đọc.",
-      "leadVi": "Giảng lần ba, | tôi mới /vỡ_lẽ/ | cách giải bài.",
+      "defVi": "Nắm được | /ý_nghĩa/ | của=điều=nghe hay đọc.",
+      "leadVi": "Giảng lần ba, | tôi mới /vỡ_lẽ/ | cách=giải bài.",
       "anticipateVi": "Nghe một lần | là /thông_suốt/?",
       "emphasis": [
         "ý nghĩa",
@@ -17283,7 +17297,7 @@
       "word": "próximo",
       "shareCode": "RV2",
       "meaningVi": "tiếp_theo",
-      "defVi": "Xếp ngay sau | cái hiện_tại, | theo đúng /thứ_tự/.",
+      "defVi": "Xếp ngay sau | cái=hiện_tại, | theo đúng /thứ_tự/.",
       "leadVi": "Xếp_hàng ở căng_tin, | bạn /kế_tiếp/ | là mình.",
       "anticipateVi": "Tập sau | bao_giờ /công_chiếu/?",
       "emphasis": [
@@ -17381,7 +17395,7 @@
       "word": "primero",
       "shareCode": "H08",
       "meaningVi": "đầu_tiên",
-      "defVi": "Trước mọi thứ khác | theo đúng /thứ_tự/.",
+      "defVi": "Trước mọi thứ=khác | theo đúng /thứ_tự/.",
       "leadVi": "Vào phòng thi, chị | /rà_soát/ | cả đề trước.",
       "anticipateVi": "Lướt hết đề, | /khởi_động/ câu nào?",
       "emphasis": [
@@ -17469,7 +17483,7 @@
         }
       ],
       "grammar": {
-        "tipVi": "ahora mismo | nghĩa là | ngay lập_tức."
+        "tipVi": "ahora mismo | nghĩa_là | ngay lập_tức."
       }
     },
     {
@@ -17626,7 +17640,7 @@
         }
       ],
       "grammar": {
-        "tipVi": "hoy en día | nghĩa là thời_nay."
+        "tipVi": "hoy en día | nghĩa_là thời_nay."
       }
     },
     {
@@ -17662,7 +17676,7 @@
       "id": "abril",
       "word": "abril",
       "shareCode": "BR8",
-      "meaningVi": "tháng tư",
+      "meaningVi": "tháng_tư",
       "defVi": "Tháng giữa mùa_xuân, | trời /ấm_áp/ | ngay sau tháng ba.",
       "leadVi": "Mùa /loa_kèn/, | em ôm bó hoa trắng | về phòng.",
       "anticipateVi": "Hoa trắng | ngập /phố_phường/?",
@@ -17800,7 +17814,7 @@
       "shareCode": "P5V",
       "meaningVi": "thế_kỷ",
       "defVi": "Quãng /thời_gian/ | dài đúng trăm năm | trong lịch_sử.",
-      "leadVi": "Tham_quan nhà cổ, | chị ngắm | cột gỗ /lâu_đời/.",
+      "leadVi": "Tham_quan nhà=cổ, | chị ngắm | cột gỗ /lâu_đời/.",
       "anticipateVi": "Trăm năm vẫn /đứng_vững/?",
       "emphasis": [
         "thời gian",
@@ -17819,7 +17833,7 @@
       "usage": [
         {
           "en": "Esta casa tiene casi un _____.",
-          "vi": "Ngôi nhà này | gần một thế_kỷ tuổi."
+          "vi": "Ngôi nhà=này | gần một thế_kỷ tuổi."
         }
       ],
       "grammar": {
@@ -17962,7 +17976,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los viernes",
-        "tipVi": "Số nhiều giữ_nguyên: | los viernes."
+        "tipVi": "Số_nhiều giữ_nguyên: | los viernes."
       }
     },
     {
@@ -18091,7 +18105,7 @@
       "usage": [
         {
           "en": "En _____ vamos a la playa con la familia.",
-          "vi": "Tháng bảy | cả=nhà mình đi biển."
+          "vi": "Tháng bảy | cả=nhà=mình đi biển."
         }
       ],
       "grammar": {
@@ -18367,7 +18381,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los meses",
-        "tipVi": "Số nhiều | thêm -es: | los meses."
+        "tipVi": "Số_nhiều | thêm -es: | los meses."
       }
     },
     {
@@ -18670,7 +18684,7 @@
       "usage": [
         {
           "en": "El _____ comemos en casa de mis abuelos.",
-          "vi": "Chủ_nhật | cả=nhà mình ăn | ở nhà ông_bà."
+          "vi": "Chủ_nhật | cả=nhà=mình ăn | ở nhà=ông_bà."
         }
       ],
       "grammar": {
@@ -18712,7 +18726,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los jueves",
-        "tipVi": "Số nhiều giữ_nguyên: | los jueves."
+        "tipVi": "Số_nhiều giữ_nguyên: | los jueves."
       }
     },
     {
@@ -18720,7 +18734,7 @@
       "word": "tiempo",
       "shareCode": "28Y",
       "meaningVi": "thời_gian",
-      "defVi": "Thứ ta đo | bằng /đồng_hồ/, | trôi mãi không dừng.",
+      "defVi": "Thứ=ta đo | bằng /đồng_hồ/, | trôi mãi không dừng.",
       "leadVi": "Mùa thi, | bạn ước | có thêm /giờ_giấc/ để ôn bài.",
       "anticipateVi": "/Mải_mê/, trời sắp sáng?",
       "emphasis": [
@@ -18754,7 +18768,7 @@
       "id": "martes",
       "word": "martes",
       "shareCode": "4WX",
-      "meaningVi": "thứ ba",
+      "meaningVi": "thứ_ba",
       "defVi": "Ngày nằm giữa thứ hai | và thứ tư | trong /tuần_lễ/.",
       "leadVi": "Tuần nào cũng thế, | ngày này lớp có /thể_dục/.",
       "anticipateVi": "Tuần mới, vẫn /hăng_hái/ chứ?",
@@ -18782,14 +18796,14 @@
         "gender": "m",
         "article": "el",
         "plural": "los martes",
-        "tipVi": "Không viết hoa, | số nhiều giữ nguyên: | los martes."
+        "tipVi": "Không viết hoa, | số_nhiều giữ_nguyên: | los martes."
       }
     },
     {
       "id": "miercoles",
       "word": "miércoles",
       "shareCode": "GKS",
-      "meaningVi": "thứ tư",
+      "meaningVi": "thứ_tư",
       "defVi": "Ngày đứng /chính_giữa/ tuần, | sau thứ ba, trước thứ năm.",
       "leadVi": "Giữa tuần /mệt_mỏi/, | anh mua | ly trà_sữa tự thưởng.",
       "anticipateVi": "Qua nửa chặng, /cố_gắng/ thêm?",
@@ -18817,7 +18831,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los miércoles",
-        "tipVi": "Đuôi -s | nhưng là số ít: | el miércoles."
+        "tipVi": "Đuôi -s | nhưng là số_ít: | el miércoles."
       }
     },
     {
@@ -19017,7 +19031,7 @@
       "meaningVi": "gần",
       "defVi": "Ở /lân_cận/, | chỉ cách | một quãng ngắn thôi.",
       "leadVi": "Thuê trọ sát trường, | mình /đi_bộ/ | năm phút là tới.",
-      "anticipateVi": "Nhà sát trường, /thong_thả/ ngủ thêm?",
+      "anticipateVi": "Nhà=sát trường, /thong_thả/ ngủ thêm?",
       "emphasis": [
         "lân cận",
         "đi bộ",
@@ -19151,7 +19165,7 @@
       "id": "oeste",
       "word": "oeste",
       "shareCode": "994",
-      "meaningVi": "phía tây",
+      "meaningVi": "phía_tây",
       "defVi": "Hướng /mặt_trời/ lặn | vào mỗi=chiều tối.",
       "leadVi": "Ngồi trên đồi, | bạn ngắm | /hoàng_hôn/ đỏ rực.",
       "anticipateVi": "Trời ráng đỏ, /lộng_lẫy/ chưa?",
@@ -19173,7 +19187,7 @@
       "usage": [
         {
           "en": "Mi casa está al _____ de la ciudad.",
-          "vi": "Nhà mình | ở phía tây | thành_phố."
+          "vi": "Nhà=mình | ở phía tây | thành_phố."
         }
       ],
       "grammar": {
@@ -19255,7 +19269,7 @@
       "word": "conductor",
       "shareCode": "GVK",
       "meaningVi": "tài_xế",
-      "defVi": "Người /cầm_lái/ | xe để chở người hay hàng.",
+      "defVi": "Người=/cầm_lái/ | xe để chở người hay hàng.",
       "leadVi": "Tan ca muộn, | chị được | /bác_tài/ chở tận cổng.",
       "anticipateVi": "Tận cổng, cảm_ơn /rối_rít/?",
       "emphasis": [
@@ -19290,8 +19304,8 @@
       "id": "vuelo",
       "word": "vuelo",
       "shareCode": "S27",
-      "meaningVi": "chuyến bay",
-      "defVi": "Mỗi lượt máy_bay | /cất_cánh/ | đưa khách tới nơi khác.",
+      "meaningVi": "chuyến_bay",
+      "defVi": "Mỗi lượt máy_bay | /cất_cánh/ | đưa khách tới nơi=khác.",
       "leadVi": "Lần đầu bay, em | nắm chặt | /tay_vịn/ khi cất_cánh.",
       "anticipateVi": "Máy rung, tim /thình_thịch/?",
       "emphasis": [
@@ -19325,8 +19339,8 @@
       "word": "hotel",
       "shareCode": "GH1",
       "meaningVi": "khách_sạn",
-      "defVi": "Nơi có phòng /tiện_nghi/ | cho khách | thuê nghỉ qua đêm.",
-      "leadVi": "Đến nơi muộn, | cả nhóm | nhận phòng ở /lễ_tân/.",
+      "defVi": "Nơi=có phòng /tiện_nghi/ | cho khách | thuê nghỉ qua đêm.",
+      "leadVi": "Đến nơi=muộn, | cả nhóm | nhận phòng ở /lễ_tân/.",
       "anticipateVi": "Phòng nhìn ra biển, /tuyệt_vời/?",
       "emphasis": [
         "tiện nghi",
@@ -19456,7 +19470,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los aviones",
-        "tipVi": "Số nhiều | mất dấu: | los aviones."
+        "tipVi": "Số_nhiều | mất dấu: | los aviones."
       }
     },
     {
@@ -19464,8 +19478,8 @@
       "word": "estación",
       "shareCode": "3A6",
       "meaningVi": "nhà_ga",
-      "defVi": "Nơi tàu hay xe | /dừng_chân/ | để đón, trả khách.",
-      "leadVi": "Về nhà dịp lễ, | tôi xếp hàng | ở /sân_ga/.",
+      "defVi": "Nơi=tàu hay xe | /dừng_chân/ | để đón, trả khách.",
+      "leadVi": "Về nhà=dịp lễ, | tôi xếp hàng | ở /sân_ga/.",
       "anticipateVi": "Ga /đông_nghịt/, chen nổi?",
       "emphasis": [
         "dừng chân",
@@ -19484,7 +19498,7 @@
       "usage": [
         {
           "en": "La _____ de tren está cerca de mi casa.",
-          "vi": "Nhà_ga | ở gần nhà mình."
+          "vi": "Nhà_ga | ở gần nhà=mình."
         }
       ],
       "grammar": {
@@ -19498,8 +19512,8 @@
       "id": "calle",
       "word": "calle",
       "shareCode": "ZSM",
-      "meaningVi": "đường phố",
-      "defVi": "Con_đường | trong /thành_phố/ | có nhà hai bên.",
+      "meaningVi": "đường_phố",
+      "defVi": "Con_đường | trong /thành_phố/ | có nhà=hai bên.",
       "leadVi": "Phố /ẩm_thực/ đêm, | chị ăn | từ đầu dãy đến cuối.",
       "anticipateVi": "Bụng /no_nê/, đi tiếp?",
       "emphasis": [
@@ -19568,7 +19582,7 @@
       "word": "entrada",
       "shareCode": "3VM",
       "meaningVi": "vé vào cửa",
-      "defVi": "Thứ /cho_phép/ bạn | vào xem phim | hay trận_đấu.",
+      "defVi": "Thứ=/cho_phép/ bạn | vào xem phim | hay trận_đấu.",
       "leadVi": "Mở bán lúc mười giờ, | tôi săn | suất xem /ca_nhạc/.",
       "anticipateVi": "Một phút cháy sạch, /nhanh_tay/ chứ?",
       "emphasis": [
@@ -19603,7 +19617,7 @@
       "word": "turista",
       "shareCode": "5PN",
       "meaningVi": "khách du_lịch",
-      "defVi": "Người đi /tham_quan/ | nơi xa để vui_chơi.",
+      "defVi": "Người=đi /tham_quan/ | nơi=xa để vui_chơi.",
       "leadVi": "Phố cổ cuối_tuần, | mình chỉ đường | cho đoàn /du_khách/.",
       "anticipateVi": "Chỉ đường /bập_bẹ/, khách hiểu?",
       "emphasis": [
@@ -19665,7 +19679,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los trenes",
-        "tipVi": "Số nhiều | thêm -es: | los trenes."
+        "tipVi": "Số_nhiều | thêm -es: | los trenes."
       }
     },
     {
@@ -19673,7 +19687,7 @@
       "word": "visitante",
       "shareCode": "YWY",
       "meaningVi": "khách đến thăm",
-      "defVi": "Người từ nơi khác | đến /tham_quan/ | hay ghé chơi.",
+      "defVi": "Người=từ nơi=khác | đến /tham_quan/ | hay ghé chơi.",
       "leadVi": "Cuối_tuần, phòng trọ | có /bạn_bè/ | ghé chơi bất_ngờ.",
       "anticipateVi": "Phòng /bừa_bộn/, dọn kịp?",
       "emphasis": [
@@ -19709,7 +19723,7 @@
       "word": "regresar",
       "shareCode": "AZE",
       "meaningVi": "trở về",
-      "defVi": "Đi /trở_lại/ | nơi mình | đã=ở trước đó.",
+      "defVi": "Đi /trở_lại/ | nơi=mình | đã=ở trước đó.",
       "leadVi": "Hết /thực_tập/, | tôi về nhà | với va_li đầy quà.",
       "anticipateVi": "Va_li /nặng_trĩu/, quà ai?",
       "emphasis": [
@@ -19752,7 +19766,7 @@
       "shareCode": "EW3",
       "meaningVi": "thăm",
       "defVi": "Đến /gặp_gỡ/ ai | hay xem một nơi | trong ít lâu.",
-      "leadVi": "Dịp lễ, chị | ghé nhà ngoại | /hỏi_han/ đủ chuyện.",
+      "leadVi": "Dịp lễ, chị | ghé nhà=ngoại | /hỏi_han/ đủ chuyện.",
       "anticipateVi": "Ngoại /mừng_rỡ/, nấu cả mâm?",
       "emphasis": [
         "gặp gỡ",
@@ -19962,7 +19976,7 @@
       "word": "quedar",
       "shareCode": "QV7",
       "meaningVi": "ở lại",
-      "defVi": "Không rời đi, | vẫn /lưu_trú/ | ở một nơi ít lâu.",
+      "defVi": "Không rời đi, | vẫn /lưu_trú/ | ở một nơi=ít lâu.",
       "leadVi": "Đi biển, nhóm | thuê /nhà_nghỉ/ | ba đêm gần bờ.",
       "anticipateVi": "Ba đêm, /lưu_luyến/ chẳng muốn về?",
       "emphasis": [
@@ -20005,7 +20019,7 @@
       "word": "actriz",
       "shareCode": "KD9",
       "meaningVi": "nữ diễn_viên",
-      "defVi": "Người phụ_nữ | /đóng_vai/ | trong phim hay kịch.",
+      "defVi": "Người=phụ_nữ | /đóng_vai/ | trong phim hay kịch.",
       "leadVi": "Đêm diễn kịch, | mình vào | vai công_chúa trên /sân_khấu/.",
       "anticipateVi": "Đèn rọi, khán_giả /vỗ_tay/?",
       "emphasis": [
@@ -20033,7 +20047,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las actrices",
-        "tipVi": "Số nhiều | đổi z thành c: | las actrices."
+        "tipVi": "Số_nhiều | đổi z thành c: | las actrices."
       }
     },
     {
@@ -20041,7 +20055,7 @@
       "word": "artista",
       "shareCode": "8PR",
       "meaningVi": "nghệ_sĩ",
-      "defVi": "Người /sáng_tác/ | tranh, nhạc hay tác_phẩm nghệ_thuật.",
+      "defVi": "Người=/sáng_tác/ | tranh, nhạc hay tác_phẩm nghệ_thuật.",
       "leadVi": "Họa_sĩ đường phố | vẽ /chân_dung/ | em trong mười phút.",
       "anticipateVi": "Vài nét đã /giống_hệt/?",
       "emphasis": [
@@ -20113,7 +20127,7 @@
       "word": "carrera",
       "shareCode": "DYJ",
       "meaningVi": "sự_nghiệp",
-      "defVi": "Con_đường | /nghề_nghiệp/ | một người theo lâu dài.",
+      "defVi": "Con_đường | /nghề_nghiệp/ | một người=theo lâu dài.",
       "leadVi": "Năm cuối, mình | đi hội_thảo | /định_hướng/ nghề.",
       "anticipateVi": "Đổi nghề giữa chừng, /lo_lắng/?",
       "emphasis": [
@@ -20140,7 +20154,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las carreras",
-        "tipVi": "Cũng là | cuộc đua: | una carrera de coches."
+        "tipVi": "Cũng là | cuộc=đua: | una carrera de coches."
       }
     },
     {
@@ -20148,7 +20162,7 @@
       "word": "granjero",
       "shareCode": "980",
       "meaningVi": "nông_dân",
-      "defVi": "Người /trồng_trọt/ | hay chăn_nuôi để sống.",
+      "defVi": "Người=/trồng_trọt/ | hay chăn_nuôi để sống.",
       "leadVi": "Về quê ngoại, | chị cùng bác | ra /đồng_ruộng/ cấy lúa.",
       "anticipateVi": "Lội ruộng, /lấm_lem/ chưa?",
       "emphasis": [
@@ -20183,7 +20197,7 @@
       "id": "reunion",
       "word": "reunión",
       "shareCode": "0ZQ",
-      "meaningVi": "cuộc họp",
+      "meaningVi": "cuộc=họp",
       "defVi": "Buổi nhiều người | gặp nhau để /bàn_bạc/.",
       "leadVi": "Cả phòng | ngồi quanh bàn | /thảo_luận/ kế_hoạch tháng.",
       "anticipateVi": "Kéo dài hai tiếng, /buồn_ngủ/?",
@@ -20211,7 +20225,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las reuniones",
-        "tipVi": "Số nhiều | mất dấu: | las reuniones."
+        "tipVi": "Số_nhiều | mất dấu: | las reuniones."
       }
     },
     {
@@ -20219,7 +20233,7 @@
       "word": "oficina",
       "shareCode": "VWV",
       "meaningVi": "văn_phòng",
-      "defVi": "Nơi mọi người | ngồi làm=việc bằng /giấy_tờ/, máy_tính.",
+      "defVi": "Nơi=mọi người | ngồi làm=việc bằng /giấy_tờ/, máy_tính.",
       "leadVi": "Đi thực_tập, | tôi có | /bàn_giấy/ riêng cạnh cửa_sổ.",
       "anticipateVi": "Cà_phê sáng, /tỉnh_táo/ chưa?",
       "emphasis": [
@@ -20254,7 +20268,7 @@
       "shareCode": "BND",
       "meaningVi": "dự_án",
       "defVi": "Công_việc | có /kế_hoạch/ | làm trong một thời_gian.",
-      "leadVi": "Đồ_án cuối kỳ, | nhóm anh | dựng /mô_hình/ nhà xanh.",
+      "leadVi": "Đồ_án cuối kỳ, | nhóm anh | dựng /mô_hình/ nhà=xanh.",
       "anticipateVi": "Mấy đêm /thức_trắng/, xong chưa?",
       "emphasis": [
         "kế hoạch",
@@ -20322,9 +20336,9 @@
       "id": "cientifico",
       "word": "científico",
       "shareCode": "5EK",
-      "meaningVi": "nhà khoa_học",
-      "defVi": "Người /nghiên_cứu/ | để tìm_hiểu tự_nhiên và thế_giới.",
-      "leadVi": "Xem=phim tài_liệu, | mình mê | những=người làm /thí_nghiệm/.",
+      "meaningVi": "nhà=khoa_học",
+      "defVi": "Người=/nghiên_cứu/ | để tìm_hiểu tự_nhiên và thế_giới.",
+      "leadVi": "Xem=phim tài_liệu, | mình mê | những=người=làm /thí_nghiệm/.",
       "anticipateVi": "Lớn_lên, mơ /khám_phá/ gì?",
       "emphasis": [
         "nghiên cứu",
@@ -20344,7 +20358,7 @@
       "usage": [
         {
           "en": "Mi tío es _____ y trabaja en la universidad.",
-          "vi": "Chú mình | là nhà khoa_học, | làm ở trường đại_học."
+          "vi": "Chú mình | là nhà=khoa_học, | làm ở trường đại_học."
         }
       ],
       "grammar": {
@@ -20393,7 +20407,7 @@
       "id": "exito",
       "word": "éxito",
       "shareCode": "6W1",
-      "meaningVi": "sự thành_công",
+      "meaningVi": "sự=thành_công",
       "defVi": "Kết_quả | /tốt_đẹp/ | sau khi cố_gắng.",
       "leadVi": "Buổi diễn văn_nghệ | của=lớp | được vỗ_tay /vang_dội/.",
       "anticipateVi": "Bao tuần tập, /xứng_đáng/ chưa?",
@@ -20464,8 +20478,8 @@
       "id": "obrero",
       "word": "obrero",
       "shareCode": "M8A",
-      "meaningVi": "người lao_động",
-      "defVi": "Người /lao_động/ | kiếm_sống | bằng việc chân tay.",
+      "meaningVi": "người=lao_động",
+      "defVi": "Người=/lao_động/ | kiếm_sống | bằng việc chân tay.",
       "leadVi": "Sáng sớm /công_trường/, | các=chú thợ | đã=vào việc.",
       "anticipateVi": "Nắng gắt, vẫn /miệt_mài/?",
       "emphasis": [
@@ -20500,7 +20514,7 @@
       "word": "escritor",
       "shareCode": "NCV",
       "meaningVi": "nhà_văn",
-      "defVi": "Người /sáng_tác/ | truyện, sách hay bài_báo.",
+      "defVi": "Người=/sáng_tác/ | truyện, sách hay bài_báo.",
       "leadVi": "Hội sách, tôi | xếp hàng | xin chữ_ký /tác_giả/.",
       "anticipateVi": "/Chữ_ký/ nguệch_ngoạc, quý?",
       "emphasis": [
@@ -20691,7 +20705,7 @@
       "word": "alegre",
       "shareCode": "QCQ",
       "meaningVi": "vui_vẻ",
-      "defVi": "Hay /tươi_cười/, | làm người bên_cạnh | cũng vui lây.",
+      "defVi": "Hay /tươi_cười/, | làm người=bên_cạnh | cũng vui lây.",
       "leadVi": "Bạn cùng phòng | vừa nấu vừa hát | /ríu_rít/ cả=buổi.",
       "anticipateVi": "/Hớn_hở/ từ sáng tới giờ?",
       "emphasis": [
@@ -20727,7 +20741,7 @@
       "word": "allí",
       "shareCode": "68F",
       "meaningVi": "ở đó",
-      "defVi": "Chỉ chỗ /xa_xa/ | cách cả người nói | lẫn người nghe.",
+      "defVi": "Chỉ chỗ /xa_xa/ | cách=cả người=nói | lẫn người=nghe.",
       "leadVi": "Tay chỉ | quán cà_phê | /tít_tắp/ cuối con=phố.",
       "anticipateVi": "Tận cuối phố, /xa_lắc/ à?",
       "emphasis": [
@@ -20748,7 +20762,7 @@
       "usage": [
         {
           "en": "Mi casa está _____, al lado del parque.",
-          "vi": "Nhà mình | ở đó, | cạnh công_viên."
+          "vi": "Nhà=mình | ở đó, | cạnh công_viên."
         }
       ],
       "grammar": {
@@ -20760,7 +20774,7 @@
       "word": "alquilar",
       "shareCode": "8BZ",
       "meaningVi": "thuê",
-      "defVi": "/Thuê_mướn/ nhà, xe | của người khác, | trả tiền hằng tháng.",
+      "defVi": "/Thuê_mướn/ nhà, xe | của người=khác, | trả tiền hằng tháng.",
       "leadVi": "Lên đại_học, | mình cùng bạn | ở chung một /phòng_trọ/.",
       "anticipateVi": "Chưa đủ tiền mua, /tạm_thời/ vậy nhé?",
       "emphasis": [
@@ -20802,8 +20816,8 @@
       "word": "antipático",
       "shareCode": "M6Z",
       "meaningVi": "khó gần",
-      "defVi": "/Lạnh_lùng/, | ít cười, | khiến người khác ngại bắt_chuyện.",
-      "leadVi": "Con=mèo nhà bên | cứ thấy khách | là /quay_lưng/ đi.",
+      "defVi": "/Lạnh_lùng/, | ít cười, | khiến người=khác ngại bắt_chuyện.",
+      "leadVi": "Con=mèo nhà=bên | cứ thấy khách | là /quay_lưng/ đi.",
       "anticipateVi": "Mới gặp đã /lạnh_tanh/?",
       "emphasis": [
         "Lạnh lùng",
@@ -20945,7 +20959,7 @@
       "word": "bajito",
       "shareCode": "X24",
       "meaningVi": "thấp",
-      "defVi": "Dáng người /nhỏ_nhắn/, | chụp_ảnh lớp | luôn đứng hàng đầu.",
+      "defVi": "Dáng người=/nhỏ_nhắn/, | chụp_ảnh lớp | luôn đứng hàng đầu.",
       "leadVi": "Muốn lấy | đồ trên kệ, | bạn=ấy phải /nhón_chân/.",
       "anticipateVi": "/Nhỏ_con/ mà có võ?",
       "emphasis": [
@@ -21059,7 +21073,7 @@
       "word": "bello",
       "shareCode": "TM7",
       "meaningVi": "đẹp",
-      "defVi": "/Đẹp_đẽ/ đến mức | khiến người nhìn | lặng đi vài giây.",
+      "defVi": "/Đẹp_đẽ/ đến mức | khiến người=nhìn | lặng đi vài giây.",
       "leadVi": "Ngắm hoàng_hôn trên núi, | cả=nhóm | chỉ biết /trầm_trồ/.",
       "anticipateVi": "Đứng ngắm | đến /ngẩn_ngơ/?",
       "emphasis": [
@@ -21131,7 +21145,7 @@
       "shareCode": "HSS",
       "meaningVi": "vé, tiền_giấy",
       "defVi": "Tờ=giấy /cho_phép/ bạn | lên tàu, xe | hay máy_bay.",
-      "leadVi": "Nghỉ hè, | cả=nhà ra /nhà_ga/ | mua chỗ từ sớm.",
+      "leadVi": "Nghỉ hè, | cả=nhà=ra /nhà_ga/ | mua chỗ từ sớm.",
       "anticipateVi": "Suýt bỏ_quên ở nhà, /hú_vía/?",
       "emphasis": [
         "cho phép",
@@ -21222,7 +21236,7 @@
       "usage": [
         {
           "en": "Tu casa es muy _____.",
-          "vi": "Nhà của=bạn | xinh quá!"
+          "vi": "Nhà=của=bạn | xinh quá!"
         }
       ],
       "grammar": {
@@ -21328,7 +21342,7 @@
       "usage": [
         {
           "en": "En la biblioteca nos tenemos que _____.",
-          "vi": "Trong thư_viện | mọi người phải | giữ im_lặng."
+          "vi": "Trong thư_viện | mọi người=phải | giữ im_lặng."
         }
       ],
       "grammar": {
@@ -21428,7 +21442,7 @@
       "word": "centro",
       "shareCode": "TDH",
       "meaningVi": "trung_tâm",
-      "defVi": "/Tâm_điểm/ nằm giữa, | cách đều | mọi phía xung_quanh.",
+      "defVi": "/Tâm_điểm/ nằm giữa, | cách=đều | mọi phía xung_quanh.",
       "leadVi": "Cuối_tuần rủ nhau | ra khu phố | /nhộn_nhịp/ nhất.",
       "anticipateVi": "Mọi /con_đường/ đều dẫn về đây?",
       "emphasis": [
@@ -21464,7 +21478,7 @@
       "word": "chico",
       "shareCode": "CWK",
       "meaningVi": "chàng_trai",
-      "defVi": "Người /con_trai/ còn trẻ, | tầm tuổi | học_sinh, sinh_viên.",
+      "defVi": "Người=/con_trai/ còn trẻ, | tầm tuổi | học_sinh, sinh_viên.",
       "leadVi": "/Nam_sinh/ mới chuyển lớp, | mê bóng_đá | và hay cười.",
       "anticipateVi": "Chắc cùng /lứa_tuổi/ bạn nhỉ?",
       "emphasis": [
@@ -21533,7 +21547,7 @@
       "word": "colegio",
       "shareCode": "W0N",
       "meaningVi": "trường_học",
-      "defVi": "Nơi /học_sinh/ đi_học | từ lớp một | đến cấp=ba.",
+      "defVi": "Nơi=/học_sinh/ đi_học | từ lớp một | đến cấp=ba.",
       "leadVi": "Tiếng trống vang lên, | áo trắng | ùa vào /lớp_học/.",
       "anticipateVi": "Tiếng trống /tựu_trường/ đây rồi?",
       "emphasis": [
@@ -21567,8 +21581,8 @@
       "id": "comprador",
       "word": "comprador",
       "shareCode": "EB5",
-      "meaningVi": "người mua",
-      "defVi": "Người bỏ tiền | để /sở_hữu/ | món hàng mình thích.",
+      "meaningVi": "người=mua",
+      "defVi": "Người=bỏ tiền | để /sở_hữu/ | món hàng mình thích.",
       "leadVi": "Ngày khai_trương, | khách xếp_hàng | chờ /thanh_toán/.",
       "anticipateVi": "/Ưng_ý/ rồi thì chốt nhé?",
       "emphasis": [
@@ -21588,14 +21602,14 @@
       "usage": [
         {
           "en": "El _____ quiere ver la casa.",
-          "vi": "Người mua | muốn xem | căn nhà."
+          "vi": "Người=mua | muốn xem | căn nhà."
         }
       ],
       "grammar": {
         "gender": "m",
         "article": "el",
         "plural": "los compradores",
-        "tipVi": "Nữ là compradora; | người bán | là vendedor."
+        "tipVi": "Nữ là compradora; | người=bán | là vendedor."
       }
     },
     {
@@ -21732,7 +21746,7 @@
         "feminine": "céntrica",
         "plural": "céntricos / céntricas",
         "serEstar": "Thường dùng ser: | el hotel es céntrico.",
-        "tipVi": "Chỉ dùng | cho nơi chốn: | un piso céntrico."
+        "tipVi": "Chỉ dùng | cho nơi=chốn: | un piso céntrico."
       }
     },
     {
@@ -21740,9 +21754,9 @@
       "word": "de",
       "shareCode": "H5M",
       "meaningVi": "của, từ",
-      "defVi": "Từ_nối | chỉ ai /sở_hữu/ | hay nơi xuất_phát.",
+      "defVi": "Từ_nối | chỉ ai /sở_hữu/ | hay nơi=xuất_phát.",
       "leadVi": "Cốc xanh /chính_chủ/ là bố, | chiếc đỏ | là phần mình.",
-      "anticipateVi": "Món này | /rốt_cuộc/ | nhà ai?",
+      "anticipateVi": "Món này | /rốt_cuộc/ | nhà=ai?",
       "emphasis": [
         "sở hữu",
         "chính chủ",
@@ -21793,7 +21807,7 @@
       "usage": [
         {
           "en": "Este árbol es muy alto y _____.",
-          "vi": "Cái cây này | rất cao | và mảnh."
+          "vi": "Cái=cây này | rất cao | và mảnh."
         }
       ],
       "grammar": {
@@ -21829,7 +21843,7 @@
       "usage": [
         {
           "en": "El baño está a la _____.",
-          "vi": "Nhà vệ_sinh | ở bên phải."
+          "vi": "Nhà=vệ_sinh | ở bên phải."
         }
       ],
       "grammar": {
@@ -21843,7 +21857,7 @@
       "id": "desayunar",
       "word": "desayunar",
       "shareCode": "TGB",
-      "meaningVi": "ăn sáng",
+      "meaningVi": "ăn_sáng",
       "defVi": "Ăn bữa | /đầu_tiên/ trong ngày, | sau_khi ngủ_dậy.",
       "leadVi": "/Điểm_tâm/ bằng tô=phở | ở đầu ngõ | trước giờ học.",
       "anticipateVi": "Bỏ bữa | là /uể_oải/ cả buổi?",
@@ -21865,7 +21879,7 @@
       "usage": [
         {
           "en": "Hoy vamos a _____ en casa de mis abuelos.",
-          "vi": "Hôm_nay | bọn_mình | ăn sáng | ở nhà ông_bà."
+          "vi": "Hôm_nay | bọn_mình | ăn sáng | ở nhà=ông_bà."
         }
       ],
       "grammar": {
@@ -21928,7 +21942,7 @@
       "shareCode": "96T",
       "meaningVi": "chậm",
       "defVi": "Làm /từ_tốn/, | không vội, | tốc_độ thấp hơn bình_thường.",
-      "leadVi": "Học ngoại_ngữ, | xin người bán | nói /thong_thả/ từng chữ.",
+      "leadVi": "Học ngoại_ngữ, | xin người=bán | nói /thong_thả/ từng chữ.",
       "anticipateVi": "/Từ_từ/ thôi, ai giục đâu?",
       "emphasis": [
         "từ tốn",
@@ -22149,7 +22163,7 @@
       "word": "enfermero",
       "shareCode": "WZ9",
       "meaningVi": "y_tá",
-      "defVi": "Người /chăm_sóc/ bệnh_nhân, | tiêm thuốc | và đo huyết_áp.",
+      "defVi": "Người=/chăm_sóc/ bệnh_nhân, | tiêm thuốc | và đo huyết_áp.",
       "leadVi": "Trực đêm ở /bệnh_viện/, | anh=ấy | phát thuốc từng phòng.",
       "anticipateVi": "Áo trắng | mà chẳng phải /bác_sĩ/?",
       "emphasis": [
@@ -22472,7 +22486,7 @@
         "gender": "f",
         "article": "las",
         "plural": "las gafas",
-        "tipVi": "Luôn số_nhiều: | mis gafas, | dù chỉ | một cái kính."
+        "tipVi": "Luôn số_nhiều: | mis gafas, | dù chỉ | một cái=kính."
       }
     },
     {
@@ -22480,7 +22494,7 @@
       "word": "gastronomía",
       "shareCode": "Y8Q",
       "meaningVi": "ẩm_thực",
-      "defVi": "Món_ăn | và cách nấu | /đặc_trưng/ của một vùng.",
+      "defVi": "Món_ăn | và cách=nấu | /đặc_trưng/ của một vùng.",
       "leadVi": "Đi đâu cũng tìm | món /đặc_sản/ | để nếm thử.",
       "anticipateVi": "Du_lịch | mà chỉ lo /ăn_uống/?",
       "emphasis": [
@@ -22543,7 +22557,7 @@
         "gender": "f",
         "article": "la",
         "plural": "las gimnasias",
-        "tipVi": "Phòng tập | là gimnasio, | đuôi -o, | giống_đực."
+        "tipVi": "Phòng_tập | là gimnasio, | đuôi -o, | giống_đực."
       }
     },
     {
@@ -22693,7 +22707,7 @@
       "word": "ida",
       "shareCode": "11Y",
       "meaningVi": "chiều đi",
-      "defVi": "Chặng từ nơi /xuất_phát/ | đến điểm đến, | chưa quay về.",
+      "defVi": "Chặng từ nơi=/xuất_phát/ | đến điểm đến, | chưa quay về.",
       "leadVi": "Chuyến xe | /khởi_hành/ sáng_sớm, | chưa tính ngày về.",
       "anticipateVi": "Cứ /lên_đường/, | về tính sau?",
       "emphasis": [
@@ -22784,7 +22798,7 @@
       "usage": [
         {
           "en": "Mi casa está en el lado _____ de la calle.",
-          "vi": "Nhà mình | ở bên trái | con_đường."
+          "vi": "Nhà=mình | ở bên trái | con_đường."
         }
       ],
       "grammar": {
@@ -22833,7 +22847,7 @@
       "id": "lavabo",
       "word": "lavabo",
       "shareCode": "9RZ",
-      "meaningVi": "bồn rửa, nhà vệ_sinh",
+      "meaningVi": "bồn_rửa, nhà=vệ_sinh",
       "defVi": "Bồn sứ gắn tường, | có /vòi_nước/ | để rửa tay.",
       "leadVi": "Sáng ra /đánh_răng/, | đứng trước gương | rửa mặt.",
       "anticipateVi": "Nước chảy /róc_rách/ mãi?",
@@ -22854,14 +22868,14 @@
       "usage": [
         {
           "en": "Por favor, ¿dónde está el _____?",
-          "vi": "Cho hỏi, | nhà vệ_sinh | ở đâu ạ?"
+          "vi": "Cho hỏi, | nhà=vệ_sinh | ở đâu ạ?"
         }
       ],
       "grammar": {
         "gender": "m",
         "article": "el",
         "plural": "los lavabos",
-        "tipVi": "Bồn rửa bát | trong bếp | là fregadero."
+        "tipVi": "Bồn_rửa bát | trong bếp | là fregadero."
       }
     },
     {
@@ -22870,7 +22884,7 @@
       "shareCode": "BGJ",
       "meaningVi": "mưa",
       "defVi": "Nước từ /đám_mây/ | rơi xuống | khắp mặt_đất.",
-      "leadVi": "Tan học | không mang ô, | về nhà /ướt_sũng/.",
+      "leadVi": "Tan học | không mang ô, | về nhà=/ướt_sũng/.",
       "anticipateVi": "Phơi đồ xong | trời /sầm_sập/ đổ?",
       "emphasis": [
         "đám mây",
@@ -22912,7 +22926,7 @@
       "word": "mal",
       "shareCode": "VTY",
       "meaningVi": "tệ",
-      "defVi": "Không ổn, | kết_quả /tồi_tệ/ | hơn điều mình mong.",
+      "defVi": "Không ổn, | kết_quả /tồi_tệ/ | hơn điều=mình mong.",
       "leadVi": "Lần đầu đứng bếp, | trứng ốp | /khét_lẹt/ một nửa.",
       "anticipateVi": "Cố mấy | mà vẫn /hỏng_bét/?",
       "emphasis": [

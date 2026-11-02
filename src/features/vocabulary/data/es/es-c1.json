@@ -1,5 +1,5 @@
 {
-  "revision": "6caf210480dac36a30a09fca",
+  "revision": "4db52aa12892d3ec40067103",
   "name": "WordCrawler vocabulary",
   "count": 93,
   "topics": [
@@ -11,7 +11,6 @@
     "general",
     "health",
     "money",
-    "nature",
     "perception",
     "society",
     "study",
@@ -167,7 +166,7 @@
       "word": "agradecido",
       "shareCode": "FD0",
       "meaningVi": "biết_ơn",
-      "defVi": "Ghi_nhớ | và /trân_trọng/ | điều ai làm cho mình.",
+      "defVi": "Ghi_nhớ | và /trân_trọng/ | điều=ai làm cho mình.",
       "leadVi": "Bạn cho mượn vở | lúc mình nghỉ, | /cảm_kích/ lắm.",
       "anticipateVi": "Mua /trà_sữa/ đền ơn?",
       "emphasis": [
@@ -271,7 +270,7 @@
       "word": "interrumpir",
       "shareCode": "4KD",
       "meaningVi": "ngắt_lời",
-      "defVi": "/Chen_ngang/ vào | khi người khác | đang=nói.",
+      "defVi": "/Chen_ngang/ vào | khi người=khác | đang=nói.",
       "leadVi": "Mình đang kể dở, | cậu=ấy | /cắt_ngang/ hỏi chuyện khác.",
       "anticipateVi": "Để mình nói /trọn_vẹn/ đã?",
       "emphasis": [
@@ -658,7 +657,7 @@
       "word": "permitir",
       "shareCode": "AGQ",
       "meaningVi": "cho_phép",
-      "defVi": "/Đồng_ý/ | để ai đó làm điều họ muốn.",
+      "defVi": "/Đồng_ý/ | để ai đó làm điều=họ muốn.",
       "leadVi": "Đi trại_hè, | mẹ /gật_đầu/ | duyệt em đi ba ngày.",
       "anticipateVi": "/Năn_nỉ/ cả tuần mới gật?",
       "emphasis": [
@@ -733,7 +732,7 @@
       "word": "oportunidad",
       "shareCode": "5HW",
       "meaningVi": "cơ_hội",
-      "defVi": "Dịp /thuận_lợi/ | để làm | điều mình mong muốn.",
+      "defVi": "Dịp /thuận_lợi/ | để làm | điều=mình mong muốn.",
       "leadVi": "Trường mở | suất học_bổng, | chị /tận_dụng/ liền.",
       "anticipateVi": "Chậm chân, /tiếc_nuối/ không?",
       "emphasis": [
@@ -898,18 +897,18 @@
       "word": "circunstancia",
       "shareCode": "JZZ",
       "meaningVi": "hoàn_cảnh",
-      "defVi": "Hoàn_cảnh | hoặc /điều_kiện/ | xung_quanh một sự_việc.",
-      "leadVi": "Nhà nghèo, | đường xa, | cậu vẫn đến lớp | /đều_đặn/.",
-      "anticipateVi": "Gặp cảnh nào rồi?",
+      "defVi": "/Điều_kiện/, | sự_việc | quanh một chuyện xảy_ra.",
+      "leadVi": "Nhà=khó_khăn, | /tình_cảnh/ ấy | khiến em đi làm_thêm.",
+      "anticipateVi": "Vẫn giữ /học_bổng/?",
       "emphasis": [
-        "điều kiện",
-        "đều đặn"
+        "Điều kiện",
+        "tình cảnh",
+        "học bổng"
       ],
       "pos": "noun",
       "ipa": "/θiɾkunsˈtanθja/",
-      "topic": "society",
+      "topic": "general",
       "topics": [
-        "society",
         "general"
       ],
       "level": "C1",
@@ -917,10 +916,15 @@
       "initial": "C",
       "usage": [
         {
-          "en": "En esta _____, lo mejor es esperar.",
-          "vi": "Trong hoàn_cảnh này, | tốt nhất | là chờ_đợi."
+          "en": "En esta _____, es mejor esperar un poco.",
+          "vi": "Trong hoàn_cảnh này, | tốt hơn | nên đợi một_chút."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "plural": "las circunstancias"
+      }
     },
     {
       "id": "pol-mico",
@@ -956,58 +960,75 @@
       "word": "crucial",
       "shareCode": "TTR",
       "meaningVi": "then_chốt, cực_kỳ quan_trọng",
-      "defVi": "/Cực_kỳ/ quan_trọng, | ảnh_hưởng quyết_định | đến kết_quả.",
-      "leadVi": "Phút cuối trận, | cú sút này | định_đoạt /tất_cả/.",
-      "anticipateVi": "/Then_chốt/ ở đâu?",
+      "defVi": "Cực_kỳ /quan_trọng/, | ảnh_hưởng | tới kết_quả cuối.",
+      "leadVi": "Phút cuối trận, | cú sút này | sẽ /quyết_định/ tất_cả.",
+      "anticipateVi": "/Khán_đài/ nín thở?",
       "emphasis": [
+        "quan trọng",
         "quyết định",
-        "định đoạt"
+        "Khán đài"
       ],
       "pos": "adj",
       "ipa": "/kɾuˈθjal/",
-      "topic": "thinking",
+      "topic": "general",
       "topics": [
-        "thinking",
-        "work"
+        "general"
       ],
       "level": "C1",
       "chars": 7,
       "initial": "C",
       "usage": [
         {
-          "en": "Dormir bien es _____ antes de un examen.",
-          "vi": "Ngủ đủ giấc | là điều then_chốt | trước kỳ thi."
+          "en": "Este es el momento _____ del partido.",
+          "vi": "Đây là | khoảnh_khắc then_chốt | của trận đấu."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "crucial",
+        "plural": "cruciales",
+        "serEstar": "Thường dùng ser: | es crucial."
+      }
     },
     {
       "id": "surgir",
       "word": "surgir",
       "shareCode": "DJV",
       "meaningVi": "hiện ra, xuất_hiện",
-      "defVi": "Xuất_hiện | hoặc lộ ra | sau khi bị /che_khuất/.",
-      "leadVi": "Sương tan dần, | /ngọn_núi/ hiện ra sừng_sững.",
-      "anticipateVi": "/Ló_dạng/ rồi kìa?",
+      "defVi": "Bất_ngờ /xuất_hiện/, | nhất là | khó_khăn, vấn_đề.",
+      "leadVi": "Làm bài nhóm, | /bất_đồng/ | chợt nảy ra giữa hai bạn.",
+      "anticipateVi": "Ngồi lại /hòa_giải/?",
       "emphasis": [
-        "Xuất hiện",
-        "sừng sững"
+        "xuất hiện",
+        "bất đồng",
+        "hòa giải"
       ],
       "pos": "verb",
       "ipa": "/suɾˈxiɾ/",
-      "topic": "nature",
+      "topic": "general",
       "topics": [
-        "nature",
-        "perception"
+        "general"
       ],
       "level": "C1",
       "chars": 6,
       "initial": "S",
       "usage": [
         {
-          "en": "Vimos _____ la luna detrás de las montañas.",
-          "vi": "Chúng_tôi thấy mặt_trăng | hiện ra | sau dãy núi."
+          "en": "Pueden _____ problemas durante el viaje.",
+          "vi": "Vấn_đề có_thể | nảy_sinh | trong chuyến đi."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo surjo",
+            "pretérito": "él surgió",
+            "participio": "surgido",
+            "gerundio": "surgiendo"
+          }
+        },
+        "tipVi": "Đổi chính_tả g → j: | surjo, surja."
+      }
     },
     {
       "id": "evaluar",
@@ -1135,57 +1156,70 @@
       "word": "potencial",
       "shareCode": "EAP",
       "meaningVi": "tiềm_năng",
-      "defVi": "Khả_năng tiềm_ẩn | có_thể /phát_triển/ | thành điều lớn.",
-      "leadVi": "Cậu bé mười tuổi | đã đá bóng | như /cầu_thủ/ chuyên.",
-      "anticipateVi": "/Hạt_giống/ tài_năng?",
+      "defVi": "Khả_năng | có_sẵn | để /phát_triển/ sau_này.",
+      "leadVi": "Thấy bạn vẽ đẹp, | thầy tin | bạn có /năng_khiếu/ lớn.",
+      "anticipateVi": "Ngôi_sao /tương_lai/ đây à?",
       "emphasis": [
-        "tiềm ẩn",
-        "cầu thủ"
+        "phát triển",
+        "năng khiếu",
+        "tương lai"
       ],
       "pos": "noun",
-      "ipa": "/po.tenˈθjal/",
-      "topic": "work",
+      "ipa": "/potenˈθjal/",
+      "topic": "general",
       "topics": [
-        "work",
-        "character"
+        "general"
       ],
       "level": "C1",
       "chars": 9,
       "initial": "P",
       "usage": [
         {
-          "en": "Este barrio tiene mucho _____ para el turismo.",
-          "vi": "Khu phố này | có nhiều tiềm_năng du_lịch."
+          "en": "Esta estudiante tiene mucho _____ para la música.",
+          "vi": "Cô sinh_viên này | có nhiều tiềm_năng | về âm_nhạc."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los potenciales",
+        "tipVi": "Cũng là tính_từ: | un cliente potencial."
+      }
     },
     {
       "id": "preciso",
       "word": "preciso",
       "shareCode": "EJZ",
       "meaningVi": "chính_xác",
-      "defVi": "/Chính_xác/ | đến từng chi_tiết | nhỏ nhất.",
-      "leadVi": "/Đồng_hồ/ Thụy_Sĩ | chạy chuẩn từng giây | suốt chục năm.",
-      "anticipateVi": "Từng li | từng tí?",
+      "defVi": "Đúng tới | từng chi_tiết, | không /sai_lệch/ chút nào.",
+      "leadVi": "Làm bánh, | bạn cân đường | /chuẩn_xác/ tới từng gam.",
+      "anticipateVi": "Vị /chuẩn_mực/ chưa?",
       "emphasis": [
-        "chi tiết",
-        "chạy chuẩn"
+        "sai lệch",
+        "chuẩn xác",
+        "chuẩn mực"
       ],
       "pos": "adj",
-      "ipa": "/pɾeˈθi.so/",
-      "topic": "thinking",
+      "ipa": "/pɾeˈθiso/",
+      "topic": "general",
       "topics": [
-        "thinking"
+        "general"
       ],
       "level": "C1",
       "chars": 7,
       "initial": "P",
       "usage": [
         {
-          "en": "Necesito un dato _____, no una aproximación.",
-          "vi": "Tôi cần số_liệu | chính_xác, | không phải ước_chừng."
+          "en": "Necesito la hora _____ de llegada del tren.",
+          "vi": "Mình cần | giờ tàu đến chính_xác."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "precisa",
+        "plural": "precisos / precisas",
+        "serEstar": "Thường dùng ser: | el dato es preciso.",
+        "tipVi": "Cũng nghĩa cần_thiết: | es preciso salir ya."
+      }
     },
     {
       "id": "prioridad",
@@ -1579,7 +1613,7 @@
       "word": "convincente",
       "shareCode": "R04",
       "meaningVi": "thuyết_phục",
-      "defVi": "Khiến người nghe | /tin_tưởng/ | là thật, là đúng.",
+      "defVi": "Khiến người=nghe | /tin_tưởng/ | là thật, là đúng.",
       "leadVi": "Tranh_biện, | mình đưa | ba /số_liệu/ rõ_ràng.",
       "anticipateVi": "Đội bạn /cứng_họng/?",
       "emphasis": [
@@ -1614,28 +1648,34 @@
       "word": "convencional",
       "shareCode": "J17",
       "meaningVi": "thông_thường, truyền_thống",
-      "defVi": "Theo lối /truyền_thống/ | được số đông chấp_nhận.",
-      "leadVi": "/Áo_dài/, mâm cỗ, | cưới_hỏi đủ lễ | như xưa.",
-      "anticipateVi": "Lối mòn /quen_thuộc/?",
+      "defVi": "Làm theo lối /truyền_thống/, | quen_thuộc | với số đông.",
+      "leadVi": "Thầy vẫn dạy | bằng phấn, bảng_đen | đúng kiểu /cổ_điển/.",
+      "anticipateVi": "Phấn trắng vẫn /lên_ngôi/?",
       "emphasis": [
         "truyền thống",
-        "mâm cỗ"
+        "cổ điển",
+        "lên ngôi"
       ],
       "pos": "adj",
-      "ipa": "/kom.ben.θjoˈnal/",
-      "topic": "society",
+      "ipa": "/kombenθjoˈnal/",
+      "topic": "general",
       "topics": [
-        "society"
+        "general"
       ],
       "level": "C1",
       "chars": 12,
       "initial": "C",
       "usage": [
         {
-          "en": "Prefiero un horno _____ al microondas.",
-          "vi": "Tôi thích lò nướng | thông_thường | hơn lò vi_sóng."
+          "en": "Usamos un método _____ para aprender vocabulario.",
+          "vi": "Tụi mình dùng | phương_pháp thông_thường | để học từ_vựng."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "convencional",
+        "plural": "convencionales",
+        "serEstar": "Thường dùng ser: | es un método convencional."
+      }
     },
     {
       "id": "cre-ble",
@@ -2071,29 +2111,35 @@
       "word": "incentivo",
       "shareCode": "PRN",
       "meaningVi": "động_lực, sự khuyến_khích",
-      "defVi": "Thứ /khuyến_khích/ | ai đó nỗ_lực | hay làm điều gì.",
-      "leadVi": "Vượt /chỉ_tiêu/ tháng này, | cả phòng được thưởng | đi biển.",
-      "anticipateVi": "Có thưởng thì sao?",
+      "defVi": "Phần_thưởng hứa trước | tạo /động_lực/ để mình cố_gắng.",
+      "leadVi": "Sếp hứa thưởng | để cả=nhóm /hăng_hái/ chạy ca tối.",
+      "anticipateVi": "Có thưởng là /bứt_tốc/ ngay?",
       "emphasis": [
-        "khuyến khích",
-        "chỉ tiêu"
+        "động lực",
+        "hăng hái",
+        "bứt tốc"
       ],
       "pos": "noun",
-      "ipa": "/inθenˈtiβo/",
-      "topic": "work",
+      "ipa": "/inθenˈtibo/",
+      "topic": "money",
       "topics": [
-        "work",
-        "money"
+        "money",
+        "work"
       ],
       "level": "C1",
       "chars": 9,
       "initial": "I",
       "usage": [
         {
-          "en": "El descuento es un buen _____ para comprar ahora.",
-          "vi": "Giảm_giá | là động_lực tốt | để mua ngay bây_giờ."
+          "en": "La empresa ofrece un _____ a quien venda más este mes.",
+          "vi": "Công_ty | đưa ra một khoản khuyến_khích | cho ai bán được nhiều nhất tháng này."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los incentivos"
+      }
     },
     {
       "id": "innovador",
@@ -2790,28 +2836,41 @@
       "word": "aliviar",
       "shareCode": "J00",
       "meaningVi": "làm dịu, giảm_nhẹ",
-      "defVi": "Làm dịu bớt nỗi đau, | /gánh_nặng/ hay khó_khăn.",
-      "leadVi": "Chườm khăn ấm lên trán, | cơn đau đầu | dịu dần.",
-      "anticipateVi": "Đỡ hơn | chút nào chưa?",
+      "defVi": "Làm /giảm_bớt/ cơn đau | hay cảm_giác khó_chịu.",
+      "leadVi": "Đau_đầu vì ôn bài, | mình xoa dầu cho /dễ_chịu/.",
+      "anticipateVi": "Thấy /thư_thái/ hơn chưa?",
       "emphasis": [
-        "dịu bớt",
-        "dịu dần"
+        "giảm bớt",
+        "dễ chịu",
+        "thư thái"
       ],
       "pos": "verb",
       "ipa": "/aliˈβjaɾ/",
       "topic": "health",
       "topics": [
-        "health"
+        "health",
+        "emotion"
       ],
       "level": "C1",
       "chars": 7,
       "initial": "A",
       "usage": [
         {
-          "en": "Un poco de hielo puede _____ el dolor de rodilla.",
-          "vi": "Một chút đá lạnh | có_thể làm dịu | cơn đau đầu_gối."
+          "en": "Un té caliente me ayuda a _____ el dolor de garganta.",
+          "vi": "Tách trà nóng | giúp mình làm dịu | cơn đau họng."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo alivio",
+            "pretérito": "él alivió",
+            "participio": "aliviado",
+            "gerundio": "aliviando"
+          }
+        }
+      }
     }
   ]
 }

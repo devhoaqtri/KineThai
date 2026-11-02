@@ -23,7 +23,7 @@
     "serEstar": null,
     "tipVi": null,
     "defVi": "Nói /vắn_tắt/ | về một điều | trong lúc chuyện_trò.",
-    "leadVi": "Đang=ăn, | chị /buột_miệng/ | nói tên người ấy.",
+    "leadVi": "Đang=ăn, | chị /buột_miệng/ | nói tên người=ấy.",
     "anticipateVi": "Lỡ nhắc tên, | cả bàn /trêu_chọc/?",
     "usageEn": "No quiero _____ el examen delante de mis padres.",
     "usageVi": "Mình không muốn | nhắc đến bài thi | trước mặt bố_mẹ.",
@@ -45,19 +45,34 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Nói lời động_viên | để ai thêm tự_tin, | cố_gắng.",
-    "leadVi": "Trước giờ thi, | mẹ vỗ vai: | \"Con làm=được mà.\"",
-    "anticipateVi": "Vỗ tay cho bạn | trước nè!",
-    "usageEn": "Hay que _____ a los niños a hacer deporte.",
-    "usageVi": "Cần động_viên trẻ_em | chơi thể_thao.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo animo",
+        "pretérito": "él animó",
+        "participio": "animado",
+        "gerundio": "animando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Cũng nghĩa động_viên: | animar a alguien a estudiar.",
+    "defVi": "Hò_hét /động_viên/ | để ai đó | cố lên.",
+    "leadVi": "Hội_thao trường, | bạn gõ | chai nhựa /ầm_ĩ/.",
+    "anticipateVi": "Rát /cổ_họng/ chưa nào?",
+    "usageEn": "Fuimos al estadio para _____ a nuestro equipo.",
+    "usageVi": "Tụi mình | ra sân_vận_động | để cổ_vũ đội nhà.",
     "topics": [
-      "communication",
       "emotion"
     ],
     "exams": [],
     "emphasisVi": [
       "động viên",
-      "vỗ vai"
+      "ầm ĩ",
+      "cổ họng"
     ]
   },
   {
@@ -210,7 +225,7 @@
     "reflexive": null,
     "governs": null,
     "serEstar": null,
-    "tipVi": "Đánh răng: | lavarse los dientes.",
+    "tipVi": "Đánh_răng: | lavarse los dientes.",
     "defVi": "Phần trắng cứng | trong miệng | để cắn và /nghiền_nát/.",
     "leadVi": "Trước khi ngủ, | em cầm /bàn_chải/ | chà kỹ ba phút.",
     "anticipateVi": "Kẹo ngọt quá, | /ê_buốt/ chưa?",
@@ -234,19 +249,25 @@
     "gender": null,
     "article": null,
     "feminine": "adinerada",
-    "defVi": "Có=rất nhiều tiền_bạc | và tài_sản quý_giá.",
-    "leadVi": "Biệt_thự bên hồ, | xe sang | đậu kín cả sân.",
-    "anticipateVi": "Tiền nhiều | để=làm gì?",
-    "usageEn": "Se casó con un hombre muy _____.",
-    "usageVi": "Cô=ấy cưới | một người đàn_ông | rất giàu_có.",
+    "plural": "adinerados / adineradas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": "Thường dùng ser: | es una familia adinerada.",
+    "tipVi": null,
+    "defVi": "Có rất nhiều | tiền của | và /tài_sản/.",
+    "leadVi": "Chú khởi_nghiệp | thành_công, | giờ /sung_túc/ hẳn.",
+    "anticipateVi": "Vẫn /giản_dị/ như xưa?",
+    "usageEn": "Su abuelo era un hombre _____, pero vivía de forma sencilla.",
+    "usageVi": "Ông cô=ấy | là người=giàu_có | nhưng sống giản_dị.",
     "topics": [
-      "money",
-      "society"
+      "money"
     ],
     "exams": [],
     "emphasisVi": [
       "tài sản",
-      "xe sang"
+      "sung túc",
+      "giản dị"
     ]
   },
   {

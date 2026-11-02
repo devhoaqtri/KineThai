@@ -1,5 +1,5 @@
 {
-  "revision": "ff633ca2658039a40a3c8ca7",
+  "revision": "bb371d719422d441169ebc29",
   "name": "WordCrawler vocabulary",
   "count": 32,
   "topics": [
@@ -28,7 +28,7 @@
       "shareCode": "4P9",
       "meaningVi": "nhắc đến",
       "defVi": "Nói /vắn_tắt/ | về một điều | trong lúc chuyện_trò.",
-      "leadVi": "Đang=ăn, | chị /buột_miệng/ | nói tên người ấy.",
+      "leadVi": "Đang=ăn, | chị /buột_miệng/ | nói tên người=ấy.",
       "anticipateVi": "Lỡ nhắc tên, | cả bàn /trêu_chọc/?",
       "emphasis": [
         "vắn tắt",
@@ -67,18 +67,18 @@
       "word": "animar",
       "shareCode": "PWF",
       "meaningVi": "động_viên, khuyến_khích",
-      "defVi": "Nói lời /động_viên/ | để ai thêm tự_tin, | cố_gắng.",
-      "leadVi": "Trước giờ thi, | mẹ vỗ vai: | \"Con làm=được mà.\"",
-      "anticipateVi": "/Vỗ_tay/ cho bạn | trước nè!",
+      "defVi": "Hò_hét /động_viên/ | để ai đó | cố lên.",
+      "leadVi": "Hội_thao trường, | bạn gõ | chai nhựa /ầm_ĩ/.",
+      "anticipateVi": "Rát /cổ_họng/ chưa nào?",
       "emphasis": [
         "động viên",
-        "vỗ vai"
+        "ầm ĩ",
+        "cổ họng"
       ],
       "pos": "verb",
       "ipa": "/aniˈmaɾ/",
-      "topic": "communication",
+      "topic": "emotion",
       "topics": [
-        "communication",
         "emotion"
       ],
       "level": "C2",
@@ -86,10 +86,22 @@
       "initial": "A",
       "usage": [
         {
-          "en": "Hay que _____ a los niños a hacer deporte.",
-          "vi": "Cần động_viên trẻ_em | chơi thể_thao."
+          "en": "Fuimos al estadio para _____ a nuestro equipo.",
+          "vi": "Tụi mình | ra sân_vận_động | để cổ_vũ đội nhà."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo animo",
+            "pretérito": "él animó",
+            "participio": "animado",
+            "gerundio": "animando"
+          }
+        },
+        "tipVi": "Cũng nghĩa động_viên: | animar a alguien a estudiar."
+      }
     },
     {
       "id": "sombr-o",
@@ -296,7 +308,7 @@
         "gender": "m",
         "article": "el",
         "plural": "los dientes",
-        "tipVi": "Đánh răng: | lavarse los dientes."
+        "tipVi": "Đánh_răng: | lavarse los dientes."
       }
     },
     {
@@ -304,29 +316,34 @@
       "word": "adinerado",
       "shareCode": "JA5",
       "meaningVi": "giàu_có",
-      "defVi": "Có=rất nhiều tiền_bạc | và tài_sản /quý_giá/.",
-      "leadVi": "Biệt_thự bên hồ, | xe sang | đậu kín cả sân.",
-      "anticipateVi": "Tiền nhiều | để=làm gì?",
+      "defVi": "Có rất nhiều | tiền của | và /tài_sản/.",
+      "leadVi": "Chú khởi_nghiệp | thành_công, | giờ /sung_túc/ hẳn.",
+      "anticipateVi": "Vẫn /giản_dị/ như xưa?",
       "emphasis": [
         "tài sản",
-        "xe sang"
+        "sung túc",
+        "giản dị"
       ],
       "pos": "adj",
       "ipa": "/aðineˈɾaðo/",
       "topic": "money",
       "topics": [
-        "money",
-        "society"
+        "money"
       ],
       "level": "C2",
       "chars": 9,
       "initial": "A",
       "usage": [
         {
-          "en": "Se casó con un hombre muy _____.",
-          "vi": "Cô=ấy cưới | một người đàn_ông | rất giàu_có."
+          "en": "Su abuelo era un hombre _____, pero vivía de forma sencilla.",
+          "vi": "Ông cô=ấy | là người=giàu_có | nhưng sống giản_dị."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "adinerada",
+        "plural": "adinerados / adineradas",
+        "serEstar": "Thường dùng ser: | es una familia adinerada."
+      }
     },
     {
       "id": "enfoque",
