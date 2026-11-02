@@ -91,19 +91,34 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Không chấp_nhận, | khước_từ lời mời | hay yêu_cầu.",
-    "leadVi": "Được mời thêm chén nữa, | xua tay lia_lịa: | “Thôi, thôi!”",
-    "anticipateVi": "Lắc đầu nguầy_nguậy!",
-    "usageEn": "No puedo _____ una invitación de mi jefe.",
-    "usageVi": "Tôi không_thể từ_chối | lời mời của sếp.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo rechazo",
+        "pretérito": "él rechazó",
+        "participio": "rechazado",
+        "gerundio": "rechazando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Không nhận, | /khước_từ/ | lời mời hay đề_nghị.",
+    "leadVi": "Bản thiết_kế đầu, | sếp /gạt_bỏ/ | không chút do_dự.",
+    "anticipateVi": "Bản hai | /ưng_ý/ hơn?",
+    "usageEn": "La empresa decidió _____ mi propuesta.",
+    "usageVi": "Công_ty | quyết_định từ_chối | đề_xuất của=mình.",
     "topics": [
-      "communication",
-      "society"
+      "communication"
     ],
     "exams": [],
     "emphasisVi": [
       "khước từ",
-      "xua tay"
+      "gạt bỏ",
+      "ưng ý"
     ]
   },
   {
@@ -114,18 +129,25 @@
     "gender": null,
     "article": null,
     "feminine": "agradecida",
-    "defVi": "Thấy biết_ơn | vì điều tốt | người khác dành cho mình.",
-    "leadVi": "Nhận hoa | từ học_trò cũ, | thầy rưng_rưng | nước_mắt.",
-    "anticipateVi": "Cảm_ơn bao_nhiêu | cho đủ?",
-    "usageEn": "Estoy muy _____ por tu ayuda con la mudanza.",
-    "usageVi": "Tôi rất biết_ơn bạn | đã giúp | chuyển nhà.",
+    "plural": "agradecidos / agradecidas",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": "por + sustantivo",
+    "serEstar": "Thường dùng estar: | estoy muy agradecido.",
+    "tipVi": null,
+    "defVi": "Ghi_nhớ | và /trân_trọng/ | điều ai làm cho mình.",
+    "leadVi": "Bạn cho mượn vở | lúc mình nghỉ, | /cảm_kích/ lắm.",
+    "anticipateVi": "Mua /trà_sữa/ đền ơn?",
+    "usageEn": "Estoy muy _____ por tu ayuda con el examen.",
+    "usageVi": "Mình rất biết_ơn | vì bạn giúp | mình ôn thi.",
     "topics": [
       "emotion"
     ],
     "exams": [],
     "emphasisVi": [
-      "biết ơn",
-      "rưng rưng"
+      "trân trọng",
+      "cảm kích",
+      "trà sữa"
     ]
   },
   {
@@ -158,19 +180,34 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Cố_tình làm_lơ, | không quan_tâm | hay đáp lại ai.",
-    "leadVi": "Nhắn mười tin, | người kia xem rồi | mà chẳng trả_lời.",
-    "anticipateVi": "Coi như không thấy nha!",
-    "usageEn": "Es mejor _____ a la gente que solo quiere pelear.",
-    "usageVi": "Tốt nhất | là phớt_lờ | những người | chỉ muốn gây_sự.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "regular",
+      "raíz": null,
+      "tiempos": {
+        "presente": "yo ignoro",
+        "pretérito": "él ignoró",
+        "participio": "ignorado",
+        "gerundio": "ignorando"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Ignorar còn nghĩa | không biết: | ignoro la respuesta.",
+    "defVi": "Cố_tình | không /để_ý/ | tới lời ai đó nói.",
+    "leadVi": "Tiếng loa | quảng_cáo ngoài phố, | mình /làm_ngơ/ ôn bài.",
+    "anticipateVi": "/Tai_nghe/ đeo vào luôn?",
+    "usageEn": "No puedes _____ el problema para siempre.",
+    "usageVi": "Bạn không=thể | phớt_lờ vấn_đề này | mãi được.",
     "topics": [
-      "attention",
-      "communication"
+      "attention"
     ],
     "exams": [],
     "emphasisVi": [
-      "làm lơ",
-      "trả lời"
+      "để ý",
+      "làm ngơ",
+      "Tai nghe"
     ]
   },
   {
@@ -510,24 +547,30 @@
   {
     "word": "reto",
     "pos": "noun",
-    "ipa": "/ˈre.to/",
+    "ipa": "/ˈreto/",
     "meaningVi": "thử_thách",
     "gender": "m",
     "article": "el",
     "feminine": null,
-    "defVi": "Việc khó_khăn | đòi_hỏi nhiều nỗ_lực | mới vượt qua.",
-    "leadVi": "Ngọn_núi cao trước mặt | khiến ai cũng=muốn | chinh_phục.",
-    "anticipateVi": "Dám thử sức không?",
-    "usageEn": "Aprender a nadar a mi edad es todo un _____.",
-    "usageVi": "Học bơi | ở tuổi tôi | là cả một thử_thách.",
+    "plural": "los retos",
+    "verbInfo": null,
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": null,
+    "defVi": "Việc khó, | /đòi_hỏi/ | nhiều cố_gắng mới xong.",
+    "leadVi": "Ba mươi ngày | không /đồ_ngọt/, | mình cắn_răng chịu.",
+    "anticipateVi": "Tuần đầu /thèm_thuồng/ chứ?",
+    "usageEn": "Aprender a nadar fue un gran _____ para mí.",
+    "usageVi": "Học bơi | là thử_thách lớn | với mình.",
     "topics": [
-      "work",
-      "study"
+      "general"
     ],
     "exams": [],
     "emphasisVi": [
-      "khó khăn",
-      "chinh phục"
+      "đòi hỏi",
+      "đồ ngọt",
+      "thèm thuồng"
     ]
   },
   {
@@ -613,19 +656,35 @@
     "gender": null,
     "article": null,
     "feminine": null,
-    "defVi": "Hấp_dẫn | hoặc khiến ai đó | thấy thích thú.",
-    "leadVi": "Món_ăn đường phố | khiến khách tây | mê tít.",
-    "anticipateVi": "Mê tít vì đâu?",
-    "usageEn": "La vida en el campo no me suele _____.",
-    "usageVi": "Cuộc_sống ở nông_thôn | thường không | thu_hút tôi.",
+    "plural": null,
+    "verbInfo": {
+      "conjugación": "irregular",
+      "raíz": "yo -igo : atraigo",
+      "tiempos": {
+        "presente": "yo atraigo",
+        "pretérito": "él atrajo",
+        "participio": "atraído",
+        "gerundio": "atrayendo"
+      }
+    },
+    "reflexive": null,
+    "governs": null,
+    "serEstar": null,
+    "tipVi": "Chia như traer: | atraigo, | atrajo.",
+    "defVi": "Khiến người | hay vật | tìm tới, /chú_ý/.",
+    "leadVi": "Bày hàng /bắt_mắt/, | quầy tôi | khách vây kín.",
+    "anticipateVi": "Bán /đắt_hàng/ chứ?",
+    "usageEn": "Los colores vivos _____ a los clientes.",
+    "usageVi": "Màu_sắc tươi | thu_hút | khách_hàng.",
     "topics": [
-      "emotion",
-      "society"
+      "attention",
+      "general"
     ],
     "exams": [],
     "emphasisVi": [
-      "Hấp dẫn",
-      "mê tít"
+      "chú ý",
+      "bắt mắt",
+      "đắt hàng"
     ]
   },
   {

@@ -1,5 +1,5 @@
 {
-  "revision": "0d832c03ea60d685d08d1eb1",
+  "revision": "1a767e5e6145e383d4c470e6",
   "name": "WordCrawler vocabulary",
   "count": 93,
   "topics": [
@@ -127,41 +127,53 @@
       "word": "rechazar",
       "shareCode": "EMP",
       "meaningVi": "từ_chối",
-      "defVi": "Không chấp_nhận, | khước_từ lời mời | hay /yêu_cầu/.",
-      "leadVi": "Được mời thêm chén nữa, | xua tay /lia_lịa/: | “Thôi, thôi!”",
-      "anticipateVi": "Lắc đầu /nguầy_nguậy/!",
+      "defVi": "Không nhận, | /khước_từ/ | lời mời hay đề_nghị.",
+      "leadVi": "Bản thiết_kế đầu, | sếp /gạt_bỏ/ | không chút do_dự.",
+      "anticipateVi": "Bản hai | /ưng_ý/ hơn?",
       "emphasis": [
         "khước từ",
-        "xua tay"
+        "gạt bỏ",
+        "ưng ý"
       ],
       "pos": "verb",
       "ipa": "/retʃaˈθaɾ/",
       "topic": "communication",
       "topics": [
-        "communication",
-        "society"
+        "communication"
       ],
       "level": "C1",
       "chars": 8,
       "initial": "R",
       "usage": [
         {
-          "en": "No puedo _____ una invitación de mi jefe.",
-          "vi": "Tôi không_thể từ_chối | lời mời của sếp."
+          "en": "La empresa decidió _____ mi propuesta.",
+          "vi": "Công_ty | quyết_định từ_chối | đề_xuất của=mình."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo rechazo",
+            "pretérito": "él rechazó",
+            "participio": "rechazado",
+            "gerundio": "rechazando"
+          }
+        }
+      }
     },
     {
       "id": "agradecido",
       "word": "agradecido",
       "shareCode": "FD0",
       "meaningVi": "biết_ơn",
-      "defVi": "Thấy /biết_ơn/ | vì điều tốt | người khác dành cho mình.",
-      "leadVi": "Nhận hoa | từ học_trò cũ, | thầy rưng_rưng | /nước_mắt/.",
-      "anticipateVi": "/Cảm_ơn/ bao_nhiêu | cho đủ?",
+      "defVi": "Ghi_nhớ | và /trân_trọng/ | điều ai làm cho mình.",
+      "leadVi": "Bạn cho mượn vở | lúc mình nghỉ, | /cảm_kích/ lắm.",
+      "anticipateVi": "Mua /trà_sữa/ đền ơn?",
       "emphasis": [
-        "biết ơn",
-        "rưng rưng"
+        "trân trọng",
+        "cảm kích",
+        "trà sữa"
       ],
       "pos": "adj",
       "ipa": "/aɣɾaðeˈθiðo/",
@@ -174,10 +186,16 @@
       "initial": "A",
       "usage": [
         {
-          "en": "Estoy muy _____ por tu ayuda con la mudanza.",
-          "vi": "Tôi rất biết_ơn bạn | đã giúp | chuyển nhà."
+          "en": "Estoy muy _____ por tu ayuda con el examen.",
+          "vi": "Mình rất biết_ơn | vì bạn giúp | mình ôn thi."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "agradecida",
+        "plural": "agradecidos / agradecidas",
+        "governs": "por + sustantivo",
+        "serEstar": "Thường dùng estar: | estoy muy agradecido."
+      }
     },
     {
       "id": "disculpar",
@@ -212,29 +230,41 @@
       "word": "ignorar",
       "shareCode": "J8A",
       "meaningVi": "phớt_lờ",
-      "defVi": "/Cố_tình/ làm_lơ, | không quan_tâm | hay đáp lại ai.",
-      "leadVi": "Nhắn mười tin, | người kia xem rồi | mà chẳng /trả_lời/.",
-      "anticipateVi": "Coi như không thấy nha!",
+      "defVi": "Cố_tình | không /để_ý/ | tới lời ai đó nói.",
+      "leadVi": "Tiếng loa | quảng_cáo ngoài phố, | mình /làm_ngơ/ ôn bài.",
+      "anticipateVi": "/Tai_nghe/ đeo vào luôn?",
       "emphasis": [
-        "làm lơ",
-        "trả lời"
+        "để ý",
+        "làm ngơ",
+        "Tai nghe"
       ],
       "pos": "verb",
       "ipa": "/iɣnoˈɾaɾ/",
       "topic": "attention",
       "topics": [
-        "attention",
-        "communication"
+        "attention"
       ],
       "level": "C1",
       "chars": 7,
       "initial": "I",
       "usage": [
         {
-          "en": "Es mejor _____ a la gente que solo quiere pelear.",
-          "vi": "Tốt nhất | là phớt_lờ | những người | chỉ muốn gây_sự."
+          "en": "No puedes _____ el problema para siempre.",
+          "vi": "Bạn không=thể | phớt_lờ vấn_đề này | mãi được."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo ignoro",
+            "pretérito": "él ignoró",
+            "participio": "ignorado",
+            "gerundio": "ignorando"
+          }
+        },
+        "tipVi": "Ignorar còn nghĩa | không biết: | ignoro la respuesta."
+      }
     },
     {
       "id": "interrumpir",
@@ -656,29 +686,34 @@
       "word": "reto",
       "shareCode": "79G",
       "meaningVi": "thử_thách",
-      "defVi": "Việc khó_khăn | /đòi_hỏi/ nhiều nỗ_lực | mới vượt qua.",
-      "leadVi": "Ngọn_núi cao trước mặt | khiến ai cũng=muốn | /chinh_phục/.",
-      "anticipateVi": "Dám thử sức không?",
+      "defVi": "Việc khó, | /đòi_hỏi/ | nhiều cố_gắng mới xong.",
+      "leadVi": "Ba mươi ngày | không /đồ_ngọt/, | mình cắn_răng chịu.",
+      "anticipateVi": "Tuần đầu /thèm_thuồng/ chứ?",
       "emphasis": [
-        "khó khăn",
-        "chinh phục"
+        "đòi hỏi",
+        "đồ ngọt",
+        "thèm thuồng"
       ],
       "pos": "noun",
-      "ipa": "/ˈre.to/",
-      "topic": "work",
+      "ipa": "/ˈreto/",
+      "topic": "general",
       "topics": [
-        "work",
-        "study"
+        "general"
       ],
       "level": "C1",
       "chars": 4,
       "initial": "R",
       "usage": [
         {
-          "en": "Aprender a nadar a mi edad es todo un _____.",
-          "vi": "Học bơi | ở tuổi tôi | là cả một thử_thách."
+          "en": "Aprender a nadar fue un gran _____ para mí.",
+          "vi": "Học bơi | là thử_thách lớn | với mình."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los retos"
+      }
     },
     {
       "id": "oportunidad",
@@ -778,29 +813,43 @@
       "word": "atraer",
       "shareCode": "Q17",
       "meaningVi": "thu_hút, hấp_dẫn",
-      "defVi": "/Hấp_dẫn/ | hoặc khiến ai đó | thấy thích thú.",
-      "leadVi": "/Món_ăn/ đường phố | khiến khách tây | mê tít.",
-      "anticipateVi": "/Mê_tít/ vì đâu?",
+      "defVi": "Khiến người | hay vật | tìm tới, /chú_ý/.",
+      "leadVi": "Bày hàng /bắt_mắt/, | quầy tôi | khách vây kín.",
+      "anticipateVi": "Bán /đắt_hàng/ chứ?",
       "emphasis": [
-        "Hấp dẫn",
-        "mê tít"
+        "chú ý",
+        "bắt mắt",
+        "đắt hàng"
       ],
       "pos": "verb",
       "ipa": "/atɾaˈeɾ/",
-      "topic": "emotion",
+      "topic": "attention",
       "topics": [
-        "emotion",
-        "society"
+        "attention",
+        "general"
       ],
       "level": "C1",
       "chars": 6,
       "initial": "A",
       "usage": [
         {
-          "en": "La vida en el campo no me suele _____.",
-          "vi": "Cuộc_sống ở nông_thôn | thường không | thu_hút tôi."
+          "en": "Los colores vivos _____ a los clientes.",
+          "vi": "Màu_sắc tươi | thu_hút | khách_hàng."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "yo -igo : atraigo",
+          "tiempos": {
+            "presente": "yo atraigo",
+            "pretérito": "él atrajo",
+            "participio": "atraído",
+            "gerundio": "atrayendo"
+          }
+        },
+        "tipVi": "Chia như traer: | atraigo, | atrajo."
+      }
     },
     {
       "id": "beneficio",

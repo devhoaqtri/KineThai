@@ -1,5 +1,5 @@
 {
-  "revision": "f0c34adf9b91f5b2f3f8ed4b",
+  "revision": "d090f5db95ea89df830acb22",
   "name": "WordCrawler vocabulary",
   "count": 642,
   "topics": [
@@ -3785,29 +3785,34 @@
       "word": "tímido",
       "shareCode": "HNH",
       "meaningVi": "nhút_nhát",
-      "defVi": "Ngại_ngùng, | /e_dè/ | khi=gặp hay nói_chuyện | người lạ.",
-      "leadVi": "Được=khen trước lớp, | cô bé /đỏ_mặt/ | cúi gằm.",
-      "anticipateVi": "Má ửng hồng rồi kìa!",
+      "defVi": "Ngại tiếp_xúc, | /rụt_rè/ | trước người lạ.",
+      "leadVi": "Ngày đầu lớp mới, | mình /ngại_ngùng/ | ít nói hẳn.",
+      "anticipateVi": "Ai /bắt_chuyện/ trước?",
       "emphasis": [
-        "e dè",
-        "đỏ mặt"
+        "rụt rè",
+        "ngại ngùng",
+        "bắt chuyện"
       ],
       "pos": "adj",
       "ipa": "/ˈtimiðo/",
       "topic": "character",
       "topics": [
-        "character",
-        "emotion"
+        "character"
       ],
       "level": "A1",
       "chars": 6,
       "initial": "T",
       "usage": [
         {
-          "en": "De niño era muy _____ y no hablaba con nadie.",
-          "vi": "Hồi nhỏ | tôi rất nhút_nhát | và không nói_chuyện | với ai."
+          "en": "Mi hermano es muy _____ y no habla mucho en clase.",
+          "vi": "Anh_trai mình | rất nhút_nhát | và ít nói trong lớp."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "tímida",
+        "plural": "tímidos / tímidas",
+        "serEstar": "Thường dùng ser: | es muy tímido."
+      }
     },
     {
       "id": "interesado",
