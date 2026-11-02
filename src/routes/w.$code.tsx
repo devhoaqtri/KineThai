@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ChallengePage } from "@/features/vocabulary/components/ChallengePage";
 import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
-import { sitePageHead } from "@/features/vocabulary/lib/target-language";
+import { languageName, sitePageHead } from "@/features/vocabulary/lib/target-language";
 
 export const Route = createFileRoute("/w/$code")({
   // The word itself is fetched by the page after the reader arrives (/api/public/word);
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/w/$code")({
     sitePageHead(
       loaderData?.locale,
       "Đoán từ này đi!",
-      "Một người bạn thách bạn đoán từ tiếng Anh này.",
+      `Một người bạn thách bạn đoán từ tiếng ${languageName(loaderData?.locale ?? "en")} này.`,
     ),
   component: ChallengePage,
 });

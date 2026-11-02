@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveTarget, siteAddress, siteBrand, siteTitle } from "../target-language";
+import { languageName, resolveTarget, siteAddress, siteBrand, siteTitle } from "../target-language";
 import { readVocabularyPage } from "../../api/catalog.server";
 
 describe("resolveTarget", () => {
@@ -29,6 +29,26 @@ describe("resolveTarget", () => {
   it("every address resolves back to its own deck", () => {
     for (const locale of ["en", "zh", "ko", "ja", "fr", "de", "es"] as const) {
       expect(resolveTarget(siteAddress(locale))).toBe(locale);
+    }
+  });
+});
+
+describe("languageName", () => {
+  // Reader copy ("Vốn từ tiếng X vô tận", "Gợi ý tiếng Việt, từ mới tiếng X", the /w/
+  // link-preview head) interpolates the deck's target language from this helper. Pin
+  // each entry so a new locale cannot silently ship hardcoded "tiếng Anh" wording.
+  it("names each deck's target language in Vietnamese, sans 'tiếng'", () => {
+    expect(languageName("en")).toBe("Anh");
+    expect(languageName("zh")).toBe("Trung");
+    expect(languageName("ko")).toBe("Hàn");
+    expect(languageName("ja")).toBe("Nhật");
+    expect(languageName("fr")).toBe("Pháp");
+    expect(languageName("de")).toBe("Đức");
+    expect(languageName("es")).toBe("Tây Ban Nha");
+  });
+  it("only the English entry says 'Anh' — no other locale falls back to it", () => {
+    for (const locale of ["zh", "ko", "ja", "fr", "de", "es"] as const) {
+      expect(languageName(locale)).not.toBe("Anh");
     }
   });
 });

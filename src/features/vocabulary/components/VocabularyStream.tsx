@@ -1,5 +1,5 @@
 /** Bounded, full-screen vocabulary stream and network states. Exports: VocabularyStream. Depends on: feed/window hooks, backfill bounds, VocabularyCard. */
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useVocabularyFeed } from "../hooks/useVocabularyFeed";
 import { useVocabularyWindow } from "../hooks/useVocabularyWindow";
 import { useFeedPagination } from "../hooks/useFeedPagination";
@@ -7,6 +7,8 @@ import { canWalkFurther, getWalkedPositions } from "../lib/backfill";
 import { formatCountdown, isWordAllowed, nextAvailableAt, type ViewHistory } from "../lib/history";
 import type { FeedPage, Presentation, VocabularyFilters } from "../types";
 import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
+import { DeckLocaleContext } from "../lib/deck-locale";
+import { languageName } from "../lib/target-language";
 import { VocabularyCard } from "./VocabularyCard";
 
 // Local only: a production build has no export studio at all, and even in development it
@@ -68,6 +70,10 @@ export function VocabularyStream({
   onToggleAutoplay?: () => void;
 }) {
   const query = useVocabularyFeed(seed, filters);
+  // Deck locale drives the "tiếng X" copy in the reader's labels and empty states, so a
+  // Korean host never reads "Vốn từ tiếng Anh vô tận". Falls back to English without a
+  // provider (see DeckLocaleContext).
+  const deckLanguage = languageName(useContext(DeckLocaleContext));
   // Tick so day-window expiries re-evaluate without a reload.
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -263,7 +269,7 @@ export function VocabularyStream({
         ref={viewport}
         className="vocab-viewport"
         role="feed"
-        aria-label="Vốn từ tiếng Anh vô tận"
+        aria-label={`Vốn từ tiếng ${deckLanguage} vô tận`}
         aria-busy={query.isFetching}
         tabIndex={0}
         onScroll={onScroll}
@@ -309,7 +315,7 @@ export function VocabularyStream({
                           ? ` Từ tiếp theo sẽ mở sau ${formatCountdown(nextUnlock, now)}.`
                           : ""
                       }`
-                    : "Gợi ý tiếng Việt, từ mới tiếng Anh. Không cần đăng nhập."}
+                    : `Gợi ý tiếng Việt, từ mới tiếng ${deckLanguage}. Không cần đăng nhập.`}
             </p>
             {initialError && !query.retryAt && (
               <button

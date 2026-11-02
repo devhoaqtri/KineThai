@@ -3,7 +3,8 @@
  * deck and the page title do. Unknown hosts (preview, localhost, IPs, anh.*) fall back to
  * English and never throw. Host is client-controlled: use it only to pick public content.
  *
- * Exports: TargetLocale, TARGET_LOCALES, resolveTarget, siteTitle, siteBrand, siteAddress, sitePageHead
+ * Exports: TargetLocale, TARGET_LOCALES, resolveTarget, siteTitle, siteBrand, siteAddress,
+ *          sitePageHead, languageName
  */
 export type TargetLocale = "en" | "zh" | "ko" | "ja" | "fr" | "de" | "es";
 
@@ -68,6 +69,27 @@ const ADDRESSES: Record<TargetLocale, string> = {
 /** @param locale Deck locale. @returns The public address for that deck, with no scheme. */
 export function siteAddress(locale: TargetLocale): string {
   return ADDRESSES[locale];
+}
+
+/**
+ * The Vietnamese name of the language a deck teaches, without the "tiếng" prefix — so
+ * the copy sites around it can decide whether to say "tiếng Hàn", "môn tiếng Hàn", "bằng
+ * tiếng Hàn", etc. The English entry is "Anh" (never " tiếng Anh"), matching the "tiếng "
+ * already in the reader's labels.
+ */
+const LANGUAGE_NAMES: Record<TargetLocale, string> = {
+  en: "Anh",
+  zh: "Trung",
+  ko: "Hàn",
+  ja: "Nhật",
+  fr: "Pháp",
+  de: "Đức",
+  es: "Tây Ban Nha",
+};
+
+/** @param locale Deck locale. @returns Vietnamese name of the target language, sans "tiếng". */
+export function languageName(locale: TargetLocale): string {
+  return LANGUAGE_NAMES[locale];
 }
 
 /** Shared leaf metadata keeps browser and sharing titles aligned with the domain. */
