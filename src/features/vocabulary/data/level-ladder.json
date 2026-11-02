@@ -107,12 +107,14 @@
     "levels": [
       "HSK1",
       "HSK2",
-      "HSK3"
+      "HSK3",
+      "HSK4"
     ],
     "levelCounts": {
       "HSK1": 484,
       "HSK2": 711,
-      "HSK3": 893
+      "HSK3": 893,
+      "HSK4": 457
     },
     "levelSamples": {
       "HSK1": [
@@ -155,6 +157,20 @@
         },
         {
           "word": "工厂"
+        }
+      ],
+      "HSK4": [
+        {
+          "word": "受不了"
+        },
+        {
+          "word": "背景"
+        },
+        {
+          "word": "无所谓"
+        },
+        {
+          "word": "大会"
         }
       ]
     }
