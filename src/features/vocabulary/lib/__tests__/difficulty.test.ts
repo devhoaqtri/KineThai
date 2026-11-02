@@ -8,6 +8,7 @@ import {
   JLPT_TRACKS,
   TOPIK_TRACKS,
   LEVEL_SAMPLE_PRIORITY,
+  clampDifficultyToDeck,
   countTrackWords,
   difficultyLevels,
   formatLevelBand,
@@ -142,6 +143,26 @@ describe("difficultyLevels", () => {
     expect(difficultyLevels("co-ban")).toEqual(["A2"]));
   it("mixes available tracks and drops unavailable ones", () =>
     expect(difficultyLevels("co-ban,van-chuong", ["A2", "B2"])).toEqual(["A2"]));
+});
+
+describe("clampDifficultyToDeck", () => {
+  const topik = ["TOPIK1", "TOPIK2"] as VocabularyLevel[];
+  it("passes the empty sentinel through", () =>
+    expect(clampDifficultyToDeck("", topik)).toBe(""));
+  it("leaves a choice alone when the deck is not yet known", () =>
+    // metadata.levels is empty before the first page resolves; do not clobber the reader's
+    // stored level just because we cannot check it yet.
+    expect(clampDifficultyToDeck("giao-tiep", undefined)).toBe("giao-tiep"));
+  it("keeps a selection that still streams something", () =>
+    expect(clampDifficultyToDeck("vo-long", topik)).toBe("vo-long"));
+  it("drops a stale cross-deck track that resolves empty to every level", () =>
+    // giao-tiep tops out at TOPIK3, which the Korean deck has not reached — exactly the
+    // "Korean page shows nothing" case.
+    expect(clampDifficultyToDeck("giao-tiep", topik)).toBe(DIFFICULTY_ALL));
+  it("keeps a multi-select whose surviving track still has words", () =>
+    expect(clampDifficultyToDeck("vo-long,giao-tiep", topik)).toBe("vo-long,giao-tiep"));
+  it("falls back when every selected track is beyond the deck", () =>
+    expect(clampDifficultyToDeck("giao-tiep,doc-hieu", topik)).toBe(DIFFICULTY_ALL));
 });
 
 describe("formatLevelBand", () => {

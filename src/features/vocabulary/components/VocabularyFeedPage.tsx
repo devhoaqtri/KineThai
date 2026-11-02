@@ -8,7 +8,7 @@ import { useShellHeightVar } from "@/hooks/use-shell-height-var";
 import type { FeedPage, Presentation, VocabularyFilters } from "../types";
 import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
 import { rememberRecallWord } from "../lib/recall-words";
-import { DIFFICULTY_ALL } from "../lib/difficulty";
+import { clampDifficultyToDeck, DIFFICULTY_ALL } from "../lib/difficulty";
 import { SHORT_VIEWPORT_MAX_H } from "../lib/landscape-geometry";
 import { useCanExport } from "@/features/admin/hooks/useCanExport";
 import { useFontsReady } from "../hooks/useFontsReady";
@@ -112,6 +112,11 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     const sync = () => {
       const pack = readCustomPack();
       setPackName(pack?.catalog.name ?? null);
+      // metadata always describes the LAST page served, and pages come from whichever
+      // source is now active — the pack or the built-in deck. Drop it on every transition
+      // so the difficulty clamp (below) never reads levels from the source the reader has
+      // just left; the next fetch replaces it with the current source's levels.
+      setMetadata(undefined);
       if (pack) {
         setFilters(ALL_FILTERS);
         setPresentation((p) => ({ ...p, theme: "mix", style: "mix" }));
@@ -146,6 +151,22 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     setFilters((current) => ({ ...current, difficulty: stored }));
     setStage("feed");
   }, []);
+  // A difficulty chosen on another language's deck can name a track this deck has not
+  // reached — the ids are shared, the ceilings are not — and would stream nothing. Once the
+  // served page reports its levels, drop any such choice to "every level" so the feed is
+  // never blank, and remember the correction. It watches filters.difficulty, so it also
+  // catches a selection made here, not just the stored one. The sync handler above clears
+  // metadata on every pack/deck transition, so the levels here always describe the source
+  // the reader is on — never a stale page from the one they just left.
+  useEffect(() => {
+    if (packName) return; // an imported pack plays every word; nothing to clamp
+    if (!metadata?.levels?.length) return;
+    const safe = clampDifficultyToDeck(filters.difficulty, metadata.levels);
+    if (safe === filters.difficulty) return;
+    writeDifficultyChoice(safe);
+    setFilters((current) => ({ ...current, difficulty: safe }));
+    setSeed(newSeed());
+  }, [metadata, packName, filters.difficulty]);
   const pickDifficulty = useCallback((difficulty: string) => {
     writeDifficultyChoice(difficulty);
     setFilters((current) => ({ ...current, difficulty }));
