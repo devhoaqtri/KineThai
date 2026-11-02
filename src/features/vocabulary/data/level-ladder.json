@@ -162,11 +162,13 @@
   "ko": {
     "levels": [
       "TOPIK1",
-      "TOPIK2"
+      "TOPIK2",
+      "TOPIK3"
     ],
     "levelCounts": {
       "TOPIK1": 778,
-      "TOPIK2": 763
+      "TOPIK2": 1013,
+      "TOPIK3": 185
     },
     "levelSamples": {
       "TOPIK1": [
@@ -195,6 +197,20 @@
         },
         {
           "word": "토끼"
+        }
+      ],
+      "TOPIK3": [
+        {
+          "word": "없이"
+        },
+        {
+          "word": "또한"
+        },
+        {
+          "word": "낳다"
+        },
+        {
+          "word": "근데"
         }
       ]
     }

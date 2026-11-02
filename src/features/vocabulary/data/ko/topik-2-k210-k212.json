@@ -1,0 +1,7306 @@
+{
+  "revision": "0c48fb4e1a668c6f46a259b4",
+  "name": "TOPIK K210–K212",
+  "count": 253,
+  "topics": [
+    "character",
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "TOPIK2"
+  ],
+  "words": [
+    {
+      "id": "banggeum-b126b4",
+      "word": "방금",
+      "meaningVi": "vừa_mới",
+      "defVi": "Chỉ cách lúc nói | một /khoảnh_khắc/ rất ngắn.",
+      "leadVi": "Bánh_mì trên bàn | vẫn còn /nóng_hổi/ thơm_phức.",
+      "anticipateVi": "Chưa kịp /chớp_mắt/ đâu!",
+      "pos": "adv",
+      "ipa": "banggeum",
+      "topic": "time",
+      "topics": [
+        "time",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 집에 왔어요.",
+          "vi": "Tôi vừa_mới về đến nhà."
+        }
+      ],
+      "chars": 2,
+      "initial": "방",
+      "grammar": {
+        "hanja": "方今",
+        "hanViet": "phương kim"
+      }
+    },
+    {
+      "id": "nongdam-bd2713",
+      "word": "농담",
+      "meaningVi": "câu=nói_đùa",
+      "defVi": "Câu nói vui | để mọi=người /bật_cười/, không hề thật.",
+      "leadVi": "Bố nói câu /hài_hước/, | cả=nhà cười không ngớt.",
+      "anticipateVi": "Đừng /giận_dỗi/, | chỉ vui thôi mà!",
+      "pos": "noun",
+      "ipa": "nongdam",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구와 _____을 해요.",
+          "vi": "Tôi nói_đùa với bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "농",
+      "grammar": {
+        "hanja": "弄談",
+        "hanViet": "lộng đàm"
+      }
+    },
+    {
+      "id": "sinho-7d25ce",
+      "word": "신호",
+      "meaningVi": "tín_hiệu",
+      "defVi": "Đèn hay âm_thanh dùng để /báo_hiệu/ cho người_ta.",
+      "leadVi": "Vừa thấy đèn /nhấp_nháy/, | cả dòng xe dừng lại.",
+      "anticipateVi": "Nháy_mắt /ra_hiệu/ nhé!",
+      "pos": "noun",
+      "ipa": "sinho",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "communication",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "길을 건널 때 _____를 기다려요.",
+          "vi": "Khi qua đường, | tôi chờ tín_hiệu đèn."
+        }
+      ],
+      "chars": 2,
+      "initial": "신",
+      "grammar": {
+        "hanja": "信號",
+        "hanViet": "tín hiệu"
+      }
+    },
+    {
+      "id": "chulbal-36044b",
+      "word": "출발",
+      "meaningVi": "khởi_hành",
+      "defVi": "Rời chỗ đang ở | để bắt_đầu /hành_trình/ mới.",
+      "leadVi": "Còi tàu vang lên, | đoàn tàu /chuẩn_bị/ lăn bánh.",
+      "anticipateVi": "Đeo ba_lô lên, | /lên_đường/ thôi!",
+      "pos": "noun",
+      "ipa": "chulbal",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "기차 _____ 시간은 아홉 시예요.",
+          "vi": "Giờ khởi_hành của tàu là chín giờ."
+        }
+      ],
+      "chars": 2,
+      "initial": "출",
+      "grammar": {
+        "hanja": "出發",
+        "hanViet": "xuất phát"
+      }
+    },
+    {
+      "id": "jagisogae-8d8d2c",
+      "word": "자기소개",
+      "meaningVi": "tự=giới_thiệu",
+      "defVi": "Nói tên, tuổi, /sở_thích/ khi lần đầu gặp ai.",
+      "leadVi": "Ngày đầu đến lớp, | từng bạn /lần_lượt/ lên bảng.",
+      "anticipateVi": "/Hân_hạnh/ được làm_quen nhé!",
+      "pos": "noun",
+      "ipa": "jagisogae",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "수업 시간에 _____를 했어요.",
+          "vi": "Tôi tự=giới_thiệu trong giờ học."
+        }
+      ],
+      "chars": 4,
+      "initial": "자",
+      "grammar": {
+        "hanja": "自己紹介",
+        "hanViet": "tự kỷ thiệu giới"
+      }
+    },
+    {
+      "id": "deokbun-a4e2b4",
+      "word": "덕분",
+      "meaningVi": "nhờ=ơn",
+      "defVi": "Kết_quả tốt có được | do người=khác /giúp_đỡ/.",
+      "leadVi": "Thi đỗ rồi, | em /cảm_ơn/ thầy đã chỉ_bảo.",
+      "anticipateVi": "Tất_cả là /công_lao/ của bạn!",
+      "pos": "noun",
+      "ipa": "deokbun [덕뿐]",
+      "topic": "emotion",
+      "topics": [
+        "emotion",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "부모님 _____에 잘 지내요.",
+          "vi": "Nhờ bố_mẹ mà tôi sống tốt."
+        }
+      ],
+      "chars": 2,
+      "initial": "덕",
+      "grammar": {
+        "hanja": "德分",
+        "hanViet": "đức phân"
+      }
+    },
+    {
+      "id": "sangja-5b5ef8",
+      "word": "상자",
+      "meaningVi": "cái=hộp",
+      "defVi": "Thùng nhỏ có nắp | để /cất_giữ/ đồ_đạc trong nhà.",
+      "leadVi": "Chuyển=nhà, | đồ_đạc được /đóng_gói/ gọn_gàng.",
+      "anticipateVi": "Hé nắp xem | có /bất_ngờ/ gì?",
+      "pos": "noun",
+      "ipa": "sangja",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "책을 _____에 넣어요.",
+          "vi": "Tôi xếp sách vào hộp."
+        }
+      ],
+      "chars": 2,
+      "initial": "상",
+      "grammar": {
+        "counter": "개",
+        "hanja": "箱子",
+        "hanViet": "tương tử"
+      }
+    },
+    {
+      "id": "sigye-3131c2",
+      "word": "시계",
+      "meaningVi": "đồng_hồ",
+      "defVi": "Vật đeo tay hay treo tường | dùng để xem /thời_gian/.",
+      "leadVi": "Kim dài, kim ngắn | cứ /tích_tắc/ chạy vòng_quanh.",
+      "anticipateVi": "/Đúng_giờ/ nhé, | đừng để ai chờ!",
+      "pos": "noun",
+      "ipa": "sigye",
+      "topic": "time",
+      "topics": [
+        "time",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____를 보니까 벌써 열 시예요.",
+          "vi": "Nhìn đồng_hồ | thì đã mười giờ rồi."
+        }
+      ],
+      "chars": 2,
+      "initial": "시",
+      "grammar": {
+        "counter": "개",
+        "hanja": "時計",
+        "hanViet": "thời kế"
+      }
+    },
+    {
+      "id": "chingchan-e77a4b",
+      "word": "칭찬",
+      "meaningVi": "lời=khen",
+      "defVi": "Lời nói tốt dành cho ai | đã làm việc /xuất_sắc/.",
+      "leadVi": "Được cô_giáo xoa đầu, | em /hớn_hở/ suốt cả ngày.",
+      "anticipateVi": "Giỏi quá, | /tuyệt_vời/ luôn!",
+      "pos": "noun",
+      "ipa": "chingchan",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "emotion",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "선생님께 _____을 들었어요.",
+          "vi": "Tôi được thầy_giáo khen."
+        }
+      ],
+      "chars": 2,
+      "initial": "칭",
+      "grammar": {
+        "hanja": "稱讚",
+        "hanViet": "xưng tán"
+      }
+    },
+    {
+      "id": "gandanhi-509656",
+      "word": "간단히",
+      "meaningVi": "đơn_giản",
+      "defVi": "Làm gọn_gàng, | không /rườm_rà/ hay mất nhiều thời_gian.",
+      "leadVi": "Cả buổi họp | chỉ /vỏn_vẹn/ năm phút thôi.",
+      "anticipateVi": "Ngắn thôi, | đừng /dài_dòng/!",
+      "pos": "adv",
+      "ipa": "gandanhi",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "general"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "점심은 _____ 먹었어요.",
+          "vi": "Bữa=trưa tôi ăn đơn_giản thôi."
+        }
+      ],
+      "chars": 3,
+      "initial": "간",
+      "grammar": {
+        "hanja": "簡單-",
+        "hanViet": "giản đơn"
+      }
+    },
+    {
+      "id": "seoryu-9135e2",
+      "word": "서류",
+      "meaningVi": "giấy_tờ",
+      "defVi": "Giấy có ghi /thông_tin/ | dùng cho công_việc văn_phòng.",
+      "leadVi": "Cần đóng_dấu | và /chữ_ký/ của giám_đốc.",
+      "anticipateVi": "Nộp đủ /bản_sao/ chưa?",
+      "pos": "noun",
+      "ipa": "seoryu",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "회사에 _____를 내야 해요.",
+          "vi": "Tôi phải nộp giấy_tờ cho công_ty."
+        }
+      ],
+      "chars": 2,
+      "initial": "서",
+      "grammar": {
+        "counter": "장",
+        "hanja": "書類",
+        "hanViet": "thư loại"
+      }
+    },
+    {
+      "id": "jinhada-35b8d7",
+      "word": "진하다",
+      "meaningVi": "đậm, đặc",
+      "defVi": "Màu hay vị /đậm_đà/, | không nhạt hay loãng chút nào.",
+      "leadVi": "Sáng_sớm trên núi, | /sương_mù/ che kín cả đường.",
+      "anticipateVi": "Ngụm cà_phê /đắng_ngắt/ quá!",
+      "pos": "adj",
+      "ipa": "jinhada",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "perception"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아침에 안개가 _____.",
+          "vi": "Buổi_sáng | sương_mù dày đặc.",
+          "fill": "진해요"
+        }
+      ],
+      "chars": 3,
+      "initial": "진",
+      "grammar": {
+        "hanja": "津-",
+        "hanViet": "tân",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "진해요",
+            "반말": "진해",
+            "합쇼체": "진합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "cha-2c94f8",
+      "word": "차",
+      "meaningVi": "trà",
+      "defVi": "/Thức_uống/ pha từ lá khô | với nước nóng, hơi đắng.",
+      "leadVi": "Chiều mưa, ông ngồi /nhâm_nhi/ | bên ấm nhỏ thơm_lừng.",
+      "anticipateVi": "Mùi lá /thoang_thoảng/ đây!",
+      "pos": "noun",
+      "ipa": "cha",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "오후에 _____를 마셔요.",
+          "vi": "Buổi_chiều tôi uống trà."
+        }
+      ],
+      "chars": 1,
+      "initial": "차",
+      "grammar": {
+        "counter": "잔",
+        "hanja": "茶",
+        "hanViet": "trà"
+      }
+    },
+    {
+      "id": "chaeso-c8de17",
+      "word": "채소",
+      "meaningVi": "rau",
+      "defVi": "Lá, củ, quả ăn được, | rất tốt cho /sức_khỏe/.",
+      "leadVi": "Mẹ ra chợ sáng | mua mớ cải /xanh_mướt/ về.",
+      "anticipateVi": "Ăn đủ /dinh_dưỡng/ chưa?",
+      "pos": "noun",
+      "ipa": "chaeso",
+      "topic": "food",
+      "topics": [
+        "food",
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "매일 _____를 먹어요.",
+          "vi": "Ngày nào tôi cũng ăn rau."
+        }
+      ],
+      "chars": 2,
+      "initial": "채",
+      "grammar": {
+        "hanja": "菜蔬",
+        "hanViet": "thái sơ"
+      }
+    },
+    {
+      "id": "ganjang-113148",
+      "word": "간장",
+      "meaningVi": "nước_tương",
+      "defVi": "Nước_chấm màu nâu, | làm từ /đậu_nành/, vị mặn.",
+      "leadVi": "Đĩa đậu_phụ rán | chấm vào là /đậm_đà/ ngay.",
+      "anticipateVi": "Chấm một chút | vị /mằn_mặn/ nhé!",
+      "pos": "noun",
+      "ipa": "ganjang",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "국에 _____을 넣어요.",
+          "vi": "Tôi cho nước_tương vào canh."
+        }
+      ],
+      "chars": 2,
+      "initial": "간",
+      "grammar": {
+        "hanja": "-醬",
+        "hanViet": "tương"
+      }
+    },
+    {
+      "id": "gyohwan-2b3016",
+      "word": "교환",
+      "meaningVi": "trao_đổi",
+      "defVi": "/Đổi_chác/ đồ với người=khác | cho vừa_ý cả hai.",
+      "leadVi": "Áo mua về bị chật, | cô=ấy mang lại /cửa_hàng/.",
+      "anticipateVi": "Của mình | lấy của cậu, /công_bằng/ chứ?",
+      "pos": "noun",
+      "ipa": "gyohwan",
+      "topic": "money",
+      "topics": [
+        "money",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "옷이 작아서 _____을 했어요.",
+          "vi": "Áo nhỏ quá | nên tôi đã đi đổi."
+        }
+      ],
+      "chars": 2,
+      "initial": "교",
+      "grammar": {
+        "hanja": "交換",
+        "hanViet": "giao hoán"
+      }
+    },
+    {
+      "id": "akgi-58df82",
+      "word": "악기",
+      "meaningVi": "nhạc_cụ",
+      "defVi": "Đồ phát ra /âm_thanh/ | để chơi=nhạc, như đàn, trống.",
+      "leadVi": "Tiếng /dương_cầm/ | vang lên từ phòng bên_cạnh.",
+      "anticipateVi": "Ban=nhạc /tập_dượt/ chưa?",
+      "pos": "noun",
+      "ipa": "akgi [악끼]",
+      "topic": "general",
+      "topics": [
+        "general",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____를 배우고 싶어요.",
+          "vi": "Tôi muốn học một nhạc_cụ."
+        }
+      ],
+      "chars": 2,
+      "initial": "악",
+      "grammar": {
+        "counter": "개",
+        "hanja": "樂器",
+        "hanViet": "nhạc khí"
+      }
+    },
+    {
+      "id": "baksu-79720b",
+      "word": "박수",
+      "meaningVi": "vỗ_tay",
+      "defVi": "Hai lòng_bàn_tay | đập vào nhau để /cổ_vũ/ ai.",
+      "leadVi": "Tiết_mục vừa kết_thúc, | cả /khán_phòng/ rộn_ràng lên.",
+      "anticipateVi": "Một tràng /giòn_giã/ nào!",
+      "pos": "noun",
+      "ipa": "baksu [박쑤]",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "모두 _____를 쳤어요.",
+          "vi": "Mọi=người đều vỗ_tay."
+        }
+      ],
+      "chars": 2,
+      "initial": "박",
+      "grammar": {
+        "hanja": "拍手",
+        "hanViet": "phách thủ"
+      }
+    },
+    {
+      "id": "sillang-24bc61",
+      "word": "신랑",
+      "meaningVi": "chú_rể",
+      "defVi": "Chàng_trai | làm lễ /kết_hôn/ trong ngày cưới.",
+      "leadVi": "Com_lê chỉnh_tề, | anh /hồi_hộp/ đứng đón cô_dâu.",
+      "anticipateVi": "Sắp /rước_dâu/ rồi đó!",
+      "pos": "noun",
+      "ipa": "sillang [실랑]",
+      "topic": "society",
+      "topics": [
+        "society",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____과 신부가 웃어요.",
+          "vi": "Chú_rể và cô_dâu đang cười."
+        }
+      ],
+      "chars": 2,
+      "initial": "신",
+      "grammar": {
+        "hanja": "新郞",
+        "hanViet": "tân lang"
+      }
+    },
+    {
+      "id": "hwaga-8cca84",
+      "word": "화가",
+      "meaningVi": "họa_sĩ",
+      "defVi": "Người=chuyên /sáng_tác/ tranh | bằng màu và cọ.",
+      "leadVi": "Bên giá vẽ, | cô=ấy /tỉ_mỉ/ tô từng nét.",
+      "anticipateVi": "Một /kiệt_tác/ sắp ra_đời!",
+      "pos": "noun",
+      "ipa": "hwaga",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____가 그림을 그려요.",
+          "vi": "Họa_sĩ đang vẽ tranh."
+        }
+      ],
+      "chars": 2,
+      "initial": "화",
+      "grammar": {
+        "counter": "명",
+        "hanja": "畵家",
+        "hanViet": "họa gia"
+      }
+    },
+    {
+      "id": "yachae-e1efec",
+      "word": "야채",
+      "meaningVi": "rau=củ",
+      "defVi": "Rau và củ | dùng để nấu /món_ăn/ hằng_ngày.",
+      "leadVi": "Nồi canh nóng | đầy cà_rốt, bắp_cải /tươi_rói/.",
+      "anticipateVi": "Giỏ đi chợ | /đầy_ắp/ rồi!",
+      "pos": "noun",
+      "ipa": "yachae",
+      "topic": "food",
+      "topics": [
+        "food",
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아이가 _____를 잘 먹어요.",
+          "vi": "Em_bé ăn rau=củ rất ngoan."
+        }
+      ],
+      "chars": 2,
+      "initial": "야",
+      "grammar": {
+        "hanja": "野菜",
+        "hanViet": "dã thái"
+      }
+    },
+    {
+      "id": "jeonbu-45d7fb",
+      "word": "전부",
+      "meaningVi": "tất_cả",
+      "defVi": "Mọi phần cộng lại, | không thiếu hay /bỏ_sót/ chút nào.",
+      "leadVi": "Cả lớp có_mặt /đông_đủ/, | không thiếu bạn nào.",
+      "anticipateVi": "Gom đủ cả, | /trọn_vẹn/ luôn!",
+      "pos": "noun",
+      "ipa": "jeonbu",
+      "topic": "general",
+      "topics": [
+        "general",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "가족이 _____ 모였어요.",
+          "vi": "Cả gia_đình đã tụ_họp đông_đủ."
+        }
+      ],
+      "chars": 2,
+      "initial": "전",
+      "grammar": {
+        "hanja": "全部",
+        "hanViet": "toàn bộ"
+      }
+    },
+    {
+      "id": "chinhada-a0069b",
+      "word": "친하다",
+      "meaningVi": "thân_thiết",
+      "defVi": "Quen nhau lâu, | /gắn_bó/ và hiểu nhau như người_nhà.",
+      "leadVi": "Hai đứa đi đâu | cũng có nhau, /chia_sẻ/ mọi chuyện.",
+      "anticipateVi": "Bạn /chí_cốt/ của mình đây!",
+      "pos": "adj",
+      "ipa": "chinhada",
+      "topic": "emotion",
+      "topics": [
+        "emotion",
+        "character"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 그 친구와 정말 _____.",
+          "vi": "Tôi rất thân với người=bạn đó.",
+          "fill": "친해요"
+        }
+      ],
+      "chars": 3,
+      "initial": "친",
+      "grammar": {
+        "hanja": "親-",
+        "hanViet": "thân",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "친해요",
+            "반말": "친해",
+            "합쇼체": "친합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "baengman-8d2a45",
+      "word": "백만",
+      "meaningVi": "một=triệu",
+      "defVi": "Số có sáu /chữ_số/ không | đứng sau /chữ_số/ một.",
+      "leadVi": "Tiết_kiệm mãi | mới gom đủ con_số /tròn_trĩnh/ ấy.",
+      "anticipateVi": "Sáu số không | /nối_đuôi/ nhau kìa!",
+      "pos": "adj",
+      "ipa": "baengman [뱅만]",
+      "topic": "money",
+      "topics": [
+        "money",
+        "general"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이 컴퓨터는 _____ 원이에요.",
+          "vi": "Máy_tính này giá một=triệu won."
+        }
+      ],
+      "chars": 2,
+      "initial": "백",
+      "grammar": {
+        "hanja": "百萬",
+        "hanViet": "bách vạn"
+      }
+    },
+    {
+      "id": "silpae-052a41",
+      "word": "실패",
+      "meaningVi": "sự=thất_bại",
+      "defVi": "Làm mà không đạt /mục_tiêu/ | mình đã đặt ra.",
+      "leadVi": "Ngã một lần | rồi đứng dậy, ta /trưởng_thành/ hơn.",
+      "anticipateVi": "Đừng /nản_lòng/, thử lại nhé!",
+      "pos": "noun",
+      "ipa": "silpae",
+      "topic": "thinking",
+      "topics": [
+        "thinking",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____는 성공의 어머니예요.",
+          "vi": "Thất_bại là mẹ thành_công."
+        }
+      ],
+      "chars": 2,
+      "initial": "실",
+      "grammar": {
+        "hanja": "失敗",
+        "hanViet": "thất bại"
+      }
+    },
+    {
+      "id": "yuri-80adc9",
+      "word": "유리",
+      "meaningVi": "thủy_tinh",
+      "defVi": "Vật_liệu /trong_suốt/, dễ vỡ, | dùng làm cửa_sổ.",
+      "leadVi": "Nhìn xuyên qua được | nhưng chạm mạnh là /rạn_nứt/ ngay.",
+      "anticipateVi": "Đụng phải /cửa_kính/ rồi kìa!",
+      "pos": "noun",
+      "ipa": "yuri",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "general"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이 컵은 _____로 만들었어요.",
+          "vi": "Cái=cốc này làm bằng thủy_tinh."
+        }
+      ],
+      "chars": 2,
+      "initial": "유",
+      "grammar": {
+        "hanja": "琉璃",
+        "hanViet": "lưu ly"
+      }
+    },
+    {
+      "id": "daehagwon-525da4",
+      "word": "대학원",
+      "meaningVi": "cao_học",
+      "defVi": "Nơi=học sâu hơn | sau khi /tốt_nghiệp/ đại_học.",
+      "leadVi": "Có bằng cử_nhân | vẫn mê /nghiên_cứu/ tiếp.",
+      "anticipateVi": "Lên /thạc_sĩ/ không nào?",
+      "pos": "noun",
+      "ipa": "daehagwon",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "형은 _____에 다녀요.",
+          "vi": "Anh_trai tôi đang học cao_học."
+        }
+      ],
+      "chars": 3,
+      "initial": "대",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "大學院",
+        "hanViet": "đại học viện"
+      }
+    },
+    {
+      "id": "jinanbeon-562e45",
+      "word": "지난번",
+      "meaningVi": "lần=trước",
+      "defVi": "Dịp đã qua | ngay trước lần này, /gần_đây/ thôi.",
+      "leadVi": "Hôm ấy lỡ hẹn, | hôm_nay mình xin /bù_đắp/ nhé.",
+      "anticipateVi": "Còn nhớ /kỷ_niệm/ hôm ấy?",
+      "pos": "noun",
+      "ipa": "jinanbeon [지난뻔]",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에는 정말 고마웠어요.",
+          "vi": "Cảm_ơn bạn chuyện lần trước nhé."
+        }
+      ],
+      "chars": 3,
+      "initial": "지",
+      "grammar": {
+        "hanja": "-番",
+        "hanViet": "phiên"
+      }
+    },
+    {
+      "id": "galsaek-fd4a85",
+      "word": "갈색",
+      "meaningVi": "màu=nâu",
+      "defVi": "Màu đất, màu vỏ cây | hay ly /ca_cao/ nóng.",
+      "leadVi": "Đôi giày da | mang sắc /cà_phê/ đậm đà.",
+      "anticipateVi": "Giống màu /đất_sét/ không?",
+      "pos": "noun",
+      "ipa": "galsaek [갈쌕]",
+      "topic": "perception",
+      "topics": [
+        "perception",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 구두를 샀어요.",
+          "vi": "Tôi đã mua đôi giày da màu=nâu."
+        }
+      ],
+      "chars": 2,
+      "initial": "갈",
+      "grammar": {
+        "hanja": "褐色",
+        "hanViet": "hạt sắc"
+      }
+    },
+    {
+      "id": "banchan-52b8e5",
+      "word": "반찬",
+      "meaningVi": "món_ăn kèm",
+      "defVi": "Đĩa nhỏ xếp quanh | bát cơm trắng trong /bữa_ăn/.",
+      "leadVi": "Kim_chi, rau trộn, | trứng cuộn bày /san_sát/ trên bàn.",
+      "anticipateVi": "Thêm đĩa /dưa_muối/ nhé?",
+      "pos": "noun",
+      "ipa": "banchan",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "엄마가 _____을 만들었어요.",
+          "vi": "Mẹ nấu mấy món_ăn kèm."
+        }
+      ],
+      "chars": 2,
+      "initial": "반",
+      "grammar": {
+        "counter": "가지",
+        "hanja": "飯饌",
+        "hanViet": "phạn soạn"
+      }
+    },
+    {
+      "id": "buja-494368",
+      "word": "부자",
+      "meaningVi": "người=giàu",
+      "defVi": "Người=có rất nhiều tiền | và /tài_sản/ trong nhà.",
+      "leadVi": "Làm_ăn phát_đạt, | ông ấy xây nhà=/rộng_rãi/.",
+      "anticipateVi": "Ví lúc_nào cũng /rủng_rỉnh/?",
+      "pos": "noun",
+      "ipa": "buja",
+      "topic": "money",
+      "topics": [
+        "money"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "열심히 일해서 _____가 되고 싶어요.",
+          "vi": "Tôi muốn làm_việc chăm_chỉ để trở_nên giàu_có."
+        }
+      ],
+      "chars": 2,
+      "initial": "부",
+      "grammar": {
+        "counter": "명",
+        "hanja": "富者",
+        "hanViet": "phú giả"
+      }
+    },
+    {
+      "id": "sogae-1430e2",
+      "word": "소개",
+      "meaningVi": "sự=giới_thiệu",
+      "defVi": "Nói cho người_khác biết | /thông_tin/ về một người.",
+      "leadVi": "Gặp bạn mới, | mình nói tên và /sở_thích/ trước.",
+      "anticipateVi": "/Làm_quen/ chút nhé!",
+      "pos": "noun",
+      "ipa": "sogae",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "먼저 제 _____를 할게요.",
+          "vi": "Để tôi tự giới_thiệu trước nhé."
+        }
+      ],
+      "chars": 2,
+      "initial": "소",
+      "grammar": {
+        "hanja": "紹介",
+        "hanViet": "thiệu giới"
+      }
+    },
+    {
+      "id": "ilgi-72cdfe",
+      "word": "일기",
+      "meaningVi": "nhật_ký",
+      "defVi": "Ghi lại việc trong ngày | và /cảm_xúc/ của mình.",
+      "leadVi": "Cuốn sổ có khóa | giữ bao /bí_mật/ của tuổi_thơ.",
+      "anticipateVi": "Trang giấy chờ /tâm_sự/ tối nay?",
+      "pos": "noun",
+      "ipa": "ilgi",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 매일 밤 _____를 써요.",
+          "vi": "Tối nào tôi cũng viết nhật_ký."
+        }
+      ],
+      "chars": 2,
+      "initial": "일",
+      "grammar": {
+        "hanja": "日記",
+        "hanViet": "nhật ký"
+      }
+    },
+    {
+      "id": "hagwon-d8cd3c",
+      "word": "학원",
+      "meaningVi": "trung_tâm học=thêm",
+      "defVi": "Nơi=dạy thêm /ngoại_ngữ/ hay môn khác | sau giờ học.",
+      "leadVi": "Tan học | lại vội đến lớp_học /bổ_túc/ buổi chiều.",
+      "anticipateVi": "Lại /ôn_thi/ đến tối à?",
+      "pos": "noun",
+      "ipa": "hagwon",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "동생은 매일 _____에 다녀요.",
+          "vi": "Ngày nào em tôi cũng đi học=thêm."
+        }
+      ],
+      "chars": 2,
+      "initial": "학",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "學院",
+        "hanViet": "học viện"
+      }
+    },
+    {
+      "id": "yuchiwon-e6e655",
+      "word": "유치원",
+      "meaningVi": "trường mẫu_giáo",
+      "defVi": "Nơi=trẻ_nhỏ /vui_chơi/, học | trước khi vào lớp một.",
+      "leadVi": "Mỗi sáng | bé đeo ba_lô, /líu_lo/ chào cô.",
+      "anticipateVi": "Bé hết /mít_ướt/ chưa?",
+      "pos": "noun",
+      "ipa": "yuchiwon",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아이가 올해 _____에 들어갔어요.",
+          "vi": "Năm nay con tôi vào mẫu_giáo."
+        }
+      ],
+      "chars": 3,
+      "initial": "유",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "幼稚園",
+        "hanViet": "ấu trĩ viên"
+      }
+    },
+    {
+      "id": "jeongong-18ef51",
+      "word": "전공",
+      "meaningVi": "chuyên_ngành",
+      "defVi": "Ngành học chính | mà sinh_viên chọn ở /đại_học/.",
+      "leadVi": "Năm nhất phải /cân_nhắc/ | theo kinh_tế hay âm_nhạc.",
+      "anticipateVi": "Bạn /theo_đuổi/ ngành gì?",
+      "pos": "noun",
+      "ipa": "jeongong",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "제 _____은 음악이에요.",
+          "vi": "Chuyên_ngành của tôi là âm_nhạc."
+        }
+      ],
+      "chars": 2,
+      "initial": "전",
+      "grammar": {
+        "hanja": "專攻",
+        "hanViet": "chuyên công"
+      }
+    },
+    {
+      "id": "gyotongsago-6dfd6c",
+      "word": "교통사고",
+      "meaningVi": "tai_nạn giao_thông",
+      "defVi": "Xe_cộ /va_chạm/ | bất_ngờ khi đi trên đường_phố.",
+      "leadVi": "Đường trơn, | nhớ đội mũ và lái_xe /cẩn_thận/.",
+      "anticipateVi": "Chạy chậm thôi, /an_toàn/ nhé!",
+      "pos": "noun",
+      "ipa": "gyotongsago",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "어제 길에서 _____가 났어요.",
+          "vi": "Hôm_qua trên đường xảy_ra tai_nạn giao_thông."
+        }
+      ],
+      "chars": 4,
+      "initial": "교",
+      "grammar": {
+        "hanja": "交通事故",
+        "hanViet": "giao thông sự cố"
+      }
+    },
+    {
+      "id": "yeonyein-ec181c",
+      "word": "연예인",
+      "meaningVi": "nghệ_sĩ giải_trí",
+      "defVi": "Người=hát, đóng phim | hay dẫn chương_trình trên /truyền_hình/.",
+      "leadVi": "Ra phố | ai cũng xin /chữ_ký/ và chụp_ảnh cùng.",
+      "anticipateVi": "Lên /sân_khấu/ rồi kìa!",
+      "pos": "noun",
+      "ipa": "yeonyein",
+      "topic": "work",
+      "topics": [
+        "work",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "제 꿈은 _____이 되는 거예요.",
+          "vi": "Ước_mơ của tôi là trở_thành nghệ_sĩ."
+        }
+      ],
+      "chars": 3,
+      "initial": "연",
+      "grammar": {
+        "counter": "명",
+        "hanja": "演藝人",
+        "hanViet": "diễn nghệ nhân"
+      }
+    },
+    {
+      "id": "wolgeup-bc1bec",
+      "word": "월급",
+      "meaningVi": "tiền=lương",
+      "defVi": "Khoản tiền /nhân_viên/ nhận | đều_đặn mỗi=tháng.",
+      "leadVi": "Cuối tháng | tài_khoản đầy lên, ai cũng /hớn_hở/.",
+      "anticipateVi": "Túi tiền /đầy_ắp/ rồi!",
+      "pos": "noun",
+      "ipa": "wolgeup [월끕]",
+      "topic": "money",
+      "topics": [
+        "money",
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이번 달 _____을 받았어요.",
+          "vi": "Tôi đã nhận lương tháng này."
+        }
+      ],
+      "chars": 2,
+      "initial": "월",
+      "grammar": {
+        "hanja": "月給",
+        "hanViet": "nguyệt cấp"
+      }
+    },
+    {
+      "id": "yuhaeng-a3cd7c",
+      "word": "유행",
+      "meaningVi": "trào_lưu",
+      "defVi": "Kiểu áo hay /thói_quen/ | nhiều người=cùng theo một thời.",
+      "leadVi": "Năm nay | phố nào cũng thấy /áo_khoác/ dáng rộng.",
+      "anticipateVi": "Trông /sành_điệu/ ghê chưa!",
+      "pos": "noun",
+      "ipa": "yuhaeng",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "요즘 이 옷이 _____이에요.",
+          "vi": "Dạo này kiểu áo này đang thịnh_hành."
+        }
+      ],
+      "chars": 2,
+      "initial": "유",
+      "grammar": {
+        "hanja": "流行",
+        "hanViet": "lưu hành"
+      }
+    },
+    {
+      "id": "butak-985ea7",
+      "word": "부탁",
+      "meaningVi": "lời=nhờ_vả",
+      "defVi": "Lời xin người_khác /giúp_đỡ/ | mình một việc.",
+      "leadVi": "Tay đầy đồ, | chị khẽ nói: /làm_ơn/ mở cửa.",
+      "anticipateVi": "Có /rảnh_rỗi/ không bạn?",
+      "pos": "noun",
+      "ipa": "butak",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구의 _____을 받았어요.",
+          "vi": "Tôi được bạn nhờ một việc."
+        }
+      ],
+      "chars": 2,
+      "initial": "부",
+      "grammar": {
+        "hanja": "付託",
+        "hanViet": "phó thác"
+      }
+    },
+    {
+      "id": "pyeonan-6493f2",
+      "word": "편안",
+      "meaningVi": "sự=bình_an",
+      "defVi": "Trạng_thái thân và tâm | /thoải_mái/, không lo_lắng gì.",
+      "leadVi": "Về quê_nhà, | nằm võng nghe gió /mát_rượi/.",
+      "anticipateVi": "Ngủ một giấc /ngon_lành/ nhé!",
+      "pos": "noun",
+      "ipa": "pyeonan",
+      "topic": "emotion",
+      "topics": [
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "가족의 _____을 바라요.",
+          "vi": "Tôi mong gia_đình được bình_an."
+        }
+      ],
+      "chars": 2,
+      "initial": "편",
+      "grammar": {
+        "hanja": "便安",
+        "hanViet": "tiện an"
+      }
+    },
+    {
+      "id": "jeomsu-c85bdc",
+      "word": "점수",
+      "meaningVi": "điểm_số",
+      "defVi": "Mức /đánh_giá/ bài thi | do thầy_cô chấm bằng số.",
+      "leadVi": "Nhận bài kiểm_tra, | thấy chín mười là /mừng_rỡ/.",
+      "anticipateVi": "Bài thi /tuyệt_vời/ chứ?",
+      "pos": "noun",
+      "ipa": "jeomsu [점쑤]",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "시험 _____가 높아요.",
+          "vi": "Điểm bài thi của tôi cao."
+        }
+      ],
+      "chars": 2,
+      "initial": "점",
+      "grammar": {
+        "hanja": "點數",
+        "hanViet": "điểm số"
+      }
+    },
+    {
+      "id": "tongjang-4f4cea",
+      "word": "통장",
+      "meaningVi": "sổ=tài_khoản",
+      "defVi": "Cuốn sổ /ngân_hàng/ cấp, | ghi tiền gửi vào rút ra.",
+      "leadVi": "Mỗi tháng | để_dành một ít, /tích_góp/ cho tương_lai.",
+      "anticipateVi": "Ra quầy /giao_dịch/ nào!",
+      "pos": "noun",
+      "ipa": "tongjang",
+      "topic": "money",
+      "topics": [
+        "money"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "은행에서 _____을 만들었어요.",
+          "vi": "Tôi đã mở sổ tài_khoản ở ngân_hàng."
+        }
+      ],
+      "chars": 2,
+      "initial": "통",
+      "grammar": {
+        "counter": "개",
+        "hanja": "通帳",
+        "hanViet": "thông trướng"
+      }
+    },
+    {
+      "id": "gojang-9fa660",
+      "word": "고장",
+      "meaningVi": "sự=hỏng_hóc",
+      "defVi": "Máy_móc không /hoạt_động/ | bình_thường như trước nữa.",
+      "leadVi": "Tivi đang xem | bỗng tắt phụt, gọi thợ /sửa_chữa/.",
+      "anticipateVi": "Tủ_lạnh lại /trục_trặc/ à?",
+      "pos": "noun",
+      "ipa": "gojang",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "냉장고가 _____이 났어요.",
+          "vi": "Tủ_lạnh bị hỏng rồi."
+        }
+      ],
+      "chars": 2,
+      "initial": "고",
+      "grammar": {
+        "hanja": "故障",
+        "hanViet": "cố chướng"
+      }
+    },
+    {
+      "id": "muryo-c005c2",
+      "word": "무료",
+      "meaningVi": "miễn_phí",
+      "defVi": "Không mất /chi_phí/ | khi vào cửa hay dùng dịch_vụ.",
+      "leadVi": "Khỏi móc ví, | quán /khuyến_mãi/ tặng kèm ly nước.",
+      "anticipateVi": "Khỏi /tốn_kém/ nhé!",
+      "pos": "noun",
+      "ipa": "muryo",
+      "topic": "money",
+      "topics": [
+        "money",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "가게에서 물을 _____로 줘요.",
+          "vi": "Cửa_hàng cho nước miễn_phí."
+        }
+      ],
+      "chars": 2,
+      "initial": "무",
+      "grammar": {
+        "hanja": "無料",
+        "hanViet": "vô liệu"
+      }
+    },
+    {
+      "id": "gwangwanggaek-b51bd5",
+      "word": "관광객",
+      "meaningVi": "khách du_lịch",
+      "defVi": "Người=đi /du_lịch/, | ghé thăm cảnh đẹp ở nơi=khác.",
+      "leadVi": "Đeo máy_ảnh, | cầm /bản_đồ/ | dạo quanh phố=cổ.",
+      "anticipateVi": "Ai cầm bản_đồ | /ngơ_ngác/ giữa phố?",
+      "pos": "noun",
+      "ipa": "gwangwanggaek",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "여름에는 바닷가에 _____이 많아요.",
+          "vi": "Mùa_hè | bãi_biển có nhiều khách du_lịch."
+        }
+      ],
+      "chars": 3,
+      "initial": "관",
+      "grammar": {
+        "counter": "명",
+        "hanja": "觀光客",
+        "hanViet": "quan quang khách"
+      }
+    },
+    {
+      "id": "misulgwan-3ada7e",
+      "word": "미술관",
+      "meaningVi": "bảo_tàng mỹ_thuật",
+      "defVi": "Nơi=trưng_bày tranh | để khách vào /chiêm_ngưỡng/ nghệ_thuật.",
+      "leadVi": "Họa_sĩ trẻ | vừa mở /triển_lãm/ tranh | ở tầng hai.",
+      "anticipateVi": "Đi ngắm tranh | cho /thư_thái/ nhé?",
+      "pos": "noun",
+      "ipa": "misulgwan",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에 _____에 가서 그림을 봤어요.",
+          "vi": "Cuối_tuần | tôi đến bảo_tàng mỹ_thuật xem=tranh."
+        }
+      ],
+      "chars": 3,
+      "initial": "미",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "美術館",
+        "hanViet": "mỹ thuật quán"
+      }
+    },
+    {
+      "id": "sieomeoni-e70a3c",
+      "word": "시어머니",
+      "meaningVi": "mẹ_chồng",
+      "defVi": "Mẹ ruột của chồng, | được nàng_dâu /kính_trọng/ như mẹ.",
+      "leadVi": "Sau /đám_cưới/, | cô có thêm một người=mẹ mới.",
+      "anticipateVi": "Lần đầu /ra_mắt/ | nhà_chồng hả?",
+      "pos": "noun",
+      "ipa": "sieomeoni",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____를 모시고 살아요.",
+          "vi": "Tôi sống chung | để chăm_sóc mẹ_chồng."
+        }
+      ],
+      "chars": 4,
+      "initial": "시",
+      "grammar": {
+        "hanja": "媤-",
+        "hanViet": "thi"
+      }
+    },
+    {
+      "id": "gamsahada-c1c436",
+      "word": "감사하다",
+      "meaningVi": "biết_ơn",
+      "defVi": "Thấy /mang_ơn/ người=đã giúp mình | lúc khó_khăn.",
+      "leadVi": "Hàng_xóm giúp dọn nhà, | cả=nhà /cảm_động/ lắm.",
+      "anticipateVi": "Nói lời gì | khi được /giúp_đỡ/?",
+      "pos": "adj",
+      "ipa": "gamsahada",
+      "topic": "emotion",
+      "topics": [
+        "emotion",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "도와주셔서 정말 _____.",
+          "vi": "Bạn đã giúp | tôi thật biết_ơn.",
+          "fill": "감사합니다"
+        }
+      ],
+      "chars": 4,
+      "initial": "감",
+      "grammar": {
+        "hanja": "感謝-",
+        "hanViet": "cảm tạ",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "감사해요",
+            "반말": "감사해",
+            "합쇼체": "감사합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "sang-43a66d",
+      "word": "상",
+      "meaningVi": "giải_thưởng",
+      "defVi": "Phần /khen_thưởng/ | trao cho người=đạt thành_tích tốt.",
+      "leadVi": "Lên sân_khấu, | em nhận /giấy_khen/ trong tiếng vỗ_tay.",
+      "anticipateVi": "Tiếng /vỗ_tay/ dành cho ai?",
+      "pos": "noun",
+      "ipa": "sang",
+      "topic": "study",
+      "topics": [
+        "study",
+        "general"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "학교에서 _____을 받았어요.",
+          "vi": "Tôi đã nhận giải_thưởng ở trường."
+        }
+      ],
+      "chars": 1,
+      "initial": "상",
+      "grammar": {
+        "counter": "개",
+        "hanja": "賞",
+        "hanViet": "thưởng"
+      }
+    },
+    {
+      "id": "chinjeolhada-f38ee2",
+      "word": "친절하다",
+      "meaningVi": "tử_tế",
+      "defVi": "Đối_xử nhẹ_nhàng, | luôn sẵn_lòng /giúp_đỡ/ người_khác.",
+      "leadVi": "Cô bán_hàng | luôn /mỉm_cười/ | chỉ đường cho khách lạ.",
+      "anticipateVi": "Lời nói /dịu_dàng/ | ấm cả lòng!",
+      "pos": "adj",
+      "ipa": "chinjeolhada",
+      "topic": "character",
+      "topics": [
+        "character",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "그 가게 직원은 아주 _____.",
+          "vi": "Nhân_viên cửa_hàng đó | rất=tử_tế.",
+          "fill": "친절해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "친",
+      "grammar": {
+        "hanja": "親切-",
+        "hanViet": "thân thiết",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "친절해요",
+            "반말": "친절해",
+            "합쇼체": "친절합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "hasukjip-9254b9",
+      "word": "하숙집",
+      "meaningVi": "nhà_trọ",
+      "defVi": "Nhà=cho /sinh_viên/ thuê phòng, | có chủ nấu cơm.",
+      "leadVi": "Xa quê đi học, | tối về | ăn cơm cùng /chủ_nhà/.",
+      "anticipateVi": "Thuê phòng | có /ấm_cúng/ không?",
+      "pos": "noun",
+      "ipa": "hasukjip [하숙찝]",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "대학교 근처 _____에서 살아요.",
+          "vi": "Tôi sống ở nhà_trọ | gần trường đại_học."
+        }
+      ],
+      "chars": 3,
+      "initial": "하",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "下宿-",
+        "hanViet": "hạ túc"
+      }
+    },
+    {
+      "id": "myeongjeol-3485cd",
+      "word": "명절",
+      "meaningVi": "ngày=lễ truyền_thống",
+      "defVi": "Ngày lễ /truyền_thống/, | cả=nhà sum_họp ăn món ngon.",
+      "leadVi": "Đường về quê | /tấp_nập/ xe, | ai cũng xách quà.",
+      "anticipateVi": "Lại sắp được /đoàn_tụ/ rồi!",
+      "pos": "noun",
+      "ipa": "myeongjeol",
+      "topic": "society",
+      "topics": [
+        "society",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에는 가족이 모두 모여요.",
+          "vi": "Dịp lễ tết | cả=nhà đều sum_họp."
+        }
+      ],
+      "chars": 2,
+      "initial": "명",
+      "grammar": {
+        "hanja": "名節",
+        "hanViet": "danh tiết"
+      }
+    },
+    {
+      "id": "churip-ccfd59",
+      "word": "출입",
+      "meaningVi": "sự=ra_vào",
+      "defVi": "Đi vào, đi ra | khu_vực có /bảo_vệ/ canh cổng.",
+      "leadVi": "/Biển_báo/ trước cổng: | khách lạ miễn vào.",
+      "anticipateVi": "Cổng đóng, | /bảo_vệ/ hỏi thẻ ngay!",
+      "pos": "noun",
+      "ipa": "churip",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "밤에는 학교 _____이 안 돼요.",
+          "vi": "Ban_đêm | không được ra_vào trường."
+        }
+      ],
+      "chars": 2,
+      "initial": "출",
+      "grammar": {
+        "hanja": "出入",
+        "hanViet": "xuất nhập"
+      }
+    },
+    {
+      "id": "hoesaek-13a7ae",
+      "word": "회색",
+      "meaningVi": "màu=xám",
+      "defVi": "Màu pha giữa đen và trắng, | như bầu_trời /âm_u/.",
+      "leadVi": "Bức tường /xi_măng/ | chưa sơn | mang đúng màu này.",
+      "anticipateVi": "Mây /mù_mịt/ | báo trời sắp mưa?",
+      "pos": "noun",
+      "ipa": "hoesaek",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "perception"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____ 옷을 자주 입어요.",
+          "vi": "Tôi hay mặc quần_áo màu=xám."
+        }
+      ],
+      "chars": 2,
+      "initial": "회",
+      "grammar": {
+        "hanja": "灰色",
+        "hanViet": "hôi sắc"
+      }
+    },
+    {
+      "id": "bulpyeon-61429f",
+      "word": "불편",
+      "meaningVi": "sự=bất_tiện",
+      "defVi": "Cảm_giác không /thoải_mái/ | khi thiếu đồ cần dùng.",
+      "leadVi": "Mất điện cả=buổi tối, | cả=xóm /chật_vật/ đủ đường.",
+      "anticipateVi": "Thang_máy hỏng, | leo bộ /mệt_nhoài/!",
+      "pos": "noun",
+      "ipa": "bulpyeon",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "집이 멀어서 _____이 많아요.",
+          "vi": "Nhà=xa | nên có nhiều bất_tiện."
+        }
+      ],
+      "chars": 2,
+      "initial": "불",
+      "grammar": {
+        "hanja": "不便",
+        "hanViet": "bất tiện"
+      }
+    },
+    {
+      "id": "insahada-cbb89e",
+      "word": "인사하다",
+      "meaningVi": "chào_hỏi",
+      "defVi": "Cúi đầu hay nói lời chào | khi /gặp_mặt/ người_quen.",
+      "leadVi": "Ra cổng, | em /lễ_phép/ khoanh tay | trước bác hàng_xóm.",
+      "anticipateVi": "Gặp ông bà | nhớ /ngoan_ngoãn/ nhé!",
+      "pos": "verb",
+      "ipa": "insahada",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아침에 선생님께 _____.",
+          "vi": "Buổi_sáng | tôi chào thầy_giáo.",
+          "fill": "인사해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "인",
+      "grammar": {
+        "hanja": "人事-",
+        "hanViet": "nhân sự",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "인사해요",
+            "반말": "인사해",
+            "합쇼체": "인사합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "dap-6f5e48",
+      "word": "답",
+      "meaningVi": "câu=trả_lời",
+      "defVi": "Lời /phản_hồi/ | cho một câu_hỏi hay lá thư.",
+      "leadVi": "Gửi tin_nhắn từ sáng, | đến tối vẫn /im_lặng/.",
+      "anticipateVi": "Bài toán này | /kết_quả/ bằng mấy?",
+      "pos": "noun",
+      "ipa": "dap",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구에게 편지를 보냈는데 _____이 없어요.",
+          "vi": "Tôi gửi thư cho bạn | mà chưa có hồi_âm."
+        }
+      ],
+      "chars": 1,
+      "initial": "답",
+      "grammar": {
+        "hanja": "答",
+        "hanViet": "đáp"
+      }
+    },
+    {
+      "id": "dokseo-dae15d",
+      "word": "독서",
+      "meaningVi": "đọc=sách",
+      "defVi": "Đọc sách | để học_hỏi hay /thư_giãn/ lúc rảnh.",
+      "leadVi": "Tối nào bố cũng /chăm_chú/ | bên cuốn=tiểu_thuyết dày.",
+      "anticipateVi": "Ghé /thư_viện/ | chiều nay không?",
+      "pos": "noun",
+      "ipa": "dokseo [독써]",
+      "topic": "study",
+      "topics": [
+        "study",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 주말에 _____를 해요.",
+          "vi": "Cuối_tuần | tôi đọc=sách."
+        }
+      ],
+      "chars": 2,
+      "initial": "독",
+      "grammar": {
+        "hanja": "讀書",
+        "hanViet": "độc thư"
+      }
+    },
+    {
+      "id": "annae-629cb8",
+      "word": "안내",
+      "meaningVi": "sự=hướng_dẫn",
+      "defVi": "Chỉ đường, /giới_thiệu/ | để khách biết chỗ cần đến.",
+      "leadVi": "Cầm cờ nhỏ, | cô dẫn /du_khách/ | dạo quanh phố=cổ.",
+      "anticipateVi": "Lối ra ở đâu, | hỏi /lễ_tân/ nhé?",
+      "pos": "noun",
+      "ipa": "annae",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "직원이 _____를 해 줬어요.",
+          "vi": "Nhân_viên đã hướng_dẫn cho tôi."
+        }
+      ],
+      "chars": 2,
+      "initial": "안",
+      "grammar": {
+        "hanja": "案內",
+        "hanViet": "án nội"
+      }
+    },
+    {
+      "id": "chuseok-34e8e2",
+      "word": "추석",
+      "meaningVi": "tết trung_thu",
+      "defVi": "Ngày lễ /mùa_thu/, | cả=nhà về quê làm bánh.",
+      "leadVi": "Đêm rằm, | trăng sáng /vằng_vặc/ | trên mâm bánh_trái.",
+      "anticipateVi": "Rằm này | về /quê_hương/ chứ?",
+      "pos": "noun",
+      "ipa": "chuseok",
+      "topic": "society",
+      "topics": [
+        "society",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에 고향에 가요.",
+          "vi": "Dịp trung_thu | tôi về quê."
+        }
+      ],
+      "chars": 2,
+      "initial": "추",
+      "grammar": {
+        "hanja": "秋夕",
+        "hanViet": "thu tịch"
+      }
+    },
+    {
+      "id": "pojang-c85fff",
+      "word": "포장",
+      "meaningVi": "sự=đóng_gói",
+      "defVi": "Bọc đồ bằng giấy hay hộp | cho /gọn_gàng/, đẹp mắt.",
+      "leadVi": "Giấy hoa, nơ đỏ, | món quà /xinh_xắn/ | đã sẵn_sàng.",
+      "anticipateVi": "Thắt nơ | cho hộp quà /lấp_lánh/?",
+      "pos": "noun",
+      "ipa": "pojang",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "money"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "선물 _____를 부탁해요.",
+          "vi": "Nhờ gói quà giúp tôi."
+        }
+      ],
+      "chars": 2,
+      "initial": "포",
+      "grammar": {
+        "hanja": "包裝",
+        "hanViet": "bao trang"
+      }
+    },
+    {
+      "id": "hosu-ae63fc",
+      "word": "호수",
+      "meaningVi": "hồ",
+      "defVi": "Vùng nước rộng nằm giữa /đất_liền/, | lặng sóng.",
+      "leadVi": "Mặt nước /trong_veo/ | in bóng hàng cây ven bờ.",
+      "anticipateVi": "Thiên_nga bơi | /thong_thả/ ở đâu?",
+      "pos": "noun",
+      "ipa": "hosu",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "공원 _____가 아주 맑아요.",
+          "vi": "Hồ trong công_viên | rất=trong."
+        }
+      ],
+      "chars": 2,
+      "initial": "호",
+      "grammar": {
+        "counter": "개",
+        "hanja": "湖水",
+        "hanViet": "hồ thủy"
+      }
+    },
+    {
+      "id": "noksaek-ecbb91",
+      "word": "녹색",
+      "meaningVi": "màu=xanh_lục",
+      "defVi": "Màu của /cây_cối/ | và thảm cỏ sau cơn=mưa.",
+      "leadVi": "Đèn /giao_thông/ đổi màu, | xe_cộ nối_đuôi lăn bánh.",
+      "anticipateVi": "Ruộng lúa /mơn_mởn/ màu gì?",
+      "pos": "noun",
+      "ipa": "noksaek [녹쌕]",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "perception"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____을 좋아해요.",
+          "vi": "Tôi thích màu=xanh_lục."
+        }
+      ],
+      "chars": 2,
+      "initial": "녹",
+      "grammar": {
+        "hanja": "綠色",
+        "hanViet": "lục sắc"
+      }
+    },
+    {
+      "id": "geomjeong-ef239e",
+      "word": "검정",
+      "meaningVi": "màu=đen",
+      "defVi": "Màu tối nhất, | giống /bầu_trời/ đêm không trăng.",
+      "leadVi": "Hạt mè rang | và /than_củi/ | chung một màu.",
+      "anticipateVi": "Đêm không trăng | /tối_om/ màu gì?",
+      "pos": "noun",
+      "ipa": "geomjeong",
+      "topic": "perception",
+      "topics": [
+        "perception",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "시장에서 _____ 가방을 샀어요.",
+          "vi": "Tôi đã mua cặp màu=đen | ở chợ."
+        }
+      ],
+      "chars": 2,
+      "initial": "검"
+    },
+    {
+      "id": "jigak-dac19a",
+      "word": "지각",
+      "meaningVi": "sự=đi muộn",
+      "defVi": "Đến lớp hay chỗ làm | muộn hơn /giờ_giấc/ quy_định.",
+      "leadVi": "Chuông reo rồi, | em mới /hớt_hải/ | chạy vào lớp.",
+      "anticipateVi": "Lại /ngủ_quên/ à?",
+      "pos": "noun",
+      "ipa": "jigak",
+      "topic": "time",
+      "topics": [
+        "time",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "오늘 아침에 또 _____을 했어요.",
+          "vi": "Sáng nay | tôi lại đi=muộn."
+        }
+      ],
+      "chars": 2,
+      "initial": "지",
+      "grammar": {
+        "hanja": "遲刻",
+        "hanViet": "trì khắc"
+      }
+    },
+    {
+      "id": "injeongbatda-c9545c",
+      "word": "인정받다",
+      "meaningVi": "được=công_nhận",
+      "defVi": "Được đồng_nghiệp | thừa_nhận /năng_lực/ của mình.",
+      "leadVi": "Ba năm miệt_mài, | anh được sếp /tin_tưởng/ hẳn.",
+      "anticipateVi": "Công_sức | cuối_cùng cũng /đền_đáp/!",
+      "pos": "verb",
+      "ipa": "injeongbatda [인정받따]",
+      "topic": "work",
+      "topics": [
+        "work",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "회사에서 능력을 _____.",
+          "vi": "Tôi được công_nhận năng_lực | ở công_ty.",
+          "fill": "인정받았어요"
+        }
+      ],
+      "chars": 4,
+      "initial": "인",
+      "grammar": {
+        "hanja": "認定-",
+        "hanViet": "nhận định",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "인정받아요",
+            "반말": "인정받아",
+            "합쇼체": "인정받습니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "jeongmun-da11c8",
+      "word": "정문",
+      "meaningVi": "cổng=chính",
+      "defVi": "Lối ra_vào lớn nhất, | nằm ở /mặt_tiền/ tòa_nhà.",
+      "leadVi": "Sáng nào học_sinh | cũng ùa qua cánh cổng /rộng_lớn/.",
+      "anticipateVi": "Lối vào /rộng_rãi/ | ở đâu nhỉ?",
+      "pos": "noun",
+      "ipa": "jeongmun",
+      "topic": "study",
+      "topics": [
+        "study",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "학생들은 _____으로 다녀요.",
+          "vi": "Học_sinh | đi_lại qua cổng=chính."
+        }
+      ],
+      "chars": 2,
+      "initial": "정",
+      "grammar": {
+        "hanja": "正門",
+        "hanViet": "chính môn"
+      }
+    },
+    {
+      "id": "yeongyeol-7476b4",
+      "word": "연결",
+      "meaningVi": "sự=kết_nối",
+      "defVi": "Nối hai đầu | cho chúng /gắn_kết/ với nhau.",
+      "leadVi": "Đang gọi điện | thì sóng /chập_chờn/ | rồi tắt hẳn.",
+      "anticipateVi": "Mạng nhà=mình | /ổn_định/ chưa?",
+      "pos": "noun",
+      "ipa": "yeongyeol",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "인터넷 _____이 안 돼요.",
+          "vi": "Mạng không kết_nối được."
+        }
+      ],
+      "chars": 2,
+      "initial": "연",
+      "grammar": {
+        "hanja": "連結",
+        "hanViet": "liên kết"
+      }
+    },
+    {
+      "id": "eumsikjeom-c3e1cc",
+      "word": "음식점",
+      "meaningVi": "quán_ăn",
+      "defVi": "Nơi=bán /món_ăn/ | cho khách ngồi ăn tại chỗ.",
+      "leadVi": "Trưa đói bụng, | cả=nhóm rủ nhau ra phố /ăn_uống/.",
+      "anticipateVi": "Phố này | quán xá /nhộn_nhịp/ quá!",
+      "pos": "noun",
+      "ipa": "eumsikjeom [음식쩜]",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "학교 앞 _____에서 식사했어요.",
+          "vi": "Tôi đã ăn ở quán_ăn trước cổng trường."
+        }
+      ],
+      "chars": 3,
+      "initial": "음",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "飮食店",
+        "hanViet": "ẩm thực điếm"
+      }
+    },
+    {
+      "id": "bangmun-e1480e",
+      "word": "방문",
+      "meaningVi": "cửa=phòng",
+      "defVi": "Cánh cửa gỗ | ngăn /phòng_ngủ/ với hành_lang bên ngoài.",
+      "leadVi": "Muốn học=bài /yên_tĩnh/, | em khép nó lại.",
+      "anticipateVi": "Cộc cộc, | ai đứng /bên_ngoài/ thế?",
+      "pos": "noun",
+      "ipa": "bangmun",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____을 닫고 공부해요.",
+          "vi": "Tôi đóng cửa=phòng rồi học=bài."
+        }
+      ],
+      "chars": 2,
+      "initial": "방",
+      "grammar": {
+        "hanja": "房門",
+        "hanViet": "phòng môn"
+      }
+    },
+    {
+      "id": "jeonhwahada-82f350",
+      "word": "전화하다",
+      "meaningVi": "gọi=điện",
+      "defVi": "Dùng điện_thoại | để /trò_chuyện/ với người=ở xa.",
+      "leadVi": "Nhớ mẹ quá, | tối nào em cũng bấm số /quen_thuộc/.",
+      "anticipateVi": "Điện_thoại rung, | mau /trả_lời/ đi!",
+      "pos": "verb",
+      "ipa": "jeonhwahada",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저녁에 엄마에게 _____.",
+          "vi": "Buổi tối tôi gọi=điện cho mẹ.",
+          "fill": "전화해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "전",
+      "grammar": {
+        "hanja": "電話-",
+        "hanViet": "điện thoại",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "전화해요",
+            "반말": "전화해",
+            "합쇼체": "전화합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "jumun-5e5637",
+      "word": "주문",
+      "meaningVi": "gọi=món, đặt_hàng",
+      "defVi": "Nói với /nhân_viên/ | món mình muốn ăn trong quán.",
+      "leadVi": "Cô phục_vụ | /chăm_chú/ ghi từng=món khách gọi.",
+      "anticipateVi": "Quán có | món /đặc_biệt/ gì?",
+      "pos": "noun",
+      "ipa": "jumun",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "직원이 손님의 _____을 받아요.",
+          "vi": "Nhân_viên ghi món khách gọi."
+        }
+      ],
+      "chars": 2,
+      "initial": "주",
+      "grammar": {
+        "hanja": "注文",
+        "hanViet": "chú văn"
+      }
+    },
+    {
+      "id": "chulgeun-16206e",
+      "word": "출근",
+      "meaningVi": "đi=làm",
+      "defVi": "Sáng sớm | rời=nhà đến /cơ_quan/ làm_việc.",
+      "leadVi": "Bảy giờ sáng, | đường_phố /đông_nghịt/ xe_máy.",
+      "anticipateVi": "Áo sơ_mi | đã /phẳng_phiu/ chưa?",
+      "pos": "noun",
+      "ipa": "chulgeun",
+      "topic": "work",
+      "topics": [
+        "work",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "오늘은 _____이 늦었어요.",
+          "vi": "Hôm_nay tôi đi=làm muộn."
+        }
+      ],
+      "chars": 2,
+      "initial": "출",
+      "grammar": {
+        "hanja": "出勤",
+        "hanViet": "xuất cần"
+      }
+    },
+    {
+      "id": "chulseok-34ff90",
+      "word": "출석",
+      "meaningVi": "sự=có_mặt",
+      "defVi": "Sinh_viên /có_mặt/ | trong lớp khi buổi=học bắt_đầu.",
+      "leadVi": "Đầu giờ, | thầy gọi từng=tên, em /lên_tiếng/: có ạ.",
+      "anticipateVi": "Đầu giờ, | lớp có /đông_đủ/ không?",
+      "pos": "noun",
+      "ipa": "chulseok [출썩]",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "선생님이 _____을 불러요.",
+          "vi": "Thầy_giáo điểm_danh."
+        }
+      ],
+      "chars": 2,
+      "initial": "출",
+      "grammar": {
+        "hanja": "出席",
+        "hanViet": "xuất tịch"
+      }
+    },
+    {
+      "id": "dongjeon-e26813",
+      "word": "동전",
+      "meaningVi": "đồng_xu",
+      "defVi": "Tiền /kim_loại/ | tròn nhỏ, dùng để mua đồ lặt_vặt.",
+      "leadVi": "Lắc ống tiết_kiệm, | bên trong vang tiếng /leng_keng/.",
+      "anticipateVi": "Tiếng gì | /lách_cách/ trong túi?",
+      "pos": "noun",
+      "ipa": "dongjeon",
+      "topic": "money",
+      "topics": [
+        "money"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "백 원짜리 _____이 있어요?",
+          "vi": "Bạn có đồng_xu một trăm không?"
+        }
+      ],
+      "chars": 2,
+      "initial": "동",
+      "grammar": {
+        "counter": "개",
+        "hanja": "銅錢",
+        "hanViet": "đồng tiền"
+      }
+    },
+    {
+      "id": "taekbae-cc5926",
+      "word": "택배",
+      "meaningVi": "dịch_vụ chuyển_phát",
+      "defVi": "Dịch_vụ mang /bưu_kiện/ | đến tận tay người=nhận.",
+      "leadVi": "Chuông cửa reo, | anh /bưu_tá/ đưa hộp giấy gói kỹ.",
+      "anticipateVi": "Hộp gì | /bí_ẩn/ thế này?",
+      "pos": "noun",
+      "ipa": "taekbae [택빼]",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "책을 _____로 보냈어요.",
+          "vi": "Tôi gửi sách bằng dịch_vụ chuyển_phát."
+        }
+      ],
+      "chars": 2,
+      "initial": "택",
+      "grammar": {
+        "counter": "개",
+        "hanja": "宅配",
+        "hanViet": "trạch phối"
+      }
+    },
+    {
+      "id": "inhyeong-450878",
+      "word": "인형",
+      "meaningVi": "búp_bê",
+      "defVi": "/Đồ_chơi/ | hình=người hay con_vật, trẻ_em thích ôm.",
+      "leadVi": "Tối nào bé cũng ôm | gấu_bông /mềm_mại/ đi ngủ.",
+      "anticipateVi": "Váy ren, | má /hồng_hào/ xinh_xắn!",
+      "pos": "noun",
+      "ipa": "inhyeong",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "동생이 _____ 놀이를 해요.",
+          "vi": "Em tôi chơi búp_bê."
+        }
+      ],
+      "chars": 2,
+      "initial": "인",
+      "grammar": {
+        "counter": "개",
+        "hanja": "人形",
+        "hanViet": "nhân hình"
+      }
+    },
+    {
+      "id": "jeoncheol-65bd6b",
+      "word": "전철",
+      "meaningVi": "tàu_điện",
+      "defVi": "Tàu chạy điện, | đưa khách qua từng=/nhà_ga/ trong phố.",
+      "leadVi": "Giờ tan_tầm, | toa nào cũng /chật_cứng/ hành_khách.",
+      "anticipateVi": "Cửa sắp đóng, | /khẩn_trương/ lên!",
+      "pos": "noun",
+      "ipa": "jeoncheol",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____을 타고 회사에 가요.",
+          "vi": "Tôi đi tàu_điện đến công_ty."
+        }
+      ],
+      "chars": 2,
+      "initial": "전",
+      "grammar": {
+        "hanja": "電鐵",
+        "hanViet": "điện thiết"
+      }
+    },
+    {
+      "id": "chukahada-97d408",
+      "word": "축하하다",
+      "meaningVi": "chúc_mừng",
+      "defVi": "Nói lời /vui_mừng/ | khi người=khác gặp chuyện tốt.",
+      "leadVi": "Bạn vừa đỗ đại_học, | cả=nhà ôm nhau /rạng_rỡ/.",
+      "anticipateVi": "Nến thổi xong, | /vỗ_tay/ nào!",
+      "pos": "verb",
+      "ipa": "chukahada [추카하다]",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구의 생일을 _____.",
+          "vi": "Tôi chúc_mừng sinh_nhật bạn.",
+          "fill": "축하해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "축",
+      "grammar": {
+        "hanja": "祝賀-",
+        "hanViet": "chúc hạ",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "축하해요",
+            "반말": "축하해",
+            "합쇼체": "축하합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "tonghwa-5e30ac",
+      "word": "통화",
+      "meaningVi": "cuộc=gọi",
+      "defVi": "Hai người nói_chuyện với nhau | qua /điện_thoại/.",
+      "leadVi": "Mẹ áp máy lên tai, | /say_sưa/ kể chuyện cả tiếng.",
+      "anticipateVi": "Pin sắp hết, | nói /ngắn_gọn/ thôi!",
+      "pos": "noun",
+      "ipa": "tonghwa",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "엄마와 전화 _____를 했어요.",
+          "vi": "Tôi đã nói_chuyện điện_thoại với mẹ."
+        }
+      ],
+      "chars": 2,
+      "initial": "통",
+      "grammar": {
+        "counter": "번",
+        "hanja": "通話",
+        "hanViet": "thông thoại"
+      }
+    },
+    {
+      "id": "sikppang-bc1f0d",
+      "word": "식빵",
+      "meaningVi": "bánh_mì gối",
+      "defVi": "/Bánh_mì/ | nướng thành khối vuông, cắt lát mỏng.",
+      "leadVi": "Sáng sớm, | lát bánh /giòn_tan/ phết bơ thơm_lừng.",
+      "anticipateVi": "Hương bơ | /nồng_nàn/ khắp bếp!",
+      "pos": "noun",
+      "ipa": "sikppang",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아침에 _____을 먹어요.",
+          "vi": "Buổi sáng tôi ăn bánh_mì gối."
+        }
+      ],
+      "chars": 2,
+      "initial": "식",
+      "grammar": {
+        "counter": "개",
+        "hanja": "食-",
+        "hanViet": "thực"
+      }
+    },
+    {
+      "id": "taepung-3cd18e",
+      "word": "태풍",
+      "meaningVi": "bão",
+      "defVi": "Gió xoáy mạnh | từ biển thổi vào, kéo theo /mưa_rào/.",
+      "leadVi": "Cây ngoài sân | nghiêng_ngả, mây /đen_kịt/ kéo đến.",
+      "anticipateVi": "Gió rít | /ào_ào/ ngoài cửa!",
+      "pos": "noun",
+      "ipa": "taepung",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____이 와서 비가 많이 와요.",
+          "vi": "Bão đến nên mưa rất nhiều."
+        }
+      ],
+      "chars": 2,
+      "initial": "태",
+      "grammar": {
+        "hanja": "颱風",
+        "hanViet": "đài phong"
+      }
+    },
+    {
+      "id": "gyeolsim-b7db8d",
+      "word": "결심",
+      "meaningVi": "quyết_tâm",
+      "defVi": "Ý_định /vững_vàng/ | phải làm bằng_được việc mình chọn.",
+      "leadVi": "Đầu năm mới, | em ghi /kế_hoạch/ dậy sớm lên giấy.",
+      "anticipateVi": "Từ mai | /chắc_chắn/ làm được!",
+      "pos": "noun",
+      "ipa": "gyeolsim [결씸]",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "올해는 운동하기로 _____을 했어요.",
+          "vi": "Năm nay tôi đã quyết_tâm tập thể_dục."
+        }
+      ],
+      "chars": 2,
+      "initial": "결",
+      "grammar": {
+        "hanja": "決心",
+        "hanViet": "quyết tâm"
+      }
+    },
+    {
+      "id": "yeonhyu-efcd73",
+      "word": "연휴",
+      "meaningVi": "kỳ_nghỉ dài",
+      "defVi": "Mấy=ngày nghỉ /liên_tiếp/ | khi lễ nối với cuối_tuần.",
+      "leadVi": "Bến_xe /tấp_nập/, | ai cũng xách va_li về quê.",
+      "anticipateVi": "Ba ngày liền | /thảnh_thơi/ quá!",
+      "pos": "noun",
+      "ipa": "yeonhyu",
+      "topic": "time",
+      "topics": [
+        "time",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 동안 집에서 쉬었어요.",
+          "vi": "Tôi nghỉ ở nhà suốt kỳ_nghỉ dài."
+        }
+      ],
+      "chars": 2,
+      "initial": "연",
+      "grammar": {
+        "hanja": "連休",
+        "hanViet": "liên hưu"
+      }
+    },
+    {
+      "id": "undonghada-611c51",
+      "word": "운동하다",
+      "meaningVi": "tập thể_dục",
+      "defVi": "Vận_động cơ_thể | cho khỏe, như chạy hay /bơi_lội/.",
+      "leadVi": "Sáng sáng bố chạy | quanh công_viên, mồ_hôi /nhễ_nhại/.",
+      "anticipateVi": "Duỗi chân, | /khởi_động/ nào!",
+      "pos": "verb",
+      "ipa": "undonghada",
+      "topic": "health",
+      "topics": [
+        "health",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 매일 아침 공원에서 _____.",
+          "vi": "Sáng nào tôi cũng tập thể_dục ở công_viên.",
+          "fill": "운동해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "운",
+      "grammar": {
+        "hanja": "運動-",
+        "hanViet": "vận động",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "운동해요",
+            "반말": "운동해",
+            "합쇼체": "운동합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "imo-dacc6b",
+      "word": "이모",
+      "meaningVi": "dì",
+      "defVi": "Chị hoặc em_gái của mẹ, | người=/họ_hàng/ bên ngoại.",
+      "leadVi": "Về quê ngoại, | người=/hiền_hậu/ ấy dúi kẹo cho em.",
+      "anticipateVi": "Bên ngoại | /náo_nhiệt/ hẳn lên!",
+      "pos": "noun",
+      "ipa": "imo",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____는 엄마의 언니예요.",
+          "vi": "Dì là chị của mẹ."
+        }
+      ],
+      "chars": 2,
+      "initial": "이",
+      "grammar": {
+        "hanja": "姨母",
+        "hanViet": "di mẫu"
+      }
+    },
+    {
+      "id": "chwijik-01678f",
+      "word": "취직",
+      "meaningVi": "có việc_làm",
+      "defVi": "Được công_ty /tuyển_dụng/ | sau thời_gian dài tìm việc.",
+      "leadVi": "Ra trường, | anh_trai /hớn_hở/ khoe thư nhận việc.",
+      "anticipateVi": "Hồ_sơ nộp | đã có /hồi_âm/!",
+      "pos": "noun",
+      "ipa": "chwijik",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "형이 회사에 _____이 됐어요.",
+          "vi": "Anh_trai tôi đã xin được việc ở công_ty."
+        }
+      ],
+      "chars": 2,
+      "initial": "취",
+      "grammar": {
+        "hanja": "就職",
+        "hanViet": "tựu chức"
+      }
+    },
+    {
+      "id": "yumyeong-a7a94d",
+      "word": "유명",
+      "meaningVi": "nổi_tiếng",
+      "defVi": "Được /công_chúng/ khắp=nơi biết tên và yêu_mến.",
+      "leadVi": "Ca_sĩ bước ra, | đám_đông /hò_reo/ xin chữ_ký.",
+      "anticipateVi": "Ra phố | là bị /nhận_ra/!",
+      "pos": "noun",
+      "ipa": "yumyeong",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "오늘 _____ 가수가 학교에 와요.",
+          "vi": "Hôm_nay | ca_sĩ nổi_tiếng đến trường."
+        }
+      ],
+      "chars": 2,
+      "initial": "유",
+      "grammar": {
+        "hanja": "有名",
+        "hanViet": "hữu danh"
+      }
+    },
+    {
+      "id": "cheongsohada-c661ec",
+      "word": "청소하다",
+      "meaningVi": "dọn_dẹp",
+      "defVi": "Quét nhà, lau bàn | cho phòng thật /sạch_sẽ/.",
+      "leadVi": "Chủ_nhật, | cả=nhà xắn tay áo, /bụi_bặm/ biến=mất.",
+      "anticipateVi": "Chổi đâu, | /giẻ_lau/ đâu?",
+      "pos": "verb",
+      "ipa": "cheongsohada",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에 방을 _____.",
+          "vi": "Cuối_tuần tôi dọn_dẹp phòng.",
+          "fill": "청소해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "청",
+      "grammar": {
+        "hanja": "淸掃-",
+        "hanViet": "thanh tảo",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "청소해요",
+            "반말": "청소해",
+            "합쇼체": "청소합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "doenjang-8c0cc6",
+      "word": "된장",
+      "meaningVi": "tương đậu_nành",
+      "defVi": "Món tương đặc | làm từ /đậu_nành/ lên_men, mùi đậm.",
+      "leadVi": "Nồi canh /nghi_ngút/ khói, | mùi thơm nồng lan khắp bếp.",
+      "anticipateVi": "Rau luộc chấm | /đậm_đà/ ghê!",
+      "pos": "noun",
+      "ipa": "doenjang",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "채소를 _____에 찍어 먹어요.",
+          "vi": "Tôi chấm rau_sống vào tương rồi ăn."
+        }
+      ],
+      "chars": 2,
+      "initial": "된",
+      "grammar": {
+        "hanja": "-醬",
+        "hanViet": "tương"
+      }
+    },
+    {
+      "id": "yeongha-90292d",
+      "word": "영하",
+      "meaningVi": "dưới không độ",
+      "defVi": "Nhiệt_độ thấp hơn mức nước bắt_đầu /đóng_băng/.",
+      "leadVi": "Sáng ra, | mặt=hồ phủ lớp=băng /mỏng_manh/.",
+      "anticipateVi": "Hà hơi | tay vẫn /lạnh_cóng/!",
+      "pos": "noun",
+      "ipa": "yeongha",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "온도가 _____로 떨어졌어요.",
+          "vi": "Nhiệt_độ đã xuống dưới không độ."
+        }
+      ],
+      "chars": 2,
+      "initial": "영",
+      "grammar": {
+        "hanja": "零下",
+        "hanViet": "linh hạ"
+      }
+    },
+    {
+      "id": "hanjan-2ad399",
+      "word": "한잔",
+      "meaningVi": "một=ly",
+      "defVi": "Chừng một=cốc /đồ_uống/, | như trà nóng hay cà_phê.",
+      "leadVi": "Chiều mưa, | hai bạn ngồi quán nhâm_nhi trà /nóng_hổi/.",
+      "anticipateVi": "Trà /thơm_lừng/ | mời bạn nhé!",
+      "pos": "noun",
+      "ipa": "hanjan",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "커피 _____ 마셔요.",
+          "vi": "Uống một ly cà_phê nhé."
+        }
+      ],
+      "chars": 2,
+      "initial": "한",
+      "grammar": {
+        "hanja": "-盞",
+        "hanViet": "trản"
+      }
+    },
+    {
+      "id": "samchon-2752f3",
+      "word": "삼촌",
+      "meaningVi": "chú",
+      "defVi": "Anh hay em_trai của bố | trong /họ_hàng/ nhà mình.",
+      "leadVi": "Về quê chơi, | người=ấy mang /quà_bánh/ cho cháu.",
+      "anticipateVi": "Ai /chiều_chuộng/ cháu nhất?",
+      "pos": "noun",
+      "ipa": "samchon",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에 _____ 집에 가요.",
+          "vi": "Cuối_tuần tôi đến nhà chú."
+        }
+      ],
+      "chars": 2,
+      "initial": "삼",
+      "grammar": {
+        "counter": "분",
+        "hanja": "三寸",
+        "hanViet": "tam thốn"
+      }
+    },
+    {
+      "id": "juchajang-456fbd",
+      "word": "주차장",
+      "meaningVi": "bãi_đỗ_xe",
+      "defVi": "Khoảng sân rộng | để /ô_tô/ và xe_máy đỗ lại.",
+      "leadVi": "Xuống /tầng_hầm/ | tìm chỗ_trống cho chiếc ô_tô.",
+      "anticipateVi": "Đỗ xe ở đâu | cho /yên_tâm/?",
+      "pos": "noun",
+      "ipa": "juchajang",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에 차를 세웠어요.",
+          "vi": "Tôi đã đỗ ô_tô ở bãi_đỗ_xe."
+        }
+      ],
+      "chars": 3,
+      "initial": "주",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "駐車場",
+        "hanViet": "trú xa trường"
+      }
+    },
+    {
+      "id": "oechul-d2330f",
+      "word": "외출",
+      "meaningVi": "đi=ra=ngoài",
+      "defVi": "Rời nhà đi dạo phố | hay /mua_sắm/ rồi về.",
+      "leadVi": "Mẹ thay áo, | chải đầu, cầm /chìa_khóa/ bước ra cửa.",
+      "anticipateVi": "Ô với /khẩu_trang/ | mang chưa?",
+      "pos": "noun",
+      "ipa": "oechul",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "엄마가 _____을 준비해요.",
+          "vi": "Mẹ đang chuẩn_bị ra=ngoài."
+        }
+      ],
+      "chars": 2,
+      "initial": "외",
+      "grammar": {
+        "hanja": "外出",
+        "hanViet": "ngoại xuất"
+      }
+    },
+    {
+      "id": "jeongwon-32496b",
+      "word": "정원",
+      "meaningVi": "khu=vườn",
+      "defVi": "Mảnh đất quanh nhà | trồng /cây_cảnh/ và hoa cho đẹp.",
+      "leadVi": "Sáng sớm, | bà ra cắt tỉa từng bụi /hoa_hồng/.",
+      "anticipateVi": "Vườn nhà | hoa nở /rực_rỡ/!",
+      "pos": "noun",
+      "ipa": "jeongwon",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "집 앞에 _____이 있어요.",
+          "vi": "Có một khu=vườn trước nhà."
+        }
+      ],
+      "chars": 2,
+      "initial": "정",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "庭園",
+        "hanViet": "đình viên"
+      }
+    },
+    {
+      "id": "chodaehada-56f607",
+      "word": "초대하다",
+      "meaningVi": "mời",
+      "defVi": "Rủ bạn_bè | đến /tham_dự/ bữa tiệc của mình.",
+      "leadVi": "Gửi tấm thiệp đẹp | để bạn_bè đến /sinh_nhật/ mình.",
+      "anticipateVi": "Tiệc tối nay | /chào_đón/ ai đây?",
+      "pos": "verb",
+      "ipa": "chodaehada",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "생일에 친구들을 _____.",
+          "vi": "Tôi mời bạn_bè đến dự sinh_nhật.",
+          "fill": "초대해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "초",
+      "grammar": {
+        "hanja": "招待-",
+        "hanViet": "chiêu đãi",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "초대해요",
+            "반말": "초대해",
+            "합쇼체": "초대합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "yeonseupada-16623f",
+      "word": "연습하다",
+      "meaningVi": "luyện_tập",
+      "defVi": "Làm đi làm lại nhiều lần | cho đến khi /thành_thạo/.",
+      "leadVi": "Ngày nào em cũng /kiên_trì/ | đàn đúng một bản nhạc.",
+      "anticipateVi": "Đã /chăm_chỉ/ hôm_nay chưa?",
+      "pos": "verb",
+      "ipa": "yeonseupada [연스파다]",
+      "topic": "study",
+      "topics": [
+        "study",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 매일 노래를 _____.",
+          "vi": "Ngày nào tôi cũng tập hát.",
+          "fill": "연습해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "연",
+      "grammar": {
+        "hanja": "練習-",
+        "hanViet": "luyện tập",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "연습해요",
+            "반말": "연습해",
+            "합쇼체": "연습합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "pyeolli-40743d",
+      "word": "편리",
+      "meaningVi": "sự=tiện_lợi",
+      "defVi": "Khi mọi việc | trở nên /dễ_dàng/, đỡ tốn công.",
+      "leadVi": "Cửa_hàng mở suốt đêm, | mua gì cũng /nhanh_chóng/.",
+      "anticipateVi": "Bấm một nút | là /xong_xuôi/!",
+      "pos": "noun",
+      "ipa": "pyeolli [펼리]",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이 가게는 손님의 _____를 생각해요.",
+          "vi": "Cửa_hàng này luôn nghĩ đến sự=tiện_lợi của khách."
+        }
+      ],
+      "chars": 2,
+      "initial": "편",
+      "grammar": {
+        "hanja": "便利",
+        "hanViet": "tiện lợi"
+      }
+    },
+    {
+      "id": "jusa-f2db5c",
+      "word": "주사",
+      "meaningVi": "mũi=tiêm",
+      "defVi": "Dùng /kim_tiêm/ | đưa thuốc vào cơ_thể người_bệnh.",
+      "leadVi": "Cô /y_tá/ dặn: | hít sâu, chỉ đau như kiến cắn.",
+      "anticipateVi": "Đừng sợ, | /can_đảm/ lên nào!",
+      "pos": "noun",
+      "ipa": "jusa",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "병원에서 _____를 맞았어요.",
+          "vi": "Tôi đã tiêm ở bệnh_viện."
+        }
+      ],
+      "chars": 2,
+      "initial": "주",
+      "grammar": {
+        "counter": "대",
+        "hanja": "注射",
+        "hanViet": "chú xạ"
+      }
+    },
+    {
+      "id": "geonneopyeon-5a2b19",
+      "word": "건너편",
+      "meaningVi": "phía=đối_diện",
+      "defVi": "Chỗ nằm ở phía /đối_diện/, | bên kia con đường.",
+      "leadVi": "Muốn tới tiệm bánh, | phải băng qua /lòng_đường/.",
+      "anticipateVi": "Băng qua đường | /cẩn_thận/ nhé!",
+      "pos": "noun",
+      "ipa": "geonneopyeon",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "길 _____으로 가요.",
+          "vi": "Tôi sang phía bên kia đường."
+        }
+      ],
+      "chars": 3,
+      "initial": "건",
+      "grammar": {
+        "hanja": "-便",
+        "hanViet": "tiện"
+      }
+    },
+    {
+      "id": "yeonmal-545572",
+      "word": "연말",
+      "meaningVi": "cuối=năm",
+      "defVi": "Những tuần cuối | khi năm cũ sắp /kết_thúc/.",
+      "leadVi": "Phố xá /sáng_rực/ đèn, | công_ty vội tổng_kết.",
+      "anticipateVi": "Năm hết, | lịch /mỏng_manh/ quá!",
+      "pos": "noun",
+      "ipa": "yeonmal",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____이 되면 바빠요.",
+          "vi": "Cứ đến cuối=năm là bận."
+        }
+      ],
+      "chars": 2,
+      "initial": "연",
+      "grammar": {
+        "hanja": "年末",
+        "hanViet": "niên mạt"
+      }
+    },
+    {
+      "id": "dansun-63c652",
+      "word": "단순",
+      "meaningVi": "đơn_giản",
+      "defVi": "Không /phức_tạp/, | chỉ gồm vài bước dễ hiểu.",
+      "leadVi": "Một màu trắng, | không hoa_văn, nhìn rất /gọn_gàng/.",
+      "anticipateVi": "Đừng /rắc_rối/ thế chứ!",
+      "pos": "noun",
+      "ipa": "dansun",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "그건 _____ 실수예요.",
+          "vi": "Đó chỉ là lỗi đơn_giản."
+        }
+      ],
+      "chars": 2,
+      "initial": "단",
+      "grammar": {
+        "hanja": "單純",
+        "hanViet": "đơn thuần"
+      }
+    },
+    {
+      "id": "bareum-12cd6f",
+      "word": "발음",
+      "meaningVi": "phát_âm",
+      "defVi": "Cách đọc /âm_thanh/ của từ | khi nói thành tiếng.",
+      "leadVi": "Đọc chuẩn hay sai, | người=nghe /lập_tức/ nhận ra.",
+      "anticipateVi": "Giọng đọc | /rõ_ràng/ chưa?",
+      "pos": "noun",
+      "ipa": "bareum",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "선생님의 _____이 좋아요.",
+          "vi": "Phát_âm của thầy rất chuẩn."
+        }
+      ],
+      "chars": 2,
+      "initial": "발",
+      "grammar": {
+        "hanja": "發音",
+        "hanViet": "phát âm"
+      }
+    },
+    {
+      "id": "yemae-3987d0",
+      "word": "예매",
+      "meaningVi": "đặt=vé trước",
+      "defVi": "Mua vé từ sớm | để khỏi /xếp_hàng/ trước giờ chiếu.",
+      "leadVi": "Phim chưa chiếu, | cô ấy đã /háo_hức/ chọn ghế.",
+      "anticipateVi": "Khỏi xếp_hàng, | bấm /điện_thoại/ thôi!",
+      "pos": "noun",
+      "ipa": "yemae",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "영화 _____를 했어요.",
+          "vi": "Tôi đã đặt vé xem=phim trước."
+        }
+      ],
+      "chars": 2,
+      "initial": "예",
+      "grammar": {
+        "hanja": "豫買",
+        "hanViet": "dự mãi"
+      }
+    },
+    {
+      "id": "dubu-5209ef",
+      "word": "두부",
+      "meaningVi": "đậu_phụ",
+      "defVi": "Món làm từ /đậu_nành/ | xay nhuyễn, trắng và mềm.",
+      "leadVi": "Rán vàng, | rưới chút /xì_dầu/ là đủ bữa.",
+      "anticipateVi": "Trắng mềm | /mát_lạnh/ đây!",
+      "pos": "noun",
+      "ipa": "dubu",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저녁에 _____를 먹어요.",
+          "vi": "Buổi_tối tôi ăn đậu_phụ."
+        }
+      ],
+      "chars": 2,
+      "initial": "두",
+      "grammar": {
+        "counter": "모",
+        "hanja": "豆腐",
+        "hanViet": "đậu hủ"
+      }
+    },
+    {
+      "id": "chuljang-ecfd8c",
+      "word": "출장",
+      "meaningVi": "chuyến=công_tác",
+      "defVi": "Chuyến đi xa vì /công_việc/ | do công_ty giao.",
+      "leadVi": "Xách va_li ra /sân_bay/, | họp với đối_tác.",
+      "anticipateVi": "Sếp lại giao | /nhiệm_vụ/ xa?",
+      "pos": "noun",
+      "ipa": "chuljang [출짱]",
+      "topic": "work",
+      "topics": [
+        "work",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아빠가 _____을 가요.",
+          "vi": "Bố tôi đi công_tác."
+        }
+      ],
+      "chars": 2,
+      "initial": "출",
+      "grammar": {
+        "hanja": "出張",
+        "hanViet": "xuất trương"
+      }
+    },
+    {
+      "id": "toegeun-0a6333",
+      "word": "퇴근",
+      "meaningVi": "tan=làm",
+      "defVi": "Rời /văn_phòng/ | về nhà sau giờ làm_việc.",
+      "leadVi": "Năm giờ chiều, | ai nấy /thu_dọn/ bàn rồi về.",
+      "anticipateVi": "Về nhà | /nghỉ_ngơi/ thôi!",
+      "pos": "noun",
+      "ipa": "toegeun",
+      "topic": "work",
+      "topics": [
+        "work",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 후에 운동해요.",
+          "vi": "Sau khi tan=làm tôi tập thể_dục."
+        }
+      ],
+      "chars": 2,
+      "initial": "퇴",
+      "grammar": {
+        "hanja": "退勤",
+        "hanViet": "thoái cần"
+      }
+    },
+    {
+      "id": "hwalbalhi-f64677",
+      "word": "활발히",
+      "meaningVi": "sôi_nổi",
+      "defVi": "Làm việc | với đầy /năng_lượng/ và hăng_hái.",
+      "leadVi": "Giờ ra chơi, | lũ trẻ chạy nhảy /tíu_tít/ khắp sân.",
+      "anticipateVi": "Bọn trẻ | /nhộn_nhịp/ quá!",
+      "pos": "adv",
+      "ipa": "hwalbalhi",
+      "topic": "character",
+      "topics": [
+        "character"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아이들이 _____ 놀아요.",
+          "vi": "Bọn trẻ chơi đùa sôi_nổi."
+        }
+      ],
+      "chars": 3,
+      "initial": "활",
+      "grammar": {
+        "hanja": "活潑-",
+        "hanViet": "hoạt bát"
+      }
+    },
+    {
+      "id": "mogyoktang-25a439",
+      "word": "목욕탕",
+      "meaningVi": "nhà_tắm công_cộng",
+      "defVi": "Nơi có bồn nước nóng | để mọi người đến /tắm_rửa/.",
+      "leadVi": "Hơi nước /mù_mịt/, | bồn nóng xua tan mệt_mỏi.",
+      "anticipateVi": "Khăn với /xà_phòng/ | đâu rồi?",
+      "pos": "noun",
+      "ipa": "mogyoktang",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에서 씻었어요.",
+          "vi": "Tôi đã tắm ở nhà_tắm công_cộng."
+        }
+      ],
+      "chars": 3,
+      "initial": "목",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "沐浴湯",
+        "hanViet": "mộc dục thang"
+      }
+    },
+    {
+      "id": "seong-33a654",
+      "word": "성",
+      "meaningVi": "họ",
+      "defVi": "Phần đứng trước tên, | cả /gia_đình/ thường dùng chung.",
+      "leadVi": "Anh_em ruột | thường /giống_nhau/ ở phần này của tên.",
+      "anticipateVi": "Bố con | /trùng_khớp/ đây!",
+      "pos": "noun",
+      "ipa": "seong",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____이 뭐예요?",
+          "vi": "Họ của bạn là gì?"
+        }
+      ],
+      "chars": 1,
+      "initial": "성",
+      "grammar": {
+        "hanja": "姓",
+        "hanViet": "tính"
+      }
+    },
+    {
+      "id": "siksahada-ef95fb",
+      "word": "식사하다",
+      "meaningVi": "dùng=bữa",
+      "defVi": "Ngồi vào bàn | ăn /bữa_chính/ như trưa hay tối.",
+      "leadVi": "Mười hai giờ trưa, | cả nhà quây_quần bên /bữa_trưa/.",
+      "anticipateVi": "Cơm nóng | /thơm_phức/ rồi!",
+      "pos": "verb",
+      "ipa": "siksahada [식싸하다]",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "가족과 함께 _____.",
+          "vi": "Tôi dùng=bữa cùng gia_đình.",
+          "fill": "식사해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "식",
+      "grammar": {
+        "hanja": "食事-",
+        "hanViet": "thực sự",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "식사해요",
+            "반말": "식사해",
+            "합쇼체": "식사합니다"
+          }
+        },
+        "tipVi": "lịch_sự, trang_trọng hơn nói ăn=cơm"
+      }
+    },
+    {
+      "id": "maedal-b74fc7",
+      "word": "매달",
+      "meaningVi": "hàng=tháng",
+      "defVi": "Cứ mỗi tháng lặp lại | một lần, /đều_đặn/ cả năm.",
+      "leadVi": "Ngày mười lăm nào | cô cũng /tiết_kiệm/ một khoản.",
+      "anticipateVi": "Lịch hẹn | /định_kỳ/ đây!",
+      "pos": "adv",
+      "ipa": "maedal",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구와 _____ 만나요.",
+          "vi": "Tháng nào tôi cũng gặp bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "매",
+      "grammar": {
+        "hanja": "每-",
+        "hanViet": "mỗi"
+      }
+    },
+    {
+      "id": "sinbunjeung-61b3d3",
+      "word": "신분증",
+      "meaningVi": "giấy_tờ tùy_thân",
+      "defVi": "Tấm thẻ có ảnh | để /chứng_minh/ mình là ai.",
+      "leadVi": "Mở tài_khoản /ngân_hàng/, | nhân_viên xin xem trước.",
+      "anticipateVi": "Ví mang theo | /đầy_đủ/ chưa?",
+      "pos": "noun",
+      "ipa": "sinbunjeung [신분쯩]",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "은행에서 _____을 보여 줬어요.",
+          "vi": "Tôi đã đưa giấy_tờ tùy_thân ở ngân_hàng."
+        }
+      ],
+      "chars": 3,
+      "initial": "신",
+      "grammar": {
+        "counter": "장",
+        "hanja": "身分證",
+        "hanViet": "thân phận chứng"
+      }
+    },
+    {
+      "id": "yeohaenghada-c999be",
+      "word": "여행하다",
+      "meaningVi": "du_lịch",
+      "defVi": "Đi đến /vùng_đất/ khác | để ngắm cảnh, vui_chơi.",
+      "leadVi": "Ba_lô trên vai, | máy_ảnh trong tay, /khởi_hành/!",
+      "anticipateVi": "Vé xe trong tay, | /lên_đường/ chứ?",
+      "pos": "verb",
+      "ipa": "yeohaenghada",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "여름에 가족과 바닷가를 _____.",
+          "vi": "Mùa hè tôi đi du_lịch biển cùng gia_đình.",
+          "fill": "여행해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "여",
+      "grammar": {
+        "hanja": "旅行-",
+        "hanViet": "lữ hành",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "여행해요",
+            "반말": "여행해",
+            "합쇼체": "여행합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "jeongsineopsi-11e525",
+      "word": "정신없이",
+      "meaningVi": "tất_bật",
+      "defVi": "Làm_việc /vội_vàng/ liên_tục | đến mức chẳng kịp thở.",
+      "leadVi": "Cuối tháng, | việc dồn /chồng_chất/, | ăn cơm cũng vội.",
+      "anticipateVi": "Việc ập tới | /dồn_dập/ quá!",
+      "pos": "adv",
+      "ipa": "jeongsineopsi [정시넙씨]",
+      "topic": "work",
+      "topics": [
+        "work",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "오늘은 아침부터 _____ 일했어요.",
+          "vi": "Hôm_nay tôi làm_việc tất_bật từ sáng."
+        }
+      ],
+      "chars": 4,
+      "initial": "정",
+      "grammar": {
+        "hanja": "精神-",
+        "hanViet": "tinh thần"
+      }
+    },
+    {
+      "id": "jungyo-02579b",
+      "word": "중요",
+      "meaningVi": "sự=quan_trọng",
+      "defVi": "Mức /cần_thiết/ cao, | tuyệt_đối không_thể bỏ_qua.",
+      "leadVi": "Tập hồ_sơ này | sếp dặn /cất_giữ/ thật cẩn_thận.",
+      "anticipateVi": "/Ưu_tiên/ số một đấy nhé!",
+      "pos": "noun",
+      "ipa": "jungyo",
+      "topic": "work",
+      "topics": [
+        "work",
+        "thinking"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 서류는 가방에 넣으세요.",
+          "vi": "Hãy cất giấy_tờ quan_trọng vào cặp nhé."
+        }
+      ],
+      "chars": 2,
+      "initial": "중",
+      "grammar": {
+        "hanja": "重要",
+        "hanViet": "trọng yếu"
+      }
+    },
+    {
+      "id": "chuka-abf8b0",
+      "word": "축하",
+      "meaningVi": "sự=chúc_mừng",
+      "defVi": "Bày_tỏ niềm=vui | khi người=khác gặp /may_mắn/.",
+      "leadVi": "Nến thổi xong, | cả=nhà vỗ=tay /rộn_ràng/.",
+      "anticipateVi": "/Hoan_hô/, | pháo giấy bay rồi!",
+      "pos": "noun",
+      "ipa": "chuka [추카]",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "생일 _____ 파티에 와 주세요.",
+          "vi": "Hãy đến dự tiệc mừng sinh_nhật nhé."
+        }
+      ],
+      "chars": 2,
+      "initial": "축",
+      "grammar": {
+        "hanja": "祝賀",
+        "hanViet": "chúc hạ"
+      }
+    },
+    {
+      "id": "chwiso-465b64",
+      "word": "취소",
+      "meaningVi": "sự=hủy_bỏ",
+      "defVi": "Bỏ /kế_hoạch/ đã định, | báo không đến nữa.",
+      "leadVi": "Bận /đột_xuất/, | bàn đã đặt | đành gọi báo thôi.",
+      "anticipateVi": "Hẹn rồi lại /thất_hứa/ à?",
+      "pos": "noun",
+      "ipa": "chwiso",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "예약 _____는 내일까지 할 수 있어요.",
+          "vi": "Bạn có_thể hủy đặt chỗ đến ngày_mai."
+        }
+      ],
+      "chars": 2,
+      "initial": "취",
+      "grammar": {
+        "hanja": "取消",
+        "hanViet": "thủ tiêu"
+      }
+    },
+    {
+      "id": "gochujang-90e2f6",
+      "word": "고추장",
+      "meaningVi": "tương_ớt",
+      "defVi": "Loại tương đỏ /sền_sệt/ | làm từ ớt bột lên_men.",
+      "leadVi": "Thêm một thìa | là bát cơm trộn /đỏ_au/ cay_xè.",
+      "anticipateVi": "Canh hầm | còn thiếu /gia_vị/ đỏ!",
+      "pos": "noun",
+      "ipa": "gochujang [고추짱]",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "찌개에 _____을 넣어요.",
+          "vi": "Tôi cho tương_ớt vào nồi canh hầm."
+        }
+      ],
+      "chars": 3,
+      "initial": "고",
+      "grammar": {
+        "hanja": "-醬",
+        "hanViet": "tương"
+      }
+    },
+    {
+      "id": "banji-aebfc2",
+      "word": "반지",
+      "meaningVi": "nhẫn",
+      "defVi": "Vòng nhỏ bằng /kim_loại/ | đeo vừa khít ngón_tay.",
+      "leadVi": "Hộp nhung mở ra, | bên trong /lấp_lánh/ ánh vàng.",
+      "anticipateVi": "Ngón_áp_út | chờ /hạnh_phúc/ đây!",
+      "pos": "noun",
+      "ipa": "banji",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "손가락에 _____를 꼈어요.",
+          "vi": "Tôi đeo nhẫn vào ngón_tay."
+        }
+      ],
+      "chars": 2,
+      "initial": "반",
+      "grammar": {
+        "counter": "개",
+        "hanja": "半指",
+        "hanViet": "bán chỉ"
+      }
+    },
+    {
+      "id": "sikcho-bfd41b",
+      "word": "식초",
+      "meaningVi": "giấm",
+      "defVi": "Chất_lỏng /chua_loét/ | dùng nêm món nộm rau.",
+      "leadVi": "Nhỏ vài giọt | là món gỏi /đậm_đà/ hẳn lên.",
+      "anticipateVi": "Ôi /chua_lè/ cả lưỡi!",
+      "pos": "noun",
+      "ipa": "sikcho",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "음식에 _____를 조금 넣어요.",
+          "vi": "Tôi cho một_chút giấm vào món_ăn."
+        }
+      ],
+      "chars": 2,
+      "initial": "식",
+      "grammar": {
+        "hanja": "食醋",
+        "hanViet": "thực thố"
+      }
+    },
+    {
+      "id": "sucheop-6dd726",
+      "word": "수첩",
+      "meaningVi": "sổ_tay",
+      "defVi": "Cuốn sổ nhỏ | để /ghi_chép/ lịch hẹn mỗi=ngày.",
+      "leadVi": "Lật vài trang | là nhớ ngay /công_việc/ tuần này.",
+      "anticipateVi": "/Bút_bi/ đâu, | ghi lại kẻo quên!",
+      "pos": "noun",
+      "ipa": "sucheop",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "약속 시간을 _____에 써요.",
+          "vi": "Tôi ghi giờ hẹn vào sổ_tay."
+        }
+      ],
+      "chars": 2,
+      "initial": "수",
+      "grammar": {
+        "counter": "권",
+        "hanja": "手帖",
+        "hanViet": "thủ thiếp"
+      }
+    },
+    {
+      "id": "chulgu-a61fbe",
+      "word": "출구",
+      "meaningVi": "lối_ra",
+      "defVi": "Cửa dẫn ra ngoài | để khách /rời_khỏi/ tòa_nhà.",
+      "leadVi": "Phim vừa hết, | khán_giả /lũ_lượt/ theo đèn xanh.",
+      "anticipateVi": "Tìm /biển_báo/ màu xanh lá!",
+      "pos": "noun",
+      "ipa": "chulgu",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이쪽 _____로 나가세요.",
+          "vi": "Xin mời đi ra bằng lối_ra phía này."
+        }
+      ],
+      "chars": 2,
+      "initial": "출",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "出口",
+        "hanViet": "xuất khẩu"
+      }
+    },
+    {
+      "id": "hanggong-063401",
+      "word": "항공",
+      "meaningVi": "hàng_không",
+      "defVi": "Ngành vận_chuyển khách | bằng /máy_bay/ trên bầu_trời.",
+      "leadVi": "Cơ_trưởng thông_báo | /cất_cánh/ sau ít phút.",
+      "anticipateVi": "/Phi_công/ đã vào buồng lái!",
+      "pos": "noun",
+      "ipa": "hanggong",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "형은 _____ 회사에서 일해요.",
+          "vi": "Anh_trai tôi làm ở công_ty hàng_không."
+        }
+      ],
+      "chars": 2,
+      "initial": "항",
+      "grammar": {
+        "hanja": "航空",
+        "hanViet": "hàng không"
+      }
+    },
+    {
+      "id": "sinhodeung-f6008e",
+      "word": "신호등",
+      "meaningVi": "đèn giao_thông",
+      "defVi": "Cột đèn xanh đỏ vàng | ở /giao_lộ/ điều_khiển xe.",
+      "leadVi": "Ba màu thay nhau bật sáng | giữa dòng xe /tấp_nập/.",
+      "anticipateVi": "Dừng lại, | đèn đỏ đang /nhấp_nháy/!",
+      "pos": "noun",
+      "ipa": "sinhodeung",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____이 바뀌면 길을 건너요.",
+          "vi": "Đèn giao_thông đổi màu thì tôi sang đường."
+        }
+      ],
+      "chars": 3,
+      "initial": "신",
+      "grammar": {
+        "counter": "개",
+        "hanja": "信號燈",
+        "hanViet": "tín hiệu đăng"
+      }
+    },
+    {
+      "id": "sinhonnyeohaeng-6cacc8",
+      "word": "신혼여행",
+      "meaningVi": "tuần trăng_mật",
+      "defVi": "Chuyến đi chơi | của đôi /vợ_chồng/ vừa cưới xong.",
+      "leadVi": "Cưới xong, | đôi trẻ xách va_li | ra /bờ_biển/.",
+      "anticipateVi": "Cô_dâu chú_rể | /lên_đường/ rồi!",
+      "pos": "noun",
+      "ipa": "sinhonnyeohaeng [신혼녀행]",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "바다로 _____을 갔어요.",
+          "vi": "Chúng_tôi đi tuần trăng_mật ở biển."
+        }
+      ],
+      "chars": 4,
+      "initial": "신",
+      "grammar": {
+        "hanja": "新婚旅行",
+        "hanViet": "tân hôn lữ hành"
+      }
+    },
+    {
+      "id": "ibwon-fd53d5",
+      "word": "입원",
+      "meaningVi": "sự=nhập_viện",
+      "defVi": "Vào ở lại /bệnh_viện/ | vài ngày để bác_sĩ chữa.",
+      "leadVi": "Mẹ mang cháo, | ngày nào cũng vào /thăm_nom/.",
+      "anticipateVi": "Mau /bình_phục/ nhé!",
+      "pos": "noun",
+      "ipa": "ibwon",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "감기 때문에 이틀 동안 _____을 했어요.",
+          "vi": "Vì cảm mà tôi phải nằm_viện hai ngày."
+        }
+      ],
+      "chars": 2,
+      "initial": "입",
+      "grammar": {
+        "hanja": "入院",
+        "hanViet": "nhập viện"
+      }
+    },
+    {
+      "id": "chinjeol-c935cf",
+      "word": "친절",
+      "meaningVi": "sự=tử_tế",
+      "defVi": "Thái_độ /ân_cần/, | dịu_dàng giúp người=khác.",
+      "leadVi": "Khách lạc_đường, | cô bán_hàng /tận_tình/ chỉ lối.",
+      "anticipateVi": "Thật /chu_đáo/ quá đi!",
+      "pos": "noun",
+      "ipa": "chinjeol",
+      "topic": "character",
+      "topics": [
+        "character",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "직원의 _____이 고마웠어요.",
+          "vi": "Tôi biết_ơn sự=tử_tế của nhân_viên."
+        }
+      ],
+      "chars": 2,
+      "initial": "친",
+      "grammar": {
+        "hanja": "親切",
+        "hanViet": "thân thiết"
+      }
+    },
+    {
+      "id": "chimsil-2577ba",
+      "word": "침실",
+      "meaningVi": "phòng_ngủ",
+      "defVi": "Căn phòng kê giường | để /nghỉ_ngơi/ mỗi=tối.",
+      "leadVi": "Kéo rèm, | tắt đèn, | ôm chăn /ngon_giấc/ đến sáng.",
+      "anticipateVi": "Chăn ấm | đang /chờ_đợi/ bạn!",
+      "pos": "noun",
+      "ipa": "chimsil",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아이가 _____에서 자요.",
+          "vi": "Con tôi đang ngủ trong phòng_ngủ."
+        }
+      ],
+      "chars": 2,
+      "initial": "침",
+      "grammar": {
+        "counter": "개",
+        "hanja": "寢室",
+        "hanViet": "tẩm thất"
+      }
+    },
+    {
+      "id": "dutong-7cd187",
+      "word": "두통",
+      "meaningVi": "đau_đầu",
+      "defVi": "Cảm_giác đau /nhức_nhối/ | ở vùng trán hay thái_dương.",
+      "leadVi": "Thức khuya ôn bài, | sáng ra /thái_dương/ giật_giật.",
+      "anticipateVi": "Trời ơi, /choáng_váng/ quá!",
+      "pos": "noun",
+      "ipa": "dutong",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "오늘은 _____이 심해요.",
+          "vi": "Hôm_nay tôi đau_đầu dữ_dội."
+        }
+      ],
+      "chars": 2,
+      "initial": "두",
+      "grammar": {
+        "hanja": "頭痛",
+        "hanViet": "đầu thống"
+      }
+    },
+    {
+      "id": "mugunghwa-f1cf34",
+      "word": "무궁화",
+      "meaningVi": "hoa mộc_cận",
+      "defVi": "Loài hoa tím hồng | nở /liên_tục/ suốt mùa_hè.",
+      "leadVi": "Sáng nở chiều khép, | hôm sau lại /rực_rỡ/ bông khác.",
+      "anticipateVi": "Bông nào | /bền_bỉ/ thế nhỉ?",
+      "pos": "noun",
+      "ipa": "mugunghwa",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "여름에 _____ 꽃이 피어요.",
+          "vi": "Mùa_hè hoa mộc_cận nở rộ."
+        }
+      ],
+      "chars": 3,
+      "initial": "무",
+      "grammar": {
+        "counter": "송이",
+        "hanja": "無窮花",
+        "hanViet": "vô cùng hoa"
+      }
+    },
+    {
+      "id": "gayo-724127",
+      "word": "가요",
+      "meaningVi": "nhạc đại_chúng",
+      "defVi": "Bài_hát /thịnh_hành/ | ai cũng thuộc và ngân_nga theo.",
+      "leadVi": "Bật đài lên | là giai_điệu /quen_thuộc/ vang khắp phố.",
+      "anticipateVi": "Hát /song_ca/ một bài nào!",
+      "pos": "noun",
+      "ipa": "gayo",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "general"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 옛날 _____를 좋아해요.",
+          "vi": "Tôi thích nhạc đại_chúng ngày_xưa."
+        }
+      ],
+      "chars": 2,
+      "initial": "가",
+      "grammar": {
+        "counter": "곡",
+        "hanja": "歌謠",
+        "hanViet": "ca dao"
+      }
+    },
+    {
+      "id": "gongjja-a2ba5c",
+      "word": "공짜",
+      "meaningVi": "miễn_phí",
+      "defVi": "Món đồ được tặng, | không cần /thanh_toán/ chút=nào.",
+      "leadVi": "Mua một tặng một, | khách /hớn_hở/ xếp_hàng dài.",
+      "anticipateVi": "Không tốn xu nào, | /tuyệt_vời/!",
+      "pos": "noun",
+      "ipa": "gongjja",
+      "topic": "money",
+      "topics": [
+        "money",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이 빵은 _____로 받았어요.",
+          "vi": "Bánh_mì này tôi được cho miễn_phí."
+        }
+      ],
+      "chars": 2,
+      "initial": "공",
+      "grammar": {
+        "hanja": "空-",
+        "hanViet": "không"
+      }
+    },
+    {
+      "id": "yeohaengsa-2c4cb7",
+      "word": "여행사",
+      "meaningVi": "công_ty du_lịch",
+      "defVi": "Chỗ đặt vé, | khách_sạn và /lịch_trình/ cho chuyến đi.",
+      "leadVi": "Chỉ cần chọn gói, | mọi khâu đã được /lo_liệu/.",
+      "anticipateVi": "Đi chơi /trọn_gói/ nhé!",
+      "pos": "noun",
+      "ipa": "yeohaengsa",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "언니는 _____에서 일해요.",
+          "vi": "Chị tôi làm ở công_ty du_lịch."
+        }
+      ],
+      "chars": 3,
+      "initial": "여",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "旅行社",
+        "hanViet": "lữ hành xã"
+      }
+    },
+    {
+      "id": "hangahada-9b3476",
+      "word": "한가하다",
+      "meaningVi": "rảnh_rỗi",
+      "defVi": "Không bận việc, | còn nhiều /thời_gian/ để thong_thả.",
+      "leadVi": "Chiều chủ_nhật, | ngồi /nhâm_nhi/ trà ngắm mây trôi.",
+      "anticipateVi": "Chẳng vội đâu, | /thảnh_thơi/ mà!",
+      "pos": "adj",
+      "ipa": "hangahada",
+      "topic": "time",
+      "topics": [
+        "time",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에는 좀 _____.",
+          "vi": "Cuối_tuần thì tôi hơi rảnh_rỗi.",
+          "fill": "한가해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "한",
+      "grammar": {
+        "hanja": "閑暇-",
+        "hanViet": "nhàn hạ",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "한가해요",
+            "반말": "한가해",
+            "합쇼체": "한가합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "yorisa-79fbcb",
+      "word": "요리사",
+      "meaningVi": "đầu_bếp",
+      "defVi": "Thợ nấu_ăn /chuyên_nghiệp/ | làm trong bếp nhà_hàng.",
+      "leadVi": "Mũ trắng cao, | tay đảo chảo /thoăn_thoắt/ trên bếp.",
+      "anticipateVi": "Ai /trổ_tài/ món này vậy?",
+      "pos": "noun",
+      "ipa": "yorisa",
+      "topic": "work",
+      "topics": [
+        "work",
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "형은 식당 _____예요.",
+          "vi": "Anh_trai tôi là đầu_bếp nhà_hàng."
+        }
+      ],
+      "chars": 3,
+      "initial": "요",
+      "grammar": {
+        "counter": "명",
+        "hanja": "料理師",
+        "hanViet": "liệu lý sư"
+      }
+    },
+    {
+      "id": "siganpyo-81fbf4",
+      "word": "시간표",
+      "meaningVi": "thời_khóa_biểu",
+      "defVi": "Bảng chia giờ từng /môn_học/ | trong một tuần.",
+      "leadVi": "Tiết đầu toán, | tiết hai văn, | /lần_lượt/ suốt tuần.",
+      "anticipateVi": "Mai học gì, | /tra_cứu/ đã!",
+      "pos": "noun",
+      "ipa": "siganpyo",
+      "topic": "study",
+      "topics": [
+        "study",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "새 학기 _____를 받았어요.",
+          "vi": "Tôi đã nhận thời_khóa_biểu học_kỳ mới."
+        }
+      ],
+      "chars": 3,
+      "initial": "시",
+      "grammar": {
+        "counter": "장",
+        "hanja": "時間表",
+        "hanViet": "thời gian biểu"
+      }
+    },
+    {
+      "id": "hangungmal-b77a2d",
+      "word": "한국말",
+      "meaningVi": "tiếng=Hàn",
+      "defVi": "Thứ=tiếng có đuôi câu /kính_trọng/ | dành cho người_lớn.",
+      "leadVi": "Xem phim | mà không cần đọc /phụ_đề/ bên dưới.",
+      "anticipateVi": "Thử /bắt_chuyện/ | bằng câu chào!",
+      "pos": "noun",
+      "ipa": "hangungmal [한궁말]",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 친구와 _____로 말해요.",
+          "vi": "Tôi nói_chuyện với bạn bằng tiếng=Hàn."
+        }
+      ],
+      "chars": 3,
+      "initial": "한",
+      "grammar": {
+        "hanja": "韓國-",
+        "hanViet": "hàn quốc"
+      }
+    },
+    {
+      "id": "maeju-a6c84c",
+      "word": "매주",
+      "meaningVi": "mỗi=tuần",
+      "defVi": "Lặp_lại /đều_đặn/ | vào cùng một ngày của mọi=tuần.",
+      "leadVi": "Thành /thói_quen/, | chủ_nhật nào cả=nhà cũng đi bơi.",
+      "anticipateVi": "Lịch /cố_định/ rồi nhé!",
+      "pos": "adv",
+      "ipa": "maeju",
+      "topic": "time",
+      "topics": [
+        "time",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "우리는 _____ 토요일에 만나요.",
+          "vi": "Chúng_tôi gặp nhau | vào thứ_bảy mỗi=tuần."
+        }
+      ],
+      "chars": 2,
+      "initial": "매",
+      "grammar": {
+        "hanja": "每週",
+        "hanViet": "mỗi chu"
+      }
+    },
+    {
+      "id": "chaekjang-bbd70b",
+      "word": "책장",
+      "meaningVi": "tủ_sách",
+      "defVi": "Món đồ có nhiều ngăn | để xếp /sách_vở/ gọn_gàng.",
+      "leadVi": "Truyện_tranh | xếp /ngay_ngắn/ từng tầng sát bức tường.",
+      "anticipateVi": "Sách nhiều quá, | /chật_chội/ rồi!",
+      "pos": "noun",
+      "ipa": "chaekjang [책짱]",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에 책이 많아요.",
+          "vi": "Trên tủ_sách có nhiều=sách."
+        }
+      ],
+      "chars": 2,
+      "initial": "책",
+      "grammar": {
+        "counter": "개",
+        "hanja": "冊張",
+        "hanViet": "sách trương"
+      }
+    },
+    {
+      "id": "eumnyosu-783ad1",
+      "word": "음료수",
+      "meaningVi": "đồ_uống",
+      "defVi": "Thứ=nước /đóng_chai/ | như nước_ngọt, uống cho đỡ khát.",
+      "leadVi": "Trưa nắng, | mở /tủ_lạnh/ lấy chai nước mát uống.",
+      "anticipateVi": "Oi quá, | /giải_khát/ thôi!",
+      "pos": "noun",
+      "ipa": "eumnyosu [음뇨수]",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "가게에서 _____를 샀어요.",
+          "vi": "Tôi đã mua đồ_uống ở cửa_hàng."
+        }
+      ],
+      "chars": 3,
+      "initial": "음",
+      "grammar": {
+        "counter": "병",
+        "hanja": "飮料水",
+        "hanViet": "ẩm liệu thủy"
+      }
+    },
+    {
+      "id": "gwangwangji-685407",
+      "word": "관광지",
+      "meaningVi": "điểm=du_lịch",
+      "defVi": "Nơi=có /phong_cảnh/ đẹp, | khách đến tham_quan rất=đông.",
+      "leadVi": "Nghỉ hè, | cả=nhà /chụp_ảnh/ trên bãi_biển đông người.",
+      "anticipateVi": "Xếp đồ xong, | /lên_đường/ thôi!",
+      "pos": "noun",
+      "ipa": "gwangwangji",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "nature"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이 산은 유명한 _____예요.",
+          "vi": "Ngọn núi này | là điểm=du_lịch nổi_tiếng."
+        }
+      ],
+      "chars": 3,
+      "initial": "관",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "觀光地",
+        "hanViet": "quan quang địa"
+      }
+    },
+    {
+      "id": "baedal-93231b",
+      "word": "배달",
+      "meaningVi": "giao_hàng",
+      "defVi": "Mang /hàng_hóa/ | hay đồ_ăn tới tận tay khách.",
+      "leadVi": "Lười nấu, | bấm điện_thoại là cơm /nóng_hổi/ tới cửa.",
+      "anticipateVi": "Chuông kêu, | /đồ_ăn/ tới rồi!",
+      "pos": "noun",
+      "ipa": "baedal",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저녁에 음식 _____을 시켰어요.",
+          "vi": "Buổi_tối tôi đã gọi đồ_ăn | giao tới nhà."
+        }
+      ],
+      "chars": 2,
+      "initial": "배",
+      "grammar": {
+        "hanja": "配達",
+        "hanViet": "phối đạt"
+      }
+    },
+    {
+      "id": "yaksa-d3f251",
+      "word": "약사",
+      "meaningVi": "dược_sĩ",
+      "defVi": "Người=bán /thuốc_men/ | và chỉ cách=uống cho bệnh_nhân.",
+      "leadVi": "Đứng ở /nhà_thuốc/, | dặn khách uống sau bữa_ăn.",
+      "anticipateVi": "Bị /cảm_lạnh/, | hỏi ai đây?",
+      "pos": "noun",
+      "ipa": "yaksa [약싸]",
+      "topic": "work",
+      "topics": [
+        "work",
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____가 되고 싶어요.",
+          "vi": "Tôi muốn trở_thành dược_sĩ."
+        }
+      ],
+      "chars": 2,
+      "initial": "약",
+      "grammar": {
+        "counter": "명",
+        "hanja": "藥師",
+        "hanViet": "dược sư"
+      }
+    },
+    {
+      "id": "jeonhwagi-40f262",
+      "word": "전화기",
+      "meaningVi": "máy=điện_thoại",
+      "defVi": "Thiết_bị giúp người=ở xa | /trò_chuyện/ bằng giọng nói.",
+      "leadVi": "Bỗng reo vang, | bố vội nhấc /ống_nghe/ lên.",
+      "anticipateVi": "Ai /liên_lạc/ đấy nhỉ?",
+      "pos": "noun",
+      "ipa": "jeonhwagi",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "책상 위에 _____가 있어요.",
+          "vi": "Trên bàn | có điện_thoại."
+        }
+      ],
+      "chars": 3,
+      "initial": "전",
+      "grammar": {
+        "counter": "대",
+        "hanja": "電話機",
+        "hanViet": "điện thoại cơ"
+      }
+    },
+    {
+      "id": "gagu-5ac6d1",
+      "word": "가구",
+      "meaningVi": "đồ=nội_thất",
+      "defVi": "Bàn, ghế, tủ | giúp căn=phòng /tiện_nghi/ hơn.",
+      "leadVi": "Căn_hộ mới /trống_trơn/, | bố_mẹ đi chọn đồ gỗ.",
+      "anticipateVi": "Phòng /trống_trải/ quá nhỉ?",
+      "pos": "noun",
+      "ipa": "gagu",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "새 집에 _____를 샀어요.",
+          "vi": "Tôi đã mua đồ=nội_thất | cho căn_hộ mới."
+        }
+      ],
+      "chars": 2,
+      "initial": "가",
+      "grammar": {
+        "hanja": "家具",
+        "hanViet": "gia cụ"
+      }
+    },
+    {
+      "id": "gieongnada-ac3be9",
+      "word": "기억나다",
+      "meaningVi": "nhớ=ra",
+      "defVi": "Chuyện cũ | bỗng quay về trong /trí_nhớ/ của mình.",
+      "leadVi": "Nghe bài_hát cũ, | /kỷ_niệm/ tuổi_thơ ùa về.",
+      "anticipateVi": "Vỗ=trán | rồi /bừng_tỉnh/!",
+      "pos": "verb",
+      "ipa": "gieongnada [기엉나다]",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구 이름이 갑자기 _____.",
+          "vi": "Tôi chợt nhớ=ra | tên của bạn.",
+          "fill": "기억나요"
+        }
+      ],
+      "chars": 4,
+      "initial": "기",
+      "grammar": {
+        "hanja": "記憶-",
+        "hanViet": "ký ức",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "기억나요",
+            "반말": "기억나",
+            "합쇼체": "기억납니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "hwanjeon-52ff77",
+      "word": "환전",
+      "meaningVi": "đổi=tiền",
+      "defVi": "Đổi tiền đang có | sang /ngoại_tệ/ tại quầy ngân_hàng.",
+      "leadVi": "Quầy /giao_dịch/ | treo bảng giá tiền mới hôm_nay.",
+      "anticipateVi": "Tờ=tiền | màu /lạ_lẫm/ quá!",
+      "pos": "noun",
+      "ipa": "hwanjeon",
+      "topic": "money",
+      "topics": [
+        "money",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "은행에서 _____을 했어요.",
+          "vi": "Tôi đã đổi=tiền ở ngân_hàng."
+        }
+      ],
+      "chars": 2,
+      "initial": "환",
+      "grammar": {
+        "hanja": "換錢",
+        "hanViet": "hoán tiền"
+      }
+    },
+    {
+      "id": "yeopseo-81ee44",
+      "word": "엽서",
+      "meaningVi": "bưu_thiếp",
+      "defVi": "Tấm thiệp in /hình_ảnh/, | viết vài dòng rồi gửi đi.",
+      "leadVi": "Đi chơi xa, | dán /tem_thư/ gửi lời thăm về nhà.",
+      "anticipateVi": "/Hòm_thư/ có quà kìa!",
+      "pos": "noun",
+      "ipa": "yeopseo [엽써]",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구에게 _____를 보냈어요.",
+          "vi": "Tôi đã gửi bưu_thiếp cho bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "엽",
+      "grammar": {
+        "counter": "장",
+        "hanja": "葉書",
+        "hanViet": "diệp thư"
+      }
+    },
+    {
+      "id": "chodaejang-3df031",
+      "word": "초대장",
+      "meaningVi": "thiệp_mời",
+      "defVi": "Tấm thiệp báo ngày_giờ | và /địa_điểm/ của bữa tiệc.",
+      "leadVi": "Sắp /sinh_nhật/, | em ghi tên bạn lên phong_bì.",
+      "anticipateVi": "Tiệc vui | đang /chờ_đợi/ bạn!",
+      "pos": "noun",
+      "ipa": "chodaejang [초대짱]",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구들에게 _____을 보냈어요.",
+          "vi": "Tôi đã gửi thiệp_mời cho bạn_bè."
+        }
+      ],
+      "chars": 3,
+      "initial": "초",
+      "grammar": {
+        "counter": "장",
+        "hanja": "招待狀",
+        "hanViet": "chiêu đãi trạng"
+      }
+    },
+    {
+      "id": "jilmunhada-ec6b03",
+      "word": "질문하다",
+      "meaningVi": "hỏi",
+      "defVi": "Nói ra điều=mình chưa hiểu | để người=khác /giải_thích/.",
+      "leadVi": "Chưa hiểu bài, | em /mạnh_dạn/ giơ tay ngay.",
+      "anticipateVi": "Vì sao nhỉ, | /thắc_mắc/ quá!",
+      "pos": "verb",
+      "ipa": "jilmunhada",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "수업이 끝나고 선생님께 _____.",
+          "vi": "Hết giờ học, | tôi đã hỏi thầy.",
+          "fill": "질문했어요"
+        }
+      ],
+      "chars": 4,
+      "initial": "질",
+      "grammar": {
+        "hanja": "質問-",
+        "hanViet": "chất vấn",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "질문해요",
+            "반말": "질문해",
+            "합쇼체": "질문합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "dapjang-86db70",
+      "word": "답장",
+      "meaningVi": "hồi_âm",
+      "defVi": "Lá thư gửi lại | để /hồi_đáp/ thư người=kia.",
+      "leadVi": "Nhắn xong, | cứ /thấp_thỏm/ nhìn màn_hình điện_thoại.",
+      "anticipateVi": "Bạn=ấy | /im_lặng/ mãi thế?",
+      "pos": "noun",
+      "ipa": "dapjang [답짱]",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "어제 친구에게 _____을 보냈어요.",
+          "vi": "Hôm_qua tôi đã gửi hồi_âm cho bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "답",
+      "grammar": {
+        "hanja": "答狀",
+        "hanViet": "đáp trạng"
+      }
+    },
+    {
+      "id": "sseuregitong-a076ce",
+      "word": "쓰레기통",
+      "meaningVi": "thùng_rác",
+      "defVi": "Chiếc thùng có nắp | để bỏ /rác_thải/ trong nhà.",
+      "leadVi": "Ăn bánh xong, | em mang giấy gói đi /vứt_bỏ/ ngay.",
+      "anticipateVi": "Giữ phòng /sạch_sẽ/ nào!",
+      "pos": "noun",
+      "ipa": "sseuregitong",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "쓰레기를 _____에 버려요.",
+          "vi": "Tôi bỏ rác vào thùng_rác."
+        }
+      ],
+      "chars": 4,
+      "initial": "쓰",
+      "grammar": {
+        "counter": "개",
+        "hanja": "-桶",
+        "hanViet": "thũng"
+      }
+    },
+    {
+      "id": "unjeonhada-6ce160",
+      "word": "운전하다",
+      "meaningVi": "lái=xe",
+      "defVi": "Cầm_lái ô_tô | để /di_chuyển/ trên đường_phố.",
+      "leadVi": "Thắt dây an_toàn, | hai tay giữ chặt /vô_lăng/.",
+      "anticipateVi": "Đèn xanh rồi, | /xuất_phát/ thôi!",
+      "pos": "verb",
+      "ipa": "unjeonhada",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아빠가 차를 천천히 _____.",
+          "vi": "Bố tôi lái ô_tô | chầm_chậm.",
+          "fill": "운전해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "운",
+      "grammar": {
+        "hanja": "運轉-",
+        "hanViet": "vận chuyển",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "운전해요",
+            "반말": "운전해",
+            "합쇼체": "운전합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "jeobeon-d82528",
+      "word": "저번",
+      "meaningVi": "lần=trước",
+      "defVi": "Dịp đã qua | gần nhất, ngay trước lúc /hiện_tại/.",
+      "leadVi": "Quán_ăn hôm nọ | /ngon_miệng/ đến mức muốn ghé tiếp.",
+      "anticipateVi": "Lần đó | còn /rõ_ràng/ chứ?",
+      "pos": "noun",
+      "ipa": "jeobeon",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 주에 친구를 만났어요.",
+          "vi": "Tuần=trước | tôi đã gặp bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "저",
+      "grammar": {
+        "hanja": "這番",
+        "hanViet": "giá phiên"
+      }
+    },
+    {
+      "id": "harin-86e8cd",
+      "word": "할인",
+      "meaningVi": "giảm_giá",
+      "defVi": "Phần tiền được bớt | khi cửa_hàng /khuyến_mãi/ cuối mùa.",
+      "leadVi": "Cuối mùa, | áo treo đầy tiệm với giá /hấp_dẫn/.",
+      "anticipateVi": "Mua ngay, | /tiết_kiệm/ lắm!",
+      "pos": "noun",
+      "ipa": "harin",
+      "topic": "money",
+      "topics": [
+        "money",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 가격으로 신발을 샀어요.",
+          "vi": "Tôi mua giày | với giá đã giảm."
+        }
+      ],
+      "chars": 2,
+      "initial": "할",
+      "grammar": {
+        "hanja": "割引",
+        "hanViet": "cát dẫn"
+      }
+    },
+    {
+      "id": "setak-006b08",
+      "word": "세탁",
+      "meaningVi": "giặt_giũ",
+      "defVi": "Dùng nước và /xà_phòng/ | làm sạch quần_áo bẩn.",
+      "leadVi": "Cuối_tuần, | quần_áo /thơm_tho/ phơi kín ban_công.",
+      "anticipateVi": "Áo bẩn | /chất_đống/ rồi kìa!",
+      "pos": "noun",
+      "ipa": "setak",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에 _____을 해요.",
+          "vi": "Cuối_tuần tôi giặt quần_áo."
+        }
+      ],
+      "chars": 2,
+      "initial": "세",
+      "grammar": {
+        "hanja": "洗濯",
+        "hanViet": "tẩy trạc"
+      }
+    },
+    {
+      "id": "sonsugeon-92ed6e",
+      "word": "손수건",
+      "meaningVi": "khăn_tay",
+      "defVi": "Mảnh vải nhỏ | mang theo để lau /mồ_hôi/ hay tay.",
+      "leadVi": "Trưa /nóng_nực/, | bà rút mảnh vải gấp vuông trong túi.",
+      "anticipateVi": "Trán /ướt_đẫm/ rồi kìa!",
+      "pos": "noun",
+      "ipa": "sonsugeon [손쑤건]",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____으로 손을 닦아요.",
+          "vi": "Tôi lau tay bằng khăn_tay."
+        }
+      ],
+      "chars": 3,
+      "initial": "손",
+      "grammar": {
+        "counter": "장",
+        "hanja": "-手巾",
+        "hanViet": "thủ cân"
+      }
+    },
+    {
+      "id": "yeonghwabaeu-c09096",
+      "word": "영화배우",
+      "meaningVi": "diễn_viên điện_ảnh",
+      "defVi": "Người=/diễn_xuất/ nhiều vai | trong phim chiếu ngoài rạp.",
+      "leadVi": "Trên /thảm_đỏ/, | người=hâm_mộ reo hò xin chữ_ký.",
+      "anticipateVi": "Diễn cảnh này | thật /xuất_sắc/!",
+      "pos": "noun",
+      "ipa": "yeonghwabaeu",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "제 꿈은 _____예요.",
+          "vi": "Ước_mơ của tôi | là làm diễn_viên điện_ảnh."
+        }
+      ],
+      "chars": 4,
+      "initial": "영",
+      "grammar": {
+        "counter": "명",
+        "hanja": "映畵俳優",
+        "hanViet": "ánh họa bài ưu"
+      }
+    },
+    {
+      "id": "hwanyeong-561585",
+      "word": "환영",
+      "meaningVi": "sự=chào_đón",
+      "defVi": "Đón người=mới đến | bằng nụ_cười thật /thân_thiện/.",
+      "leadVi": "Vừa bước vào lớp, | cả=lớp vỗ tay /rộn_ràng/.",
+      "anticipateVi": "Mời vào, | cứ /tự_nhiên/ nhé!",
+      "pos": "noun",
+      "ipa": "hwanyeong",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "새 친구가 큰 _____을 받았어요.",
+          "vi": "Bạn mới | được chào_đón nồng_nhiệt."
+        }
+      ],
+      "chars": 2,
+      "initial": "환",
+      "grammar": {
+        "hanja": "歡迎",
+        "hanViet": "hoan nghênh"
+      }
+    },
+    {
+      "id": "gansik-a928c6",
+      "word": "간식",
+      "meaningVi": "đồ=ăn_vặt",
+      "defVi": "Món ăn nhẹ | /lót_dạ/ giữa hai bữa chính.",
+      "leadVi": "Tan=học, | em ghé tiệm mua gói /bánh_quy/ nhỏ.",
+      "anticipateVi": "Ba giờ chiều, | /đói_meo/ rồi!",
+      "pos": "noun",
+      "ipa": "gansik [간씩]",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "오후에 _____을 먹어요.",
+          "vi": "Buổi_chiều tôi ăn đồ=ăn_vặt."
+        }
+      ],
+      "chars": 2,
+      "initial": "간",
+      "grammar": {
+        "hanja": "間食",
+        "hanViet": "gian thực"
+      }
+    },
+    {
+      "id": "gichayeok-9cf9dc",
+      "word": "기차역",
+      "meaningVi": "ga=tàu",
+      "defVi": "Nơi=/hành_khách/ lên xuống tàu_hỏa | trên đường_ray.",
+      "leadVi": "Còi tàu hú, | khách /vội_vàng/ kéo va_li lên toa.",
+      "anticipateVi": "Toa tàu | đang /chờ_đợi/ bạn!",
+      "pos": "noun",
+      "ipa": "gichayeok",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "기차가 _____에 도착했어요.",
+          "vi": "Tàu_hỏa đã đến=ga."
+        }
+      ],
+      "chars": 3,
+      "initial": "기",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "汽車驛",
+        "hanViet": "khí xa dịch"
+      }
+    },
+    {
+      "id": "jihacheollyeok-390f81",
+      "word": "지하철역",
+      "meaningVi": "ga=tàu_điện_ngầm",
+      "defVi": "Nơi=khách xuống cầu_thang | đón tàu chạy dưới /lòng_đất/.",
+      "leadVi": "Giờ tan_tầm, | dòng người /tấp_nập/ qua cửa soát_vé.",
+      "anticipateVi": "Bước lên /thang_cuốn/ | xuống sâu nào!",
+      "pos": "noun",
+      "ipa": "jihacheollyeok [지하철력]",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에서 친구를 기다려요.",
+          "vi": "Tôi đợi bạn | ở ga=tàu_điện_ngầm."
+        }
+      ],
+      "chars": 4,
+      "initial": "지",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "地下鐵驛",
+        "hanViet": "địa hạ thiết dịch"
+      }
+    },
+    {
+      "id": "sagyejeol-81414c",
+      "word": "사계절",
+      "meaningVi": "bốn=mùa",
+      "defVi": "Xuân, hạ, thu, đông | /luân_phiên/ nhau suốt cả năm.",
+      "leadVi": "Hoa nở, nắng gắt, | lá rụng rồi đến /giá_rét/.",
+      "anticipateVi": "Mỗi mùa | một /sắc_màu/ riêng!",
+      "pos": "noun",
+      "ipa": "sagyejeol",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 중에 가을이 제일 좋아요.",
+          "vi": "Trong bốn=mùa, | tôi thích mùa_thu nhất."
+        }
+      ],
+      "chars": 3,
+      "initial": "사",
+      "grammar": {
+        "hanja": "四季節",
+        "hanViet": "tứ quý tiết"
+      }
+    },
+    {
+      "id": "eumakga-73f779",
+      "word": "음악가",
+      "meaningVi": "nhạc_sĩ",
+      "defVi": "Người=lấy /âm_nhạc/ làm nghề | sáng_tác, biểu_diễn.",
+      "leadVi": "Ngón tay lướt phím=đàn, | khán_phòng /lặng_im/ lắng_nghe.",
+      "anticipateVi": "Ai chơi đàn | mà /du_dương/ thế?",
+      "pos": "noun",
+      "ipa": "eumakga [으막까]",
+      "topic": "society",
+      "topics": [
+        "society",
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____가 피아노를 쳐요.",
+          "vi": "Nhạc_sĩ chơi=đàn dương_cầm."
+        }
+      ],
+      "chars": 3,
+      "initial": "음",
+      "grammar": {
+        "counter": "명",
+        "hanja": "音樂家",
+        "hanViet": "âm nhạc gia"
+      }
+    },
+    {
+      "id": "insam-ee2a91",
+      "word": "인삼",
+      "meaningVi": "nhân_sâm",
+      "defVi": "Loại củ quý | có vị đắng, dùng làm /thuốc_bổ/.",
+      "leadVi": "Bà sắc nồi nước /đăng_đắng/, | bảo uống vào khỏe người.",
+      "anticipateVi": "Củ nhỏ | mà /bổ_dưỡng/ ghê!",
+      "pos": "noun",
+      "ipa": "insam",
+      "topic": "health",
+      "topics": [
+        "health",
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "할머니께 _____ 차를 드렸어요.",
+          "vi": "Tôi biếu bà | trà nhân_sâm."
+        }
+      ],
+      "chars": 2,
+      "initial": "인",
+      "grammar": {
+        "counter": "뿌리",
+        "hanja": "人蔘",
+        "hanViet": "nhân sâm"
+      }
+    },
+    {
+      "id": "juhwangsaek-48d481",
+      "word": "주황색",
+      "meaningVi": "màu=cam",
+      "defVi": "Màu /pha_trộn/ giữa đỏ và vàng, | như quýt chín.",
+      "leadVi": "Chiều muộn, | bầu_trời /rực_rỡ/ như quả quýt chín.",
+      "anticipateVi": "Cả bầu_trời | nhuộm sắc /hoàng_hôn/!",
+      "pos": "noun",
+      "ipa": "juhwangsaek",
+      "topic": "perception",
+      "topics": [
+        "perception"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____ 옷을 좋아해요.",
+          "vi": "Tôi thích quần_áo màu=cam."
+        }
+      ],
+      "chars": 3,
+      "initial": "주",
+      "grammar": {
+        "hanja": "朱黃色",
+        "hanViet": "chu hoàng sắc"
+      }
+    },
+    {
+      "id": "hoengdanbodo-9491d5",
+      "word": "횡단보도",
+      "meaningVi": "vạch=sang đường",
+      "defVi": "Vạch sơn trắng | cho người=đi_bộ sang đường /an_toàn/.",
+      "leadVi": "Đèn xanh bật, | dòng người /vội_vã/ sang bên kia.",
+      "anticipateVi": "Trông xe | thật /cẩn_thận/ nhé!",
+      "pos": "noun",
+      "ipa": "hoengdanbodo",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "학생들이 _____를 건너요.",
+          "vi": "Học_sinh băng qua | vạch=sang đường."
+        }
+      ],
+      "chars": 4,
+      "initial": "횡",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "橫斷步道",
+        "hanViet": "hoành đoạn bộ đạo"
+      }
+    },
+    {
+      "id": "hoesawon-442d8b",
+      "word": "회사원",
+      "meaningVi": "nhân_viên văn_phòng",
+      "defVi": "Người=làm_việc cho một /công_ty/, | hưởng lương hằng tháng.",
+      "leadVi": "Sơ_mi, cà_vạt, | cả ngày ngồi trước /máy_tính/.",
+      "anticipateVi": "Ngày nhận lương | ai cũng /hớn_hở/!",
+      "pos": "noun",
+      "ipa": "hoesawon",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "우리 형은 _____이에요.",
+          "vi": "Anh_trai tôi là nhân_viên văn_phòng."
+        }
+      ],
+      "chars": 3,
+      "initial": "회",
+      "grammar": {
+        "counter": "명",
+        "hanja": "會社員",
+        "hanViet": "hội xã viên"
+      }
+    },
+    {
+      "id": "gongjungjeonhwa-e028c6",
+      "word": "공중전화",
+      "meaningVi": "điện_thoại công_cộng",
+      "defVi": "Điện_thoại đặt nơi=/công_cộng/, | ai cũng gọi được.",
+      "leadVi": "Bỏ đồng=xu vào khe, | nhấc /ống_nghe/ rồi bấm số.",
+      "anticipateVi": "Quay số | gọi về /gia_đình/ nào!",
+      "pos": "noun",
+      "ipa": "gongjungjeonhwa",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "technology"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "역 앞에 _____가 있어요.",
+          "vi": "Trước ga có điện_thoại công_cộng."
+        }
+      ],
+      "chars": 4,
+      "initial": "공",
+      "grammar": {
+        "counter": "대",
+        "hanja": "公衆電話",
+        "hanViet": "công chúng điện thoại"
+      }
+    },
+    {
+      "id": "songpyeon-71bf53",
+      "word": "송편",
+      "meaningVi": "bánh_gạo hấp",
+      "defVi": "Bánh_gạo hình /bán_nguyệt/, | nhân ngọt, hấp cùng lá=thông.",
+      "leadVi": "Rằm mùa thu, | cả nhà /quây_quần/ nặn bánh.",
+      "anticipateVi": "/Mềm_dẻo/ | thơm mùi lá=thông!",
+      "pos": "noun",
+      "ipa": "songpyeon",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "명절에 가족과 _____을 만들어요.",
+          "vi": "Dịp lễ, | cả nhà cùng làm bánh."
+        }
+      ],
+      "chars": 2,
+      "initial": "송",
+      "grammar": {
+        "counter": "개",
+        "hanja": "松-",
+        "hanViet": "tùng"
+      }
+    },
+    {
+      "id": "jeonghyeongoegwa-02654e",
+      "word": "정형외과",
+      "meaningVi": "khoa=chỉnh_hình",
+      "defVi": "Khoa /chữa_trị/ xương, khớp | và cơ_bắp bị đau.",
+      "leadVi": "Ngồi máy_tính lâu, | lưng /ê_ẩm/ phải đi khám.",
+      "anticipateVi": "Đầu_gối | lại /đau_nhức/ rồi!",
+      "pos": "noun",
+      "ipa": "jeonghyeongoegwa [정형외꽈]",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "허리가 아파서 _____에 갔어요.",
+          "vi": "Đau lưng | nên tôi đi khám khoa=chỉnh_hình."
+        }
+      ],
+      "chars": 4,
+      "initial": "정",
+      "grammar": {
+        "hanja": "整形外科",
+        "hanViet": "chỉnh hình ngoại khoa"
+      }
+    },
+    {
+      "id": "hanok-d9d319",
+      "word": "한옥",
+      "meaningVi": "nhà=truyền_thống",
+      "defVi": "Kiểu nhà=/truyền_thống/ | mái ngói cong, sàn gỗ ấm.",
+      "leadVi": "Ngồi trên sàn gỗ, | ngắm mái ngói /cong_vút/ sau mưa.",
+      "anticipateVi": "Đông về, | sàn_nhà vẫn /ấm_áp/!",
+      "pos": "noun",
+      "ipa": "hanok",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "할머니는 _____에 사세요.",
+          "vi": "Bà tôi sống | trong nhà=truyền_thống."
+        }
+      ],
+      "chars": 2,
+      "initial": "한",
+      "grammar": {
+        "counter": "채",
+        "hanja": "韓屋",
+        "hanViet": "hàn ốc"
+      }
+    },
+    {
+      "id": "japangi-a0a4e3",
+      "word": "자판기",
+      "meaningVi": "máy=bán tự_động",
+      "defVi": "Chiếc máy | nhận tiền rồi /tự_động/ nhả nước_uống ra.",
+      "leadVi": "Bỏ tiền, bấm nút, | lon nước /mát_lạnh/ rơi ra.",
+      "anticipateVi": "Đang /khát_nước/ | thì bấm nút đi!",
+      "pos": "noun",
+      "ipa": "japangi",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "technology"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에서 커피를 뽑았어요.",
+          "vi": "Tôi mua cà_phê | ở máy=bán_hàng tự_động."
+        }
+      ],
+      "chars": 3,
+      "initial": "자",
+      "grammar": {
+        "counter": "대",
+        "hanja": "自販機",
+        "hanViet": "tự phán cơ"
+      }
+    },
+    {
+      "id": "chultoegeun-d44075",
+      "word": "출퇴근",
+      "meaningVi": "đi_lại đi=làm",
+      "defVi": "Chuyến đi_lại /hằng_ngày/ | giữa nhà và nơi=làm_việc.",
+      "leadVi": "Bảy giờ sáng, | đường_phố /đông_nghịt/ xe_máy nối_đuôi.",
+      "anticipateVi": "Lại /kẹt_xe/ | giờ cao_điểm!",
+      "pos": "noun",
+      "ipa": "chultoegeun",
+      "topic": "work",
+      "topics": [
+        "work",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 시간에는 버스가 복잡해요.",
+          "vi": "Giờ đi=làm, | xe_buýt rất=đông."
+        }
+      ],
+      "chars": 3,
+      "initial": "출",
+      "grammar": {
+        "hanja": "出退勤",
+        "hanViet": "xuất thoái cần"
+      }
+    },
+    {
+      "id": "chigwa-1cc93c",
+      "word": "치과",
+      "meaningVi": "nha_khoa",
+      "defVi": "Nơi=bác_sĩ /chăm_sóc/ | hàm_răng cho người=bệnh.",
+      "leadVi": "Ngồi ghế dài, | nghe tiếng máy khoan /rè_rè/ mà run.",
+      "anticipateVi": "Kẹo ngọt | coi_chừng /sâu_răng/!",
+      "pos": "noun",
+      "ipa": "chigwa [치꽈]",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "내일 _____에 가야 해요.",
+          "vi": "Mai tôi phải đi nha_khoa."
+        }
+      ],
+      "chars": 2,
+      "initial": "치",
+      "grammar": {
+        "hanja": "齒科",
+        "hanViet": "xỉ khoa"
+      }
+    },
+    {
+      "id": "hwanada-de9dd9",
+      "word": "화나다",
+      "meaningVi": "nổi_giận",
+      "defVi": "Cảm_thấy /bực_bội/ | khi ai đó làm mình phật_ý.",
+      "leadVi": "Bạn đến trễ cả tiếng, | mình /cau_có/ chẳng thèm nói.",
+      "anticipateVi": "Mặt_mày | /hầm_hầm/ thế kia!",
+      "pos": "verb",
+      "ipa": "hwanada",
+      "topic": "emotion",
+      "topics": [
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구가 늦어서 _____.",
+          "vi": "Bạn đến muộn | nên tôi giận.",
+          "fill": "화났어요"
+        }
+      ],
+      "chars": 3,
+      "initial": "화",
+      "grammar": {
+        "hanja": "火-",
+        "hanViet": "hỏa",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "화나요",
+            "반말": "화나",
+            "합쇼체": "화납니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "ipjanggwon-0f3475",
+      "word": "입장권",
+      "meaningVi": "vé=vào cửa",
+      "defVi": "Vé phải trình ở cổng | trước khi vào /triển_lãm/.",
+      "leadVi": "Hàng người dài trước cổng, | ai cũng /chờ_đợi/ đến=lượt.",
+      "anticipateVi": "Giữ kỹ | kẻo /đánh_rơi/ nhé!",
+      "pos": "noun",
+      "ipa": "ipjanggwon [입짱꿘]",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "money"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "박물관 _____을 샀어요.",
+          "vi": "Tôi đã mua vé vào bảo_tàng."
+        }
+      ],
+      "chars": 3,
+      "initial": "입",
+      "grammar": {
+        "counter": "장",
+        "hanja": "入場券",
+        "hanViet": "nhập trường khoán"
+      }
+    },
+    {
+      "id": "yeyak-b09b6f",
+      "word": "예약",
+      "meaningVi": "đặt=trước",
+      "defVi": "Gọi=điện | /đăng_ký/ chỗ trước cho ngày sắp_tới.",
+      "leadVi": "Quán đông_nghịt, | nhờ gọi sớm nên có /bàn_ăn/ ngay.",
+      "anticipateVi": "Đến nơi | khỏi /xếp_hàng/!",
+      "pos": "noun",
+      "ipa": "yeyak",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "호텔 _____을 했어요.",
+          "vi": "Tôi đã đặt phòng khách_sạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "예",
+      "grammar": {
+        "hanja": "豫約",
+        "hanViet": "dự ước"
+      }
+    },
+    {
+      "id": "jeomsimttae-e33782",
+      "word": "점심때",
+      "meaningVi": "giờ=trưa",
+      "defVi": "Lúc mặt_trời /đứng_bóng/, | mọi người nghỉ tay ăn cơm.",
+      "leadVi": "Mười hai giờ, | dân văn_phòng /rủ_rê/ nhau đi ăn.",
+      "anticipateVi": "Bụng /cồn_cào/ rồi đây!",
+      "pos": "noun",
+      "ipa": "jeomsimttae",
+      "topic": "time",
+      "topics": [
+        "time",
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____가 되면 배가 고파요.",
+          "vi": "Đến giờ trưa | là tôi đói_bụng."
+        }
+      ],
+      "chars": 3,
+      "initial": "점",
+      "grammar": {
+        "hanja": "點心-",
+        "hanViet": "điểm tâm"
+      }
+    },
+    {
+      "id": "juil-a2e776",
+      "word": "주일",
+      "meaningVi": "tuần",
+      "defVi": "/Chu_kỳ/ bảy ngày | từ thứ_hai đến hết chủ_nhật.",
+      "leadVi": "Lịch làm_việc /kín_mít/ | suốt bảy ngày liền.",
+      "anticipateVi": "Bảy ngày | trôi /nhanh_chóng/ quá!",
+      "pos": "noun",
+      "ipa": "juil",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이번 _____에 시험이 있어요.",
+          "vi": "Tuần này tôi có bài_thi."
+        }
+      ],
+      "chars": 2,
+      "initial": "주",
+      "grammar": {
+        "hanja": "週日",
+        "hanViet": "chu nhật"
+      }
+    },
+    {
+      "id": "pigon-1aa739",
+      "word": "피곤",
+      "meaningVi": "sự=mệt_mỏi",
+      "defVi": "Cảm_giác cơ_thể /kiệt_sức/ | sau một ngày làm_việc.",
+      "leadVi": "Về đến nhà, | chỉ muốn /ngả_lưng/ ngủ một giấc.",
+      "anticipateVi": "Hai mắt | /nặng_trĩu/ rồi!",
+      "pos": "noun",
+      "ipa": "pigon",
+      "topic": "health",
+      "topics": [
+        "health",
+        "emotion"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 때문에 일찍 잤어요.",
+          "vi": "Vì mệt nên tôi ngủ sớm."
+        }
+      ],
+      "chars": 2,
+      "initial": "피",
+      "grammar": {
+        "hanja": "疲困",
+        "hanViet": "bì khốn"
+      }
+    },
+    {
+      "id": "annaemun-7c991f",
+      "word": "안내문",
+      "meaningVi": "tờ=hướng_dẫn",
+      "defVi": "Bản ghi /thông_tin/ | chỉ_dẫn khách nên làm gì.",
+      "leadVi": "Dán ngay cửa=ra_vào, | dặn khách giữ_gìn /trật_tự/.",
+      "anticipateVi": "Đọc kỹ | trước khi /bắt_đầu/ nhé!",
+      "pos": "noun",
+      "ipa": "annaemun",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "학교에서 _____을 받았어요.",
+          "vi": "Tôi nhận được thông_báo | từ trường."
+        }
+      ],
+      "chars": 3,
+      "initial": "안",
+      "grammar": {
+        "counter": "장",
+        "hanja": "案內文",
+        "hanViet": "án nội văn"
+      }
+    },
+    {
+      "id": "yeohaengji-884243",
+      "word": "여행지",
+      "meaningVi": "điểm_đến",
+      "defVi": "Vùng_đất mình /tham_quan/ | trong chuyến đi chơi xa.",
+      "leadVi": "Ba_lô trên vai, | cầm /bản_đồ/ khám_phá miền mới.",
+      "anticipateVi": "Hè này | đi đâu /thư_giãn/ đây?",
+      "pos": "noun",
+      "ipa": "yeohaengji",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "방학에 바닷가 _____로 떠나요.",
+          "vi": "Nghỉ hè, | tôi đi_chơi biển."
+        }
+      ],
+      "chars": 3,
+      "initial": "여",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "旅行地",
+        "hanViet": "lữ hành địa"
+      }
+    },
+    {
+      "id": "jeonggeojang-b54e2e",
+      "word": "정거장",
+      "meaningVi": "trạm=xe",
+      "defVi": "Điểm dừng /cố_định/ | cho xe_buýt đón trả khách.",
+      "leadVi": "Đứng dưới mái_che, | cả nhóm /ngóng_chờ/ chuyến xe kế.",
+      "anticipateVi": "Xe tới | /đúng_giờ/ không ta?",
+      "pos": "noun",
+      "ipa": "jeonggeojang",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "다음 _____에서 내리세요.",
+          "vi": "Hãy xuống ở trạm kế_tiếp."
+        }
+      ],
+      "chars": 3,
+      "initial": "정",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "停車場",
+        "hanViet": "đình xa trường"
+      }
+    },
+    {
+      "id": "seonpunggi-206a25",
+      "word": "선풍기",
+      "meaningVi": "quạt_điện",
+      "defVi": "Máy có cánh_quạt quay | thổi gió /mát_mẻ/ ngày hè.",
+      "leadVi": "Trưa hè /oi_bức/, | bật nút số ba là dễ_chịu.",
+      "anticipateVi": "Cánh quay /vù_vù/ | mát cả=phòng!",
+      "pos": "noun",
+      "ipa": "seonpunggi",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "technology"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "더워서 _____를 켰어요.",
+          "vi": "Trời nóng nên tôi bật quạt_điện."
+        }
+      ],
+      "chars": 3,
+      "initial": "선",
+      "grammar": {
+        "counter": "대",
+        "hanja": "扇風機",
+        "hanViet": "phiến phong cơ"
+      }
+    },
+    {
+      "id": "bunsik-7c392b",
+      "word": "분식",
+      "meaningVi": "món=ăn_vặt",
+      "defVi": "Món làm từ /bột_mì/ | như mì, bánh_gạo, cơm=cuộn.",
+      "leadVi": "Tan=học, | cả=nhóm ghé quán nhỏ | ăn mì /cay_xè/.",
+      "anticipateVi": "Bữa xế /no_nê/ mà rẻ!",
+      "pos": "noun",
+      "ipa": "bunsik",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "점심에 친구와 _____을 먹었어요.",
+          "vi": "Buổi trưa tôi ăn món ăn_vặt với bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "분",
+      "grammar": {
+        "hanja": "分食",
+        "hanViet": "phân thực"
+      }
+    },
+    {
+      "id": "pyeongil-88b570",
+      "word": "평일",
+      "meaningVi": "ngày_thường",
+      "defVi": "Ngày /làm_việc/ | từ thứ_hai đến thứ_sáu hằng tuần.",
+      "leadVi": "Sáng nào cũng dậy sớm, | đường_phố /tấp_nập/ xe.",
+      "anticipateVi": "Lại thứ_hai, | /vội_vàng/ ra cửa!",
+      "pos": "noun",
+      "ipa": "pyeongil",
+      "topic": "time",
+      "topics": [
+        "time",
+        "work"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에는 회사에 가요.",
+          "vi": "Ngày_thường tôi đi=làm ở công_ty."
+        }
+      ],
+      "chars": 2,
+      "initial": "평",
+      "grammar": {
+        "hanja": "平日",
+        "hanViet": "bình nhật"
+      }
+    },
+    {
+      "id": "gyul-605fc3",
+      "word": "귤",
+      "meaningVi": "quả=quýt",
+      "defVi": "Quả nhỏ màu cam, | vỏ mỏng dễ bóc, | múi /mọng_nước/.",
+      "leadVi": "Mùa_đông, | cả=nhà ngồi bóc vỏ, | tay /thơm_lừng/.",
+      "anticipateVi": "Bóc vỏ ra | /thơm_phức/ cả=phòng!",
+      "pos": "noun",
+      "ipa": "gyul",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "겨울에 _____을 많이 먹어요.",
+          "vi": "Mùa_đông tôi ăn nhiều quýt."
+        }
+      ],
+      "chars": 1,
+      "initial": "귤",
+      "grammar": {
+        "counter": "개",
+        "hanja": "橘",
+        "hanViet": "quất"
+      }
+    },
+    {
+      "id": "naegwa-be79dc",
+      "word": "내과",
+      "meaningVi": "khoa_nội",
+      "defVi": "Khoa /khám_bệnh/ | chữa đau_bụng, cảm_lạnh bằng thuốc.",
+      "leadVi": "Bị đau_bụng mấy hôm, | mẹ dẫn đi /bác_sĩ/.",
+      "anticipateVi": "Ống_nghe đặt lên, | /hít_thở/ đều!",
+      "pos": "noun",
+      "ipa": "naegwa [내꽈]",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "배가 아파서 _____에 갔어요.",
+          "vi": "Tôi đau_bụng nên đã đi khám khoa_nội."
+        }
+      ],
+      "chars": 2,
+      "initial": "내",
+      "grammar": {
+        "hanja": "內科",
+        "hanViet": "nội khoa"
+      }
+    },
+    {
+      "id": "doenjangjjigae-a225d3",
+      "word": "된장찌개",
+      "meaningVi": "canh=tương=đậu",
+      "defVi": "Món canh nấu với /đậu_phụ/ | và tương=đậu lên_men.",
+      "leadVi": "Nồi canh sôi /lục_bục/, | mùi tương thơm khắp bếp.",
+      "anticipateVi": "Mùi tương | /thơm_lừng/ khắp nhà!",
+      "pos": "noun",
+      "ipa": "doenjangjjigae",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "엄마가 만든 _____가 맛있어요.",
+          "vi": "Canh=tương=đậu mẹ nấu thật đậm_đà."
+        }
+      ],
+      "chars": 4,
+      "initial": "된",
+      "grammar": {
+        "hanja": "-醬-",
+        "hanViet": "tương"
+      }
+    },
+    {
+      "id": "seukijang-0ced5e",
+      "word": "스키장",
+      "meaningVi": "khu=trượt_tuyết",
+      "defVi": "Khu dốc núi phủ trắng | để du_khách /trượt_tuyết/.",
+      "leadVi": "Mặc áo dày, | lướt ván xuống dốc /vun_vút/.",
+      "anticipateVi": "Mũ len, găng_tay | /đầy_đủ/ chưa?",
+      "pos": "noun",
+      "ipa": "seukijang",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "nature"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "겨울에 가족과 _____에 갔어요.",
+          "vi": "Mùa_đông tôi đi khu trượt_tuyết với gia_đình."
+        }
+      ],
+      "chars": 3,
+      "initial": "스",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "-場",
+        "hanViet": "trường"
+      }
+    },
+    {
+      "id": "takgu-77d9e2",
+      "word": "탁구",
+      "meaningVi": "bóng_bàn",
+      "defVi": "Môn /thể_thao/ đánh bóng nhỏ | qua lưới trên bàn.",
+      "leadVi": "Tiếng bóng /lách_cách/ | vang khắp phòng sinh_hoạt chung.",
+      "anticipateVi": "Cổ tay | thật /nhanh_nhẹn/ nhé!",
+      "pos": "noun",
+      "ipa": "takgu [탁꾸]",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에 동생과 _____를 쳐요.",
+          "vi": "Cuối_tuần tôi chơi bóng_bàn với em."
+        }
+      ],
+      "chars": 2,
+      "initial": "탁",
+      "grammar": {
+        "hanja": "卓球",
+        "hanViet": "trác cầu"
+      }
+    },
+    {
+      "id": "gyotongbi-db25c5",
+      "word": "교통비",
+      "meaningVi": "chi_phí đi_lại",
+      "defVi": "/Chi_phí/ trả cho xe_buýt, | tàu_điện khi đi_lại.",
+      "leadVi": "Sống ở /ngoại_ô/, | ngày nào cũng tốn tiền xe.",
+      "anticipateVi": "Ngồi xe_buýt | /tốn_kém/ không?",
+      "pos": "noun",
+      "ipa": "gyotongbi",
+      "topic": "money",
+      "topics": [
+        "money",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "회사가 멀어서 _____가 많이 들어요.",
+          "vi": "Công_ty xa nên tốn nhiều tiền đi_lại."
+        }
+      ],
+      "chars": 3,
+      "initial": "교",
+      "grammar": {
+        "hanja": "交通費",
+        "hanViet": "giao thông phí"
+      }
+    },
+    {
+      "id": "yeonghwagwan-4b3bcc",
+      "word": "영화관",
+      "meaningVi": "rạp=chiếu_phim",
+      "defVi": "Phòng có /màn_hình/ lớn | để khán_giả ngồi xem phim.",
+      "leadVi": "Đèn tắt dần, | ai cũng ôm hộp /bỏng_ngô/.",
+      "anticipateVi": "Suất chiếu tối | /hấp_dẫn/ lắm!",
+      "pos": "noun",
+      "ipa": "yeonghwagwan",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구와 _____에 가기로 했어요.",
+          "vi": "Tôi đã hẹn đi rạp=chiếu_phim với bạn."
+        }
+      ],
+      "chars": 3,
+      "initial": "영",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "映畵館",
+        "hanViet": "ánh họa quán"
+      }
+    },
+    {
+      "id": "jihado-cc4905",
+      "word": "지하도",
+      "meaningVi": "đường_hầm",
+      "defVi": "Lối đi dưới /lòng_đất/ | để sang bên kia đường lớn.",
+      "leadVi": "Không cần chờ đèn, | đi xuống /cầu_thang/ là sang đường.",
+      "anticipateVi": "Đi dưới này | /an_toàn/ hơn!",
+      "pos": "noun",
+      "ipa": "jihado",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____를 건너면 시장이 있어요.",
+          "vi": "Đi qua đường_hầm là tới chợ."
+        }
+      ],
+      "chars": 3,
+      "initial": "지",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "地下道",
+        "hanViet": "địa hạ đạo"
+      }
+    },
+    {
+      "id": "gosokbeoseu-d01923",
+      "word": "고속버스",
+      "meaningVi": "xe_khách đường_dài",
+      "defVi": "Xe_khách chạy /cao_tốc/ | nối hai thành_phố xa.",
+      "leadVi": "Dịp /nghỉ_lễ/, | ra bến mua vé về quê thăm bà.",
+      "anticipateVi": "Ngả ghế | /chợp_mắt/ tới nơi!",
+      "pos": "noun",
+      "ipa": "gosokbeoseu [고속뻐스]",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "고향에 _____를 타고 가요.",
+          "vi": "Tôi đi xe_khách đường_dài về quê."
+        }
+      ],
+      "chars": 4,
+      "initial": "고",
+      "grammar": {
+        "counter": "대",
+        "hanja": "高速-",
+        "hanViet": "cao tốc"
+      }
+    },
+    {
+      "id": "bunhongsaek-4e0ccb",
+      "word": "분홍색",
+      "meaningVi": "màu=hồng",
+      "defVi": "Màu nhạt pha giữa đỏ và trắng, | như /hoa_đào/.",
+      "leadVi": "Cánh /anh_đào/ nở rộ | phủ kín con=đường mùa_xuân.",
+      "anticipateVi": "Kẹo=bông /ngọt_lịm/ | màu gì?",
+      "pos": "noun",
+      "ipa": "bunhongsaek",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____ 가방을 샀어요.",
+          "vi": "Tôi vừa mua chiếc túi_xách màu=hồng."
+        }
+      ],
+      "chars": 3,
+      "initial": "분",
+      "grammar": {
+        "hanja": "粉紅色",
+        "hanViet": "phấn hồng sắc"
+      }
+    },
+    {
+      "id": "sopo-23a99a",
+      "word": "소포",
+      "meaningVi": "bưu_kiện",
+      "defVi": "Gói đồ đóng hộp | gửi qua /bưu_điện/ đến người=nhận.",
+      "leadVi": "Chuông cửa reo, | /bưu_tá/ đưa chiếc=hộp khá nặng.",
+      "anticipateVi": "Hộp to quá, | /bất_ngờ/ chưa!",
+      "pos": "noun",
+      "ipa": "sopo",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "할머니께 _____를 보냈어요.",
+          "vi": "Tôi đã gửi bưu_kiện cho bà."
+        }
+      ],
+      "chars": 2,
+      "initial": "소",
+      "grammar": {
+        "counter": "개",
+        "hanja": "小包",
+        "hanViet": "tiểu bao"
+      }
+    },
+    {
+      "id": "sonnyeo-902d19",
+      "word": "손녀",
+      "meaningVi": "cháu=gái",
+      "defVi": "Bé gái thuộc /thế_hệ/ sau con mình | trong nhà.",
+      "leadVi": "Bà /âu_yếm/ | tết tóc cho bé mỗi=sáng.",
+      "anticipateVi": "Bé út được /cưng_chiều/ nhất nhà?",
+      "pos": "noun",
+      "ipa": "sonnyeo",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "할머니는 _____와 같이 살아요.",
+          "vi": "Bà sống cùng cháu=gái."
+        }
+      ],
+      "chars": 2,
+      "initial": "손",
+      "grammar": {
+        "counter": "명",
+        "hanja": "孫女",
+        "hanViet": "tôn nữ"
+      }
+    },
+    {
+      "id": "ilboneo-83495d",
+      "word": "일본어",
+      "meaningVi": "tiếng=Nhật",
+      "defVi": "/Ngoại_ngữ/ nhiều bạn học | để đọc truyện_tranh gốc.",
+      "leadVi": "Xem phim hoạt_hình | mà không cần /phụ_đề/ bên dưới.",
+      "anticipateVi": "Mở lời /chào_hỏi/ | thật lễ_phép!",
+      "pos": "noun",
+      "ipa": "ilboneo",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____로 말할 수 있어요.",
+          "vi": "Tôi có_thể nói bằng tiếng=Nhật."
+        }
+      ],
+      "chars": 3,
+      "initial": "일",
+      "grammar": {
+        "hanja": "日本語",
+        "hanViet": "nhật bản ngữ"
+      }
+    },
+    {
+      "id": "janggap-7e7518",
+      "word": "장갑",
+      "meaningVi": "găng_tay",
+      "defVi": "Đồ đeo vào /bàn_tay/ | để giữ ấm khi trời lạnh.",
+      "leadVi": "Tuyết rơi, | xỏ từng ngón vào lớp len /ấm_áp/.",
+      "anticipateVi": "Tay /lạnh_cóng/ rồi kìa!",
+      "pos": "noun",
+      "ipa": "janggap",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "추워서 _____을 꼈어요.",
+          "vi": "Trời lạnh nên tôi đeo găng_tay."
+        }
+      ],
+      "chars": 2,
+      "initial": "장",
+      "grammar": {
+        "counter": "켤레",
+        "hanja": "掌匣",
+        "hanViet": "chưởng hạp"
+      }
+    },
+    {
+      "id": "dongmurwon-e1cd67",
+      "word": "동물원",
+      "meaningVi": "vườn_thú",
+      "defVi": "Khu nuôi nhiều /động_vật/ | cho du_khách đến tham_quan.",
+      "leadVi": "Cuối_tuần, | bé được ngắm /sư_tử/ và hươu.",
+      "anticipateVi": "Chú khỉ | đang /nhăn_nhó/ kìa!",
+      "pos": "noun",
+      "ipa": "dongmurwon",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "travel"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에 아이들과 _____에 가요.",
+          "vi": "Cuối_tuần tôi đưa bọn trẻ đi vườn_thú."
+        }
+      ],
+      "chars": 3,
+      "initial": "동",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "動物園",
+        "hanViet": "động vật viên"
+      }
+    },
+    {
+      "id": "samgyetang-cb92c1",
+      "word": "삼계탕",
+      "meaningVi": "gà=hầm sâm",
+      "defVi": "Món gà hầm với /nhân_sâm/, | gạo_nếp và táo đỏ.",
+      "leadVi": "Giữa hè nóng_nực, | ăn bát canh gà /bổ_dưỡng/.",
+      "anticipateVi": "Nồi gà hầm | /thơm_nức/ rồi!",
+      "pos": "noun",
+      "ipa": "samgyetang",
+      "topic": "food",
+      "topics": [
+        "food",
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "여름에 _____을 먹어요.",
+          "vi": "Mùa_hè tôi ăn gà=hầm sâm."
+        }
+      ],
+      "chars": 3,
+      "initial": "삼",
+      "grammar": {
+        "counter": "그릇",
+        "hanja": "蔘鷄湯",
+        "hanViet": "sâm kê thang"
+      }
+    },
+    {
+      "id": "saengsin-22cd08",
+      "word": "생신",
+      "meaningVi": "sinh_nhật",
+      "defVi": "Ngày_sinh của ông bà, | nói bằng lời /kính_trọng/.",
+      "leadVi": "Con_cháu quây_quần, | chúc_thọ bà bên /bánh_kem/.",
+      "anticipateVi": "Quà cho bà | /chu_đáo/ chưa?",
+      "pos": "noun",
+      "ipa": "saengsin",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "내일은 할아버지 _____이에요.",
+          "vi": "Ngày_mai là sinh_nhật ông."
+        }
+      ],
+      "chars": 2,
+      "initial": "생",
+      "grammar": {
+        "hanja": "生辰",
+        "hanViet": "sinh thần",
+        "tipVi": "kính_ngữ, dùng cho sinh_nhật người_lớn tuổi"
+      }
+    },
+    {
+      "id": "upyo-cfe08c",
+      "word": "우표",
+      "meaningVi": "tem_thư",
+      "defVi": "Mẩu giấy nhỏ dán lên /phong_bì/ | trước khi gửi thư.",
+      "leadVi": "Ông có cuốn sổ | /sưu_tầm/ đủ hình hoa_lá.",
+      "anticipateVi": "Góc thư | còn /trống_trơn/ kìa!",
+      "pos": "noun",
+      "ipa": "upyo",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "편지에 _____를 붙였어요.",
+          "vi": "Tôi đã dán tem lên phong_bì thư."
+        }
+      ],
+      "chars": 2,
+      "initial": "우",
+      "grammar": {
+        "counter": "장",
+        "hanja": "郵票",
+        "hanViet": "bưu phiếu"
+      }
+    },
+    {
+      "id": "toewon-1e2913",
+      "word": "퇴원",
+      "meaningVi": "xuất_viện",
+      "defVi": "Bệnh_nhân khỏe lại | được rời /bệnh_viện/ về nhà.",
+      "leadVi": "Sức_khỏe đã /hồi_phục/, | ông xách túi về nhà.",
+      "anticipateVi": "/Khỏe_mạnh/ rồi, về thôi!",
+      "pos": "noun",
+      "ipa": "toewon",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "할머니는 내일 _____을 하세요.",
+          "vi": "Ngày_mai bà xuất_viện."
+        }
+      ],
+      "chars": 2,
+      "initial": "퇴",
+      "grammar": {
+        "hanja": "退院",
+        "hanViet": "thoái viện"
+      }
+    },
+    {
+      "id": "danpung-f2e842",
+      "word": "단풍",
+      "meaningVi": "lá=đỏ mùa_thu",
+      "defVi": "Lá cây đổi màu đỏ vàng khi /mùa_thu/ về.",
+      "leadVi": "Lên núi tháng mười, | cả rừng /rực_rỡ/ sắc đỏ.",
+      "anticipateVi": "Núi đồi /lộng_lẫy/ quá!",
+      "pos": "noun",
+      "ipa": "danpung",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "time"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "가을에 산에 _____이 들었어요.",
+          "vi": "Mùa_thu, lá trên núi đã=đổi màu."
+        }
+      ],
+      "chars": 2,
+      "initial": "단",
+      "grammar": {
+        "hanja": "丹楓",
+        "hanViet": "đan phong"
+      }
+    },
+    {
+      "id": "gamgiyak-b0d15c",
+      "word": "감기약",
+      "meaningVi": "thuốc=cảm",
+      "defVi": "Thuốc uống | giúp bớt ho khi bị /cảm_lạnh/.",
+      "leadVi": "Ho và /sổ_mũi/ cả đêm, | mẹ đưa viên thuốc.",
+      "anticipateVi": "Mũi đỏ, | /hắt_hơi/ liên_tục!",
+      "pos": "noun",
+      "ipa": "gamgiyak",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "밥을 먹고 _____을 먹었어요.",
+          "vi": "Ăn cơm xong, tôi uống thuốc=cảm."
+        }
+      ],
+      "chars": 3,
+      "initial": "감",
+      "grammar": {
+        "counter": "알",
+        "hanja": "感氣藥",
+        "hanViet": "cảm khí dược"
+      }
+    },
+    {
+      "id": "maepyoso-42873a",
+      "word": "매표소",
+      "meaningVi": "quầy=bán vé",
+      "defVi": "Ô cửa nhỏ | để /hành_khách/ mua vé tàu xe.",
+      "leadVi": "Trước giờ chiếu, | khách /xếp_hàng/ dài trước ô kính.",
+      "anticipateVi": "/Khán_giả/ chen kín cửa rồi!",
+      "pos": "noun",
+      "ipa": "maepyoso",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "극장 _____ 앞에 사람이 많아요.",
+          "vi": "Trước quầy=vé của rạp có rất đông khán_giả."
+        }
+      ],
+      "chars": 3,
+      "initial": "매",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "賣票所",
+        "hanViet": "mại phiếu sở"
+      }
+    },
+    {
+      "id": "seonmulhada-460276",
+      "word": "선물하다",
+      "meaningVi": "tặng=quà",
+      "defVi": "Trao đồ cho người=khác | để bày_tỏ /tình_cảm/.",
+      "leadVi": "Đúng ngày /sinh_nhật/, | bạn trao hộp nhỏ thắt nơ.",
+      "anticipateVi": "Hộp xinh quá, | /bất_ngờ/ ghê!",
+      "pos": "verb",
+      "ipa": "seonmulhada",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "엄마에게 꽃을 _____.",
+          "vi": "Tôi tặng hoa cho mẹ.",
+          "fill": "선물해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "선",
+      "grammar": {
+        "hanja": "膳物-",
+        "hanViet": "thiện vật",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "선물해요",
+            "반말": "선물해",
+            "합쇼체": "선물합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "yorihada-bee72b",
+      "word": "요리하다",
+      "meaningVi": "nấu_ăn",
+      "defVi": "Sơ_chế rồi nấu /thực_phẩm/ thành món ngon.",
+      "leadVi": "Dao thớt lách_cách, | hành phi /thơm_phức/ khắp bếp.",
+      "anticipateVi": "Vào bếp /trổ_tài/ nào!",
+      "pos": "verb",
+      "ipa": "yorihada",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에 아빠가 _____.",
+          "vi": "Cuối_tuần bố nấu_ăn.",
+          "fill": "요리해요"
+        }
+      ],
+      "chars": 4,
+      "initial": "요",
+      "grammar": {
+        "hanja": "料理-",
+        "hanViet": "liệu lý",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "요리해요",
+            "반말": "요리해",
+            "합쇼체": "요리합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "jucha-6ed5d3",
+      "word": "주차",
+      "meaningVi": "đỗ=xe",
+      "defVi": "Dừng /ô_tô/ | và để yên ở chỗ cho phép.",
+      "leadVi": "Vòng quanh tòa_nhà, | chưa thấy /khoảng_trống/ nào.",
+      "anticipateVi": "Lùi xe /cẩn_thận/ nhé!",
+      "pos": "noun",
+      "ipa": "jucha",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "학교 앞에 _____하면 안 돼요.",
+          "vi": "Không được đỗ=xe trước cổng trường."
+        }
+      ],
+      "chars": 2,
+      "initial": "주",
+      "grammar": {
+        "hanja": "駐車",
+        "hanViet": "trú xa"
+      }
+    },
+    {
+      "id": "cheyukgwan-1bc5d5",
+      "word": "체육관",
+      "meaningVi": "nhà=thi_đấu",
+      "defVi": "Tòa_nhà lớn | để chơi bóng, | /luyện_tập/ thể_thao.",
+      "leadVi": "Sàn gỗ bóng, | tiếng bóng nảy /vang_vọng/ dưới mái.",
+      "anticipateVi": "Giày /thể_thao/ mang chưa?",
+      "pos": "noun",
+      "ipa": "cheyukgwan [체육꽌]",
+      "topic": "health",
+      "topics": [
+        "health",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "학교 _____에서 운동을 해요.",
+          "vi": "Tôi tập thể_thao ở nhà=thi_đấu của trường."
+        }
+      ],
+      "chars": 3,
+      "initial": "체",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "體育館",
+        "hanViet": "thể dục quán"
+      }
+    },
+    {
+      "id": "hongcha-4e81fc",
+      "word": "홍차",
+      "meaningVi": "hồng_trà",
+      "defVi": "Trà lá ủ kỹ, | nước nâu đỏ, | vị /đậm_đà/.",
+      "leadVi": "Thêm chút sữa, | nhâm_nhi bên đĩa /bánh_quy/.",
+      "anticipateVi": "Một tách /thơm_lừng/ nhé?",
+      "pos": "noun",
+      "ipa": "hongcha",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "아침에 _____를 마셔요.",
+          "vi": "Buổi_sáng tôi uống hồng_trà."
+        }
+      ],
+      "chars": 2,
+      "initial": "홍",
+      "grammar": {
+        "counter": "잔",
+        "hanja": "紅茶",
+        "hanViet": "hồng trà"
+      }
+    },
+    {
+      "id": "yeollakcheo-51e0c8",
+      "word": "연락처",
+      "meaningVi": "thông_tin liên_lạc",
+      "defVi": "Số /điện_thoại/ hay địa_chỉ để gọi tìm mình.",
+      "leadVi": "Gặp bạn mới, | cả hai /trao_đổi/ số máy.",
+      "anticipateVi": "Lưu vào /danh_bạ/ nhé!",
+      "pos": "noun",
+      "ipa": "yeollakcheo [열락처]",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "여기에 _____를 써 주세요.",
+          "vi": "Hãy ghi số liên_lạc vào đây."
+        }
+      ],
+      "chars": 3,
+      "initial": "연",
+      "grammar": {
+        "hanja": "連絡處",
+        "hanViet": "liên lạc xứ"
+      }
+    },
+    {
+      "id": "yeonse-ebe376",
+      "word": "연세",
+      "meaningVi": "tuổi_tác",
+      "defVi": "Từ /lễ_phép/ chỉ tuổi của ông_bà, | người=lớn.",
+      "leadVi": "Ông đã qua bao_nhiêu /mùa_xuân/ rồi ạ?",
+      "anticipateVi": "Nói với ông_bà | phải /kính_trọng/!",
+      "pos": "noun",
+      "ipa": "yeonse",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "할아버지, _____가 어떻게 되세요?",
+          "vi": "Ông ơi, ông bao_nhiêu tuổi ạ?"
+        }
+      ],
+      "chars": 2,
+      "initial": "연",
+      "grammar": {
+        "hanja": "年歲",
+        "hanViet": "niên tuế",
+        "tipVi": "kính_ngữ, dùng khi hỏi tuổi người=lớn"
+      }
+    },
+    {
+      "id": "choroksaek-832717",
+      "word": "초록색",
+      "meaningVi": "màu=xanh_lá_cây",
+      "defVi": "Màu của lá non | và bãi cỏ /tươi_tốt/.",
+      "leadVi": "Đèn bật màu này, | xe cộ /nối_đuôi/ lăn bánh.",
+      "anticipateVi": "Đồi chè /xanh_mướt/ quá!",
+      "pos": "noun",
+      "ipa": "choroksaek [초록쌕]",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "perception"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____ 가방을 샀어요.",
+          "vi": "Tôi đã mua cái=cặp màu=xanh_lá_cây."
+        }
+      ],
+      "chars": 3,
+      "initial": "초",
+      "grammar": {
+        "hanja": "草綠色",
+        "hanViet": "thảo lục sắc"
+      }
+    },
+    {
+      "id": "chukgugong-49d073",
+      "word": "축구공",
+      "meaningVi": "quả=bóng_đá",
+      "defVi": "Quả bóng tròn | dùng để đá trên /sân_cỏ/.",
+      "leadVi": "Giờ ra chơi, | cả lớp /hào_hứng/ sút bóng.",
+      "anticipateVi": "/Thủ_môn/ bắt hụt rồi!",
+      "pos": "noun",
+      "ipa": "chukgugong [축꾸공]",
+      "topic": "health",
+      "topics": [
+        "health",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "공원에서 _____을 차요.",
+          "vi": "Tôi đá bóng ở công_viên."
+        }
+      ],
+      "chars": 3,
+      "initial": "축",
+      "grammar": {
+        "counter": "개",
+        "hanja": "蹴球-",
+        "hanViet": "xúc cầu"
+      }
+    },
+    {
+      "id": "gyeolseok-26dc3c",
+      "word": "결석",
+      "meaningVi": "vắng_mặt",
+      "defVi": "Không có_mặt ở lớp | vào ngày phải /lên_lớp/.",
+      "leadVi": "Lúc /điểm_danh/, | gọi tên mãi chẳng ai đáp.",
+      "anticipateVi": "Bàn đầu /trống_trơn/ kìa!",
+      "pos": "noun",
+      "ipa": "gyeolseok [결썩]",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "어제 감기 때문에 _____을 했어요.",
+          "vi": "Hôm_qua tôi nghỉ=học vì bị cảm."
+        }
+      ],
+      "chars": 2,
+      "initial": "결",
+      "grammar": {
+        "hanja": "缺席",
+        "hanViet": "khuyết tịch"
+      }
+    },
+    {
+      "id": "nokcha-8bb63f",
+      "word": "녹차",
+      "meaningVi": "trà=xanh",
+      "defVi": "Trà lá tươi, | nước xanh, | vị chát /nhẹ_nhàng/.",
+      "leadVi": "Sau bữa cơm, | chén nhỏ tỏa hương /thoang_thoảng/.",
+      "anticipateVi": "Nhấp một ngụm, | /sảng_khoái/ ghê!",
+      "pos": "noun",
+      "ipa": "nokcha",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "식사 후에 _____를 마셔요.",
+          "vi": "Ăn xong tôi uống trà=xanh."
+        }
+      ],
+      "chars": 2,
+      "initial": "녹",
+      "grammar": {
+        "counter": "잔",
+        "hanja": "綠茶",
+        "hanViet": "lục trà"
+      }
+    },
+    {
+      "id": "mandu-4abacb",
+      "word": "만두",
+      "meaningVi": "sủi_cảo",
+      "defVi": "Bánh vỏ /bột_mì/ mỏng, | gói nhân thịt rồi hấp.",
+      "leadVi": "Ngày đầu năm, | con_cháu /quây_quần/ nặn bánh.",
+      "anticipateVi": "Xửng hấp /nghi_ngút/ khói kìa!",
+      "pos": "noun",
+      "ipa": "mandu",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "점심에 _____를 먹었어요.",
+          "vi": "Bữa trưa tôi ăn sủi_cảo."
+        }
+      ],
+      "chars": 2,
+      "initial": "만",
+      "grammar": {
+        "counter": "개",
+        "hanja": "饅頭",
+        "hanViet": "man đầu"
+      }
+    },
+    {
+      "id": "borasaek-93f309",
+      "word": "보라색",
+      "meaningVi": "màu=tím",
+      "defVi": "Màu pha giữa đỏ với xanh | như hoa /oải_hương/.",
+      "leadVi": "Quả cà, | chùm nho chín | khoác sắc /mộng_mơ/ này.",
+      "anticipateVi": "Hoa /bằng_lăng/ nở rồi!",
+      "pos": "noun",
+      "ipa": "borasaek",
+      "topic": "perception",
+      "topics": [
+        "perception",
+        "nature"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____ 꽃이 예뻐요.",
+          "vi": "Hoa màu tím đẹp quá."
+        }
+      ],
+      "chars": 3,
+      "initial": "보",
+      "grammar": {
+        "hanja": "-色",
+        "hanViet": "sắc"
+      }
+    },
+    {
+      "id": "sillyehada-b9585c",
+      "word": "실례하다",
+      "meaningVi": "thất_lễ",
+      "defVi": "Làm phiền người=khác, | cư_xử chưa /lịch_sự/.",
+      "leadVi": "Muốn hỏi đường, | bạn khẽ /xin_lỗi/ người=lạ trước.",
+      "anticipateVi": "Cho tôi /làm_phiền/ chút nhé?",
+      "pos": "verb",
+      "ipa": "sillyehada",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____, 화장실이 어디예요?",
+          "vi": "Xin_lỗi, nhà_vệ_sinh ở đâu ạ?",
+          "fill": "실례합니다"
+        }
+      ],
+      "chars": 4,
+      "initial": "실",
+      "grammar": {
+        "hanja": "失禮-",
+        "hanViet": "thất lễ",
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "실례해요",
+            "반말": "실례해",
+            "합쇼체": "실례합니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "bokseup-54e4ee",
+      "word": "복습",
+      "meaningVi": "ôn_tập",
+      "defVi": "Xem lại bài đã học | để /ghi_nhớ/ lâu hơn.",
+      "leadVi": "Tối về, | lật vở đọc lại /kiến_thức/ ban sáng.",
+      "anticipateVi": "Mai kiểm_tra, | /chăm_chỉ/ lên!",
+      "pos": "noun",
+      "ipa": "bokseup [복씁]",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 매일 _____을 해요.",
+          "vi": "Ngày=nào tôi cũng ôn=bài."
+        }
+      ],
+      "chars": 2,
+      "initial": "복",
+      "grammar": {
+        "hanja": "復習",
+        "hanViet": "phục tập"
+      }
+    },
+    {
+      "id": "seongham-c31dc9",
+      "word": "성함",
+      "meaningVi": "quý_danh",
+      "defVi": "Từ /tôn_kính/ chỉ tên | của người=lớn hay khách.",
+      "leadVi": "Gặp khách lớn tuổi, | nhân_viên /lễ_độ/ hỏi danh_tính.",
+      "anticipateVi": "Xin cho biết | /quý_khách/ là ai ạ?",
+      "pos": "noun",
+      "ipa": "seongham",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "society"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____이 어떻게 되세요?",
+          "vi": "Xin hỏi quý_danh của quý_khách ạ?"
+        }
+      ],
+      "chars": 2,
+      "initial": "성",
+      "grammar": {
+        "hanja": "姓銜",
+        "hanViet": "tính hàm",
+        "tipVi": "kính_ngữ, dùng khi hỏi tên người=lớn"
+      }
+    },
+    {
+      "id": "setakso-27ae31",
+      "word": "세탁소",
+      "meaningVi": "tiệm=giặt_ủi",
+      "defVi": "Cửa_hàng nhận giặt, | ủi và /giặt_khô/ quần_áo.",
+      "leadVi": "Áo sơ_mi nhàu gửi sáng, | chiều lấy đã /phẳng_phiu/.",
+      "anticipateVi": "Áo lại /thơm_tho/ rồi!",
+      "pos": "noun",
+      "ipa": "setakso [세탁쏘]",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "집 앞에 _____가 있어요.",
+          "vi": "Có tiệm=giặt_ủi ở trước nhà."
+        }
+      ],
+      "chars": 3,
+      "initial": "세",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "洗濯所",
+        "hanViet": "tẩy trạc sở"
+      }
+    },
+    {
+      "id": "undongbok-ca8a7c",
+      "word": "운동복",
+      "meaningVi": "đồ=thể_thao",
+      "defVi": "Quần_áo /co_giãn/, | thoáng mát, | mặc khi tập.",
+      "leadVi": "Mặc vào là | chạy nhảy, | vươn_vai /thoải_mái/.",
+      "anticipateVi": "Mặc xong, | /khởi_động/ thôi!",
+      "pos": "noun",
+      "ipa": "undongbok",
+      "topic": "health",
+      "topics": [
+        "health",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "운동할 때 _____을 입어요.",
+          "vi": "Khi tập thể_thao tôi mặc đồ=thể_thao."
+        }
+      ],
+      "chars": 3,
+      "initial": "운",
+      "grammar": {
+        "counter": "벌",
+        "hanja": "運動服",
+        "hanViet": "vận động phục"
+      }
+    },
+    {
+      "id": "junggugeo-07c8b0",
+      "word": "중국어",
+      "meaningVi": "tiếng=Trung",
+      "defVi": "/Ngôn_ngữ/ có thanh_điệu, | chữ_viết vuông_vức nhiều nét.",
+      "leadVi": "Luyện viết từng nét | trong ô_vuông, /kiên_nhẫn/ mỗi tối.",
+      "anticipateVi": "Luyện /thanh_điệu/ | đến mỏi_miệng!",
+      "pos": "noun",
+      "ipa": "junggugeo",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "선생님이 _____로 말해요.",
+          "vi": "Giáo_viên nói | bằng tiếng=Trung."
+        }
+      ],
+      "chars": 3,
+      "initial": "중",
+      "grammar": {
+        "hanja": "中國語",
+        "hanViet": "trung quốc ngữ"
+      }
+    },
+    {
+      "id": "piltong-ba6ffb",
+      "word": "필통",
+      "meaningVi": "hộp=bút",
+      "defVi": "Hộp nhỏ | học_sinh dùng đựng /bút_chì/ và thước_kẻ.",
+      "leadVi": "Mở cặp ra, | bút, thước, tẩy nằm /gọn_gàng/ một chỗ.",
+      "anticipateVi": "Lắc cặp | nghe /lạch_cạch/ kìa!",
+      "pos": "noun",
+      "ipa": "piltong",
+      "topic": "study",
+      "topics": [
+        "study",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "연필을 _____에 넣었어요.",
+          "vi": "Tôi đã cho bút_chì vào hộp=bút."
+        }
+      ],
+      "chars": 2,
+      "initial": "필",
+      "grammar": {
+        "counter": "개",
+        "hanja": "筆筒",
+        "hanViet": "bút đồng"
+      }
+    },
+    {
+      "id": "haksaengjeung-a56c99",
+      "word": "학생증",
+      "meaningVi": "thẻ=học_sinh",
+      "defVi": "Thẻ có ảnh | chứng_minh mình là /học_sinh/ của trường.",
+      "leadVi": "Xuất_trình ở /thư_viện/ | là mượn được sách ngay.",
+      "anticipateVi": "Thẻ nhỏ | mà /quyền_lực/ ghê!",
+      "pos": "noun",
+      "ipa": "haksaengjeung [학쌩쯩]",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "도서관에서 _____을 보여 주세요.",
+          "vi": "Vui_lòng cho xem thẻ=học_sinh | ở thư_viện."
+        }
+      ],
+      "chars": 3,
+      "initial": "학",
+      "grammar": {
+        "counter": "장",
+        "hanja": "學生證",
+        "hanViet": "học sinh chứng"
+      }
+    },
+    {
+      "id": "hansik-e1cb47",
+      "word": "한식",
+      "meaningVi": "món=Hàn",
+      "defVi": "Mâm cơm có cơm, canh | và /kim_chi/ ăn kèm.",
+      "leadVi": "Đũa kim_loại dẹt | gắp đĩa /dưa_muối/ nhỏ kín bàn.",
+      "anticipateVi": "Cay cay, | /đậm_đà/ khó quên!",
+      "pos": "noun",
+      "ipa": "hansik",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "점심에 _____을 먹었어요.",
+          "vi": "Bữa trưa tôi đã ăn món=Hàn."
+        }
+      ],
+      "chars": 2,
+      "initial": "한",
+      "grammar": {
+        "hanja": "韓食",
+        "hanViet": "hàn thực"
+      }
+    },
+    {
+      "id": "seolleongtang-f83033",
+      "word": "설렁탕",
+      "meaningVi": "canh=xương_bò",
+      "defVi": "Canh /xương_bò/ ninh lâu, | nước trắng_đục béo_ngậy.",
+      "leadVi": "Muối để sẵn, | khách tự /gia_giảm/ cho vừa_miệng.",
+      "anticipateVi": "Hơi nóng /nghi_ngút/ | sáng mùa_đông!",
+      "pos": "noun",
+      "ipa": "seolleongtang",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "추운 날에 _____을 먹어요.",
+          "vi": "Ngày lạnh tôi ăn canh=xương_bò."
+        }
+      ],
+      "chars": 3,
+      "initial": "설",
+      "grammar": {
+        "counter": "그릇",
+        "hanja": "-湯",
+        "hanViet": "thang"
+      }
+    },
+    {
+      "id": "kkamansaek-e0fafa",
+      "word": "까만색",
+      "meaningVi": "màu=đen",
+      "defVi": "Màu của /than_đá/ | và bầu_trời đêm không trăng.",
+      "leadVi": "Quạ, than_củi và /bóng_tối/ | có chung một màu.",
+      "anticipateVi": "Mất điện | cả phòng /tối_om/!",
+      "pos": "noun",
+      "ipa": "kkamansaek",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____ 가방이 있어요.",
+          "vi": "Tôi có chiếc cặp_sách màu=đen."
+        }
+      ],
+      "chars": 3,
+      "initial": "까",
+      "grammar": {
+        "hanja": "-色",
+        "hanViet": "sắc"
+      }
+    },
+    {
+      "id": "yeseup-e89256",
+      "word": "예습",
+      "meaningVi": "chuẩn_bị bài",
+      "defVi": "Đọc /bài_học/ trước ở nhà | khi thầy chưa giảng.",
+      "leadVi": "Tối nay đọc trước, | mai lên=lớp /tự_tin/ giơ=tay.",
+      "anticipateVi": "Bài mai | đã /chuẩn_bị/ chưa?",
+      "pos": "noun",
+      "ipa": "yeseup",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "수업 전에 _____을 해요.",
+          "vi": "Tôi chuẩn_bị bài | trước giờ học."
+        }
+      ],
+      "chars": 2,
+      "initial": "예",
+      "grammar": {
+        "hanja": "豫習",
+        "hanViet": "dự tập"
+      }
+    },
+    {
+      "id": "yukgyo-d6bd62",
+      "word": "육교",
+      "meaningVi": "cầu_vượt",
+      "defVi": "Cây cầu bắc ngang đường_phố | cho người=/đi_bộ/.",
+      "leadVi": "Đứng trên cao | ngắm dòng xe /tấp_nập/ dưới chân.",
+      "anticipateVi": "Sang đường | /an_toàn/ hơn rồi!",
+      "pos": "noun",
+      "ipa": "yukgyo [육꾜]",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "학교 앞 _____를 건너요.",
+          "vi": "Tôi đi qua cầu_vượt | trước trường."
+        }
+      ],
+      "chars": 2,
+      "initial": "육",
+      "grammar": {
+        "counter": "개",
+        "hanja": "陸橋",
+        "hanViet": "lục kiều"
+      }
+    },
+    {
+      "id": "yangsik-4592ac",
+      "word": "양식",
+      "meaningVi": "món=Tây",
+      "defVi": "Bữa_ăn có súp, | thịt bò /áp_chảo/ và bánh_mì.",
+      "leadVi": "Nhà_hàng trải khăn trắng, | món /khai_vị/ là súp kem.",
+      "anticipateVi": "Thử đổi /khẩu_vị/ | tối nay nhé!",
+      "pos": "noun",
+      "ipa": "yangsik",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "오늘 저녁에 _____을 먹어요.",
+          "vi": "Tối nay tôi ăn món=Tây."
+        }
+      ],
+      "chars": 2,
+      "initial": "양",
+      "grammar": {
+        "hanja": "洋食",
+        "hanViet": "dương thực"
+      }
+    },
+    {
+      "id": "eok-af9f38",
+      "word": "억",
+      "meaningVi": "trăm=triệu",
+      "defVi": "Số đếm lớn | bằng trăm triệu, ghi tám /chữ_số/ không.",
+      "leadVi": "Giá căn nhà=/mơ_ước/ | thường tính bằng đơn_vị này.",
+      "anticipateVi": "Hoa_mắt | /chóng_mặt/ luôn!",
+      "pos": "noun",
+      "ipa": "eok",
+      "topic": "money",
+      "topics": [
+        "money"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이 차는 _____ 원이 넘어요.",
+          "vi": "Chiếc xe này | giá hơn một trăm triệu won."
+        }
+      ],
+      "chars": 1,
+      "initial": "억",
+      "grammar": {
+        "hanja": "億",
+        "hanViet": "ức"
+      }
+    },
+    {
+      "id": "pyeonuijeom-dbf769",
+      "word": "편의점",
+      "meaningVi": "cửa_hàng tiện_lợi",
+      "defVi": "Cửa_hàng /mở_cửa/ suốt ngày_đêm, | bán đồ lặt_vặt.",
+      "leadVi": "Nửa_đêm đói_bụng, | chạy xuống mua /xúc_xích/ ngay.",
+      "anticipateVi": "Thèm /bánh_mì/ | lúc nửa_đêm?",
+      "pos": "noun",
+      "ipa": "pyeonuijeom [펴니점]",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에서 우유를 샀어요.",
+          "vi": "Tôi đã mua sữa | ở cửa_hàng tiện_lợi."
+        }
+      ],
+      "chars": 3,
+      "initial": "편",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "便宜店",
+        "hanViet": "tiện nghi điếm"
+      }
+    },
+    {
+      "id": "galbitang-cf58cd",
+      "word": "갈비탕",
+      "meaningVi": "canh=sườn",
+      "defVi": "Canh nước trong, | nấu từ /xương_sườn/ bò và củ_cải.",
+      "leadVi": "Thịt mềm róc khỏi xương, | /nước_dùng/ ngọt thanh.",
+      "anticipateVi": "Gặm xương | /thơm_lừng/ cả miệng!",
+      "pos": "noun",
+      "ipa": "galbitang",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "할머니와 _____을 먹었어요.",
+          "vi": "Tôi đã ăn canh=sườn | với bà."
+        }
+      ],
+      "chars": 3,
+      "initial": "갈",
+      "grammar": {
+        "counter": "그릇",
+        "hanja": "-湯",
+        "hanViet": "thang"
+      }
+    },
+    {
+      "id": "miyongsil-745b53",
+      "word": "미용실",
+      "meaningVi": "tiệm=làm=tóc",
+      "defVi": "Nơi=thợ /cắt_tóc/, | uốn hay nhuộm tóc cho khách.",
+      "leadVi": "/Máy_sấy/ kêu ù_ù, | mái_tóc mới dần hiện ra.",
+      "anticipateVi": "Đổi /phong_cách/ | thôi nào!",
+      "pos": "noun",
+      "ipa": "miyongsil",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "주말에 _____에 갔어요.",
+          "vi": "Cuối_tuần tôi đã đi | tiệm=làm=tóc."
+        }
+      ],
+      "chars": 3,
+      "initial": "미",
+      "grammar": {
+        "counter": "곳",
+        "hanja": "美容室",
+        "hanViet": "mỹ dung thất"
+      }
+    },
+    {
+      "id": "ilsik-4d2553",
+      "word": "일식",
+      "meaningVi": "món=Nhật",
+      "defVi": "Cơm cuộn, | cá sống thái mỏng chấm /mù_tạt/ cay.",
+      "leadVi": "/Cá_hồi/ tươi | được đầu_bếp khéo_léo thái từng lát.",
+      "anticipateVi": "Gắp miếng cá | /tươi_rói/ nào!",
+      "pos": "noun",
+      "ipa": "ilsik [일씩]",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구와 _____ 식당에 갔어요.",
+          "vi": "Tôi đã đến quán món=Nhật | với bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "일",
+      "grammar": {
+        "hanja": "日食",
+        "hanViet": "nhật thực"
+      }
+    },
+    {
+      "id": "chodeunghaksaeng-f0cd03",
+      "word": "초등학생",
+      "meaningVi": "học_sinh tiểu_học",
+      "defVi": "Học_sinh nhỏ_tuổi | đang đi_học ở trường /tiểu_học/.",
+      "leadVi": "Chiếc /cặp_sách/ to | gần bằng người, tung_tăng đến lớp.",
+      "anticipateVi": "Bé /tung_tăng/ | đến trường!",
+      "pos": "noun",
+      "ipa": "chodeunghaksaeng [초등학쌩]",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "동생이 올해 _____이 됐어요.",
+          "vi": "Năm_nay em tôi | đã thành học_sinh tiểu_học."
+        }
+      ],
+      "chars": 4,
+      "initial": "초",
+      "grammar": {
+        "counter": "명",
+        "hanja": "初等學生",
+        "hanViet": "sơ đẳng học sinh"
+      }
+    },
+    {
+      "id": "hayansaek-b7f411",
+      "word": "하얀색",
+      "meaningVi": "màu=trắng",
+      "defVi": "Màu của tuyết mới rơi | và ly /sữa_tươi/.",
+      "leadVi": "Áo sơ_mi /đồng_phục/ | dính chút mực là lộ ngay.",
+      "anticipateVi": "Như mây trời | /tinh_khôi/ quá!",
+      "pos": "noun",
+      "ipa": "hayansaek",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "저는 _____ 운동화를 샀어요.",
+          "vi": "Tôi đã mua đôi giày=thể_thao màu=trắng."
+        }
+      ],
+      "chars": 3,
+      "initial": "하",
+      "grammar": {
+        "hanja": "-色",
+        "hanViet": "sắc"
+      }
+    },
+    {
+      "id": "byeongmunan-6c6034",
+      "word": "병문안",
+      "meaningVi": "thăm=người=ốm",
+      "defVi": "Đến /bệnh_viện/ | thăm bạn_bè hay họ_hàng đang ốm.",
+      "leadVi": "Xách giỏ trái_cây | vào phòng hỏi_han bạn /cảm_lạnh/.",
+      "anticipateVi": "Mang /hoa_quả/ | đến hỏi_thăm!",
+      "pos": "noun",
+      "ipa": "byeongmunan",
+      "topic": "health",
+      "topics": [
+        "health",
+        "communication"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "친구가 아파서 _____을 갔어요.",
+          "vi": "Bạn bị ốm | nên tôi đã đi thăm."
+        }
+      ],
+      "chars": 3,
+      "initial": "병",
+      "grammar": {
+        "hanja": "病問安",
+        "hanViet": "bệnh vấn an"
+      }
+    },
+    {
+      "id": "ipaksiheom-d560ca",
+      "word": "입학시험",
+      "meaningVi": "kỳ_thi tuyển_sinh",
+      "defVi": "Bài_thi phải đỗ | mới được /nhập_học/ vào trường.",
+      "leadVi": "Cả nhà=/hồi_hộp/ | chờ tin báo đỗ vào trường.",
+      "anticipateVi": "Ôn /cấp_tốc/ | cho kịp nào!",
+      "pos": "noun",
+      "ipa": "ipaksiheom [이팍씨험]",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "언니가 _____을 봤어요.",
+          "vi": "Chị_gái tôi | đã dự kỳ_thi tuyển_sinh."
+        }
+      ],
+      "chars": 4,
+      "initial": "입",
+      "grammar": {
+        "hanja": "入學試驗",
+        "hanViet": "nhập học thí nghiệm"
+      }
+    },
+    {
+      "id": "jadongpanmaegi-f5ebbf",
+      "word": "자동판매기",
+      "meaningVi": "máy=bán=tự_động",
+      "defVi": "Máy bỏ tiền vào, | bấm nút là /nước_ngọt/ rơi ra.",
+      "leadVi": "Nhét tiền vào khe, | máy /lập_tức/ nhả lon nước.",
+      "anticipateVi": "Nút_bấm | /nhấp_nháy/ mời_gọi!",
+      "pos": "noun",
+      "ipa": "jadongpanmaegi",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "technology"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "_____에서 물을 샀어요.",
+          "vi": "Tôi mua nước | ở máy=bán_hàng tự_động."
+        }
+      ],
+      "chars": 5,
+      "initial": "자",
+      "grammar": {
+        "counter": "대",
+        "hanja": "自動販賣機",
+        "hanViet": "tự động phán mại cơ"
+      }
+    },
+    {
+      "id": "japchae-c0dac3",
+      "word": "잡채",
+      "meaningVi": "miến=trộn",
+      "defVi": "Miến xào với rau, | thịt và /xì_dầu/ ngọt mặn.",
+      "leadVi": "Sợi trong /óng_ánh/, | dai mềm, xào cùng rau và thịt.",
+      "anticipateVi": "Món /đãi_khách/ | ngày vui đây!",
+      "pos": "noun",
+      "ipa": "japchae",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "생일에 엄마가 _____를 만들었어요.",
+          "vi": "Mẹ làm miến=trộn | vào ngày sinh_nhật."
+        }
+      ],
+      "chars": 2,
+      "initial": "잡",
+      "grammar": {
+        "counter": "접시",
+        "hanja": "雜菜",
+        "hanViet": "tạp thái"
+      }
+    },
+    {
+      "id": "jeogeum-580e55",
+      "word": "저금",
+      "meaningVi": "tiết_kiệm",
+      "defVi": "Bỏ dần tiền vào /ngân_hàng/ | để_dành cho sau_này.",
+      "leadVi": "Từng đồng lẻ | góp lại sẽ /dư_dả/ về_sau.",
+      "anticipateVi": "Chậm mà chắc, | /tích_góp/ từng đồng!",
+      "pos": "noun",
+      "ipa": "jeogeum",
+      "topic": "money",
+      "topics": [
+        "money"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "은행에 _____을 했어요.",
+          "vi": "Tôi đã gửi tiết_kiệm | ở ngân_hàng."
+        }
+      ],
+      "chars": 2,
+      "initial": "저",
+      "grammar": {
+        "hanja": "貯金",
+        "hanViet": "trữ kim"
+      }
+    },
+    {
+      "id": "hasukbi-25db6f",
+      "word": "하숙비",
+      "meaningVi": "tiền=trọ",
+      "defVi": "Tiền trả chủ_nhà | để ở_trọ, kèm cả /bữa_ăn/.",
+      "leadVi": "Đầu tháng, | /sinh_viên/ xa quê nộp cho bà_chủ.",
+      "anticipateVi": "Bà_chủ | /nhắc_nhở/ rồi kìa!",
+      "pos": "noun",
+      "ipa": "hasukbi [하숙삐]",
+      "topic": "money",
+      "topics": [
+        "money",
+        "daily"
+      ],
+      "level": "TOPIK2",
+      "usage": [
+        {
+          "en": "이번 달 _____를 냈어요.",
+          "vi": "Tôi đã nộp tiền=trọ | tháng=này."
+        }
+      ],
+      "chars": 3,
+      "initial": "하",
+      "grammar": {
+        "hanja": "下宿費",
+        "hanViet": "hạ túc phí"
+      }
+    }
+  ]
+}
