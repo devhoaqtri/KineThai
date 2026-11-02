@@ -1,5 +1,5 @@
 {
-  "revision": "f24e3d8623aefce34b5bc468",
+  "revision": "f3a71f51f1e3662ef781bec2",
   "name": "WordCrawler vocabulary",
   "count": 700,
   "topics": [
@@ -378,29 +378,35 @@
       "word": "reconfortante",
       "shareCode": "REA",
       "meaningVi": "an_ủi, ấm_lòng",
-      "defVi": "Mang lại /an_ủi/, | giúp người_ta | bớt lo, bớt buồn.",
-      "leadVi": "Cháo hành | mẹ nấu lúc ốm, | ăn vào | thấy /ấm_lòng/.",
-      "anticipateVi": "Thấy đỡ hơn chưa nào?",
+      "defVi": "Làm người_ta thấy /yên_lòng/, | bớt buồn và mệt.",
+      "leadVi": "Thi trượt về nhà, | được mẹ /vỗ_về/ | bên mâm cơm.",
+      "anticipateVi": "Bát canh /ấm_áp/ đúng_lúc?",
       "emphasis": [
-        "an ủi",
-        "ấm lòng"
+        "yên lòng",
+        "vỗ về",
+        "ấm áp"
       ],
       "pos": "adj",
       "ipa": "/rekomfoɾˈtante/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "communication"
+        "emotion"
       ],
       "level": "C1",
       "chars": 13,
       "initial": "R",
       "usage": [
         {
-          "en": "Un abrazo de mi madre siempre es _____.",
-          "vi": "Cái ôm của=mẹ | lúc_nào cũng | ấm_lòng."
+          "en": "Después de un día largo, una sopa caliente es muy _____.",
+          "vi": "Sau một ngày dài, | bát súp nóng | thật ấm_lòng."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "reconfortante",
+        "plural": "reconfortantes",
+        "serEstar": "Thường dùng ser: | es reconfortante saberlo.",
+        "tipVi": "Không đổi theo giống: | una sopa reconfortante."
+      }
     },
     {
       "id": "aturdido",
@@ -521,31 +527,36 @@
       "id": "resentimiento",
       "word": "resentimiento",
       "shareCode": "KMQ",
-      "meaningVi": "sự oán_giận",
-      "defVi": "Nỗi /ấm_ức/ âm_ỉ | vì chuyện | mình thấy bất_công.",
-      "leadVi": "Chia đất, | anh cả phần to, | các em /im_lặng/ mãi.",
-      "anticipateVi": "/Cục_tức/ | nghẹn ngang cổ!",
+      "meaningVi": "sự=oán_giận",
+      "defVi": "Cảm_giác /ấm_ức/ lâu | vì bị đối_xử bất_công.",
+      "leadVi": "Bị đổ_oan làm vỡ cốc, | bạn /hậm_hực/ cả=tuần.",
+      "anticipateVi": "Giận đến bao_giờ | mới /nguôi_ngoai/?",
       "emphasis": [
-        "âm ỉ",
-        "im lặng"
+        "ấm ức",
+        "hậm hực",
+        "nguôi ngoai"
       ],
       "pos": "noun",
       "ipa": "/resentiˈmjento/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "society",
-        "work"
+        "emotion"
       ],
       "level": "C1",
       "chars": 13,
       "initial": "R",
       "usage": [
         {
-          "en": "Las injusticias en la empresa generan mucho _____.",
-          "vi": "Những bất_công | trong công_ty | gây ra | nhiều oán_giận."
+          "en": "Después de tantos años, todavía guarda _____ hacia su antiguo jefe.",
+          "vi": "Bao năm rồi, | anh=ấy vẫn | oán_giận sếp cũ."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los resentimientos",
+        "tipVi": "Đi với hacia: | resentimiento hacia alguien."
+      }
     },
     {
       "id": "entristecer",
@@ -579,88 +590,113 @@
       "id": "autocontrol",
       "word": "autocontrol",
       "shareCode": "HS5",
-      "meaningVi": "sự tự_chủ",
-      "defVi": "Sự tự_chủ, | kìm_chế cảm_xúc | và /hành_động/ mình.",
-      "leadVi": "Bị /khiêu_khích/ | giữa đường, | anh hít sâu | rồi bỏ đi.",
-      "anticipateVi": "Kìm lại, | kìm lại nào!",
+      "meaningVi": "sự=tự_chủ",
+      "defVi": "Khả_năng /kiềm_chế/ | cơn giận hay mong_muốn bốc_đồng.",
+      "leadVi": "Bị trêu mãi, | bạn hít sâu, | vẫn /nhẫn_nhịn/ đáp_lời.",
+      "anticipateVi": "Muốn cãi mà vẫn /im_lặng/?",
       "emphasis": [
-        "tự chủ",
-        "hít sâu"
+        "kiềm chế",
+        "nhẫn nhịn",
+        "im lặng"
       ],
       "pos": "noun",
       "ipa": "/awtokonˈtɾol/",
       "topic": "character",
       "topics": [
-        "character",
-        "emotion"
+        "character"
       ],
       "level": "C1",
       "chars": 11,
       "initial": "A",
       "usage": [
         {
-          "en": "Hace falta mucho _____ para no comerse todo el pastel.",
-          "vi": "Cần rất nhiều tự_chủ | để không ăn hết | cả cái_bánh."
+          "en": "Hace falta mucho _____ para no contestar cuando alguien te grita.",
+          "vi": "Cần nhiều | sự=tự_chủ | để không cãi=lại | khi bị ai quát."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "tipVi": "Viết liền một chữ: | autocontrol, | không có gạch_nối."
+      }
     },
     {
       "id": "sereno",
       "word": "sereno",
       "shareCode": "56C",
       "meaningVi": "thanh_thản",
-      "defVi": "/Thanh_thản/, bình_yên, | không chút xao_động nào.",
-      "leadVi": "/Sớm_mai/ bên hồ, | sư thầy ngồi_thiền | dưới gốc đa.",
-      "anticipateVi": "Tâm tịnh | như nước.",
+      "defVi": "Lòng /yên_bình/, | chẳng bồn_chồn | dù việc bề_bộn.",
+      "leadVi": "Sáng_sớm bên hồ, | bạn ngồi /lặng_yên/ nghe chim hót.",
+      "anticipateVi": "Bạn quên hết /áp_lực/?",
       "emphasis": [
-        "bình yên",
-        "ngồi thiền"
+        "yên bình",
+        "lặng yên",
+        "áp lực"
       ],
       "pos": "adj",
       "ipa": "/seˈɾeno/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "character"
+        "emotion"
       ],
       "level": "C1",
       "chars": 6,
       "initial": "S",
       "usage": [
         {
-          "en": "Después de meditar me siento tranquilo y _____.",
-          "vi": "Sau khi ngồi_thiền, | tôi thấy | bình_yên và thanh_thản."
+          "en": "Aunque todos estaban nerviosos, ella estaba _____ antes del examen.",
+          "vi": "Dù ai cũng | lo_lắng, | cô=ấy vẫn thanh_thản | trước giờ thi."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "serena",
+        "plural": "serenos / serenas",
+        "serEstar": "ser sereno: điềm_đạm | estar sereno: đang bình_tâm",
+        "tipVi": "Trời sereno | là trời quang, | không mây."
+      }
     },
     {
       "id": "estremecer",
       "word": "estremecer",
       "shareCode": "G6J",
       "meaningVi": "rùng_mình",
-      "defVi": "/Rùng_mình/ | khi nghĩ đến hay thấy | điều gì ghê_sợ.",
-      "leadVi": "Nhớ lần kẹt /thang_máy/ | tối om, | sống_lưng | lạnh toát.",
-      "anticipateVi": "Nổi hết /da_gà/!",
+      "defVi": "/Run_rẩy/ thoáng qua | vì lạnh, | vì sợ hay ghê.",
+      "leadVi": "Nhớ lần lạc trong rừng, | bạn vẫn | nổi /da_gà/.",
+      "anticipateVi": "Nước_đá chảy dọc /sống_lưng/?",
       "emphasis": [
-        "ghê sợ",
-        "lạnh toát"
+        "Run rẩy",
+        "da gà",
+        "sống lưng"
       ],
       "pos": "verb",
       "ipa": "/estɾemeˈθeɾ/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "perception"
+        "emotion"
       ],
       "level": "C1",
       "chars": 10,
       "initial": "E",
       "usage": [
         {
-          "en": "Cada vez que recuerdo aquel accidente, me hace _____.",
-          "vi": "Mỗi lần nhớ lại | vụ tai_nạn đó, | tôi lại rùng_mình."
+          "en": "Cada vez que recuerda aquella tormenta, se vuelve a _____.",
+          "vi": "Mỗi lần nhớ | trận bão ấy, | cậu=ấy lại rùng_mình."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "yo -zco : me estremezco",
+          "tiempos": {
+            "presente": "yo me estremezco",
+            "pretérito": "él se estremeció",
+            "participio": "estremecido",
+            "gerundio": "estremeciéndose"
+          }
+        },
+        "reflexive": "estremecerse",
+        "tipVi": "Ngôi yo thêm z: | me estremezco."
+      }
     },
     {
       "id": "permitir",
@@ -1622,29 +1658,36 @@
       "word": "ambiguo",
       "shareCode": "JAE",
       "meaningVi": "nước đôi, mập_mờ",
-      "defVi": "/Có_thể/ hiểu | theo nhiều cách, | không rõ nghĩa.",
-      "leadVi": "Nhắn đúng chữ ừ, | đọc mãi | chẳng biết | vui hay giận.",
-      "anticipateVi": "Hiểu sao cho đúng?",
+      "defVi": "Có_thể hiểu | theo nhiều cách, | chẳng /rõ_ràng/.",
+      "leadVi": "Nhận tin_nhắn chỉ một chữ ừ, | bạn /đoán_mò/ mãi.",
+      "anticipateVi": "Gọi hỏi /thẳng_thắn/ cho xong?",
       "emphasis": [
-        "nhiều cách",
-        "đọc mãi"
+        "rõ ràng",
+        "đoán mò",
+        "thẳng thắn"
       ],
       "pos": "adj",
-      "ipa": "/amˈbi.ɣwo/",
-      "topic": "communication",
+      "ipa": "/amˈbiɣwo/",
+      "topic": "thinking",
       "topics": [
-        "communication",
-        "thinking"
+        "thinking",
+        "communication"
       ],
       "level": "C1",
       "chars": 7,
       "initial": "A",
       "usage": [
         {
-          "en": "El final de la película es bastante _____.",
-          "vi": "Cái kết bộ_phim | khá mập_mờ."
+          "en": "La respuesta del director fue tan _____ que nadie supo qué hacer.",
+          "vi": "Câu trả_lời | của hiệu_trưởng | mơ_hồ đến mức | chẳng ai biết làm gì."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "ambigua",
+        "plural": "ambiguos / ambiguas",
+        "serEstar": "Thường dùng ser: | la pregunta es ambigua.",
+        "tipVi": "Chữ u vẫn đọc: | am-bi-guo, | giống_cái ambigua."
+      }
     },
     {
       "id": "aspirar",
@@ -1694,15 +1737,16 @@
       "word": "coherente",
       "shareCode": "EKP",
       "meaningVi": "mạch_lạc",
-      "defVi": "Mạch_lạc, | các phần gắn_kết | /chặt_chẽ/ và hợp_lý.",
-      "leadVi": "Từng ý | /nối_tiếp/ nhau | như các mắt_xích | liền_mạch.",
-      "anticipateVi": "/Ăn_khớp/ chưa?",
+      "defVi": "Các=ý nối nhau | /hợp_lý/, | dễ theo_dõi.",
+      "leadVi": "Bài=văn đi từng ý /chặt_chẽ/, | thầy khen.",
+      "anticipateVi": "Bài mẫu | được /tuyên_dương/?",
       "emphasis": [
-        "gắn kết",
-        "mắt xích"
+        "hợp lý",
+        "chặt chẽ",
+        "tuyên dương"
       ],
       "pos": "adj",
-      "ipa": "/ko.eˈɾen.te/",
+      "ipa": "/koeˈɾente/",
       "topic": "thinking",
       "topics": [
         "thinking",
@@ -1713,10 +1757,16 @@
       "initial": "C",
       "usage": [
         {
-          "en": "Su discurso fue claro y _____.",
-          "vi": "Bài phát_biểu | của=cô ấy | rõ_ràng và mạch_lạc."
+          "en": "Tu redacción es clara y _____ de principio a fin.",
+          "vi": "Bài viết của=bạn | rõ_ràng và mạch_lạc | từ đầu đến cuối."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "coherente",
+        "plural": "coherentes",
+        "serEstar": "Thường dùng ser: | el texto es coherente.",
+        "tipVi": "Coherente con | là nhất_quán với: | ser coherente con sus ideas."
+      }
     },
     {
       "id": "convincente",
@@ -2207,28 +2257,41 @@
       "word": "dificultar",
       "shareCode": "PS2",
       "meaningVi": "cản_trở",
-      "defVi": "/Cản_trở/, | làm chậm | hoặc gây khó | cho tiến_trình.",
-      "leadVi": "Mưa lớn kéo dài, | /công_trình/ đành dừng | giữa chừng.",
-      "anticipateVi": "Vướng chân | ở đâu?",
+      "defVi": "Gây /khó_khăn/ | khiến một việc | chậm hơn hay kém đi.",
+      "leadVi": "Ba_lô to | /vướng_víu/, | bạn leo dốc chậm hẳn.",
+      "anticipateVi": "Vứt bớt /đồ_đạc/ nhé?",
       "emphasis": [
-        "Cản trở",
-        "giữa chừng"
+        "khó khăn",
+        "vướng víu",
+        "đồ đạc"
       ],
       "pos": "verb",
       "ipa": "/difikulˈtaɾ/",
-      "topic": "general",
+      "topic": "daily",
       "topics": [
-        "general"
+        "daily"
       ],
       "level": "C1",
       "chars": 10,
       "initial": "D",
       "usage": [
         {
-          "en": "La lluvia puede _____ el trabajo de los bomberos.",
-          "vi": "Mưa có_thể | cản_trở công_việc | của lính cứu_hỏa."
+          "en": "La niebla puede _____ la visibilidad en la carretera.",
+          "vi": "Sương_mù có_thể | cản_trở tầm_nhìn | trên đường."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo dificulto",
+            "pretérito": "él dificultó",
+            "participio": "dificultado",
+            "gerundio": "dificultando"
+          }
+        },
+        "tipVi": "Không nhầm | với impedir: | dificultar chỉ làm khó thêm."
+      }
     },
     {
       "id": "impl-cito",
@@ -2453,29 +2516,34 @@
       "word": "meticuloso",
       "shareCode": "5MQ",
       "meaningVi": "tỉ_mỉ",
-      "defVi": "/Tỉ_mỉ/, | chú_ý | đến từng chi_tiết | nhỏ nhất.",
-      "leadVi": "Gấp áo phẳng từng nếp, | xếp màu | theo /thứ_tự/.",
-      "anticipateVi": "/Kỹ_tính/ quá chưa?",
+      "defVi": "Rất /cẩn_thận/ | tới từng chi_tiết nhỏ.",
+      "leadVi": "Mình dán nhãn ngăn_kéo, | xếp bút /ngăn_nắp/ | theo màu.",
+      "anticipateVi": "Mấy đứa bạn /nể_phục/?",
       "emphasis": [
-        "Tỉ mỉ",
-        "từng nếp"
+        "cẩn thận",
+        "ngăn nắp",
+        "nể phục"
       ],
       "pos": "adj",
       "ipa": "/metikuˈloso/",
       "topic": "character",
       "topics": [
-        "character",
-        "attention"
+        "character"
       ],
       "level": "C1",
       "chars": 10,
       "initial": "M",
       "usage": [
         {
-          "en": "Es un carpintero muy _____ con los detalles.",
-          "vi": "Anh=ấy | là một thợ mộc | rất tỉ_mỉ | trong từng chi_tiết."
+          "en": "Es muy _____ con su trabajo: revisa cada detalle dos veces.",
+          "vi": "Cô=ấy rất tỉ_mỉ | trong công_việc: | soát từng chi_tiết | hai lần."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "meticulosa",
+        "plural": "meticulosos / meticulosas",
+        "serEstar": "Thường dùng ser: | es meticuloso."
+      }
     },
     {
       "id": "noci-n",
@@ -2546,29 +2614,34 @@
       "word": "pragmático",
       "shareCode": "KTR",
       "meaningVi": "thực_tế, thực_dụng",
-      "defVi": "Thực_tế, | chú_trọng cách làm hiệu_quả | hơn /lý_thuyết/.",
-      "leadVi": "Không mơ_mộng /xa_xôi/, | chị chọn việc gần, | lương ổn.",
-      "anticipateVi": "/Thực_tế/ chút đi?",
+      "defVi": "Chọn cách=làm | /hợp_lý/, | sát với đời_sống.",
+      "leadVi": "Thay_vì mua mới, | mình /sửa_chữa/ | chiếc máy cũ.",
+      "anticipateVi": "/Để_dành/ tiền mua sau?",
       "emphasis": [
-        "Thực tế",
-        "mơ mộng"
+        "hợp lý",
+        "sửa chữa",
+        "Để dành"
       ],
       "pos": "adj",
       "ipa": "/pɾaɣˈmatiko/",
       "topic": "thinking",
       "topics": [
-        "thinking",
-        "work"
+        "thinking"
       ],
       "level": "C1",
       "chars": 10,
       "initial": "P",
       "usage": [
         {
-          "en": "Mi jefe es muy _____ y no pierde tiempo en discusiones.",
-          "vi": "Sếp tôi rất thực_tế | và không phí thời_gian | vào tranh_cãi."
+          "en": "Mi madre es muy _____: siempre busca la solución más sencilla.",
+          "vi": "Mẹ tôi rất thực_tế: | luôn chọn | cách=đơn_giản nhất."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "pragmática",
+        "plural": "pragmáticos / pragmáticas",
+        "serEstar": "Thường dùng ser: | es pragmático."
+      }
     },
     {
       "id": "precedente",
@@ -2611,12 +2684,13 @@
       "word": "predominante",
       "shareCode": "B32",
       "meaningVi": "chủ_đạo, chiếm ưu_thế",
-      "defVi": "Chiếm /ưu_thế/, | nổi_trội | hoặc phổ_biến nhất.",
-      "leadVi": "Cả cánh rừng | toàn một /màu_xanh/ | của=thông.",
-      "anticipateVi": "Màu nào chiếm phần?",
+      "defVi": "/Áp_đảo/ | về số_lượng | hay sức_mạnh trong nhóm.",
+      "leadVi": "Trong tủ đồ, | áo màu đen | /chiếm_lĩnh/ gần hết.",
+      "anticipateVi": "Mẹ tặng áo /sặc_sỡ/?",
       "emphasis": [
-        "ưu thế",
-        "màu xanh"
+        "Áp đảo",
+        "chiếm lĩnh",
+        "sặc sỡ"
       ],
       "pos": "adj",
       "ipa": "/pɾeðomiˈnante/",
@@ -2629,10 +2703,15 @@
       "initial": "P",
       "usage": [
         {
-          "en": "El rojo es el color _____ en esta bandera.",
-          "vi": "Màu đỏ | là màu chủ_đạo | trên lá_cờ này."
+          "en": "El color _____ en su ropa es el negro.",
+          "vi": "Màu chủ_đạo | trong quần_áo của=cô=ấy | là màu đen."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "predominante",
+        "plural": "predominantes",
+        "serEstar": "Thường dùng ser: | es predominante."
+      }
     },
     {
       "id": "extendido",
@@ -2668,18 +2747,18 @@
       "word": "reconciliar",
       "shareCode": "H04",
       "meaningVi": "làm_lành, hòa_giải",
-      "defVi": "/Hòa_giải/ | hoặc làm những điều mâu_thuẫn | dung_hòa nhau.",
-      "leadVi": "Hai /anh_em/ | giận nhau chục năm, | nay ôm chầm.",
-      "anticipateVi": "Làm lành được chưa?",
+      "defVi": "Giúp hai bên | đang giận nhau | /làm_lành/ trở_lại.",
+      "leadVi": "Hai bạn_thân /giận_dỗi/, | bạn rủ cả hai | ăn kem.",
+      "anticipateVi": "Cuối buổi /tươi_cười/ chứ?",
       "emphasis": [
-        "Hòa giải",
-        "ôm chầm"
+        "làm lành",
+        "giận dỗi",
+        "tươi cười"
       ],
       "pos": "verb",
       "ipa": "/rekonθiˈljaɾ/",
-      "topic": "society",
+      "topic": "emotion",
       "topics": [
-        "society",
         "emotion"
       ],
       "level": "C1",
@@ -2687,39 +2766,56 @@
       "initial": "R",
       "usage": [
         {
-          "en": "Mis padres decidieron _____se después de un año separados.",
-          "vi": "Bố_mẹ tôi | quyết_định làm_lành | sau một năm ly_thân."
+          "en": "Mi madre consiguió _____ a mis dos hermanos después de la discusión.",
+          "vi": "Mẹ tôi đã | hòa_giải được | hai anh_em sau lần cãi_vã."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo reconcilio",
+            "pretérito": "él reconcilió",
+            "participio": "reconciliado",
+            "gerundio": "reconciliando"
+          }
+        },
+        "tipVi": "Tự làm_lành thì | dùng reconciliarse."
+      }
     },
     {
       "id": "superfluo",
       "word": "superfluo",
       "shareCode": "P89",
       "meaningVi": "thừa, dư_thừa",
-      "defVi": "/Thừa_thãi/, | không còn cần_thiết | hay hữu_ích nữa.",
-      "leadVi": "/Câu_văn/ lặp hai lần một ý, | gạch bớt | cho gọn.",
-      "anticipateVi": "Bỏ bớt được không?",
+      "defVi": "Có cũng như không, | /dư_thừa/ | chẳng ai cần.",
+      "leadVi": "Đoạn_văn /rườm_rà/, | cô gạch | bớt mấy câu lặp ý.",
+      "anticipateVi": "Viết /ngắn_gọn/ lại nhé?",
       "emphasis": [
-        "Thừa thãi",
-        "gạch bớt"
+        "dư thừa",
+        "rườm rà",
+        "ngắn gọn"
       ],
       "pos": "adj",
       "ipa": "/suˈpeɾflwo/",
-      "topic": "general",
+      "topic": "study",
       "topics": [
-        "general",
-        "work"
+        "study"
       ],
       "level": "C1",
       "chars": 9,
       "initial": "S",
       "usage": [
         {
-          "en": "Quita ese adjetivo, es _____.",
-          "vi": "Bỏ tính_từ đó đi, | nó dư_thừa."
+          "en": "Este párrafo es _____, no aporta nada nuevo.",
+          "vi": "Đoạn này thừa, | chẳng thêm | được ý gì mới."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "superflua",
+        "plural": "superfluos / superfluas",
+        "serEstar": "Thường dùng ser: | es superfluo."
+      }
     },
     {
       "id": "pulir",
@@ -2903,29 +2999,35 @@
       "word": "versátil",
       "shareCode": "NDH",
       "meaningVi": "đa_năng, đa_tài",
-      "defVi": "/Đa_năng/, | làm được | nhiều việc khác nhau.",
-      "leadVi": "Sáng /dạy_học/, | chiều sửa xe, | tối đàn hát cho quán.",
-      "anticipateVi": "Biết tuốt à?",
+      "defVi": "Làm giỏi nhiều việc /khác_nhau/, | đổi vai rất nhanh.",
+      "leadVi": "Bạn=ấy hát, đàn, | lại còn /nhảy_múa/ rất cừ.",
+      "anticipateVi": "Lớp cử đi /biểu_diễn/ chứ?",
       "emphasis": [
-        "Đa năng",
-        "sửa xe"
+        "khác nhau",
+        "nhảy múa",
+        "biểu diễn"
       ],
       "pos": "adj",
       "ipa": "/beɾˈsatil/",
       "topic": "character",
       "topics": [
-        "character",
-        "work"
+        "character"
       ],
       "level": "C1",
       "chars": 8,
       "initial": "V",
       "usage": [
         {
-          "en": "Es un actor muy _____ que hace comedia y drama.",
-          "vi": "Anh=ấy | là một diễn_viên | rất đa_tài, | đóng cả hài lẫn chính_kịch."
+          "en": "Es una actriz muy _____: hace comedia, drama y musicales.",
+          "vi": "Cô=ấy là nữ diễn_viên | rất đa_năng: | đóng hài, chính_kịch | lẫn nhạc_kịch."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "versátil",
+        "plural": "versátiles",
+        "serEstar": "Thường dùng ser: | es una actriz versátil.",
+        "tipVi": "Số_nhiều | vẫn giữ dấu: | versátiles."
+      }
     },
     {
       "id": "ferviente",

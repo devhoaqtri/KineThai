@@ -1,5 +1,5 @@
 {
-  "revision": "d207b609f15dc800b8b79c89",
+  "revision": "0bb3fb96a683ba88a10082d7",
   "name": "WordCrawler vocabulary",
   "count": 565,
   "topics": [
@@ -1185,29 +1185,34 @@
       "word": "reservado",
       "shareCode": "PBM",
       "meaningVi": "kín_đáo",
-      "defVi": "/Kín_đáo/, | ít khi để lộ | cảm_xúc hay suy_nghĩ.",
-      "leadVi": "Làm cùng ba năm, | anh vẫn chẳng mấy khi /tâm_sự/.",
-      "anticipateVi": "Hỏi mười, | đáp một.",
+      "defVi": "Ít nói, | ít khi /bộc_lộ/ chuyện riêng với người=lạ.",
+      "leadVi": "Lớp mới, | bạn ngồi góc cuối, | hiếm_khi /mở_lời/ trước.",
+      "anticipateVi": "Hỏi gì cũng chỉ /mỉm_cười/?",
       "emphasis": [
-        "để lộ",
-        "tâm sự"
+        "bộc lộ",
+        "mở lời",
+        "mỉm cười"
       ],
       "pos": "adj",
       "ipa": "/reseɾˈβaðo/",
       "topic": "character",
       "topics": [
-        "character",
-        "emotion"
+        "character"
       ],
       "level": "A2",
       "chars": 9,
       "initial": "R",
       "usage": [
         {
-          "en": "Mi padre es un hombre _____ que no habla de sus sentimientos.",
-          "vi": "Bố tôi | là người kín_đáo, | không nói về cảm_xúc | của=mình."
+          "en": "Mi hermano es muy _____ y habla poco con gente nueva.",
+          "vi": "Anh_trai mình | rất kín_đáo, | ít nói_chuyện | với người=mới."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "reservada",
+        "plural": "reservados / reservadas",
+        "serEstar": "ser reservado: kín_đáo | estar reservado: đã=đặt chỗ"
+      }
     },
     {
       "id": "manzana",

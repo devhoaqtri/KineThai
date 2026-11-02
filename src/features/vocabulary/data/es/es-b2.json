@@ -1,5 +1,5 @@
 {
-  "revision": "56485187273b302312c68ced",
+  "revision": "3d7f2dcdd74231d7ce0bc2bf",
   "name": "WordCrawler vocabulary",
   "count": 862,
   "topics": [
@@ -711,13 +711,14 @@
       "id": "asco",
       "word": "asco",
       "shareCode": "9DW",
-      "meaningVi": "sự ghê_tởm",
-      "defVi": "/Cảm_giác/ ghê_tởm | trước điều bẩn_thỉu | hay đáng khinh.",
-      "leadVi": "Thấy ai /xả=rác/ xuống hồ, | cô nhăn mặt | quay đi.",
-      "anticipateVi": "/Eo_ơi/, | gớm quá!",
+      "meaningVi": "sự=ghê_tởm",
+      "defVi": "Cảm_giác /buồn_nôn/ | khi thấy thứ=bẩn | hay hôi_thối.",
+      "leadVi": "Mở hộp cơm quên cả=tuần, | bạn /nhăn_nhó/ quay đi.",
+      "anticipateVi": "Đổ thẳng vào /thùng_rác/?",
       "emphasis": [
-        "ghê tởm",
-        "nhăn mặt"
+        "buồn nôn",
+        "nhăn nhó",
+        "thùng rác"
       ],
       "pos": "noun",
       "ipa": "/ˈasko/",
@@ -730,39 +731,51 @@
       "initial": "A",
       "usage": [
         {
-          "en": "Mi hija pone cara de _____ cuando ve brócoli.",
-          "vi": "Con gái tôi | nhăn mặt ghê_tởm | khi thấy bông cải xanh."
+          "en": "Me da _____ ver la cocina tan sucia.",
+          "vi": "Nhìn bếp bẩn thế, | mình thấy ghê_tởm."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "tipVi": "Thường nói ¡Qué asco! | hoặc me da asco."
+      }
     },
     {
       "id": "desilusionado",
       "word": "desilusionado",
       "shareCode": "9CK",
       "meaningVi": "vỡ_mộng",
-      "defVi": "/Vỡ_mộng/, thất_vọng | vì sự_thật | không như mình nghĩ.",
-      "leadVi": "Tưởng làm ca_sĩ sướng, | ai ngờ | chạy sô /mệt_nhoài/.",
-      "anticipateVi": "/Màu_hồng/ đâu mất=rồi?",
+      "defVi": "Hết tin_tưởng, | /thất_vọng/ vì sự_thật | không như mơ.",
+      "leadVi": "Quán nổi_tiếng trên mạng, | ăn thử thấy /bình_thường/.",
+      "anticipateVi": "Kỳ_vọng bao_nhiêu, | /hụt_hẫng/ bấy_nhiêu?",
       "emphasis": [
         "thất vọng",
-        "ai ngờ"
+        "bình thường",
+        "hụt hẫng"
       ],
       "pos": "adj",
       "ipa": "/desilusjoˈnaðo/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "work"
+        "emotion"
       ],
       "level": "B2",
       "chars": 13,
       "initial": "D",
       "usage": [
         {
-          "en": "Mi hermano está _____ con su trabajo de oficina.",
-          "vi": "Anh_trai tôi | vỡ_mộng | với công_việc văn_phòng."
+          "en": "Muchos aficionados están _____ con el nuevo entrenador del equipo.",
+          "vi": "Nhiều người=hâm_mộ | vỡ_mộng với | huấn_luyện_viên mới của=đội."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "desilusionada",
+        "plural": "desilusionados / desilusionadas",
+        "governs": "con + sustantivo",
+        "serEstar": "Thường dùng estar: | estoy desilusionado.",
+        "tipVi": "Gốc là ilusión | (niềm=mong_đợi), | thêm des- | thành mất mong_đợi."
+      }
     },
     {
       "id": "expresivo",
@@ -799,11 +812,12 @@
       "word": "humillado",
       "shareCode": "KKD",
       "meaningVi": "bẽ_mặt, nhục_nhã",
-      "defVi": "/Bẽ_mặt/, | thấy nhục_nhã, | xấu_hổ trước mọi_người.",
-      "leadVi": "Bị sếp mắng | trước cả phòng, | chỉ muốn /độn_thổ/.",
-      "anticipateVi": "Tìm lỗ_nẻ | mà chui!",
+      "defVi": "/Xấu_hổ/ vì bị làm | mất_mặt trước đám_đông.",
+      "leadVi": "Trượt_chân giữa sân_trường, | bạn /đỏ_bừng/ cả=mặt.",
+      "anticipateVi": "Chỉ muốn /độn_thổ/ ngay?",
       "emphasis": [
-        "nhục nhã",
+        "Xấu hổ",
+        "đỏ bừng",
         "độn thổ"
       ],
       "pos": "adj",
@@ -817,98 +831,119 @@
       "initial": "H",
       "usage": [
         {
-          "en": "Me sentí _____ cuando el jefe me gritó delante de todos.",
-          "vi": "Tôi thấy nhục_nhã | khi sếp quát tôi | trước mọi_người."
+          "en": "Se sintió _____ cuando el profesor leyó su error en voz alta.",
+          "vi": "Cậu=ấy thấy bẽ_mặt | khi thầy đọc to | lỗi của=mình."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "humillada",
+        "plural": "humillados / humilladas",
+        "serEstar": "Thường dùng estar | hoặc sentirse: | se sintió humillado.",
+        "tipVi": "Gốc humillar, | hay đi với sentirse: | me sentí humillado."
+      }
     },
     {
       "id": "impaciencia",
       "word": "impaciencia",
       "shareCode": "7RH",
-      "meaningVi": "sự sốt_ruột",
-      "defVi": "Sự /sốt_ruột/ | khi phải chờ | hay mọi thứ quá chậm.",
-      "leadVi": "Đèn đỏ | còn ba giây, | /phía_sau/ | đã bóp_còi.",
-      "anticipateVi": "Nhanh lên nào, | lâu quá!",
+      "meaningVi": "sự=sốt_ruột",
+      "defVi": "Cảm_giác /bồn_chồn/ | khi phải chờ | quá lâu.",
+      "leadVi": "Mạng chậm, | bạn /nóng_ruột/ | gõ tay xuống bàn.",
+      "anticipateVi": "Muốn /bỏ_cuộc/ cho xong?",
       "emphasis": [
-        "sốt ruột",
-        "bóp còi"
+        "bồn chồn",
+        "nóng ruột",
+        "bỏ cuộc"
       ],
       "pos": "noun",
       "ipa": "/impaˈθjenθja/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "character",
-        "time"
+        "emotion"
       ],
       "level": "B2",
       "chars": 11,
       "initial": "I",
       "usage": [
         {
-          "en": "Tocaba el claxon con _____ en el semáforo.",
-          "vi": "Anh=ta | bấm còi | đầy sốt_ruột | ở đèn đỏ."
+          "en": "Esperaba la nota del examen con _____.",
+          "vi": "Cậu=ấy chờ | điểm thi | trong sốt_ruột."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "tipVi": "Có hai chữ c | đọc θ: | impaciencia."
+      }
     },
     {
       "id": "impulso",
       "word": "impulso",
       "shareCode": "451",
-      "meaningVi": "sự thôi_thúc",
-      "defVi": "Sự thôi_thúc /bất_chợt/ | muốn làm gì, | không kịp nghĩ.",
-      "leadVi": "/Ngang_qua/ tiệm giày, | bất_giác bước vào | mua một đôi.",
-      "anticipateVi": "Nghĩ chi, | cứ quẹt=thẻ!",
+      "meaningVi": "sự=thôi_thúc",
+      "defVi": "Ý_muốn /bất_chợt/ | nảy ra, | làm ngay chẳng suy_nghĩ.",
+      "leadVi": "Ngang qua tiệm giày, | bạn /bốc_đồng/ | quẹt thẻ mua luôn.",
+      "anticipateVi": "Giày nằm im trong tủ, | /hối_hận/ chưa?",
       "emphasis": [
-        "thôi thúc",
-        "bất giác"
+        "bất chợt",
+        "bốc đồng",
+        "hối hận"
       ],
       "pos": "noun",
       "ipa": "/imˈpulso/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "thinking"
+        "emotion"
       ],
       "level": "B2",
       "chars": 7,
       "initial": "I",
       "usage": [
         {
-          "en": "Compré la chaqueta por puro _____, sin pensarlo.",
-          "vi": "Tôi mua chiếc áo_khoác | vì thôi_thúc nhất_thời, | chẳng nghĩ_ngợi."
+          "en": "Por un _____, compré unas zapatillas que no necesitaba.",
+          "vi": "Vì một phút | bốc_đồng, | mình mua đôi giày | chẳng cần đến."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "plural": "los impulsos",
+        "tipVi": "Cũng là đà: | tomar impulso | là lấy đà."
+      }
     },
     {
       "id": "inferioridad",
       "word": "inferioridad",
       "shareCode": "T4K",
-      "meaningVi": "sự tự_ti",
-      "defVi": "Cảm_giác /tự_ti/, | thấy mình | thua_kém người khác.",
-      "leadVi": "Anh chị | /học_giỏi/ cả, | cậu út | ngồi im thin_thít.",
-      "anticipateVi": "Mình chẳng bằng ai…",
+      "meaningVi": "sự=tự_ti",
+      "defVi": "Cảm_giác mình /kém_cỏi/ | hơn những người=xung_quanh.",
+      "leadVi": "Vào lớp chuyên, | bạn thấy ai cũng giỏi, | /chùn_bước/ hẳn.",
+      "anticipateVi": "Muốn phát_biểu | mà tay cứ /ngần_ngại/?",
       "emphasis": [
-        "tự ti",
-        "thin thít"
+        "kém cỏi",
+        "chùn bước",
+        "ngần ngại"
       ],
       "pos": "noun",
-      "ipa": "/infeɾjoɾiˈðað/",
+      "ipa": "/imfeɾjoɾiˈðað/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "character"
+        "emotion"
       ],
       "level": "B2",
       "chars": 12,
       "initial": "I",
       "usage": [
         {
-          "en": "Tiene complejo de _____ porque su hermana saca mejores notas.",
-          "vi": "Cô=ấy tự_ti | vì chị_gái | học giỏi hơn."
+          "en": "Tenía un sentimiento de _____ frente a sus compañeros mayores.",
+          "vi": "Cậu=ấy thấy | tự_ti | trước các=bạn lớn_tuổi hơn."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "tipVi": "Hay đi trong cụm: | complejo de inferioridad."
+      }
     },
     {
       "id": "irritable",
@@ -943,100 +978,119 @@
       "id": "nostalgia",
       "word": "nostalgia",
       "shareCode": "ZPN",
-      "meaningVi": "nỗi hoài_niệm",
-      "defVi": "Nỗi hoài_niệm, | vui buồn /lẫn_lộn/ | khi nhớ ngày_xưa.",
-      "leadVi": "Nghe lại bài_hát | thời sinh_viên, | lòng bỗng /bồi_hồi/.",
-      "anticipateVi": "/Ngày_xưa/ ơi!",
+      "meaningVi": "nỗi=hoài_niệm",
+      "defVi": "Cảm_giác vừa vui vừa buồn | khi /hồi_tưởng/ chuyện cũ.",
+      "leadVi": "Nghe bài_hát thời cấp=một, | bạn /bồi_hồi/ cả=buổi.",
+      "anticipateVi": "Giở lại cuốn /lưu_bút/?",
       "emphasis": [
-        "hoài niệm",
-        "bồi hồi"
+        "hồi tưởng",
+        "bồi hồi",
+        "lưu bút"
       ],
       "pos": "noun",
       "ipa": "/nosˈtalxja/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "time"
+        "emotion"
       ],
       "level": "B2",
       "chars": 9,
       "initial": "N",
       "usage": [
         {
-          "en": "Mi abuela habla de su pueblo con mucha _____.",
-          "vi": "Bà tôi | nói về quê | với đầy hoài_niệm."
+          "en": "Cuando escucho esta canción, siento _____ de mis años en el colegio.",
+          "vi": "Mỗi khi nghe | bài_hát này, | mình hoài_niệm | những năm đi_học."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "f",
+        "article": "la",
+        "tipVi": "Hay đi với de: | nostalgia de la infancia."
+      }
     },
     {
       "id": "posesivo",
       "word": "posesivo",
       "shareCode": "JF0",
       "meaningVi": "chiếm_hữu",
-      "defVi": "/Chiếm_hữu/, | muốn người kia | chỉ thuộc về riêng mình.",
-      "leadVi": "Người_yêu /kiểm_tra/ điện_thoại, | cấm đi chơi | với bạn.",
-      "anticipateVi": "Của=tui, | cấm đụng!",
+      "defVi": "Muốn giữ khư_khư | làm /của_riêng/, | chẳng cho ai chạm.",
+      "leadVi": "Ai chạm vào gối, | con=mèo /gầm_gừ/ | giữ ngay.",
+      "anticipateVi": "Muốn bạn_thân là /độc_quyền/?",
       "emphasis": [
-        "riêng mình",
-        "kiểm tra"
+        "của riêng",
+        "gầm gừ",
+        "độc quyền"
       ],
       "pos": "adj",
       "ipa": "/poseˈsiβo/",
-      "topic": "emotion",
+      "topic": "character",
       "topics": [
-        "emotion",
-        "character"
+        "character",
+        "emotion"
       ],
       "level": "B2",
       "chars": 8,
       "initial": "P",
       "usage": [
         {
-          "en": "Mi exnovio era muy _____ y celoso.",
-          "vi": "Người_yêu cũ của=tôi | rất chiếm_hữu | và hay ghen."
+          "en": "Mi gato es muy _____ con su manta y no deja que nadie la toque.",
+          "vi": "Con=mèo nhà=mình | rất chiếm_hữu tấm chăn, | chẳng cho ai chạm vào."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "posesiva",
+        "plural": "posesivos / posesivas",
+        "serEstar": "Thường dùng ser: | es muy posesivo.",
+        "tipVi": "Còn là thuật_ngữ ngữ_pháp: | adjetivo posesivo (mi, tu)."
+      }
     },
     {
       "id": "sentimental",
       "word": "sentimental",
       "shareCode": "D9Q",
       "meaningVi": "tình_cảm, đa_cảm",
-      "defVi": "/Đa_cảm/, | dễ xúc_động, | quý những gì | gắn kỷ_niệm.",
-      "leadVi": "Vé /xem_phim/ | buổi_hẹn đầu, | giữ mãi | không nỡ vứt.",
-      "anticipateVi": "/Mít_ướt/ vừa thôi!",
+      "defVi": "Dễ /xúc_động/ | trước kỷ_niệm hay chuyện tình_cảm.",
+      "leadVi": "Dọn tủ, | chị /nâng_niu/ | từng tấm vé cũ.",
+      "anticipateVi": "Xem phim hoạt_hình | cũng /rơm_rớm/?",
       "emphasis": [
         "xúc động",
-        "giữ mãi"
+        "nâng niu",
+        "rơm rớm"
       ],
       "pos": "adj",
       "ipa": "/sentimenˈtal/",
       "topic": "emotion",
       "topics": [
-        "emotion",
-        "character"
+        "emotion"
       ],
       "level": "B2",
       "chars": 11,
       "initial": "S",
       "usage": [
         {
-          "en": "Guardo este reloj por su valor _____.",
-          "vi": "Tôi giữ chiếc đồng_hồ này | vì giá_trị tình_cảm."
+          "en": "Soy muy _____ y guardo todas las cartas de mis amigos.",
+          "vi": "Mình rất đa_cảm, | giữ hết | thư bạn_bè gửi."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "sentimental",
+        "plural": "sentimentales",
+        "serEstar": "ser sentimental: đa_cảm | estar sentimental: đang dễ xúc_động",
+        "tipVi": "Valor sentimental | là giá_trị kỷ_niệm, | không phải giá tiền."
+      }
     },
     {
       "id": "suspense",
       "word": "suspense",
       "shareCode": "QH2",
-      "meaningVi": "sự hồi_hộp",
-      "defVi": "Cảm_giác /hồi_hộp/ | chờ xem | chuyện gì sắp xảy_ra.",
-      "leadVi": "/Nhân_vật/ mở cửa | phòng tối, | nhạc phim | ngừng bặt.",
-      "anticipateVi": "/Nín_thở/ | chờ tí…",
+      "meaningVi": "sự=hồi_hộp",
+      "defVi": "Cảm_giác /căng_thẳng/ | chờ xem | chuyện gì sẽ xảy_ra.",
+      "leadVi": "Phim trinh_thám tới đoạn /cao_trào/, | bạn nín_thở.",
+      "anticipateVi": "Tay bấu chặt /gối_ôm/?",
       "emphasis": [
-        "hồi hộp",
-        "ngừng bặt"
+        "căng thẳng",
+        "cao trào",
+        "gối ôm"
       ],
       "pos": "noun",
       "ipa": "/susˈpense/",
@@ -1049,10 +1103,15 @@
       "initial": "S",
       "usage": [
         {
-          "en": "La novela tiene tanto _____ que no puedo dejar de leer.",
-          "vi": "Cuốn tiểu_thuyết | hồi_hộp đến mức | tôi không thể ngừng đọc."
+          "en": "La película mantiene el _____ hasta el último minuto.",
+          "vi": "Bộ=phim giữ | sự=hồi_hộp | đến phút cuối."
         }
-      ]
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "el",
+        "tipVi": "Đọc đủ ba âm: | sus-pen-se."
+      }
     },
     {
       "id": "traum-tico",
@@ -3703,12 +3762,13 @@
       "word": "deducir",
       "shareCode": "506",
       "meaningVi": "suy_ra, suy_luận",
-      "defVi": "Suy ra /kết_luận/ | từ những dữ_kiện | đã có.",
-      "leadVi": "Vết bùn ở giày, | /thám_tử/ đoán | anh vừa ra vườn.",
-      "anticipateVi": "Suy ra được gì?",
+      "defVi": "Rút ra /kết_luận/ | từ những gì | đã biết.",
+      "leadVi": "Giày ướt ở cửa, | mình /suy_đoán/ | em đi mưa.",
+      "anticipateVi": "Cứ như /thám_tử/ vậy!",
       "emphasis": [
         "kết luận",
-        "Vết bùn"
+        "suy đoán",
+        "thám tử"
       ],
       "pos": "verb",
       "ipa": "/deðuˈθiɾ/",
@@ -3721,10 +3781,23 @@
       "initial": "D",
       "usage": [
         {
-          "en": "Por su ropa mojada, es fácil _____ que está lloviendo.",
-          "vi": "Nhìn quần_áo ướt của=cô=ấy, | dễ suy_ra | trời đang mưa."
+          "en": "Por su cara, puedo _____ que el examen le ha ido bien.",
+          "vi": "Nhìn mặt, | mình suy ra | cậu=ấy làm bài tốt."
         }
-      ]
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "yo -zco : deduzco",
+          "tiempos": {
+            "presente": "yo deduzco",
+            "pretérito": "él dedujo",
+            "participio": "deducido",
+            "gerundio": "deduciendo"
+          }
+        },
+        "tipVi": "Quá_khứ | đổi thành j: | dedujo, không phải deducó."
+      }
     },
     {
       "id": "representar",
@@ -3848,29 +3921,35 @@
       "id": "imprescindible",
       "word": "imprescindible",
       "shareCode": "B78",
-      "meaningVi": "không_thể thiếu",
-      "defVi": "Không_thể thiếu, | /bắt_buộc/ phải có | mới làm được.",
-      "leadVi": "Thiếu cô=ấy một hôm, | cả /văn_phòng/ rối tung.",
-      "anticipateVi": "Vắng là rối à?",
+      "meaningVi": "không=thể=thiếu",
+      "defVi": "Rất /thiết_yếu/, | thiếu nó | thì không làm nổi.",
+      "leadVi": "Leo núi mùa đông, | áo ấm | là thứ=/bắt_buộc/.",
+      "anticipateVi": "Thêm đôi /găng_tay/ nữa?",
       "emphasis": [
+        "thiết yếu",
         "bắt buộc",
-        "rối tung"
+        "găng tay"
       ],
       "pos": "adj",
       "ipa": "/impɾesθinˈdiβle/",
-      "topic": "general",
+      "topic": "thinking",
       "topics": [
-        "general"
+        "thinking"
       ],
       "level": "B2",
       "chars": 14,
       "initial": "I",
       "usage": [
         {
-          "en": "Para este viaje, el pasaporte es _____.",
-          "vi": "Với chuyến_đi này, | hộ_chiếu | là không_thể thiếu."
+          "en": "Para hacer esta receta, la harina es _____.",
+          "vi": "Muốn làm món này, | bột mì | là thứ=không=thể thiếu."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "imprescindible",
+        "plural": "imprescindibles",
+        "serEstar": "Thường dùng ser: | es imprescindible."
+      }
     },
     {
       "id": "destacado",
@@ -3995,18 +4074,18 @@
       "word": "superficial",
       "shareCode": "PCS",
       "meaningVi": "hời_hợt",
-      "defVi": "/Hời_hợt/, | chỉ ở bề_ngoài | mà không sâu_sắc.",
-      "leadVi": "Quen nhau ba năm | mà chỉ /hỏi_han/ | chuyện thời_tiết.",
-      "anticipateVi": "Chỉ ngoài da thôi?",
+      "defVi": "Chỉ lướt qua bề_ngoài, | không đi vào /chiều_sâu/.",
+      "leadVi": "/Đọc_lướt/ tiêu_đề rồi bình_luận, | bạn bị nhóm nhắc.",
+      "anticipateVi": "Mở bài_báo | /nghiền_ngẫm/ lại?",
       "emphasis": [
-        "Hời hợt",
-        "hỏi han"
+        "chiều sâu",
+        "Đọc lướt",
+        "nghiền ngẫm"
       ],
       "pos": "adj",
       "ipa": "/supeɾfiˈθjal/",
-      "topic": "character",
+      "topic": "thinking",
       "topics": [
-        "character",
         "thinking"
       ],
       "level": "B2",
@@ -4014,10 +4093,15 @@
       "initial": "S",
       "usage": [
         {
-          "en": "Su conocimiento del tema es bastante _____.",
-          "vi": "Hiểu_biết của=anh=ấy | về chủ_đề này | khá hời_hợt."
+          "en": "Su análisis es demasiado _____ y no explica nada importante.",
+          "vi": "Bài phân_tích của=anh=ấy | quá hời_hợt, | chẳng giải_thích | được gì quan_trọng."
         }
-      ]
+      ],
+      "grammar": {
+        "feminine": "superficial",
+        "plural": "superficiales",
+        "serEstar": "Thường dùng ser: | es un análisis superficial."
+      }
     },
     {
       "id": "vulnerable",
