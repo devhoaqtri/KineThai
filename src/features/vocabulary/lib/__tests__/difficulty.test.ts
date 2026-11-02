@@ -21,6 +21,7 @@ import {
 import type { VocabularyLevel } from "../schema";
 
 const cefr = (id: string): DifficultyTrack => CEFR_TRACKS.find((t) => t.id === id)!;
+const topik = (id: string): DifficultyTrack => TOPIK_TRACKS.find((t) => t.id === id)!;
 
 describe("track catalogues", () => {
   it("ships ten CEFR tracks", () => expect(CEFR_TRACKS).toHaveLength(10));
@@ -72,6 +73,24 @@ describe("TOPIK_TRACKS", () => {
   });
   it("offers the first track once a TOPIK 1 deck is loaded", () =>
     expect(difficultyLevels("vo-long", ["TOPIK1"])).toEqual(["TOPIK1"]));
+  // doc-hieu sits alone on TOPIK3 for the same reason vo-long sits alone on TOPIK1: the
+  // ko deck reached TOPIK3 (K301–K302) but has no TOPIK4 cards, so `isTrackAvailable`,
+  // which checks `trackCeiling`, would grey the rung at "Sắp có · 0 từ" and hide the
+  // reader's only TOPIK3-only entry point. Widen doc-hieu to ["TOPIK3","TOPIK4"] and
+  // update these assertions when a TOPIK4 batch ships.
+  it("nails doc-hieu's ceiling to TOPIK3 so the current deck can serve it", () => {
+    expect(topik("doc-hieu").levels).toEqual(["TOPIK3"]);
+    expect(trackCeiling(topik("doc-hieu"))).toBe("TOPIK3");
+  });
+  it("offers doc-hieu once a deck carries TOPIK3, before any TOPIK4 exists", () => {
+    const koLevels: VocabularyLevel[] = ["TOPIK1", "TOPIK2", "TOPIK3"];
+    expect(isTrackAvailable(topik("doc-hieu"), koLevels)).toBe(true);
+    // Sanity: before K301–K302 (only TOPIK1+TOPIK2), doc-hieu was not available and the
+    // clamp fell back to DIFFICULTY_ALL. The narrowing keeps that pre-TOPIK3 behavior.
+    const preTOPIK3: VocabularyLevel[] = ["TOPIK1", "TOPIK2"];
+    expect(isTrackAvailable(topik("doc-hieu"), preTOPIK3)).toBe(false);
+    expect(clampDifficultyToDeck("doc-hieu", preTOPIK3)).toBe(DIFFICULTY_ALL);
+  });
 });
 
 describe("JLPT_TRACKS", () => {
