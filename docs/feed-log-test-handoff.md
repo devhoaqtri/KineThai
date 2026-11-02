@@ -61,7 +61,8 @@ npm run dev -- --port 5195
 - **Headless:** the recipe in the project memory "Headless layout measurement" applies —
   `puppeteer-core` at `/usr/local/lib/node_modules/puppeteer-core/...`, Chrome at
   `/Applications/Google Chrome.app/...`. Set `localStorage["kinetic.orientation.gate"]="off"`
-  and `localStorage["kinetic.vocab.difficulty"]=""` before load. Use a mobile viewport
+  and `localStorage["kinetic.vocab.difficulty.<locale>"]=""` (`<locale>` is the deck the host
+  serves — `vi`, `es`, `ko`, …) before load. Use a mobile viewport
   (`390x844`, `deviceScaleFactor: 3`, `isMobile`, `hasTouch`). Swipe with CDP
   `Input.dispatchTouchEvent` (start at y≈600, eight moves of −45 px, end); do not use
   `touchscreen.tap`, it fires twice. To fit many words into a short run, scale `setTimeout`

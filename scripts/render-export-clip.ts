@@ -66,7 +66,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { getExportPreset } from "../src/features/vocabulary/lib/export-presets";
 import { SHOWCASE_CONTRACT } from "../src/features/vocabulary/lib/showcase-contract";
 import { resolveTarget, siteAddress } from "../src/features/vocabulary/lib/target-language";
-import { DIFFICULTY_CHOICE_KEY } from "../src/features/vocabulary/lib/difficulty-choice";
+import { difficultyChoiceKey } from "../src/features/vocabulary/lib/difficulty-choice";
 import { DIFFICULTY_ALL } from "../src/features/vocabulary/lib/difficulty";
 import { launchChrome, type Cdp, type ChromeSession } from "./lib/cdp";
 
@@ -107,7 +107,8 @@ if (mode === "export" && !code) {
 const preset = flag("preset", "tiktok-clear");
 const base = flag("base", "http://localhost:5195");
 // The end card names the address of the deck being recorded (hoa.localhost → hoa.chayla.app).
-const address = siteAddress(resolveTarget(new URL(base).host));
+const target = resolveTarget(new URL(base).host);
+const address = siteAddress(target);
 // Export and showcase modes only; the feed takes its dialect from the reader's own choice.
 const dialect = flag("dialect", "");
 const fps = Number(flag("fps", "30"));
@@ -301,9 +302,10 @@ async function main() {
     });
     // Skip the difficulty onboarding. It is a first-visit screen, and a clip that opens on
     // it is showing the reader a form rather than the thing being advertised. Written
-    // before any app script runs, so the feed never renders the onboarding at all.
+    // before any app script runs, so the feed never renders the onboarding at all. The key
+    // is the deck locale's slot, matching what the app reads on boot.
     await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
-      source: `try { localStorage.setItem(${JSON.stringify(DIFFICULTY_CHOICE_KEY)}, ${JSON.stringify(DIFFICULTY_ALL)}); } catch {}`,
+      source: `try { localStorage.setItem(${JSON.stringify(difficultyChoiceKey(target))}, ${JSON.stringify(DIFFICULTY_ALL)}); } catch {}`,
     });
     url = `${base}/feed`;
   } else {

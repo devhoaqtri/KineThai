@@ -128,7 +128,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
         // level confirmed while the pack played has already been written to it.
         setFilters((current) => ({
           ...current,
-          difficulty: readDifficultyChoice() ?? DIFFICULTY_ALL,
+          difficulty: readDifficultyChoice(locale ?? "en") ?? DIFFICULTY_ALL,
         }));
       }
       setSeed(newSeed());
@@ -143,7 +143,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
       setStage("feed");
       return;
     }
-    const stored = readDifficultyChoice();
+    const stored = readDifficultyChoice(locale ?? "en");
     if (stored === null) {
       setStage("onboarding");
       return;
@@ -163,12 +163,12 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     if (!metadata?.levels?.length) return;
     const safe = clampDifficultyToDeck(filters.difficulty, metadata.levels);
     if (safe === filters.difficulty) return;
-    writeDifficultyChoice(safe);
+    writeDifficultyChoice(locale ?? "en", safe);
     setFilters((current) => ({ ...current, difficulty: safe }));
     setSeed(newSeed());
   }, [metadata, packName, filters.difficulty]);
   const pickDifficulty = useCallback((difficulty: string) => {
-    writeDifficultyChoice(difficulty);
+    writeDifficultyChoice(locale ?? "en", difficulty);
     setFilters((current) => ({ ...current, difficulty }));
     setSeed(newSeed());
     setStage("feed");
@@ -271,7 +271,8 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
             )
               return;
             // The level chosen here is the one the next visit opens on.
-            if (value.difficulty !== filters.difficulty) writeDifficultyChoice(value.difficulty);
+            if (value.difficulty !== filters.difficulty)
+              writeDifficultyChoice(locale ?? "en", value.difficulty);
             setFilters(value);
             setSeed(newSeed());
           }}
@@ -367,7 +368,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           onMetadata={setMetadata}
           onRestart={shuffle}
           onClearFilters={() => {
-            writeDifficultyChoice(ALL_FILTERS.difficulty);
+            writeDifficultyChoice(locale ?? "en", ALL_FILTERS.difficulty);
             setFilters(ALL_FILTERS);
           }}
           revealButtonLabel={activeWording?.reveal_button}
