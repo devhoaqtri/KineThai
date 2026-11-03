@@ -1,0 +1,3624 @@
+{
+  "revision": "f695ad227754b4a2469795dd",
+  "name": "HSK6",
+  "count": 95,
+  "topics": [
+    "attention",
+    "character",
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "HSK6"
+  ],
+  "words": [
+    {
+      "id": "baolu-6ebae8",
+      "word": "暴露",
+      "meaningVi": "bộc_lộ",
+      "defVi": "Để điều đang /che_giấu/ | hiện rõ trước người=khác.",
+      "leadVi": "Nấp kỹ thế, | tiếng cười lại /vô_tình/ chỉ chỗ trốn.",
+      "anticipateVi": "Hết đường /giấu_giếm/ rồi nhé!",
+      "pos": "verb",
+      "ipa": "bàolù",
+      "topic": "thinking",
+      "topics": [
+        "thinking",
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他藏在门后，一笑就_____了。",
+          "vi": "Cậu=ấy nấp sau cánh_cửa, | vừa bật cười là lộ ngay."
+        }
+      ],
+      "chars": 2,
+      "initial": "暴",
+      "grammar": {
+        "hanViet": "bạo lộ",
+        "collocations": [
+          {
+            "text": "暴露问题",
+            "vi": "bộc lộ vấn đề"
+          },
+          {
+            "text": "暴露出来",
+            "vi": "lộ ra"
+          }
+        ],
+        "tipVi": "暴露 là để lộ ra điều vốn bị che giấu, thường là điều không hay; 表现 là thể hiện ra bên ngoài, không mang ý xấu."
+      }
+    },
+    {
+      "id": "jixie-0509b0",
+      "word": "机械",
+      "meaningVi": "cơ_khí",
+      "defVi": "Ngành chế_tạo máy | và các /thiết_bị/ chuyển_động.",
+      "leadVi": "Bánh_răng, đinh_vít | là đồ_nghề của /kỹ_sư/ ấy.",
+      "anticipateVi": "Tiếng /bánh_răng/ quay đều_đều?",
+      "pos": "noun",
+      "ipa": "jīxiè",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我哥_哥是_____工_程_师，每天和机_器在一_起。",
+          "vi": "Anh_trai tôi là kỹ_sư cơ_khí, | ngày=nào cũng ở bên máy_móc."
+        }
+      ],
+      "chars": 2,
+      "initial": "机",
+      "grammar": {
+        "counter": "种 zhǒng",
+        "hanViet": "cơ giới",
+        "collocations": [
+          {
+            "text": "机械工程师",
+            "vi": "kỹ sư cơ khí"
+          },
+          {
+            "text": "机械设备",
+            "vi": "thiết bị cơ khí"
+          }
+        ],
+        "tipVi": "机械 là tên chung cho máy móc và ngành cơ khí; 机器 là một cái máy cụ thể."
+      }
+    },
+    {
+      "id": "dianli-a90bcf",
+      "word": "电力",
+      "meaningVi": "điện_lực",
+      "defVi": "Nguồn /năng_lượng/ | làm đèn sáng, quạt quay, máy chạy.",
+      "leadVi": "Mất nó một buổi, | cả=khu_phố /tối_om/.",
+      "anticipateVi": "Quạt /đứng_im/ rồi à?",
+      "pos": "noun",
+      "ipa": "diànlì",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "大风过_后，_____公_司派人来修，很快又有电了。",
+          "vi": "Sau trận gió lớn, | công_ty điện_lực cử người đến sửa, | chẳng mấy chốc đã có điện lại."
+        }
+      ],
+      "chars": 2,
+      "initial": "电",
+      "grammar": {
+        "hanViet": "điện lực",
+        "collocations": [
+          {
+            "text": "电力公司",
+            "vi": "công ty điện lực"
+          },
+          {
+            "text": "电力供应",
+            "vi": "cung cấp điện"
+          }
+        ],
+        "tipVi": "电力 trang trọng, hay dùng trong ngành, công ty, nguồn cung; 电 là từ thường ngày."
+      }
+    },
+    {
+      "id": "shejishi-ddc69e",
+      "word": "设计师",
+      "meaningVi": "nhà=thiết_kế",
+      "defVi": "Người=/sáng_tạo/ kiểu_dáng | cho quần_áo hay căn phòng.",
+      "leadVi": "Từ bản_vẽ | thành chiếc váy /lộng_lẫy/ trên sàn_diễn.",
+      "anticipateVi": "Ai /phác_thảo/ mẫu này?",
+      "pos": "noun",
+      "ipa": "shèjìshī",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我想当服_装_____，自_己设_计衣_服。",
+          "vi": "Tôi muốn làm nhà=thiết_kế thời_trang, | tự thiết_kế quần_áo."
+        }
+      ],
+      "chars": 3,
+      "initial": "设",
+      "grammar": {
+        "counter": "位 wèi",
+        "hanViet": "thiết kế sư",
+        "collocations": [
+          {
+            "text": "服装设计师",
+            "vi": "nhà thiết kế thời trang"
+          },
+          {
+            "text": "首席设计师",
+            "vi": "nhà thiết kế trưởng"
+          }
+        ],
+        "tipVi": "设计师 là người thiết kế kiểu dáng, hình ảnh; 工程师 là kỹ sư lo kỹ thuật, máy móc, công trình."
+      }
+    },
+    {
+      "id": "xiezhu-21cdd0",
+      "word": "协助",
+      "meaningVi": "hỗ_trợ",
+      "defVi": "Góp sức /phụ_giúp/ | để việc của người=khác suôn_sẻ.",
+      "leadVi": "Nhóm_trưởng lo chính, | bạn chỉ cần /hậu_thuẫn/ bên_cạnh.",
+      "anticipateVi": "Ra /tiếp_sức/ một chút nhé?",
+      "pos": "verb",
+      "ipa": "xiézhù",
+      "topic": "work",
+      "topics": [
+        "work",
+        "communication"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "需_要帮_助的_话，服_务_员会随_时_____您。",
+          "vi": "Nếu cần giúp_đỡ, | nhân_viên phục_vụ sẽ hỗ_trợ quý_khách | bất_cứ lúc_nào."
+        }
+      ],
+      "chars": 2,
+      "initial": "协",
+      "grammar": {
+        "hanViet": "hiệp trợ",
+        "collocations": [
+          {
+            "text": "协助工作",
+            "vi": "hỗ trợ công việc"
+          },
+          {
+            "text": "在他的协助下",
+            "vi": "với sự giúp đỡ của anh ấy"
+          }
+        ],
+        "tipVi": "协助 trang trọng, là phụ giúp người phụ trách chính; 帮助 là giúp đỡ nói chung, dùng hằng ngày."
+      }
+    },
+    {
+      "id": "fangshou-9bb21c",
+      "word": "防守",
+      "meaningVi": "phòng_thủ",
+      "defVi": "Ngăn đội bạn /ghi_bàn/ | vào khung_thành của mình.",
+      "leadVi": "Hậu_vệ lùi về, | /bọc_lót/ kín mọi=khoảng_trống.",
+      "anticipateVi": "Hàng hậu_vệ /vững_chắc/ chưa?",
+      "pos": "verb",
+      "ipa": "fángshǒu",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我_们队进_攻很强，但_____不_太好。",
+          "vi": "Đội mình tấn_công rất mạnh, | nhưng phòng_thủ chưa tốt lắm."
+        }
+      ],
+      "chars": 2,
+      "initial": "防",
+      "grammar": {
+        "hanViet": "phòng thủ",
+        "collocations": [
+          {
+            "text": "加强防守",
+            "vi": "tăng cường phòng thủ"
+          },
+          {
+            "text": "防守球员",
+            "vi": "cầu thủ phòng ngự"
+          }
+        ],
+        "tipVi": "防守 là giữ, chặn đối phương trong thi đấu; 保护 là che chở cho người hay vật khỏi bị hại."
+      }
+    },
+    {
+      "id": "zhujue-3b002f",
+      "word": "主角",
+      "meaningVi": "vai=chính",
+      "defVi": "Nhân_vật /trung_tâm/ | mà cả=câu_chuyện xoay_quanh.",
+      "leadVi": "Tên in to nhất | trên tấm /áp_phích/ phim.",
+      "anticipateVi": "Cả phim /xoay_quanh/ ai?",
+      "pos": "noun",
+      "ipa": "zhǔjué",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这部电_影的_____是一只小狗，演得特_别好。",
+          "vi": "Vai=chính của bộ=phim này | là một=chú chó nhỏ, | diễn cực hay."
+        }
+      ],
+      "chars": 2,
+      "initial": "主",
+      "grammar": {
+        "counter": "个 gè",
+        "hanViet": "chủ giác",
+        "collocations": [
+          {
+            "text": "电影主角",
+            "vi": "vai chính trong phim"
+          },
+          {
+            "text": "当主角",
+            "vi": "đóng vai chính"
+          }
+        ],
+        "tipVi": "主角 là vai chính trong phim, truyện; 演员 là người đóng phim, đóng kịch nói chung."
+      }
+    },
+    {
+      "id": "qianli-c05ec0",
+      "word": "潜力",
+      "meaningVi": "tiềm_năng",
+      "defVi": "Sức_mạnh còn /ẩn_giấu/ | chờ ngày được khơi_dậy.",
+      "leadVi": "Mới tập vài tháng, | thầy đã /tin_chắc/ em sẽ giỏi.",
+      "anticipateVi": "Một /nhân_tài/ đang lớn?",
+      "pos": "noun",
+      "ipa": "qiánlì",
+      "topic": "character",
+      "topics": [
+        "character",
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他的_____还没_有完_全发_挥出_来。",
+          "vi": "Tiềm_năng của anh=ấy | vẫn chưa được phát_huy hết."
+        }
+      ],
+      "chars": 2,
+      "initial": "潜",
+      "grammar": {
+        "hanViet": "tiềm lực",
+        "collocations": [
+          {
+            "text": "很有潜力",
+            "vi": "rất có tiềm năng"
+          },
+          {
+            "text": "发挥潜力",
+            "vi": "phát huy tiềm năng"
+          }
+        ],
+        "tipVi": "潜力 là khả năng còn ẩn, chưa dùng tới; 能力 là khả năng đang có, làm được ngay."
+      }
+    },
+    {
+      "id": "zongbu-cd0780",
+      "word": "总部",
+      "meaningVi": "trụ_sở=chính",
+      "defVi": "Văn_phòng /đầu_não/ | điều_hành mọi=chi_nhánh công_ty.",
+      "leadVi": "Các chi_nhánh | đều gửi /báo_cáo/ về đây.",
+      "anticipateVi": "/Bản_doanh/ nằm đâu nhỉ?",
+      "pos": "noun",
+      "ipa": "zǒngbù",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "公_司_____在市中_心，还_有十几家分公_司。",
+          "vi": "Trụ_sở=chính của công_ty ở trung_tâm thành_phố, | còn có hơn mười chi_nhánh."
+        }
+      ],
+      "chars": 2,
+      "initial": "总",
+      "grammar": {
+        "counter": "个 gè",
+        "hanViet": "tổng bộ",
+        "collocations": [
+          {
+            "text": "公司总部",
+            "vi": "trụ sở chính công ty"
+          },
+          {
+            "text": "总部大楼",
+            "vi": "tòa nhà trụ sở chính"
+          }
+        ],
+        "tipVi": "总部 là trụ sở chính, nơi đặt bộ máy điều hành; 公司 là cả công ty nói chung."
+      }
+    },
+    {
+      "id": "xiaorong-48f353",
+      "word": "笑容",
+      "meaningVi": "nụ_cười",
+      "defVi": "Nét /rạng_rỡ/ hiện trên gương_mặt | khi vui.",
+      "leadVi": "Nhận tin_vui, | mặt ai cũng /tươi_tắn/ hẳn lên.",
+      "anticipateVi": "Mặt /hớn_hở/ thế kia?",
+      "pos": "noun",
+      "ipa": "xiàoróng",
+      "topic": "emotion",
+      "topics": [
+        "emotion"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "奶_奶_____满面地看着孩_子们。",
+          "vi": "Bà nhìn các cháu | với gương_mặt rạng_rỡ nụ_cười."
+        }
+      ],
+      "chars": 2,
+      "initial": "笑",
+      "grammar": {
+        "counter": "丝 sī",
+        "hanViet": "tiếu dung",
+        "collocations": [
+          {
+            "text": "露出笑容",
+            "vi": "nở nụ cười"
+          },
+          {
+            "text": "脸上的笑容",
+            "vi": "nụ cười trên mặt"
+          }
+        ],
+        "tipVi": "笑容 là vẻ mặt đang cười, danh từ; 微笑 là mỉm cười, vừa là động từ vừa là danh từ."
+      }
+    },
+    {
+      "id": "diban-c1d00f",
+      "word": "地板",
+      "meaningVi": "sàn_nhà",
+      "defVi": "Mặt_phẳng lát gỗ hay gạch | dưới /bàn_chân/ trong phòng.",
+      "leadVi": "Vừa lau xong, | đi kẻo /trơn_tuột/ đấy!",
+      "anticipateVi": "Lau /bóng_loáng/ chưa đấy?",
+      "pos": "noun",
+      "ipa": "dìbǎn",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "客_厅有一块_____松了，走上_去会响。",
+          "vi": "Phòng_khách có một tấm sàn bị lỏng, | bước lên là kêu."
+        }
+      ],
+      "chars": 2,
+      "initial": "地",
+      "grammar": {
+        "counter": "块 kuài",
+        "hanViet": "địa bản",
+        "collocations": [
+          {
+            "text": "擦地板",
+            "vi": "lau sàn"
+          },
+          {
+            "text": "木头地板",
+            "vi": "sàn gỗ"
+          }
+        ],
+        "tipVi": "地板 là sàn lát trong nhà; 地面 là mặt đất hay mặt nền nói chung, cả ngoài trời."
+      }
+    },
+    {
+      "id": "bale-c5b541",
+      "word": "罢了",
+      "meaningVi": "mà_thôi",
+      "defVi": "Ý nói /đơn_giản/ chỉ vậy, | không hơn không kém.",
+      "leadVi": "Chỉ hỏi cho vui, | chứ có /ý_định/ gì đâu.",
+      "anticipateVi": "Chuyện /cỏn_con/ ấy hả?",
+      "pos": "phrase",
+      "ipa": "bàle",
+      "topic": "communication",
+      "topics": [
+        "communication"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我只_是随_便问问_____，你别想多了。",
+          "vi": "Tôi chỉ hỏi bâng_quơ vậy thôi, | bạn đừng nghĩ nhiều."
+        }
+      ],
+      "chars": 2,
+      "initial": "罢",
+      "grammar": {
+        "hanViet": "bãi liễu",
+        "collocations": [
+          {
+            "text": "说说罢了",
+            "vi": "nói vậy thôi"
+          },
+          {
+            "text": "随便问问罢了",
+            "vi": "hỏi bâng quơ thôi"
+          }
+        ],
+        "tipVi": "罢了 và 而已 đều đặt cuối câu nghĩa là \"mà thôi\"; 罢了 hơi khẩu ngữ hơn, 而已 hay gặp trong văn viết."
+      }
+    },
+    {
+      "id": "tongxun-1d1e66",
+      "word": "通讯",
+      "meaningVi": "viễn_thông",
+      "defVi": "Truyền tin qua /điện_thoại/, | mạng hay sóng vô_tuyến.",
+      "leadVi": "Trên núi mất sóng, | không ai /liên_lạc/ được.",
+      "anticipateVi": "Vạch sóng /chập_chờn/ quá?",
+      "pos": "noun",
+      "ipa": "tōngxùn",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "communication"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "手_机是现_在最常_用的_____工_具。",
+          "vi": "Điện_thoại là công_cụ liên_lạc | phổ_biến nhất bây_giờ."
+        }
+      ],
+      "chars": 2,
+      "initial": "通",
+      "grammar": {
+        "hanViet": "thông tấn",
+        "collocations": [
+          {
+            "text": "通讯工具",
+            "vi": "công cụ liên lạc"
+          },
+          {
+            "text": "通讯设备",
+            "vi": "thiết bị viễn thông"
+          }
+        ],
+        "tipVi": "通讯 là việc truyền tin bằng thiết bị, kỹ thuật; 联系 là liên lạc, giữ quan hệ giữa người với người."
+      }
+    },
+    {
+      "id": "yincang-36c1a9",
+      "word": "隐藏",
+      "meaningVi": "ẩn_giấu",
+      "defVi": "Cất thật kín | để người=khác không /phát_hiện/ ra.",
+      "leadVi": "Nút ấy | nằm /lẩn_khuất/ trong phần cài_đặt.",
+      "anticipateVi": "Mục /bí_mật/ nằm đâu?",
+      "pos": "verb",
+      "ipa": "yǐncáng",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "general"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这个手_机有个_____功_能，知_道的人很少。",
+          "vi": "Chiếc điện_thoại này có một tính_năng ẩn, | không mấy ai biết."
+        }
+      ],
+      "chars": 2,
+      "initial": "隐",
+      "grammar": {
+        "hanViet": "ẩn tàng",
+        "collocations": [
+          {
+            "text": "隐藏起来",
+            "vi": "giấu đi"
+          },
+          {
+            "text": "隐藏功能",
+            "vi": "tính năng ẩn"
+          }
+        ],
+        "tipVi": "隐藏 trang trọng hơn, hay dùng cho tính năng, cảm xúc, sự thật; 藏 là giấu đồ vật, dùng hằng ngày."
+      }
+    },
+    {
+      "id": "suanle-2db6c9",
+      "word": "算了",
+      "meaningVi": "thôi=vậy",
+      "defVi": "Câu_nói khi muốn /từ_bỏ/ | việc chẳng đáng theo_đuổi.",
+      "leadVi": "Áo đắt quá, | /lắc_đầu/ không mua nữa.",
+      "anticipateVi": "Bỏ đi, đừng /bận_tâm/!",
+      "pos": "phrase",
+      "ipa": "suànle",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "_____吧，这件衣_服太贵，不买了。",
+          "vi": "Thôi bỏ đi, | cái=áo này đắt quá, | không mua nữa."
+        }
+      ],
+      "chars": 2,
+      "initial": "算",
+      "grammar": {
+        "hanViet": "toán liễu",
+        "collocations": [
+          {
+            "text": "算了吧",
+            "vi": "thôi bỏ đi"
+          },
+          {
+            "text": "就这样算了",
+            "vi": "thôi cứ thế cho xong"
+          }
+        ],
+        "tipVi": "算了 đứng riêng, nghĩa là thôi bỏ qua; 罢了 đặt cuối câu, nghĩa là chỉ vậy mà thôi."
+      }
+    },
+    {
+      "id": "hen-658c77",
+      "word": "狠",
+      "meaningVi": "mạnh_tay",
+      "defVi": "Cứng_rắn, /quyết_liệt/, | không nương_nhẹ chút nào.",
+      "leadVi": "Mê trò_chơi quá, | cậu=ấy /dứt_khoát/ bỏ hẳn.",
+      "anticipateVi": "Ý_chí /sắt_đá/ thế cơ à?",
+      "pos": "adj",
+      "ipa": "hěn",
+      "topic": "character",
+      "topics": [
+        "character"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他_____下心，以_后再_也不打游_戏了。",
+          "vi": "Anh=ấy cứng_rắn với bản_thân, | từ nay không chơi trò_chơi nữa."
+        }
+      ],
+      "chars": 1,
+      "initial": "狠",
+      "grammar": {
+        "hanViet": "ngận",
+        "collocations": [
+          {
+            "text": "狠下心",
+            "vi": "cứng rắn quyết tâm"
+          },
+          {
+            "text": "狠狠地",
+            "vi": "thật mạnh"
+          }
+        ],
+        "tipVi": "狠 là cứng rắn, quyết liệt, có khi với chính mình; 凶 là dữ dằn, đáng sợ với người khác."
+      }
+    },
+    {
+      "id": "cehua-6b67f2",
+      "word": "策划",
+      "meaningVi": "lên=kế_hoạch",
+      "defVi": "Nghĩ ý_tưởng, | sắp_xếp từng bước cho một /sự_kiện/.",
+      "leadVi": "Chương_trình cuối năm | do anh=ấy /lo_liệu/ từ đầu.",
+      "anticipateVi": "Khâu /chuẩn_bị/ xong chưa?",
+      "pos": "verb",
+      "ipa": "cèhuà",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "公_司的新_年活_动由他负_责_____。",
+          "vi": "Hoạt_động năm_mới của công_ty | do anh=ấy phụ_trách lên=kế_hoạch."
+        }
+      ],
+      "chars": 2,
+      "initial": "策",
+      "grammar": {
+        "hanViet": "sách hoạch",
+        "collocations": [
+          {
+            "text": "策划晚会",
+            "vi": "lên kế hoạch buổi tiệc"
+          },
+          {
+            "text": "活动策划",
+            "vi": "lên kế hoạch sự kiện"
+          }
+        ],
+        "tipVi": "策划 là bày ra ý tưởng và cách làm cho một sự kiện, dự án; 计划 là định trước việc sẽ làm."
+      }
+    },
+    {
+      "id": "dun-f63309",
+      "word": "蹲",
+      "meaningVi": "ngồi_xổm",
+      "defVi": "Co gối hạ người, | hai bàn_chân /giữ_vững/ trên đất.",
+      "leadVi": "Muốn nói_chuyện với bé, | hãy hạ người cho /ngang_tầm/.",
+      "anticipateVi": "Hạ_thấp /tư_thế/ nào!",
+      "pos": "verb",
+      "ipa": "dūn",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他_____下_来，这_样就和小_朋_友一_样高了。",
+          "vi": "Anh=ấy ngồi_xổm xuống, | thế là cao ngang các bạn nhỏ."
+        }
+      ],
+      "chars": 1,
+      "initial": "蹲",
+      "grammar": {
+        "hanViet": "tồn",
+        "collocations": [
+          {
+            "text": "蹲下",
+            "vi": "ngồi xổm xuống"
+          },
+          {
+            "text": "蹲在地上",
+            "vi": "ngồi xổm dưới đất"
+          }
+        ],
+        "tipVi": "蹲 là co gối hạ người, không ngồi lên gì; 坐 là đặt người lên ghế hay mặt đất."
+      }
+    },
+    {
+      "id": "qian-f08d52",
+      "word": "牵",
+      "meaningVi": "dắt",
+      "defVi": "Cầm dây kéo nhẹ | để con_vật /ngoan_ngoãn/ đi cùng.",
+      "leadVi": "Mỗi=sáng, | chú chó /tung_tăng/ đi cạnh chủ.",
+      "anticipateVi": "Cún /háo_hức/ ra công_viên?",
+      "pos": "verb",
+      "ipa": "qiān",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "不_用拉，轻轻一_____，小狗就跟着走了。",
+          "vi": "Không cần kéo, | chỉ dắt nhẹ một cái | là chú cún đi theo ngay."
+        }
+      ],
+      "chars": 1,
+      "initial": "牵",
+      "grammar": {
+        "hanViet": "khiên",
+        "collocations": [
+          {
+            "text": "牵手",
+            "vi": "nắm tay"
+          },
+          {
+            "text": "牵着狗",
+            "vi": "dắt chó"
+          }
+        ],
+        "tipVi": "牵 là dắt nhẹ cho đi theo mình; 拉 là kéo mạnh về phía mình."
+      }
+    },
+    {
+      "id": "zhanghu-3def82",
+      "word": "账户",
+      "meaningVi": "tài_khoản",
+      "defVi": "Mục riêng ở ngân_hàng | ghi số_tiền bạn /sở_hữu/.",
+      "leadVi": "Lương về, | điện_thoại báo /số_dư/ tăng vọt.",
+      "anticipateVi": "Nhập /mật_khẩu/ đúng chưa?",
+      "pos": "noun",
+      "ipa": "zhànghù",
+      "topic": "money",
+      "topics": [
+        "money"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我在这家银_行开了一个_____。",
+          "vi": "Tôi đã mở một tài_khoản | ở ngân_hàng này."
+        }
+      ],
+      "chars": 2,
+      "initial": "账",
+      "grammar": {
+        "counter": "个 gè",
+        "hanViet": "trướng hộ",
+        "collocations": [
+          {
+            "text": "银行账户",
+            "vi": "tài khoản ngân hàng"
+          },
+          {
+            "text": "开账户",
+            "vi": "mở tài khoản"
+          }
+        ],
+        "tipVi": "账户 là tài khoản ở ngân hàng hay trên mạng; 账 là sổ sách ghi tiền ra vào."
+      }
+    },
+    {
+      "id": "dangcheng-827dde",
+      "word": "当成",
+      "meaningVi": "xem_như",
+      "defVi": "Nghĩ người hay vật này | /tương_đương/ một thứ=khác.",
+      "leadVi": "Hàng_xóm thân đến_mức | mình là /người_nhà/ luôn.",
+      "anticipateVi": "Đâu còn /khách_sáo/ chứ?",
+      "pos": "verb",
+      "ipa": "dàngchéng",
+      "topic": "thinking",
+      "topics": [
+        "thinking",
+        "communication"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "没_有桌_子，我_们就把大箱_子_____了桌_子。",
+          "vi": "Không có bàn, | chúng_tôi lấy cái=thùng to | làm bàn luôn."
+        }
+      ],
+      "chars": 2,
+      "initial": "当",
+      "grammar": {
+        "hanViet": "đáng thành",
+        "collocations": [
+          {
+            "text": "当成朋友",
+            "vi": "coi là bạn"
+          },
+          {
+            "text": "当成自己家",
+            "vi": "coi như nhà mình"
+          }
+        ],
+        "tipVi": "当成 và 当作 nghĩa gần như nhau; 当成 khẩu ngữ hơn, 当作 hơi trang trọng."
+      }
+    },
+    {
+      "id": "yuanli-b397ac",
+      "word": "远离",
+      "meaningVi": "xa_rời",
+      "defVi": "Ở /cách_biệt/ hay giữ khoảng_cách | với điều=gì.",
+      "leadVi": "Không còi xe, bụi_bặm, | chỉ có /núi_rừng/ yên_tĩnh.",
+      "anticipateVi": "Trốn /phố_thị/ một hôm?",
+      "pos": "verb",
+      "ipa": "yuǎnlí",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "travel"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这个小山村_____城_市，非_常安_静。",
+          "vi": "Ngôi làng nhỏ trên núi này | nằm cách_biệt thành_phố, rất yên_tĩnh."
+        }
+      ],
+      "chars": 2,
+      "initial": "远",
+      "grammar": {
+        "hanViet": "viễn ly",
+        "collocations": [
+          {
+            "text": "远离城市",
+            "vi": "cách xa thành phố"
+          },
+          {
+            "text": "远离危险",
+            "vi": "tránh xa nguy hiểm"
+          }
+        ],
+        "tipVi": "远离 là ở cách xa, giữ khoảng cách; 离开 là rời khỏi một nơi."
+      }
+    },
+    {
+      "id": "shidang-ca035f",
+      "word": "适当",
+      "meaningVi": "vừa_phải",
+      "defVi": "/Chừng_mực/, | không thừa mà cũng chẳng thiếu.",
+      "leadVi": "Nêm chút đường thôi, | đừng để món_ăn /ngọt_lịm/.",
+      "anticipateVi": "Đủ /liều_lượng/ chưa?",
+      "pos": "adj",
+      "ipa": "shìdàng",
+      "topic": "food",
+      "topics": [
+        "food",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "菜里可_以_____加一点糖。",
+          "vi": "Trong món_ăn | có_thể cho thêm chút đường cho vừa."
+        }
+      ],
+      "chars": 2,
+      "initial": "适",
+      "grammar": {
+        "hanViet": "thích đáng",
+        "collocations": [
+          {
+            "text": "适当休息",
+            "vi": "nghỉ ngơi hợp lý"
+          },
+          {
+            "text": "适当的时候",
+            "vi": "lúc thích hợp"
+          }
+        ],
+        "tipVi": "适当 là vừa mức, đúng chừng, hay đứng trước động từ; 合适 là vừa vặn, hợp, hay làm vị ngữ."
+      }
+    },
+    {
+      "id": "hexie-24710e",
+      "word": "和谐",
+      "meaningVi": "hài_hòa",
+      "defVi": "Các phần /ăn_khớp/ với nhau, | êm_đẹp và cân_đối.",
+      "leadVi": "Rừng xanh, chim hót, | con_người sống /gần_gũi/ thiên_nhiên.",
+      "anticipateVi": "/Cân_bằng/ đẹp quá nhỉ?",
+      "pos": "adj",
+      "ipa": "héxié",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "society"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "人和自_然要_____相_处。",
+          "vi": "Con_người và thiên_nhiên | cần chung_sống hài_hòa."
+        }
+      ],
+      "chars": 2,
+      "initial": "和",
+      "grammar": {
+        "hanViet": "hòa hài",
+        "collocations": [
+          {
+            "text": "和谐相处",
+            "vi": "chung sống hài hòa"
+          },
+          {
+            "text": "和谐的家庭",
+            "vi": "gia đình êm ấm"
+          }
+        ],
+        "tipVi": "和谐 là êm đẹp, hợp nhau một cách tự nhiên; 协调 là phối hợp, sắp xếp cho các bên ăn khớp."
+      }
+    },
+    {
+      "id": "gaoshou-f14c63",
+      "word": "高手",
+      "meaningVi": "cao_thủ",
+      "defVi": "Người=/lão_luyện/, | giỏi vượt_trội ở một môn.",
+      "leadVi": "Bơi với anh=ấy, | cả đội /chịu_thua/ hết.",
+      "anticipateVi": "Ra chiêu /lợi_hại/ quá!",
+      "pos": "noun",
+      "ipa": "gāoshǒu",
+      "topic": "character",
+      "topics": [
+        "character",
+        "general"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他游_泳特_别厉_害，是个真_正的_____。",
+          "vi": "Anh=ấy bơi cực giỏi, | đúng là một cao_thủ thật_sự."
+        }
+      ],
+      "chars": 2,
+      "initial": "高",
+      "grammar": {
+        "counter": "位 wèi",
+        "hanViet": "cao thủ",
+        "collocations": [
+          {
+            "text": "真正的高手",
+            "vi": "cao thủ thật sự"
+          },
+          {
+            "text": "电脑高手",
+            "vi": "cao thủ máy tính"
+          }
+        ],
+        "tipVi": "高手 là người rất giỏi một môn, hay dùng khi nói; 专家 là chuyên gia có học vấn chuyên sâu."
+      }
+    },
+    {
+      "id": "cansai-aedc9b",
+      "word": "参赛",
+      "meaningVi": "dự_thi",
+      "defVi": "Ghi tên rồi /đọ_sức/ | cùng các đối_thủ khác.",
+      "leadVi": "Đeo số báo_danh, | vận_động_viên /chờ_đợi/ hiệu_lệnh.",
+      "anticipateVi": "Vào /vòng_loại/ nào!",
+      "pos": "verb",
+      "ipa": "cānsài",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "所_有_____选_手都要提_前半小_时到。",
+          "vi": "Tất_cả thí_sinh dự_thi | phải đến sớm nửa tiếng."
+        }
+      ],
+      "chars": 2,
+      "initial": "参",
+      "grammar": {
+        "hanViet": "tham tái",
+        "collocations": [
+          {
+            "text": "参赛选手",
+            "vi": "thí sinh dự thi"
+          },
+          {
+            "text": "报名参赛",
+            "vi": "đăng ký dự thi"
+          }
+        ],
+        "tipVi": "参赛 chỉ dùng cho thi đấu, không mang tân ngữ; 参加 là tham gia mọi hoạt động, có tân ngữ."
+      }
+    },
+    {
+      "id": "gua-2b5b4e",
+      "word": "刮",
+      "meaningVi": "thổi, cạo",
+      "defVi": "Gió /ào_ào/ nổi lên | làm cây_cối nghiêng_ngả.",
+      "leadVi": "Ngoài_trời /lồng_lộng/, | áo phơi bay tứ_tung.",
+      "anticipateVi": "Cửa_sổ kêu /lạch_cạch/ à?",
+      "pos": "verb",
+      "ipa": "guā",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "外_面_____着大风，出_门多穿点。",
+          "vi": "Bên_ngoài đang nổi gió to, | ra ngoài mặc thêm áo nhé."
+        }
+      ],
+      "chars": 1,
+      "initial": "刮",
+      "grammar": {
+        "hanViet": "quát",
+        "collocations": [
+          {
+            "text": "刮大风",
+            "vi": "nổi gió to"
+          },
+          {
+            "text": "风刮得很大",
+            "vi": "gió thổi rất mạnh"
+          }
+        ],
+        "tipVi": "刮 hay dùng cho gió trời nổi lên; 吹 là thổi bằng miệng hay quạt, cũng dùng cho gió nhẹ."
+      }
+    },
+    {
+      "id": "luxiang-5d588f",
+      "word": "录像",
+      "meaningVi": "ghi_hình",
+      "defVi": "Thu cả=âm_thanh lẫn chuyển_động | bằng /máy_quay/.",
+      "leadVi": "Buổi diễn của lớp | được /lưu_giữ/ để xem lại.",
+      "anticipateVi": "Máy /quay_phim/ bật chưa?",
+      "pos": "noun",
+      "ipa": "lùxiàng",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这段_____是三十年前拍的，比手_机视_频模_糊多了。",
+          "vi": "Đoạn ghi_hình này | quay từ ba=mươi năm trước, | mờ hơn phim điện_thoại nhiều."
+        }
+      ],
+      "chars": 2,
+      "initial": "录",
+      "grammar": {
+        "counter": "段 duàn",
+        "hanViet": "lục tượng",
+        "collocations": [
+          {
+            "text": "看录像",
+            "vi": "xem băng ghi hình"
+          },
+          {
+            "text": "比赛录像",
+            "vi": "đoạn ghi hình trận đấu"
+          }
+        ],
+        "tipVi": "录像 là hình ảnh quay lại bằng máy quay; 视频 là video nói chung, nhất là trên mạng."
+      }
+    },
+    {
+      "id": "chakan-8347bd",
+      "word": "查看",
+      "meaningVi": "xem_xét",
+      "defVi": "Nhìn kỹ để /nắm_bắt/ | tình_hình hay thông_tin.",
+      "leadVi": "Đăng_nhập vào trang, | điểm_số hiện ra /rõ_ràng/.",
+      "anticipateVi": "Vào /ứng_dụng/ coi thử?",
+      "pos": "verb",
+      "ipa": "chákàn",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "study"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "登_录以_后，你就可_以_____自_己的成_绩。",
+          "vi": "Sau_khi đăng_nhập, | bạn có_thể xem điểm của mình."
+        }
+      ],
+      "chars": 2,
+      "initial": "查",
+      "grammar": {
+        "hanViet": "tra khán",
+        "collocations": [
+          {
+            "text": "查看成绩",
+            "vi": "xem điểm"
+          },
+          {
+            "text": "查看情况",
+            "vi": "xem xét tình hình"
+          }
+        ],
+        "tipVi": "查看 là mở ra xem để biết thông tin; 检查 là kiểm tra kỹ xem có sai sót không."
+      }
+    },
+    {
+      "id": "dadao-8eb3d7",
+      "word": "大道",
+      "meaningVi": "đại_lộ",
+      "defVi": "Con_đường /rộng_rãi/, | thẳng_tắp giữa thành_phố.",
+      "leadVi": "Hai hàng cây_xanh | /rợp_bóng/ suốt tuyến_đường lớn.",
+      "anticipateVi": "Đường /thênh_thang/ quá nhỉ?",
+      "pos": "noun",
+      "ipa": "dàdào",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这条_____两_边种满了高_大的树。",
+          "vi": "Hai bên đại_lộ này | trồng kín những hàng cây cao_lớn."
+        }
+      ],
+      "chars": 2,
+      "initial": "大",
+      "grammar": {
+        "counter": "条 tiáo",
+        "hanViet": "đại đạo",
+        "collocations": [
+          {
+            "text": "一条大道",
+            "vi": "một đại lộ"
+          },
+          {
+            "text": "城市大道",
+            "vi": "đại lộ thành phố"
+          }
+        ],
+        "tipVi": "大道 là đường lớn, rộng, nghe trang trọng; 马路 là đường phố thường ngày."
+      }
+    },
+    {
+      "id": "tengtong-a6e234",
+      "word": "疼痛",
+      "meaningVi": "đau_đớn",
+      "defVi": "Cảm_giác /nhức_nhối/ | ở một chỗ trên cơ_thể.",
+      "leadVi": "Chườm ấm một lúc, | lưng /dễ_chịu/ hẳn ra.",
+      "anticipateVi": "Nhức /ê_ẩm/ hả?",
+      "pos": "noun",
+      "ipa": "téngtòng",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这种药可_以减_轻_____。",
+          "vi": "Loại thuốc này | có_thể làm giảm cơn đau."
+        }
+      ],
+      "chars": 2,
+      "initial": "疼",
+      "grammar": {
+        "hanViet": "đông thống",
+        "collocations": [
+          {
+            "text": "减轻疼痛",
+            "vi": "giảm đau"
+          },
+          {
+            "text": "感到疼痛",
+            "vi": "cảm thấy đau"
+          }
+        ],
+        "tipVi": "疼痛 trang trọng, hay dùng trong y học, làm danh từ; 疼 là đau, dùng khi nói hằng ngày."
+      }
+    },
+    {
+      "id": "hunhe-13ffa9",
+      "word": "混合",
+      "meaningVi": "trộn_lẫn",
+      "defVi": "Gộp nhiều thứ=khác_nhau | thành một /tổng_thể/.",
+      "leadVi": "Bột và nước | khuấy đều cho /mịn_màng/.",
+      "anticipateVi": "Pha /màu_sắc/ thử không?",
+      "pos": "verb",
+      "ipa": "hùnhé",
+      "topic": "general",
+      "topics": [
+        "general",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "果_汁和牛_奶_____后，味_道很特_别。",
+          "vi": "Nước_ép và sữa | sau_khi trộn lẫn | có vị rất đặc_biệt."
+        }
+      ],
+      "chars": 2,
+      "initial": "混",
+      "grammar": {
+        "hanViet": "hỗn hợp",
+        "collocations": [
+          {
+            "text": "混合在一起",
+            "vi": "trộn lẫn với nhau"
+          },
+          {
+            "text": "混合使用",
+            "vi": "dùng lẫn với nhau"
+          }
+        ],
+        "tipVi": "混合 là trộn lẫn các thứ vào nhau; 结合 là kết hợp các mặt, các yếu tố cho ăn khớp."
+      }
+    },
+    {
+      "id": "huijian-2f5175",
+      "word": "会见",
+      "meaningVi": "gặp_gỡ",
+      "defVi": "Tiếp_khách /trang_trọng/ | theo lịch đã hẹn trước.",
+      "leadVi": "Giám_đốc /đích_thân/ | ra tận cửa đón đối_tác.",
+      "anticipateVi": "Khách /quan_trọng/ tới à?",
+      "pos": "verb",
+      "ipa": "huìjiàn",
+      "topic": "work",
+      "topics": [
+        "work",
+        "communication"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "客_人由秘_书先接_待，再由总_经_理_____。",
+          "vi": "Khách được thư_ký tiếp trước, | sau_đó tổng giám_đốc mới ra gặp."
+        }
+      ],
+      "chars": 2,
+      "initial": "会",
+      "grammar": {
+        "hanViet": "hội kiến",
+        "collocations": [
+          {
+            "text": "会见客人",
+            "vi": "tiếp khách"
+          },
+          {
+            "text": "正式会见",
+            "vi": "gặp gỡ chính thức"
+          }
+        ],
+        "tipVi": "会见 trang trọng, thường là người có chức vụ gặp khách; 见面 là gặp nhau thường ngày."
+      }
+    },
+    {
+      "id": "heyue-08cf43",
+      "word": "合约",
+      "meaningVi": "hợp_đồng",
+      "defVi": "Văn_bản hai bên /thỏa_thuận/ | và cùng ký_tên.",
+      "leadVi": "Đặt bút ký, | /cam_kết/ ba năm gắn với đội.",
+      "anticipateVi": "Mực /chữ_ký/ khô chưa?",
+      "pos": "noun",
+      "ipa": "héyuē",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这位球_员和球_队签了三年的_____。",
+          "vi": "Cầu_thủ này đã ký hợp_đồng ba năm | với đội_bóng."
+        }
+      ],
+      "chars": 2,
+      "initial": "合",
+      "grammar": {
+        "counter": "份 fèn",
+        "hanViet": "hợp ước",
+        "collocations": [
+          {
+            "text": "签合约",
+            "vi": "ký hợp đồng"
+          },
+          {
+            "text": "合约到期",
+            "vi": "hợp đồng hết hạn"
+          }
+        ],
+        "tipVi": "合约 và 合同 gần nghĩa; 合同 dùng phổ biến hơn, 合约 hay gặp trong thể thao, giải trí."
+      }
+    },
+    {
+      "id": "fuyou-84181a",
+      "word": "富有",
+      "meaningVi": "giàu, đầy",
+      "defVi": "Mang trong mình /dồi_dào/ | một phẩm_chất nào_đó.",
+      "leadVi": "Tranh của anh=ấy | ngập_tràn /sáng_tạo/ bất_ngờ.",
+      "anticipateVi": "Tràn /cảm_hứng/ quá nhỉ?",
+      "pos": "verb",
+      "ipa": "fùyǒu",
+      "topic": "character",
+      "topics": [
+        "character"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他的画_____想_象力，孩_子们都很喜_欢。",
+          "vi": "Tranh của anh=ấy giàu trí=tưởng_tượng, | trẻ_con đều rất thích."
+        }
+      ],
+      "chars": 2,
+      "initial": "富",
+      "grammar": {
+        "hanViet": "phú hữu",
+        "collocations": [
+          {
+            "text": "富有经验",
+            "vi": "giàu kinh nghiệm"
+          },
+          {
+            "text": "富有想象力",
+            "vi": "giàu trí tưởng tượng"
+          }
+        ],
+        "tipVi": "富有 là giàu có một phẩm chất, hay đi với từ trừu tượng; 充满 là tràn đầy, chứa đầy."
+      }
+    },
+    {
+      "id": "qingxiang-9baaed",
+      "word": "倾向",
+      "meaningVi": "nghiêng=về",
+      "defVi": "Lòng /ủng_hộ/ một lựa_chọn | hơn cái=còn_lại.",
+      "leadVi": "Giữa hai phương_án, | mình /ưng_ý/ cái=sau hơn.",
+      "anticipateVi": "Chọn /phương_án/ nào đây?",
+      "pos": "verb",
+      "ipa": "qīngxiàng",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "两个方_案都不_错，我更_____于第_二个。",
+          "vi": "Hai phương_án đều ổn, | tôi nghiêng về phương_án sau hơn."
+        }
+      ],
+      "chars": 2,
+      "initial": "倾",
+      "grammar": {
+        "hanViet": "khuynh hướng",
+        "collocations": [
+          {
+            "text": "倾向于",
+            "vi": "nghiêng về"
+          },
+          {
+            "text": "倾向于选择",
+            "vi": "nghiêng về chọn"
+          }
+        ],
+        "tipVi": "倾向 là thiên về một phía, một lựa chọn; 趋势 là xu thế phát triển chung của sự việc."
+      }
+    },
+    {
+      "id": "chiyou-d5651c",
+      "word": "持有",
+      "meaningVi": "nắm_giữ",
+      "defVi": "Đang có trong tay | giấy_tờ hay /cổ_phần/ hợp_lệ.",
+      "leadVi": "Ai có vé trong tay | thì được /ưu_tiên/ vào trước.",
+      "anticipateVi": "Vé /hợp_lệ/ đâu nào?",
+      "pos": "verb",
+      "ipa": "chíyǒu",
+      "topic": "general",
+      "topics": [
+        "general",
+        "money"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "_____有_效证_件的旅_客，请走这_边。",
+          "vi": "Hành_khách có giấy_tờ hợp_lệ | xin đi lối này."
+        }
+      ],
+      "chars": 2,
+      "initial": "持",
+      "grammar": {
+        "hanViet": "trì hữu",
+        "collocations": [
+          {
+            "text": "持有门票",
+            "vi": "có vé"
+          },
+          {
+            "text": "持有股票",
+            "vi": "nắm giữ cổ phiếu"
+          }
+        ],
+        "tipVi": "持有 là đang cầm, đang giữ giấy tờ, vé, cổ phần; 拥有 là sở hữu, có được thứ lớn lao."
+      }
+    },
+    {
+      "id": "yanzhe-ff34b6",
+      "word": "沿着",
+      "meaningVi": "dọc=theo",
+      "defVi": "Đi /song_song/ | với một con_đường hay bờ_sông.",
+      "leadVi": "Cứ men bờ_biển, | ta /thong_thả/ ngắm hoàng_hôn.",
+      "anticipateVi": "Men /bờ_sông/ đi_dạo nhé?",
+      "pos": "prep",
+      "ipa": "yánzhe",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "_____这条路往前走，就能看_到学_校。",
+          "vi": "Đi dọc con_đường nhỏ này | là sẽ thấy trường_học."
+        }
+      ],
+      "chars": 2,
+      "initial": "沿",
+      "grammar": {
+        "hanViet": "duyên trứ",
+        "collocations": [
+          {
+            "text": "沿着河边",
+            "vi": "dọc bờ sông"
+          },
+          {
+            "text": "沿着这条路",
+            "vi": "theo con đường này"
+          }
+        ],
+        "tipVi": "沿着 nhấn đi dọc bên một con đường, bờ sông; 顺着 nhấn đi xuôi theo hướng có sẵn."
+      }
+    },
+    {
+      "id": "tansuo-ee2d9e",
+      "word": "探索",
+      "meaningVi": "khám_phá",
+      "defVi": "Tìm_tòi những điều=/bí_ẩn/ | mà ta chưa hiểu.",
+      "leadVi": "Tàu_vũ_trụ bay xa | để tìm_hiểu /thiên_hà/.",
+      "anticipateVi": "Đi /thám_hiểm/ không nào?",
+      "pos": "verb",
+      "ipa": "tànsuǒ",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "study"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "人_类一_直在_____海_洋的秘_密。",
+          "vi": "Con_người vẫn luôn khám_phá | bí_mật của đại_dương."
+        }
+      ],
+      "chars": 2,
+      "initial": "探",
+      "grammar": {
+        "hanViet": "thám sách",
+        "collocations": [
+          {
+            "text": "探索海洋",
+            "vi": "khám phá đại dương"
+          },
+          {
+            "text": "探索精神",
+            "vi": "tinh thần khám phá"
+          }
+        ],
+        "tipVi": "探索 là tìm tòi điều chưa biết, nhấn tinh thần khám phá; 研究 là nghiên cứu có hệ thống."
+      }
+    },
+    {
+      "id": "mie-e88a1f",
+      "word": "灭",
+      "meaningVi": "tắt",
+      "defVi": "Khiến ngọn_lửa /tàn_lụi/ | hay ánh đèn tối đi.",
+      "leadVi": "Mất điện, | cả=phòng /tối_đen/ như mực.",
+      "anticipateVi": "Nến /leo_lét/ sắp tàn?",
+      "pos": "verb",
+      "ipa": "miè",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "停了电，灯一_下_子全_____了。",
+          "vi": "Mất điện, | đèn tắt hết trong chớp_mắt."
+        }
+      ],
+      "chars": 1,
+      "initial": "灭",
+      "grammar": {
+        "hanViet": "diệt",
+        "collocations": [
+          {
+            "text": "灯灭了",
+            "vi": "đèn tắt rồi"
+          },
+          {
+            "text": "灭火",
+            "vi": "dập lửa"
+          }
+        ],
+        "tipVi": "灭 là lửa, đèn tự tắt hay bị dập; 关 là tắt bằng công tắc, đóng lại."
+      }
+    },
+    {
+      "id": "zhiyuan-bd286c",
+      "word": "支援",
+      "meaningVi": "chi_viện",
+      "defVi": "Gửi người hay của | đến /giúp_sức/ nơi đang thiếu.",
+      "leadVi": "Phòng bên quá_tải, | hai đồng_nghiệp được /điều_động/ sang.",
+      "anticipateVi": "Thêm /nhân_lực/ đến kìa!",
+      "pos": "verb",
+      "ipa": "zhīyuán",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我_们部_门太忙了，经_理派了两个_人来_____。",
+          "vi": "Bộ_phận chúng_tôi bận quá, | quản_lý cử thêm hai đồng_nghiệp sang hỗ_trợ."
+        }
+      ],
+      "chars": 2,
+      "initial": "支",
+      "grammar": {
+        "hanViet": "chi viện",
+        "collocations": [
+          {
+            "text": "派人支援",
+            "vi": "cử người hỗ trợ"
+          },
+          {
+            "text": "互相支援",
+            "vi": "hỗ trợ lẫn nhau"
+          }
+        ],
+        "tipVi": "支援 là gửi người, sức lực sang giúp; 援助 là viện trợ tiền của, vật chất cho nơi khó khăn."
+      }
+    },
+    {
+      "id": "xianlu-6ff85e",
+      "word": "线路",
+      "meaningVi": "tuyến, đường_dây",
+      "defVi": "Lộ_trình cố_định | mà xe_buýt hay /tàu_điện/ chạy.",
+      "leadVi": "Xe số mười=hai | /dừng_chân/ ngay cổng trường.",
+      "anticipateVi": "Đổi /lộ_trình/ à?",
+      "pos": "noun",
+      "ipa": "xiànlù",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "technology"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这座城_市新开了两条地_铁_____。",
+          "vi": "Thành_phố này | vừa mở thêm hai tuyến tàu_điện ngầm."
+        }
+      ],
+      "chars": 2,
+      "initial": "线",
+      "grammar": {
+        "counter": "条 tiáo",
+        "hanViet": "tuyến lộ",
+        "collocations": [
+          {
+            "text": "地铁线路",
+            "vi": "tuyến tàu điện ngầm"
+          },
+          {
+            "text": "电话线路",
+            "vi": "đường dây điện thoại"
+          }
+        ],
+        "tipVi": "线路 là tuyến cố định của xe, tàu hay đường dây điện; 路线 là lộ trình đi từ nơi này đến nơi khác."
+      }
+    },
+    {
+      "id": "wawa-9e06e8",
+      "word": "娃娃",
+      "meaningVi": "búp_bê",
+      "defVi": "Đồ_chơi hình em_bé | làm bằng /vải_vóc/ hay nhựa.",
+      "leadVi": "Đôi mắt tròn_xoe | nằm /im_lìm/ trên kệ.",
+      "anticipateVi": "Ôm /em_bé/ vải đi ngủ?",
+      "pos": "noun",
+      "ipa": "wáwa",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "商_店里摆着很多可_爱的布_____。",
+          "vi": "Trong cửa_hàng | bày rất nhiều búp_bê vải dễ_thương."
+        }
+      ],
+      "chars": 2,
+      "initial": "娃",
+      "grammar": {
+        "counter": "个 gè",
+        "hanViet": "oa oa",
+        "collocations": [
+          {
+            "text": "布娃娃",
+            "vi": "búp bê vải"
+          },
+          {
+            "text": "抱着娃娃",
+            "vi": "ôm búp bê"
+          }
+        ],
+        "tipVi": "娃娃 là búp bê hình em bé; 玩具 là đồ chơi nói chung."
+      }
+    },
+    {
+      "id": "rexian-d6ef20",
+      "word": "热线",
+      "meaningVi": "đường_dây_nóng",
+      "defVi": "Số /điện_thoại/ trực suốt ngày_đêm | để giải_đáp.",
+      "leadVi": "Nửa_đêm gọi vẫn có | người=/tư_vấn/ nhấc máy.",
+      "anticipateVi": "Cần /hỗ_trợ/ gấp à?",
+      "pos": "noun",
+      "ipa": "rèxiàn",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "technology"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "有什_么不明_白的，欢_迎拨_打这条服_务_____。",
+          "vi": "Có gì chưa rõ, | xin mời gọi đường_dây_nóng phục_vụ này."
+        }
+      ],
+      "chars": 2,
+      "initial": "热",
+      "grammar": {
+        "counter": "条 tiáo",
+        "hanViet": "nhiệt tuyến",
+        "collocations": [
+          {
+            "text": "服务热线",
+            "vi": "đường dây nóng phục vụ"
+          },
+          {
+            "text": "打热线",
+            "vi": "gọi đường dây nóng"
+          }
+        ],
+        "tipVi": "热线 là số gọi riêng để hỏi đáp, phục vụ; 电话 là điện thoại hay cuộc gọi nói chung."
+      }
+    },
+    {
+      "id": "guanlian-a094b6",
+      "word": "关联",
+      "meaningVi": "liên_quan",
+      "defVi": "Có mối /dính_dáng/ | giữa hai sự_việc với nhau.",
+      "leadVi": "Thức_khuya và hay quên | hóa_ra /ảnh_hưởng/ lẫn_nhau.",
+      "anticipateVi": "Chuyện này /can_hệ/ gì?",
+      "pos": "noun",
+      "ipa": "guānlián",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这两件事之_间没_有任_何_____。",
+          "vi": "Giữa hai việc này | không hề có mối liên_quan nào."
+        }
+      ],
+      "chars": 2,
+      "initial": "关",
+      "grammar": {
+        "counter": "种 zhǒng",
+        "hanViet": "quan liên",
+        "collocations": [
+          {
+            "text": "有关联",
+            "vi": "có liên quan"
+          },
+          {
+            "text": "没有任何关联",
+            "vi": "không hề có liên quan"
+          }
+        ],
+        "tipVi": "关联 nhấn sự dính dáng giữa các sự việc; 联系 còn có nghĩa liên lạc giữa người với người."
+      }
+    },
+    {
+      "id": "jian-e4a4dc",
+      "word": "捡",
+      "meaningVi": "nhặt",
+      "defVi": "Cúi xuống /thu_gom/ | vật đang nằm dưới đất.",
+      "leadVi": "Thấy vỏ chai trên cỏ, | em /nhanh_nhẹn/ bỏ vào thùng.",
+      "anticipateVi": "Rác rơi kìa, /dọn_dẹp/ nhé?",
+      "pos": "verb",
+      "ipa": "jiǎn",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "nature"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "地_上的垃_圾，我_们一_起_____起_来吧。",
+          "vi": "Rác trên mặt_đất, | chúng_mình cùng nhặt lên nhé."
+        }
+      ],
+      "chars": 1,
+      "initial": "捡",
+      "grammar": {
+        "hanViet": "kiểm",
+        "collocations": [
+          {
+            "text": "捡起来",
+            "vi": "nhặt lên"
+          },
+          {
+            "text": "捡垃圾",
+            "vi": "nhặt rác"
+          }
+        ],
+        "tipVi": "捡 khẩu ngữ, dùng hằng ngày; 拾 nghĩa giống nhưng trang trọng hơn."
+      }
+    },
+    {
+      "id": "jinqian-b453f7",
+      "word": "金钱",
+      "meaningVi": "tiền_bạc",
+      "defVi": "Của_cải đo bằng /giá_trị/ | dùng để mua_bán.",
+      "leadVi": "Giàu đến đâu | cũng không mua được /hạnh_phúc/.",
+      "anticipateVi": "Chuyện /tài_chính/ hả?",
+      "pos": "noun",
+      "ipa": "jīnqián",
+      "topic": "money",
+      "topics": [
+        "money",
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这件事花了他大_量的时_间、精_力和_____。",
+          "vi": "Việc này đã tốn của anh=ấy | rất nhiều thời_gian, | công_sức và tiền_bạc."
+        }
+      ],
+      "chars": 2,
+      "initial": "金",
+      "grammar": {
+        "hanViet": "kim tiền",
+        "collocations": [
+          {
+            "text": "金钱和时间",
+            "vi": "tiền bạc và thời gian"
+          },
+          {
+            "text": "时间和金钱",
+            "vi": "thời gian và tiền bạc"
+          }
+        ],
+        "tipVi": "金钱 trang trọng, hay dùng khi bàn chuyện chung, trừu tượng; 钱 là tiền, dùng hằng ngày."
+      }
+    },
+    {
+      "id": "jietou-3980ba",
+      "word": "街头",
+      "meaningVi": "đường_phố",
+      "defVi": "Khoảng không_gian /công_cộng/ | dọc hai bên lối_đi.",
+      "leadVi": "Cuối_tuần, | ca_sĩ /tự_do/ ôm đàn hát ngoài_trời.",
+      "anticipateVi": "Nghe /đàn_hát/ ngoài_trời?",
+      "pos": "noun",
+      "ipa": "jiētóu",
+      "topic": "society",
+      "topics": [
+        "society",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "周_末的_____有很多人表_演音_乐。",
+          "vi": "Cuối_tuần trên đường_phố | có rất nhiều người đang biểu_diễn âm_nhạc."
+        }
+      ],
+      "chars": 2,
+      "initial": "街",
+      "grammar": {
+        "hanViet": "nhai đầu",
+        "collocations": [
+          {
+            "text": "街头表演",
+            "vi": "biểu diễn đường phố"
+          },
+          {
+            "text": "街头音乐",
+            "vi": "nhạc đường phố"
+          }
+        ],
+        "tipVi": "街头 là ngoài phố, nơi công cộng đông người; 街道 là con phố, tuyến phố cụ thể."
+      }
+    },
+    {
+      "id": "jingren-831f6d",
+      "word": "惊人",
+      "meaningVi": "đáng=kinh_ngạc",
+      "defVi": "Lớn_lao hay lạ_thường | đến_mức ai cũng /sửng_sốt/.",
+      "leadVi": "Đọc một lượt | là thuộc /làu_làu/ cả trang.",
+      "anticipateVi": "Trí_nhớ /phi_thường/ à?",
+      "pos": "adj",
+      "ipa": "jīngrén",
+      "topic": "perception",
+      "topics": [
+        "perception",
+        "character"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他有_着_____的记_忆力，看一遍就能记_住。",
+          "vi": "Anh=ấy có trí_nhớ đáng=kinh_ngạc, | xem một lần là nhớ."
+        }
+      ],
+      "chars": 2,
+      "initial": "惊",
+      "grammar": {
+        "hanViet": "kinh nhân",
+        "collocations": [
+          {
+            "text": "惊人的速度",
+            "vi": "tốc độ đáng kinh ngạc"
+          },
+          {
+            "text": "数字惊人",
+            "vi": "con số đáng kinh ngạc"
+          }
+        ],
+        "tipVi": "惊人 là khiến người khác kinh ngạc, tả sự vật; 吃惊 là bản thân mình giật mình, ngạc nhiên."
+      }
+    },
+    {
+      "id": "luguo-6c669c",
+      "word": "路过",
+      "meaningVi": "đi=ngang=qua",
+      "defVi": "Trên đường tới nơi=khác, | /tiện_thể/ men theo chỗ ấy.",
+      "leadVi": "Tiện đường ghé thăm, | không /báo_trước/ gì cả.",
+      "anticipateVi": "Ghé /bất_chợt/ thế?",
+      "pos": "verb",
+      "ipa": "lùguò",
+      "topic": "travel",
+      "topics": [
+        "travel",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我只_是_____，不是专_门来找你的。",
+          "vi": "Tôi chỉ đi=ngang=qua thôi, | không phải cố_ý | đến tìm bạn đâu."
+        }
+      ],
+      "chars": 2,
+      "initial": "路",
+      "grammar": {
+        "hanViet": "lộ quá",
+        "collocations": [
+          {
+            "text": "路过这里",
+            "vi": "đi ngang qua đây"
+          },
+          {
+            "text": "正好路过",
+            "vi": "vừa hay đi ngang"
+          }
+        ],
+        "tipVi": "路过 là tiện đường đi ngang qua một nơi; 经过 rộng hơn, còn chỉ quá trình hay trải qua việc gì."
+      }
+    },
+    {
+      "id": "haiyang-135bbf",
+      "word": "海洋",
+      "meaningVi": "đại_dương",
+      "defVi": "Vùng nước_mặn /mênh_mông/ | bao_phủ phần_lớn trái_đất.",
+      "leadVi": "Cá_voi, sao_biển | sống dưới làn nước /sâu_thẳm/.",
+      "anticipateVi": "Biển xanh /thăm_thẳm/ quá!",
+      "pos": "noun",
+      "ipa": "hǎiyáng",
+      "topic": "nature",
+      "topics": [
+        "nature"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我_们要保_护_____，不_要往海里扔垃_圾。",
+          "vi": "Chúng_ta phải bảo_vệ đại_dương, | đừng vứt rác xuống biển."
+        }
+      ],
+      "chars": 2,
+      "initial": "海",
+      "grammar": {
+        "counter": "片 piàn",
+        "hanViet": "hải dương",
+        "collocations": [
+          {
+            "text": "保护海洋",
+            "vi": "bảo vệ đại dương"
+          },
+          {
+            "text": "海洋动物",
+            "vi": "động vật biển"
+          }
+        ],
+        "tipVi": "海洋 là tên chung cho biển cả, hay dùng trong khoa học; 大海 là biển lớn, nghe gần gũi hơn."
+      }
+    },
+    {
+      "id": "jinrong-d83647",
+      "word": "金融",
+      "meaningVi": "tài_chính",
+      "defVi": "Lĩnh_vực về tiền_tệ, | /ngân_hàng/ và đầu_tư.",
+      "leadVi": "Biểu_đồ cổ_phiếu | nhấp_nháy /liên_tục/ trên màn_hình.",
+      "anticipateVi": "Thị_trường /biến_động/ à?",
+      "pos": "noun",
+      "ipa": "jīnróng",
+      "topic": "money",
+      "topics": [
+        "money",
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "银_行和保_险都属_于_____行_业。",
+          "vi": "Ngân_hàng và bảo_hiểm | đều thuộc ngành tài_chính."
+        }
+      ],
+      "chars": 2,
+      "initial": "金",
+      "grammar": {
+        "hanViet": "kim dung",
+        "collocations": [
+          {
+            "text": "金融行业",
+            "vi": "ngành tài chính"
+          },
+          {
+            "text": "金融中心",
+            "vi": "trung tâm tài chính"
+          }
+        ],
+        "tipVi": "金融 là lĩnh vực tiền tệ, ngân hàng, đầu tư; 经济 là kinh tế nói chung."
+      }
+    },
+    {
+      "id": "shouxi-83d17f",
+      "word": "首席",
+      "meaningVi": "đứng_đầu",
+      "defVi": "Giữ vị_trí cao nhất | trong một /tập_thể/ chuyên_môn.",
+      "leadVi": "Mọi bản_vẽ | đều chờ người=/phụ_trách/ duyệt.",
+      "anticipateVi": "Ghế /cầm_trịch/ của ai?",
+      "pos": "noun",
+      "ipa": "shǒuxí",
+      "topic": "work",
+      "topics": [
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他是这家公_司的_____设_计_师。",
+          "vi": "Anh=ấy là nhà=thiết_kế trưởng | của công_ty này."
+        }
+      ],
+      "chars": 2,
+      "initial": "首",
+      "grammar": {
+        "hanViet": "thủ tịch",
+        "collocations": [
+          {
+            "text": "首席设计师",
+            "vi": "nhà thiết kế trưởng"
+          },
+          {
+            "text": "首席代表",
+            "vi": "đại diện trưởng"
+          }
+        ],
+        "tipVi": "首席 là đứng đầu, số một trong một nhóm; 高级 là cấp cao, cao cấp nói chung."
+      }
+    },
+    {
+      "id": "chengfen-5ec91c",
+      "word": "成分",
+      "meaningVi": "thành_phần",
+      "defVi": "Những chất /cấu_tạo/ | nên một món đồ, món_ăn.",
+      "leadVi": "Lật vỏ hộp, | đọc dòng chữ nhỏ /liệt_kê/ nguyên_liệu.",
+      "anticipateVi": "Trong hộp /chứa_đựng/ gì?",
+      "pos": "noun",
+      "ipa": "chéngfèn",
+      "topic": "food",
+      "topics": [
+        "food",
+        "health"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这种药含_有哪_些_____？",
+          "vi": "Loại thuốc này | có những thành_phần nào?"
+        }
+      ],
+      "chars": 2,
+      "initial": "成",
+      "grammar": {
+        "counter": "种 zhǒng",
+        "hanViet": "thành phần",
+        "collocations": [
+          {
+            "text": "主要成分",
+            "vi": "thành phần chính"
+          },
+          {
+            "text": "营养成分",
+            "vi": "thành phần dinh dưỡng"
+          }
+        ],
+        "tipVi": "成分 là các chất có trong một thứ; 材料 là vật liệu, nguyên liệu dùng để làm ra thứ đó."
+      }
+    },
+    {
+      "id": "tongyi-16f273",
+      "word": "同一",
+      "meaningVi": "cùng=một",
+      "defVi": "Chính là cái=đó, | chứ không /riêng_rẽ/ hai cái.",
+      "leadVi": "Sinh_nhật hai đứa | /trùng_hợp/ đến từng ngày.",
+      "anticipateVi": "Trùng ngày /sinh_nhật/ à?",
+      "pos": "adj",
+      "ipa": "tóngyī",
+      "topic": "general",
+      "topics": [
+        "general",
+        "time"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我_们两个是在_____天出_生的。",
+          "vi": "Hai đứa mình | sinh cùng=một ngày."
+        }
+      ],
+      "chars": 2,
+      "initial": "同",
+      "grammar": {
+        "hanViet": "đồng nhất",
+        "collocations": [
+          {
+            "text": "同一天",
+            "vi": "cùng một ngày"
+          },
+          {
+            "text": "同一个人",
+            "vi": "cùng một người"
+          }
+        ],
+        "tipVi": "同一 là cùng một cái, không phải hai; 一样 là giống nhau giữa hai thứ khác nhau."
+      }
+    },
+    {
+      "id": "xunhuan-fdd441",
+      "word": "循环",
+      "meaningVi": "tuần_hoàn",
+      "defVi": "Lặp đi lặp lại | theo một /vòng_tròn/ khép_kín.",
+      "leadVi": "Chai nhựa được /tái_chế/ | thành chai mới, rồi lại thế.",
+      "anticipateVi": "Quay /vòng_vòng/ mãi à?",
+      "pos": "verb",
+      "ipa": "xúnhuán",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这首歌我已_经_____播_放了一整_天。",
+          "vi": "Bài_hát này | tôi đã bật lặp đi lặp lại cả ngày rồi."
+        }
+      ],
+      "chars": 2,
+      "initial": "循",
+      "grammar": {
+        "hanViet": "tuần hoàn",
+        "collocations": [
+          {
+            "text": "循环播放",
+            "vi": "phát lặp lại"
+          },
+          {
+            "text": "循环使用",
+            "vi": "dùng tuần hoàn"
+          }
+        ],
+        "tipVi": "循环 là quay vòng, hết vòng lại bắt đầu lại; 重复 là làm lại, nói lại một lần nữa."
+      }
+    },
+    {
+      "id": "congmei-98a8db",
+      "word": "从没",
+      "meaningVi": "chưa=bao_giờ",
+      "defVi": "Từ trước đến nay | /tuyệt_nhiên/ không hề xảy_ra.",
+      "leadVi": "Lớn ngần_này rồi | mà /lần_đầu/ mới thấy tuyết.",
+      "anticipateVi": "/Ngỡ_ngàng/ thật sao?",
+      "pos": "adv",
+      "ipa": "cóngméi",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我长这_么大，_____见_过这_么大的雪。",
+          "vi": "Tôi lớn chừng=này rồi | mà chưa từng thấy tuyết to thế."
+        }
+      ],
+      "chars": 2,
+      "initial": "从",
+      "grammar": {
+        "hanViet": "tòng một",
+        "collocations": [
+          {
+            "text": "从没见过",
+            "vi": "chưa từng thấy"
+          },
+          {
+            "text": "从没去过",
+            "vi": "chưa từng đi"
+          }
+        ],
+        "tipVi": "从没 nói việc trong quá khứ chưa từng xảy ra; 从不 nói thói quen, xưa nay không làm."
+      }
+    },
+    {
+      "id": "xietiao-c82edd",
+      "word": "协调",
+      "meaningVi": "điều_phối",
+      "defVi": "Sắp_xếp cho các bên | /ăn_ý/ và nhịp_nhàng.",
+      "leadVi": "Hai nhóm bất_đồng, | trưởng_phòng đứng ra /dàn_xếp/.",
+      "anticipateVi": "Cần người=/hòa_giải/ không?",
+      "pos": "verb",
+      "ipa": "xiétiáo",
+      "topic": "work",
+      "topics": [
+        "work",
+        "communication"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "经_理正_在_____两个部_门之_间的工_作。",
+          "vi": "Quản_lý đang điều_phối công_việc | giữa hai bộ_phận."
+        }
+      ],
+      "chars": 2,
+      "initial": "协",
+      "grammar": {
+        "hanViet": "hiệp điều",
+        "collocations": [
+          {
+            "text": "协调工作",
+            "vi": "điều phối công việc"
+          },
+          {
+            "text": "协调关系",
+            "vi": "điều hòa quan hệ"
+          }
+        ],
+        "tipVi": "协调 là sắp xếp cho các bên ăn khớp; 合作 là các bên cùng làm chung một việc."
+      }
+    },
+    {
+      "id": "jianding-4fb191",
+      "word": "鉴定",
+      "meaningVi": "giám_định",
+      "defVi": "Xem_xét kỹ để /xác_nhận/ | thật giả hay chất_lượng.",
+      "leadVi": "Chuyên_gia soi từng nét | rồi /kết_luận/ là tranh thật.",
+      "anticipateVi": "Đồ /chính_hiệu/ chứ?",
+      "pos": "verb",
+      "ipa": "jiàndìng",
+      "topic": "work",
+      "topics": [
+        "work",
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "专_家_____后说，这幅画是真_的。",
+          "vi": "Sau_khi giám_định, | chuyên_gia nói bức tranh này là thật."
+        }
+      ],
+      "chars": 2,
+      "initial": "鉴",
+      "grammar": {
+        "hanViet": "giám định",
+        "collocations": [
+          {
+            "text": "专家鉴定",
+            "vi": "chuyên gia giám định"
+          },
+          {
+            "text": "鉴定结果",
+            "vi": "kết quả giám định"
+          }
+        ],
+        "tipVi": "鉴定 là chuyên gia xét để kết luận thật giả, chất lượng; 检查 là kiểm tra xem có vấn đề không."
+      }
+    },
+    {
+      "id": "mo-9840a0",
+      "word": "膜",
+      "meaningVi": "màng",
+      "defVi": "Lớp /mỏng_manh/ phủ kín | bên_ngoài một bề_mặt.",
+      "leadVi": "Mua điện_thoại mới, | dán ngay lớp /bảo_vệ/ màn_hình.",
+      "anticipateVi": "Lớp /trong_suốt/ này là gì?",
+      "pos": "noun",
+      "ipa": "mó",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "剩_下的菜盖上一层_____，再放进冰_箱。",
+          "vi": "Thức_ăn thừa | phủ một lớp màng rồi cho vào tủ_lạnh."
+        }
+      ],
+      "chars": 1,
+      "initial": "膜",
+      "grammar": {
+        "counter": "层 céng",
+        "hanViet": "mô",
+        "collocations": [
+          {
+            "text": "贴膜",
+            "vi": "dán màng"
+          },
+          {
+            "text": "一层膜",
+            "vi": "một lớp màng"
+          }
+        ],
+        "tipVi": "膜 là lớp màng mỏng phủ lên bề mặt; 皮 là vỏ, da bọc ngoài."
+      }
+    },
+    {
+      "id": "pu-7e228e",
+      "word": "铺",
+      "meaningVi": "trải",
+      "defVi": "Đặt phẳng một lớp | /rộng_khắp/ lên trên bề_mặt.",
+      "leadVi": "Tấm khăn xanh | /phẳng_phiu/ phủ kín mặt bàn.",
+      "anticipateVi": "Khăn /ngay_ngắn/ chưa?",
+      "pos": "verb",
+      "ipa": "pū",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "桌_子上_____着一块蓝_色的布。",
+          "vi": "Trên bàn | trải một tấm vải màu xanh."
+        }
+      ],
+      "chars": 1,
+      "initial": "铺",
+      "grammar": {
+        "hanViet": "phô",
+        "collocations": [
+          {
+            "text": "铺床",
+            "vi": "trải giường"
+          },
+          {
+            "text": "铺地板",
+            "vi": "lát sàn"
+          }
+        ],
+        "tipVi": "铺 là trải phẳng ra trên bề mặt; 盖 là đậy, phủ lên để che."
+      }
+    },
+    {
+      "id": "ni-608f95",
+      "word": "泥",
+      "meaningVi": "bùn",
+      "defVi": "Đất trộn nước, | mềm nhão và /lấm_lem/.",
+      "leadVi": "Mưa xong, | giày ai cũng /lấm_láp/ đất đỏ.",
+      "anticipateVi": "Chân /lem_luốc/ thế kia?",
+      "pos": "noun",
+      "ipa": "ní",
+      "topic": "nature",
+      "topics": [
+        "nature",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "下_雨以_后，路_上全是_____，鞋都脏了。",
+          "vi": "Mưa xong | đường toàn bùn, giày bẩn hết."
+        }
+      ],
+      "chars": 1,
+      "initial": "泥",
+      "grammar": {
+        "counter": "块 kuài",
+        "hanViet": "nê",
+        "collocations": [
+          {
+            "text": "一身泥",
+            "vi": "lấm bùn khắp người"
+          },
+          {
+            "text": "鞋上的泥",
+            "vi": "bùn trên giày"
+          }
+        ],
+        "tipVi": "泥 là đất ướt, nhão; 土 là đất khô nói chung."
+      }
+    },
+    {
+      "id": "changjing-b317ce",
+      "word": "场景",
+      "meaningVi": "cảnh_tượng",
+      "defVi": "Bức_tranh /sống_động/ | về nơi_chốn và sự_việc.",
+      "leadVi": "Đoạn cuối phim | khiến cả=rạp /rưng_rưng/.",
+      "anticipateVi": "Thước phim /xúc_động/ quá!",
+      "pos": "noun",
+      "ipa": "chǎngjǐng",
+      "topic": "general",
+      "topics": [
+        "general",
+        "perception"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这部电_影的最_后一个_____让我很感_动。",
+          "vi": "Cảnh cuối_cùng của bộ phim này | làm tôi rất xúc_động."
+        }
+      ],
+      "chars": 2,
+      "initial": "场",
+      "grammar": {
+        "counter": "个 gè",
+        "hanViet": "trường cảnh",
+        "collocations": [
+          {
+            "text": "电影场景",
+            "vi": "cảnh phim"
+          },
+          {
+            "text": "生活场景",
+            "vi": "cảnh đời thường"
+          }
+        ],
+        "tipVi": "chángjǐng - hai thanh 3 liền nhau, chữ đầu đọc thành thanh 2."
+      }
+    },
+    {
+      "id": "kua-6c2d76",
+      "word": "跨",
+      "meaningVi": "sải=bước",
+      "defVi": "Nhấc chân thật rộng | để vượt khỏi /chướng_ngại/.",
+      "leadVi": "Con suối nhỏ thôi, | nhấc chân /nhẹ_nhàng/ là sang.",
+      "anticipateVi": "Suối hẹp, /mạnh_dạn/ lên!",
+      "pos": "verb",
+      "ipa": "kuà",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "travel"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他一步就_____过了那条小河。",
+          "vi": "Anh=ấy chỉ một bước | là sang được con_sông nhỏ ấy."
+        }
+      ],
+      "chars": 1,
+      "initial": "跨",
+      "grammar": {
+        "hanViet": "khóa",
+        "collocations": [
+          {
+            "text": "跨过",
+            "vi": "bước qua"
+          },
+          {
+            "text": "跨一大步",
+            "vi": "sải một bước dài"
+          }
+        ],
+        "tipVi": "跨 là bước dài qua, chân vẫn lần lượt chạm đất; 跳 là nhảy, cả hai chân rời mặt đất."
+      }
+    },
+    {
+      "id": "die-482d3e",
+      "word": "跌",
+      "meaningVi": "sụt_giảm",
+      "defVi": "Giá_cả /tuột_dốc/ | xuống mức thấp trước_đây.",
+      "leadVi": "Tuần này rau lên, | tuần sau lại /hạ_giá/.",
+      "anticipateVi": "Rau /rớt_giá/ rồi à?",
+      "pos": "verb",
+      "ipa": "diē",
+      "topic": "money",
+      "topics": [
+        "money",
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这个月的菜价有涨有_____。",
+          "vi": "Tháng này giá rau | lúc lên lúc xuống."
+        }
+      ],
+      "chars": 1,
+      "initial": "跌",
+      "grammar": {
+        "hanViet": "điệt",
+        "collocations": [
+          {
+            "text": "价格跌了",
+            "vi": "giá giảm rồi"
+          },
+          {
+            "text": "有涨有跌",
+            "vi": "lúc lên lúc xuống"
+          }
+        ],
+        "tipVi": "跌 hay dùng cho giá cả, cổ phiếu tụt xuống; 降 là hạ xuống, dùng rộng cho nhiệt độ, mức độ."
+      }
+    },
+    {
+      "id": "fangfu-bb5fb2",
+      "word": "仿佛",
+      "meaningVi": "như_thể",
+      "defVi": "Giống y_hệt, | tưởng_chừng /thật_sự/ là vậy.",
+      "leadVi": "Đứng trên đỉnh_núi, | mây /lơ_lửng/ ngay tầm_tay.",
+      "anticipateVi": "Mơ hay /tỉnh_táo/ đây?",
+      "pos": "adv",
+      "ipa": "fǎngfú",
+      "topic": "perception",
+      "topics": [
+        "perception",
+        "nature"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这_里的山好_像画一_样，我_____走_进了画里一_般。",
+          "vi": "Núi ở đây | như một bức tranh, | tôi như_thể đã bước vào trong tranh."
+        }
+      ],
+      "chars": 2,
+      "initial": "仿",
+      "grammar": {
+        "hanViet": "phảng phất",
+        "collocations": [
+          {
+            "text": "仿佛在做梦",
+            "vi": "như đang mơ"
+          },
+          {
+            "text": "仿佛看到",
+            "vi": "như thể nhìn thấy"
+          }
+        ],
+        "tipVi": "仿佛 trang trọng, hay dùng trong văn viết, giàu hình ảnh; 好像 dùng hằng ngày, cả khi nói."
+      }
+    },
+    {
+      "id": "miao-9c491c",
+      "word": "妙",
+      "meaningVi": "tuyệt",
+      "defVi": "Hay một cách=/khéo_léo/, | khiến người_ta phục.",
+      "leadVi": "Chỉ một nước đi | mà cả=bàn_cờ /xoay_chuyển/.",
+      "anticipateVi": "/Cao_kiến/ thật đấy!",
+      "pos": "adj",
+      "ipa": "miào",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这个主_意真_____，我怎_么没_想_到！",
+          "vi": "Ý này hay thật, | sao mình không nghĩ ra nhỉ!"
+        }
+      ],
+      "chars": 1,
+      "initial": "妙",
+      "grammar": {
+        "hanViet": "diệu",
+        "collocations": [
+          {
+            "text": "真妙",
+            "vi": "thật tuyệt"
+          },
+          {
+            "text": "妙极了",
+            "vi": "tuyệt vời quá"
+          }
+        ],
+        "tipVi": "妙 là hay một cách khéo, bất ngờ; 好 là tốt, hay nói chung."
+      }
+    },
+    {
+      "id": "zuyi-5dde22",
+      "word": "足以",
+      "meaningVi": "đủ=để",
+      "defVi": "Đạt tới mức | /cần_thiết/ cho một việc.",
+      "leadVi": "Chừng ấy bằng_chứng | là /thuyết_phục/ mọi=người.",
+      "anticipateVi": "Thế là /dư_dả/ rồi!",
+      "pos": "adv",
+      "ipa": "zúyǐ",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这个数_字_____说_明问_题。",
+          "vi": "Con_số này | đủ để nói_lên vấn_đề."
+        }
+      ],
+      "chars": 2,
+      "initial": "足",
+      "grammar": {
+        "hanViet": "túc dĩ",
+        "collocations": [
+          {
+            "text": "足以说明",
+            "vi": "đủ để chứng tỏ"
+          },
+          {
+            "text": "足以证明",
+            "vi": "đủ để chứng minh"
+          }
+        ],
+        "tipVi": "足以 đứng trước động từ, nghĩa là đủ để làm gì; 足够 là đủ, thường làm vị ngữ hay định ngữ."
+      }
+    },
+    {
+      "id": "yueding-9b8ee6",
+      "word": "约定",
+      "meaningVi": "giao_hẹn",
+      "defVi": "Hai bên /thống_nhất/ trước | việc sẽ làm, giờ sẽ gặp.",
+      "leadVi": "Ngoéo_tay xong, | năm sau /nhất_định/ quay lại.",
+      "anticipateVi": "Nhớ /lời_hứa/ nhé!",
+      "pos": "verb",
+      "ipa": "yuēdìng",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "time"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我_们_____每年夏_天都在这_里见_面。",
+          "vi": "Chúng_mình giao_hẹn | mùa_hè năm nào cũng gặp nhau ở đây."
+        }
+      ],
+      "chars": 2,
+      "initial": "约",
+      "grammar": {
+        "hanViet": "ước định",
+        "collocations": [
+          {
+            "text": "约定时间",
+            "vi": "hẹn giờ"
+          },
+          {
+            "text": "按照约定",
+            "vi": "theo như đã hẹn"
+          }
+        ],
+        "tipVi": "约定 là hai bên thống nhất trước một việc; 约会 là cuộc hẹn gặp mặt."
+      }
+    },
+    {
+      "id": "yuanzhu-6fe508",
+      "word": "援助",
+      "meaningVi": "viện_trợ",
+      "defVi": "Gửi tiền của, vật_chất | giúp nơi=gặp /khó_khăn/.",
+      "leadVi": "Sau trận lũ, | từng chuyến xe /lương_thực/ về thị_trấn.",
+      "anticipateVi": "Ai /tiếp_tế/ đấy?",
+      "pos": "verb",
+      "ipa": "yuánzhù",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "大水过_后，各_地都来_____这个小镇。",
+          "vi": "Sau trận lũ, | khắp_nơi đều đến viện_trợ thị_trấn nhỏ này."
+        }
+      ],
+      "chars": 2,
+      "initial": "援",
+      "grammar": {
+        "hanViet": "viện trợ",
+        "collocations": [
+          {
+            "text": "提供援助",
+            "vi": "cung cấp viện trợ"
+          },
+          {
+            "text": "援助小镇",
+            "vi": "viện trợ thị trấn"
+          }
+        ],
+        "tipVi": "援助 là giúp tiền của, vật chất cho nơi khó khăn; 支援 là gửi người, sức lực sang giúp."
+      }
+    },
+    {
+      "id": "sui-f73fa2",
+      "word": "虽",
+      "meaningVi": "tuy",
+      "defVi": "Từ_nối nêu điều=trái_ngược | với /kết_quả/ phía_sau.",
+      "leadVi": "Quán nhỏ_xíu, | mà món nào cũng /đầy_đủ/.",
+      "anticipateVi": "Quán bé /tí_xíu/ mà đủ?",
+      "pos": "conj",
+      "ipa": "suī",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "店_____小，货却全。",
+          "vi": "Cửa_hàng tuy nhỏ | nhưng hàng_hóa lại đầy_đủ."
+        }
+      ],
+      "chars": 1,
+      "initial": "虽",
+      "grammar": {
+        "hanViet": "tuy",
+        "collocations": [
+          {
+            "text": "虽小",
+            "vi": "tuy nhỏ"
+          },
+          {
+            "text": "虽小却全",
+            "vi": "tuy nhỏ mà đủ"
+          }
+        ],
+        "tipVi": "虽 là dạng một chữ, trang trọng, hay dùng trong văn viết; 虽然 là dạng thường dùng hằng ngày."
+      }
+    },
+    {
+      "id": "zhiming-5e0137",
+      "word": "知名",
+      "meaningVi": "nổi_tiếng",
+      "defVi": "Được đông_đảo /công_chúng/ | biết tên và nhắc tới.",
+      "leadVi": "Sách của bà | được /xuất_bản/ khắp_nơi.",
+      "anticipateVi": "Tác_giả /lừng_lẫy/ nhỉ?",
+      "pos": "adj",
+      "ipa": "zhīmíng",
+      "topic": "society",
+      "topics": [
+        "society"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他是一位_____电_影导_演。",
+          "vi": "Ông=ấy là một đạo_diễn phim | nổi_tiếng."
+        }
+      ],
+      "chars": 2,
+      "initial": "知",
+      "grammar": {
+        "hanViet": "tri danh",
+        "collocations": [
+          {
+            "text": "知名作家",
+            "vi": "nhà văn nổi tiếng"
+          },
+          {
+            "text": "知名品牌",
+            "vi": "thương hiệu nổi tiếng"
+          }
+        ],
+        "tipVi": "知名 là được nhiều người biết; 著名 trang trọng hơn, nổi tiếng rộng và có thành tựu."
+      }
+    },
+    {
+      "id": "tuichu-c77a67",
+      "word": "推出",
+      "meaningVi": "ra_mắt",
+      "defVi": "Đưa sản_phẩm hay chương_trình mới | đến với /công_chúng/.",
+      "leadVi": "Mẫu điện_thoại mới | sắp /có_mặt/ ở cửa_hàng.",
+      "anticipateVi": "Sản_phẩm /nóng_hổi/ đây!",
+      "pos": "verb",
+      "ipa": "tuīchū",
+      "topic": "work",
+      "topics": [
+        "work",
+        "technology"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这家饭_店最_近_____了几道新菜。",
+          "vi": "Nhà_hàng này | gần_đây ra_mắt vài món mới."
+        }
+      ],
+      "chars": 2,
+      "initial": "推",
+      "grammar": {
+        "hanViet": "thôi xuất",
+        "collocations": [
+          {
+            "text": "推出新产品",
+            "vi": "ra mắt sản phẩm mới"
+          },
+          {
+            "text": "推出活动",
+            "vi": "tung ra chương trình"
+          }
+        ],
+        "tipVi": "推出 là đưa sản phẩm, chương trình mới ra thị trường; 发布 là công bố thông tin, tin tức."
+      }
+    },
+    {
+      "id": "chuchang-8b1694",
+      "word": "出场",
+      "meaningVi": "xuất_hiện",
+      "defVi": "Bước ra trước /khán_giả/ | để biểu_diễn hay thi_đấu.",
+      "leadVi": "Đèn sáng bừng, | ca_sĩ bước ra giữa tiếng /hò_reo/.",
+      "anticipateVi": "Tiếng /vỗ_tay/ vang chưa?",
+      "pos": "verb",
+      "ipa": "chūchǎng",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这位歌_手一_____，大_家就热_烈地鼓_掌。",
+          "vi": "Ca_sĩ ấy vừa bước ra, | mọi=người đã vỗ_tay nồng_nhiệt."
+        }
+      ],
+      "chars": 2,
+      "initial": "出",
+      "grammar": {
+        "hanViet": "xuất trường",
+        "collocations": [
+          {
+            "text": "出场表演",
+            "vi": "ra biểu diễn"
+          },
+          {
+            "text": "第一个出场",
+            "vi": "ra sân đầu tiên"
+          }
+        ],
+        "tipVi": "出场 là ra sân, lên sân khấu để biểu diễn, thi đấu; 出现 là xuất hiện nói chung."
+      }
+    },
+    {
+      "id": "waike-54e9f9",
+      "word": "外科",
+      "meaningVi": "ngoại_khoa",
+      "defVi": "Ngành y chữa_bệnh | bằng cách=/phẫu_thuật/.",
+      "leadVi": "Khẩu_trang, găng_tay | sẵn_sàng vào /phòng_mổ/.",
+      "anticipateVi": "Ca_mổ /suôn_sẻ/ chứ?",
+      "pos": "noun",
+      "ipa": "wàikē",
+      "topic": "health",
+      "topics": [
+        "health",
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "她在医_院的_____工_作，手_术做得特_别好。",
+          "vi": "Chị=ấy làm ở khoa ngoại của bệnh_viện, | mổ rất giỏi."
+        }
+      ],
+      "chars": 2,
+      "initial": "外",
+      "grammar": {
+        "hanViet": "ngoại khoa",
+        "collocations": [
+          {
+            "text": "外科医生",
+            "vi": "bác sĩ ngoại khoa"
+          },
+          {
+            "text": "外科手术",
+            "vi": "ca phẫu thuật"
+          }
+        ],
+        "tipVi": "外科 chữa bệnh bằng mổ, phẫu thuật; 内科 chữa bệnh bằng thuốc, không mổ."
+      }
+    },
+    {
+      "id": "mingyi-a9f5d5",
+      "word": "名义",
+      "meaningVi": "danh_nghĩa",
+      "defVi": "Tư_cách được dùng | khi /đại_diện/ cho ai đó.",
+      "leadVi": "Bức_thư cảm_ơn | ký_tên chung của /tập_thể/ lớp.",
+      "anticipateVi": "Đứng_tên /chính_thức/ chưa?",
+      "pos": "noun",
+      "ipa": "míngyì",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "society"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这封信是用全班同_学的_____写的。",
+          "vi": "Bức_thư này được viết | dưới danh_nghĩa cả=lớp."
+        }
+      ],
+      "chars": 2,
+      "initial": "名",
+      "grammar": {
+        "hanViet": "danh nghĩa",
+        "collocations": [
+          {
+            "text": "用他的名义",
+            "vi": "dưới danh nghĩa anh ấy"
+          },
+          {
+            "text": "个人名义",
+            "vi": "danh nghĩa cá nhân"
+          }
+        ],
+        "tipVi": "名义 là danh nghĩa, tư cách đứng ra làm việc; 名字 là tên gọi của người hay vật."
+      }
+    },
+    {
+      "id": "congbu-04d72c",
+      "word": "从不",
+      "meaningVi": "không=bao_giờ",
+      "defVi": "Xưa_nay /tuyệt_đối/ chẳng làm | việc ấy lần nào.",
+      "leadVi": "Đi_học đều_đặn, | sáng nào cũng /có_mặt/ đầu_tiên.",
+      "anticipateVi": "Chưa lần nào /lỡ_hẹn/?",
+      "pos": "adv",
+      "ipa": "cóngbù",
+      "topic": "character",
+      "topics": [
+        "character",
+        "time"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他_____在吃_饭的时_候看手_机。",
+          "vi": "Anh=ấy không bao_giờ xem điện_thoại | trong lúc ăn cơm."
+        }
+      ],
+      "chars": 2,
+      "initial": "从",
+      "grammar": {
+        "hanViet": "tòng bất",
+        "collocations": [
+          {
+            "text": "从不迟到",
+            "vi": "không bao giờ đến muộn"
+          },
+          {
+            "text": "从不生气",
+            "vi": "chẳng bao giờ giận"
+          }
+        ],
+        "tipVi": "从不 nói thói quen, xưa nay không làm; 从没 nói việc trong quá khứ chưa từng xảy ra."
+      }
+    },
+    {
+      "id": "zhong-b94267",
+      "word": "肿",
+      "meaningVi": "sưng",
+      "defVi": "Chỗ đau trên cơ_thể | /phù_nề/ to hơn bình_thường.",
+      "leadVi": "Bị bong_gân hôm qua, | cổ_chân giờ /to_tướng/.",
+      "anticipateVi": "Chườm /nước_đá/ nhé?",
+      "pos": "verb",
+      "ipa": "zhǒng",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他的脚扭了，_____得像个馒_头。",
+          "vi": "Chân anh=ấy bị trẹo, | sưng to như cái=bánh_bao."
+        }
+      ],
+      "chars": 1,
+      "initial": "肿",
+      "grammar": {
+        "hanViet": "thũng",
+        "collocations": [
+          {
+            "text": "肿了",
+            "vi": "sưng lên rồi"
+          },
+          {
+            "text": "肿得很厉害",
+            "vi": "sưng rất to"
+          }
+        ],
+        "tipVi": "肿 là sưng do đau, viêm; 胖 là béo, mập."
+      }
+    },
+    {
+      "id": "tujing-f88621",
+      "word": "途径",
+      "meaningVi": "con_đường",
+      "defVi": "Lối hay /phương_thức/ | giúp đạt tới mục_tiêu.",
+      "leadVi": "Sách_vở hay mạng | đều mở cánh_cửa /hiểu_biết/.",
+      "anticipateVi": "Tìm /phương_hướng/ mới nhé?",
+      "pos": "noun",
+      "ipa": "tújìng",
+      "topic": "study",
+      "topics": [
+        "study",
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "读_书是了_解世_界的一条重_要_____。",
+          "vi": "Đọc sách là một con_đường quan_trọng | để hiểu thế_giới."
+        }
+      ],
+      "chars": 2,
+      "initial": "途",
+      "grammar": {
+        "counter": "条 tiáo",
+        "hanViet": "đồ kính",
+        "collocations": [
+          {
+            "text": "重要途径",
+            "vi": "con đường quan trọng"
+          },
+          {
+            "text": "通过这个途径",
+            "vi": "qua con đường này"
+          }
+        ],
+        "tipVi": "途径 là con đường, kênh để đạt tới mục tiêu; 方法 là cách làm cụ thể."
+      }
+    },
+    {
+      "id": "zaoshou-94d157",
+      "word": "遭受",
+      "meaningVi": "hứng_chịu",
+      "defVi": "Gặp_phải điều=/bất_lợi/ | như tổn_thất, thiệt_hại.",
+      "leadVi": "Năm ấy làm_ăn /thua_lỗ/, | công_ty mất nhiều vốn.",
+      "anticipateVi": "Thiệt_hại /nặng_nề/ không?",
+      "pos": "verb",
+      "ipa": "zāoshòu",
+      "topic": "work",
+      "topics": [
+        "work",
+        "money"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "受_到市_场影_响，公_司_____了很大的损_失。",
+          "vi": "Chịu ảnh_hưởng của thị_trường, | công_ty đã hứng_chịu tổn_thất rất lớn."
+        }
+      ],
+      "chars": 2,
+      "initial": "遭",
+      "grammar": {
+        "hanViet": "tao thụ",
+        "collocations": [
+          {
+            "text": "遭受损失",
+            "vi": "chịu tổn thất"
+          },
+          {
+            "text": "遭受批评",
+            "vi": "bị phê bình"
+          }
+        ],
+        "tipVi": "遭受 dùng cho điều không hay như tổn thất; 受到 dùng được cả việc tốt như khen ngợi."
+      }
+    },
+    {
+      "id": "kangfu-224770",
+      "word": "康复",
+      "meaningVi": "bình_phục",
+      "defVi": "Sức_khỏe trở_lại | như lúc /ban_đầu/ sau khi ốm.",
+      "leadVi": "Sau mấy tuần /tập_luyện/, | đôi chân đã đi_lại được.",
+      "anticipateVi": "Đã /khỏe_khoắn/ chưa?",
+      "pos": "verb",
+      "ipa": "kāngfù",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "他每天在医_院做_____训_练。",
+          "vi": "Ngày=nào anh=ấy cũng | tập phục_hồi ở bệnh_viện."
+        }
+      ],
+      "chars": 2,
+      "initial": "康",
+      "grammar": {
+        "hanViet": "khang phục",
+        "collocations": [
+          {
+            "text": "完全康复",
+            "vi": "hoàn toàn bình phục"
+          },
+          {
+            "text": "康复训练",
+            "vi": "tập phục hồi"
+          }
+        ],
+        "tipVi": "康复 chỉ sức khỏe hồi phục sau bệnh; 恢复 dùng rộng, cả trật tự, liên lạc, sức lực."
+      }
+    },
+    {
+      "id": "guidao-d6a648",
+      "word": "轨道",
+      "meaningVi": "quỹ_đạo",
+      "defVi": "Đường vòng quanh | mà vệ_tinh hay /hành_tinh/ di_chuyển.",
+      "leadVi": "Trái_đất /miệt_mài/ quay quanh mặt_trời | suốt năm.",
+      "anticipateVi": "Vệ_tinh /an_toàn/ chưa?",
+      "pos": "noun",
+      "ipa": "guǐdào",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "nature"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "卫_星顺_利进_入了_____。",
+          "vi": "Vệ_tinh đã vào quỹ_đạo | thuận_lợi."
+        }
+      ],
+      "chars": 2,
+      "initial": "轨",
+      "grammar": {
+        "counter": "条 tiáo",
+        "hanViet": "quỹ đạo",
+        "collocations": [
+          {
+            "text": "进入轨道",
+            "vi": "vào quỹ đạo"
+          },
+          {
+            "text": "火车轨道",
+            "vi": "đường ray tàu hỏa"
+          }
+        ],
+        "tipVi": "轨道 là quỹ đạo hay đường ray cố định; 路线 là lộ trình đi lại nói chung."
+      }
+    },
+    {
+      "id": "chengzhen-a90890",
+      "word": "城镇",
+      "meaningVi": "thị_trấn",
+      "defVi": "Khu dân_cư /đông_đúc/ | nhỏ hơn thành_phố lớn.",
+      "leadVi": "Chợ, trường, bưu_điện | /quây_quần/ bên con phố chính.",
+      "anticipateVi": "Chốn /phồn_hoa/ nhỏ nhỉ?",
+      "pos": "noun",
+      "ipa": "chéngzhèn",
+      "topic": "society",
+      "topics": [
+        "society",
+        "travel"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "现_在城_市、_____和农_村都能上_网了。",
+          "vi": "Giờ đây | thành_phố, thị_trấn và nông_thôn | đều lên=mạng được rồi."
+        }
+      ],
+      "chars": 2,
+      "initial": "城",
+      "grammar": {
+        "counter": "座 zuò",
+        "hanViet": "thành trấn",
+        "collocations": [
+          {
+            "text": "城镇居民",
+            "vi": "cư dân thị trấn"
+          },
+          {
+            "text": "小城镇",
+            "vi": "thị trấn nhỏ"
+          }
+        ],
+        "tipVi": "城镇 là thị trấn, đô thị nhỏ; 城市 là thành phố lớn."
+      }
+    },
+    {
+      "id": "qitu-548347",
+      "word": "企图",
+      "meaningVi": "toan_tính",
+      "defVi": "Có /ý_đồ/ làm một việc, | thường chẳng mấy hay.",
+      "leadVi": "Chú mèo /rình_rập/ mãi | chờ nhảy lên bàn.",
+      "anticipateVi": "Lại /giở_trò/ gì đây?",
+      "pos": "verb",
+      "ipa": "qǐtú",
+      "topic": "thinking",
+      "topics": [
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "小猫_____跳上桌_子，可_是没成_功。",
+          "vi": "Chú mèo con toan nhảy lên bàn, | nhưng không thành."
+        }
+      ],
+      "chars": 2,
+      "initial": "企",
+      "grammar": {
+        "hanViet": "xí đồ",
+        "collocations": [
+          {
+            "text": "企图改变",
+            "vi": "toan thay đổi"
+          },
+          {
+            "text": "企图跳上去",
+            "vi": "toan nhảy lên"
+          }
+        ],
+        "tipVi": "企图 là toan làm gì, thường mang ý xấu, trang trọng; 打算 là định làm, trung tính."
+      }
+    },
+    {
+      "id": "qianlai-e3fc80",
+      "word": "前来",
+      "meaningVi": "đến",
+      "defVi": "Từ chỗ=khác | /di_chuyển/ về nơi=người nói đang ở.",
+      "leadVi": "Khách khắp_nơi | /tề_tựu/ về hội_trường hôm_nay.",
+      "anticipateVi": "Quý_khách /an_tọa/ chưa?",
+      "pos": "verb",
+      "ipa": "qiánlái",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "travel"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "听_说公_园里的花开了，游_客纷_纷_____。",
+          "vi": "Nghe_nói hoa trong công_viên đã nở, | du_khách lũ_lượt kéo đến."
+        }
+      ],
+      "chars": 2,
+      "initial": "前",
+      "grammar": {
+        "hanViet": "tiền lai",
+        "collocations": [
+          {
+            "text": "前来参加",
+            "vi": "đến tham dự"
+          },
+          {
+            "text": "前来参观",
+            "vi": "đến tham quan"
+          }
+        ],
+        "tipVi": "前来 trang trọng, dùng trong lời mời, thông báo; 来 là đến, dùng hằng ngày."
+      }
+    },
+    {
+      "id": "pingtai-25c3bf",
+      "word": "平台",
+      "meaningVi": "nền_tảng",
+      "defVi": "Trang mạng hay /ứng_dụng/ | nơi=mọi=người cùng kết_nối.",
+      "leadVi": "Chỉ cần đăng_ký, | /học_viên/ nghe giảng miễn_phí.",
+      "anticipateVi": "Lập /tài_khoản/ chưa?",
+      "pos": "noun",
+      "ipa": "píngtái",
+      "topic": "technology",
+      "topics": [
+        "technology",
+        "study"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "在这个学_习_____上，可_以免_费听课。",
+          "vi": "Trên nền_tảng học_tập này, | có_thể nghe giảng miễn_phí."
+        }
+      ],
+      "chars": 2,
+      "initial": "平",
+      "grammar": {
+        "counter": "个 gè",
+        "hanViet": "bình đài",
+        "collocations": [
+          {
+            "text": "网络平台",
+            "vi": "nền tảng mạng"
+          },
+          {
+            "text": "学习平台",
+            "vi": "nền tảng học tập"
+          }
+        ],
+        "tipVi": "平台 là nền tảng cho nhiều người dùng, kết nối; 网站 là một trang web cụ thể."
+      }
+    },
+    {
+      "id": "pu-d4a655",
+      "word": "扑",
+      "meaningVi": "lao, vồ",
+      "defVi": "Lấy đà phóng tới | rồi /ôm_chầm/ hay đè lên.",
+      "leadVi": "Vừa mở cửa, | cún đã /mừng_rỡ/ nhào tới.",
+      "anticipateVi": "Cún /quấn_quýt/ quá nhỉ?",
+      "pos": "verb",
+      "ipa": "pū",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "小狗一见_到我，就_____到我身_上。",
+          "vi": "Chú chó con vừa thấy tôi | là nhào lên người=tôi."
+        }
+      ],
+      "chars": 1,
+      "initial": "扑",
+      "grammar": {
+        "hanViet": "phác",
+        "collocations": [
+          {
+            "text": "扑过来",
+            "vi": "nhào tới"
+          },
+          {
+            "text": "扑到身上",
+            "vi": "nhào lên người"
+          }
+        ],
+        "tipVi": "扑 là lao cả người về phía trước để ôm, chụp; 跳 là nhảy lên."
+      }
+    },
+    {
+      "id": "dida-04394c",
+      "word": "抵达",
+      "meaningVi": "đến_nơi",
+      "defVi": "Kết_thúc hành_trình | khi /đặt_chân/ tới chỗ cần tới.",
+      "leadVi": "Máy_bay /hạ_cánh/, | hành_khách lần_lượt bước ra.",
+      "anticipateVi": "Tới /sân_bay/ chưa?",
+      "pos": "verb",
+      "ipa": "dǐdá",
+      "topic": "travel",
+      "topics": [
+        "travel"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "坐了一夜的车，我_们终_于安_全_____终_点站。",
+          "vi": "Ngồi xe suốt một=đêm, | cuối_cùng chúng_tôi | đã đến ga cuối an_toàn."
+        }
+      ],
+      "chars": 2,
+      "initial": "抵",
+      "grammar": {
+        "hanViet": "để đạt",
+        "collocations": [
+          {
+            "text": "抵达机场",
+            "vi": "đến sân bay"
+          },
+          {
+            "text": "安全抵达",
+            "vi": "đến nơi an toàn"
+          }
+        ],
+        "tipVi": "抵达 trang trọng, hay dùng trong thông báo, tin tức; 到达 dùng phổ biến hơn."
+      }
+    },
+    {
+      "id": "gan-974231",
+      "word": "肝",
+      "meaningVi": "gan",
+      "defVi": "Cơ_quan trong bụng | lọc /chất_độc/ cho cơ_thể.",
+      "leadVi": "Ăn nhiều dầu_mỡ | khiến bộ_phận ấy /vất_vả/.",
+      "anticipateVi": "Ăn_uống /điều_độ/ chưa?",
+      "pos": "noun",
+      "ipa": "gān",
+      "topic": "health",
+      "topics": [
+        "health"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "_____在肚_子的右_边，是很重_要的器_官。",
+          "vi": "Gan nằm ở bên phải bụng, | là cơ_quan rất quan_trọng."
+        }
+      ],
+      "chars": 1,
+      "initial": "肝",
+      "grammar": {
+        "hanViet": "can",
+        "collocations": [
+          {
+            "text": "保护肝",
+            "vi": "bảo vệ gan"
+          },
+          {
+            "text": "肝很健康",
+            "vi": "gan khỏe mạnh"
+          }
+        ],
+        "tipVi": "肝 là gan, lọc độc cho cơ thể; 胃 là dạ dày, nơi tiêu hóa thức ăn."
+      }
+    },
+    {
+      "id": "liuyan-b5adcd",
+      "word": "留言",
+      "meaningVi": "để=lại lời=nhắn",
+      "defVi": "Viết vài câu | cho người=/vắng_mặt/ đọc sau.",
+      "leadVi": "Gọi mãi chẳng ai bắt máy, | đành gửi vào /thư_thoại/.",
+      "anticipateVi": "Ai /ghi_chú/ gì đây?",
+      "pos": "verb",
+      "ipa": "liúyán",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "technology"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我在网_上给他_____了，他还没回。",
+          "vi": "Tôi đã để_lại lời=nhắn cho anh=ấy trên mạng, | anh=ấy vẫn chưa trả_lời."
+        }
+      ],
+      "chars": 2,
+      "initial": "留",
+      "grammar": {
+        "hanViet": "lưu ngôn",
+        "collocations": [
+          {
+            "text": "给他留言",
+            "vi": "để lại lời nhắn cho anh ấy"
+          },
+          {
+            "text": "网上留言",
+            "vi": "nhắn trên mạng"
+          }
+        ],
+        "tipVi": "留言 là để lại lời nhắn cho người vắng mặt; 短信 là tin nhắn điện thoại."
+      }
+    },
+    {
+      "id": "hulue-a2df0a",
+      "word": "忽略",
+      "meaningVi": "bỏ_qua",
+      "defVi": "Không để_ý tới | những chi_tiết đáng /chú_ý/.",
+      "leadVi": "Vết nứt nhỏ_xíu | chẳng ai /để_tâm/, giờ mới hối.",
+      "anticipateVi": "/Lơ_đễnh/ thế à?",
+      "pos": "verb",
+      "ipa": "hūlüè",
+      "topic": "attention",
+      "topics": [
+        "attention",
+        "thinking"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这个小问_题很容_易被人_____。",
+          "vi": "Vấn_đề nhỏ này | rất dễ bị người_ta bỏ_qua."
+        }
+      ],
+      "chars": 2,
+      "initial": "忽",
+      "grammar": {
+        "hanViet": "hốt lược",
+        "collocations": [
+          {
+            "text": "忽略细节",
+            "vi": "bỏ qua chi tiết"
+          },
+          {
+            "text": "被忽略",
+            "vi": "bị bỏ qua"
+          }
+        ],
+        "tipVi": "忽略 là sơ ý bỏ sót, không để ý; 忽视 là xem nhẹ, coi thường điều quan trọng."
+      }
+    },
+    {
+      "id": "juan-d5a4c4",
+      "word": "捐",
+      "meaningVi": "quyên_góp",
+      "defVi": "Tự_nguyện tặng tiền hay đồ | cho /cộng_đồng/.",
+      "leadVi": "Sách cũ đọc xong, | em mang tới thư_viện /chia_sẻ/.",
+      "anticipateVi": "Lòng /hào_phóng/ ghê!",
+      "pos": "verb",
+      "ipa": "juān",
+      "topic": "society",
+      "topics": [
+        "society",
+        "money"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这次活_动，大_家一_共_____了五千块钱。",
+          "vi": "Trong hoạt_động lần này, | mọi=người quyên_góp tổng_cộng năm nghìn tệ."
+        }
+      ],
+      "chars": 1,
+      "initial": "捐",
+      "grammar": {
+        "hanViet": "quyên",
+        "collocations": [
+          {
+            "text": "捐钱",
+            "vi": "quyên tiền"
+          },
+          {
+            "text": "捐书",
+            "vi": "tặng sách"
+          }
+        ],
+        "tipVi": "捐 là tặng cho tập thể, nơi cần giúp; 送 là biếu, tặng cho một người cụ thể."
+      }
+    },
+    {
+      "id": "cici-74ccbd",
+      "word": "此次",
+      "meaningVi": "lần=này",
+      "defVi": "Cách=nói /trang_trọng/ | chỉ đợt việc đang bàn.",
+      "leadVi": "Thông_báo ghi: | đợt /tập_huấn/ diễn ra ba ngày.",
+      "anticipateVi": "Đợt /hội_thảo/ đông chứ?",
+      "pos": "noun",
+      "ipa": "cǐcì",
+      "topic": "time",
+      "topics": [
+        "time",
+        "work"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "_____活_动共_有三百人参_加。",
+          "vi": "Hoạt_động lần này | có tổng_cộng ba trăm người=tham_gia."
+        }
+      ],
+      "chars": 2,
+      "initial": "此",
+      "grammar": {
+        "hanViet": "thử thứ",
+        "collocations": [
+          {
+            "text": "此次活动",
+            "vi": "hoạt động lần này"
+          },
+          {
+            "text": "此次会议",
+            "vi": "cuộc họp lần này"
+          }
+        ],
+        "tipVi": "此次 là lần này, trang trọng, dùng trong thông báo; 上次 là lần trước."
+      }
+    },
+    {
+      "id": "jiang-f327ff",
+      "word": "酱",
+      "meaningVi": "tương, mứt",
+      "defVi": "Món /sền_sệt/ từ đậu hay trái_cây, | để chấm, phết.",
+      "leadVi": "Lát bánh_mì nướng | phết lớp táo /ngọt_ngào/.",
+      "anticipateVi": "Chấm /đậm_đà/ chưa?",
+      "pos": "noun",
+      "ipa": "jiàng",
+      "topic": "food",
+      "topics": [
+        "food"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "我早_上喜_欢吃面_包加苹_果_____。",
+          "vi": "Buổi_sáng tôi thích ăn | bánh_mì kèm mứt táo."
+        }
+      ],
+      "chars": 1,
+      "initial": "酱",
+      "grammar": {
+        "counter": "瓶 píng",
+        "hanViet": "tương",
+        "collocations": [
+          {
+            "text": "苹果酱",
+            "vi": "mứt táo"
+          },
+          {
+            "text": "一瓶酱",
+            "vi": "một lọ tương"
+          }
+        ],
+        "tipVi": "酱 là tương, sốt hay mứt sệt; 酱油 là nước tương, xì dầu dạng lỏng."
+      }
+    },
+    {
+      "id": "zhicheng-e22a39",
+      "word": "支撑",
+      "meaningVi": "chống_đỡ",
+      "defVi": "Gánh sức_nặng | để vật khỏi /sụp_đổ/.",
+      "leadVi": "Bốn cây cột gỗ | /vững_chãi/ giữ cả=mái_nhà.",
+      "anticipateVi": "Trụ /kiên_cố/ chứ?",
+      "pos": "verb",
+      "ipa": "zhīchēng",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK6",
+      "usage": [
+        {
+          "en": "这座老房_子靠四根柱_子_____着。",
+          "vi": "Ngôi_nhà cũ này | được bốn cây cột chống_đỡ."
+        }
+      ],
+      "chars": 2,
+      "initial": "支",
+      "grammar": {
+        "hanViet": "chi xanh",
+        "collocations": [
+          {
+            "text": "支撑着",
+            "vi": "đang chống đỡ"
+          },
+          {
+            "text": "互相支撑",
+            "vi": "dựa vào nhau"
+          }
+        ],
+        "tipVi": "支撑 là chống đỡ sức nặng về vật lý; 支持 là ủng hộ về tinh thần, ý kiến."
+      }
+    }
+  ]
+}
