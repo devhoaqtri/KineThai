@@ -211,12 +211,14 @@
     "levels": [
       "TOPIK1",
       "TOPIK2",
-      "TOPIK3"
+      "TOPIK3",
+      "TOPIK4"
     ],
     "levelCounts": {
       "TOPIK1": 778,
       "TOPIK2": 1013,
-      "TOPIK3": 873
+      "TOPIK3": 873,
+      "TOPIK4": 546
     },
     "levelSamples": {
       "TOPIK1": [
@@ -259,6 +261,20 @@
         },
         {
           "word": "근데"
+        }
+      ],
+      "TOPIK4": [
+        {
+          "word": "개다"
+        },
+        {
+          "word": "데다"
+        },
+        {
+          "word": "속다"
+        },
+        {
+          "word": "만큼"
         }
       ]
     }

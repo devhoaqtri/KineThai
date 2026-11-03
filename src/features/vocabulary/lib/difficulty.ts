@@ -295,11 +295,12 @@ export const JLPT_TRACKS: readonly DifficultyTrack[] = [
  * The ten TOPIK tracks for the han (Korean) feed, over TOPIK 1 (easiest) to 6. The CEFR
  * bands one level for one level, except where a track's ceiling names a level the shipped
  * deck does not carry yet: `vo-long` sits alone on TOPIK1 so a TOPIK1-only deck still has
- * a starting rung, and `doc-hieu` is currently narrowed to TOPIK3 alone for the same
- * reason — the ko deck reached TOPIK3 with K301–K302 but has no TOPIK4 cards, so
- * `isTrackAvailable` (which checks `trackCeiling`) would otherwise grey the track at
- * "Sắp có · 0 từ" and hide the TOPIK3 layer from a reader who picks it. Widen it back to
- * ["TOPIK3", "TOPIK4"] as soon as a TOPIK4 batch ships.
+ * a starting rung. Narrow a track to its reachable prefix while the ceiling level is
+ * unpopulated — `isTrackAvailable` checks `trackCeiling`, so an unpopulated ceiling greys
+ * the whole track at "Sắp có · 0 từ". Widen it back the moment the deck ships the ceiling
+ * level. `doc-hieu` was `TOPIK3` alone between K301–K302 and K401–K408; the TOPIK4 batch
+ * (c71f1df follow-up) widened it back to `["TOPIK3", "TOPIK4"]`. A missing ceiling today
+ * is TOPIK5 or TOPIK6.
  */
 export const TOPIK_TRACKS: readonly DifficultyTrack[] = [
   {
@@ -335,7 +336,7 @@ export const TOPIK_TRACKS: readonly DifficultyTrack[] = [
     label: "đọc hiểu",
     hint: "Đọc báo và đọc truyện",
     emoji: "🍃",
-    levels: ["TOPIK3"],
+    levels: ["TOPIK3", "TOPIK4"],
   },
   {
     id: "chuyen-sau",
