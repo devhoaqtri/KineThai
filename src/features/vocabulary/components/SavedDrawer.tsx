@@ -36,12 +36,14 @@ import { BookmarksPage } from "./BookmarksPage";
 /** Matches the panel's exit duration in vocabulary.css and this module's retract timer. */
 export const SAVED_DRAWER_EXIT_MS = 260;
 /**
- * The tab's outline in its own 30 × 168 px box, the screen edge on the right. It leaves
- * the edge on a soft S (tangent to the edge, then rounding over to full width), runs
- * straight past the glyphs and curves back the same way. One path draws the tab's edge
- * and clips its blur, so the two can never disagree.
+ * The tab's outline in its own 30 × 100 px box, the screen edge on the right: a browser
+ * tab on its side. It leaves the edge through a small inward curve (radius 8), runs flat
+ * for a moment and turns down through a rounder corner (radius 12), then mirrors that at
+ * the foot. One path draws the tab's edge and clips its blur, so the two never disagree.
  */
-const HANDLE_EDGE = "M30 0 C30 23 0 23 0 46 L0 122 C0 145 30 145 30 168";
+const HANDLE_EDGE =
+  "M30 0 C30 4.42 26.42 8 22 8 L12 8 C5.37 8 0 13.37 0 20 L0 80 " +
+  "C0 86.63 5.37 92 12 92 L22 92 C26.42 92 30 95.58 30 100";
 
 /**
  * The drawer's own width, mirroring `min(420px, 85vw)` in vocabulary.css. The handle is a tab
@@ -318,7 +320,7 @@ export function SavedDrawer({ open, onOpenChange }: SavedDrawerProps): React.Rea
             style={{ clipPath: `path("${HANDLE_EDGE} Z")` }}
             aria-hidden="true"
           />
-          <svg className="vocab-saved-handle-shape" viewBox="0 0 30 168" aria-hidden="true">
+          <svg className="vocab-saved-handle-shape" viewBox="0 0 30 100" aria-hidden="true">
             <path d={`${HANDLE_EDGE} Z`} />
             <path d={HANDLE_EDGE} />
           </svg>
