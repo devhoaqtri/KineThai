@@ -476,11 +476,11 @@
   /* The two glyphs sit apart and dead-centre now the grip bar is gone. */
   gap: 10px;
   /* 1.5× wider (20 → 30px): the tab now carries two stacked glyphs, not one icon
-     and a count. 100px tall, where it was 72: the extra is the tab's soft shoulders,
+     and a count. 118px tall, where it was 72: the extra is the tab's soft shoulders,
      which leave the screen edge on a curve instead of a corner (HANDLE_EDGE in
      SavedDrawer.tsx draws them). */
   width: 30px;
-  height: 100px;
+  height: 118px;
   padding: 0;
   border: 0;
   background: none;
