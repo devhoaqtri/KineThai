@@ -428,14 +428,28 @@ export function VocabularyCard({
   }, [reducedMotion, canAdvance, exportLayout, onAdvance]);
   useEffect(() => () => window.clearTimeout(leaveTimer.current), []);
   // An overlay opening mid-exit must not let the timer carry the stream on to the next
-  // word underneath it. Drop the exit; the playback clock for this page is already spent,
-  // so it asks to advance again the moment the card is playing.
+  // word underneath it. Drop the exit, and leave the moment the overlay closes. The word
+  // is already finished; waiting for the playback clock instead replays the whole coda,
+  // since a last page that resumes is timed afresh, and the spelled word sat on screen
+  // after a badge looking stuck. A word the reader has moved away from forgets it.
+  const exitDropped = useRef(false);
   useEffect(() => {
-    if (active || leaveTimer.current === undefined) return;
+    if (!current) {
+      exitDropped.current = false;
+      return;
+    }
+    if (active) {
+      if (!exitDropped.current) return;
+      exitDropped.current = false;
+      advanceWithExit();
+      return;
+    }
+    if (leaveTimer.current === undefined) return;
     window.clearTimeout(leaveTimer.current);
     leaveTimer.current = undefined;
     setLeaving(false);
-  }, [active]);
+    exitDropped.current = true;
+  }, [active, current, advanceWithExit]);
   // The page's text is on stage from the first moment this card PLAYS and stays there
   // until the reader leaves the word. It used to be tied straight to `active`, so anything
   // that paused the feed (the options sheet, the saved drawer) unmounted the text and its
