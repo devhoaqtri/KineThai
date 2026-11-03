@@ -35,6 +35,13 @@ import { BookmarksPage } from "./BookmarksPage";
 
 /** Matches the panel's exit duration in vocabulary.css and this module's retract timer. */
 export const SAVED_DRAWER_EXIT_MS = 260;
+/**
+ * The tab's outline in its own 30 × 168 px box, the screen edge on the right. It leaves
+ * the edge on a soft S (tangent to the edge, then rounding over to full width), runs
+ * straight past the glyphs and curves back the same way. One path draws the tab's edge
+ * and clips its blur, so the two can never disagree.
+ */
+const HANDLE_EDGE = "M30 0 C30 23 0 23 0 46 L0 122 C0 145 30 145 30 168";
 
 /**
  * The drawer's own width, mirroring `min(420px, 85vw)` in vocabulary.css. The handle is a tab
@@ -306,6 +313,15 @@ export function SavedDrawer({ open, onOpenChange }: SavedDrawerProps): React.Rea
           aria-expanded={open}
           onClick={() => onOpenChange(true)}
         >
+          <span
+            className="vocab-saved-handle-glass"
+            style={{ clipPath: `path("${HANDLE_EDGE} Z")` }}
+            aria-hidden="true"
+          />
+          <svg className="vocab-saved-handle-shape" viewBox="0 0 30 168" aria-hidden="true">
+            <path d={`${HANDLE_EDGE} Z`} />
+            <path d={HANDLE_EDGE} />
+          </svg>
           {/* The vault keeps two kinds, so the tab shows both: bookmark over heart,
               centred and spaced. The grip bar and the count badge are both gone — the tab
               names the drawer, it doesn't tally it or advertise a pull affordance. */}
