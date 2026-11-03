@@ -466,6 +466,12 @@
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
+  /* The handle rides the drawer's edge and fades on the drawer's own clock: 320ms out,
+     260ms back (SAVED_DRAWER_EXIT_MS), on DRAWER_EASE (SavedDrawer.tsx). This is the
+     coming back; [data-hidden] below is the going. */
+  --drawer-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --handle-slide: 260ms;
+  transition: opacity var(--handle-slide) var(--drawer-ease);
 }
 .vocab-saved-handle {
   position: relative;
@@ -491,9 +497,10 @@
   --handle-strength: 0.4;
   --handle-fill: color-mix(in srgb, var(--shell-surface, #15102a) 34%, transparent);
   --handle-edge: #ffffff1f;
-  /* The handle only stretches a little; the drawer follows the finger from there. */
+  /* Follows the drawer's leading edge (--handle-shift is the panel's progress in px),
+     so opening carries it across with the panel rather than leaving it behind. */
   transform: translateX(calc(var(--handle-shift, 0) * -1px));
-  transition: transform var(--dur-move) var(--ease-spring);
+  transition: transform var(--handle-slide) var(--drawer-ease);
 }
 .vocab-saved-handle > * {
   position: relative;
@@ -585,12 +592,12 @@
   outline: 2px solid var(--chrome-accent, #a78bfa);
   outline-offset: 2px;
 }
-/* The handle is the drawer's edge: once the panel is in, it has nothing left to
-   pull, so it steps aside instead of sitting on top of the panel. */
+/* The handle is the drawer's edge: once the panel is in, it has nothing left to pull,
+   so it fades away as it travels with the panel, and fades back as it returns. */
 .vocab-saved-dock[data-hidden] {
+  --handle-slide: 320ms;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--dur-quick) var(--ease-out);
 }
 
 /* Saved-words drawer -------------------------------------------------------- */
