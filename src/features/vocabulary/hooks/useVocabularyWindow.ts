@@ -132,6 +132,32 @@ export function useVocabularyWindow(
     return () => observer.disconnect();
   }, []);
 
+  const entriesRef = useRef(entries);
+  entriesRef.current = entries;
+  const heightRef = useRef(height);
+  heightRef.current = height;
+  const activeIndexRef = useRef(activeIndex);
+  activeIndexRef.current = activeIndex;
+
+  /**
+   * Anchor on the row the scroll offset rests on now. onScroll does this as the feed
+   * moves, but it ignores the events a rebase echoes, and a glide can end inside one: the
+   * word on screen then never became current, so it did not start and the top bar kept the
+   * previous card's tone. Every place a movement ends calls this too.
+   */
+  const syncActive = useCallback(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const list = entriesRef.current;
+    const index = resolveActiveIndex(
+      element.scrollTop / heightRef.current,
+      activeIndexRef.current,
+      list.length,
+    );
+    const id = list[index]?.occurrenceId ?? null;
+    if (id !== null) setActiveId(id);
+  }, []);
+
   /** Write the scroll offset, shielding onScroll from the echo of our own write. */
   const writeTop = useCallback((top: number) => {
     const element = viewport.current;
@@ -173,23 +199,18 @@ export function useVocabularyWindow(
     // rAF can never leave `adjusting` stuck true (which would freeze onScroll and move()).
     const frame = requestAnimationFrame(() => {
       adjusting.current = false;
+      syncActive();
     });
     const backstop = setTimeout(() => {
       adjusting.current = false;
+      syncActive();
     }, 120);
     return () => {
       cancelAnimationFrame(frame);
       clearTimeout(backstop);
       adjusting.current = false;
     };
-  }, [entries, activeIndex, activeId, height, virtualizer, writeTop]);
-
-  const entriesRef = useRef(entries);
-  entriesRef.current = entries;
-  const heightRef = useRef(height);
-  heightRef.current = height;
-  const activeIndexRef = useRef(activeIndex);
-  activeIndexRef.current = activeIndex;
+  }, [entries, activeIndex, activeId, height, virtualizer, writeTop, syncActive]);
 
   // A gesture's destination, held until the scroll comes to rest. See `flick`.
   const pending = useRef<number | null>(null);
@@ -208,7 +229,8 @@ export function useVocabularyWindow(
     feedLog("settle", { to: index, offBy: short });
     if (Math.abs(element.scrollTop - top) > 1) element.scrollTo({ top, behavior: "auto" });
     release(element);
-  }, []);
+    syncActive();
+  }, [syncActive]);
   const armIdle = useCallback(() => {
     clearTimeout(idleTimer.current);
     idleTimer.current = setTimeout(settle, SCROLL_IDLE_MS);
@@ -229,11 +251,8 @@ export function useVocabularyWindow(
     if (Math.abs(top - lastTop.current) > 1)
       direction.current = top > lastTop.current ? "next" : "previous";
     lastTop.current = top;
-    const list = entriesRef.current;
-    const index = resolveActiveIndex(top / heightRef.current, activeIndexRef.current, list.length);
-    const id = list[index]?.occurrenceId ?? null;
-    if (id !== null) setActiveId(id);
-  }, [armIdle]);
+    syncActive();
+  }, [armIdle, syncActive]);
 
   /** Jump straight to a row. The one programmatic way the stream changes word. */
   const moveTo = useCallback((index: number, cause = "jump") => {
