@@ -24,6 +24,8 @@
     "check:hanzi": "npx tsx scripts/check-hanzi-spelling.ts",
     "check:douyin": "npx tsx scripts/check-douyin-presets.ts",
     "check:measured-lines": "npx tsx scripts/check-measured-lines.ts",
+    "fonts:walk": "npx tsx scripts/walk-page-fonts.ts",
+    "fonts:report": "npx tsx scripts/report-page-fonts.ts",
     "check:word-joiners": "npx tsx scripts/check-word-joiners.ts",
     "check:landscape": "npx tsx scripts/check-landscape-geometry.ts",
     "check:orientation-gate": "npx tsx scripts/check-orientation-gate.ts",

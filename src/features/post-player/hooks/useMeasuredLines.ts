@@ -1,15 +1,21 @@
 /**
  * Measured line layout for a packed page: measure what was drawn, then break.
  *
- * Exports: MeasuredLayoutBudget, useMeasuredLines
+ * In development every settled page also announces its size as a bubbling
+ * `kinetic:page-font` DOM event (PAGE_FONT_EVENT), which the feed log records; production
+ * builds send nothing. `npx tsx scripts/report-page-fonts.ts` reads those records.
+ *
+ * Exports: MeasuredLayoutBudget, PAGE_FONT_EVENT, PageFontDetail, useMeasuredLines
  * Depends on: kinetic-text solveMeasuredLines / getWidestLineWidth, playback-timing safe insets
  */
 
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import {
   MAX_MEASURED_SEGMENTS,
+  RELAX_LINE_RULE_BELOW,
   getWidestLineWidth,
   solveMeasuredLines,
+  type MeasuredFontBound,
   type MeasuredSegment,
   type WordLine,
 } from "@/features/kinetic-text";
@@ -28,6 +34,32 @@ const LINE_FIT_MARGIN = 0.985;
 const SEGMENT_GAP_EM = 0.24;
 const LINE_GAP_EM = 0.06;
 
+/** Development builds only: Vite replaces this at build time. */
+const ANNOUNCE =
+  typeof window !== "undefined" && (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true;
+
+/** The DOM event a settled measured page dispatches from its text element, in development. */
+export const PAGE_FONT_EVENT = "kinetic:page-font";
+
+/** What a settled page reports about its size. */
+export type PageFontDetail = {
+  /** The page's lines, words joined by spaces, lines by " / ". */
+  text: string;
+  /** The size it was drawn at, px (after the drawn-width check). */
+  fontPx: number;
+  maxFontPx: number;
+  /** Holding the phrase rule and line budget, and loosening them (see measured-lines). */
+  strictFontPx: number;
+  relaxedFontPx: number;
+  relaxed: boolean;
+  bound: MeasuredFontBound;
+  /** The widest line is one unbreakable word: no line rule holds this page small. */
+  widestUnbreakable: boolean;
+  lines: number;
+  boxWidthPx: number;
+  boxHeightPx: number;
+};
+
 /** What the caller allows a measured page: its largest font and its vertical budget. */
 export type MeasuredLayoutBudget = {
   /** Largest font the page may be set in, px. */
@@ -42,6 +74,8 @@ type Solution = {
   signature: string;
   lines: WordLine[];
   fontSize: number;
+  /** Diagnostics for the development announcement. */
+  report: Omit<PageFontDetail, "text" | "fontPx" | "lines">;
   /** Set once the drawn result has been checked against the box. */
   checked: boolean;
 };
@@ -202,7 +236,7 @@ export function useMeasuredLines({
         gapEm: SEGMENT_GAP_EM,
         lineGapEm: LINE_GAP_EM * lineSpacingScale,
       },
-      { phraseEdges, softPhraseEdges },
+      { phraseEdges, softPhraseEdges, relaxBelow: RELAX_LINE_RULE_BELOW },
     );
     if (!solved) {
       setSolution((current) => (current ? null : current));
@@ -220,7 +254,22 @@ export function useMeasuredLines({
       ) {
         return current;
       }
-      return { signature, lines: solved.lines, fontSize, checked: false };
+      return {
+        signature,
+        lines: solved.lines,
+        fontSize,
+        checked: false,
+        report: {
+          maxFontPx: maxSize,
+          strictFontPx: settle(solved.strictFontPx),
+          relaxedFontPx: settle(solved.relaxedFontPx),
+          relaxed: solved.relaxed,
+          bound: solved.bound,
+          widestUnbreakable: solved.widestUnbreakable,
+          boxWidthPx: Math.round(wrapper.clientWidth),
+          boxHeightPx: Math.round(bandHeight),
+        },
+      };
     });
   }, [
     active,
@@ -248,14 +297,27 @@ export function useMeasuredLines({
     if (!wrapper || !text) return;
     const room = wrapper.clientWidth * LINE_BOX_SHARE;
     const widest = getWidestLineWidth(text);
+    let fontSize = solution.fontSize;
     if (widest > room + 0.5) {
-      setSolution({
-        ...solution,
-        fontSize: settle(solution.fontSize * (room / widest) * 0.995),
-        checked: true,
-      });
+      fontSize = settle(solution.fontSize * (room / widest) * 0.995);
+      setSolution({ ...solution, fontSize, checked: true });
     } else {
       solution.checked = true;
+    }
+    if (ANNOUNCE) {
+      const detail: PageFontDetail = {
+        ...solution.report,
+        text: solution.lines
+          .map((line) =>
+            line.segments
+              .map((segment) => segment.words.map((word) => word.text).join(" "))
+              .join(" "),
+          )
+          .join(" / "),
+        fontPx: fontSize,
+        lines: solution.lines.length,
+      };
+      text.dispatchEvent(new CustomEvent(PAGE_FONT_EVENT, { bubbles: true, detail }));
     }
   }, [solution, signature, wrapperRef, textRef]);
 

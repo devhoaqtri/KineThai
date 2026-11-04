@@ -75,6 +75,9 @@ import { VocabularyStage } from "./VocabularyStage";
 import { WordReportButton, WordReportPanel } from "./WordReportControl";
 import { feedLog } from "../lib/feed-log";
 
+/** Development builds only; Vite replaces this at build time. */
+const DEV_BUILD = (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true;
+
 /**
  * The CJK stroke coda is lazy: Hanzi Writer plus the vendored stroke dataset load only
  * when a Han answer actually reaches its coda, so the English feed chunk never carries
@@ -988,6 +991,9 @@ export function VocabularyCard({
       data-export-progress={exportLayout?.showProgress || undefined}
       data-still={still ? "" : undefined}
       data-stage={isSpelling ? "spelling" : stage.id}
+      // Development only: names the word for the feed log's page-font records. A production
+      // card must not carry its answer in the DOM while the clue pages are up.
+      data-word={DEV_BUILD ? entry.word.word : undefined}
       inert={!active}
       aria-hidden={!active}
       aria-label={`Thẻ từ vựng ${entry.position + 1}`}
