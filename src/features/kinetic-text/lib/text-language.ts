@@ -36,11 +36,13 @@ export {
   countSentenceWords,
   limitShortSentenceEmphasis,
   MAX_MEASURED_SEGMENTS,
+  RELAX_LINE_RULE_BELOW,
   getPunctuationPhraseEdges,
   isBreakOneWordFromEdge,
   solveMeasuredLines,
 } from "./text-language/index";
 export type {
+  MeasuredFontBound,
   MeasuredLineBounds,
   MeasuredLineOptions,
   MeasuredLines,

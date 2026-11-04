@@ -19,9 +19,19 @@
  * end one word after the mark, nor begin with the one word that carries it. That word
  * would read as cut off from its phrase.
  *
+ * Relaxing the rules. Holding a phrase together, or refusing to leave a short word alone on
+ * a line, can cost a page most of its size: one long first line is as wide as the box, so
+ * the whole page is set at half the size of the page before it, and that jump from page to
+ * page is what the reader notices. So every page is also solved with the rules loosened —
+ * phrase edges only a preference, a lone short word a mild cost instead of a heavy one, and
+ * the block allowed the band's whole height instead of the line budget. When the strict
+ * layout would be set under RELAX_LINE_RULE_BELOW of the page's full size and the loosened
+ * one is clearly larger, the loosened one is used. Bonds (`_`, `=`) are never loosened: a
+ * page whose widest line is one bonded word is as large as it can be (`widestUnbreakable`).
+ *
  * Exports: MeasuredSegment, MeasuredLineBounds, MeasuredLines, MeasuredLineOptions,
- *          MAX_MEASURED_SEGMENTS, getPunctuationPhraseEdges, isBreakOneWordFromEdge,
- *          solveMeasuredLines
+ *          MeasuredFontBound, MAX_MEASURED_SEGMENTS, RELAX_LINE_RULE_BELOW,
+ *          getPunctuationPhraseEdges, isBreakOneWordFromEdge, solveMeasuredLines
  * Depends on: ./page-metrics getVietnameseLineIndentEm, ./types
  */
 
@@ -59,7 +69,38 @@ export type MeasuredLineBounds = {
   lineGapEm: number;
 };
 
-export type MeasuredLines = { lines: WordLine[]; fontPx: number };
+/** What set a page's font size: the line width, the band's height, the line budget, or a cap. */
+export type MeasuredFontBound = "max" | "width" | "height" | "budget" | "floor";
+
+export type MeasuredLines = {
+  lines: WordLine[];
+  fontPx: number;
+  /** What set `fontPx`. */
+  bound: MeasuredFontBound;
+  /** The size the page gets with the phrase rule and line budget held. */
+  strictFontPx: number;
+  /** The size it gets with both loosened (see RELAX_LINE_RULE_BELOW). */
+  relaxedFontPx: number;
+  /** Whether the loosened layout was used. */
+  relaxed: boolean;
+  /**
+   * The widest line is a single unbreakable segment (a bonded or highlighted word): no
+   * line rule is what holds the page small.
+   */
+  widestUnbreakable: boolean;
+};
+
+/**
+ * A page whose strict layout would be set under this share of its full size (maxFontPx)
+ * is loosened, when loosening makes it clearly larger. 0 never loosens. Tune it from
+ * `npm run fonts:report`, which shows every logged page against its word's largest page
+ * and what each threshold would change.
+ */
+export const RELAX_LINE_RULE_BELOW = 0.6;
+/** Loosening has to buy at least this much size to be worth its stranded word or split phrase. */
+const MIN_RELAX_GAIN = 1.05;
+/** A lone scrap of a word, when the rules are loosened: a mild cost instead of a third. */
+const LOOSE_LONE_SCRAP_FACTOR = 0.9;
 
 /** What the page says about its own structure, beyond its measured segments. */
 export type MeasuredLineOptions = {
@@ -74,7 +115,15 @@ export type MeasuredLineOptions = {
    * otherwise have to share a line with the words before it and size the whole page.
    */
   softPhraseEdges?: boolean;
+  /**
+   * Loosen the line rules when holding them would set the page under this share of its
+   * full size (RELAX_LINE_RULE_BELOW). Omitted or 0: never loosened.
+   */
+  relaxBelow?: number;
 };
+
+/** Solver internals that only the loosened pass changes. */
+type SolveTuning = { loneScrapFactor: number };
 
 /**
  * Every arrangement is tried, so the work doubles with each segment. A Vietnamese page
@@ -233,21 +282,27 @@ function getBreakFactors(
   return factors;
 }
 
-function loneWordFactor(share: number): number {
+function loneWordFactor(share: number, scrapFactor: number): number {
   const scrap = Math.min(
     1,
     Math.max(0, (LONE_FULL_SHARE - share) / (LONE_FULL_SHARE - LONE_SCRAP_SHARE)),
   );
-  return LONE_FULL_FACTOR - (LONE_FULL_FACTOR - LONE_SCRAP_FACTOR) * scrap;
+  const full = Math.max(LONE_FULL_FACTOR, scrapFactor);
+  return full - (full - scrapFactor) * scrap;
 }
 
 /**
  * Choose line breaks and a font size for measured segments.
+ *
+ * The page is solved twice: once holding the line rules and the line budget, once with
+ * them loosened. The strict layout stands unless it would be set under `relaxBelow` of the
+ * page's full size and the loosened one is clearly larger.
  * @param segments - the page's unbreakable segments in reading order, with measured sizes
  * @param bounds - the box and the font sizes allowed
- * @param options - the page's phrase edges, when it has any
- * @returns The best arrangement and the font it fits at, or null when there is nothing
- *   to solve (no segments, too many to try, or no room measured yet)
+ * @param options - the page's phrase edges, when it has any, and the relax threshold
+ * @returns The best arrangement and the font it fits at, both sizes, and which was used;
+ *   null when there is nothing to solve (no segments, too many to try, or no room
+ *   measured yet)
  * @pure true
  */
 export function solveMeasuredLines(
@@ -255,6 +310,45 @@ export function solveMeasuredLines(
   bounds: MeasuredLineBounds,
   options: MeasuredLineOptions = {},
 ): MeasuredLines | null {
+  const strict = solveArrangement(segments, bounds, options, {
+    loneScrapFactor: LONE_SCRAP_FACTOR,
+  });
+  if (!strict) return null;
+  // Loosened: an edge is only a preference, a lone short word a mild cost, and the block
+  // may take the band's whole height (the hard bound still holds) rather than the budget.
+  const relaxed = solveArrangement(
+    segments,
+    bounds.hardHeightPx > 0 ? { ...bounds, budgetHeightPx: Number.POSITIVE_INFINITY } : bounds,
+    { ...options, softPhraseEdges: true },
+    { loneScrapFactor: LOOSE_LONE_SCRAP_FACTOR },
+  );
+  const relaxBelow = options.relaxBelow ?? 0;
+  const useRelaxed =
+    !!relaxed &&
+    relaxBelow > 0 &&
+    strict.fontPx < relaxBelow * bounds.maxFontPx &&
+    relaxed.fontPx >= strict.fontPx * MIN_RELAX_GAIN;
+  const chosen = useRelaxed ? relaxed : strict;
+  return {
+    ...chosen,
+    strictFontPx: strict.fontPx,
+    relaxedFontPx: relaxed?.fontPx ?? strict.fontPx,
+    relaxed: useRelaxed,
+  };
+}
+
+/** One solve under one set of rules. @pure true */
+function solveArrangement(
+  segments: readonly MeasuredSegment[],
+  bounds: MeasuredLineBounds,
+  options: MeasuredLineOptions,
+  tuning: SolveTuning,
+): {
+  lines: WordLine[];
+  fontPx: number;
+  bound: MeasuredFontBound;
+  widestUnbreakable: boolean;
+} | null {
   const count = segments.length;
   if (count === 0 || count > MAX_MEASURED_SEGMENTS) return null;
   if (!(bounds.lineWidthPx > 0) || !(bounds.maxFontPx > 0)) return null;
@@ -282,6 +376,7 @@ export function solveMeasuredLines(
     score: number;
     lines: number;
     edgeSplit: boolean;
+    bound: MeasuredFontBound;
   };
   let best: Candidate | null = null;
   /** The best arrangement ignoring the floor, for a page that cannot satisfy it. */
@@ -290,13 +385,7 @@ export function solveMeasuredLines(
   // until the winner's size is known: the top-scoring spread can itself be smaller than
   // a clean cram it lost to, and choosing only among the spreads that read LARGER keeps
   // a bigger 4-line layout from being vetoed by a smaller one.
-  const spreads: {
-    mask: number;
-    fontPx: number;
-    score: number;
-    lines: number;
-    edgeSplit: boolean;
-  }[] = [];
+  const spreads: Candidate[] = [];
   // Bit i set = the line breaks after segment i.
   const arrangements = 1 << (count - 1);
   for (let mask = 0; mask < arrangements; mask += 1) {
@@ -339,21 +428,29 @@ export function solveMeasuredLines(
     const lines = lineIndex;
     let penalty = phrasing;
     // A page that is one word on one line is not a stranded word; it is the page.
-    if (lines > 1) for (const width of loneWidths) penalty *= loneWordFactor(width / widest);
+    if (lines > 1)
+      for (const width of loneWidths)
+        penalty *= loneWordFactor(width / widest, tuning.loneScrapFactor);
 
     // Verified bounds: no line wider than its room, the block no taller than the band.
     const widthFont = bounds.lineWidthPx / widest;
     const hardHeightFont = bounds.hardHeightPx > 0 ? bounds.hardHeightPx / blockHeight : Infinity;
     const budgetFont = bounds.budgetHeightPx / (lines * bounds.budgetLineEm);
-    const fontPx = Math.min(
-      bounds.maxFontPx,
-      widthFont,
-      hardHeightFont,
-      Math.max(budgetFont, floorPx),
-    );
+    const budgetOrFloor = Math.max(budgetFont, floorPx);
+    const fontPx = Math.min(bounds.maxFontPx, widthFont, hardHeightFont, budgetOrFloor);
+    const bound: MeasuredFontBound =
+      fontPx === widthFont
+        ? "width"
+        : fontPx === hardHeightFont
+          ? "height"
+          : fontPx === bounds.maxFontPx
+            ? "max"
+            : budgetFont >= floorPx
+              ? "budget"
+              : "floor";
     const ragged = 1 - widthSum / lines / widest;
     const score = fontPx * penalty * (1 - RAGGED_WEIGHT * ragged);
-    const candidate = { mask, fontPx, score, lines, edgeSplit };
+    const candidate = { mask, fontPx, score, lines, edgeSplit, bound };
     // Kept whatever the floor says, so a page that cannot reach the floor still has a
     // layout to fall back to rather than none at all.
     if (
@@ -405,12 +502,22 @@ export function solveMeasuredLines(
 
   const lines: WordLine[] = [];
   let current: WordSegment[] = [];
-  segments.forEach(({ segment }, index) => {
+  let lineReach = 0;
+  let widestReach = 0;
+  let widestUnbreakable = false;
+  segments.forEach(({ segment, widthEm }, index) => {
+    lineReach += (current.length ? bounds.gapEm : 0) + widthEm;
     current.push(segment);
     if (index === count - 1 || chosen.mask & (1 << index)) {
+      const reach = lineReach + getVietnameseLineIndentEm(lines.length);
+      if (reach > widestReach) {
+        widestReach = reach;
+        widestUnbreakable = current.length === 1;
+      }
       lines.push({ indentEm: getVietnameseLineIndentEm(lines.length), segments: current });
       current = [];
+      lineReach = 0;
     }
   });
-  return { lines, fontPx: chosen.fontPx };
+  return { lines, fontPx: chosen.fontPx, bound: chosen.bound, widestUnbreakable };
 }

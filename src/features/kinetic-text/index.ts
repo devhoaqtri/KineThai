@@ -36,6 +36,7 @@ export {
   countSentenceWords,
   limitShortSentenceEmphasis,
   MAX_MEASURED_SEGMENTS,
+  RELAX_LINE_RULE_BELOW,
   CLOSING_PUNCTUATION_CLASS,
   endsWithPunctuation,
   getPunctuationPhraseEdges,
@@ -43,6 +44,7 @@ export {
   solveMeasuredLines,
 } from "./lib/text-language";
 export type {
+  MeasuredFontBound,
   MeasuredLineBounds,
   MeasuredLineOptions,
   MeasuredLines,

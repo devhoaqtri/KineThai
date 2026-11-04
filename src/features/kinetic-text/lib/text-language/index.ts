@@ -32,11 +32,13 @@ export { CLOSING_PUNCTUATION_CLASS, endsWithPunctuation } from "./closing-punctu
 
 export {
   MAX_MEASURED_SEGMENTS,
+  RELAX_LINE_RULE_BELOW,
   getPunctuationPhraseEdges,
   isBreakOneWordFromEdge,
   solveMeasuredLines,
 } from "./measured-lines";
 export type {
+  MeasuredFontBound,
   MeasuredLineBounds,
   MeasuredLineOptions,
   MeasuredLines,
