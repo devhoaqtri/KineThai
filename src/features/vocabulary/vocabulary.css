@@ -619,6 +619,12 @@
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
+  /* The handle rides the drawer's edge and fades on the drawer's own clock: 320ms out,
+     260ms back (SAVED_DRAWER_EXIT_MS), on DRAWER_EASE (SavedDrawer.tsx). This is the
+     coming back; [data-hidden] below is the going. */
+  --drawer-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --handle-slide: 260ms;
+  transition: opacity var(--handle-slide) var(--drawer-ease);
 }
 .vocab-saved-handle {
   position: relative;
@@ -629,41 +635,69 @@
   /* The two glyphs sit apart and dead-centre now the grip bar is gone. */
   gap: 10px;
   /* 1.5× wider (20 → 30px): the tab now carries two stacked glyphs, not one icon
-     and a count. */
+     and a count. 118px tall, where it was 72: the extra is the tab's soft shoulders,
+     which leave the screen edge on a curve instead of a corner (HANDLE_EDGE in
+     SavedDrawer.tsx draws them). */
   width: 30px;
-  height: 72px;
-  border: 1px solid #ffffff1f;
-  border-right: 0;
-  border-radius: 11px 0 0 11px;
-  background: color-mix(in srgb, var(--shell-surface, #15102a) 34%, transparent);
-  backdrop-filter: blur(10px);
+  height: 118px;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--shell-text);
-  box-shadow: -4px 0 14px #0000003d;
   /* Mostly faded while untouched: the handle sits over the word, and at full
-     strength it read as a bar across the text. */
-  opacity: 0.4;
-  /* The handle only stretches a little; the drawer follows the finger from there. */
+     strength it read as a bar across the text. Each layer fades itself rather than
+     the button, because a faded parent would leave the glass nothing to blur. */
+  --handle-strength: 0.4;
+  --handle-fill: color-mix(in srgb, var(--shell-surface, #15102a) 34%, transparent);
+  --handle-edge: #ffffff1f;
+  /* Follows the drawer's leading edge (--handle-shift is the panel's progress in px),
+     so opening carries it across with the panel rather than leaving it behind. */
   transform: translateX(calc(var(--handle-shift, 0) * -1px));
-  transition:
-    transform var(--dur-move) var(--ease-spring),
-    opacity var(--dur-move) var(--ease-out),
-    border-color var(--dur-quick) var(--ease-out),
-    background var(--dur-quick) var(--ease-out);
+  transition: transform var(--handle-slide) var(--drawer-ease);
+}
+.vocab-saved-handle > * {
+  position: relative;
+  opacity: var(--handle-strength);
+  transition: opacity var(--dur-move) var(--ease-out);
+}
+.vocab-saved-handle > :is(.vocab-saved-handle-glass, .vocab-saved-handle-shape) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.vocab-saved-handle-glass {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.vocab-saved-handle-shape {
+  overflow: visible;
+  filter: drop-shadow(-4px 0 7px #0000003d) drop-shadow(0 0 0 transparent)
+    drop-shadow(0 0 0 transparent);
+}
+.vocab-saved-handle-shape path:first-child {
+  fill: var(--handle-fill);
+  transition: fill var(--dur-quick) var(--ease-out);
+}
+/* Only the curve is edged: the side against the screen stays open, as the old tab's did. */
+.vocab-saved-handle-shape path + path {
+  fill: none;
+  stroke: var(--handle-edge);
+  stroke-width: 1px;
+  transition: stroke var(--dur-quick) var(--ease-out);
 }
 /* Any attention at all brings it up to full strength. */
 .vocab-saved-dock[data-pulling] .vocab-saved-handle,
 .vocab-saved-handle:hover,
 .vocab-saved-handle:focus-visible {
-  opacity: 1;
-  border-color: #ffffff47;
-  background: color-mix(in srgb, var(--shell-surface, #15102a) 72%, transparent);
+  --handle-strength: 1;
+  --handle-edge: #ffffff47;
+  --handle-fill: color-mix(in srgb, var(--shell-surface, #15102a) 72%, transparent);
 }
 /* While the finger is down the handle must track it exactly; the spring is only
    for the release. */
 .vocab-saved-dock[data-pulling] .vocab-saved-handle {
-  transition:
-    opacity var(--dur-quick) var(--ease-out),
-    background var(--dur-quick) var(--ease-out);
+  transition: none;
 }
 /* The reveal is the one moment saving a word means anything: until then the reader does
    not know what they would be keeping. So when the card on screen reaches its reveal — and
@@ -671,52 +705,52 @@
    animates up to full strength, so the vault is visibly ready exactly when the answer lands.
    :has() is the same bridge the tone rule at the top of this file uses: the dock is a
    SIBLING of the stream, not a descendant of the card, so no custom property can inherit
-   down to it. The opacity/background transition is already declared on the handle, so this
-   rule only has to state the destination. */
+   down to it. The opacity/fill transitions are already declared on the handle's layers, so
+   this rule only has to state the destination. */
 .vocabulary-shell:has(.vocab-slot[data-current] .vocab-card[data-stage="reveal"])
   .vocab-saved-handle,
 .vocabulary-shell:has(.vocab-slot[data-current] .vocab-card[data-stage="spelling"])
   .vocab-saved-handle {
-  opacity: 1;
-  border-color: #ffffff47;
-  background: color-mix(in srgb, var(--shell-surface, #15102a) 72%, transparent);
+  --handle-strength: 1;
+  --handle-edge: #ffffff47;
+  --handle-fill: color-mix(in srgb, var(--shell-surface, #15102a) 72%, transparent);
 }
 /* Coming up to full strength is the state; this is the call for attention on top of it —
    two halo pulses in the on-screen card's own accent (lifted onto the shell as
    --popup-accent by VocabularyStream), then it settles and stays lit. Only the reveal
    pulses: the spelling replay inherits the lit state above without a second beat. A pull or
    a hover cancels the call, because the reader has already noticed and the halo would just
-   fight the gesture. The glow is painted with box-shadow alone — `transform` belongs to the
-   pull, and animating it here would tear the handle off the drawer's edge. */
+   fight the gesture. The glow is painted with the tab's own drop-shadows, so it follows its
+   curves — `transform` belongs to the pull, and animating it here would tear the handle off
+   the drawer's edge. */
 .vocabulary-shell:has(.vocab-slot[data-current] .vocab-card[data-stage="reveal"])
   .vocab-saved-dock:not([data-pulling])
-  .vocab-saved-handle:not(:hover) {
+  .vocab-saved-handle:not(:hover)
+  .vocab-saved-handle-shape {
   animation: vocab-saved-call 1100ms var(--ease-out) 2;
 }
 @keyframes vocab-saved-call {
   0%,
   100% {
-    box-shadow: -4px 0 14px #0000003d;
-    border-color: #ffffff47;
+    filter: drop-shadow(-4px 0 7px #0000003d) drop-shadow(0 0 0 transparent)
+      drop-shadow(0 0 0 transparent);
   }
   45% {
-    box-shadow:
-      -4px 0 14px #0000003d,
-      0 0 0 3px color-mix(in srgb, var(--popup-accent, #a78bfa) 40%, transparent),
-      0 0 18px 2px color-mix(in srgb, var(--popup-accent, #a78bfa) 55%, transparent);
-    border-color: color-mix(in srgb, var(--popup-accent, #a78bfa) 70%, #ffffff47);
+    filter: drop-shadow(-4px 0 7px #0000003d)
+      drop-shadow(0 0 2px color-mix(in srgb, var(--popup-accent, #a78bfa) 70%, transparent))
+      drop-shadow(0 0 9px color-mix(in srgb, var(--popup-accent, #a78bfa) 55%, transparent));
   }
 }
 .vocab-saved-handle:focus-visible {
   outline: 2px solid var(--chrome-accent, #a78bfa);
   outline-offset: 2px;
 }
-/* The handle is the drawer's edge: once the panel is in, it has nothing left to
-   pull, so it steps aside instead of sitting on top of the panel. */
+/* The handle is the drawer's edge: once the panel is in, it has nothing left to pull,
+   so it fades away as it travels with the panel, and fades back as it returns. */
 .vocab-saved-dock[data-hidden] {
+  --handle-slide: 320ms;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--dur-quick) var(--ease-out);
 }
 
 /* Saved-words drawer -------------------------------------------------------- */
@@ -821,10 +855,14 @@
   pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .vocab-saved-handle {
+  .vocab-saved-handle,
+  .vocab-saved-handle > *,
+  .vocab-saved-handle-shape path {
     transition: none;
-    /* The reveal still brings the handle to full strength; only the pulsing halo goes. */
-    animation: none;
+  }
+  /* The reveal still brings the handle to full strength; only the pulsing halo goes. */
+  .vocab-saved-handle-shape {
+    animation: none !important;
   }
 }
 .vocab-options {
