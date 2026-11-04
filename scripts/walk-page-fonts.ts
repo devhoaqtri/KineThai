@@ -13,6 +13,9 @@
  *   npx tsx scripts/walk-page-fonts.ts                                   # 30 words, 375x812
  *   npx tsx scripts/walk-page-fonts.ts --url http://localhost:5196 --words 60 --viewport 390x844
  *   npx tsx scripts/walk-page-fonts.ts --difficulty vo-long
+ *   npx tsx scripts/walk-page-fonts.ts --host hoa.localhost        # the Chinese site
+ * A site is chosen by its host's first label, as in production (anh, hoa, han, nhat, phap,
+ * duc, tbn); every browser resolves *.localhost to this machine.
  */
 type Page = {
   goto: (url: string, options?: object) => Promise<unknown>;
@@ -29,7 +32,8 @@ const option = (name: string, fallback: string) => {
   const at = args.indexOf(`--${name}`);
   return at >= 0 ? (args[at + 1] ?? fallback) : fallback;
 };
-const base = option("url", "http://localhost:5195");
+const host = option("host", "localhost");
+const base = option("url", `http://${host}:${option("port", "5195")}`);
 const wordCount = Number(option("words", "30"));
 const [width, height] = option("viewport", "375x812").split("x").map(Number) as [number, number];
 const difficulty = option("difficulty", "");

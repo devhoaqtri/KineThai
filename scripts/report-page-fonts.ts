@@ -1,10 +1,12 @@
 /**
- * Font size per clue page, from the dev feed log, to choose RELAX_LINE_RULE_BELOW.
+ * Font size per clue page, from the dev feed log, to choose each site's threshold in
+ * src/features/vocabulary/lib/line-relax.ts (RELAX_LINE_RULE_BELOW).
  *
  * Every measured clue page logs a `page-font` record under `npm run dev` (on this machine,
  * a phone on the LAN, or `scripts/walk-page-fonts.ts`): the size it was drawn at, the size
  * it gets holding the line rules ("strict") and loosening them ("relaxed"), its full size,
- * and what set the size. This groups the pages by word and screen, and shows:
+ * and what set the size. This groups the pages by site (its deck language), word and screen,
+ * and shows:
  *   - every page's size as a share of the largest page of the same word, so a page set at
  *     half the size of the next one stands out;
  *   - for each candidate threshold (a share of full size: a strict page under it is
@@ -13,15 +15,20 @@
  * A page marked "1w" has a single unbreakable word as its widest line (a bonded or
  * highlighted word): no line rule holds it small, so no threshold changes it.
  *
+ * A site is read from the record's host (anh.localhost → en, hoa.localhost → zh, …);
+ * records logged before hosts were recorded count as en.
+ *
  * Run:
  *   npx tsx scripts/report-page-fonts.ts                  # every logs/feed-*.ndjson
  *   npx tsx scripts/report-page-fonts.ts logs/feed-2026-11-05.ndjson
  *   npx tsx scripts/report-page-fonts.ts --threshold 0.75 --worst 30 --word stamp
+ *   npx tsx scripts/report-page-fonts.ts --site zh             # one site only
  *   npx tsx scripts/report-page-fonts.ts --since 2026-11-05T10   # sessions from then on
  */
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { RELAX_LINE_RULE_BELOW } from "../src/features/kinetic-text";
+import { RELAX_LINE_RULE_BELOW } from "../src/features/vocabulary/lib/line-relax";
+import { resolveTarget, type TargetLocale } from "../src/features/vocabulary/lib/target-language";
 
 type PageFont = {
   word: string | null;
@@ -37,6 +44,9 @@ type PageFont = {
   lines: number;
   boxWidthPx: number;
   boxHeightPx: number;
+  host?: string;
+  /** Filled in here from the host. */
+  site: TargetLocale;
 };
 
 const args = process.argv.slice(2);
@@ -44,12 +54,15 @@ const option = (name: string): string | undefined => {
   const at = args.indexOf(`--${name}`);
   return at >= 0 ? args[at + 1] : undefined;
 };
-const threshold = Number(option("threshold") ?? RELAX_LINE_RULE_BELOW);
+// One threshold for every site when given; otherwise each site's own.
+const override = option("threshold") === undefined ? null : Number(option("threshold"));
+const thresholdFor = (site: TargetLocale) => override ?? RELAX_LINE_RULE_BELOW[site];
+const onlySite = option("site") as TargetLocale | undefined;
 const worst = Number(option("worst") ?? 20);
 const onlyWord = option("word");
 // Session ids start with their ISO start time (":" and "." as "-"), so they sort by time.
 const since = option("since")?.replace(/[:.]/g, "-");
-const valued = new Set(["--threshold", "--worst", "--word", "--since"]);
+const valued = new Set(["--threshold", "--worst", "--word", "--since", "--site"]);
 const files = args.filter((arg, index) => !arg.startsWith("--") && !valued.has(args[index - 1]!));
 const logFiles = files.length
   ? files
@@ -72,8 +85,10 @@ for (const file of logFiles) {
     if (record.ev !== "page-font" || !record.word || !(record.fontPx > 0)) continue;
     if (onlyWord && record.word !== onlyWord) continue;
     if (since && (record.session ?? "") < since) continue;
+    record.site = resolveTarget(record.host ?? null);
+    if (onlySite && record.site !== onlySite) continue;
     const screen = `${record.boxWidthPx}x${record.boxHeightPx}`;
-    pages.set(`${record.word}@${screen}|${record.stage}|${record.text}`, record);
+    pages.set(`${record.site}:${record.word}@${screen}|${record.stage}|${record.text}`, record);
   }
 }
 if (!pages.size) {
@@ -93,7 +108,7 @@ const sizeAt = (page: PageFont, t: number) =>
 
 const groups = new Map<string, PageFont[]>();
 for (const page of pages.values()) {
-  const key = `${page.word}@${page.boxWidthPx}x${page.boxHeightPx}`;
+  const key = `${page.site}:${page.word}@${page.boxWidthPx}x${page.boxHeightPx}`;
   groups.set(key, [...(groups.get(key) ?? []), page]);
 }
 const fmt = (value: number, digits = 2) => value.toFixed(digits);
@@ -109,8 +124,14 @@ for (const [group, list] of groups) {
 console.log(
   `${pages.size} pages, ${groups.size} word×screen groups, from ${logFiles.length} log file(s).`,
 );
+const sites = [...new Set([...pages.values()].map((page) => page.site))].sort();
 console.log(
-  `Current threshold RELAX_LINE_RULE_BELOW = ${RELAX_LINE_RULE_BELOW}; showing ${threshold}.\n`,
+  `Sites: ${sites
+    .map(
+      (site) =>
+        `${site} ${[...pages.values()].filter((page) => page.site === site).length} pages, threshold ${RELAX_LINE_RULE_BELOW[site]}`,
+    )
+    .join("; ")}${override === null ? "" : ` (showing ${override} for all)`}.\n`,
 );
 
 // 1. The smallest pages relative to their word's largest page.
@@ -149,33 +170,38 @@ for (const to of buckets) {
   from = to;
 }
 
-// 3. What each threshold would do.
+// 3. What each threshold would do, site by site.
 console.log(
-  "\nThreshold what-if (t = share of full size; sizes recomputed from each page's two sizes):",
+  "\nThreshold what-if per site (t = share of full size; sizes recomputed from each page's two sizes):",
 );
-console.log(
-  `  ${pad("t", 6)}${pad("loosened", 10)}${pad("<0.6 of word max", 18)}${pad("<0.7", 8)}worst share`,
-);
-for (const t of [0, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 1]) {
-  let loosened = 0;
-  let under6 = 0;
-  let under7 = 0;
-  let worstShare = 1;
-  for (const list of groups.values()) {
-    const sizes = list.map((page) => sizeAt(page, t));
-    const largest = Math.max(...sizes);
-    list.forEach((page, index) => {
-      if (loosensAt(page, t)) loosened += 1;
-      const share = sizes[index]! / largest;
-      if (share < 0.6) under6 += 1;
-      if (share < 0.7) under7 += 1;
-      worstShare = Math.min(worstShare, share);
-    });
-  }
-  const mark = Math.abs(t - threshold) < 1e-9 ? "  ←" : "";
+for (const site of sites) {
+  const siteGroups = [...groups.values()].filter((list) => list[0]!.site === site);
+  const pageCount = siteGroups.reduce((total, list) => total + list.length, 0);
+  console.log(`\n  ${site} — ${pageCount} pages, current threshold ${RELAX_LINE_RULE_BELOW[site]}`);
   console.log(
-    `  ${pad(fmt(t), 6)}${pad(loosened, 10)}${pad(under6, 18)}${pad(under7, 8)}${fmt(worstShare)}${mark}`,
+    `  ${pad("t", 6)}${pad("loosened", 10)}${pad("<0.6 of word max", 18)}${pad("<0.7", 8)}worst share`,
   );
+  for (const t of [0, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 1]) {
+    let loosened = 0;
+    let under6 = 0;
+    let under7 = 0;
+    let worstShare = 1;
+    for (const list of siteGroups) {
+      const sizes = list.map((page) => sizeAt(page, t));
+      const largest = Math.max(...sizes);
+      list.forEach((page, index) => {
+        if (loosensAt(page, t)) loosened += 1;
+        const share = sizes[index]! / largest;
+        if (share < 0.6) under6 += 1;
+        if (share < 0.7) under7 += 1;
+        worstShare = Math.min(worstShare, share);
+      });
+    }
+    const mark = Math.abs(t - thresholdFor(site)) < 1e-9 ? "  ←" : "";
+    console.log(
+      `  ${pad(fmt(t), 6)}${pad(loosened, 10)}${pad(under6, 18)}${pad(under7, 8)}${fmt(worstShare)}${mark}`,
+    );
+  }
 }
 console.log(
   "\nshare = size against the largest page of the same word; full = size against the page's" +
