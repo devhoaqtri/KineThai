@@ -236,31 +236,26 @@ export function badgeGoalRatio(goal: BadgeGoal): number {
   return target > 0 ? Math.min(1, Math.max(0, now / target)) : 0;
 }
 
-/** @returns What a badge asks of the reader, in one or two sentences. */
+/** @returns What a badge asks of the reader, in one short line: the core rule only. */
 export function badgeGoalCriteria(goal: BadgeGoal, locale: TargetLocale): string {
-  if (goal.kind === "daily") {
-    return `Học xong ${goal.goal} từ khác nhau trong một ngày. Mỗi ngày đạt được, huy hiệu đếm thêm một lần — không cần liền nhau.`;
-  }
+  if (goal.kind === "daily") return `Học ${goal.goal} từ trong một ngày.`;
   if (goal.kind === "streak") {
-    return `Học ít nhất ${DAY_MIN_WORDS} từ mỗi ngày, ${goal.days} ngày liền nhau. Bỏ một ngày, chuỗi sẽ bắt đầu lại từ đầu.`;
+    return `Học ${DAY_MIN_WORDS}+ từ mỗi ngày, ${goal.days} ngày liền nhau.`;
   }
   if (goal.kind === "repeat") {
     return goal.of === "daily"
-      ? `Học xong ${goal.base} từ trong một ngày, ${goal.times} lần. Các ngày không cần liền nhau.`
-      : `Hoàn thành chuỗi ${goal.base} ngày liền, ${goal.times} lần. Một chuỗi dài được tính nhiều lần: ${goal.base * 2} ngày liền là 2 lần.`;
+      ? `Đạt ${goal.base} từ/ngày ${goal.times} lần.`
+      : `Hoàn thành chuỗi ${goal.base} ngày ${goal.times} lần.`;
   }
-  const any = "Mỗi từ chỉ tính một lần, dù bạn gặp lại bao nhiêu lần.";
   if (goal.scope === ALL_SCOPE) {
-    return goal.complete
-      ? `Xem hết toàn bộ ${goal.words} từ trong bộ, ở mọi trình độ. ${any}`
-      : `Xem ${goal.words} từ khác nhau, ở bất kỳ trình độ nào. ${any}`;
+    return goal.complete ? `Xem hết ${goal.words} từ.` : `Xem ${goal.words} từ khác nhau.`;
   }
   const track = tracksFor(locale).find((entry) => entry.id === goal.scope);
-  const name = scopeLabel(goal.scope, locale);
+  const name = scopeLabel(goal.scope, locale).replace(/^Cấp /, "cấp ");
   const band = track ? ` (${formatLevelBand(track.levels)})` : "";
   return goal.complete
-    ? `Xem hết ${goal.words} từ của ${name}${band}. ${any}`
-    : `Xem ${goal.words} từ khác nhau thuộc ${name}${band}. ${any}`;
+    ? `Xem hết ${goal.words} từ ${name}${band}.`
+    : `Xem ${goal.words} từ ${name}${band}.`;
 }
 
 /** @returns Where the reader stands on a badge: "Chuỗi hiện tại: 2 ngày", "Đã xem: 37/100 từ". */

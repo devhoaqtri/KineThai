@@ -183,4 +183,20 @@ describe("badge criteria", () => {
     expect(badgeGoalCriteria(goal, "en")).toContain("vỡ lòng (A1–A2)");
     expect(badgeGoalProgress(goal)).toBe("Đã xem: 37/100 từ");
   });
+
+  it("says only the core rule, in one short sentence", () => {
+    const goals = [
+      { kind: "daily", goal: 10, times: 2, today: 4 },
+      { kind: "streak", days: 7, current: 2 },
+      { kind: "repeat", of: "daily", base: 10, times: 5, count: 1 },
+      { kind: "repeat", of: "streak", base: 3, times: 5, count: 1 },
+      { kind: "words", scope: "all", words: 500, complete: false, seen: 120 },
+      { kind: "words", scope: "vo-long", words: 400, complete: true, seen: 400 },
+    ] as const;
+    for (const goal of goals) {
+      const text = badgeGoalCriteria(goal, "en");
+      expect(text.split(". ").length, text).toBe(1);
+      expect(text.length, text).toBeLessThanOrEqual(48);
+    }
+  });
 });
