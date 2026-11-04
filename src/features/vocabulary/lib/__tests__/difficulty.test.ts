@@ -90,15 +90,15 @@ describe("TOPIK_TRACKS", () => {
     expect(isTrackAvailable(topik("doc-hieu"), preTOPIK4)).toBe(false);
     expect(clampDifficultyToDeck("doc-hieu", preTOPIK4)).toBe(DIFFICULTY_ALL);
   });
-  // van-chuong is narrowed to ["TOPIK5"] while TOPIK6 sits empty (K501–K507 shipped
-  // the TOPIK5 ceiling). Widen back to ["TOPIK5", "TOPIK6"] when a TOPIK6 batch lands.
-  it("nails van-chuong's ceiling to TOPIK5 so the current deck can serve it", () => {
-    expect(topik("van-chuong").levels).toEqual(["TOPIK5"]);
-    expect(trackCeiling(topik("van-chuong"))).toBe("TOPIK5");
+  // van-chuong widened back to ["TOPIK5","TOPIK6"] after the K601–K603 batch shipped the
+  // TOPIK6 ceiling (was narrowed to ["TOPIK5"] between K501–K507 and K601–K603, so a
+  // reader picking it wasn't served the TOPIK5 layer at "Sắp có · 0 từ").
+  it("widens van-chuong to the TOPIK5+TOPIK6 band now that the deck has TOPIK6", () => {
+    expect(topik("van-chuong").levels).toEqual(["TOPIK5", "TOPIK6"]);
+    expect(trackCeiling(topik("van-chuong"))).toBe("TOPIK6");
   });
   it("offers the TOPIK5-ceiling tracks once the deck carries TOPIK5", () => {
     const koLevels: VocabularyLevel[] = ["TOPIK1", "TOPIK2", "TOPIK3", "TOPIK4", "TOPIK5"];
-    expect(isTrackAvailable(topik("van-chuong"), koLevels)).toBe(true);
     expect(isTrackAvailable(topik("viet-lach"), koLevels)).toBe(true);
     expect(isTrackAvailable(topik("du-hoc"), koLevels)).toBe(true);
     expect(isTrackAvailable(topik("nang-cao"), koLevels)).toBe(true);
@@ -107,6 +107,21 @@ describe("TOPIK_TRACKS", () => {
     for (const id of ["van-chuong", "viet-lach", "du-hoc", "nang-cao"] as const) {
       expect(isTrackAvailable(topik(id), preTOPIK5)).toBe(false);
     }
+  });
+  it("offers van-chuong only once the deck carries TOPIK6", () => {
+    const koLevels: VocabularyLevel[] = [
+      "TOPIK1",
+      "TOPIK2",
+      "TOPIK3",
+      "TOPIK4",
+      "TOPIK5",
+      "TOPIK6",
+    ];
+    expect(isTrackAvailable(topik("van-chuong"), koLevels)).toBe(true);
+    // Sanity: pre-K601–K603 (TOPIK1..5), the widened band would have greyed the rung.
+    const preTOPIK6: VocabularyLevel[] = ["TOPIK1", "TOPIK2", "TOPIK3", "TOPIK4", "TOPIK5"];
+    expect(isTrackAvailable(topik("van-chuong"), preTOPIK6)).toBe(false);
+    expect(clampDifficultyToDeck("van-chuong", preTOPIK6)).toBe(DIFFICULTY_ALL);
   });
 });
 

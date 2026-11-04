@@ -299,8 +299,9 @@ export const JLPT_TRACKS: readonly DifficultyTrack[] = [
  * unpopulated — `isTrackAvailable` checks `trackCeiling`, so an unpopulated ceiling greys
  * the whole track at "Sắp có · 0 từ". Widen it back the moment the deck ships the ceiling
  * level. `doc-hieu` was `TOPIK3` alone between K301–K302 and K401–K408; the TOPIK4 batch
- * (c71f1df follow-up) widened it back to `["TOPIK3", "TOPIK4"]`. `van-chuong` is likewise
- * narrowed to `TOPIK5` alone until a TOPIK6 batch ships.
+ * (c71f1df follow-up) widened it back to `["TOPIK3", "TOPIK4"]`. `van-chuong` was
+ * likewise narrowed to `TOPIK5` between K501–K507 and K601–K603; the TOPIK6 batch widened
+ * it back to `["TOPIK5", "TOPIK6"]`.
  */
 export const TOPIK_TRACKS: readonly DifficultyTrack[] = [
   {
@@ -371,7 +372,7 @@ export const TOPIK_TRACKS: readonly DifficultyTrack[] = [
     label: "văn chương",
     hint: "Ngôn từ đẹp và hiếm",
     emoji: "🧠",
-    levels: ["TOPIK5"],
+    levels: ["TOPIK5", "TOPIK6"],
   },
 ];
 

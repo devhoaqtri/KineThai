@@ -229,14 +229,16 @@
       "TOPIK2",
       "TOPIK3",
       "TOPIK4",
-      "TOPIK5"
+      "TOPIK5",
+      "TOPIK6"
     ],
     "levelCounts": {
       "TOPIK1": 778,
       "TOPIK2": 1013,
       "TOPIK3": 873,
       "TOPIK4": 1350,
-      "TOPIK5": 1151
+      "TOPIK5": 1463,
+      "TOPIK6": 224
     },
     "levelSamples": {
       "TOPIK1": [
@@ -307,6 +309,20 @@
         },
         {
           "word": "대다"
+        }
+      ],
+      "TOPIK6": [
+        {
+          "word": "어찌"
+        },
+        {
+          "word": "자네"
+        },
+        {
+          "word": "참새"
+        },
+        {
+          "word": "스승"
         }
       ]
     }
