@@ -25,7 +25,7 @@ import {
   VolumeX,
   X,
 } from "lucide-react";
-import { COMMUNITY_AVAILABLE } from "@/lib/feature-flags";
+import { COMMUNITY_AVAILABLE, ECOSYSTEM_MENU_AVAILABLE } from "@/lib/feature-flags";
 import { EcosystemMenu } from "@/features/ecosystem/components/EcosystemMenu";
 import { stylePool, themePool } from "../lib/presets";
 import {
@@ -1272,10 +1272,11 @@ export function FeedControls({
   return (
     <header className="vocab-toolbar" ref={toolbar}>
       <div className="vocab-toolbar-row">
-        {/* Far left: the app family. Rendered unconditionally — ECOSYSTEM_STORE_AVAILABLE
-            gates only the STORE TILE inside the panel, not the panel itself; with the
-            store gated the grid is just the sibling apps over a "more coming" footer. */}
-        <EcosystemMenu open={ecoOpen} onOpenChange={toggleEco} reducedMotion={reducedMotion} />
+        {/* Far left: the app family, while ECOSYSTEM_MENU_AVAILABLE lets it show.
+            ECOSYSTEM_STORE_AVAILABLE separately gates the store tile inside the panel. */}
+        {ECOSYSTEM_MENU_AVAILABLE && (
+          <EcosystemMenu open={ecoOpen} onOpenChange={toggleEco} reducedMotion={reducedMotion} />
+        )}
         {/* Then the title, which is the difficulty trigger. Settings holds the top-right
             corner — see the right column. */}
         <div className="vocab-toolbar-left">
