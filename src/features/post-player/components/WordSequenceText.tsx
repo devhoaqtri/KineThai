@@ -33,6 +33,7 @@ import {
   isLikelyChineseText,
   isLikelyVietnameseText,
   type EmphasisVariant,
+  VIETNAMESE_MAX_LINE_SYLLABLES,
 } from "@/features/kinetic-text";
 import { getEmphasizedWordIndexes } from "../lib/feed-emphasis";
 import { getEntranceStyle } from "../lib/entrances";
@@ -298,6 +299,8 @@ export function WordSequenceText({
     signature: measuredSignature,
     phraseEdges,
     softPhraseEdges: isHan,
+    // A Vietnamese line never holds more than four syllables; Han text has no such cap.
+    maxLineSyllables: isHan ? undefined : VIETNAMESE_MAX_LINE_SYLLABLES,
     lineSpacingScale,
     wrapperRef,
     textRef,

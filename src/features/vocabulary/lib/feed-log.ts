@@ -137,6 +137,8 @@ function start(): void {
       word: card?.dataset.word ?? null,
       stage: card?.dataset.stage ?? null,
       onScreen: !!target?.closest(".vocab-slot[data-current]"),
+      // The site, so the report can sort pages by deck language.
+      host: location.host,
       ...detail,
     });
   });

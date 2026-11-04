@@ -38,6 +38,7 @@ import {
 import { getWideRevealY, isShortViewport } from "../lib/landscape-geometry";
 import { buildStages } from "../lib/stages";
 import { DeckLocaleContext } from "../lib/deck-locale";
+import { relaxBelowFor } from "../lib/line-relax";
 import { grammarRows } from "../lib/grammar";
 import { requestDurableStorage } from "../lib/durable-storage";
 import { getExportStageBox, type CardExportLayout } from "../lib/export-layout";
@@ -685,8 +686,10 @@ export function VocabularyCard({
       maxSize: uniformTextSize,
       budgetHeight: textBudgetHeight,
       budgetLineEm: VOCAB_TEXT_BUDGET_LINE_EM,
+      // Each site keeps its own threshold for loosening a cramped page (lib/line-relax).
+      relaxBelow: relaxBelowFor(locale),
     }),
-    [uniformTextSize, textBudgetHeight],
+    [uniformTextSize, textBudgetHeight, locale],
   );
   // Every role comes from one validated palette. `--vocab-button-ink` is the
   // palette's on-accent color, which the audit already proved clears 4.5:1 against

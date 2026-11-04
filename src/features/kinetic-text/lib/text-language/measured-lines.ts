@@ -25,17 +25,21 @@
  * page is what the reader notices. So every page is also solved with the rules loosened —
  * phrase edges only a preference, a lone short word a mild cost instead of a heavy one, and
  * the block allowed the band's whole height instead of the line budget. When the strict
- * layout would be set under RELAX_LINE_RULE_BELOW of the page's full size and the loosened
- * one is clearly larger, the loosened one is used. Bonds (`_`, `=`) are never loosened: a
+ * layout would be set under the caller's threshold (`relaxBelow`, a share of the page's
+ * full size; the feed keeps one per site) and the loosened one is clearly larger, the
+ * loosened one is used. Bonds (`_`, `=`) are never loosened: a
  * page whose widest line is one bonded word is as large as it can be (`widestUnbreakable`).
  *
+ * Syllable cap. A Vietnamese page passes `maxLineSyllables` (VIETNAMESE_MAX_LINE_SYLLABLES):
+ * no line of either pass holds more syllables than that, unless it is one bonded segment,
+ * which cannot be split. The estimate packer in ./page-metrics keeps the same cap.
+ *
  * Exports: MeasuredSegment, MeasuredLineBounds, MeasuredLines, MeasuredLineOptions,
- *          MeasuredFontBound, MAX_MEASURED_SEGMENTS, RELAX_LINE_RULE_BELOW,
- *          getPunctuationPhraseEdges, isBreakOneWordFromEdge, solveMeasuredLines
+ *          MeasuredFontBound, MAX_MEASURED_SEGMENTS, getPunctuationPhraseEdges, isBreakOneWordFromEdge, solveMeasuredLines
  * Depends on: ./page-metrics getVietnameseLineIndentEm, ./types
  */
 
-import { getVietnameseLineIndentEm } from "./page-metrics";
+import { countSegmentSyllables, getVietnameseLineIndentEm } from "./page-metrics";
 import type { WordLine, WordSegment } from "./types";
 import { endsWithPunctuation } from "./closing-punctuation";
 
@@ -79,7 +83,7 @@ export type MeasuredLines = {
   bound: MeasuredFontBound;
   /** The size the page gets with the phrase rule and line budget held. */
   strictFontPx: number;
-  /** The size it gets with both loosened (see RELAX_LINE_RULE_BELOW). */
+  /** The size it gets with the rules loosened (see `relaxBelow`). */
   relaxedFontPx: number;
   /** Whether the loosened layout was used. */
   relaxed: boolean;
@@ -90,13 +94,6 @@ export type MeasuredLines = {
   widestUnbreakable: boolean;
 };
 
-/**
- * A page whose strict layout would be set under this share of its full size (maxFontPx)
- * is loosened, when loosening makes it clearly larger. 0 never loosens. Tune it from
- * `npm run fonts:report`, which shows every logged page against its word's largest page
- * and what each threshold would change.
- */
-export const RELAX_LINE_RULE_BELOW = 0.6;
 /** Loosening has to buy at least this much size to be worth its stranded word or split phrase. */
 const MIN_RELAX_GAIN = 1.05;
 /** A lone scrap of a word, when the rules are loosened: a mild cost instead of a third. */
@@ -117,9 +114,16 @@ export type MeasuredLineOptions = {
   softPhraseEdges?: boolean;
   /**
    * Loosen the line rules when holding them would set the page under this share of its
-   * full size (RELAX_LINE_RULE_BELOW). Omitted or 0: never loosened.
+   * full size. The caller chooses it (the feed keeps one per site). Omitted or 0: never
+   * loosened.
    */
   relaxBelow?: number;
+  /**
+   * Most syllables one line may hold (VIETNAMESE_MAX_LINE_SYLLABLES for a Vietnamese
+   * page). A hard rule in both passes, never loosened; a single bonded segment longer than
+   * this still stands whole on its own line. Omitted: no cap.
+   */
+  maxLineSyllables?: number;
 };
 
 /** Solver internals that only the loosened pass changes. */
@@ -355,6 +359,8 @@ function solveArrangement(
   if (segments.some((item) => !(item.widthEm > 0))) return null;
 
   const floorPx = Math.min(bounds.maxFontPx, bounds.floorFontPx);
+  const maxSyllables = options.maxLineSyllables ?? Number.POSITIVE_INFINITY;
+  const syllableCounts = segments.map(({ segment }) => countSegmentSyllables(segment));
   // Widths of the lines that hold one lone word, refilled for every arrangement.
   const loneWidths: number[] = [];
   const breakFactors = getBreakFactors(segments, options.phraseEdges, options.softPhraseEdges);
@@ -398,15 +404,19 @@ function solveArrangement(
     let blockHeight = 0;
     let phrasing = 1;
     let edgeSplit = false;
+    let lineSyllables = 0;
+    let overSyllableCap = false;
     loneWidths.length = 0;
     for (let index = 0; index < count; index += 1) {
       const item = segments[index]!;
       lineWidth += (lineSegments > 0 ? bounds.gapEm : 0) + item.widthEm;
       lineHeight = Math.max(lineHeight, item.heightEm);
       lineSegments += 1;
+      lineSyllables += syllableCounts[index]!;
       const last = index === count - 1;
       if (!last && !(mask & (1 << index))) continue;
       // The line is closed. Its reach includes the stagger, which is what has to fit.
+      if (lineSegments > 1 && lineSyllables > maxSyllables) overSyllableCap = true;
       const reach = lineWidth + getVietnameseLineIndentEm(lineIndex);
       widest = Math.max(widest, reach);
       widthSum += reach;
@@ -424,7 +434,11 @@ function solveArrangement(
       lineWidth = 0;
       lineHeight = 0;
       lineSegments = 0;
+      lineSyllables = 0;
     }
+    // A line over the syllable cap is not an arrangement at all — unless it is one bonded
+    // segment, which cannot be split and so stands on its own line.
+    if (overSyllableCap) continue;
     const lines = lineIndex;
     let penalty = phrasing;
     // A page that is one word on one line is not a stranded word; it is the page.

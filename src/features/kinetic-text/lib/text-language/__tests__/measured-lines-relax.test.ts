@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  RELAX_LINE_RULE_BELOW,
   solveMeasuredLines,
   type MeasuredLineBounds,
   type MeasuredSegment,
@@ -106,8 +105,46 @@ describe("solveMeasuredLines relax threshold", () => {
     expect(solved.relaxed).toBe(false);
   });
 
-  it("ships a threshold between 0 and 1", () => {
-    expect(RELAX_LINE_RULE_BELOW).toBeGreaterThan(0);
-    expect(RELAX_LINE_RULE_BELOW).toBeLessThanOrEqual(1);
+  it("never sets a Vietnamese line over the syllable cap, in either pass", () => {
+    // Eight one-syllable words that would happily share two long lines.
+    const page = segments(
+      ["Mình", 1.6],
+      ["đi", 0.8],
+      ["chợ", 1.1],
+      ["mua", 1.3],
+      ["rau", 1.2],
+      ["về", 0.9],
+      ["nấu", 1.3],
+      ["canh", 1.5],
+    );
+    for (const relaxBelow of [0, 1]) {
+      const solved = solveMeasuredLines(page, BOUNDS, { relaxBelow, maxLineSyllables: 4 })!;
+      for (const line of solved.lines) {
+        const syllables = line.segments.reduce((total, seg) => total + seg.words.length, 0);
+        expect(syllables).toBeLessThanOrEqual(4);
+      }
+    }
+  });
+
+  it("lets one bonded segment longer than the cap stand whole on its own line", () => {
+    let index = 0;
+    const words = (text: string) => text.split(" ").map((word) => ({ text: word, index: index++ }));
+    const long = words("không thể nào tin nổi");
+    const page: MeasuredSegment[] = [
+      { segment: { key: "a", words: words("Ôi") }, widthEm: 1, heightEm: 1.25 },
+      { segment: { key: "b", words: long }, widthEm: 7, heightEm: 1.25 },
+    ];
+    const solved = solveMeasuredLines(page, BOUNDS, { maxLineSyllables: 4 })!;
+    expect(solved.lines.map((line) => line.segments.map((seg) => seg.key))).toEqual([["a"], ["b"]]);
+  });
+
+  it("does not count a mark standing alone as a syllable", () => {
+    const page = segments(["Mưa", 1.4], ["—", 0.6], ["gió", 1.2], ["về", 0.9], ["rồi", 1.2]);
+    const solved = solveMeasuredLines(page, BOUNDS, { maxLineSyllables: 4 })!;
+    expect(solved).not.toBeNull();
+    for (const line of solved.lines) {
+      const syllables = line.segments.filter((seg) => seg.words[0]!.text !== "—").length;
+      expect(syllables).toBeLessThanOrEqual(4);
+    }
   });
 });

@@ -12,7 +12,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import {
   MAX_MEASURED_SEGMENTS,
-  RELAX_LINE_RULE_BELOW,
   getWidestLineWidth,
   solveMeasuredLines,
   type MeasuredFontBound,
@@ -52,6 +51,8 @@ export type PageFontDetail = {
   strictFontPx: number;
   relaxedFontPx: number;
   relaxed: boolean;
+  /** The threshold the page was solved with. */
+  relaxBelow: number;
   bound: MeasuredFontBound;
   /** The widest line is one unbreakable word: no line rule holds this page small. */
   widestUnbreakable: boolean;
@@ -68,6 +69,11 @@ export type MeasuredLayoutBudget = {
   budgetHeight: number;
   /** …counted at this many em per line. */
   budgetLineEm: number;
+  /**
+   * Loosen the line rules when the strict layout would be set under this share of
+   * `maxSize` (the feed keeps one per site). Omitted or 0: never loosened.
+   */
+  relaxBelow?: number;
 };
 
 type Solution = {
@@ -120,6 +126,7 @@ function settle(fontPx: number): number {
  * @param args.phraseEdges - word indices at which a phrase begins; they change the solve,
  *   not the measurements, so they are not part of the signature
  * @param args.softPhraseEdges - a break one word from an edge is a preference, not a rule
+ * @param args.maxLineSyllables - most syllables a line may hold (a Vietnamese page's cap)
  * @param args.lineSpacingScale - the caller's multiplier on the inter-line gap
  * @returns The solved lines and font size, or null while the estimate still stands
  */
@@ -130,6 +137,7 @@ export function useMeasuredLines({
   signature,
   phraseEdges,
   softPhraseEdges,
+  maxLineSyllables,
   lineSpacingScale,
   wrapperRef,
   textRef,
@@ -140,6 +148,7 @@ export function useMeasuredLines({
   signature: string;
   phraseEdges?: readonly number[];
   softPhraseEdges?: boolean;
+  maxLineSyllables?: number;
   lineSpacingScale: number;
   wrapperRef: RefObject<HTMLDivElement | null>;
   textRef: RefObject<HTMLDivElement | null>;
@@ -157,6 +166,7 @@ export function useMeasuredLines({
   const maxSize = budget?.maxSize ?? 0;
   const budgetHeight = budget?.budgetHeight ?? 0;
   const budgetLineEm = budget?.budgetLineEm ?? 1;
+  const relaxBelow = budget?.relaxBelow ?? 0;
 
   useIsomorphicLayoutEffect(() => {
     if (!active) return;
@@ -236,7 +246,7 @@ export function useMeasuredLines({
         gapEm: SEGMENT_GAP_EM,
         lineGapEm: LINE_GAP_EM * lineSpacingScale,
       },
-      { phraseEdges, softPhraseEdges, relaxBelow: RELAX_LINE_RULE_BELOW },
+      { phraseEdges, softPhraseEdges, relaxBelow, maxLineSyllables },
     );
     if (!solved) {
       setSolution((current) => (current ? null : current));
@@ -264,6 +274,7 @@ export function useMeasuredLines({
           strictFontPx: settle(solved.strictFontPx),
           relaxedFontPx: settle(solved.relaxedFontPx),
           relaxed: solved.relaxed,
+          relaxBelow,
           bound: solved.bound,
           widestUnbreakable: solved.widestUnbreakable,
           boxWidthPx: Math.round(wrapper.clientWidth),
@@ -282,6 +293,8 @@ export function useMeasuredLines({
     maxSize,
     budgetHeight,
     budgetLineEm,
+    relaxBelow,
+    maxLineSyllables,
     lineSpacingScale,
     wrapperRef,
     textRef,

@@ -26,13 +26,14 @@ export {
   getVietnameseCharBudgetForLine,
   getVietnameseLayoutMetrics,
   getVietnameseWordLines,
+  VIETNAMESE_MAX_LINE_SYLLABLES,
+  countSegmentSyllables,
 } from "./page-metrics";
 
 export { CLOSING_PUNCTUATION_CLASS, endsWithPunctuation } from "./closing-punctuation";
 
 export {
   MAX_MEASURED_SEGMENTS,
-  RELAX_LINE_RULE_BELOW,
   getPunctuationPhraseEdges,
   isBreakOneWordFromEdge,
   solveMeasuredLines,
