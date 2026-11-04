@@ -228,13 +228,15 @@
       "TOPIK1",
       "TOPIK2",
       "TOPIK3",
-      "TOPIK4"
+      "TOPIK4",
+      "TOPIK5"
     ],
     "levelCounts": {
       "TOPIK1": 778,
       "TOPIK2": 1013,
       "TOPIK3": 873,
-      "TOPIK4": 1262
+      "TOPIK4": 1350,
+      "TOPIK5": 571
     },
     "levelSamples": {
       "TOPIK1": [
@@ -291,6 +293,20 @@
         },
         {
           "word": "만큼"
+        }
+      ],
+      "TOPIK5": [
+        {
+          "word": "삼다"
+        },
+        {
+          "word": "달리"
+        },
+        {
+          "word": "다만"
+        },
+        {
+          "word": "대다"
         }
       ]
     }

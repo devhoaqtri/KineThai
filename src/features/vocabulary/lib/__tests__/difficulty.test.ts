@@ -90,6 +90,24 @@ describe("TOPIK_TRACKS", () => {
     expect(isTrackAvailable(topik("doc-hieu"), preTOPIK4)).toBe(false);
     expect(clampDifficultyToDeck("doc-hieu", preTOPIK4)).toBe(DIFFICULTY_ALL);
   });
+  // van-chuong is narrowed to ["TOPIK5"] while TOPIK6 sits empty (K501–K507 shipped
+  // the TOPIK5 ceiling). Widen back to ["TOPIK5", "TOPIK6"] when a TOPIK6 batch lands.
+  it("nails van-chuong's ceiling to TOPIK5 so the current deck can serve it", () => {
+    expect(topik("van-chuong").levels).toEqual(["TOPIK5"]);
+    expect(trackCeiling(topik("van-chuong"))).toBe("TOPIK5");
+  });
+  it("offers the TOPIK5-ceiling tracks once the deck carries TOPIK5", () => {
+    const koLevels: VocabularyLevel[] = ["TOPIK1", "TOPIK2", "TOPIK3", "TOPIK4", "TOPIK5"];
+    expect(isTrackAvailable(topik("van-chuong"), koLevels)).toBe(true);
+    expect(isTrackAvailable(topik("viet-lach"), koLevels)).toBe(true);
+    expect(isTrackAvailable(topik("du-hoc"), koLevels)).toBe(true);
+    expect(isTrackAvailable(topik("nang-cao"), koLevels)).toBe(true);
+    // Sanity: pre-K501–K507 (TOPIK1..4), all four TOPIK5-ceiling tracks were greyed.
+    const preTOPIK5: VocabularyLevel[] = ["TOPIK1", "TOPIK2", "TOPIK3", "TOPIK4"];
+    for (const id of ["van-chuong", "viet-lach", "du-hoc", "nang-cao"] as const) {
+      expect(isTrackAvailable(topik(id), preTOPIK5)).toBe(false);
+    }
+  });
 });
 
 describe("JLPT_TRACKS", () => {
