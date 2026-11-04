@@ -3,7 +3,7 @@ import { Suspense, lazy, useContext, useEffect, useMemo, useRef, useState } from
 import { useVocabularyFeed } from "../hooks/useVocabularyFeed";
 import { useVocabularyWindow } from "../hooks/useVocabularyWindow";
 import { useFeedPagination } from "../hooks/useFeedPagination";
-import { canWalkFurther, getWalkedPositions } from "../lib/backfill";
+import { canWalkFurther, getBlockedRun, selectVisibleEntries } from "../lib/backfill";
 import { formatCountdown, isWordAllowed, nextAvailableAt, type ViewHistory } from "../lib/history";
 import type { FeedPage, Presentation, VocabularyFilters } from "../types";
 import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
@@ -82,22 +82,25 @@ export function VocabularyStream({
   }, []);
 
   // Occurrences admitted before they were recorded stay mounted so the
-  // current card never vanishes the moment its view is stored.
+  // current card never vanishes the moment its view is stored. When no more words can be
+  // loaded (every fallback failed, or the device is offline), words already on the device
+  // are served even if seen today, rather than an error.
   const admitted = useRef(new Set<string>());
-  const visibleEntries = useMemo(() => {
-    const out: typeof query.entries = [];
-    for (const entry of query.entries) {
-      if (admitted.current.has(entry.occurrenceId)) {
-        out.push(entry);
-        continue;
-      }
-      if (isWordAllowed(history, entry.word.id, now)) {
-        admitted.current.add(entry.occurrenceId);
-        out.push(entry);
-      }
-    }
-    return out;
-  }, [query.entries, history, now]);
+  const loadStalled = query.entries.length > 0 && (query.isError || query.isPaused);
+  const visibleEntries = useMemo(
+    () =>
+      selectVisibleEntries(
+        query.entries,
+        admitted.current,
+        (id) => isWordAllowed(history, id, now),
+        loadStalled,
+      ),
+    [query.entries, history, now, loadStalled],
+  );
+  const visibleIds = useMemo(
+    () => new Set(visibleEntries.map((entry) => entry.occurrenceId)),
+    [visibleEntries],
+  );
 
   // Paging ceiling: the endpoint permutes the same pool forever, so hasNextPage stays
   // true even when every word it can offer is already buffered (and blocked by the
@@ -107,7 +110,7 @@ export function VocabularyStream({
   // button flickered too fast to read or tap while no word ever played.
   const canFetchMorePositions = canWalkFurther(
     query.metadata?.matching ?? 0,
-    getWalkedPositions(query.entries),
+    getBlockedRun(query.entries, visibleIds),
   );
   // Every word the pool holds is buffered: the stream ends on a page of its own after
   // the last word, rather than a toast that can only restart the feed.
@@ -124,7 +127,16 @@ export function VocabularyStream({
   const feedForPaging = useMemo(
     () => ({ ...query, entries: visibleEntries }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [query.data, query.hasNextPage, query.hasPreviousPage, query.isFetching, visibleEntries],
+    [
+      query.data,
+      query.error,
+      query.hasNextPage,
+      query.hasPreviousPage,
+      query.isFetching,
+      query.failureKind,
+      query.retryAt,
+      visibleEntries,
+    ],
   );
   const retry = useFeedPagination(
     feedForPaging as unknown as ReturnType<typeof useVocabularyFeed>,
@@ -407,7 +419,9 @@ export function VocabularyStream({
       )}
       {visibleEntries.length > 0 && (
         <>
-          {(query.error || query.isPaused) && (
+          {/* A failed page is retried in the background while the reader still has words
+              ahead; the error is only worth showing once they have reached the last one. */}
+          {(query.isPaused || (query.error && activeIndex >= visibleEntries.length - 1)) && (
             <div className="vocab-stream-status" role="status">
               <span>
                 {query.catalogChanged
@@ -416,7 +430,9 @@ export function VocabularyStream({
                     ? "Phiên xem đã hết hạn. Khởi động lại để xem tiếp."
                     : query.isPaused
                       ? "Mất mạng — các từ đã tải vẫn xem được."
-                      : "Không tải thêm từ được."}
+                      : query.retryAt
+                        ? `Không tải thêm từ được. Tự thử lại sau ${formatCountdown(query.retryAt, now)}.`
+                        : "Không tải thêm từ được."}
               </span>
               <button
                 type="button"
