@@ -1,0 +1,158 @@
+/* /confetti-lab only (development). The burst canvas itself is styled in vocabulary.css. */
+.confetti-lab {
+  min-height: 100vh;
+  padding: 24px clamp(12px, 3vw, 40px) 64px;
+  background: #0e0f14;
+  color: #e9ebf2;
+  font-family: "Inter", sans-serif;
+}
+.confetti-lab-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.confetti-lab-head h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+}
+.confetti-lab-head p {
+  margin: 0;
+  color: #a6abba;
+  font-size: 14px;
+}
+.confetti-lab-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.confetti-lab-controls button {
+  border: 1px solid #ffffff26;
+  border-radius: 999px;
+  background: #ffffff0f;
+  color: inherit;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.confetti-lab-controls button[aria-pressed="true"] {
+  background: #3ddc97;
+  border-color: #3ddc97;
+  color: #0e0f14;
+}
+.confetti-lab-kept {
+  flex-basis: 100%;
+}
+.confetti-lab-kept strong {
+  color: #3ddc97;
+}
+.confetti-lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  gap: 28px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-items: center;
+}
+.confetti-lab-item {
+  width: 288px;
+}
+.confetti-lab-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 0;
+  border-radius: 22px;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 10px 30px #0008;
+  outline: 3px solid transparent;
+  outline-offset: 3px;
+  transition: outline-color 0.2s;
+}
+.confetti-lab-item[data-kept] .confetti-lab-frame {
+  outline-color: #3ddc97;
+}
+.confetti-lab-word {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  transform: translateY(-50%);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  opacity: 0.92;
+}
+.confetti-lab-word[data-revealed] {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  opacity: 1;
+  animation: confetti-lab-pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+.confetti-lab-pill {
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  transform: translateX(-50%);
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--lab-accent);
+  color: #111;
+  font:
+    600 13px "Inter",
+    sans-serif;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+.confetti-lab-caption {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+.confetti-lab-caption strong {
+  font-size: 15px;
+}
+.confetti-lab-caption code {
+  margin-left: 8px;
+  color: #8b91a3;
+  font-size: 12px;
+}
+.confetti-lab-caption p {
+  margin: 4px 0 0;
+  color: #a6abba;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.confetti-lab-keep {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border: 1px solid #ffffff26;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.confetti-lab-keep input {
+  accent-color: #3ddc97;
+}
+@keyframes confetti-lab-pop {
+  from {
+    transform: translateY(-50%) scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
+  }
+}

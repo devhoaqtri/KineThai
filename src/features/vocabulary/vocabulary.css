@@ -9491,3 +9491,12 @@
     transform: translateY(6px);
   }
 }
+
+/* Reveal confetti (components/RevealConfetti): one canvas over the whole card, under no
+   pointer, so taps and swipes reach the card beneath. */
+.vocab-reveal-confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}

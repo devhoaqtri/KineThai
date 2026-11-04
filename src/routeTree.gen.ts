@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AdminAccessDeniedRouteImport } from './routes/admin-access-denied'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ConfettiLabRouteImport } from './routes/confetti-lab'
 import { Route as ShowcaseRouteImport } from './routes/showcase'
 import { Route as StoreRouteImport } from './routes/store'
 import { Route as AuthenticatedAboutRouteImport } from './routes/_authenticated/about'
@@ -78,6 +79,11 @@ const AdminAccessDeniedRoute = AdminAccessDeniedRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfettiLabRoute = ConfettiLabRouteImport.update({
+  id: '/confetti-lab',
+  path: '/confetti-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShowcaseRoute = ShowcaseRouteImport.update({
@@ -294,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/confetti-lab': typeof ConfettiLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/about': typeof AuthenticatedAboutRoute
@@ -340,6 +347,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/confetti-lab': typeof ConfettiLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/about': typeof AuthenticatedAboutRoute
@@ -389,6 +397,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/confetti-lab': typeof ConfettiLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
@@ -438,6 +447,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-access-denied'
     | '/auth'
+    | '/confetti-lab'
     | '/showcase'
     | '/store'
     | '/about'
@@ -484,6 +494,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin-access-denied'
     | '/auth'
+    | '/confetti-lab'
     | '/showcase'
     | '/store'
     | '/about'
@@ -532,6 +543,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-access-denied'
     | '/auth'
+    | '/confetti-lab'
     | '/showcase'
     | '/store'
     | '/_authenticated/about'
@@ -581,6 +593,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AdminAccessDeniedRoute: typeof AdminAccessDeniedRoute
   AuthRoute: typeof AuthRoute
+  ConfettiLabRoute: typeof ConfettiLabRoute
   ShowcaseRoute: typeof ShowcaseRoute
   StoreRoute: typeof StoreRoute
   CarouselCodeRoute: typeof CarouselCodeRoute
@@ -635,6 +648,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confetti-lab': {
+      id: '/confetti-lab'
+      path: '/confetti-lab'
+      fullPath: '/confetti-lab'
+      preLoaderRoute: typeof ConfettiLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/showcase': {
@@ -1000,6 +1020,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AdminAccessDeniedRoute: AdminAccessDeniedRoute,
   AuthRoute: AuthRoute,
+  ConfettiLabRoute: ConfettiLabRoute,
   ShowcaseRoute: ShowcaseRoute,
   StoreRoute: StoreRoute,
   CarouselCodeRoute: CarouselCodeRoute,
