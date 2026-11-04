@@ -1,6 +1,8 @@
-/** Anonymous browser fetch adapter. Exports: fetchVocabularyPage, VocabularyRequestError. Depends on: transport types, backfill bounds. */
+/** Anonymous browser fetch adapter. Exports: fetchVocabularyPage, loadVocabularyPage, VocabularyRequestError. Depends on: transport types, backfill bounds, feed fallbacks, feed log. */
 import { VOCAB_PAGE_LIMIT } from "../lib/backfill";
 import { readCustomPage } from "../lib/custom-pack";
+import { loadFeedPageWithFallbacks } from "../lib/feed-fallback";
+import { feedLog } from "../lib/feed-log";
 import type { FeedCursor, FeedPage, VocabularyFilters } from "../types";
 
 export class VocabularyRequestError extends Error {
@@ -64,4 +66,49 @@ export async function fetchVocabularyPage(input: {
     clearTimeout(timeout);
     input.signal.removeEventListener("abort", abort);
   }
+}
+
+/** Wait, or stop waiting the moment the query is dropped. */
+function abortableSleep(ms: number, signal: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal.aborted) return reject(signal.reason);
+    const timer = setTimeout(() => {
+      signal.removeEventListener("abort", stop);
+      resolve();
+    }, ms);
+    const stop = () => {
+      clearTimeout(timer);
+      reject(signal.reason);
+    };
+    signal.addEventListener("abort", stop, { once: true });
+  });
+}
+
+/**
+ * Request one page through every fallback (lib/feed-fallback): backoff retries, a fresh
+ * stream for a stale cursor, wider filters for an empty match. Each step is logged to the
+ * console and the dev feed log, so a recovered failure is still visible.
+ * @param input Stream/cursor context. @returns The page that finally served.
+ */
+export function loadVocabularyPage(input: {
+  seed: string;
+  filters: VocabularyFilters;
+  cursor: FeedCursor;
+  signal: AbortSignal;
+}): Promise<FeedPage> {
+  return loadFeedPageWithFallbacks(input, {
+    fetchPage: (request) =>
+      fetchVocabularyPage({
+        seed: request.seed,
+        filters: request.filters,
+        cursor: request.cursor,
+        signal: request.signal,
+      }),
+    sleep: abortableSleep,
+    now: () => Date.now(),
+    log: (cause, detail) => {
+      console.warn(`[vocabulary feed] ${cause}`, detail);
+      feedLog("feed-fallback", { cause, ...detail });
+    },
+  });
 }
