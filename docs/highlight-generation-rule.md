@@ -95,6 +95,19 @@ If your format has emphasisVi, list the marked words in field order (defVi, lead
 anticipateVi), plain, with a space where the text has the connector: /quan_trọng/ becomes
 "quan trọng". It repeats the inline marks and never replaces them.
 
+RULE 8. EVERY CLUE IS A WHOLE SENTENCE. NEVER DELETE A WORD TO HIDE THE ANSWER.
+- A clue may contain the Vietnamese meaning. If you would rather not use it, write a
+  different sentence that does not need it. Never take a sentence and cut the word out.
+- Clue fields have no blanks. The usage sentence's _____ is the only blank, and only in
+  English.
+- Nothing may be left without its head: no sải without bơi, no pin without đèn, no
+  classifier (ổ, tấm, cuốn, chiếc) without its noun, no ghi / đặt / lật / bật without its
+  object.
+- Wrong: Hè này, tôi | ra hồ /trường_học/ sải mỗi=sáng.      (bơi was cut)
+  Right: Hè này, tôi | ra hồ /trường_học/ | bơi sải mỗi=sáng.
+- Wrong: Đi /dã_ngoại/, tôi | gói sẵn mấy ổ kẹp trứng.        (bánh_mì was cut)
+  Right: Đi /dã_ngoại/, tôi | gói sẵn mấy ổ=bánh_mì kẹp trứng.
+
 CHECK EVERY FIELD BEFORE RETURNING. ANY "NO" MEANS REWRITE.
 1. Exactly one /x_y/ in this field?
 2. Does it pass all four tests in Rule 2?
@@ -103,6 +116,7 @@ CHECK EVERY FIELD BEFORE RETURNING. ANY "NO" MEANS REWRITE.
 5. Is every | between phrases of two syllables or more, and none inside a word?
 6. Is it one sentence, inside its length limit?
 7. Does removing every mark leave a natural sentence?
+8. Read cold, by someone who has never seen the card: is it complete, with no word cut out?
 ```
 
 ## Worked fixes

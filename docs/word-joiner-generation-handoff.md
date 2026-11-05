@@ -5,7 +5,8 @@
 > below describe `_`, and section 11 describes the other two.
 >
 > **Highlights:** [highlight-generation-rule.md](highlight-generation-rule.md) is the strict
-> rule and wins over anything here.
+> rule and wins over anything here. Its Rule 8 also applies to every clue: never delete a
+> word to hide the answer; a clue is a whole sentence.
 
 **For:** any model or script that writes text for a vocabulary deck (the word crawler, the
 admin "regenerate" action, a future generator for another language).

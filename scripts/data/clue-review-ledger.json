@@ -1,0 +1,33 @@
+{
+  "about": "Verdicts on Vietnamese clue fields, read by scripts/check-clue-whole.ts. A verdict is on the words (marks, joins and | are ignored), keyed by card id and field. ok: a person read the clue and it is a whole sentence. broken: a word was cut out; the text must not ship, and its count is the MAX_KNOWN_BROKEN_CLUES ratchet. See docs/clue-deleted-word-proposal.md.",
+  "entries": [
+    {
+      "id": "vi-swimming",
+      "field": "leadVi",
+      "text": "Hè này, tôi | ra hồ /trường_học/ sải mỗi=sáng.",
+      "verdict": "broken",
+      "note": "bơi cut; sải means nothing alone. Fixed in the pack."
+    },
+    {
+      "id": "vi-light",
+      "field": "leadVi",
+      "text": "Cúp điện giữa giờ ôn, | cả phòng bật pin /điện_thoại/.",
+      "verdict": "broken",
+      "note": "đèn cut; bật pin means switch on the battery."
+    },
+    {
+      "id": "vi-sandwich",
+      "field": "leadVi",
+      "text": "Đi /dã_ngoại/, tôi | gói sẵn mấy ổ kẹp trứng.",
+      "verdict": "broken",
+      "note": "bánh_mì cut; the classifier ổ has no noun."
+    },
+    {
+      "id": "vi-objective",
+      "field": "leadVi",
+      "text": "/Đầu_kỳ/, | em ghi | đạt tám điểm Toán.",
+      "verdict": "broken",
+      "note": "mục_tiêu cut; ghi has no object."
+    }
+  ]
+}

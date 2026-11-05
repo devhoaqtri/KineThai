@@ -66,6 +66,7 @@ npm run check:word-joiners               # _ = | marks survive; nothing strips t
 npm run check:emphasis-runs              # inline /…/ highlights render as one run per group
 npm run check:text-pagination            # the splitter obeys its phrase-edge rules
 npm run check:deck-pages                 # the real paginator over the real deck: no stray scene
+npm run check:clue-whole                 # no clue had its word cut out to hide the answer
 ```
 
 - `assign-share-codes` is **append-only**: a word that already has a code keeps it, and an
@@ -74,8 +75,11 @@ npm run check:deck-pages                 # the real paginator over the real deck
   one.
 - `check:meanings` requires `meaningVi` on published English words; the export carries it,
   so a failure here means a card left the refinery without one.
-- The last four are the layout guards the inline marks depend on. They read the deck as
+- The four before it are the layout guards the inline marks depend on. They read the deck as
   shipped, so run them on the imported file, not on the export in isolation.
+- `check:clue-whole` fails when an import brings in new cut-out clues or brings back a text
+  its review ledger (`scripts/data/clue-review-ledger.json`) calls broken. New candidates are
+  read once and recorded there; see [clue-deleted-word-proposal.md](clue-deleted-word-proposal.md).
 
 Then `npm test`, and rebuild/deploy to publish.
 

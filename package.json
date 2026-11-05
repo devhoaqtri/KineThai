@@ -19,6 +19,7 @@
     "check:palettes": "node scripts/check-palette-contrast.ts",
     "check:saved-groups": "npx tsx scripts/check-saved-groups.ts",
     "check:emphasis-runs": "npx tsx scripts/check-emphasis-runs.ts",
+    "check:clue-whole": "npx tsx scripts/check-clue-whole.ts",
     "format": "prettier --write .",
     "check:workbench": "npx tsx scripts/check-vocabulary-workbench.ts",
     "check:hanzi": "npx tsx scripts/check-hanzi-spelling.ts",
