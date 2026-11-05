@@ -175,6 +175,17 @@
      pill + title line, flush with the pill's left edge. */
   --vocab-brand-indent: calc(var(--eco-trigger-h) * 3 / 2 + var(--vocab-eco-gap));
 }
+/* With the app pill hidden (ECOSYSTEM_MENU_AVAILABLE off) there is nothing to step back
+   under: an indent here pushed the difficulty popup off the screen's left edge. The
+   tagline's emoji slot exists only to sit beneath the pill, so it goes too, leaving the
+   label on the title's left edge as before. Keyed on the pill itself, so turning the
+   flag back on restores the hanging layout with no other change. */
+.vocab-toolbar-row:not(:has(.eco-trigger)) .vocab-toolbar-left {
+  --vocab-brand-indent: 0px;
+}
+.vocab-toolbar-row:not(:has(.eco-trigger)) .vocab-difficulty-current-emoji {
+  display: none;
+}
 .vocab-player-controls {
   justify-self: center;
   /* The middle track centres the group between the title's box and the gear's, but the
