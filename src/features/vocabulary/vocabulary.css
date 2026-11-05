@@ -138,11 +138,13 @@
 }
 .vocab-toolbar-row {
   display: grid;
-  /* Four tracks, in source order: the app grid, the title, the transport controls, the
-     gear. The app grid needs a track of its own rather than sharing the title's — the
-     panel it opens is positioned against its trigger's box, so the trigger has to be a
-     box the grid sized, not one floating inside another flex row. */
-  grid-template-columns: auto auto 1fr auto;
+  /* Three tracks, in source order: the title, the transport controls, the gear. The
+     store/app-family button is hidden (ECOSYSTEM_MENU_AVAILABLE off), so its former
+     leading `auto` track is dropped; were it to return, restore `auto auto 1fr auto`.
+     With the side clusters content-sized and only the middle track stretching, the
+     controls centre within the leftover space between them — equally spaced from the
+     two components on either side — not on the whole screen. */
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   /* Read by the title column to hang the difficulty line under the app pill: the pill
      height (×3/2) is its width, and --vocab-eco-gap is the space between it and the
@@ -200,19 +202,25 @@
    after) and is masked to fade out at BOTH edges, so it announces the track and clears
    without repeating. */
 .vocab-now-playing {
-  /* Anchored to the sub-text's row, in the space to its right. `--vocab-tagline-right`
-     is the measured right edge of the difficulty label (its trailing caret), so the
-     crawl ENDS just before it would reach that trail — plus a 14px breathing gap — and
-     `right` keeps it clear of the corner gear. Absolute so it no longer adds height to
+  /* The song's name lives inside the transport group's own horizontal span. `left` and
+     `right` are insets from the toolbar's edges, so the box stretches between them; each
+     is the GREATER of the controls-±15% bound and a fixed clearance — off the difficulty
+     label (the measured `--vocab-tagline-right`, plus 14px) on the left, off the corner
+     gear on the right. On a wide screen the ±15% overhang wins and the label reads as a
+     caption centred under the controls; on a narrow screen the difficulty label closes in
+     first, so the box shortens rather than overlap it. Absolute so it adds no height to
      the fixed toolbar; the scrim already covers this band. */
   position: absolute;
   top: var(--vocab-tagline-mid, 49px);
   transform: translateY(-50%);
-  left: calc(var(--vocab-tagline-right, 140px) + 14px);
-  right: calc(var(--vocab-corner, 44px) + 12px);
-  /* Never stretch: cap at ~1.5× the transport group, so on wide screens it stays a
-     caption rather than a band, and only closes the gap to the gear on narrow ones. */
-  max-width: calc(var(--vocab-controls-w, 156px) * 1.5);
+  left: max(
+    calc(var(--vocab-controls-left, 50%) - var(--vocab-controls-w, 156px) * 0.15),
+    calc(var(--vocab-tagline-right, 140px) + 14px)
+  );
+  right: max(
+    calc(100% - var(--vocab-controls-right, 50%) - var(--vocab-controls-w, 156px) * 0.15),
+    calc(var(--vocab-corner, 44px) + 12px)
+  );
   overflow: hidden;
   text-align: center;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
@@ -5822,6 +5830,14 @@
    piece is a one-shot transform/opacity animation and rests invisible, so nothing
    lingers over the word once it has landed. */
 .vocab-reveal-burst {
+  /* The variant config sets these on the element (components/RevealBurst); the defaults
+     here are `classic`. --burst-dur-scale and --burst-play are NOT set on the element: a
+     lab root may set them, and the real feed simply falls back to 1 / running. */
+  --burst-scale: 1;
+  --flash-dur: 0.95s;
+  --ring-dur: 0.75s;
+  --spark-dur: 0.72s;
+  --burst-ease: var(--ease-out);
   position: absolute;
   left: 50%;
   top: 34%;
@@ -5831,10 +5847,10 @@
 }
 .vocab-reveal-flash {
   position: absolute;
-  left: -90vmax;
-  top: -90vmax;
-  width: 180vmax;
-  height: 180vmax;
+  left: calc(-90vmax * var(--burst-scale));
+  top: calc(-90vmax * var(--burst-scale));
+  width: calc(180vmax * var(--burst-scale));
+  height: calc(180vmax * var(--burst-scale));
   border-radius: 50%;
   background: radial-gradient(
     closest-side,
@@ -5844,7 +5860,19 @@
   );
   opacity: 0;
   transform: scale(0.04);
-  animation: vocab-reveal-flash 0.95s var(--ease-out) 0.1s both;
+  animation: vocab-reveal-flash calc(var(--flash-dur) * var(--burst-dur-scale, 1)) var(--burst-ease)
+    calc(0.1s * var(--burst-dur-scale, 1)) both;
+  animation-play-state: var(--burst-play, running);
+}
+/* A conic flood instead of the round bloom: masked light spokes that sweep out. */
+.vocab-reveal-burst[data-flash="conic"] .vocab-reveal-flash {
+  background: repeating-conic-gradient(
+    from -12deg,
+    color-mix(in srgb, var(--vocab-accent) 80%, transparent) 0 5deg,
+    transparent 5deg 22deg
+  );
+  -webkit-mask: radial-gradient(closest-side, #000 0 42%, transparent 72%);
+  mask: radial-gradient(closest-side, #000 0 42%, transparent 72%);
 }
 @keyframes vocab-reveal-flash {
   0% {
@@ -5861,14 +5889,21 @@
 }
 .vocab-reveal-ring {
   position: absolute;
-  left: -90px;
-  top: -90px;
-  width: 180px;
-  height: 180px;
+  left: calc(-90px * var(--burst-scale));
+  top: calc(-90px * var(--burst-scale));
+  width: calc(180px * var(--burst-scale));
+  height: calc(180px * var(--burst-scale));
   border-radius: 50%;
+  /* Border colour is set per ring by the component (odd rings flip to the other accent). */
   border: 3px solid var(--vocab-accent-alt);
   opacity: 0;
-  animation: vocab-reveal-ring 0.75s var(--ease-out) 0.16s both;
+  animation-name: vocab-reveal-ring;
+  animation-duration: calc(var(--ring-dur) * var(--burst-dur-scale, 1));
+  animation-timing-function: var(--burst-ease);
+  /* Each concentric ring lags and opens wider than the one before it. */
+  animation-delay: calc((0.16s + var(--ring-i, 0) * 0.12s) * var(--burst-dur-scale, 1));
+  animation-fill-mode: both;
+  animation-play-state: var(--burst-play, running);
 }
 @keyframes vocab-reveal-ring {
   from {
@@ -5877,40 +5912,164 @@
   }
   to {
     opacity: 0;
-    transform: scale(2.6);
+    transform: scale(calc(2.6 + var(--ring-i, 0) * 0.7));
   }
 }
 .vocab-reveal-spark {
   position: absolute;
-  left: -11px;
-  top: -3px;
-  width: 22px;
-  height: 6px;
+  left: calc(-11px * var(--burst-scale));
+  top: calc(-3px * var(--burst-scale));
+  width: calc(22px * var(--burst-scale));
+  height: calc(6px * var(--burst-scale));
   border-radius: 999px;
   background: var(--vocab-accent);
   opacity: 0;
   /* Rotated about the burst centre, then thrown outward along its own axis. */
-  animation: vocab-reveal-spark 0.72s var(--ease-out) calc(0.16s + var(--spark-delay, 0s)) both;
+  animation-name: vocab-reveal-spark;
+  animation-duration: calc(var(--spark-dur) * var(--burst-dur-scale, 1));
+  animation-timing-function: var(--burst-ease);
+  animation-delay: calc((0.16s + var(--spark-delay, 0s)) * var(--burst-dur-scale, 1));
+  animation-fill-mode: both;
+  animation-play-state: var(--burst-play, running);
 }
 .vocab-reveal-spark[data-tint="1"] {
   background: var(--vocab-accent-alt);
 }
 .vocab-reveal-spark[data-tint="2"] {
   background: var(--vocab-ink);
-  height: 4px;
+  height: calc(4px * var(--burst-scale));
+  top: calc(-2px * var(--burst-scale));
+}
+/* Spark shapes: the fan of pills is the default; dots, streaks and clipped stars reuse it. */
+.vocab-reveal-burst[data-spark-shape="dot"] .vocab-reveal-spark {
+  left: calc(-5.5px * var(--burst-scale));
+  top: calc(-5.5px * var(--burst-scale));
+  width: calc(11px * var(--burst-scale));
+  height: calc(11px * var(--burst-scale));
+  border-radius: 50%;
+}
+.vocab-reveal-burst[data-spark-shape="streak"] .vocab-reveal-spark {
+  left: calc(-17px * var(--burst-scale));
+  top: calc(-1.5px * var(--burst-scale));
+  width: calc(34px * var(--burst-scale));
+  height: calc(3px * var(--burst-scale));
+}
+.vocab-reveal-burst[data-spark-shape="star"] .vocab-reveal-spark {
+  left: calc(-8px * var(--burst-scale));
+  top: calc(-8px * var(--burst-scale));
+  width: calc(16px * var(--burst-scale));
+  height: calc(16px * var(--burst-scale));
+  border-radius: 0;
+  clip-path: polygon(
+    50% 0,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+/* Motions swap the keyframe; the fan still supplies angle, reach, delay and drift. */
+.vocab-reveal-burst[data-motion="spin"] .vocab-reveal-spark {
+  animation-name: vocab-reveal-spark-spin;
+}
+.vocab-reveal-burst[data-motion="fountain"] .vocab-reveal-spark {
+  animation-name: vocab-reveal-spark-fountain;
+}
+.vocab-reveal-burst[data-motion="drift"] .vocab-reveal-spark {
+  animation-name: vocab-reveal-spark-drift;
 }
 @keyframes vocab-reveal-spark {
   0% {
     opacity: 1;
-    transform: rotate(var(--spark-angle)) translateX(36px) scaleX(0.4);
+    transform: rotate(var(--spark-angle)) translateX(calc(36px * var(--burst-scale))) scaleX(0.4);
   }
   70% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: rotate(var(--spark-angle)) translateX(calc(250px * var(--spark-reach, 1)))
-      scaleX(0.25);
+    transform: rotate(var(--spark-angle))
+      translateX(calc(250px * var(--spark-reach, 1) * var(--burst-scale))) scaleX(0.25);
+  }
+}
+@keyframes vocab-reveal-spark-spin {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--spark-angle)) translateX(calc(30px * var(--burst-scale))) scaleX(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(calc(var(--spark-angle) + 200deg))
+      translateX(calc(230px * var(--spark-reach, 1) * var(--burst-scale))) scaleX(0.3);
+  }
+}
+@keyframes vocab-reveal-spark-fountain {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--spark-angle)) translateX(calc(16px * var(--burst-scale)));
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--spark-angle))
+      translateX(calc(220px * var(--spark-reach, 1) * var(--burst-scale)))
+      translateY(calc(90px * var(--burst-scale)));
+  }
+}
+@keyframes vocab-reveal-spark-drift {
+  0% {
+    opacity: 0;
+    transform: translate(0, calc(10px * var(--burst-scale))) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--spark-drift, 0px), calc(-80px * var(--burst-scale))) scale(1);
+  }
+}
+/* A shine band that sweeps once across the word (the `shimmer` design, and only it). */
+.vocab-reveal-sweep {
+  position: absolute;
+  left: -170px;
+  top: -90px;
+  width: 120px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--vocab-accent) 60%, transparent),
+    transparent
+  );
+  filter: blur(6px);
+  opacity: 0;
+  animation-name: vocab-reveal-sweep;
+  animation-duration: calc(var(--spark-dur) * var(--burst-dur-scale, 1));
+  animation-timing-function: var(--burst-ease);
+  animation-delay: calc(0.08s * var(--burst-dur-scale, 1));
+  animation-fill-mode: both;
+  animation-play-state: var(--burst-play, running);
+}
+@keyframes vocab-reveal-sweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px) rotate(18deg);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(300px) rotate(18deg);
   }
 }
 /* ── The answer blank as a live slot ─────────────────────────────────────────
@@ -6266,18 +6425,18 @@
     /* (34 − 17) / 4 */
     --vocab-controls-nudge: 4.25px;
   }
-  /* A phone has no room to spare between the title and the gear, so the transport group
-     docks against the gear instead of floating centred between them: it reads as one
-     cluster of controls on the right, and the space it frees goes to the title side.
-     The optical nudge has nothing to balance once the group sits at the end. */
+  /* With the store button gone there is room to spare between the title and the gear
+     even on a phone, so the transport group stays centred in the middle track rather
+     than docking against the gear: it reads as one control cluster with equal air on
+     both sides. The optical nudge still applies (base rule), so the two visible gaps
+     stay even. */
   .vocab-player-controls {
-    justify-self: end;
-    translate: none;
+    justify-self: center;
   }
-  /* Budget at 390px (row = 358): centre = 3×34 + 2×6 = 114, two row gaps = 16, so each
-     1fr column is (358 − 114 − 16) / 2 ≈ 114px. Left = title(15px ≈ 72) + gap(6) +
-     gear(30) ≈ 108 ≤ 114; right = one 34px bookmark. The tagline floats beneath the
-     title, outside this budget, so it never counts against it. */
+  /* Budget at 390px (row = 358): centre = 3×34 + 2×6 = 114, two row gaps = 16, so the
+     middle 1fr track is 358 − left − right − 2×16 and the group centres inside it.
+     Left = title(15px ≈ 72) + gap(6) ≈ 78; right = one gear. The tagline floats beneath
+     the title, outside this budget, so it never counts against it. */
   .vocab-brand {
     font-size: 15px;
     letter-spacing: -0.5px;
@@ -8598,21 +8757,9 @@
 
 .vocab-streak-flash {
   --stage: min(74vw, 300px, 46dvh);
-  --r-hi: color-mix(
-    in srgb,
-    var(--popup-accent, var(--vocab-accent)) 88%,
-    #fff
-  );
-  --r-lo: color-mix(
-    in srgb,
-    var(--popup-accent, var(--vocab-accent)) 70%,
-    #000
-  );
-  --r-shade: color-mix(
-    in srgb,
-    var(--popup-accent, var(--vocab-accent)) 45%,
-    #000
-  );
+  --r-hi: color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 88%, #fff);
+  --r-lo: color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 70%, #000);
+  --r-shade: color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 45%, #000);
   --medal-ribbon: var(--popup-accent, var(--vocab-accent));
   position: fixed;
   inset: 0;
@@ -8628,12 +8775,7 @@
     radial-gradient(
       circle at 50% 40%,
       color-mix(in srgb, var(--m-glow) 34%, transparent) 0%,
-      color-mix(
-          in srgb,
-          var(--popup-accent, var(--vocab-accent)) 18%,
-          transparent
-        )
-        34%,
+      color-mix(in srgb, var(--popup-accent, var(--vocab-accent)) 18%, transparent) 34%,
       transparent 70%
     ),
     #07050fec;
@@ -8804,9 +8946,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(
-    0 2px 12px color-mix(in srgb, var(--m-glow) 45%, transparent)
-  );
+  filter: drop-shadow(0 2px 12px color-mix(in srgb, var(--m-glow) 45%, transparent));
 }
 .vocab-streak-flash-caption {
   margin: 0;
@@ -8824,12 +8964,7 @@
   overflow: hidden;
   border: 0;
   border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    var(--m-hi),
-    var(--m-mid) 55%,
-    var(--m-lo)
-  );
+  background: linear-gradient(180deg, var(--m-hi), var(--m-mid) 55%, var(--m-lo));
   color: var(--m-ink);
   font: inherit;
   font-size: 16px;
@@ -8875,8 +9010,7 @@
   border-radius: 2px;
   background: var(--confetti);
   opacity: 0;
-  animation: vocab-streak-fall var(--t) cubic-bezier(0.35, 0.1, 0.65, 0.9)
-    var(--d) infinite;
+  animation: vocab-streak-fall var(--t) cubic-bezier(0.35, 0.1, 0.65, 0.9) var(--d) infinite;
 }
 .vocab-streak-flash-confetti i[data-shape="square"] {
   width: 10px;
@@ -8955,8 +9089,7 @@
   }
   100% {
     opacity: 0;
-    transform: rotate(var(--a))
-      translateY(calc(var(--stage) * var(--dist) * -1)) scale(0.3);
+    transform: rotate(var(--a)) translateY(calc(var(--stage) * var(--dist) * -1)) scale(0.3);
   }
 }
 @keyframes vocab-streak-twinkle {
@@ -9035,8 +9168,7 @@
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--sway), 110dvh, 0)
-      rotate3d(1, 0.4, 0.2, var(--spin));
+    transform: translate3d(var(--sway), 110dvh, 0) rotate3d(1, 0.4, 0.2, var(--spin));
   }
 }
 
@@ -9646,13 +9778,4 @@
     opacity: 0;
     transform: translateY(6px);
   }
-}
-
-/* Reveal confetti (components/RevealConfetti): one canvas over the whole card, under no
-   pointer, so taps and swipes reach the card beneath. */
-.vocab-reveal-confetti {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  pointer-events: none;
 }

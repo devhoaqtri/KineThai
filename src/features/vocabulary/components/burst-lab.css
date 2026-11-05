@@ -1,12 +1,13 @@
-/* /confetti-lab only (development). The burst canvas itself is styled in vocabulary.css. */
-.confetti-lab {
+/* /burst-lab only (development). The reveal burst itself is styled in vocabulary.css; this
+   is the picker chrome — a grid of mock reveal cards, one per design, with keep marks. */
+.burst-lab {
   min-height: 100vh;
   padding: 24px clamp(12px, 3vw, 40px) 64px;
   background: #0e0f14;
   color: #e9ebf2;
   font-family: "Inter", sans-serif;
 }
-.confetti-lab-head {
+.burst-lab-head {
   display: flex;
   flex-wrap: wrap;
   gap: 12px 24px;
@@ -14,22 +15,22 @@
   justify-content: space-between;
   margin-bottom: 24px;
 }
-.confetti-lab-head h1 {
+.burst-lab-head h1 {
   margin: 0 0 4px;
   font-size: 22px;
   font-weight: 700;
 }
-.confetti-lab-head p {
+.burst-lab-head p {
   margin: 0;
   color: #a6abba;
   font-size: 14px;
 }
-.confetti-lab-controls {
+.burst-lab-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-.confetti-lab-controls button {
+.burst-lab-controls button {
   border: 1px solid #ffffff26;
   border-radius: 999px;
   background: #ffffff0f;
@@ -39,18 +40,18 @@
   font-size: 13px;
   cursor: pointer;
 }
-.confetti-lab-controls button[aria-pressed="true"] {
+.burst-lab-controls button[aria-pressed="true"] {
   background: #3ddc97;
   border-color: #3ddc97;
   color: #0e0f14;
 }
-.confetti-lab-kept {
+.burst-lab-kept {
   flex-basis: 100%;
 }
-.confetti-lab-kept strong {
+.burst-lab-kept strong {
   color: #3ddc97;
 }
-.confetti-lab-grid {
+.burst-lab-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
   gap: 28px 20px;
@@ -59,10 +60,10 @@
   list-style: none;
   justify-items: center;
 }
-.confetti-lab-item {
+.burst-lab-item {
   width: 288px;
 }
-.confetti-lab-frame {
+.burst-lab-frame {
   position: relative;
   display: block;
   overflow: hidden;
@@ -75,13 +76,14 @@
   outline-offset: 3px;
   transition: outline-color 0.2s;
 }
-.confetti-lab-item[data-kept] .confetti-lab-frame {
+.burst-lab-item[data-kept] .burst-lab-frame {
   outline-color: #3ddc97;
 }
-.confetti-lab-word {
+.burst-lab-word {
   position: absolute;
   left: 8%;
   right: 8%;
+  top: 34%;
   transform: translateY(-50%);
   font-size: 19px;
   font-weight: 600;
@@ -89,14 +91,14 @@
   text-align: center;
   opacity: 0.92;
 }
-.confetti-lab-word[data-revealed] {
+.burst-lab-word[data-revealed] {
   font-size: 40px;
   font-weight: 800;
   letter-spacing: -0.01em;
   opacity: 1;
-  animation: confetti-lab-pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1);
+  animation: burst-lab-pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1);
 }
-.confetti-lab-pill {
+.burst-lab-pill {
   position: absolute;
   left: 50%;
   bottom: 9%;
@@ -111,28 +113,28 @@
   white-space: nowrap;
   opacity: 0.85;
 }
-.confetti-lab-caption {
+.burst-lab-caption {
   display: flex;
   gap: 12px;
   align-items: flex-start;
   justify-content: space-between;
   margin-top: 12px;
 }
-.confetti-lab-caption strong {
+.burst-lab-caption strong {
   font-size: 15px;
 }
-.confetti-lab-caption code {
+.burst-lab-caption code {
   margin-left: 8px;
   color: #8b91a3;
   font-size: 12px;
 }
-.confetti-lab-caption p {
+.burst-lab-caption p {
   margin: 4px 0 0;
   color: #a6abba;
   font-size: 13px;
   line-height: 1.4;
 }
-.confetti-lab-keep {
+.burst-lab-keep {
   display: flex;
   gap: 6px;
   align-items: center;
@@ -143,10 +145,10 @@
   font-size: 13px;
   cursor: pointer;
 }
-.confetti-lab-keep input {
+.burst-lab-keep input {
   accent-color: #3ddc97;
 }
-@keyframes confetti-lab-pop {
+@keyframes burst-lab-pop {
   from {
     transform: translateY(-50%) scale(0.6);
     opacity: 0;

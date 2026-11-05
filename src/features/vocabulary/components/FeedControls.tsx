@@ -21,6 +21,7 @@ import {
   Plus,
   Settings,
   Shuffle,
+  Sparkles,
   Volume2,
   VolumeX,
   X,
@@ -1336,6 +1337,16 @@ export function FeedControls({
             >
               <Clapperboard size={19} />
             </button>
+          )}
+          {import.meta.env.DEV && (
+            <Link
+              className="vocab-icon-button vocab-burst-lab-open"
+              to="/burst-lab"
+              aria-label="Chọn hiệu ứng lộ từ (dev)"
+              title="Reveal burst lab"
+            >
+              <Sparkles size={19} />
+            </Link>
           )}
         </div>
         {/* Right: Settings, now permanently. The two used to trade this corner — the app

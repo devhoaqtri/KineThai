@@ -14,7 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AdminAccessDeniedRouteImport } from './routes/admin-access-denied'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as ConfettiLabRouteImport } from './routes/confetti-lab'
+import { Route as BurstLabRouteImport } from './routes/burst-lab'
 import { Route as ShowcaseRouteImport } from './routes/showcase'
 import { Route as StoreRouteImport } from './routes/store'
 import { Route as AuthenticatedAboutRouteImport } from './routes/_authenticated/about'
@@ -81,9 +81,9 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ConfettiLabRoute = ConfettiLabRouteImport.update({
-  id: '/confetti-lab',
-  path: '/confetti-lab',
+const BurstLabRoute = BurstLabRouteImport.update({
+  id: '/burst-lab',
+  path: '/burst-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShowcaseRoute = ShowcaseRouteImport.update({
@@ -300,7 +300,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
-  '/confetti-lab': typeof ConfettiLabRoute
+  '/burst-lab': typeof BurstLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/about': typeof AuthenticatedAboutRoute
@@ -347,7 +347,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
-  '/confetti-lab': typeof ConfettiLabRoute
+  '/burst-lab': typeof BurstLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/about': typeof AuthenticatedAboutRoute
@@ -397,7 +397,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
-  '/confetti-lab': typeof ConfettiLabRoute
+  '/burst-lab': typeof BurstLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
@@ -447,7 +447,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-access-denied'
     | '/auth'
-    | '/confetti-lab'
+    | '/burst-lab'
     | '/showcase'
     | '/store'
     | '/about'
@@ -494,7 +494,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin-access-denied'
     | '/auth'
-    | '/confetti-lab'
+    | '/burst-lab'
     | '/showcase'
     | '/store'
     | '/about'
@@ -543,7 +543,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-access-denied'
     | '/auth'
-    | '/confetti-lab'
+    | '/burst-lab'
     | '/showcase'
     | '/store'
     | '/_authenticated/about'
@@ -593,7 +593,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AdminAccessDeniedRoute: typeof AdminAccessDeniedRoute
   AuthRoute: typeof AuthRoute
-  ConfettiLabRoute: typeof ConfettiLabRoute
+  BurstLabRoute: typeof BurstLabRoute
   ShowcaseRoute: typeof ShowcaseRoute
   StoreRoute: typeof StoreRoute
   CarouselCodeRoute: typeof CarouselCodeRoute
@@ -650,11 +650,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/confetti-lab': {
-      id: '/confetti-lab'
-      path: '/confetti-lab'
-      fullPath: '/confetti-lab'
-      preLoaderRoute: typeof ConfettiLabRouteImport
+    '/burst-lab': {
+      id: '/burst-lab'
+      path: '/burst-lab'
+      fullPath: '/burst-lab'
+      preLoaderRoute: typeof BurstLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/showcase': {
@@ -1020,7 +1020,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AdminAccessDeniedRoute: AdminAccessDeniedRoute,
   AuthRoute: AuthRoute,
-  ConfettiLabRoute: ConfettiLabRoute,
+  BurstLabRoute: BurstLabRoute,
   ShowcaseRoute: ShowcaseRoute,
   StoreRoute: StoreRoute,
   CarouselCodeRoute: CarouselCodeRoute,
