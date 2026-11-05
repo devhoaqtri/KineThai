@@ -2182,6 +2182,69 @@
   color: var(--shell-text-soft);
   transform-origin: 0 0;
 }
+/* The week sheet sets its rhythm strip beside the count instead of under the tally, so
+   the list starts two rows higher. The title keeps its natural width; the strip takes
+   the rest and its days narrow to fit. */
+.vocab-recall-hero[data-week] {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  container-type: inline-size;
+}
+.vocab-recall-title {
+  flex: none;
+  max-width: 48%;
+}
+.vocab-recall-hero-strip {
+  flex: 1;
+  min-width: 0;
+}
+.vocab-recall-hero-strip .vocab-recall-strip {
+  grid-template-columns: repeat(7, minmax(0, 1fr)) auto;
+  gap: 1px;
+  margin: 0;
+}
+.vocab-recall-hero-strip .vocab-recall-strip button {
+  height: 72px;
+  padding-bottom: 6px;
+  border-radius: 10px;
+}
+.vocab-recall-hero-strip .vocab-recall-strip small {
+  font-size: 10px;
+  letter-spacing: -0.02em;
+}
+.vocab-recall-hero-strip .vocab-recall-bar {
+  height: 44px;
+}
+.vocab-recall-hero-strip .vocab-recall-fill {
+  width: 9px;
+  border-radius: 4px;
+}
+.vocab-recall-hero-strip .vocab-recall-week {
+  min-width: 40px;
+  margin-left: 3px;
+  padding-inline: 4px;
+}
+.vocab-recall-hero-strip .vocab-recall-week strong {
+  font-size: 18px;
+}
+/* A phone-narrow header: a smaller count, the week cell without its caption, and the
+   days by number alone, so seven labels never run into each other. */
+@container (max-width: 290px) {
+  .vocab-recall-hero[data-week] .vocab-recall-count {
+    font-size: 50px;
+  }
+  .vocab-recall-hero[data-week] .vocab-recall-unit {
+    font-size: 18px;
+  }
+  .vocab-recall-hero-strip .vocab-recall-week {
+    min-width: 32px;
+  }
+  .vocab-recall-hero-strip .vocab-recall-week small,
+  .vocab-recall-hero-strip .vocab-recall-day-t {
+    display: none;
+  }
+}
 /* A three-part meter: remembered, forgotten, not tried. It is the same drawing as the
    hairline on the cell and the bars of the rhythm strip. */
 .vocab-recall-meter,

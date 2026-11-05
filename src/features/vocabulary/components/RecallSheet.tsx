@@ -363,7 +363,11 @@ function RhythmStrip({
                 <MeterParts {...tally} />
               </span>
             </span>
-            <small>{short}</small>
+            <small>
+              {/* A narrow header keeps only the day's number: "T2" reads as "2". */}
+              {short.startsWith("T") && <span className="vocab-recall-day-t">T</span>}
+              {short.replace(/^T/, "")}
+            </small>
           </button>
         );
       })}
@@ -792,18 +796,36 @@ export function RecallSheet({
               onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 4)}
             >
               <div className="vocab-recall-column">
-                <div ref={hero} className="vocab-recall-hero">
-                  <div className="vocab-recall-headline">
-                    <strong ref={count} className="vocab-recall-count">
-                      <span key={scope}>{entries.length}</span>
-                    </strong>
-                    <span ref={unit} className="vocab-recall-unit">
-                      từ
+                <div
+                  ref={hero}
+                  className="vocab-recall-hero"
+                  data-week={initialScope === "week" || undefined}
+                >
+                  <div className="vocab-recall-title">
+                    <div className="vocab-recall-headline">
+                      <strong ref={count} className="vocab-recall-count">
+                        <span key={scope}>{entries.length}</span>
+                      </strong>
+                      <span ref={unit} className="vocab-recall-unit">
+                        từ
+                      </span>
+                    </div>
+                    <span ref={name} className="vocab-recall-name">
+                      {label}
                     </span>
                   </div>
-                  <span ref={name} className="vocab-recall-name">
-                    {label}
-                  </span>
+                  {initialScope === "week" && (
+                    <div ref={strip} className="vocab-recall-hero-strip">
+                      <RhythmStrip
+                        days={days}
+                        scope={scope}
+                        marks={marks}
+                        now={now}
+                        weekCount={week.length}
+                        onScope={setScope}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div ref={tally} className="vocab-recall-tally">
                   {score.total > 0 && (
@@ -827,18 +849,6 @@ export function RecallSheet({
                     </>
                   )}
                 </div>
-                {initialScope === "week" && (
-                  <div ref={strip}>
-                    <RhythmStrip
-                      days={days}
-                      scope={scope}
-                      marks={marks}
-                      now={now}
-                      weekCount={week.length}
-                      onScope={setScope}
-                    />
-                  </div>
-                )}
                 <div ref={list} key={listKey} className="vocab-recall-list">
                   {entries.length === 0 && (
                     <p className="vocab-recall-empty">
