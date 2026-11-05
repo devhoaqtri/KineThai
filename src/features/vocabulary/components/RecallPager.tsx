@@ -122,7 +122,11 @@ export function RecallPager({
     // them would snap to the page beside the one meant, and re-snap a page further on.
     for (const animation of current.animations) animation.cancel();
     for (const extra of current.extras) extra.remove();
-    if (element) element.scrollLeft = current.to * element.clientWidth;
+    if (element) {
+      element.scrollLeft = current.to * element.clientWidth;
+      // Snapping back on only once the strip stands exactly on a page.
+      element.style.scrollSnapType = "";
+    }
     placeThumb(current.to);
     live.current.onPage(current.to);
   }, [placeThumb]);
@@ -133,6 +137,7 @@ export function RecallPager({
     move.current = null;
     for (const animation of current.animations) animation.cancel();
     for (const extra of current.extras) extra.remove();
+    if (strip.current) strip.current.style.scrollSnapType = "";
   }, []);
 
   /** A light runs down each rail of the finished page, and every node it passes lifts. */
@@ -202,6 +207,10 @@ export function RecallPager({
       if (!element || !lane || move.current) return;
       if (to < 0 || to >= live.current.count || to === from) return;
       const width = element.clientWidth;
+      // No snapping while the pages move under transforms. Once the strip has snapped
+      // to a page, the browser follows that page wherever a transform takes it and
+      // scrolls back under the slide, so it lands in one flash instead of sliding.
+      element.style.scrollSnapType = "none";
 
       if (live.current.reducedMotion) {
         const fade = element.animate([{ opacity: 1 }, { opacity: 0 }], {
