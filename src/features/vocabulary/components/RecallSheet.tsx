@@ -1,9 +1,11 @@
 /**
  * The memory sheet: a memory cell, zoomed all the way in.
  *
- * One history, seen at any distance. The cell's number becomes the headline, and below
- * runs the timeline of the words themselves. Only the week cell also opens the week's
- * rhythm, seven days ending in their total, which picks any one of them. Today and
+ * One history, seen at any distance. The cell's number becomes the headline, set small in
+ * the top bar beside the back button so the words get the room, and below runs the
+ * timeline of the words themselves. Only the week cell also opens the week's rhythm in
+ * that bar, seven days that each pick themselves, and the picked day again goes back to
+ * the whole week. Today and
  * yesterday stay on their own day: the rest of the week is mostly empty and beside the
  * point there.
  *
@@ -21,7 +23,7 @@
  * sheet shows under its top bar, measured rather than counted and cut again when the
  * panel changes size (../lib/recall-pages). The pages swipe sideways (./RecallPager),
  * so there a sideways swipe turns the page instead of answering, and the page moves on
- * by itself once its last row is answered. The headline scrolls away above them and the
+ * by itself once its last row is answered. The tally scrolls away above them and the
  * list settles under the top bar. A pull down from the top folds the sheet back into
  * its cell, with the finger on the zoom's own playhead (../hooks/useRecallZoom); a
  * gesture that starts sideways stays a page swipe.
@@ -67,7 +69,7 @@ const ENTRANCE_ROWS = 7;
 const MIN_BAR_SHARE = 0.08;
 /** The page bar's height before the sheet can read --recall-pager. */
 const PAGER_PX = 44;
-const BAR_PX = 56;
+const BAR_PX = 64;
 
 /**
  * Row and heading heights from the last sheet, so the first layout of the next one is
@@ -317,20 +319,18 @@ function Row({
   );
 }
 
-/** The week at a glance, and the way to any day of it. */
+/** The week at a glance, and the way to any day of it; the chosen day again goes back to the week. */
 function RhythmStrip({
   days,
   scope,
   marks,
   now,
-  weekCount,
   onScope,
 }: {
   days: HistoryDay[];
   scope: HistoryScope;
   marks: RecallMarks;
   now: number;
-  weekCount: number;
   onScope: (scope: HistoryScope) => void;
 }) {
   const peak = Math.max(1, ...days.map((day) => day.ids.length));
@@ -351,7 +351,7 @@ function RhythmStrip({
             data-empty={tally.total === 0 || undefined}
             aria-pressed={scope === day.start}
             aria-label={`${name}, ${tally.total} từ`}
-            onClick={() => onScope(day.start)}
+            onClick={() => onScope(scope === day.start ? "week" : day.start)}
           >
             <span className="vocab-recall-bar">
               <span
@@ -364,24 +364,13 @@ function RhythmStrip({
               </span>
             </span>
             <small>
-              {/* A narrow header keeps only the day's number: "T2" reads as "2". */}
+              {/* A narrow bar keeps only the day's number: "T2" reads as "2". */}
               {short.startsWith("T") && <span className="vocab-recall-day-t">T</span>}
               {short.replace(/^T/, "")}
             </small>
           </button>
         );
       })}
-      <button
-        type="button"
-        className="vocab-recall-week"
-        data-on={scope === "week" || undefined}
-        aria-pressed={scope === "week"}
-        aria-label={`Tuần này, ${weekCount} từ`}
-        onClick={() => onScope("week")}
-      >
-        <strong>{weekCount}</strong>
-        <small>7 ngày</small>
-      </button>
     </div>
   );
 }
@@ -432,7 +421,6 @@ export function RecallSheet({
   const [scope, setScope] = useState(initialScope);
   const [openId, setOpenId] = useState<string | null>(null);
   const [onlyForgotten, setOnlyForgotten] = useState(false);
-  const [compact, setCompact] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [copies] = useState(loadRecallWords);
   const [page, setPage] = useState(0);
@@ -457,7 +445,6 @@ export function RecallSheet({
   const strip = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLElement>(null);
   const list = useRef<HTMLDivElement>(null);
-  const hero = useRef<HTMLDivElement>(null);
   const scopeRef = useRef(scope);
   scopeRef.current = scope;
 
@@ -595,11 +582,12 @@ export function RecallSheet({
         wash: wash.current!,
         count: count.current!,
         name: name.current!,
+        // Not the whole bar: the count and name in it fly from the cell instead.
         fades: [
-          bar.current,
+          back.current,
           unit.current,
-          tally.current,
           strip.current,
+          tally.current,
           ...rows.slice(0, ENTRANCE_ROWS),
           pager.current?.indicator(),
         ].filter((node): node is HTMLElement => !!node),
@@ -610,9 +598,8 @@ export function RecallSheet({
       const exact = cellFor(scopeRef.current);
       const target = exact ?? fallbackCell();
       if (!target) return null;
-      // A scrolled-away headline has nothing to fly; it would cross the whole screen.
-      const atTop = (scroller.current?.scrollTop ?? 0) < 40;
-      return { target, flies: !!exact && atTop };
+      // The headline lives in the top bar, so it is always there to fly.
+      return { target, flies: !!exact };
     },
     reducedMotion,
     onClosed,
@@ -627,18 +614,6 @@ export function RecallSheet({
     onMarks(next);
     // Once, on opening; answers given here always belong to words in the history.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const target = hero.current;
-    const root = scroller.current;
-    if (!target || !root || typeof IntersectionObserver === "undefined") return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setCompact(entry ? !entry.isIntersecting : false),
-      { root, rootMargin: "-64px 0px 0px 0px" },
-    );
-    observer.observe(target);
-    return () => observer.disconnect();
   }, []);
 
   // A pull down from the top of the list moves the zoom's playhead. Touch events, not
@@ -796,37 +771,6 @@ export function RecallSheet({
               onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 4)}
             >
               <div className="vocab-recall-column">
-                <div
-                  ref={hero}
-                  className="vocab-recall-hero"
-                  data-week={initialScope === "week" || undefined}
-                >
-                  <div className="vocab-recall-title">
-                    <div className="vocab-recall-headline">
-                      <strong ref={count} className="vocab-recall-count">
-                        <span key={scope}>{entries.length}</span>
-                      </strong>
-                      <span ref={unit} className="vocab-recall-unit">
-                        từ
-                      </span>
-                    </div>
-                    <span ref={name} className="vocab-recall-name">
-                      {label}
-                    </span>
-                  </div>
-                  {initialScope === "week" && (
-                    <div ref={strip} className="vocab-recall-hero-strip">
-                      <RhythmStrip
-                        days={days}
-                        scope={scope}
-                        marks={marks}
-                        now={now}
-                        weekCount={week.length}
-                        onScope={setScope}
-                      />
-                    </div>
-                  )}
-                </div>
                 <div ref={tally} className="vocab-recall-tally">
                   {score.total > 0 && (
                     <>
@@ -874,12 +818,7 @@ export function RecallSheet({
                 </div>
               </div>
             </div>
-            <header
-              ref={bar}
-              className="vocab-recall-topbar"
-              data-scrolled={scrolled || undefined}
-              data-compact={compact || undefined}
-            >
+            <header ref={bar} className="vocab-recall-topbar" data-scrolled={scrolled || undefined}>
               <span className="vocab-recall-grabber" aria-hidden="true" />
               <button
                 ref={back}
@@ -890,10 +829,30 @@ export function RecallSheet({
               >
                 <ChevronLeft size={20} />
               </button>
-              <p className="vocab-recall-compact" aria-hidden={!compact}>
-                <strong>{label}</strong>
-                <small>{entries.length} từ</small>
-              </p>
+              <div className="vocab-recall-title">
+                <div className="vocab-recall-headline">
+                  <strong ref={count} className="vocab-recall-count">
+                    <span key={scope}>{entries.length}</span>
+                  </strong>
+                  <span ref={unit} className="vocab-recall-unit">
+                    từ
+                  </span>
+                </div>
+                <span ref={name} className="vocab-recall-name">
+                  {label}
+                </span>
+              </div>
+              {initialScope === "week" && (
+                <div ref={strip} className="vocab-recall-topstrip">
+                  <RhythmStrip
+                    days={days}
+                    scope={scope}
+                    marks={marks}
+                    now={now}
+                    onScope={setScope}
+                  />
+                </div>
+              )}
             </header>
           </div>
         </Dialog.Content>

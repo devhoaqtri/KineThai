@@ -1979,7 +1979,8 @@
   overflow: hidden;
 }
 .vocab-recall {
-  --recall-bar: 56px;
+  /* Tall enough for the headline and the week's bars beside the back button. */
+  --recall-bar: 64px;
   --recall-yes: var(--vocab-accent);
   --recall-no: #ff8fa3;
   --recall-open: color-mix(in srgb, var(--shell-text) 20%, transparent);
@@ -2042,7 +2043,7 @@
 .vocab-recall-column {
   width: min(100%, 560px);
   margin: 0 auto;
-  padding: var(--recall-bar) var(--recall-gutter) 24px;
+  padding: calc(var(--recall-bar) + 6px) var(--recall-gutter) 24px;
 }
 .vocab-recall-topbar {
   position: absolute;
@@ -2104,49 +2105,21 @@
 .vocab-recall-back:active {
   transform: scale(0.92);
 }
-.vocab-recall-compact {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+/* Same composition as the cell it grew from, the number over its window, set small
+   beside the back button so the words below get the room. */
+.vocab-recall-title {
+  flex: 0 1 auto;
   min-width: 0;
-  margin: 0;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity var(--dur-quick) var(--ease-out),
-    transform var(--dur-move) var(--ease-spring);
-}
-.vocab-recall-topbar[data-compact] .vocab-recall-compact {
-  opacity: 1;
-  transform: none;
-}
-.vocab-recall-compact strong {
-  overflow: hidden;
-  font-size: 16px;
-  font-weight: 750;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.vocab-recall-compact small {
-  flex: none;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--shell-text-mute);
-  font-variant-numeric: tabular-nums;
-}
-/* Same composition as the cell it grew from: the number, the window under it. */
-.vocab-recall-hero {
-  padding: 10px 0 18px;
+  max-width: 40%;
 }
 .vocab-recall-headline {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 4px;
 }
 .vocab-recall-count {
   display: block;
-  font-size: 60px;
+  font-size: 30px;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -2167,83 +2140,25 @@
   }
 }
 .vocab-recall-unit {
-  font-size: 20px;
+  font-size: 13px;
   font-weight: 650;
   letter-spacing: -0.01em;
   color: var(--shell-text-mute);
 }
 .vocab-recall-name {
   display: block;
+  overflow: hidden;
   width: fit-content;
-  margin-top: 2px;
-  font-size: 17px;
+  max-width: 100%;
+  margin-top: 1px;
+  font-size: 12.5px;
   font-weight: 650;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   letter-spacing: -0.01em;
   color: var(--shell-text-soft);
   transform-origin: 0 0;
-}
-/* The week sheet sets its rhythm strip beside the count instead of under the tally, so
-   the list starts two rows higher. The title keeps its natural width; the strip takes
-   the rest and its days narrow to fit. */
-.vocab-recall-hero[data-week] {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  container-type: inline-size;
-}
-.vocab-recall-title {
-  flex: none;
-  max-width: 48%;
-}
-.vocab-recall-hero-strip {
-  flex: 1;
-  min-width: 0;
-}
-.vocab-recall-hero-strip .vocab-recall-strip {
-  grid-template-columns: repeat(7, minmax(0, 1fr)) auto;
-  gap: 1px;
-  margin: 0;
-}
-.vocab-recall-hero-strip .vocab-recall-strip button {
-  height: 72px;
-  padding-bottom: 6px;
-  border-radius: 10px;
-}
-.vocab-recall-hero-strip .vocab-recall-strip small {
-  font-size: 10px;
-  letter-spacing: -0.02em;
-}
-.vocab-recall-hero-strip .vocab-recall-bar {
-  height: 44px;
-}
-.vocab-recall-hero-strip .vocab-recall-fill {
-  width: 9px;
-  border-radius: 4px;
-}
-.vocab-recall-hero-strip .vocab-recall-week {
-  min-width: 40px;
-  margin-left: 3px;
-  padding-inline: 4px;
-}
-.vocab-recall-hero-strip .vocab-recall-week strong {
-  font-size: 18px;
-}
-/* A phone-narrow header: a smaller count, the week cell without its caption, and the
-   days by number alone, so seven labels never run into each other. */
-@container (max-width: 290px) {
-  .vocab-recall-hero[data-week] .vocab-recall-count {
-    font-size: 50px;
-  }
-  .vocab-recall-hero[data-week] .vocab-recall-unit {
-    font-size: 18px;
-  }
-  .vocab-recall-hero-strip .vocab-recall-week {
-    min-width: 32px;
-  }
-  .vocab-recall-hero-strip .vocab-recall-week small,
-  .vocab-recall-hero-strip .vocab-recall-day-t {
-    display: none;
-  }
 }
 /* A three-part meter: remembered, forgotten, not tried. It is the same drawing as the
    hairline on the cell and the bars of the rhythm strip. */
@@ -2316,24 +2231,33 @@
   background: var(--shell-hover);
   color: var(--shell-text);
 }
-/* The week at a glance: seven days as bars, and the way to any of them. */
+/* The week at a glance in the top bar: seven days as bars, and the way to any of them.
+   It takes what the bar has left, and on a narrow bar the days go by number alone. */
+.vocab-recall-topstrip {
+  flex: 1;
+  align-self: flex-end;
+  min-width: 0;
+  max-width: 300px;
+  /* Clear of the grabber above it on a touch screen. */
+  margin: 0 0 4px auto;
+  container-type: inline-size;
+}
 .vocab-recall-strip {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr)) 58px;
-  gap: 3px;
-  margin: 14px 0 6px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
 }
 .vocab-recall-strip button {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
-  height: 76px;
-  padding: 0 0 7px;
+  height: 46px;
+  padding: 0 0 3px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 9px;
   background: none;
   color: var(--shell-text-mute);
   font: inherit;
@@ -2352,20 +2276,20 @@
   color: var(--shell-text);
 }
 .vocab-recall-strip small {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 650;
   line-height: 1;
-}
-.vocab-recall-week {
-  margin-left: 5px;
-}
-.vocab-recall-week strong {
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--shell-text);
-  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+@container (max-width: 150px) {
+  .vocab-recall-day-t {
+    display: none;
+  }
+  /* Today is the last column: "Nay" spills into the space on its right, not onto "4". */
+  .vocab-recall-day:last-child small {
+    align-self: flex-start;
+  }
 }
 .vocab-recall-day[data-dim] .vocab-recall-bar {
   opacity: 0.5;
@@ -2375,15 +2299,15 @@
   align-items: flex-end;
   justify-content: center;
   width: 100%;
-  height: 46px;
+  height: 30px;
   transition: opacity var(--dur-quick) var(--ease-out);
 }
 /* Remembered words fill the bar from its foot, the way a level rises. */
 .vocab-recall-fill {
   flex-direction: column-reverse;
   gap: 2px;
-  width: 12px;
-  border-radius: 5px;
+  width: 8px;
+  border-radius: 4px;
   transition: height 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .vocab-recall-day[data-empty] .vocab-recall-bar::after {
@@ -2463,6 +2387,10 @@
 .vocab-recall-pages[data-paged] .vocab-recall-group-head {
   position: relative;
   top: auto;
+  /* Tighter than the sticky heading: every page carries one, and on a short panel
+     these pixels are a row. */
+  padding-top: 8px;
+  padding-bottom: 4px;
 }
 /* A sideways swipe here turns the page, so the rows hand both axes to the browser. */
 .vocab-recall-pages[data-paged] .vocab-recall-item {
@@ -2820,7 +2748,6 @@
   .vocab-memory-meter i,
   .vocab-recall-fill i,
   .vocab-recall-fill,
-  .vocab-recall-compact,
   .vocab-recall-dots i {
     transition: none;
   }
