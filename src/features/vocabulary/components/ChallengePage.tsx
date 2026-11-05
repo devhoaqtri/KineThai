@@ -80,7 +80,13 @@ export function ChallengePage(): React.ReactElement {
         <p className="vocab-challenge-eyebrow">Bạn bè thách bạn đoán từ này</p>
 
         {/* The clue, never the answer. */}
-        {word.leadVi && <p className="vocab-challenge-clue">{word.leadVi}</p>}
+        {/* MarkedText, like the definition below: the deck's /…/ marks must never
+            reach a reader as literal slashes. */}
+        {word.leadVi && (
+          <p className="vocab-challenge-clue">
+            <MarkedText text={word.leadVi} />
+          </p>
+        )}
         <p className="vocab-challenge-hint">
           Gồm <strong>{letters}</strong> chữ cái, bắt đầu bằng <strong>{initial}</strong>
         </p>
