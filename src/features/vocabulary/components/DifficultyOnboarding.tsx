@@ -232,7 +232,13 @@ export function DifficultyOnboarding({
                     {/* Fixed curiosity prompt: slides in with a spring when this rung
                         becomes active, fades out when the knob moves away. */}
                     <span className="vocab-onboard-curiosity">
-                      Thấy hơi lạ, bắt đầu từ đây nhé?
+                      {/* Two wordings, one shown: the full line needs ~180px and a
+                          phone's sample column is 104–132px, so a narrow column takes
+                          the short one (container query in vocabulary.css). */}
+                      <span className="vocab-onboard-curiosity-long">
+                        Thấy hơi lạ, bắt đầu từ đây nhé?
+                      </span>
+                      <span className="vocab-onboard-curiosity-short">Bắt đầu từ đây nhé?</span>
                     </span>
                   </>
                 ) : (

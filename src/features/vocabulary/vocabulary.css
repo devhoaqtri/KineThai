@@ -5093,6 +5093,27 @@
     transform 0.17s ease-out,
     color 0.18s ease-out;
 }
+/* The prompt is one nowrap line, and the full wording overruns a phone's sample column
+   (needs ~180px; the column is 104px at 320 wide, 132px at 375), where it was cut off
+   mid-word. Wrapping is no way out: rows are a fixed height and a second line runs into
+   the next rung's word. So the column measures itself and a narrow one swaps in the short
+   wording, which fits on one line down to 320px. Inline-size containment is safe here:
+   the column's width comes from the grid track (or width: 100% in landscape), never from
+   its content. */
+.vocab-onboard-sample {
+  container-type: inline-size;
+}
+.vocab-onboard-curiosity-short {
+  display: none;
+}
+@container (max-width: 180px) {
+  .vocab-onboard-curiosity-long {
+    display: none;
+  }
+  .vocab-onboard-curiosity-short {
+    display: inline;
+  }
+}
 .vocab-onboard-rung[data-on] .vocab-onboard-curiosity {
   opacity: 1;
   color: var(--rung-own);
