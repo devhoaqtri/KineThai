@@ -487,7 +487,7 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
           : [],
     );
   // A ratchet: lower it as decks improve, never raise it to let a deck through.
-  const MAX_DARK_CLUE_PAGES = 6805;
+  const MAX_DARK_CLUE_PAGES = 3669;
   const CONJUNCTIONS = new Set(["và", "hoặc", "nhưng"]);
   const CLUE_FIELD: Record<string, string> = {
     lead: "leadVi",
@@ -550,6 +550,21 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
     `no new dark clue pages (${dark} of at most ${MAX_DARK_CLUE_PAGES})`,
     dark <= MAX_DARK_CLUE_PAGES,
   );
+}
+
+// ── English packs: every clue field carries one strong mark (scripts/lib/highlight-scan.ts).
+// Catches what the gate lets through: a teaser with no mark, a one-syllable mark, and a
+// mark on a filler or weak pair (`/lần_thử/`, `/xem_lại/`). A ratchet: lower, never raise.
+{
+  const { classifyField, FIELDS } = await import("./lib/highlight-scan");
+  const packDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data/packs");
+  const MAX_WEAK_EN_FIELDS = 149;
+  let weak = 0;
+  for (const f of readdirSync(packDir).filter((n) => /^en-.*\.json$/.test(n))) {
+    for (const w of JSON.parse(readFileSync(join(packDir, f), "utf8")).words as Record<string, unknown>[])
+      for (const field of FIELDS) if (classifyField(String(w[field] ?? "")) !== "ok") weak += 1;
+  }
+  check(`English clue fields with a missing or weak mark (${weak} of at most ${MAX_WEAK_EN_FIELDS})`, weak <= MAX_WEAK_EN_FIELDS);
 }
 
 console.log(checks.join("\n"));
