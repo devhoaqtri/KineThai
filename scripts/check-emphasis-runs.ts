@@ -487,7 +487,7 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
           : [],
     );
   // A ratchet: lower it as decks improve, never raise it to let a deck through.
-  const MAX_DARK_CLUE_PAGES = 6805;
+  const MAX_DARK_CLUE_PAGES = 3669;
   const CONJUNCTIONS = new Set(["và", "hoặc", "nhưng"]);
   const CLUE_FIELD: Record<string, string> = {
     lead: "leadVi",
@@ -558,7 +558,7 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
 {
   const { classifyField, FIELDS } = await import("./lib/highlight-scan");
   const packDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data/packs");
-  const MAX_WEAK_EN_FIELDS = 9999;
+  const MAX_WEAK_EN_FIELDS = 149;
   let weak = 0;
   for (const f of readdirSync(packDir).filter((n) => /^en-.*\.json$/.test(n))) {
     for (const w of JSON.parse(readFileSync(join(packDir, f), "utf8")).words as Record<string, unknown>[])
