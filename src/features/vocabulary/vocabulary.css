@@ -5622,6 +5622,123 @@
       box-shadow 0s;
   }
 }
+/* ── Picker entrance and the demo handover ──────────────────────────────────
+   The level picker builds up a piece at a time: backdrop, heading line by line, the rail
+   drawing itself, rungs top to bottom (each dot popping onto the rail), the knob dropping
+   onto its rung, the buttons last. Every start and duration is a custom property set from
+   lib/picker-entrance.ts while [data-entrance] is on, so these rules and the component's
+   timers read the same numbers. Each keyframe gives only its `from`, so every piece lands
+   on its own resting style (a locked rung's dim words, the knob's centring transform),
+   never on one written here. Nothing takes input until the attribute comes off. */
+.vocab-onboard[data-entrance] {
+  animation: vocab-enter-fade var(--enter-backdrop-dur) var(--ease-out) var(--enter-backdrop)
+    backwards;
+}
+.vocab-onboard[data-entrance] > * {
+  pointer-events: none;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-head > * {
+  animation: vocab-enter-rise var(--enter-head-dur) var(--ease-out) var(--enter-head) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-head > :nth-child(2) {
+  animation-delay: calc(var(--enter-head) + var(--enter-head-step));
+}
+.vocab-onboard[data-entrance] .vocab-onboard-head > :nth-child(3) {
+  animation-delay: calc(var(--enter-head) + 2 * var(--enter-head-step));
+}
+.vocab-onboard[data-entrance] .vocab-onboard-gauge::before {
+  transform-origin: 50% 0;
+  animation: vocab-enter-rail-y var(--enter-rail-dur) var(--ease-io) var(--enter-rail) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-rung {
+  animation: vocab-enter-rise var(--enter-rung-dur) var(--ease-out)
+    calc(var(--enter-rungs) + var(--i) * var(--enter-rung-step)) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-tick {
+  animation: vocab-enter-pop var(--enter-rung-dur) var(--ease-spring)
+    calc(var(--enter-rungs) + var(--i) * var(--enter-rung-step)) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-knob {
+  animation: vocab-enter-drop var(--enter-knob-dur) var(--ease-spring) var(--enter-knob) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-foot {
+  animation: vocab-enter-rise var(--enter-foot-dur) var(--ease-out) var(--enter-foot) backwards;
+}
+@media (orientation: landscape) {
+  /* The spine runs across in landscape, so it draws from the left. */
+  .vocab-onboard[data-entrance][data-landscape] .vocab-onboard-gauge::before {
+    transform-origin: 0 50%;
+    animation-name: vocab-enter-rail-x;
+  }
+}
+@keyframes vocab-enter-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes vocab-enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes vocab-enter-pop {
+  from {
+    transform: scale(0);
+  }
+}
+@keyframes vocab-enter-rail-y {
+  from {
+    transform: translateX(-50%) scaleY(0);
+  }
+}
+@keyframes vocab-enter-rail-x {
+  from {
+    transform: translateY(-50%) scaleX(0);
+  }
+}
+@keyframes vocab-enter-drop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-26px) scale(0.5);
+  }
+}
+/* The handover: the demo word that just ended stays on screen, frozen, and recedes under
+   the picker as it builds up; the toolbar and dock fade first. The feed is taken off once
+   the picker covers it (VocabularyFeedPage's "handover" stage). */
+.vocabulary-shell[data-handover] .vocab-viewport {
+  animation: vocab-handover-recede var(--handover-recede) var(--ease-out) forwards;
+}
+.vocabulary-shell[data-handover] :is(.vocab-toolbar, .vocab-saved-dock) {
+  pointer-events: none;
+  animation: vocab-handover-chrome var(--handover-chrome) var(--ease-out) forwards;
+}
+@keyframes vocab-handover-recede {
+  to {
+    transform: scale(0.96);
+    filter: blur(12px) brightness(0.55);
+  }
+}
+@keyframes vocab-handover-chrome {
+  to {
+    opacity: 0;
+  }
+}
+/* Reduced motion: the picker fades in whole over the word; nothing moves or staggers. */
+@media (prefers-reduced-motion: reduce) {
+  .vocab-onboard[data-entrance]
+    :is(
+      .vocab-onboard-head > *,
+      .vocab-onboard-rung,
+      .vocab-onboard-tick,
+      .vocab-onboard-knob,
+      .vocab-onboard-foot
+    ),
+  .vocab-onboard[data-entrance] .vocab-onboard-gauge::before,
+  .vocabulary-shell[data-handover] .vocab-viewport {
+    animation: none;
+  }
+}
 /* ── Post-reveal spelling replay ──────────────────────────────────────────────
    The revealed word dissolves, then every letter pops in one at a time so the
    reader can spell it silently before the stream advances. */
