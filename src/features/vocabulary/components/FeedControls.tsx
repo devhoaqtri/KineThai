@@ -1239,19 +1239,23 @@ export function FeedControls({
     const tagline = host.querySelector<HTMLElement>(".vocab-brand small");
     if (!corner) return;
     const sync = () => {
+      const hostBox = host.getBoundingClientRect();
       host.style.setProperty("--vocab-corner", `${corner.offsetWidth}px`);
-      // The now-playing ticker is sized off the real width of the three transport
-      // buttons, so it stays proportionate through every compaction tier instead of
-      // stretching a fixed share of the screen.
+      // The now-playing ticker is sized and centred off the real transport group: its
+      // width, so the label stays proportionate through every compaction tier, and its
+      // two horizontal edges, so the label can be bound to the controls' own span rather
+      // than to a share of the screen. Measured from the toolbar's left edge.
       if (controls) {
+        const cBox = controls.getBoundingClientRect();
         host.style.setProperty("--vocab-controls-w", `${controls.offsetWidth}px`);
+        host.style.setProperty("--vocab-controls-left", `${cBox.left - hostBox.left}px`);
+        host.style.setProperty("--vocab-controls-right", `${cBox.right - hostBox.left}px`);
       }
-      // And it is placed off the difficulty sub-text's own box: its right edge (the
-      // trailing caret) becomes the crawl's end boundary, and its vertical centre lines
-      // the two up on the same row. Measured relative to the toolbar so the absolute
-      // ticker lands exactly on the tagline's line as the label grows/shrinks.
+      // And the difficulty sub-text's own box: its right edge (the trailing caret)
+      // becomes the crawl's left boundary, and its vertical centre lines the two up on
+      // the same row. Measured relative to the toolbar so the absolute ticker lands
+      // exactly on the tagline's line as the label grows/shrinks.
       if (tagline) {
-        const hostBox = host.getBoundingClientRect();
         const tagBox = tagline.getBoundingClientRect();
         host.style.setProperty("--vocab-tagline-right", `${tagBox.right - hostBox.left}px`);
         host.style.setProperty(
