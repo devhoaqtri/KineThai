@@ -243,7 +243,7 @@ export function DifficultyOnboarding({
         <p className="vocab-eyebrow">
           {afterDemo ? "Giờ bạn đã biết cách chơi" : "Bắt đầu từ đâu?"}
         </p>
-        <h1 id="vocab-onboard-title">Chọn trình độ của bạn</h1>
+        <h1 id="vocab-onboard-title">Chọn nhóm từ bạn muốn học và ôn</h1>
         <p>Kéo nút trượt để xem mỗi mức trông thế nào. Đổi lại lúc nào cũng được.</p>
       </header>
 
