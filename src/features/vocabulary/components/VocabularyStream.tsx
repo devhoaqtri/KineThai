@@ -1,4 +1,4 @@
-/** Bounded, full-screen vocabulary stream and network states. Exports: VocabularyStream. Depends on: feed/window hooks, backfill bounds, VocabularyCard. */
+/** Bounded, full-screen vocabulary stream and network states. Exports: VocabularyStream, StreamDemo. Depends on: feed/window hooks, backfill bounds, VocabularyCard. */
 import { Suspense, lazy, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useVocabularyFeed } from "../hooks/useVocabularyFeed";
 import { useVocabularyWindow } from "../hooks/useVocabularyWindow";
@@ -22,6 +22,20 @@ const ExportStudio =
 /** How long a word must hold the screen before it counts as seen. */
 const VIEW_DWELL_MS = 900;
 
+/**
+ * A first visit's demo (lib/first-visit). Every word that comes on screen opens with the
+ * badge, its card held on the first frame of its first page until the badge has gone, and
+ * the first word to play to its end calls `onDone` instead of moving the stream on.
+ */
+export type StreamDemo = {
+  /** The badge's text. */
+  badge: string;
+  /** How long the badge holds each word back. */
+  badgeMs: number;
+  /** A demo word reached its end (auto-finish or a coda tap). */
+  onDone: () => void;
+};
+
 /** Row id of the page that closes the stream once every word in the pool has been shown. */
 const FEED_END_ID = "feed-end";
 
@@ -44,6 +58,7 @@ export function VocabularyStream({
   onClearFilters,
   revealButtonLabel,
   onToggleAutoplay,
+  demo,
 }: {
   seed: string;
   filters: VocabularyFilters;
@@ -68,6 +83,8 @@ export function VocabularyStream({
   revealButtonLabel?: string;
   /** Toggle autoplay from the card's center tap zone; flips presentation.autoplay. */
   onToggleAutoplay?: () => void;
+  /** Play the stream as a first visit's demo. */
+  demo?: StreamDemo;
 }) {
   const query = useVocabularyFeed(seed, filters);
   // Deck locale drives the "tiếng X" copy in the reader's labels and empty states, so a
@@ -176,6 +193,20 @@ export function VocabularyStream({
     }, VIEW_DWELL_MS);
     return () => clearTimeout(timer);
   }, [activeOccurrenceId, activeWord, suspended, onRecordView]);
+
+  // The demo badge: the occurrence whose badge has already gone, so its card may play. It
+  // only keeps the last one, so a word scrolled back to opens with the badge again, which
+  // matches the card itself starting that word over. The clock does not run while the feed
+  // is suspended (fonts still loading, a sheet open), so the badge is never spent unseen.
+  const [introShown, setIntroShown] = useState<string | null>(null);
+  const demoBadgeMs = demo?.badgeMs;
+  const introPending =
+    demoBadgeMs !== undefined && !!activeOccurrenceId && introShown !== activeOccurrenceId;
+  useEffect(() => {
+    if (!introPending || suspended || !activeOccurrenceId) return;
+    const timer = setTimeout(() => setIntroShown(activeOccurrenceId), demoBadgeMs);
+    return () => clearTimeout(timer);
+  }, [introPending, suspended, activeOccurrenceId, demoBadgeMs]);
 
   // The export studio needs a word. Opened with none on screen (empty stream, every
   // word blocked) it would render nothing while still holding the feed suspended, so
@@ -396,12 +427,16 @@ export function VocabularyStream({
                   key={`${entry.occurrenceId}:${presentation.style}:${presentation.dialect ?? ""}`}
                   entry={entry}
                   current={item.index === activeIndex}
-                  active={item.index === activeIndex && !suspended}
+                  active={
+                    item.index === activeIndex &&
+                    !suspended &&
+                    !(demo && introShown !== entry.occurrenceId)
+                  }
                   presentation={presentation}
                   reducedMotion={reducedMotion}
                   matching={query.metadata?.matching ?? 0}
                   canAdvance={activeIndex < rows.length - 1}
-                  onAdvance={() => advanceFrom(entry.occurrenceId)}
+                  onAdvance={demo ? demo.onDone : () => advanceFrom(entry.occurrenceId)}
                   onWordEnding={onWordEnding}
                   onWordFinished={onWordFinished}
                   revealButtonLabel={revealButtonLabel}
@@ -412,6 +447,10 @@ export function VocabularyStream({
           })}
         </div>
       </div>
+      {demo && introPending && !suspended && (
+        // Keyed on the word, so scrolling on mid-badge starts the next one from its top.
+        <DemoBadge key={activeOccurrenceId} text={demo.badge} durationMs={demo.badgeMs} />
+      )}
       {ExportStudio && exportOpen && activeEntry && onCloseExport && (
         <Suspense fallback={null}>
           <ExportStudio entry={activeEntry} presentation={presentation} onClose={onCloseExport} />
@@ -446,5 +485,24 @@ export function VocabularyStream({
         </>
       )}
     </>
+  );
+}
+
+/**
+ * The demo's opening badge. Markup only: the timeline is in vocabulary.css, written as
+ * shares of `--demo-badge-dur` so it ends exactly when the card is let go. It takes no
+ * pointer events, so the reader can scroll on to another word underneath it.
+ */
+function DemoBadge({ text, durationMs }: { text: string; durationMs: number }) {
+  return (
+    <div
+      className="vocab-demo-badge"
+      role="status"
+      style={{ "--demo-badge-dur": `${durationMs}ms` } as React.CSSProperties}
+    >
+      <div className="vocab-demo-badge-veil" />
+      <div className="vocab-demo-badge-ring" />
+      <div className="vocab-demo-badge-card">{text}</div>
+    </div>
   );
 }

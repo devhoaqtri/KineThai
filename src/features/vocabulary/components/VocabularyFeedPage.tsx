@@ -1,5 +1,5 @@
 /** Public vocabulary page orchestration. Exports: VocabularyFeedPage. Depends on: controls, stream, reduced-motion preference, font readiness, track rotation. */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useStreak } from "../hooks/useStreak";
 import { useQuery } from "@tanstack/react-query";
@@ -20,13 +20,20 @@ import { dailyBadgeBlurb, dailyBadgeTitle, dailyTier } from "../lib/streak-tiers
 import { usePresence } from "@/hooks/use-presence";
 import { getActiveVocabWording } from "@/features/admin/api/wording.functions";
 import { FeedControls } from "./FeedControls";
-import { VocabularyStream } from "./VocabularyStream";
+import { VocabularyStream, type StreamDemo } from "./VocabularyStream";
 import { SavedDrawer } from "./SavedDrawer";
 import { StreakCelebration } from "./StreakCelebration";
 import { wordBadgeBlurb, wordBadgeTitle, wordTier } from "../lib/word-badges";
 import { DifficultyOnboarding } from "./DifficultyOnboarding";
 import { levelLadderFor } from "../lib/level-ladder";
 import { readDifficultyChoice, writeDifficultyChoice } from "../lib/difficulty-choice";
+import {
+  DEMO_BADGE_MS,
+  WORD_HOOK,
+  demoDifficulty,
+  readDemoSeen,
+  writeDemoSeen,
+} from "../lib/first-visit";
 import { readDialectChoice, writeDialectChoice } from "../lib/dialect-choice";
 import { readGrammarExpand, writeGrammarExpand } from "../lib/grammar-expand";
 import type { TargetLocale } from "../lib/target-language";
@@ -88,10 +95,13 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   );
   const [metadata, setMetadata] = useState<FeedPage>();
   // "pending" until the stored choice has been read (storage is not readable while the
-  // page is server-rendered), then either the first-load level picker or the feed. The
-  // stream is not mounted before that, so it never starts on "every level" only to be
-  // thrown away a moment later for the level the reader actually keeps.
-  const [stage, setStage] = useState<"pending" | "onboarding" | "feed">("pending");
+  // page is server-rendered), then the feed, or for a reader with no level yet the
+  // first-visit demo (lib/first-visit) followed by the level picker. The stream is not
+  // mounted before that, so it never starts on "every level" only to be thrown away a
+  // moment later for the level the reader actually keeps.
+  const [stage, setStage] = useState<"pending" | "demo" | "onboarding" | "feed">("pending");
+  // The picker says so when it follows the demo, rather than opening cold.
+  const [afterDemo, setAfterDemo] = useState(false);
   // Imported pack (browser-only). Its own levels may not match a stored track, so it
   // skips onboarding, plays every word, and keeps theme/style on random mix.
   const [packName, setPackName] = useState<string | null>(null);
@@ -145,7 +155,15 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     }
     const stored = readDifficultyChoice(locale ?? "en");
     if (stored === null) {
-      setStage("onboarding");
+      if (readDemoSeen()) {
+        setStage("onboarding");
+        return;
+      }
+      // The demo plays the easiest level the deck has. That is not a choice: no level is
+      // written until the reader picks one, so the next visit still asks.
+      const difficulty = demoDifficulty(locale ?? "en", levelLadderFor(locale ?? "en"));
+      setFilters((current) => ({ ...current, difficulty }));
+      setStage("demo");
       return;
     }
     setFilters((current) => ({ ...current, difficulty: stored }));
@@ -160,19 +178,39 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   // the reader is on — never a stale page from the one they just left.
   useEffect(() => {
     if (packName) return; // an imported pack plays every word; nothing to clamp
+    if (stage === "demo") return; // the demo's level is not the reader's; never store it
     if (!metadata?.levels?.length) return;
     const safe = clampDifficultyToDeck(filters.difficulty, metadata.levels);
     if (safe === filters.difficulty) return;
     writeDifficultyChoice(locale ?? "en", safe);
     setFilters((current) => ({ ...current, difficulty: safe }));
     setSeed(newSeed());
-  }, [metadata, packName, filters.difficulty]);
+  }, [metadata, packName, filters.difficulty, stage]);
   const pickDifficulty = useCallback((difficulty: string) => {
     writeDifficultyChoice(locale ?? "en", difficulty);
     setFilters((current) => ({ ...current, difficulty }));
     setSeed(newSeed());
     setStage("feed");
   }, []);
+  // The demo is spent the moment it is on screen: this browser never shows it again, even
+  // to a reader who leaves halfway, unless its storage is cleared. Written here rather than
+  // where the stage is decided, which React's dev double-run would otherwise read back as
+  // "already seen" and skip straight to the picker.
+  useEffect(() => {
+    if (stage === "demo") writeDemoSeen();
+  }, [stage]);
+  // The first demo word to play to its end hands the reader to the level picker.
+  const finishDemo = useCallback(() => {
+    setAfterDemo(true);
+    setStage("onboarding");
+  }, []);
+  const demo = useMemo<StreamDemo | undefined>(
+    () =>
+      stage === "demo"
+        ? { badge: WORD_HOOK, badgeMs: DEMO_BADGE_MS, onDone: finishDemo }
+        : undefined,
+    [stage, finishDemo],
+  );
   // The saved drawer suspends the feed behind it rather than navigating away.
   const [savedOpen, setSavedOpen] = useState(false);
   // The landscape chrome measures itself against this, not against dvh, and the
@@ -227,17 +265,18 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     (word: VocabularyWord) => {
       recordView(word.id);
       rememberRecallWord(word);
-      // An imported pack's words are not the catalog's, so they do not fill its levels.
-      if (word.level && !packName) recordLevel(word.level, word.id);
+      // An imported pack's words are not the catalog's, so they do not fill its levels. Nor
+      // do the demo's: they were played for the reader, not chosen by them.
+      if (word.level && !packName && stage !== "demo") recordLevel(word.level, word.id);
       music.wordStarted();
     },
-    [recordView, recordLevel, packName, music],
+    [recordView, recordLevel, packName, music, stage],
   );
   const shuffle = () => {
     setSeed(newSeed());
     setOptionsOpen(false);
   };
-  if (stage !== "feed") {
+  if (stage === "pending" || stage === "onboarding") {
     return (
       <main className="vocabulary-shell" ref={shell}>
         {stage === "onboarding" && (
@@ -245,6 +284,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
             metadata={levelLadderFor(locale ?? "en")}
             locale={locale ?? "en"}
             onPick={pickDifficulty}
+            afterDemo={afterDemo}
           />
         )}
       </main>
@@ -270,9 +310,13 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
               value.difficulty === filters.difficulty
             )
               return;
-            // The level chosen here is the one the next visit opens on.
-            if (value.difficulty !== filters.difficulty)
+            // The level chosen here is the one the next visit opens on. Picked during the
+            // demo, it is also the reader's answer to the picker the demo leads to, so the
+            // feed carries straight on with it.
+            if (value.difficulty !== filters.difficulty) {
               writeDifficultyChoice(locale ?? "en", value.difficulty);
+              if (stage === "demo") setStage("feed");
+            }
             setFilters(value);
             setSeed(newSeed());
           }}
@@ -363,16 +407,18 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
           history={viewHistory.history}
           onRecordView={handleRecordView}
           onWordEnding={music.wordEnding}
-          onWordFinished={handleWordFinished}
+          // A demo word is not the reader's yet: it counts towards no streak or goal.
+          onWordFinished={demo ? undefined : handleWordFinished}
           onClearHistory={viewHistory.clear}
           onMetadata={setMetadata}
           onRestart={shuffle}
           onClearFilters={() => {
-            writeDifficultyChoice(locale ?? "en", ALL_FILTERS.difficulty);
+            if (!demo) writeDifficultyChoice(locale ?? "en", ALL_FILTERS.difficulty);
             setFilters(ALL_FILTERS);
           }}
           revealButtonLabel={activeWording?.reveal_button}
           onToggleAutoplay={() => setPresentation((p) => ({ ...p, autoplay: !p.autoplay }))}
+          demo={demo}
         />
       </main>
     </DeckLocaleContext.Provider>

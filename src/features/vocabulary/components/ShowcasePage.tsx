@@ -29,6 +29,7 @@ import { VocabularyCard } from "./VocabularyCard";
 import { ShowcaseChrome } from "./ShowcaseChrome";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { siteAddress } from "../lib/target-language";
+import { WORD_HOOK } from "../lib/first-visit";
 import {
   SHOWCASE_CONTRACT,
   pickShowcaseVariants,
@@ -206,7 +207,7 @@ export function ShowcasePage() {
             onAdvance={() => setLocalPhase("outro")}
           />
           {phase === "intro" && (
-            <ShowcaseIntro text={search.badge ?? "Từ gì mà ..."} variant={variants.intro} />
+            <ShowcaseIntro text={search.badge ?? WORD_HOOK} variant={variants.intro} />
           )}
           {(phase === "outro" || phase === "done") && <ShowcaseOutro variant={variants.outro} />}
         </div>

@@ -9779,3 +9779,162 @@
     transform: translateY(6px);
   }
 }
+
+/* ── First-visit demo badge ───────────────────────────────────────────────────────────────
+   "Từ gì mà ..." springs in over a blurred card, holds long enough to be read, pops away,
+   and the blur lifts; only then does the stream let the card's first clue start
+   (lib/first-visit, VocabularyStream DemoBadge). The recorded clip's intro looks alike but
+   is its own sheet: its `body:has(.vocab-intro)` rules hide the chrome, which the feed must
+   never do. Every beat is a share of --demo-badge-dur, set inline from DEMO_BADGE_MS, so
+   the timeline ends exactly when the card is let go. Nothing here takes a pointer, so the
+   reader can scroll on to another word through it. */
+.vocab-demo-badge {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  font-family: "Inter", sans-serif;
+}
+.vocab-demo-badge-veil {
+  position: absolute;
+  inset: 0;
+  animation: vocab-demo-veil var(--demo-badge-dur, 1600ms) ease-out both;
+}
+@keyframes vocab-demo-veil {
+  0%,
+  70% {
+    backdrop-filter: blur(18px);
+    background: #00000066;
+  }
+  100% {
+    backdrop-filter: blur(0px);
+    background: #0000;
+  }
+}
+.vocab-demo-badge-card {
+  position: relative;
+  max-width: 82%;
+  padding: 0.55em 0.95em;
+  border-radius: 0.7em;
+  font-size: clamp(28px, 9vw, 42px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+  color: #10121a;
+  background: linear-gradient(180deg, #ffffff, #f2f4fb);
+  box-shadow:
+    0 30px 80px #00000070,
+    0 3px 0 #ffffff inset,
+    0 0 0 1px #ffffff40;
+  overflow: hidden;
+  animation: vocab-demo-badge var(--demo-badge-dur, 1600ms) linear both;
+}
+/* In (0–38%) with an overshoot, hold, then out (72–94%) before the veil has gone. */
+@keyframes vocab-demo-badge {
+  0% {
+    opacity: 0;
+    transform: scale(0.42) rotate(-7deg);
+    animation-timing-function: cubic-bezier(0.17, 0.89, 0.28, 1.08);
+  }
+  21% {
+    opacity: 1;
+    transform: scale(1.1) rotate(2.5deg);
+  }
+  30% {
+    transform: scale(0.97) rotate(-1deg);
+  }
+  38%,
+  72% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    animation-timing-function: cubic-bezier(0.5, -0.4, 0.75, 0.4);
+  }
+  94%,
+  100% {
+    opacity: 0;
+    transform: scale(0.72) rotate(-5deg);
+  }
+}
+/* One light sweeping across the face just after it lands. */
+.vocab-demo-badge-card::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  width: 45%;
+  left: -60%;
+  background: linear-gradient(100deg, #0000, #ffffffe0, #0000);
+  transform: skewX(-18deg);
+  opacity: 0;
+  animation: vocab-demo-shine var(--demo-badge-dur, 1600ms) ease-in-out both;
+}
+@keyframes vocab-demo-shine {
+  0%,
+  36% {
+    left: -60%;
+    opacity: 0;
+  }
+  46% {
+    opacity: 0.85;
+  }
+  72%,
+  100% {
+    left: 130%;
+    opacity: 0;
+  }
+}
+/* A ring thrown out of the badge as it lands: the impact. */
+.vocab-demo-badge-ring {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+  opacity: 0;
+  animation: vocab-demo-ring var(--demo-badge-dur, 1600ms) ease-out both;
+}
+@keyframes vocab-demo-ring {
+  0%,
+  19% {
+    opacity: 0;
+    transform: scale(0.3);
+    border-width: 10px;
+  }
+  20% {
+    opacity: 0.75;
+    transform: scale(0.3);
+    border-width: 10px;
+  }
+  65%,
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+    border-width: 1px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocab-demo-badge-card {
+    animation-name: vocab-demo-badge-fade;
+  }
+  .vocab-demo-badge-card::after,
+  .vocab-demo-badge-ring {
+    display: none;
+  }
+}
+@keyframes vocab-demo-badge-fade {
+  0% {
+    opacity: 0;
+  }
+  15%,
+  75% {
+    opacity: 1;
+  }
+  94%,
+  100% {
+    opacity: 0;
+  }
+}

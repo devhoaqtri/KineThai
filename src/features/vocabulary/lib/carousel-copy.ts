@@ -6,13 +6,15 @@
  *
  * Exports: CAROUSEL_HOOK, CAROUSEL_SWIPE_CUE, CAROUSEL_SAVE_PROMPT, CAROUSEL_GRAMMAR_TITLE,
  *   CAROUSEL_HASHTAGS
- * Depends on: ./target-language (type)
+ * Depends on: ./first-visit (WORD_HOOK), ./target-language (type)
  */
 
+import { WORD_HOOK } from "./first-visit";
 import type { TargetLocale } from "./target-language";
 
-/** Also the opening badge of a recorded clip, so a word opens the same way in both. */
-export const CAROUSEL_HOOK = "Từ gì mà ...";
+/** Also the opening badge of a recorded clip and of the feed's demo, so a word opens the
+ * same way in all three. */
+export const CAROUSEL_HOOK = WORD_HOOK;
 export const CAROUSEL_SWIPE_CUE = "Vuốt để đoán";
 export const CAROUSEL_SAVE_PROMPT = "Vuốt hết để xem đáp án. Lưu lại để ôn, gửi bạn thử đoán.";
 export const CAROUSEL_GRAMMAR_TITLE = "Nâng cao";

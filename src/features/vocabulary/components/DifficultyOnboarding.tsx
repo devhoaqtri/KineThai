@@ -76,6 +76,7 @@ export function DifficultyOnboarding({
   metadata,
   locale,
   onPick,
+  afterDemo = false,
 }: {
   metadata: LevelLadder;
   /**
@@ -85,6 +86,8 @@ export function DifficultyOnboarding({
    */
   locale: TargetLocale;
   onPick: (difficulty: string) => void;
+  /** The reader has just watched the first-visit demo (lib/first-visit) to its end. */
+  afterDemo?: boolean;
 }) {
   // Several tracks top out at the same level; each takes the NEXT sample of that level so
   // no two rungs are illustrated by the same word.
@@ -198,7 +201,9 @@ export function DifficultyOnboarding({
       }
     >
       <header className="vocab-onboard-head">
-        <p className="vocab-eyebrow">Bắt đầu từ đâu?</p>
+        <p className="vocab-eyebrow">
+          {afterDemo ? "Giờ bạn đã biết cách chơi" : "Bắt đầu từ đâu?"}
+        </p>
         <h1 id="vocab-onboard-title">Chọn trình độ của bạn</h1>
         <p>Kéo nút trượt để xem mỗi mức trông thế nào. Đổi lại lúc nào cũng được.</p>
       </header>
