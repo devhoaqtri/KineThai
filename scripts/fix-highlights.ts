@@ -67,7 +67,7 @@ async function ask(batch: Job[]): Promise<Map<string, string | null>> {
         method: "POST",
         headers: { Authorization: `Bearer ${KEY}`, "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
+          model: "openai/gpt-6.1-terra",
           response_format: { type: "json_object" },
           messages: [
             { role: "system", content: PROMPT },
@@ -104,13 +104,7 @@ async function worker() {
       const ok =
         typeof s === "string" &&
         norm(s) === norm(j.text) &&
-        // connectors outside the mark must stay as they were
-        s.replace(/\/[^/]*\//, "#").replace(/[^_=|]/g, "") ===
-          j.text.replace(/\/[^/]*\//g, (m) => m.replace(/[_=]/g, "")).replace(/[^_=|]/g, "").length +
-            "" ===
-          ""
-            ? true
-            : true;
+        (s.match(/\|/g) ?? []).length === (j.text.match(/\|/g) ?? []).length;
       if (ok && classifyField(s!) === "ok") {
         decks.get(j.file)!.words[j.idx][j.field] = s;
         fixed++;
