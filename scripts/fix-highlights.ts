@@ -111,6 +111,8 @@ async function worker() {
         fixed++;
       } else review.push({ id: j.w.id, word: j.w.word, field: j.field, text: j.text, reason: j.reason, got: s ?? null });
     });
+    for (const [f, d] of decks) writeFileSync(join(DIR, f), JSON.stringify(d.raw, null, 2) + "\n");
+    writeFileSync("logs/highlight-review.json", JSON.stringify(review, null, 1));
     console.log(`batch done, fixed ${fixed}, review ${review.length}`);
   }
 }
