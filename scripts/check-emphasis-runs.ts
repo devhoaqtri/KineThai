@@ -552,6 +552,21 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
   );
 }
 
+// ── English packs: every clue field carries one strong mark (scripts/lib/highlight-scan.ts).
+// Catches what the gate lets through: a teaser with no mark, a one-syllable mark, and a
+// mark on a filler or weak pair (`/lần_thử/`, `/xem_lại/`). A ratchet: lower, never raise.
+{
+  const { classifyField, FIELDS } = await import("./lib/highlight-scan");
+  const packDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data/packs");
+  const MAX_WEAK_EN_FIELDS = 9999;
+  let weak = 0;
+  for (const f of readdirSync(packDir).filter((n) => /^en-.*\.json$/.test(n))) {
+    for (const w of JSON.parse(readFileSync(join(packDir, f), "utf8")).words as Record<string, unknown>[])
+      for (const field of FIELDS) if (classifyField(String(w[field] ?? "")) !== "ok") weak += 1;
+  }
+  check(`English clue fields with a missing or weak mark (${weak} of at most ${MAX_WEAK_EN_FIELDS})`, weak <= MAX_WEAK_EN_FIELDS);
+}
+
 console.log(checks.join("\n"));
 if (process.exitCode) {
   console.error("\nemphasis run guard FAILED");
