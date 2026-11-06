@@ -55,8 +55,8 @@ Rules:
 - Mark exactly one real Vietnamese dictionary word of EXACTLY two syllables, written /x_y/.
 - Choose the word that carries the sentence's point (the key action/object/quality), the two syllables that would survive if the sentence were cut to two.
 - NEVER mark: one syllable; 3+ syllables or part of a longer word; number/quantifier + anything (mỗi_ngày, cả_lớp, một_lần); tense/degree/negation + anything (đã_xong, rất_cao, không_đúng); classifier + noun (con_mèo, cái_bàn); verb + direction/result (nhớ_ra, xem_lại); comparisons (cao_nhất); question/pointer words (lúc_nào, thế_nào, ai_đó); fillers (lần_thử, một_chút, việc_gì, thứ_gì); time phrases; names.
-- Do NOT change any letter, word, punctuation, "|" or other "_"/"=" in the sentence. Only remove existing /…/ slashes and add one new /x_y/. If the two chosen syllables are separated by a space, replace that space by "_" inside the mark.
-- If no two-syllable word in the sentence qualifies, return null.
+- When a valid word exists, do NOT change any letter, word, punctuation, "|" or other "_"/"=" in the sentence. Only remove existing /…/ slashes and add one new /x_y/. If the two chosen syllables are separated by a space, replace that space by "_" inside the mark.
+- If no two-syllable word in the sentence qualifies, rewrite the sentence minimally around a real two-syllable word (Rule 4): same meaning, tone and scene, at most 2 extra syllables, keep existing "_" joins on real words, never name or delete the answer word, and mark that word. Example: "Được chưa ạ?" -> "/Chắc_chắn/ chưa ạ?". Return null only if impossible.
 Input: JSON array of {k, word, meaning, s}. Output ONLY JSON: {"r":[{"k":..., "s": "<sentence>" or null}]}`;
 
 async function ask(batch: Job[]): Promise<Map<string, string | null>> {
@@ -87,6 +87,7 @@ async function ask(batch: Job[]): Promise<Map<string, string | null>> {
   return new Map();
 }
 
+const syl = (s: string) => norm(s).split(" ").filter((x) => /\p{L}/u.test(x)).length;
 const norm = (s: string) => s.replace(/\//g, "").replace(/[ _=]+/g, " ").trim();
 const work = jobs.slice(0, LIMIT);
 const review: unknown[] = [];
@@ -103,8 +104,8 @@ async function worker() {
       const s = ans.get(String(i));
       const ok =
         typeof s === "string" &&
-        norm(s) === norm(j.text) &&
-        (s.match(/\|/g) ?? []).length === (j.text.match(/\|/g) ?? []).length;
+        syl(s) <= syl(j.text) + 2 &&
+        !s.toLowerCase().includes(j.w.word.toLowerCase());
       if (ok && classifyField(s!) === "ok") {
         decks.get(j.file)!.words[j.idx][j.field] = s;
         fixed++;
