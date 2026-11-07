@@ -20,6 +20,9 @@
 const enabled =
   typeof window !== "undefined" && (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true;
 
+/** See post-player useMeasuredLines PAGE_FONT_EVENT. */
+const PAGE_FONT_EVENT = "kinetic:page-font";
+
 /** A frame this much longer than one refresh is logged as a hitch. */
 const HITCH_MS = 50;
 const FLUSH_MS = 2000;
@@ -123,6 +126,22 @@ function start(): void {
     feedLog("error", { message: String(event.reason) }),
   );
   watchFrames();
+  // Every measured clue page reports its font size (post-player useMeasuredLines, which
+  // names this event PAGE_FONT_EVENT; spelled out here to keep this module a leaf).
+  // scripts/report-page-fonts.ts reads these to show which pages jump in size.
+  document.addEventListener(PAGE_FONT_EVENT, (event) => {
+    const detail = (event as CustomEvent<Record<string, unknown>>).detail;
+    const target = event.target instanceof Element ? event.target : null;
+    const card = target?.closest<HTMLElement>(".vocab-card");
+    feedLog("page-font", {
+      word: card?.dataset.word ?? null,
+      stage: card?.dataset.stage ?? null,
+      onScreen: !!target?.closest(".vocab-slot[data-current]"),
+      // The site, so the report can sort pages by deck language.
+      host: location.host,
+      ...detail,
+    });
+  });
 }
 
 /**

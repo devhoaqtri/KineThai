@@ -168,7 +168,7 @@ describe("badgeGoalRatio", () => {
 describe("badge criteria", () => {
   it("explains a streak and where the reader stands", () => {
     const goal = { kind: "streak", days: 10, current: 3 } as const;
-    expect(badgeGoalCriteria(goal, "en")).toContain("10 ngày liền nhau");
+    expect(badgeGoalCriteria(goal, "en")).toContain("10 ngày liền");
     expect(badgeGoalProgress(goal)).toBe("Chuỗi hiện tại: 3/10 ngày");
   });
 

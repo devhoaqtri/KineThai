@@ -33,6 +33,8 @@ export {
   getVietnameseCharBudgetForLine,
   getVietnameseLayoutMetrics,
   getVietnameseWordLines,
+  VIETNAMESE_MAX_LINE_SYLLABLES,
+  countSegmentSyllables,
   isLikelyChineseText,
   isLikelyJapaneseText,
   isLikelyVietnameseText,
@@ -46,6 +48,7 @@ export {
   solveMeasuredLines,
 } from "./text-language/index";
 export type {
+  MeasuredFontBound,
   MeasuredLineBounds,
   MeasuredLineOptions,
   MeasuredLines,

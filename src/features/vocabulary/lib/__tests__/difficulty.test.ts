@@ -6,6 +6,7 @@ import {
   DIFFICULTY_TRACKS,
   HSK_TRACKS,
   LEVEL_SAMPLE_PRIORITY,
+  clampDifficultyToDeck,
   countTrackWords,
   difficultyLevels,
   formatLevelBand,
@@ -113,6 +114,22 @@ describe("difficultyLevels", () => {
     expect(difficultyLevels("co-ban")).toEqual(["A2"]));
   it("mixes available tracks and drops unavailable ones", () =>
     expect(difficultyLevels("co-ban,van-chuong", ["A2", "B2"])).toEqual(["A2"]));
+});
+
+describe("clampDifficultyToDeck", () => {
+  const early = ["A1", "A2"] as VocabularyLevel[];
+  it("passes the empty sentinel through", () =>
+    expect(clampDifficultyToDeck("", early)).toBe(""));
+  it("leaves a choice alone when the deck is not yet known", () =>
+    expect(clampDifficultyToDeck("giao-tiep", undefined)).toBe("giao-tiep"));
+  it("keeps a selection that still streams something", () =>
+    expect(clampDifficultyToDeck("vo-long", early)).toBe("vo-long"));
+  it("drops a stale cross-deck track that resolves empty to every level", () =>
+    expect(clampDifficultyToDeck("giao-tiep", early)).toBe(DIFFICULTY_ALL));
+  it("keeps a multi-select whose surviving track still has words", () =>
+    expect(clampDifficultyToDeck("vo-long,giao-tiep", early)).toBe("vo-long,giao-tiep"));
+  it("falls back when every selected track is beyond the deck", () =>
+    expect(clampDifficultyToDeck("giao-tiep,doc-hieu", early)).toBe(DIFFICULTY_ALL));
 });
 
 describe("formatLevelBand", () => {

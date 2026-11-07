@@ -4,8 +4,8 @@
  * fall back to Japanese, the app's default deck, and never throw. Host is
  * client-controlled: use it only to pick public content.
  *
- * Exports: DEFAULT_TARGET, TARGET_LOCALES, TargetLocale, resolveTarget, siteTitle, siteBrand,
- *   sitePageHead
+ * Exports: DEFAULT_TARGET, TARGET_LOCALES, TargetLocale, addressLocale, resolveTarget,
+ *   siteTitle, siteBrand, sitePageHead, languageName
  */
 export const TARGET_LOCALES = ["en", "zh", "ko", "ja", "fr", "de", "es"] as const;
 
@@ -27,12 +27,17 @@ const SUBDOMAINS: Record<string, TargetLocale> = {
   tbn: "es",
 };
 
-/** @param host Host header or location.host (may carry a port). @returns The deck locale. */
-export function resolveTarget(host: string | null | undefined): TargetLocale {
+/** @param host Host header or location.host (may carry a port). @returns The address's locale. */
+export function addressLocale(host: string | null | undefined): TargetLocale {
   if (!host) return DEFAULT_TARGET;
   const name = host.trim().toLowerCase().replace(/:\d+$/, "");
   const first = name.split(".")[0] ?? "";
   return SUBDOMAINS[first] ?? DEFAULT_TARGET;
+}
+
+/** @param host Host header or location.host (may carry a port). @returns The deck locale. */
+export function resolveTarget(host: string | null | undefined): TargetLocale {
+  return addressLocale(host);
 }
 
 const TITLES: Record<TargetLocale, string> = {
@@ -48,6 +53,26 @@ const TITLES: Record<TargetLocale, string> = {
 /** @param locale Deck locale. @returns Page title for that address. */
 export function siteTitle(locale: TargetLocale): string {
   return TITLES[locale];
+}
+
+/**
+ * The Vietnamese name of the language a deck teaches, without the "tiếng" prefix — so
+ * the copy sites around it can decide whether to say "tiếng Hàn", "môn tiếng Hàn", "bằng
+ * tiếng Hàn", etc.
+ */
+const LANGUAGE_NAMES: Record<TargetLocale, string> = {
+  en: "Anh",
+  zh: "Trung",
+  ko: "Hàn",
+  ja: "Nhật",
+  fr: "Pháp",
+  de: "Đức",
+  es: "Tây Ban Nha",
+};
+
+/** @param locale Deck locale. @returns Vietnamese name of the target language, sans "tiếng". */
+export function languageName(locale: TargetLocale): string {
+  return LANGUAGE_NAMES[locale] ?? LANGUAGE_NAMES[DEFAULT_TARGET];
 }
 
 /**

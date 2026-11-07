@@ -11,6 +11,7 @@ import { resolveClue } from "../lib/clues";
 import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
 import { VOCAB_LINE_SPACING_SCALE } from "../lib/presets";
+import { pickBurstVariant } from "../lib/burst-variants";
 import { FilledUsage, MarkedText } from "./MarkedText";
 import { RevealBurst } from "./RevealBurst";
 import { ShareChallengeButton } from "./ShareChallengeButton";
@@ -22,6 +23,11 @@ const PAGE_ENTER_OFFSET = 34;
 const PAGE_EXIT_OFFSET = 52;
 /** Beat of stillness before the answer lands, so the reveal reads as an event. */
 const REVEAL_HOLD_SECONDS = 0.14;
+/**
+ * The burst's clock starts this long after the answer page mounts, so its inhale begins as
+ * the word fades in and its release lands with the word's spring, not on the outgoing clue.
+ */
+const BURST_LEAD_SECONDS = REVEAL_HOLD_SECONDS + 0.06;
 /** The meaning follows the word instead of competing with it. */
 const DETAILS_DELAY_SECONDS = 0.34;
 
@@ -195,7 +201,20 @@ export function VocabularyStage({
       <p className="sr-only" lang={stage.lang}>
         {stage.text}
       </p>
-      {stage.reveal && staged && !reducedMotion && !still && <RevealBurst key={playKey} />}
+      {/* The burst takes its turn in the rotation by word, freezes with the card (a pause
+          or an overlay) and, under reduced motion, plays its calm form instead of
+          disappearing. */}
+      {stage.reveal && staged && !still && (
+        <RevealBurst
+          key={playKey}
+          variant={pickBurstVariant(word.id)}
+          originY={revealY}
+          paused={!playing}
+          delay={reducedMotion ? 0 : BURST_LEAD_SECONDS}
+          reducedMotion={reducedMotion}
+          seed={word.id}
+        />
+      )}
       {/* No `initial={false}` here. It read as "do not slide the first page in", but
           AnimatePresence hands that flag to EVERY motion component underneath, so on a card
           that was born playing — the first word of a stream, whenever its fonts were ready

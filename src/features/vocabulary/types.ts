@@ -44,8 +44,23 @@ export type FeedPage = {
   topicTotal: number;
   /** Signed cursor the next (or previous) page request must echo back. Server pages only. */
   cursor?: string;
+  /**
+   * Client-only: the filters that actually served this page when a fallback widened them
+   * (lib/feed-fallback). Absent when the stream's own filters did.
+   */
+  scope?: VocabularyFilters;
 };
-export type FeedCursor = { position: number; revision?: string; token?: string };
+/**
+   * Where the next request goes. `seed` and `scope` are set only after a recovery restarted
+   * the stream on a derived seed or widened its filters; later pages must keep them.
+   */
+export type FeedCursor = {
+  position: number;
+  revision?: string;
+  token?: string;
+  seed?: string;
+  scope?: VocabularyFilters;
+};
 /**
  * Which visual dialect dresses the stream. "douyin" swaps in the mainland-flavored
  * palettes, motion presets and highlight reskin; it is only ever offered on the

@@ -7,6 +7,12 @@ export const DAY_MS = 24 * 60 * 60 * 1000;
 export const THREE_DAYS_MS = 3 * DAY_MS;
 export const WEEK_MS = 7 * DAY_MS;
 export const HISTORY_KEY = "wordcrawler:view-history:v1";
+/**
+ * How long a word's answer has to stay open before the word counts as seen. Opening a card
+ * on its first clue is not a view (the reader hasn't met the word yet), and neither is a
+ * fast swipe that only brushes past the answer.
+ */
+export const VIEW_ANSWER_MS = 1500;
 
 export type ViewHistory = Record<string, number[]>;
 

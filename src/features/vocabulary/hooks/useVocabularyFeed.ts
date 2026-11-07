@@ -1,18 +1,21 @@
-/** Bounded, bidirectional query state for a single vocabulary stream. Exports: useVocabularyFeed. Depends on: React Query, fetch adapter, backfill bounds, session tracker. */
+/** Bounded, bidirectional query state for a single vocabulary stream. Exports: useVocabularyFeed. Depends on: React Query, fetch adapter, feed fallbacks, backfill bounds, session tracker. */
 import { useEffect, useMemo, useRef } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchVocabularyPage, VocabularyRequestError } from "../api/feed";
+import { loadVocabularyPage, VocabularyRequestError } from "../api/feed";
 import { VOCAB_MAX_PAGES } from "../lib/backfill";
-import type { FeedCursor, VocabularyFilters, TargetLocale } from "../types";
+import { backgroundRetryDelay, classifyFeedFailure } from "../lib/feed-fallback";
+import type { FeedCursor, FeedPage, VocabularyFilters, TargetLocale } from "../types";
 import { markReportedOnce, reportVisitorEvent } from "@/lib/session-tracker";
 
-/** Errors a retry cannot fix: the stream itself has to be restarted or the request changed. */
-const TERMINAL_CODES = ["CATALOG_CHANGED", "STREAM_EXPIRED", "INVALID_REQUEST", "FORBIDDEN"];
-/** Transient failures are retried this many times, backing off 1, 2, 4 then 8 s. */
-const MAX_RETRIES = 4;
-
-function isTerminal(error: unknown): boolean {
-  return error instanceof VocabularyRequestError && TERMINAL_CODES.includes(error.code);
+/** The cursor a page hands on: a recovered stream keeps its derived seed and filters. */
+function cursorFrom(page: FeedPage, position: number): FeedCursor {
+  return {
+    position,
+    revision: page.revision,
+    token: page.cursor,
+    seed: page.seed,
+    ...(page.scope ? { scope: page.scope } : {}),
+  };
 }
 
 /** The server's own word on when to ask again, when it refused for rate. */
@@ -32,34 +35,39 @@ export function useVocabularyFeed(seed: string, filters: VocabularyFilters, loca
   const query = useInfiniteQuery({
     queryKey,
     initialPageParam: { position: 0 } as FeedCursor,
+    // Every fallback (backoff, fresh stream, wider filters) is spent inside the page load,
+    // so what reaches the query as an error is what none of them could fix.
     queryFn: ({ pageParam, signal }) =>
-      fetchVocabularyPage({ seed, filters, cursor: pageParam, signal }, locale),
+      loadVocabularyPage({ seed, filters, cursor: pageParam, signal }, locale),
     getNextPageParam: (last) =>
-      last.nextPosition === null
-        ? undefined
-        : { position: last.nextPosition, revision: last.revision },
+      last.nextPosition === null ? undefined : cursorFrom(last, last.nextPosition),
     getPreviousPageParam: (first) =>
-      first.previousPosition === null
-        ? undefined
-        : { position: first.previousPosition, revision: first.revision },
+      first.previousPosition === null ? undefined : cursorFrom(first, first.previousPosition),
     maxPages: VOCAB_MAX_PAGES,
     staleTime: Infinity,
     gcTime: 0,
     // A first page that failed for a passing reason — a server restart, a deploy swap, a
     // phone dropping signal — backs off for ~15 s, and returning to the tab or regaining
-    // the network asks again at once. None of this touches a stream that has loaded: with
-    // staleTime Infinity a query holding pages is never stale, so focus and reconnect
-    // refetch only a stream that has nothing to show yet.
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
-    // A rate refusal is not retried on a guess: asking again inside the window is refused
-    // again. The stream waits exactly as long as the server's Retry-After says instead.
+    // the network asks again at once. None of this may touch a stream that has loaded:
+    // staleTime Infinity was not enough on its own. Measured: focusing the tab while a next
+    // page had failed refetched every buffered page at once (ten requests against a
+    // 30-a-minute budget). A loaded stream retries only its failed page
+    // (useFeedPagination).
+    refetchOnWindowFocus: (current) => current.state.data === undefined,
+    refetchOnReconnect: (current) => current.state.data === undefined,
+    // A first page that failed after every fallback keeps asking on its own: a rate
+    // refusal exactly when the server's Retry-After says, anything passing on a growing
+    // backoff. A loaded stream is retried by useFeedPagination instead.
     refetchInterval: (current) =>
       current.state.status === "error" && current.state.data === undefined
-        ? (rateLimitWait(current.state.error) ?? false)
+        ? (backgroundRetryDelay(
+            classifyFeedFailure(current.state.error, 0),
+            Math.max(0, current.state.fetchFailureCount - 1),
+            rateLimitWait(current.state.error),
+          ) ?? false)
         : false,
-    retry: (attempt, error) =>
-      !isTerminal(error) && rateLimitWait(error) === null && attempt < MAX_RETRIES,
+    // The page load already retried with backoff (lib/feed-fallback).
+    retry: false,
   });
   useEffect(
     () => () => {
@@ -110,6 +118,8 @@ export function useVocabularyFeed(seed: string, filters: VocabularyFilters, loca
   // When a refused stream will ask again by itself, so the panel can say so.
   const wait = rateLimitWait(query.error);
   const retryAt = wait === null ? null : query.errorUpdatedAt + wait;
+  // A refusal of the stream itself (the browser gate) is the one failure no retry can fix.
+  const failureKind = query.error ? classifyFeedFailure(query.error, entries.length ? 1 : 0) : null;
   return {
     ...query,
     entries,
@@ -118,5 +128,6 @@ export function useVocabularyFeed(seed: string, filters: VocabularyFilters, loca
     streamExpired,
     needsRestart,
     retryAt,
+    failureKind,
   };
 }

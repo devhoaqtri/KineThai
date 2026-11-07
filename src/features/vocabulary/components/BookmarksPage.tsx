@@ -472,6 +472,7 @@ const MEDAL_COPY: Partial<
       gotIt: string;
       tileAria: (
         caption: string,
+        scope: string | undefined,
         note: string | undefined,
         earned: boolean,
         percent: number,
@@ -498,13 +499,13 @@ const MEDAL_COPY: Partial<
     wordsCount: (words) => `${words} từ`,
     earnedStatus: "Đã đạt",
     gotIt: "Đã hiểu",
-    tileAria: (caption, note, earned, percent) =>
-      `${caption}${earned ? (note ? `, ${note}` : "") : `, chưa đạt, ${percent}%`}. Xem điều kiện`,
+    tileAria: (caption, scope, note, earned, percent) =>
+      `${caption}${scope ? `, ${scope}` : ""}${earned ? (note ? `, ${note}` : "") : `, chưa đạt, ${percent}%`}. Xem điều kiện`,
     emptyHint: "Chạm vào một huy hiệu bên dưới để xem cách mở khóa.",
     dailyHeading: "Số từ trong một ngày",
     wordsPerDay: (goal) => `${goal} từ/ngày`,
     timesCount: (times) => `${times} lần`,
-    wordsHeading: "Số từ đã học",
+    wordsHeading: "Số từ đã xem",
     streakHeading: "Chuỗi ngày liên tiếp",
     repeatDailyTitle: (times, base) => `${times} lần ${base} từ mỗi ngày`,
     repeatStreakTitle: (times, base) => `${times} lần chuỗi ${base} ngày`,
@@ -520,13 +521,13 @@ const MEDAL_COPY: Partial<
     wordsCount: (words) => `${words} 語`,
     earnedStatus: "獲得済み",
     gotIt: "閉じる",
-    tileAria: (caption, note, earned, percent) =>
-      `${caption}${earned ? (note ? `、${note}` : "") : `、未獲得、${percent}%`}。条件を見る`,
+    tileAria: (caption, scope, note, earned, percent) =>
+      `${caption}${scope ? `、${scope}` : ""}${earned ? (note ? `、${note}` : "") : `、未獲得、${percent}%`}。条件を見る`,
     emptyHint: "下のバッジをタップして獲得条件を確認できます。",
     dailyHeading: "1日の単語数",
     wordsPerDay: (goal) => `${goal} 語/日`,
     timesCount: (times) => `${times} 回`,
-    wordsHeading: "学習した単語",
+    wordsHeading: "見た単語数",
     streakHeading: "連続日数",
     repeatDailyTitle: (times, base) => `1日 ${base} 語を ${times} 回`,
     repeatStreakTitle: (times, base) => `${base}日連続を ${times} 回`,
@@ -542,13 +543,13 @@ const MEDAL_COPY: Partial<
     wordsCount: (words) => `${words} คำ`,
     earnedStatus: "ได้รับแล้ว",
     gotIt: "เข้าใจแล้ว",
-    tileAria: (caption, note, earned, percent) =>
-      `${caption}${earned ? (note ? `, ${note}` : "") : `, ยังไม่บรรลุ, ${percent}%`} ดูเงื่อนไข`,
+    tileAria: (caption, scope, note, earned, percent) =>
+      `${caption}${scope ? `, ${scope}` : ""}${earned ? (note ? `, ${note}` : "") : `, ยังไม่บรรลุ, ${percent}%`} ดูเงื่อนไข`,
     emptyHint: "แตะเหรียญด้านล่างเพื่อดูวิธีปลดล็อก",
     dailyHeading: "จำนวนคำต่อวัน",
     wordsPerDay: (goal) => `${goal} คำ/วัน`,
     timesCount: (times) => `${times} ครั้ง`,
-    wordsHeading: "คำที่เรียนแล้ว",
+    wordsHeading: "จำนวนคำที่ดูแล้ว",
     streakHeading: "สถิติวันต่อเนื่อง",
     repeatDailyTitle: (times, base) => `วันละ ${base} คำ ${times} ครั้ง`,
     repeatStreakTitle: (times, base) => `ต่อเนื่อง ${base} วัน ${times} ครั้ง`,
@@ -677,6 +678,7 @@ function MedalTile({
   goal,
   earned,
   caption,
+  scope,
   note,
   locale,
   ui,
@@ -685,6 +687,8 @@ function MedalTile({
   goal: BadgeGoal;
   earned: boolean;
   caption: string;
+  /** The level or pack a words badge counts ("Cấp độ A1"), on its own line under the count. */
+  scope?: string;
   /** Under an earned medal, when there is something to add ("4 lần"). */
   note?: string;
   locale: TargetLocale;
@@ -701,10 +705,11 @@ function MedalTile({
         className="vocab-medal-tile"
         data-locked={earned ? undefined : true}
         onClick={() => onOpen(goal, earned)}
-        aria-label={copy.tileAria(caption, note, earned, percent)}
+        aria-label={copy.tileAria(caption, scope, note, earned, percent)}
       >
         <StreakMedal days={look.value} tier={look.tier} unit={look.unit} count={look.count} />
         <span className="vocab-medal-tile-days">{caption}</span>
+        {scope && <span className="vocab-medal-tile-scope">{scope}</span>}
         {earned ? (
           note && (
             <span className="vocab-medal-tile-tier" data-scope>
@@ -724,11 +729,14 @@ function MedalTile({
 /** One rung of a ladder as a tile: its face, its caption, and its count or bar below. */
 function RungTile({
   rung,
+  scope,
   locale,
   ui,
   onOpen,
 }: {
   rung: BadgeRung;
+  /** For a words badge: the level or pack it counts, shown under its count. */
+  scope?: string;
   locale: TargetLocale;
   ui: Locale;
   onOpen: (goal: BadgeGoal, earned: boolean) => void;
@@ -756,8 +764,19 @@ function RungTile({
     <MedalTile
       {...shared}
       caption={goal.complete ? copy.completeSet : copy.wordsCount(goal.words)}
+      scope={scope}
     />
   );
+}
+
+/**
+ * A words badge's level or pack line: "Cấp độ A1", "Gói từ 🐣 vỡ lòng". Each half keeps
+ * its spaces unbreakable, so a name too long for the medal's width wraps whole onto the
+ * next line ("Gói từ" over "🐣 vỡ lòng") instead of being cut.
+ */
+function scopeLine(kind: string, label: string): string {
+  const keep = (text: string) => text.replace(/ /g, "\u00a0");
+  return `${keep(kind)} ${keep(label.replace(/^(?:Cấp|レベル|ระดับ) /, ""))}`;
 }
 
 function rungKey({ goal }: BadgeRung): string {
@@ -825,10 +844,10 @@ function MedalShelf({
   const nothingYet =
     !badges.length && !wordBadges.length && DAILY_GOALS.every((goal) => daily.times[goal] === 0);
   const open_ = (goal: BadgeGoal, earned: boolean) => setOpen({ goal, earned });
-  const shelf = (rungs: BadgeRung[]) => (
+  const shelf = (rungs: BadgeRung[], scope?: string) => (
     <ul className="vocab-medal-shelf">
       {rungs.map((rung) => (
-        <RungTile key={rungKey(rung)} rung={rung} locale={locale} ui={ui} onOpen={open_} />
+        <RungTile key={rungKey(rung)} rung={rung} scope={scope} locale={locale} ui={ui} onOpen={open_} />
       ))}
     </ul>
   );
@@ -855,16 +874,11 @@ function MedalShelf({
       {wordRows.length > 0 && (
         <section className="vocab-medal-group" aria-label={copy.wordsHeading}>
           <h3 className="vocab-medal-group-title">{copy.wordsHeading}</h3>
+          {/* Each medal names its own level or pack under its count ("100 từ", then
+              "Cấp độ A1"), so the rows need no label column beside them. */}
           {wordRows.map(({ kind, ladder }) => (
             <div key={kind} className="vocab-medal-ladder">
-              <h4 className="vocab-medal-ladder-title">
-                <small>{kind}</small>
-                {/* The row already says "level", so a level shows as its bare name. */}
-                {scopeKind(ladder.scope, locale) === "level"
-                  ? ladder.scope
-                  : scopeLabel(ladder.scope, locale, ui)}
-              </h4>
-              {shelf(ladder.rungs)}
+              {shelf(ladder.rungs, scopeLine(kind, scopeLabel(ladder.scope, locale, ui)))}
             </div>
           ))}
         </section>

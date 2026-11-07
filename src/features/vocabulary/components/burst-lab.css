@@ -1,0 +1,296 @@
+/* /burst-lab only (development). The burst canvas itself is styled in vocabulary.css; this
+   is the judging tool's chrome: a sticky control bar with a scrubber, and mock reveal
+   cards (deep and pale side by side) shaped like the real one at 390 × 844. */
+.burst-lab {
+  --lab-bg: #0d0e13;
+  --lab-panel: #16171e;
+  --lab-line: #ffffff1f;
+  --lab-text: #e9ebf2;
+  --lab-dim: #9ba1b3;
+  --lab-on: #3ddc97;
+  --lab-card-w: min(216px, calc((100vw - 44px) / 2));
+  min-height: 100vh;
+  padding: 0 clamp(12px, 3vw, 40px) 64px;
+  background: var(--lab-bg);
+  color: var(--lab-text);
+  font-family: "Inter", system-ui, sans-serif;
+}
+.burst-lab[data-view="focus"] {
+  --lab-card-w: min(390px, calc(100vw - 32px));
+}
+.burst-lab-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  gap: 10px;
+  margin: 0 calc(-1 * clamp(12px, 3vw, 40px)) 20px;
+  padding: 16px clamp(12px, 3vw, 40px) 12px;
+  background: color-mix(in srgb, var(--lab-bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--lab-line);
+}
+.burst-lab-title h1 {
+  margin: 0 0 2px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.burst-lab-title p,
+.burst-lab-kept {
+  margin: 0;
+  color: var(--lab-dim);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.burst-lab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.burst-lab-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--lab-line);
+  border-radius: 12px;
+  background: var(--lab-panel);
+}
+.burst-lab button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.burst-lab-group button,
+.burst-lab-tabs button,
+.burst-lab-actions button {
+  min-height: 32px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  padding: 6px 11px;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background-color 0.15s;
+}
+.burst-lab-group button:hover,
+.burst-lab-tabs button:hover,
+.burst-lab-actions button:hover {
+  background: #ffffff14;
+}
+.burst-lab button[aria-pressed="true"] {
+  background: var(--lab-on);
+  color: #0d0e13;
+  font-weight: 600;
+}
+.burst-lab-timeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+}
+.burst-lab-timeline input {
+  flex: 1 1 260px;
+  accent-color: var(--lab-on);
+}
+.burst-lab-time,
+.burst-lab-fps {
+  font:
+    12px ui-monospace,
+    "SF Mono",
+    Menlo,
+    monospace;
+  color: var(--lab-dim);
+  font-variant-numeric: tabular-nums;
+}
+.burst-lab-time {
+  min-width: 72px;
+  color: var(--lab-text);
+}
+.burst-lab-kept strong {
+  color: var(--lab-on);
+}
+.burst-lab-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+.burst-lab-tabs button {
+  border: 1px solid var(--lab-line);
+}
+.burst-lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--lab-card-w) * 2 + 10px), 1fr));
+  gap: 32px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-items: center;
+}
+.burst-lab[data-view="focus"] .burst-lab-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+.burst-lab-item {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  justify-items: center;
+}
+.burst-lab-pair {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* A mock reveal card, shaped like the real one: the word at 34%, the meaning panel from
+   50%, the action pill at the foot. Sizes are in container units so a half-size card is
+   a faithful miniature of a phone. */
+.burst-lab-card {
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--lab-card-w);
+  aspect-ratio: 390 / 844;
+  overflow: hidden;
+  container-type: inline-size;
+  border: 0;
+  border-radius: 7cqw;
+  padding: 0;
+  text-align: center;
+  box-shadow:
+    0 18px 40px #0009,
+    0 0 0 1px #ffffff14;
+  outline: 3px solid transparent;
+  outline-offset: 4px;
+  transition: outline-color 0.2s;
+}
+.burst-lab-item[data-kept] .burst-lab-card {
+  outline-color: var(--lab-on);
+}
+.burst-lab-clue,
+.burst-lab-word {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+.burst-lab-clue {
+  width: 84%;
+  font-size: 6cqw;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.burst-lab-word {
+  font-size: var(--lab-word-size, 15cqw);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  opacity: 0;
+}
+.burst-lab-card[data-tone="dark"] .burst-lab-clue,
+.burst-lab-card[data-tone="dark"] .burst-lab-word {
+  /* The real feed lifts light type off a deep card with a wide soft shadow. */
+  text-shadow: 0 0.6cqw 5cqw #0006;
+}
+.burst-lab-details {
+  position: absolute;
+  left: 4.6cqw;
+  right: 4.6cqw;
+  top: 50%;
+  display: grid;
+  gap: 2cqw;
+  padding: 4.5cqw 5cqw;
+  border-radius: 5cqw;
+  background: color-mix(in srgb, currentColor 9%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 12%, transparent);
+  text-align: left;
+}
+.burst-lab-details strong {
+  font-size: 5.6cqw;
+}
+.burst-lab-details em {
+  font-size: 3.8cqw;
+  opacity: 0.75;
+}
+.burst-lab-pill {
+  position: absolute;
+  left: 50%;
+  bottom: 7%;
+  transform: translateX(-50%);
+  padding: 2.6cqw 5cqw;
+  border-radius: 999px;
+  background: var(--lab-accent);
+  color: var(--lab-on-accent);
+  font:
+    600 3.6cqw "Inter",
+    sans-serif;
+  white-space: nowrap;
+}
+
+.burst-lab-caption {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: calc(var(--lab-card-w) * 2 + 10px);
+  max-width: 100%;
+}
+.burst-lab-caption strong {
+  font-size: 15px;
+}
+.burst-lab-caption code {
+  margin-left: 8px;
+  color: var(--lab-dim);
+  font-size: 12px;
+}
+.burst-lab-badge {
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #ffffff1a;
+  font-size: 11px;
+}
+.burst-lab-caption p {
+  margin: 4px 0 0;
+  color: var(--lab-dim);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.burst-lab-caption .burst-lab-spec {
+  font:
+    11.5px ui-monospace,
+    "SF Mono",
+    Menlo,
+    monospace;
+  color: #7d8396;
+}
+.burst-lab-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+.burst-lab-actions button {
+  border: 1px solid var(--lab-line);
+}
+.burst-lab-keep {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border: 1px solid var(--lab-line);
+  border-radius: 9px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.burst-lab-keep input {
+  accent-color: var(--lab-on);
+}

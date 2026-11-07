@@ -28,7 +28,8 @@ import {
   trackCeiling,
   tracksFor,
 } from "../lib/difficulty";
-import { getAmbientPlayer } from "../lib/ambient";
+import { FADE_OUT_MS, getAmbientPlayer } from "../lib/ambient";
+import { pickerEntrance } from "../lib/picker-entrance";
 import { getAmbientOwnership } from "../lib/ambientOwnership";
 import type { TargetLocale } from "../lib/target-language";
 import { difficultyCopy, t } from "../lib/ui-copy";
@@ -92,6 +93,8 @@ export function DifficultyOnboarding({
   metadata,
   locale,
   onPick,
+  afterDemo = false,
+  reducedMotion = false,
 }: {
   metadata: LevelLadder;
   /**
@@ -101,6 +104,10 @@ export function DifficultyOnboarding({
    */
   locale: TargetLocale;
   onPick: (difficulty: string) => void;
+  /** The reader has just watched the first-visit demo (lib/first-visit) to its end. */
+  afterDemo?: boolean;
+  /** The entrance is one short fade instead of a build-up. */
+  reducedMotion?: boolean;
 }) {
   // Picker chrome follows the UI locale; tracks and sample words follow the deck.
   const ui = useLocale();
@@ -138,12 +145,38 @@ export function DifficultyOnboarding({
   const current = rungs[index]!;
   const ladder = useRef<HTMLOListElement>(null);
   // No background music while a level is being picked: the ladder is a one-time choice,
-  // not a listening session. Whatever is still sounding is silenced here; the toggle itself
-  // is left as it is, so music the reader turned on resumes with the first word.
+  // not a listening session. Whatever is still sounding fades out under the entrance and is
+  // then silenced; the toggle itself is left as it is, so music the reader turned on
+  // resumes with the first word. A pick before the fade is done silences it at once.
   useEffect(() => {
-    getAmbientPlayer().stop();
-    getAmbientOwnership().release();
+    const player = getAmbientPlayer();
+    const silence = () => {
+      player.stop();
+      getAmbientOwnership().release();
+    };
+    player.fadeOutAndHold();
+    const timer = setTimeout(silence, FADE_OUT_MS);
+    return () => {
+      clearTimeout(timer);
+      silence();
+    };
   }, []);
+
+  // The entrance (lib/picker-entrance) is fixed when the picker mounts, so nothing later can
+  // restart it. Until the knob has landed no rung is lit, so the first one lights up as the
+  // knob arrives; until the buttons have landed the picker takes no input, so a tap meant
+  // for the demo word underneath cannot pick a level.
+  const [entrance] = useState(() => pickerEntrance(afterDemo, reducedMotion));
+  const [knobDown, setKnobDown] = useState(false);
+  const [entering, setEntering] = useState(true);
+  useEffect(() => {
+    const knob = setTimeout(() => setKnobDown(true), entrance.knobMs);
+    const done = setTimeout(() => setEntering(false), entrance.readyMs);
+    return () => {
+      clearTimeout(knob);
+      clearTimeout(done);
+    };
+  }, [entrance]);
 
   // Landscape detection: drives both pointer-axis mapping in JS and a data-landscape
   // attribute that CSS uses to switch the gauge to a horizontal layout with alternating
@@ -196,23 +229,32 @@ export function DifficultyOnboarding({
     }
   };
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (entering) return;
     if (event.key === "ArrowDown" || event.key === "ArrowRight") step(1);
     else if (event.key === "ArrowUp" || event.key === "ArrowLeft") step(-1);
     else if (event.key === "Home") choose(0);
     else if (event.key === "End") choose(rungs.length - 1);
-    else if (event.key === "Enter") onPick(current.track.id);
+    else if (event.key === "Enter") pick(current.track.id);
     else return;
     event.preventDefault();
   };
   const ready = resolved >= 0;
+  const lit = ready && knobDown;
+  /** Pick a level, but never while the picker is still building up. */
+  const pick = (difficulty: string) => {
+    if (!entering) onPick(difficulty);
+  };
 
   return (
     <section
       className="vocab-onboard"
       aria-labelledby="vocab-onboard-title"
       data-landscape={landscape ? "" : undefined}
+      // Only while it runs: once off, a later rotation cannot replay any of it.
+      data-entrance={entering ? entrance.kind : undefined}
       style={
         {
+          ...(entering ? entrance.vars : {}),
           "--rung": current.color,
           "--rung-index": index,
           "--rung-count": rungs.length,
@@ -220,7 +262,9 @@ export function DifficultyOnboarding({
       }
     >
       <header className="vocab-onboard-head">
-        <p className="vocab-eyebrow">{t(ui, "onboard.eyebrow")}</p>
+        <p className="vocab-eyebrow">
+          {t(ui, afterDemo ? "onboard.eyebrowAfterDemo" : "onboard.eyebrow")}
+        </p>
         <h1 id="vocab-onboard-title">{t(ui, "onboard.title")}</h1>
         <p>{t(ui, "onboard.hint")}</p>
       </header>
@@ -232,10 +276,10 @@ export function DifficultyOnboarding({
               key={rung.track.id}
               className="vocab-onboard-rung"
               lang={ui}
-              data-on={at === index && ready ? "" : undefined}
-              data-passed={at < index && ready ? "" : undefined}
+              data-on={at === index && lit ? "" : undefined}
+              data-passed={at < index && lit ? "" : undefined}
               aria-disabled={!availability[at] || undefined}
-              style={{ "--rung-own": rung.color } as React.CSSProperties}
+              style={{ "--rung-own": rung.color, "--i": at } as React.CSSProperties}
               onClick={() => choose(at)}
             >
               <span className="vocab-onboard-name">
@@ -255,7 +299,17 @@ export function DifficultyOnboarding({
                     <strong lang={locale === "zh" ? "zh-Hans" : locale}>{rung.sample.word}</strong>
                     {/* Fixed curiosity prompt: slides in with a spring when this rung
                         becomes active, fades out when the knob moves away. */}
-                    <span className="vocab-onboard-curiosity">{t(ui, "onboard.curiosity")}</span>
+                    <span className="vocab-onboard-curiosity">
+                      {/* Two wordings, one shown: the full line needs ~180px and a
+                          phone's sample column is 104–132px, so a narrow column takes
+                          the short one (container query in vocabulary.css). */}
+                      <span className="vocab-onboard-curiosity-long">
+                        {t(ui, "onboard.curiosity")}
+                      </span>
+                      <span className="vocab-onboard-curiosity-short">
+                        {t(ui, "onboard.curiosityShort")}
+                      </span>
+                    </span>
                   </>
                 ) : (
                   <span className="vocab-onboard-soon">{t(ui, "onboard.soon")}</span>
@@ -291,7 +345,7 @@ export function DifficultyOnboarding({
           type="button"
           className="vocab-onboard-all"
           aria-label={t(ui, "onboard.allLevels")}
-          onClick={() => onPick(DIFFICULTY_ALL)}
+          onClick={() => pick(DIFFICULTY_ALL)}
         >
           {t(ui, "onboard.allLevels")}
         </button>
@@ -299,7 +353,7 @@ export function DifficultyOnboarding({
           type="button"
           className="vocab-onboard-go"
           disabled={!ready}
-          onClick={() => onPick(current.track.id)}
+          onClick={() => pick(current.track.id)}
         >
           {ready ? t(ui, "onboard.start", { label: current.label }) : t(ui, "onboard.loading")}
         </button>

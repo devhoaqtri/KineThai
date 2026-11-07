@@ -142,11 +142,13 @@
 }
 .vocab-toolbar-row {
   display: grid;
-  /* Four tracks, in source order: the app grid, the title, the transport controls, the
-     gear. The app grid needs a track of its own rather than sharing the title's — the
-     panel it opens is positioned against its trigger's box, so the trigger has to be a
-     box the grid sized, not one floating inside another flex row. */
-  grid-template-columns: auto auto 1fr auto;
+  /* Three tracks, in source order: the title, the transport controls, the gear. The
+     store/app-family button is hidden (ECOSYSTEM_MENU_AVAILABLE off), so its former
+     leading `auto` track is dropped; were it to return, restore `auto auto 1fr auto`.
+     With the side clusters content-sized and only the middle track stretching, the
+     controls centre within the leftover space between them — equally spaced from the
+     two components on either side — not on the whole screen. */
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   /* Read by the title column to hang the difficulty line under the app pill: the pill
      height (×3/2) is its width, and --vocab-eco-gap is the space between it and the
@@ -179,6 +181,17 @@
      pill + title line, flush with the pill's left edge. */
   --vocab-brand-indent: calc(var(--eco-trigger-h) * 3 / 2 + var(--vocab-eco-gap));
 }
+/* With the app pill hidden (ECOSYSTEM_MENU_AVAILABLE off) there is nothing to step back
+   under: an indent here pushed the difficulty popup off the screen's left edge. The
+   tagline's emoji slot exists only to sit beneath the pill, so it goes too, leaving the
+   label on the title's left edge as before. Keyed on the pill itself, so turning the
+   flag back on restores the hanging layout with no other change. */
+.vocab-toolbar-row:not(:has(.eco-trigger)) .vocab-toolbar-left {
+  --vocab-brand-indent: 0px;
+}
+.vocab-toolbar-row:not(:has(.eco-trigger)) .vocab-difficulty-current-emoji {
+  display: none;
+}
 .vocab-player-controls {
   justify-self: center;
   /* The middle track centres the group between the title's box and the gear's, but the
@@ -193,19 +206,25 @@
    after) and is masked to fade out at BOTH edges, so it announces the track and clears
    without repeating. */
 .vocab-now-playing {
-  /* Anchored to the sub-text's row, in the space to its right. `--vocab-tagline-right`
-     is the measured right edge of the difficulty label (its trailing caret), so the
-     crawl ENDS just before it would reach that trail — plus a 14px breathing gap — and
-     `right` keeps it clear of the corner gear. Absolute so it no longer adds height to
+  /* The song's name lives inside the transport group's own horizontal span. `left` and
+     `right` are insets from the toolbar's edges, so the box stretches between them; each
+     is the GREATER of the controls-±15% bound and a fixed clearance — off the difficulty
+     label (the measured `--vocab-tagline-right`, plus 14px) on the left, off the corner
+     gear on the right. On a wide screen the ±15% overhang wins and the label reads as a
+     caption centred under the controls; on a narrow screen the difficulty label closes in
+     first, so the box shortens rather than overlap it. Absolute so it adds no height to
      the fixed toolbar; the scrim already covers this band. */
   position: absolute;
   top: var(--vocab-tagline-mid, 49px);
   transform: translateY(-50%);
-  left: calc(var(--vocab-tagline-right, 140px) + 14px);
-  right: calc(var(--vocab-corner, 44px) + 12px);
-  /* Never stretch: cap at ~1.5× the transport group, so on wide screens it stays a
-     caption rather than a band, and only closes the gap to the gear on narrow ones. */
-  max-width: calc(var(--vocab-controls-w, 156px) * 1.5);
+  left: max(
+    calc(var(--vocab-controls-left, 50%) - var(--vocab-controls-w, 156px) * 0.15),
+    calc(var(--vocab-tagline-right, 140px) + 14px)
+  );
+  right: max(
+    calc(100% - var(--vocab-controls-right, 50%) - var(--vocab-controls-w, 156px) * 0.15),
+    calc(var(--vocab-corner, 44px) + 12px)
+  );
   overflow: hidden;
   text-align: center;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
@@ -4663,6 +4682,27 @@
     transform 0.17s ease-out,
     color 0.18s ease-out;
 }
+/* The prompt is one nowrap line, and the full wording overruns a phone's sample column
+   (needs ~180px; the column is 104px at 320 wide, 132px at 375), where it was cut off
+   mid-word. Wrapping is no way out: rows are a fixed height and a second line runs into
+   the next rung's word. So the column measures itself and a narrow one swaps in the short
+   wording, which fits on one line down to 320px. Inline-size containment is safe here:
+   the column's width comes from the grid track (or width: 100% in landscape), never from
+   its content. */
+.vocab-onboard-sample {
+  container-type: inline-size;
+}
+.vocab-onboard-curiosity-short {
+  display: none;
+}
+@container (max-width: 180px) {
+  .vocab-onboard-curiosity-long {
+    display: none;
+  }
+  .vocab-onboard-curiosity-short {
+    display: inline;
+  }
+}
 .vocab-onboard-rung:lang(ja) .vocab-onboard-curiosity {
   font-size: 11px;
 }
@@ -5061,6 +5101,123 @@
       box-shadow 0s;
   }
 }
+/* ── Picker entrance and the demo handover ──────────────────────────────────
+   The level picker builds up a piece at a time: backdrop, heading line by line, the rail
+   drawing itself, rungs top to bottom (each dot popping onto the rail), the knob dropping
+   onto its rung, the buttons last. Every start and duration is a custom property set from
+   lib/picker-entrance.ts while [data-entrance] is on, so these rules and the component's
+   timers read the same numbers. Each keyframe gives only its `from`, so every piece lands
+   on its own resting style (a locked rung's dim words, the knob's centring transform),
+   never on one written here. Nothing takes input until the attribute comes off. */
+.vocab-onboard[data-entrance] {
+  animation: vocab-enter-fade var(--enter-backdrop-dur) var(--ease-out) var(--enter-backdrop)
+    backwards;
+}
+.vocab-onboard[data-entrance] > * {
+  pointer-events: none;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-head > * {
+  animation: vocab-enter-rise var(--enter-head-dur) var(--ease-out) var(--enter-head) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-head > :nth-child(2) {
+  animation-delay: calc(var(--enter-head) + var(--enter-head-step));
+}
+.vocab-onboard[data-entrance] .vocab-onboard-head > :nth-child(3) {
+  animation-delay: calc(var(--enter-head) + 2 * var(--enter-head-step));
+}
+.vocab-onboard[data-entrance] .vocab-onboard-gauge::before {
+  transform-origin: 50% 0;
+  animation: vocab-enter-rail-y var(--enter-rail-dur) var(--ease-io) var(--enter-rail) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-rung {
+  animation: vocab-enter-rise var(--enter-rung-dur) var(--ease-out)
+    calc(var(--enter-rungs) + var(--i) * var(--enter-rung-step)) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-tick {
+  animation: vocab-enter-pop var(--enter-rung-dur) var(--ease-spring)
+    calc(var(--enter-rungs) + var(--i) * var(--enter-rung-step)) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-knob {
+  animation: vocab-enter-drop var(--enter-knob-dur) var(--ease-spring) var(--enter-knob) backwards;
+}
+.vocab-onboard[data-entrance] .vocab-onboard-foot {
+  animation: vocab-enter-rise var(--enter-foot-dur) var(--ease-out) var(--enter-foot) backwards;
+}
+@media (orientation: landscape) {
+  /* The spine runs across in landscape, so it draws from the left. */
+  .vocab-onboard[data-entrance][data-landscape] .vocab-onboard-gauge::before {
+    transform-origin: 0 50%;
+    animation-name: vocab-enter-rail-x;
+  }
+}
+@keyframes vocab-enter-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes vocab-enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes vocab-enter-pop {
+  from {
+    transform: scale(0);
+  }
+}
+@keyframes vocab-enter-rail-y {
+  from {
+    transform: translateX(-50%) scaleY(0);
+  }
+}
+@keyframes vocab-enter-rail-x {
+  from {
+    transform: translateY(-50%) scaleX(0);
+  }
+}
+@keyframes vocab-enter-drop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-26px) scale(0.5);
+  }
+}
+/* The handover: the demo word that just ended stays on screen, frozen, and recedes under
+   the picker as it builds up; the toolbar and dock fade first. The feed is taken off once
+   the picker covers it (VocabularyFeedPage's "handover" stage). */
+.vocabulary-shell[data-handover] .vocab-viewport {
+  animation: vocab-handover-recede var(--handover-recede) var(--ease-out) forwards;
+}
+.vocabulary-shell[data-handover] :is(.vocab-toolbar, .vocab-saved-dock) {
+  pointer-events: none;
+  animation: vocab-handover-chrome var(--handover-chrome) var(--ease-out) forwards;
+}
+@keyframes vocab-handover-recede {
+  to {
+    transform: scale(0.96);
+    filter: blur(12px) brightness(0.55);
+  }
+}
+@keyframes vocab-handover-chrome {
+  to {
+    opacity: 0;
+  }
+}
+/* Reduced motion: the picker fades in whole over the word; nothing moves or staggers. */
+@media (prefers-reduced-motion: reduce) {
+  .vocab-onboard[data-entrance]
+    :is(
+      .vocab-onboard-head > *,
+      .vocab-onboard-rung,
+      .vocab-onboard-tick,
+      .vocab-onboard-knob,
+      .vocab-onboard-foot
+    ),
+  .vocab-onboard[data-entrance] .vocab-onboard-gauge::before,
+  .vocabulary-shell[data-handover] .vocab-viewport {
+    animation: none;
+  }
+}
 /* ── Post-reveal spelling replay ──────────────────────────────────────────────
    The revealed word dissolves, then every letter pops in one at a time so the
    reader can spell it silently before the stream advances. */
@@ -5200,101 +5357,15 @@
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
-/* ── The reveal: flood, ring, sparks ─────────────────────────────────────────
-   Centred on the answer (the reveal page sets its text at 34% of the card). Every
-   piece is a one-shot transform/opacity animation and rests invisible, so nothing
-   lingers over the word once it has landed. */
+/* ── The reveal burst ─────────────────────────────────────────────────────────
+   A canvas over the whole card, under the text (it comes first in the stage), drawn
+   by components/RevealBurst. Every piece of it fades before it reaches the word. */
 .vocab-reveal-burst {
   position: absolute;
-  left: 50%;
-  top: 34%;
-  width: 0;
-  height: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-}
-.vocab-reveal-flash {
-  position: absolute;
-  left: -90vmax;
-  top: -90vmax;
-  width: 180vmax;
-  height: 180vmax;
-  border-radius: 50%;
-  background: radial-gradient(
-    closest-side,
-    color-mix(in srgb, var(--vocab-accent) 78%, transparent) 0%,
-    color-mix(in srgb, var(--vocab-accent) 46%, transparent) 46%,
-    transparent 72%
-  );
-  opacity: 0;
-  transform: scale(0.04);
-  animation: vocab-reveal-flash 0.95s var(--ease-out) 0.1s both;
-}
-@keyframes vocab-reveal-flash {
-  0% {
-    opacity: 0;
-    transform: scale(0.04);
-  }
-  16% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
-}
-.vocab-reveal-ring {
-  position: absolute;
-  left: -90px;
-  top: -90px;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  border: 3px solid var(--vocab-accent-alt);
-  opacity: 0;
-  animation: vocab-reveal-ring 0.75s var(--ease-out) 0.16s both;
-}
-@keyframes vocab-reveal-ring {
-  from {
-    opacity: 0.9;
-    transform: scale(0.2);
-  }
-  to {
-    opacity: 0;
-    transform: scale(2.6);
-  }
-}
-.vocab-reveal-spark {
-  position: absolute;
-  left: -11px;
-  top: -3px;
-  width: 22px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--vocab-accent);
-  opacity: 0;
-  /* Rotated about the burst centre, then thrown outward along its own axis. */
-  animation: vocab-reveal-spark 0.72s var(--ease-out) calc(0.16s + var(--spark-delay, 0s)) both;
-}
-.vocab-reveal-spark[data-tint="1"] {
-  background: var(--vocab-accent-alt);
-}
-.vocab-reveal-spark[data-tint="2"] {
-  background: var(--vocab-ink);
-  height: 4px;
-}
-@keyframes vocab-reveal-spark {
-  0% {
-    opacity: 1;
-    transform: rotate(var(--spark-angle)) translateX(36px) scaleX(0.4);
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: rotate(var(--spark-angle)) translateX(calc(250px * var(--spark-reach, 1)))
-      scaleX(0.25);
-  }
 }
 /* ── The answer blank as a live slot ─────────────────────────────────────────
    The masked answer is the one thing every clue page is about, and five underscores
@@ -6102,18 +6173,18 @@
     /* (34 − 17) / 4 */
     --vocab-controls-nudge: 4.25px;
   }
-  /* A phone has no room to spare between the title and the gear, so the transport group
-     docks against the gear instead of floating centred between them: it reads as one
-     cluster of controls on the right, and the space it frees goes to the title side.
-     The optical nudge has nothing to balance once the group sits at the end. */
+  /* With the store button gone there is room to spare between the title and the gear
+     even on a phone, so the transport group stays centred in the middle track rather
+     than docking against the gear: it reads as one control cluster with equal air on
+     both sides. The optical nudge still applies (base rule), so the two visible gaps
+     stay even. */
   .vocab-player-controls {
-    justify-self: end;
-    translate: none;
+    justify-self: center;
   }
-  /* Budget at 390px (row = 358): centre = 3×34 + 2×6 = 114, two row gaps = 16, so each
-     1fr column is (358 − 114 − 16) / 2 ≈ 114px. Left = title(15px ≈ 72) + gap(6) +
-     gear(30) ≈ 108 ≤ 114; right = one 34px bookmark. The tagline floats beneath the
-     title, outside this budget, so it never counts against it. */
+  /* Budget at 390px (row = 358): centre = 3×34 + 2×6 = 114, two row gaps = 16, so the
+     middle 1fr track is 358 − left − right − 2×16 and the group centres inside it.
+     Left = title(15px ≈ 72) + gap(6) ≈ 78; right = one gear. The tagline floats beneath
+     the title, outside this budget, so it never counts against it. */
   .vocab-brand {
     font-size: 15px;
     letter-spacing: -0.5px;
@@ -6391,10 +6462,6 @@
       var(--vocab-reveal-head) + var(--vocab-reveal-word) + var(--vocab-reveal-seam)
     );
     --vocab-reveal-gap: var(--vocab-reveal-foot);
-  }
-  /* The celebration bursts from the middle of the word, wherever the word now is. */
-  .vocab-card:not([data-export]) .vocab-reveal-burst {
-    top: calc(var(--vocab-reveal-head) + var(--vocab-reveal-word) / 2);
   }
   /* A clue page's band is stretched the same way: the fit solver keeps its text 132px
      clear of the band's foot, which is portrait furniture. On a 390px-tall card the real
@@ -10268,23 +10335,10 @@ body:has(.vocab-intro) .vocab-resume {
   text-transform: uppercase;
   color: var(--shell-text-mute);
 }
-/* One level's row in the words-per-level ladder: its name beside its medals, so a
-   catalog with a dozen tracks stays a short list. */
-.vocab-medal-ladder {
-  display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
-  align-items: center;
-}
-.vocab-medal-ladder-title {
-  margin: 0;
-  padding: 0 0 18px 16px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--shell-text);
-}
+/* One row of the words ladder (a level, then a pack). Each medal names its own level or
+   pack under its count (.vocab-medal-tile-scope), so the row is just its shelf. */
 .vocab-medal-ladder .vocab-medal-shelf {
-  padding: 8px 12px 4px 0;
+  padding: 8px 12px 4px;
 }
 .vocab-medal-ladder:nth-child(2) .vocab-medal-shelf {
   padding-top: 16px;
@@ -10292,13 +10346,17 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-medal-ladder:last-child .vocab-medal-shelf {
   padding-bottom: 24px;
 }
-.vocab-medal-ladder-title small {
-  display: block;
-  margin-bottom: 2px;
-  font-size: 10px;
+/* The words badge's level or pack, under its count: one line ("Cấp độ A1"), or two when
+   a pack's name is wider than the medal ("Gói từ" over "🐣 vỡ lòng"; scopeLine keeps each
+   half whole). */
+.vocab-medal-tile-scope {
+  margin-top: -4px;
+  max-width: 100%;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
   color: var(--shell-text-mute);
 }
 /* Under a grey goal, in place of its metal: how close the reader is. */
@@ -10735,11 +10793,14 @@ body:has(.vocab-intro) .vocab-resume {
   overflow: hidden;
 }
 .vocab-recall {
-  --recall-bar: 56px;
+  /* Tall enough for the headline and the week's bars beside the back button. */
+  --recall-bar: 64px;
   --recall-yes: var(--vocab-accent);
   --recall-no: #ff8fa3;
   --recall-open: color-mix(in srgb, var(--shell-text) 20%, transparent);
   --recall-gutter: 20px;
+  /* The page bar under a paged list; RecallSheet reads it to cut the pages. */
+  --recall-pager: 44px;
   position: absolute;
   inset: 0;
   z-index: 70;
@@ -10802,7 +10863,7 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-recall-column {
   width: min(100%, 560px);
   margin: 0 auto;
-  padding: var(--recall-bar) var(--recall-gutter) 24px;
+  padding: calc(var(--recall-bar) + 6px) var(--recall-gutter) 24px;
 }
 .vocab-recall-topbar {
   position: absolute;
@@ -10864,49 +10925,21 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-recall-back:active {
   transform: scale(0.92);
 }
-.vocab-recall-compact {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+/* Same composition as the cell it grew from, the number over its window, set small
+   beside the back button so the words below get the room. */
+.vocab-recall-title {
+  flex: 0 1 auto;
   min-width: 0;
-  margin: 0;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity var(--dur-quick) var(--ease-out),
-    transform var(--dur-move) var(--ease-spring);
-}
-.vocab-recall-topbar[data-compact] .vocab-recall-compact {
-  opacity: 1;
-  transform: none;
-}
-.vocab-recall-compact strong {
-  overflow: hidden;
-  font-size: 16px;
-  font-weight: 750;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.vocab-recall-compact small {
-  flex: none;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--shell-text-mute);
-  font-variant-numeric: tabular-nums;
-}
-/* Same composition as the cell it grew from: the number, the window under it. */
-.vocab-recall-hero {
-  padding: 10px 0 18px;
+  max-width: 40%;
 }
 .vocab-recall-headline {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 4px;
 }
 .vocab-recall-count {
   display: block;
-  font-size: 60px;
+  font-size: 30px;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -10927,17 +10960,22 @@ body:has(.vocab-intro) .vocab-resume {
   }
 }
 .vocab-recall-unit {
-  font-size: 20px;
+  font-size: 13px;
   font-weight: 650;
   letter-spacing: -0.01em;
   color: var(--shell-text-mute);
 }
 .vocab-recall-name {
   display: block;
+  overflow: hidden;
   width: fit-content;
-  margin-top: 2px;
-  font-size: 17px;
+  max-width: 100%;
+  margin-top: 1px;
+  font-size: 12.5px;
   font-weight: 650;
+  line-height: 1.25;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   letter-spacing: -0.01em;
   color: var(--shell-text-soft);
   transform-origin: 0 0;
@@ -11013,24 +11051,33 @@ body:has(.vocab-intro) .vocab-resume {
   background: var(--shell-hover);
   color: var(--shell-text);
 }
-/* The week at a glance: seven days as bars, and the way to any of them. */
+/* The week at a glance in the top bar: seven days as bars, and the way to any of them.
+   It takes what the bar has left, and on a narrow bar the days go by number alone. */
+.vocab-recall-topstrip {
+  flex: 1;
+  align-self: flex-end;
+  min-width: 0;
+  max-width: 300px;
+  /* Clear of the grabber above it on a touch screen. */
+  margin: 0 0 4px auto;
+  container-type: inline-size;
+}
 .vocab-recall-strip {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr)) 58px;
-  gap: 3px;
-  margin: 14px 0 6px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
 }
 .vocab-recall-strip button {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
-  height: 76px;
-  padding: 0 0 7px;
+  height: 46px;
+  padding: 0 0 3px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 9px;
   background: none;
   color: var(--shell-text-mute);
   font: inherit;
@@ -11049,20 +11096,20 @@ body:has(.vocab-intro) .vocab-resume {
   color: var(--shell-text);
 }
 .vocab-recall-strip small {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 650;
   line-height: 1;
-}
-.vocab-recall-week {
-  margin-left: 5px;
-}
-.vocab-recall-week strong {
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--shell-text);
-  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+@container (max-width: 150px) {
+  .vocab-recall-day-t {
+    display: none;
+  }
+  /* Today is the last column: "Nay" spills into the space on its right, not onto "4". */
+  .vocab-recall-day:last-child small {
+    align-self: flex-start;
+  }
 }
 .vocab-recall-day[data-dim] .vocab-recall-bar {
   opacity: 0.5;
@@ -11072,15 +11119,15 @@ body:has(.vocab-intro) .vocab-resume {
   align-items: flex-end;
   justify-content: center;
   width: 100%;
-  height: 46px;
+  height: 30px;
   transition: opacity var(--dur-quick) var(--ease-out);
 }
 /* Remembered words fill the bar from its foot, the way a level rises. */
 .vocab-recall-fill {
   flex-direction: column-reverse;
   gap: 2px;
-  width: 12px;
-  border-radius: 5px;
+  width: 8px;
+  border-radius: 4px;
   transition: height 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .vocab-recall-day[data-empty] .vocab-recall-bar::after {
@@ -11115,6 +11162,141 @@ body:has(.vocab-intro) .vocab-resume {
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--shell-text-mute);
+}
+/* A list taller than the sheet, in pages. Each page fills the sheet under its top bar,
+   so the headline scrolls away above them and the list settles under the bar; the
+   strip snaps sideways from page to page, and the page bar stays at the foot. */
+.vocab-recall-scroll[data-paged] {
+  scroll-snap-type: y proximity;
+}
+.vocab-recall-scroll[data-paged] .vocab-recall-column {
+  scroll-snap-align: start;
+  padding-bottom: 0;
+}
+.vocab-recall-pages[data-paged] {
+  scroll-snap-align: start;
+  scroll-margin-top: var(--recall-bar);
+  margin: 0 calc(var(--recall-gutter) * -1);
+}
+.vocab-recall-pages[data-paged] .vocab-recall-pages-strip {
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.vocab-recall-pages-strip::-webkit-scrollbar {
+  display: none;
+}
+.vocab-recall-pages[data-paged] .vocab-recall-track {
+  display: flex;
+  align-items: flex-start;
+}
+.vocab-recall-pages[data-paged] .vocab-recall-page {
+  position: relative;
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 0 var(--recall-gutter);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+/* Each page repeats its day's heading, so it need not stick; inside the strip it would
+   stick to the strip, not the sheet. */
+.vocab-recall-pages[data-paged] .vocab-recall-group-head {
+  position: relative;
+  top: auto;
+  /* Tighter than the sticky heading: every page carries one, and on a short panel
+     these pixels are a row. */
+  padding-top: 8px;
+  padding-bottom: 4px;
+}
+/* A sideways swipe here turns the page, so the rows hand both axes to the browser. */
+.vocab-recall-pages[data-paged] .vocab-recall-item {
+  touch-action: pan-x pan-y;
+}
+/* The light that runs down a finished page's timeline (RecallPager). */
+.vocab-recall-sweep {
+  position: absolute;
+  z-index: 0;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: linear-gradient(
+    var(--recall-yes),
+    color-mix(in srgb, var(--recall-yes) 70%, var(--shell-text))
+  );
+  box-shadow: 0 0 10px color-mix(in srgb, var(--recall-yes) 60%, transparent);
+  transform-origin: top;
+  pointer-events: none;
+}
+.vocab-recall-pager {
+  position: sticky;
+  z-index: 2;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: var(--recall-pager);
+  padding: 0 var(--recall-gutter);
+  background: linear-gradient(transparent, var(--shell-surface) 38%);
+}
+.vocab-recall-dots {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  /* RecallPager's SEGMENT_GAP. */
+  gap: 4px;
+  height: 100%;
+}
+.vocab-recall-dots button {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.vocab-recall-dots i {
+  width: 100%;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--recall-open);
+  transition: background 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vocab-recall-dots button[data-done] i {
+  background: color-mix(in srgb, var(--recall-yes) 55%, transparent);
+}
+.vocab-recall-dots button:focus-visible {
+  outline: 2px solid var(--vocab-accent);
+  outline-offset: -6px;
+  border-radius: 6px;
+}
+.vocab-recall-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: calc((100% - (var(--pages) - 1) * 4px) / var(--pages));
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 99px;
+  background: var(--shell-text);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--shell-text) 28%, transparent);
+  pointer-events: none;
+}
+.vocab-recall-pageno {
+  flex: none;
+  min-width: 3.2ch;
+  font-size: 12.5px;
+  font-weight: 650;
+  text-align: right;
+  color: var(--shell-text-mute);
+  font-variant-numeric: tabular-nums;
 }
 /* The timeline. One line down the left edge; each word is a node on it, and the node
    is the answer: hollow until tried, lit once answered. */
@@ -11386,7 +11568,166 @@ body:has(.vocab-intro) .vocab-resume {
   .vocab-memory-meter i,
   .vocab-recall-fill i,
   .vocab-recall-fill,
-  .vocab-recall-compact {
+  .vocab-recall-dots i {
     transition: none;
+  }
+}
+
+/* ── First-visit demo badge ───────────────────────────────────────────────────────────────
+   "Từ gì mà ..." springs in over a blurred card, holds long enough to be read, pops away,
+   and the blur lifts; only then does the stream let the card's first clue start
+   (lib/first-visit, VocabularyStream DemoBadge). The recorded clip's intro looks alike but
+   is its own sheet: its `body:has(.vocab-intro)` rules hide the chrome, which the feed must
+   never do. Every beat is a share of --demo-badge-dur, set inline from DEMO_BADGE_MS, so
+   the timeline ends exactly when the card is let go. Nothing here takes a pointer, so the
+   reader can scroll on to another word through it. */
+.vocab-demo-badge {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  font-family: "Inter", sans-serif;
+}
+.vocab-demo-badge-veil {
+  position: absolute;
+  inset: 0;
+  animation: vocab-demo-veil var(--demo-badge-dur, 1600ms) ease-out both;
+}
+@keyframes vocab-demo-veil {
+  0%,
+  70% {
+    backdrop-filter: blur(18px);
+    background: #00000066;
+  }
+  100% {
+    backdrop-filter: blur(0px);
+    background: #0000;
+  }
+}
+.vocab-demo-badge-card {
+  position: relative;
+  max-width: 82%;
+  padding: 0.55em 0.95em;
+  border-radius: 0.7em;
+  font-size: clamp(28px, 9vw, 42px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+  color: #10121a;
+  background: linear-gradient(180deg, #ffffff, #f2f4fb);
+  box-shadow:
+    0 30px 80px #00000070,
+    0 3px 0 #ffffff inset,
+    0 0 0 1px #ffffff40;
+  overflow: hidden;
+  animation: vocab-demo-badge var(--demo-badge-dur, 1600ms) linear both;
+}
+/* In (0–38%) with an overshoot, hold, then out (72–94%) before the veil has gone. */
+@keyframes vocab-demo-badge {
+  0% {
+    opacity: 0;
+    transform: scale(0.42) rotate(-7deg);
+    animation-timing-function: cubic-bezier(0.17, 0.89, 0.28, 1.08);
+  }
+  21% {
+    opacity: 1;
+    transform: scale(1.1) rotate(2.5deg);
+  }
+  30% {
+    transform: scale(0.97) rotate(-1deg);
+  }
+  38%,
+  72% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    animation-timing-function: cubic-bezier(0.5, -0.4, 0.75, 0.4);
+  }
+  94%,
+  100% {
+    opacity: 0;
+    transform: scale(0.72) rotate(-5deg);
+  }
+}
+/* One light sweeping across the face just after it lands. */
+.vocab-demo-badge-card::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  width: 45%;
+  left: -60%;
+  background: linear-gradient(100deg, #0000, #ffffffe0, #0000);
+  transform: skewX(-18deg);
+  opacity: 0;
+  animation: vocab-demo-shine var(--demo-badge-dur, 1600ms) ease-in-out both;
+}
+@keyframes vocab-demo-shine {
+  0%,
+  36% {
+    left: -60%;
+    opacity: 0;
+  }
+  46% {
+    opacity: 0.85;
+  }
+  72%,
+  100% {
+    left: 130%;
+    opacity: 0;
+  }
+}
+/* A ring thrown out of the badge as it lands: the impact. */
+.vocab-demo-badge-ring {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+  opacity: 0;
+  animation: vocab-demo-ring var(--demo-badge-dur, 1600ms) ease-out both;
+}
+@keyframes vocab-demo-ring {
+  0%,
+  19% {
+    opacity: 0;
+    transform: scale(0.3);
+    border-width: 10px;
+  }
+  20% {
+    opacity: 0.75;
+    transform: scale(0.3);
+    border-width: 10px;
+  }
+  65%,
+  100% {
+    opacity: 0;
+    transform: scale(2.1);
+    border-width: 1px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocab-demo-badge-card {
+    animation-name: vocab-demo-badge-fade;
+  }
+  .vocab-demo-badge-card::after,
+  .vocab-demo-badge-ring {
+    display: none;
+  }
+}
+@keyframes vocab-demo-badge-fade {
+  0% {
+    opacity: 0;
+  }
+  15%,
+  75% {
+    opacity: 1;
+  }
+  94%,
+  100% {
+    opacity: 0;
   }
 }

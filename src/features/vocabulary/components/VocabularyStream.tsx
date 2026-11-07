@@ -1,13 +1,13 @@
-/** Bounded, full-screen vocabulary stream and network states. Exports: VocabularyStream. Depends on: feed/window hooks, backfill bounds, VocabularyCard. */
+/** Bounded, full-screen vocabulary stream and network states. Exports: VocabularyStream, StreamDemo. Depends on: feed/window hooks, backfill bounds, VocabularyCard. */
 import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { useVocabularyFeed } from "../hooks/useVocabularyFeed";
 import { useVocabularyWindow } from "../hooks/useVocabularyWindow";
 import { useFeedPagination } from "../hooks/useFeedPagination";
-import { canWalkFurther, getWalkedPositions } from "../lib/backfill";
+import { canWalkFurther, getBlockedRun, selectVisibleEntries } from "../lib/backfill";
 import { formatCountdown, isWordAllowed, nextAvailableAt, type ViewHistory } from "../lib/history";
 import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
-import type { FeedPage, Presentation, TargetLocale, VocabularyFilters } from "../types";
+import type { FeedEntry, FeedPage, Presentation, TargetLocale, VocabularyFilters } from "../types";
 import type { VocabularyWord } from "../lib/schema";
 import { VocabularyCard } from "./VocabularyCard";
 
@@ -16,8 +16,26 @@ const ExportStudio = lazy(() =>
   import("./ExportStudio").then((module) => ({ default: module.ExportStudio })),
 );
 
-/** How long a word must hold the screen before it counts as seen. */
-const VIEW_DWELL_MS = 900;
+/**
+ * How long a word must hold the screen before it counts as having come on screen, for the
+ * music's run of words only. Entering the history takes far more: the card's answer page
+ * has to have held the screen (VocabularyCard onViewed, lib/history VIEW_ANSWER_MS).
+ */
+const SHOWN_DWELL_MS = 900;
+
+/**
+ * A first visit's demo (lib/first-visit). Every word that comes on screen opens with the
+ * badge, its card held on the first frame of its first page until the badge has gone, and
+ * the first word to play to its end calls `onDone` instead of moving the stream on.
+ */
+export type StreamDemo = {
+  /** The badge's text. */
+  badge: string;
+  /** How long the badge holds each word back. */
+  badgeMs: number;
+  /** A demo word reached its end (auto-finish or a coda tap). */
+  onDone: () => void;
+};
 
 /**
  * TEMPORARY, KineThai-only: never park on a dead end. The ja/th listings are
@@ -42,6 +60,7 @@ export function VocabularyStream({
   suspended,
   history,
   onRecordView,
+  onWordShown,
   onWordEnding,
   onWordFinished,
   exportOpen = false,
@@ -52,6 +71,7 @@ export function VocabularyStream({
   onClearFilters,
   revealButtonLabel,
   onToggleAutoplay,
+  demo,
 }: {
   seed: string;
   filters: VocabularyFilters;
@@ -61,8 +81,13 @@ export function VocabularyStream({
   reducedMotion: boolean;
   suspended: boolean;
   history: ViewHistory;
-  /** A word was read: its id, and its level when it has one (for level progress). */
+  /**
+   * A word was fully viewed (its answer held the screen), so it enters the history: its id,
+   * and its level when it has one (for level progress).
+   */
   onRecordView: (word: VocabularyWord) => void;
+  /** A word has held the screen for a moment (the music counts its run of words by this). */
+  onWordShown?: () => void;
   /** The on-screen word reached its final page; ms left before the stream moves on. */
   onWordEnding?: (remainingMs: number) => void;
   /** A word was finished; the feed records it against the reader's daily streak. */
@@ -78,6 +103,8 @@ export function VocabularyStream({
   revealButtonLabel?: string;
   /** Toggle autoplay from the card's center tap zone; flips presentation.autoplay. */
   onToggleAutoplay?: () => void;
+  /** Play the stream as a first visit's demo. */
+  demo?: StreamDemo;
 }) {
   const query = useVocabularyFeed(seed, filters, locale);
   // Empty states, status line and feed landmark read in the active UI locale.
@@ -90,27 +117,29 @@ export function VocabularyStream({
   }, []);
 
   // Occurrences admitted before they were recorded stay mounted so the
-  // current card never vanishes the moment its view is stored.
+  // current card never vanishes the moment its view is stored. When no more words can be
+  // loaded (every fallback failed, or the device is offline), words already on the device
+  // are served even if seen today, rather than an error.
   const admitted = useRef(new Set<string>());
+  const loadStalled = query.entries.length > 0 && (query.isError || query.isPaused);
   const visibleEntries = useMemo(() => {
-    const out: typeof query.entries = [];
-    for (const entry of query.entries) {
-      if (admitted.current.has(entry.occurrenceId)) {
-        out.push(entry);
-        continue;
-      }
-      if (isWordAllowed(history, entry.word.id, now)) {
-        admitted.current.add(entry.occurrenceId);
-        out.push(entry);
-      }
-    }
+    const out = selectVisibleEntries(
+      query.entries,
+      admitted.current,
+      (id) => isWordAllowed(history, id, now),
+      loadStalled,
+    );
     // Endless mode: when caps would block the whole buffer, show it anyway
     // (repeats) instead of stranding the reader on the seen-everything panel.
     if (ENDLESS_STREAM && out.length === 0 && query.entries.length > 0) {
       return query.entries;
     }
     return out;
-  }, [query.entries, history, now]);
+  }, [query.entries, history, now, loadStalled]);
+  const visibleIds = useMemo(
+    () => new Set(visibleEntries.map((entry) => entry.occurrenceId)),
+    [visibleEntries],
+  );
 
   // Paging ceiling: the endpoint permutes the same pool forever, so hasNextPage stays
   // true even when every word it can offer is already buffered (and blocked by the
@@ -120,7 +149,7 @@ export function VocabularyStream({
   // button flickered too fast to read or tap while no word ever played.
   const canFetchMorePositions = canWalkFurther(
     query.metadata?.matching ?? 0,
-    getWalkedPositions(query.entries),
+    getBlockedRun(query.entries, visibleIds),
   );
   // Every word the pool holds is buffered: the stream ends on a page of its own after
   // the last word, rather than a toast that can only restart the feed.
@@ -137,7 +166,16 @@ export function VocabularyStream({
   const feedForPaging = useMemo(
     () => ({ ...query, entries: visibleEntries }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [query.data, query.hasNextPage, query.hasPreviousPage, query.isFetching, visibleEntries],
+    [
+      query.data,
+      query.error,
+      query.hasNextPage,
+      query.hasPreviousPage,
+      query.isFetching,
+      query.failureKind,
+      query.retryAt,
+      visibleEntries,
+    ],
   );
   const retry = useFeedPagination(
     feedForPaging as unknown as ReturnType<typeof useVocabularyFeed>,
@@ -159,24 +197,44 @@ export function VocabularyStream({
     if (query.metadata) onMetadata(query.metadata);
   }, [query.metadata, onMetadata]);
 
-  // Record a view once per occurrence — but only for a word the reader actually stayed on.
-  // Recording the instant a card became active meant every card the scroll merely passed
-  // through (a long flick, a snap that overshot and came back) was written to the history
-  // and blocked for a day without ever having been read. The dwell is short enough that a
-  // word someone glances at and deliberately skips still counts.
+  // A word enters the history only once it has been fully viewed: its card reports that
+  // its answer held the screen (onViewed). Counting a word the moment it had been on screen
+  // for under a second let every word the feed merely passed through — a cascade of
+  // changing words, a long flick, a background tab — fill the history with words nobody
+  // read, each then blocked for a day. Recorded once per occurrence.
   const recorded = useRef(new Set<string>());
+  const recordViewed = (entry: FeedEntry) => {
+    if (recorded.current.has(entry.occurrenceId)) return;
+    recorded.current.add(entry.occurrenceId);
+    onRecordView(entry.word);
+  };
   const activeEntry = visibleEntries[activeIndex];
   const activeOccurrenceId = activeEntry?.occurrenceId;
-  const activeWord = activeEntry?.word;
+  // The music counts a word that held the screen for a moment, read or not.
+  const shown = useRef(new Set<string>());
   useEffect(() => {
-    if (!activeOccurrenceId || !activeWord || suspended) return;
-    if (recorded.current.has(activeOccurrenceId)) return;
+    if (!activeOccurrenceId || suspended || !onWordShown) return;
+    if (shown.current.has(activeOccurrenceId)) return;
     const timer = setTimeout(() => {
-      recorded.current.add(activeOccurrenceId);
-      onRecordView(activeWord);
-    }, VIEW_DWELL_MS);
+      shown.current.add(activeOccurrenceId);
+      onWordShown();
+    }, SHOWN_DWELL_MS);
     return () => clearTimeout(timer);
-  }, [activeOccurrenceId, activeWord, suspended, onRecordView]);
+  }, [activeOccurrenceId, suspended, onWordShown]);
+
+  // The demo badge: the occurrence whose badge has already gone, so its card may play. It
+  // only keeps the last one, so a word scrolled back to opens with the badge again, which
+  // matches the card itself starting that word over. The clock does not run while the feed
+  // is suspended (fonts still loading, a sheet open), so the badge is never spent unseen.
+  const [introShown, setIntroShown] = useState<string | null>(null);
+  const demoBadgeMs = demo?.badgeMs;
+  const introPending =
+    demoBadgeMs !== undefined && !!activeOccurrenceId && introShown !== activeOccurrenceId;
+  useEffect(() => {
+    if (!introPending || suspended || !activeOccurrenceId) return;
+    const timer = setTimeout(() => setIntroShown(activeOccurrenceId), demoBadgeMs);
+    return () => clearTimeout(timer);
+  }, [introPending, suspended, activeOccurrenceId, demoBadgeMs]);
 
   // The export studio needs a word. Opened with none on screen (empty stream, every
   // word blocked) it would render nothing while still holding the feed suspended, so
@@ -404,14 +462,19 @@ export function VocabularyStream({
                   key={`${entry.occurrenceId}:${presentation.style}:${presentation.dialect ?? ""}`}
                   entry={entry}
                   current={item.index === activeIndex}
-                  active={item.index === activeIndex && !suspended}
+                  active={
+                    item.index === activeIndex &&
+                    !suspended &&
+                    !(demo && introShown !== entry.occurrenceId)
+                  }
                   presentation={presentation}
                   reducedMotion={reducedMotion}
                   matching={query.metadata?.matching ?? 0}
                   canAdvance={activeIndex < rows.length - 1}
-                  onAdvance={() => advanceFrom(entry.occurrenceId)}
+                  onAdvance={demo ? demo.onDone : () => advanceFrom(entry.occurrenceId)}
                   onWordEnding={onWordEnding}
                   onWordFinished={onWordFinished}
+                  onViewed={() => recordViewed(entry)}
                   revealButtonLabel={revealButtonLabel}
                   onToggleAutoplay={onToggleAutoplay}
                 />
@@ -420,6 +483,10 @@ export function VocabularyStream({
           })}
         </div>
       </div>
+      {demo && introPending && !suspended && (
+        // Keyed on the word, so scrolling on mid-badge starts the next one from its top.
+        <DemoBadge key={activeOccurrenceId} text={demo.badge} durationMs={demo.badgeMs} />
+      )}
       {exportOpen && activeEntry && onCloseExport && (
         <Suspense fallback={null}>
           <ExportStudio entry={activeEntry} presentation={presentation} onClose={onCloseExport} />
@@ -427,14 +494,22 @@ export function VocabularyStream({
       )}
       {visibleEntries.length > 0 && (
         <>
-          {(query.error || query.isPaused) && (
+          {/* A failed page is retried in the background while the reader still has words
+              ahead; the error is only worth showing once they have reached the last one. */}
+          {(query.isPaused || (query.error && activeIndex >= visibleEntries.length - 1)) && (
             <div className="vocab-stream-status" role="status">
               <span>
-                {query.needsRestart
+                {query.catalogChanged
                   ? t(ui, "stream.newCatalog")
-                  : query.isPaused
-                    ? t(ui, "stream.offline")
-                    : t(ui, "stream.loadMoreFail")}
+                  : query.needsRestart
+                    ? t(ui, "stream.sessionExpired")
+                    : query.isPaused
+                      ? t(ui, "stream.offline")
+                      : query.retryAt
+                        ? t(ui, "stream.loadMoreRetryAt", {
+                            countdown: formatCountdown(query.retryAt, now, ui),
+                          })
+                        : t(ui, "stream.loadMoreFail")}
               </span>
               <button
                 type="button"
@@ -448,5 +523,24 @@ export function VocabularyStream({
         </>
       )}
     </>
+  );
+}
+
+/**
+ * The demo's opening badge. Markup only: the timeline is in vocabulary.css, written as
+ * shares of `--demo-badge-dur` so it ends exactly when the card is let go. It takes no
+ * pointer events, so the reader can scroll on to another word underneath it.
+ */
+function DemoBadge({ text, durationMs }: { text: string; durationMs: number }) {
+  return (
+    <div
+      className="vocab-demo-badge"
+      role="status"
+      style={{ "--demo-badge-dur": `${durationMs}ms` } as React.CSSProperties}
+    >
+      <div className="vocab-demo-badge-veil" />
+      <div className="vocab-demo-badge-ring" />
+      <div className="vocab-demo-badge-card">{text}</div>
+    </div>
   );
 }

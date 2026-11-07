@@ -1,7 +1,7 @@
 /**
  * Vietnamese + Han kinetic line packing and page fit metrics.
  *
- * Exports: WordLine, WordSegment, getVietnameseWordLines, getVietnameseLayoutMetrics, getHanCharBudgetForLine, getHanLayoutMetrics, getVietnameseLineIndentEm, char budget helpers
+ * Exports: WordLine, WordSegment, VIETNAMESE_MAX_LINE_SYLLABLES, countSegmentSyllables, getVietnameseWordLines, getVietnameseLayoutMetrics, getHanCharBudgetForLine, getHanLayoutMetrics, getVietnameseLineIndentEm, char budget helpers
  * Depends on: text-language/vietnamese-phrases getBoundPhraseLength
  */
 
@@ -39,6 +39,24 @@ const VIETNAMESE_MAX_CONSECUTIVE_SOLO_LINES = 3;
 // is reached and a pair must be forced.
 const VIETNAMESE_PAIR_RELAX_CHARS = 3;
 const VIETNAMESE_PAIR_FORCE_CHARS = 6;
+/**
+ * No Vietnamese line holds more than this many syllables. A longer line is set small
+ * because its width binds, and that page then reads far smaller than its neighbours. A
+ * bonded word longer than this still stands whole on a line of its own: bonds never split.
+ */
+export const VIETNAMESE_MAX_LINE_SYLLABLES = 4;
+
+const HAS_GLYPH = /\p{L}|\p{N}/u;
+
+/**
+ * Syllables in a segment: one per token that draws a letter or digit. A Vietnamese token
+ * is one syllable (a `_` bond is a no-break space, and tokens split on it); a mark standing
+ * alone, such as "—", counts nothing.
+ * @pure true
+ */
+export function countSegmentSyllables(segment: WordSegment): number {
+  return segment.words.filter((word) => HAS_GLYPH.test(word.text)).length;
+}
 // Han pages pack through the SAME staggered line machinery as Vietnamese, one
 // character per token. A token costs the budget one visible char plus one joining
 // gap; a Han glyph is ~1em wide and the gap ~0.24em, so the average unit lands
@@ -225,11 +243,13 @@ export function getVietnameseWordLines(
     // flag the look-ahead chains indefinitely and the 4-glyph cap becomes
     // decorative.
     let hanRescueUsed = false;
+    let lineSyllables = 0;
 
     while (index < segments.length) {
       const segment = segments[index];
       const segmentLength = getSegmentVisibleLength(segment);
       const segmentWords = segment.words.length;
+      const segmentSyllables = countSegmentSyllables(segment);
       const projected = lineLength + (lineSegments.length > 0 ? gapUnits : 0) + segmentLength;
 
       // The first segment always lands on the line, however wide it is.
@@ -237,15 +257,25 @@ export function getVietnameseWordLines(
         lineSegments.push(segment);
         lineLength = segmentLength;
         lineWords = segmentWords;
+        lineSyllables = segmentSyllables;
         index += 1;
         continue;
       }
+
+      // A Vietnamese line never grows past the syllable cap, whatever room is left.
+      if (
+        !lineIsHan &&
+        options?.gapUnits !== 0 &&
+        lineSyllables + segmentSyllables > VIETNAMESE_MAX_LINE_SYLLABLES
+      )
+        break;
 
       // Within the soft capacity — keep filling.
       if (projected <= capacity) {
         lineSegments.push(segment);
         lineLength = projected;
         lineWords += segmentWords;
+        lineSyllables += segmentSyllables;
         index += 1;
         continue;
       }
@@ -269,6 +299,7 @@ export function getVietnameseWordLines(
         lineSegments.push(segment);
         lineLength = projected;
         lineWords += segmentWords;
+        lineSyllables += segmentSyllables;
         hanRescueUsed = true;
         index += 1;
         continue;
@@ -286,6 +317,7 @@ export function getVietnameseWordLines(
           lineSegments.push(segment);
           lineLength = projected;
           lineWords += segmentWords;
+          lineSyllables += segmentSyllables;
           index += 1;
         }
       }

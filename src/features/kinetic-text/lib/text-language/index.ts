@@ -26,6 +26,8 @@ export {
   getVietnameseCharBudgetForLine,
   getVietnameseLayoutMetrics,
   getVietnameseWordLines,
+  VIETNAMESE_MAX_LINE_SYLLABLES,
+  countSegmentSyllables,
 } from "./page-metrics";
 
 export { CLOSING_PUNCTUATION_CLASS, endsWithPunctuation } from "./closing-punctuation";
@@ -37,6 +39,7 @@ export {
   solveMeasuredLines,
 } from "./measured-lines";
 export type {
+  MeasuredFontBound,
   MeasuredLineBounds,
   MeasuredLineOptions,
   MeasuredLines,

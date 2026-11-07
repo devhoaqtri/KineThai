@@ -1,6 +1,9 @@
 /** Visibility-aware clue playback that auto-plays pages and finishes the card. Exports: useLearningPlayback. Depends on: React. */
 import { useEffect, useRef, useState } from "react";
 
+/** How long after a word stops being on screen its card rewinds to the first page: past a swipe's glide, so the card is already out of view. */
+const REWIND_AFTER_LEAVE_MS = 700;
+
 /** Advance clues while visible; once the reveal is reached, signal the stream to load the next word. @param options Playback configuration. @returns Stage state and navigation. */
 export function useLearningPlayback(options: {
   count: number;
@@ -24,9 +27,11 @@ export function useLearningPlayback(options: {
   revealPage?: number;
   /** Replay the word from its first page instead of finishing when the last page ends. */
   loop?: boolean;
+  /** Page to open on; a still image starts on the page it shows. */
+  initialPage?: number;
   onFinish?: () => void;
 }) {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(options.initialPage ?? 0);
   const [replay, setReplay] = useState(0);
   const [visible, setVisible] = useState(() => typeof document === "undefined" || !document.hidden);
   useEffect(() => {
@@ -103,7 +108,8 @@ export function useLearningPlayback(options: {
       clearTimeout(timer);
       // Bank at most the page's own length, and nothing for time spent with the page
       // hidden — otherwise a long pause returns with the clock already spent.
-      const shown = typeof document !== "undefined" && document.hidden ? 0 : performance.now() - startedAt;
+      const shown =
+        typeof document !== "undefined" && document.hidden ? 0 : performance.now() - startedAt;
       elapsed.current = Math.min(duration, elapsed.current + shown);
     };
   }, [
@@ -120,8 +126,36 @@ export function useLearningPlayback(options: {
   // page was shown, and a word the reader has LEFT must not keep that — coming back to a
   // finished card would otherwise find its clock already spent and bounce straight off it.
   const current = options.current ?? options.active;
+  // A word the reader comes back to starts again from its first page. Its card stays
+  // mounted while it is a neighbour, and it used to keep its page: a finished word is left
+  // on the spelling coda, so scrolling back replayed only the coda, finished, and pushed
+  // the reader forward again, every time they tried. The rewind waits until the card has
+  // slid out of view so it never jumps while still on screen; a reader who comes straight
+  // back before then gets it the moment the card is the word on screen again.
+  const rewindDue = useRef(false);
+  const shownOnce = useRef(false);
   useEffect(() => {
-    if (!current) elapsed.current = 0;
+    if (!current) {
+      elapsed.current = 0;
+      // Nothing to rewind on a neighbour that has not been on screen yet, nor on a still
+      // image, which keeps the page it shows.
+      if (!shownOnce.current || options.initialPage !== undefined) return;
+      rewindDue.current = true;
+      const timer = setTimeout(() => {
+        if (!rewindDue.current) return;
+        rewindDue.current = false;
+        setPage(0);
+        setReplay((count) => count + 1);
+      }, REWIND_AFTER_LEAVE_MS);
+      return () => clearTimeout(timer);
+    }
+    shownOnce.current = true;
+    if (rewindDue.current) {
+      rewindDue.current = false;
+      setPage(0);
+      setReplay((count) => count + 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current]);
   return {
     page,

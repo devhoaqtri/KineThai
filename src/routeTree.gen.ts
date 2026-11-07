@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AdminAccessDeniedRouteImport } from './routes/admin-access-denied'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BurstLabRouteImport } from './routes/burst-lab'
 import { Route as StoreRouteImport } from './routes/store'
 import { Route as AuthenticatedAboutRouteImport } from './routes/_authenticated/about'
 import { Route as AuthenticatedCommunityRouteImport } from './routes/_authenticated/community'
@@ -72,6 +73,11 @@ const AdminAccessDeniedRoute = AdminAccessDeniedRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BurstLabRoute = BurstLabRouteImport.update({
+  id: '/burst-lab',
+  path: '/burst-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StoreRoute = StoreRouteImport.update({
@@ -258,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/burst-lab': typeof BurstLabRoute
   '/store': typeof StoreRoute
   '/about': typeof AuthenticatedAboutRoute
   '/community': typeof AuthenticatedCommunityRoute
@@ -298,6 +305,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/burst-lab': typeof BurstLabRoute
   '/store': typeof StoreRoute
   '/about': typeof AuthenticatedAboutRoute
   '/community': typeof AuthenticatedCommunityRoute
@@ -341,6 +349,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/burst-lab': typeof BurstLabRoute
   '/store': typeof StoreRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
   '/_authenticated/community': typeof AuthenticatedCommunityRoute
@@ -384,6 +393,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-access-denied'
     | '/auth'
+    | '/burst-lab'
     | '/store'
     | '/about'
     | '/community'
@@ -424,6 +434,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin-access-denied'
     | '/auth'
+    | '/burst-lab'
     | '/store'
     | '/about'
     | '/community'
@@ -466,6 +477,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-access-denied'
     | '/auth'
+    | '/burst-lab'
     | '/store'
     | '/_authenticated/about'
     | '/_authenticated/community'
@@ -509,6 +521,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AdminAccessDeniedRoute: typeof AdminAccessDeniedRoute
   AuthRoute: typeof AuthRoute
+  BurstLabRoute: typeof BurstLabRoute
   StoreRoute: typeof StoreRoute
   FeedAboutRoute: typeof FeedAboutRoute
   FeedLibraryRoute: typeof FeedLibraryRoute
@@ -558,6 +571,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/burst-lab': {
+      id: '/burst-lab'
+      path: '/burst-lab'
+      fullPath: '/burst-lab'
+      preLoaderRoute: typeof BurstLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/store': {
@@ -879,6 +899,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AdminAccessDeniedRoute: AdminAccessDeniedRoute,
   AuthRoute: AuthRoute,
+  BurstLabRoute: BurstLabRoute,
   StoreRoute: StoreRoute,
   FeedAboutRoute: FeedAboutRoute,
   FeedLibraryRoute: FeedLibraryRoute,

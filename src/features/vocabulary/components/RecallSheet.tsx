@@ -1,24 +1,36 @@
 /**
  * The memory sheet: a memory cell, zoomed all the way in.
  *
- * One history, seen at any distance. The cell's number becomes the headline, the week's
- * rhythm sits under it and picks any of the last seven days, and below runs the timeline
- * of the words themselves.
+ * One history, seen at any distance. The cell's number becomes the headline, set small in
+ * the top bar beside the back button so the words get the room, and below runs the
+ * timeline of the words themselves. Only the week cell also opens the week's rhythm in
+ * that bar, seven days that each pick themselves, and the picked day again goes back to
+ * the whole week. Today and
+ * yesterday stay on their own day: the rest of the week is mostly empty and beside the
+ * point there.
  *
  * It is built for honest recall. A word's meaning stays redacted until the reader has
  * tried it, then opens with the example and the two answers (recall.yes, recall.no). The
  * answer is the timeline's own node, lit on the rail, and the row keeps its meaning from
  * then on, so a finished day reads as a glossary. Marking never opens the next word,
- * which would show its meaning before it could be tried. A sideways swipe answers
- * without opening. A pull down from the top folds the sheet back into its cell, with
- * the finger on the zoom's own playhead (../hooks/useRecallZoom).
+ * which would show its meaning before it could be tried. On a list short enough for one
+ * page a sideways swipe on a row answers the same way.
+ *
+ * A list taller than the sheet is cut into pages, each holding as many rows as the
+ * sheet shows under its top bar, measured rather than counted and cut again when the
+ * panel changes size (../lib/recall-pages). The pages swipe sideways (./RecallPager),
+ * so there a sideways swipe turns the page instead of answering, and the page moves on
+ * by itself once its last row is answered. The tally scrolls away above them and the
+ * list settles under the top bar. A pull down from the top folds the sheet back into
+ * its cell, with the finger on the zoom's own playhead (../hooks/useRecallZoom); a
+ * gesture that starts sideways stays a page swipe.
  *
  * Exports: RecallSheet
  * Depends on: @radix-ui/react-dialog, framer-motion, lucide-react, ../hooks/useRecallZoom,
- *   ../lib/hanzi, ../lib/history, ../lib/i18n, ../lib/recall-marks, ../lib/recall-words,
- *   ../lib/ui-copy, ../lib/useLocale, ./MarkedText
+ *   ../lib/hanzi, ../lib/history, ../lib/i18n, ../lib/recall-marks, ../lib/recall-pages,
+ *   ../lib/recall-words, ../lib/ui-copy, ../lib/useLocale, ./MarkedText, ./RecallPager
  */
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion, useMotionValue, useTransform, type PanInfo } from "framer-motion";
 import { Check, ChevronLeft, X } from "lucide-react";
@@ -37,6 +49,7 @@ import {
 import { posLabel } from "../lib/i18n";
 import type { Locale } from "../lib/locale";
 import { saveRecallMarks, type RecallChoice, type RecallMarks } from "../lib/recall-marks";
+import { packRecallPages, type RecallSlice } from "../lib/recall-pages";
 import {
   loadRecallWords,
   recallFallbackLabel,
@@ -46,6 +59,7 @@ import {
 import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
 import { FilledUsage, MarkedText } from "./MarkedText";
+import { RecallPager, type RecallPagerHandle } from "./RecallPager";
 
 /**
  * Rows show only the word and its short meaning for now. Flip this to bring back the
@@ -60,6 +74,17 @@ const DISMISS_SHARE = 0.16;
 const ENTRANCE_ROWS = 7;
 /** Bars never vanish: a day with one word still reads as a day with a word. */
 const MIN_BAR_SHARE = 0.08;
+/** The page bar's height before the sheet can read --recall-pager. */
+const PAGER_PX = 44;
+const BAR_PX = 64;
+
+/**
+ * Row and heading heights from the last sheet, so the first layout of the next one is
+ * usually already right and its rows rise with the zoom instead of being re-cut under it.
+ */
+const remembered = { row: 69, head: 38 };
+
+type Metrics = { capacity: number; rows: Record<string, number>; row: number; head: number };
 
 function dayName(start: number, now: number, ui: Locale): string {
   const today = startOfDay(now);
@@ -128,6 +153,7 @@ function Row({
   open,
   ui,
   weekViews,
+  swipe,
   onToggle,
   onMark,
 }: {
@@ -137,6 +163,8 @@ function Row({
   open: boolean;
   ui: Locale;
   weekViews: number;
+  /** Answer by swiping the row; off where a sideways swipe turns the page. */
+  swipe: boolean;
   onToggle: () => void;
   onMark: (choice: RecallChoice, toggle: boolean) => void;
 }) {
@@ -167,7 +195,13 @@ function Row({
   };
 
   return (
-    <li ref={row} className="vocab-recall-row" data-mark={mark} data-open={open || undefined}>
+    <li
+      ref={row}
+      className="vocab-recall-row"
+      data-id={entry.id}
+      data-mark={mark}
+      data-open={open || undefined}
+    >
       <div className="vocab-recall-cues" aria-hidden="true">
         <motion.span data-kind="yes" style={{ opacity: yesCue }}>
           <Check size={18} strokeWidth={2.75} /> {t(ui, "recall.yes")}
@@ -180,7 +214,7 @@ function Row({
         className="vocab-recall-item"
         data-dragging={dragging || undefined}
         style={{ x }}
-        drag="x"
+        drag={swipe ? "x" : false}
         dragDirectionLock
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.55}
@@ -304,14 +338,13 @@ function Row({
   );
 }
 
-/** The week at a glance, and the way to any day of it. */
+/** The week at a glance, and the way to any day of it; the chosen day again goes back to the week. */
 function RhythmStrip({
   days,
   scope,
   marks,
   now,
   ui,
-  weekCount,
   onScope,
 }: {
   days: HistoryDay[];
@@ -319,7 +352,6 @@ function RhythmStrip({
   marks: RecallMarks;
   now: number;
   ui: Locale;
-  weekCount: number;
   onScope: (scope: HistoryScope) => void;
 }) {
   const peak = Math.max(1, ...days.map((day) => day.ids.length));
@@ -343,7 +375,7 @@ function RhythmStrip({
             data-empty={tally.total === 0 || undefined}
             aria-pressed={scope === day.start}
             aria-label={t(ui, "recall.scopeAria", { label: name, n: tally.total })}
-            onClick={() => onScope(day.start)}
+            onClick={() => onScope(scope === day.start ? "week" : day.start)}
           >
             <span className="vocab-recall-bar">
               <span
@@ -355,21 +387,14 @@ function RhythmStrip({
                 <MeterParts {...tally} />
               </span>
             </span>
-            <small>{short}</small>
+            <small>
+              {/* A narrow bar keeps only the day's number: "T2" reads as "2". */}
+              {short.startsWith("T") && <span className="vocab-recall-day-t">T</span>}
+              {short.replace(/^T/, "")}
+            </small>
           </button>
         );
       })}
-      <button
-        type="button"
-        className="vocab-recall-week"
-        data-on={scope === "week" || undefined}
-        aria-pressed={scope === "week"}
-        aria-label={t(ui, "recall.scopeAria", { label: t(ui, "memory.cell.week"), n: weekCount })}
-        onClick={() => onScope("week")}
-      >
-        <strong>{weekCount}</strong>
-        <small>{t(ui, "recall.sevenDays")}</small>
-      </button>
     </div>
   );
 }
@@ -418,9 +443,16 @@ export function RecallSheet({
   const [scope, setScope] = useState(initialScope);
   const [openId, setOpenId] = useState<string | null>(null);
   const [onlyForgotten, setOnlyForgotten] = useState(false);
-  const [compact, setCompact] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [copies] = useState(loadRecallWords);
+  const [page, setPage] = useState(0);
+  // A first guess from the panel's height, refined from the rows once they are laid out.
+  const [metrics, setMetrics] = useState<Metrics>(() => ({
+    capacity: container ? container.clientHeight - BAR_PX - PAGER_PX : Number.POSITIVE_INFINITY,
+    rows: {},
+    ...remembered,
+  }));
+  const pager = useRef<RecallPagerHandle>(null);
 
   const back = useRef<HTMLButtonElement>(null);
   const sheet = useRef<HTMLDivElement>(null);
@@ -435,7 +467,6 @@ export function RecallSheet({
   const strip = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLElement>(null);
   const list = useRef<HTMLDivElement>(null);
-  const hero = useRef<HTMLDivElement>(null);
   const scopeRef = useRef(scope);
   scopeRef.current = scope;
 
@@ -455,24 +486,132 @@ export function RecallSheet({
     }
     return [...byDay].map(([start, rows]) => ({ start, rows }));
   }, [scope, shown]);
+  const pages = useMemo(
+    () =>
+      packRecallPages(
+        groups.map((group) => ({
+          head: scope === "week" ? metrics.head : 0,
+          rows: group.rows.map((entry) => metrics.rows[entry.id] ?? metrics.row),
+        })),
+        metrics.capacity,
+      ),
+    [groups, metrics, scope],
+  );
+  const pageIds = useMemo(
+    () =>
+      pages.map((slices) =>
+        slices.flatMap((slice) =>
+          groups[slice.group]!.rows.slice(slice.from, slice.to).map((entry) => entry.id),
+        ),
+      ),
+    [groups, pages],
+  );
+  const paged = pages.length > 1;
+  const cut = pageIds.map((ids) => ids.join(" ")).join("|");
+  const pageDone = pageIds.map((ids) => ids.length > 0 && ids.every((id) => marks[id]));
+  const listKey = `${scope}-${forgotten}`;
+  // The first word of the page in view, so a re-cut page keeps the reader on their words.
+  const anchor = useRef<string | null>(null);
+
+  // The memory cells sit low in the panel, so it is usually scrolled when one is tapped.
+  // The sheet stays over the part in view, and comes first: the zoom measures it next.
+  useLayoutEffect(() => {
+    const node = sheet.current;
+    if (!node || !container) return;
+    const pin = () => {
+      node.style.transform = `translateY(${container.scrollTop}px)`;
+    };
+    pin();
+    container.addEventListener("scroll", pin, { passive: true });
+    return () => container?.removeEventListener("scroll", pin);
+  }, [container]);
+
+  // Cut the pages from what the sheet really shows: its height under the top bar, less the
+  // page bar, and each row's own height. An opened row keeps the height it had closed,
+  // so opening a word never moves words between pages.
+  const measure = useCallback(() => {
+    const root = scroller.current;
+    const area = list.current;
+    if (!root || !area || !sheet.current) return;
+    const pagerPx =
+      Number.parseFloat(getComputedStyle(sheet.current).getPropertyValue("--recall-pager")) ||
+      PAGER_PX;
+    const capacity = root.clientHeight - (bar.current?.offsetHeight ?? BAR_PX) - pagerPx;
+    const rows: Record<string, number> = {};
+    for (const row of area.querySelectorAll<HTMLElement>(".vocab-recall-row")) {
+      const id = row.dataset.id;
+      if (id && !row.hasAttribute("data-open")) rows[id] = row.offsetHeight;
+    }
+    const heads = [...area.querySelectorAll<HTMLElement>(".vocab-recall-group-head")];
+    const heights = Object.values(rows).sort((a, b) => a - b);
+    if (heights.length) remembered.row = heights[Math.floor(heights.length / 2)]!;
+    if (heads.length) remembered.head = Math.max(...heads.map((head) => head.offsetHeight));
+    setMetrics((previous) => {
+      const merged = { ...previous.rows, ...rows };
+      const same =
+        previous.capacity === capacity &&
+        previous.head === remembered.head &&
+        Object.keys(rows).every((id) => previous.rows[id] === rows[id]);
+      return same
+        ? previous
+        : { capacity, rows: merged, row: remembered.row, head: remembered.head };
+    });
+  }, []);
+
+  useLayoutEffect(measure, [measure, listKey, shown.length]);
+
+  useEffect(() => {
+    const root = scroller.current;
+    if (!root || typeof ResizeObserver === "undefined") return;
+    let width = root.clientWidth;
+    let height = root.clientHeight;
+    const observer = new ResizeObserver(() => {
+      if (root.clientWidth === width && root.clientHeight === height) return;
+      width = root.clientWidth;
+      height = root.clientHeight;
+      measure();
+    });
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, [measure]);
+
+  // After the re-cut below has read it, so it still names a word of the old cut there.
+  useEffect(() => {
+    anchor.current = pageIds[page]?.[0] ?? null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, cut]);
+
+  // Re-cut pages: stay with the words that were in view.
+  useLayoutEffect(() => {
+    const index = anchor.current ? pageIds.findIndex((ids) => ids.includes(anchor.current!)) : 0;
+    const target = Math.max(0, Math.min(pages.length - 1, index));
+    if (target !== page) setPage(target);
+    pager.current?.jump(target, true);
+    // Only when the cut changes; paging itself moves `page`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cut]);
 
   const zoom = useRecallZoom({
     parts: () => {
       const required = [stage, backdrop, wash, count, name].map((ref) => ref.current);
       if (required.some((node) => !node)) return null;
-      const rows = list.current?.querySelectorAll<HTMLElement>(".vocab-recall-row") ?? [];
+      // A page still sliding lands first, so the zoom measures the sheet at rest.
+      pager.current?.settle();
+      const rows = pager.current?.currentRows() ?? [];
       return {
         stage: stage.current!,
         backdrop: backdrop.current!,
         wash: wash.current!,
         count: count.current!,
         name: name.current!,
+        // Not the whole bar: the count and name in it fly from the cell instead.
         fades: [
-          bar.current,
+          back.current,
           unit.current,
-          tally.current,
           strip.current,
-          ...[...rows].slice(0, ENTRANCE_ROWS),
+          tally.current,
+          ...rows.slice(0, ENTRANCE_ROWS),
+          pager.current?.indicator(),
         ].filter((node): node is HTMLElement => !!node),
         scene,
       };
@@ -481,9 +620,8 @@ export function RecallSheet({
       const exact = cellFor(scopeRef.current);
       const target = exact ?? fallbackCell();
       if (!target) return null;
-      // A scrolled-away headline has nothing to fly; it would cross the whole screen.
-      const atTop = (scroller.current?.scrollTop ?? 0) < 40;
-      return { target, flies: !!exact && atTop };
+      // The headline lives in the top bar, so it is always there to fly.
+      return { target, flies: !!exact };
     },
     reducedMotion,
     onClosed,
@@ -500,18 +638,6 @@ export function RecallSheet({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const target = hero.current;
-    const root = scroller.current;
-    if (!target || !root || typeof IntersectionObserver === "undefined") return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setCompact(entry ? !entry.isIntersecting : false),
-      { root, rootMargin: "-64px 0px 0px 0px" },
-    );
-    observer.observe(target);
-    return () => observer.disconnect();
-  }, []);
-
   // A pull down from the top of the list moves the zoom's playhead. Touch events, not
   // pointer events: the browser cancels a pointer the moment it takes the pan, and only
   // a non-passive touchmove can claim the gesture.
@@ -521,6 +647,7 @@ export function RecallSheet({
     let startY = 0;
     let startX = 0;
     let pulling = false;
+    let sideways = false;
     let travelled = 0;
     const onStart = (event: TouchEvent) => {
       const touch = event.touches[0];
@@ -528,14 +655,20 @@ export function RecallSheet({
       startY = touch.clientY;
       startX = touch.clientX;
       pulling = false;
+      sideways = false;
       travelled = 0;
     };
     const onMove = (event: TouchEvent) => {
       const touch = event.touches[0];
-      if (!touch) return;
+      if (!touch || sideways) return;
       const dy = touch.clientY - startY;
       const dx = touch.clientX - startX;
       if (!pulling) {
+        // A gesture that sets off sideways is a page swipe to the end, however it bends.
+        if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
+          sideways = true;
+          return;
+        }
         const atTop = (scroller.current?.scrollTop ?? 0) <= 0;
         if (!atTop || dy < 10 || dy < Math.abs(dx) * 1.2) return;
         pulling = true;
@@ -564,16 +697,16 @@ export function RecallSheet({
   }, [zoom]);
 
   useLayoutEffect(() => {
-    const node = sheet.current;
-    if (!node || !container) return;
-    node.style.transform = `translateY(${container.scrollTop}px)`;
-  }, [container]);
-
-  useLayoutEffect(() => {
     if (scroller.current) scroller.current.scrollTop = 0;
     setOpenId(null);
     setOnlyForgotten(false);
   }, [scope]);
+
+  // Another day or the forgotten filter is a new list, read from its first page.
+  useLayoutEffect(() => {
+    anchor.current = null;
+    setPage(0);
+  }, [listKey]);
 
   const mark = (id: string, choice: RecallChoice, toggle: boolean) => {
     const next = { ...marks };
@@ -583,46 +716,152 @@ export function RecallSheet({
     saveRecallMarks(next);
     onMarks(next);
     if (next[id]) setOpenId((current) => (current === id ? null : current));
+    // The answer that finishes the page in view turns it; taking one back calls that off.
+    // The forgotten view is all answers already, and its rows leave as they are re-marked.
+    const inView = pageIds[page];
+    if (!paged || forgotten || !inView?.includes(id)) return;
+    const finished = inView.every((row) => next[row]);
+    if (!finished) pager.current?.cancelAdvance();
+    else if (!inView.every((row) => marks[row]) && page < pages.length - 1) {
+      pager.current?.advance();
+    }
+  };
+
+  const renderSlice = (slice: RecallSlice) => {
+    const group = groups[slice.group]!;
+    return (
+      <section key={`${group.start}-${slice.from}`} className="vocab-recall-group">
+        {scope === "week" && (
+          <h3 className="vocab-recall-group-head">{dayName(group.start, now, ui)}</h3>
+        )}
+        <ol className="vocab-recall-rail">
+          {group.rows.slice(slice.from, slice.to).map((entry) => (
+            <Row
+              key={entry.id}
+              entry={entry}
+              copy={copies[entry.id]}
+              mark={marks[entry.id]}
+              open={openId === entry.id}
+              ui={ui}
+              weekViews={week.find((row) => row.id === entry.id)?.views ?? 1}
+              swipe={!paged}
+              onToggle={() => setOpenId((current) => (current === entry.id ? null : entry.id))}
+              onMark={(choice, toggle) => mark(entry.id, choice, toggle)}
+            />
+          ))}
+        </ol>
+      </section>
+    );
   };
 
   const label = scopeName(scope, now, ui);
   const summary = tallyLine(score, ui);
 
   return (
-    <Dialog.Root open onOpenChange={(open) => !open && zoom.close()}>
-      <Dialog.Content
-        ref={sheet}
-        className="vocab-recall"
-        aria-describedby={undefined}
-        onOpenAutoFocus={(event) => {
-          event.preventDefault();
-          back.current?.focus({ preventScroll: true });
-        }}
-        // This dialog has no Radix trigger to hand focus back to.
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          returnFocus();
-        }}
-        // The settings sheet behind must not read this Escape as its own.
-        onKeyDown={(event) => event.stopPropagation()}
-      >
-        <Dialog.Title className="sr-only">
-          {t(ui, "recall.scopeAria", { label, n: entries.length })}
-        </Dialog.Title>
-        <div ref={backdrop} className="vocab-recall-backdrop" />
-        <div
-          ref={stage}
-          className="vocab-recall-stage"
-          data-today={(typeof scope === "number" && scope === startOfDay(now)) || undefined}
+    // Not modal. A modal dialog turns off pointer events on everything outside it, which
+    // took the settings panel's close button with it and made a tap outside fold only this
+    // sheet. The sheet lives inside the panel, so the panel's own rule applies: the close
+    // button and any tap outside close the panel, sheet and all (FeedControls). Escape and
+    // the back button still fold just the sheet.
+    <Dialog.Root open modal={false} onOpenChange={(open) => !open && zoom.close()}>
+      <Dialog.Portal container={container}>
+        <Dialog.Content
+          ref={sheet}
+          className="vocab-recall"
+          aria-describedby={undefined}
+          onOpenAutoFocus={(event) => {
+            event.preventDefault();
+            back.current?.focus({ preventScroll: true });
+          }}
+          // This dialog has no Radix trigger to hand focus back to.
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            returnFocus();
+          }}
+          // A tap outside belongs to the panel, which closes with the sheet inside it; folding
+          // the sheet at the same time would fight the panel's exit.
+          onInteractOutside={(event) => event.preventDefault()}
+          // The settings sheet behind must not read this Escape as its own.
+          onKeyDown={(event) => event.stopPropagation()}
         >
-          <div ref={wash} className="vocab-recall-wash" />
+          <Dialog.Title className="sr-only">
+            {t(ui, "recall.scopeAria", { label, n: entries.length })}
+          </Dialog.Title>
+          <div ref={backdrop} className="vocab-recall-backdrop" />
           <div
-            ref={scroller}
-            className="vocab-recall-scroll"
-            onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 4)}
+            ref={stage}
+            className="vocab-recall-stage"
+            data-today={(typeof scope === "number" && scope === startOfDay(now)) || undefined}
           >
-            <div className="vocab-recall-column">
-              <div ref={hero} className="vocab-recall-hero">
+            <div ref={wash} className="vocab-recall-wash" />
+            <div
+              ref={scroller}
+              className="vocab-recall-scroll"
+              data-paged={paged || undefined}
+              onScroll={(event) => setScrolled(event.currentTarget.scrollTop > 4)}
+            >
+              <div className="vocab-recall-column">
+                <div ref={tally} className="vocab-recall-tally">
+                  {score.total > 0 && (
+                    <>
+                      <div className="vocab-recall-meter" aria-hidden="true">
+                        <MeterParts {...score} />
+                      </div>
+                      <div className="vocab-recall-summary">
+                        <p aria-live="polite">{summary}</p>
+                        {score.no > 0 && (
+                          <button
+                            type="button"
+                            aria-pressed={forgotten}
+                            data-on={forgotten || undefined}
+                            onClick={() => setOnlyForgotten((on) => !on)}
+                          >
+                            {forgotten
+                              ? t(ui, "recall.showAll")
+                              : t(ui, "recall.showForgotten", { n: score.no })}
+                          </button>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div ref={list} key={listKey} className="vocab-recall-list">
+                  {entries.length === 0 && (
+                    <p className="vocab-recall-empty">
+                      {scope === "week"
+                        ? t(ui, "recall.empty.week")
+                        : scope === startOfDay(now)
+                          ? t(ui, "recall.empty.today")
+                          : t(ui, "recall.empty.day")}
+                    </p>
+                  )}
+                  {entries.length > 0 && (
+                    <RecallPager
+                      handle={pager}
+                      pages={pages}
+                      page={page}
+                      onPage={setPage}
+                      done={pageDone}
+                      capacity={metrics.capacity}
+                      reducedMotion={reducedMotion}
+                      renderSlice={renderSlice}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+            <header ref={bar} className="vocab-recall-topbar" data-scrolled={scrolled || undefined}>
+              <span className="vocab-recall-grabber" aria-hidden="true" />
+              <button
+                ref={back}
+                type="button"
+                className="vocab-recall-back"
+                onClick={zoom.close}
+                aria-label={t(ui, "recall.back")}
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <div className="vocab-recall-title">
                 <div className="vocab-recall-headline">
                   <strong ref={count} className="vocab-recall-count">
                     <span key={scope}>{entries.length}</span>
@@ -635,105 +874,22 @@ export function RecallSheet({
                   {label}
                 </span>
               </div>
-              <div ref={tally} className="vocab-recall-tally">
-                {score.total > 0 && (
-                  <>
-                    <div className="vocab-recall-meter" aria-hidden="true">
-                      <MeterParts {...score} />
-                    </div>
-                    <div className="vocab-recall-summary">
-                      <p aria-live="polite">{summary}</p>
-                      {score.no > 0 && (
-                        <button
-                          type="button"
-                          aria-pressed={forgotten}
-                          data-on={forgotten || undefined}
-                          onClick={() => setOnlyForgotten((on) => !on)}
-                        >
-                          {forgotten
-                            ? t(ui, "recall.showAll")
-                            : t(ui, "recall.showForgotten", { n: score.no })}
-                        </button>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
               {initialScope === "week" && (
-                <div ref={strip}>
+                <div ref={strip} className="vocab-recall-topstrip">
                   <RhythmStrip
                     days={days}
                     scope={scope}
                     marks={marks}
                     now={now}
                     ui={ui}
-                    weekCount={week.length}
                     onScope={setScope}
                   />
                 </div>
               )}
-              <div ref={list} key={`${scope}-${forgotten}`} className="vocab-recall-list">
-                {entries.length === 0 && (
-                  <p className="vocab-recall-empty">
-                    {scope === "week"
-                      ? t(ui, "recall.empty.week")
-                      : scope === startOfDay(now)
-                        ? t(ui, "recall.empty.today")
-                        : t(ui, "recall.empty.day")}
-                  </p>
-                )}
-                {groups.map((group) => (
-                  <section key={group.start} className="vocab-recall-group">
-                    {scope === "week" && (
-                      <h3 className="vocab-recall-group-head">{dayName(group.start, now, ui)}</h3>
-                    )}
-                    <ol className="vocab-recall-rail">
-                      {group.rows.map((entry) => (
-                        <Row
-                          key={entry.id}
-                          entry={entry}
-                          copy={copies[entry.id]}
-                          mark={marks[entry.id]}
-                          open={openId === entry.id}
-                          ui={ui}
-                          weekViews={week.find((row) => row.id === entry.id)?.views ?? 1}
-                          onToggle={() =>
-                            setOpenId((current) => (current === entry.id ? null : entry.id))
-                          }
-                          onMark={(choice, toggle) => mark(entry.id, choice, toggle)}
-                        />
-                      ))}
-                    </ol>
-                  </section>
-                ))}
-              </div>
-            </div>
+            </header>
           </div>
-          <header
-            ref={bar}
-            className="vocab-recall-topbar"
-            data-scrolled={scrolled || undefined}
-            data-compact={compact || undefined}
-          >
-            <span className="vocab-recall-grabber" aria-hidden="true" />
-            <button
-              ref={back}
-              type="button"
-              className="vocab-recall-back"
-              onClick={zoom.close}
-              aria-label={t(ui, "recall.back")}
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <p className="vocab-recall-compact" aria-hidden={!compact}>
-              <strong>{label}</strong>
-              <small>
-                {entries.length} {t(ui, "onboard.wordsUnit")}
-              </small>
-            </p>
-          </header>
-        </div>
-      </Dialog.Content>
+        </Dialog.Content>
+      </Dialog.Portal>
     </Dialog.Root>
   );
 }

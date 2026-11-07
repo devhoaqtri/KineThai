@@ -1,5 +1,6 @@
-/** Edge prefetch and reconnect recovery without retry loops. Exports: useFeedPagination. Depends on: query/window hooks. */
-import { useCallback, useEffect } from "react";
+/** Edge prefetch, reconnect recovery and a bounded background retry. Exports: useFeedPagination. Depends on: query/window hooks, feed fallbacks. */
+import { useCallback, useEffect, useRef } from "react";
+import { backgroundRetryDelay } from "../lib/feed-fallback";
 import type { useVocabularyFeed } from "./useVocabularyFeed";
 import type { useVocabularyWindow } from "./useVocabularyWindow";
 
@@ -45,15 +46,15 @@ export function useFeedPagination(
     fetchPreviousPage,
   ]);
 
-  const { catalogChanged, isFetchPreviousPageError, isFetchNextPageError, refetch } = query;
+  const { needsRestart, isFetchPreviousPageError, isFetchNextPageError, refetch } = query;
   const retry = useCallback(() => {
-    if (isFetching || catalogChanged) return;
+    if (isFetching || needsRestart) return;
     if (isFetchPreviousPageError) void fetchPreviousPage({ cancelRefetch: false });
     else if (isFetchNextPageError) void fetchNextPage({ cancelRefetch: false });
     else void refetch({ cancelRefetch: false });
   }, [
     isFetching,
-    catalogChanged,
+    needsRestart,
     isFetchPreviousPageError,
     isFetchNextPageError,
     fetchPreviousPage,
@@ -67,5 +68,28 @@ export function useFeedPagination(
     window.addEventListener("online", online);
     return () => window.removeEventListener("online", online);
   }, [error, retry]);
+
+  // A loaded stream whose next page failed after every fallback keeps asking on its own,
+  // on a growing backoff (or the server's Retry-After), while the reader reads what is
+  // already loaded. Only a refusal no retry can fix waits for the button.
+  const { failureKind, retryAt } = query;
+  const failures = useRef(0);
+  useEffect(() => {
+    if (!error) failures.current = 0;
+  }, [error]);
+  useEffect(() => {
+    if (!error || !entries.length || isFetching || needsRestart || !failureKind) return;
+    const delay = backgroundRetryDelay(
+      failureKind,
+      failures.current,
+      retryAt === null ? null : retryAt - Date.now(),
+    );
+    if (delay === null) return;
+    const timer = setTimeout(() => {
+      failures.current += 1;
+      retry();
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [error, entries.length, isFetching, needsRestart, failureKind, retryAt, retry]);
   return retry;
 }

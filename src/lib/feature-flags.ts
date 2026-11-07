@@ -52,6 +52,15 @@ export const COMMUNITY_AVAILABLE = false;
 export const ECOSYSTEM_STORE_AVAILABLE = false;
 
 /**
+ * The app-family button at the far left of the feed toolbar (the grid that opens the
+ * panel of sibling language apps) is hidden for now. Only the button is gated: the panel
+ * component, its app list and the `/store` route stay as they are.
+ *
+ * To bring the button back: set ECOSYSTEM_MENU_AVAILABLE = true.
+ */
+export const ECOSYSTEM_MENU_AVAILABLE = false;
+
+/**
  * The word library's curated packs are placeholder metadata — every one is marked
  * "Sắp có" and none can be opened yet — so the shelves are hidden and the page is used
  * only to upload a reader's own pack (ImportPackPanel).

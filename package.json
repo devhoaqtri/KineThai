@@ -36,7 +36,9 @@
     "build:vercel": "VITE_STATIC_BUILD=1 BASE_PATH=/ vite build",
     "check:static-feed": "npx tsx scripts/check-static-feed.ts",
     "share:codes": "npx tsx scripts/assign-share-codes.ts",
-    "check:share-codes": "npx tsx scripts/check-share-codes.ts"
+    "check:share-codes": "npx tsx scripts/check-share-codes.ts",
+    "fonts:walk": "npx tsx scripts/walk-page-fonts.ts",
+    "fonts:report": "npx tsx scripts/report-page-fonts.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

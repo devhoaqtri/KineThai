@@ -236,7 +236,7 @@ export function badgeGoalRatio(goal: BadgeGoal): number {
   return target > 0 ? Math.min(1, Math.max(0, now / target)) : 0;
 }
 
-/** @returns What a badge asks of the reader, in one or two sentences. */
+/** @returns What a badge asks of the reader, in one short line. */
 export function badgeGoalCriteria(
   goal: BadgeGoal,
   locale: TargetLocale,
@@ -244,77 +244,74 @@ export function badgeGoalCriteria(
 ): string {
   if (uiLocale === "ja") {
     if (goal.kind === "daily") {
-      return `1日に異なる単語を ${goal.goal} 語最後まで学習します。達成した日ごとに回数が1つ増えます（連続でなくても構いません）。`;
+      return `1日に ${goal.goal} 語を最後まで学習します。`;
     }
     if (goal.kind === "streak") {
-      return `毎日少なくとも ${DAY_MIN_WORDS} 語を、${goal.days} 日連続で学習します。1日休むとカウントは最初からになります。`;
+      return `毎日少なくとも ${DAY_MIN_WORDS} 語を、${goal.days} 日連続で学習します。`;
     }
     if (goal.kind === "repeat") {
       return goal.of === "daily"
-        ? `1日に ${goal.base} 語の学習を ${goal.times} 回達成します。連続した日でなくても構いません。`
-        : `${goal.base} 日連続を ${goal.times} 回達成します。長い連続記録は複数回として数えられます（${goal.base * 2} 日連続なら 2 回）。`;
+        ? `1日に ${goal.base} 語の学習を ${goal.times} 回達成します。`
+        : `${goal.base} 日連続を ${goal.times} 回達成します。`;
     }
-    const any = "同じ単語を何度見ても1語として数えられます。";
     if (goal.scope === ALL_SCOPE) {
       return goal.complete
-        ? `すべてのレベルにわたって、デッキ内の全 ${goal.words} 語を学習します。${any}`
-        : `レベルを問わず、異なる単語を ${goal.words} 語学習します。${any}`;
+        ? `デッキ内の全 ${goal.words} 語を学習します。`
+        : `レベルを問わず、${goal.words} 語学習します。`;
     }
     const track = tracksFor(locale).find((entry) => entry.id === goal.scope);
     const name = scopeLabel(goal.scope, locale, uiLocale);
     const band = track ? `（${formatLevelBand(track.levels)}）` : "";
     return goal.complete
-      ? `${name}${band} の全 ${goal.words} 語を学習します。${any}`
-      : `${name}${band} の異なる単語を ${goal.words} 語学習します。${any}`;
+      ? `${name}${band} の全 ${goal.words} 語を学習します。`
+      : `${name}${band} の単語を ${goal.words} 語学習します。`;
   }
   if (uiLocale === "th") {
     if (goal.kind === "daily") {
-      return `เรียนคำศัพท์ที่ไม่ซ้ำกันครบ ${goal.goal} คำในหนึ่งวัน ทุกวันที่ทำได้ เหรียญจะนับเพิ่มหนึ่งครั้งโดยไม่จำเป็นต้องติดต่อกัน`;
+      return `เรียนครบ ${goal.goal} คำในหนึ่งวัน`;
     }
     if (goal.kind === "streak") {
-      return `เรียนอย่างน้อยวันละ ${DAY_MIN_WORDS} คำ ติดต่อกัน ${goal.days} วัน หากเว้นหนึ่งวัน สถิติจะเริ่มนับใหม่`;
+      return `เรียนอย่างน้อยวันละ ${DAY_MIN_WORDS} คำ ติดต่อกัน ${goal.days} วัน`;
     }
     if (goal.kind === "repeat") {
       return goal.of === "daily"
-        ? `เรียนครบ ${goal.base} คำในหนึ่งวัน จำนวน ${goal.times} ครั้ง ไม่จำเป็นต้องเป็นวันติดกัน`
-        : `ทำสถิติต่อเนื่อง ${goal.base} วันให้ครบ ${goal.times} ครั้ง สถิติยาวนับได้หลายครั้ง: ${goal.base * 2} วันติดกันนับเป็น 2 ครั้ง`;
+        ? `เรียนครบ ${goal.base} คำในหนึ่งวัน ${goal.times} ครั้ง`
+        : `ต่อเนื่อง ${goal.base} วัน ${goal.times} ครั้ง`;
     }
-    const any = "แต่ละคำนับเพียงครั้งเดียวไม่ว่าจะเจอกี่ครั้งก็ตาม";
     if (goal.scope === ALL_SCOPE) {
       return goal.complete
-        ? `ดูคำศัพท์ครบทั้งหมด ${goal.words} คำในชุด ทุกระดับ ${any}`
-        : `ดูคำศัพท์ที่ไม่ซ้ำกันครบ ${goal.words} คำ ในระดับใดก็ได้ ${any}`;
+        ? `ดูคำศัพท์ครบทั้งหมด ${goal.words} คำในชุด`
+        : `ดูคำศัพท์ครบ ${goal.words} คำ ในระดับใดก็ได้`;
     }
     const track = tracksFor(locale).find((entry) => entry.id === goal.scope);
     const name = scopeLabel(goal.scope, locale, uiLocale);
     const band = track ? ` (${formatLevelBand(track.levels)})` : "";
     return goal.complete
-      ? `ดูคำศัพท์ครบทั้งหมด ${goal.words} คำของ ${name}${band} ${any}`
-      : `ดูคำศัพท์ที่ไม่ซ้ำกันครบ ${goal.words} คำใน ${name}${band} ${any}`;
+      ? `ดูคำศัพท์ครบ ${goal.words} คำของ ${name}${band}`
+      : `ดูคำศัพท์ครบ ${goal.words} คำใน ${name}${band}`;
   }
   if (goal.kind === "daily") {
-    return `Học xong ${goal.goal} từ khác nhau trong một ngày. Mỗi ngày đạt được, huy hiệu đếm thêm một lần — không cần liền nhau.`;
+    return `Học xong ${goal.goal} từ trong một ngày.`;
   }
   if (goal.kind === "streak") {
-    return `Học ít nhất ${DAY_MIN_WORDS} từ mỗi ngày, ${goal.days} ngày liền nhau. Bỏ một ngày, chuỗi sẽ bắt đầu lại từ đầu.`;
+    return `Học ít nhất ${DAY_MIN_WORDS} từ mỗi ngày, ${goal.days} ngày liền.`;
   }
   if (goal.kind === "repeat") {
     return goal.of === "daily"
-      ? `Học xong ${goal.base} từ trong một ngày, ${goal.times} lần. Các ngày không cần liền nhau.`
-      : `Hoàn thành chuỗi ${goal.base} ngày liền, ${goal.times} lần. Một chuỗi dài được tính nhiều lần: ${goal.base * 2} ngày liền là 2 lần.`;
+      ? `Học xong ${goal.base} từ trong một ngày, ${goal.times} lần.`
+      : `Chuỗi ${goal.base} ngày liền, ${goal.times} lần.`;
   }
-  const any = "Mỗi từ chỉ tính một lần, dù bạn gặp lại bao nhiêu lần.";
   if (goal.scope === ALL_SCOPE) {
     return goal.complete
-      ? `Xem hết toàn bộ ${goal.words} từ trong bộ, ở mọi trình độ. ${any}`
-      : `Xem ${goal.words} từ khác nhau, ở bất kỳ trình độ nào. ${any}`;
+      ? `Xem hết ${goal.words} từ trong bộ.`
+      : `Xem ${goal.words} từ, ở bất kỳ trình độ nào.`;
   }
   const track = tracksFor(locale).find((entry) => entry.id === goal.scope);
   const name = scopeLabel(goal.scope, locale, "vi");
   const band = track ? ` (${formatLevelBand(track.levels)})` : "";
   return goal.complete
-    ? `Xem hết ${goal.words} từ của ${name}${band}. ${any}`
-    : `Xem ${goal.words} từ khác nhau thuộc ${name}${band}. ${any}`;
+    ? `Xem hết ${goal.words} từ của ${name}${band}.`
+    : `Xem ${goal.words} từ thuộc ${name}${band}.`;
 }
 
 /** @returns Where the reader stands on a badge: "Chuỗi hiện tại: 2 ngày", "Đã xem: 37/100 từ". */

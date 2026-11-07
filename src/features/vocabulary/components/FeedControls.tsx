@@ -21,11 +21,12 @@ import {
   Plus,
   Settings,
   Shuffle,
+  Sparkles,
   Volume2,
   VolumeX,
   X,
 } from "lucide-react";
-import { COMMUNITY_AVAILABLE } from "@/lib/feature-flags";
+import { COMMUNITY_AVAILABLE, ECOSYSTEM_MENU_AVAILABLE } from "@/lib/feature-flags";
 import { EcosystemMenu } from "@/features/ecosystem/components/EcosystemMenu";
 import { stylePool, themePool } from "../lib/presets";
 import {
@@ -666,6 +667,18 @@ function DifficultyDropdown({
     const { seen, total } = scopeProgress(levels, levelProgress, ladder.levelCounts);
     return total > 0 ? { seen, total, ...tierProgress(seen, total) } : null;
   };
+  // The first row is "tất cả" only while nothing is picked. With some packs picked it is
+  // their total: "tổng cộng", its chip running from the lowest of their levels to the
+  // highest, beside the union count countFor already gives it.
+  const pickedLevels = tracksFor(activeLocale)
+    .filter((track) => draft.has(track.id))
+    .flatMap((track) => track.levels);
+  const rowLabel = (option: DifficultyOption) =>
+    option.id === DIFFICULTY_ALL && draft.size > 0 ? t(ui, "difficulty.total") : option.label;
+  const rowBand = (option: DifficultyOption) =>
+    option.id === DIFFICULTY_ALL && pickedLevels.length > 0
+      ? formatLevelBand(pickedLevels)
+      : option.band;
   const pickRow = (id: string) => {
     // Shared by tap and keyboard: an empty track cannot be chosen by either.
     if (id !== DIFFICULTY_ALL && countFor(id) === 0) return;
@@ -931,8 +944,8 @@ function DifficultyDropdown({
                             begin on one vertical line. */}
                         <span
                           className="vocab-difficulty-band"
-                          data-empty={option.band ? undefined : true}
-                          aria-hidden={option.band ? undefined : true}
+                          data-empty={rowBand(option) ? undefined : true}
+                          aria-hidden={rowBand(option) ? undefined : true}
                           data-complete={(progress && progress.seen >= progress.total) || undefined}
                           style={
                             progress
@@ -942,7 +955,7 @@ function DifficultyDropdown({
                               : undefined
                           }
                         >
-                          {option.band}
+                          {rowBand(option)}
                           {progress && (
                             <span className="sr-only">
                               {progress.seen >= progress.total
@@ -954,7 +967,7 @@ function DifficultyDropdown({
                             </span>
                           )}
                         </span>
-                        {option.label}
+                        {rowLabel(option)}
                       </span>
                       {/* key=count re-mounts the figure whenever the sum moves, which is what
                           (re)triggers the spring-and-flash CSS entrance on it. */}
@@ -1272,19 +1285,23 @@ export function FeedControls({
     const tagline = host.querySelector<HTMLElement>(".vocab-brand small");
     if (!corner) return;
     const sync = () => {
+      const hostBox = host.getBoundingClientRect();
       host.style.setProperty("--vocab-corner", `${corner.offsetWidth}px`);
-      // The now-playing ticker is sized off the real width of the three transport
-      // buttons, so it stays proportionate through every compaction tier instead of
-      // stretching a fixed share of the screen.
+      // The now-playing ticker is sized and centred off the real transport group: its
+      // width, so the label stays proportionate through every compaction tier, and its
+      // two horizontal edges, so the label can be bound to the controls' own span rather
+      // than to a share of the screen. Measured from the toolbar's left edge.
       if (controls) {
+        const cBox = controls.getBoundingClientRect();
         host.style.setProperty("--vocab-controls-w", `${controls.offsetWidth}px`);
+        host.style.setProperty("--vocab-controls-left", `${cBox.left - hostBox.left}px`);
+        host.style.setProperty("--vocab-controls-right", `${cBox.right - hostBox.left}px`);
       }
-      // And it is placed off the difficulty sub-text's own box: its right edge (the
-      // trailing caret) becomes the crawl's end boundary, and its vertical centre lines
-      // the two up on the same row. Measured relative to the toolbar so the absolute
-      // ticker lands exactly on the tagline's line as the label grows/shrinks.
+      // And the difficulty sub-text's own box: its right edge (the trailing caret)
+      // becomes the crawl's left boundary, and its vertical centre lines the two up on
+      // the same row. Measured relative to the toolbar so the absolute ticker lands
+      // exactly on the tagline's line as the label grows/shrinks.
       if (tagline) {
-        const hostBox = host.getBoundingClientRect();
         const tagBox = tagline.getBoundingClientRect();
         host.style.setProperty("--vocab-tagline-right", `${tagBox.right - hostBox.left}px`);
         host.style.setProperty(
@@ -1308,10 +1325,11 @@ export function FeedControls({
   return (
     <header className="vocab-toolbar" ref={toolbar}>
       <div className="vocab-toolbar-row">
-        {/* Far left: the app family. Rendered unconditionally — ECOSYSTEM_STORE_AVAILABLE
-            gates only the STORE TILE inside the panel, not the panel itself; with the
-            store gated the grid is just the sibling apps over a "more coming" footer. */}
-        <EcosystemMenu open={ecoOpen} onOpenChange={toggleEco} reducedMotion={reducedMotion} />
+        {/* Far left: the app family, while ECOSYSTEM_MENU_AVAILABLE lets it show.
+            ECOSYSTEM_STORE_AVAILABLE separately gates the store tile inside the panel. */}
+        {ECOSYSTEM_MENU_AVAILABLE && (
+          <EcosystemMenu open={ecoOpen} onOpenChange={toggleEco} reducedMotion={reducedMotion} />
+        )}
         {/* Then the title, which is the difficulty trigger. Settings holds the top-right
             corner — see the right column. */}
         <div className="vocab-toolbar-left">
@@ -1372,6 +1390,16 @@ export function FeedControls({
             >
               <Clapperboard size={19} />
             </button>
+          )}
+          {import.meta.env.DEV && (
+            <Link
+              className="vocab-icon-button vocab-burst-lab-open"
+              to="/burst-lab"
+              aria-label="Chọn hiệu ứng lộ từ (dev)"
+              title="Reveal burst lab"
+            >
+              <Sparkles size={19} />
+            </Link>
           )}
         </div>
         {/* Right: Settings, now permanently. The two used to trade this corner — the app

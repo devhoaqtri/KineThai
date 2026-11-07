@@ -35,6 +35,7 @@ import {
   isLikelyJapaneseText,
   isLikelyVietnameseText,
   type EmphasisVariant,
+  VIETNAMESE_MAX_LINE_SYLLABLES,
 } from "@/features/kinetic-text";
 import { getEmphasizedWordIndexes } from "../lib/feed-emphasis";
 import { getEntranceStyle } from "../lib/entrances";
@@ -335,6 +336,8 @@ export function WordSequenceText({
     signature: measuredSignature,
     phraseEdges: layoutPhraseEdges,
     softPhraseEdges: isHan,
+    // A Vietnamese line never holds more than four syllables; Han and Japanese text have no such cap.
+    maxLineSyllables: isVietnamese ? VIETNAMESE_MAX_LINE_SYLLABLES : undefined,
     // Japanese 文節 are drawn flush; the gap belongs to spaced scripts only.
     segmentGapEm: isJapanese ? 0 : undefined,
     lineSpacingScale,

@@ -1,4 +1,5 @@
 /** One independent vocabulary learning card; clue navigation and heart/bookmark reactions stay on-device, and the reveal is followed by a spelling coda (letter-by-letter for Latin, stroke-by-stroke for Han). Exports: VocabularyCard. Depends on: presets, playback, VocabularyStage, SpellingAnimation, HanziStrokeSpelling, reactions. */
+import { VIEW_ANSWER_MS } from "../lib/history";
 import {
   lazy,
   Suspense,
@@ -39,6 +40,7 @@ import { getWideRevealY, isShortViewport } from "../lib/landscape-geometry";
 import { buildStages } from "../lib/stages";
 import { resolveClue } from "../lib/clues";
 import { DeckLocaleContext } from "../lib/deck-locale";
+import { relaxBelowFor } from "../lib/line-relax";
 import { grammarRows } from "../lib/grammar";
 import { t } from "../lib/ui-copy";
 import { useLocale } from "../lib/useLocale";
@@ -68,6 +70,9 @@ import { SpellingAnimation } from "./SpellingAnimation";
 import { VocabularyStage } from "./VocabularyStage";
 import { WordReportButton, WordReportPanel } from "./WordReportControl";
 import { feedLog } from "../lib/feed-log";
+
+/** Development builds only; Vite replaces this at build time. */
+const DEV_BUILD = (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true;
 
 /**
  * The CJK stroke coda is lazy: Hanzi Writer plus the vendored stroke dataset load only
@@ -207,6 +212,7 @@ export function VocabularyCard({
   onAdvance,
   onWordEnding,
   onWordFinished,
+  onViewed,
   exportLayout,
   revealButtonLabel,
   onToggleAutoplay,
@@ -238,6 +244,12 @@ export function VocabularyCard({
    * and the id is the only thing stable across a shuffle or a remount.
    */
   onWordFinished?: (wordId: string) => void;
+  /**
+   * This word has been fully viewed: its answer page held the screen, in a visible tab with
+   * nothing covering the feed, for VIEW_ANSWER_MS (lib/history). Only then does it enter the
+   * reader's history; a word that flashed past or was skipped on its clues never does.
+   */
+  onViewed?: () => void;
   /**
    * Render for video export instead of for a reader: the text is confined to the
    * given clear zone, the interactive chrome is hidden and gestures are off. The
@@ -427,14 +439,28 @@ export function VocabularyCard({
   }, [reducedMotion, canAdvance, exportLayout, onAdvance]);
   useEffect(() => () => window.clearTimeout(leaveTimer.current), []);
   // An overlay opening mid-exit must not let the timer carry the stream on to the next
-  // word underneath it. Drop the exit; the playback clock for this page is already spent,
-  // so it asks to advance again the moment the card is playing.
+  // word underneath it. Drop the exit, and leave the moment the overlay closes. The word
+  // is already finished; waiting for the playback clock instead replays the whole coda,
+  // since a last page that resumes is timed afresh, and the spelled word sat on screen
+  // after a badge looking stuck. A word the reader has moved away from forgets it.
+  const exitDropped = useRef(false);
   useEffect(() => {
-    if (active || leaveTimer.current === undefined) return;
+    if (!current) {
+      exitDropped.current = false;
+      return;
+    }
+    if (active) {
+      if (!exitDropped.current) return;
+      exitDropped.current = false;
+      advanceWithExit();
+      return;
+    }
+    if (leaveTimer.current === undefined) return;
     window.clearTimeout(leaveTimer.current);
     leaveTimer.current = undefined;
     setLeaving(false);
-  }, [active]);
+    exitDropped.current = true;
+  }, [active, current, advanceWithExit]);
   // The page's text is on stage from the first moment this card PLAYS and stays there
   // until the reader leaves the word. It used to be tied straight to `active`, so anything
   // that paused the feed (the options sheet, the saved drawer) unmounted the text and its
@@ -482,6 +508,28 @@ export function VocabularyCard({
   // The reveal page and the spelling coda both belong to the answer, so the emoji
   // burst stays mounted across the flip instead of remounting and restarting.
   const isRevealed = playback.page >= revealPage;
+  // Fully viewed: the answer has held the screen for VIEW_ANSWER_MS of time the reader could
+  // see it. The clock stops while the tab is hidden and restarts in full when it returns, so
+  // a background tab can never run it out.
+  const viewedRef = useRef(onViewed);
+  viewedRef.current = onViewed;
+  useEffect(() => {
+    if (!active || !isRevealed || exportLayout) return;
+    let timer: number | undefined;
+    const arm = () => {
+      window.clearTimeout(timer);
+      if (document.hidden) return;
+      timer = window.setTimeout(() => {
+        if (!document.hidden) viewedRef.current?.();
+      }, VIEW_ANSWER_MS);
+    };
+    arm();
+    document.addEventListener("visibilitychange", arm);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", arm);
+    };
+  }, [active, isRevealed, exportLayout]);
   // The burst fills both pages and fades out as the spelled word leaves.
   const burstSpanSeconds = ((pageDurations[revealPage] ?? 0) + spellingDuration) / 1000;
   // During the coda there is no matching stage; the answer stage stays mounted
@@ -659,8 +707,10 @@ export function VocabularyCard({
       maxSize: uniformTextSize,
       budgetHeight: textBudgetHeight,
       budgetLineEm: VOCAB_TEXT_BUDGET_LINE_EM,
+      // Each site keeps its own threshold for loosening a cramped page (lib/line-relax).
+      relaxBelow: relaxBelowFor(locale),
     }),
-    [uniformTextSize, textBudgetHeight],
+    [uniformTextSize, textBudgetHeight, locale],
   );
   // Every role comes from one validated palette. `--vocab-button-ink` is the
   // palette's on-accent color, which the audit already proved clears 4.5:1 against
@@ -956,7 +1006,11 @@ export function VocabularyCard({
       data-dialect={presentation.dialect === "douyin" ? "douyin" : undefined}
       data-export={exportLayout ? "" : undefined}
       data-export-progress={exportLayout?.showProgress || undefined}
+      data-still={still ? "" : undefined}
       data-stage={isSpelling ? "spelling" : stage.id}
+      // Development only: names the word for the feed log's page-font records. A production
+      // card must not carry its answer in the DOM while the clue pages are up.
+      data-word={DEV_BUILD ? entry.word.word : undefined}
       inert={!active}
       aria-hidden={!active}
       aria-label={t(ui, "card.aria", { position: entry.position + 1 })}

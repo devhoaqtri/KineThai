@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveTarget, siteBrand, siteTitle } from "../target-language";
+import { languageName, resolveTarget, siteBrand, siteTitle } from "../target-language";
 import { catalogFor } from "../catalog-source";
 import { readVocabularyPage } from "../../api/catalog.server";
 
@@ -20,6 +20,23 @@ describe("resolveTarget", () => {
     for (const locale of ["en", "zh", "ko", "ja"] as const) {
       const { lead, accent } = siteBrand(locale);
       expect(lead + accent).toBe(siteTitle(locale));
+    }
+  });
+});
+
+describe("languageName", () => {
+  it("names each deck's target language in Vietnamese, sans 'tiếng'", () => {
+    expect(languageName("en")).toBe("Anh");
+    expect(languageName("zh")).toBe("Trung");
+    expect(languageName("ko")).toBe("Hàn");
+    expect(languageName("ja")).toBe("Nhật");
+    expect(languageName("fr")).toBe("Pháp");
+    expect(languageName("de")).toBe("Đức");
+    expect(languageName("es")).toBe("Tây Ban Nha");
+  });
+  it("only the English entry says 'Anh' — no other locale falls back to it", () => {
+    for (const locale of ["zh", "ko", "ja", "fr", "de", "es"] as const) {
+      expect(languageName(locale)).not.toBe("Anh");
     }
   });
 });

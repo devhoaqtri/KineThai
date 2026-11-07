@@ -14,7 +14,7 @@
  * Exports: DifficultyTrack, DIFFICULTY_TRACKS, DIFFICULTY_IDS, DIFFICULTY_ALL,
  *          LEVEL_SAMPLE_PRIORITY, tracksFor, CEFR_TRACKS, HSK_TRACKS,
  *          difficultyLevels, formatLevelBand, countTrackWords,
- *          trackCeiling, isTrackAvailable
+ *          trackCeiling, isTrackAvailable, clampDifficultyToDeck
  * Depends on: ./schema, ./target-language
  */
 
@@ -304,6 +304,30 @@ export function difficultyLevels(
     for (const level of track.levels) union.add(level);
   }
   return LEVELS.filter((level) => union.has(level));
+}
+
+/**
+ * Guard a stored or chosen difficulty against the deck that is actually on screen.
+ *
+ * Track ids are shared by every language (vo-long, giao-tiep, …), so a level picked while
+ * reading one deck can resolve to an EMPTY band on another whose track ceilings it has not
+ * reached yet — so it streams nothing and the reader sees an empty page. That is a stale choice,
+ * not a real request, so we drop it: any selection whose tracks all resolve empty falls back
+ * to "every level", which always shows what the deck does have. A selection that still
+ * streams at least one level is left exactly as the reader set it.
+ * @param difficulty Comma-joined track ids, or the empty sentinel for "all".
+ * @param catalogLevels The levels the served deck has words for (page.trackLevels / page.levels).
+ * @returns The difficulty unchanged when it streams something (or the deck is unknown), or
+ *   the empty sentinel when it would otherwise leave the feed blank.
+ * @pure true
+ */
+export function clampDifficultyToDeck(
+  difficulty: string,
+  catalogLevels: readonly VocabularyLevel[] | undefined,
+): string {
+  if (!difficulty || !catalogLevels?.length) return difficulty;
+  const band = difficultyLevels(difficulty, catalogLevels);
+  return band && band.length === 0 ? DIFFICULTY_ALL : difficulty;
 }
 
 /**
