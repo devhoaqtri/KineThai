@@ -1,0 +1,265 @@
+{
+  "revision": "8aeabca1c3b82970c94c3a63",
+  "name": "JLPT N301–N304 + 2 packs · demo",
+  "count": 8,
+  "topics": [
+    "attention",
+    "character",
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "N5",
+    "N4",
+    "N3"
+  ],
+  "words": [
+    {
+      "id": "hajimete-d707f0",
+      "word": "初めて",
+      "meaningVi": "lần đầu",
+      "defVi": "Việc /xảy_ra/ | mà trước đó | chưa từng có lần nào.",
+      "leadVi": "Bé /run_run/ | bước những bước | đầu đời trên bãi cỏ.",
+      "anticipateVi": "/Bỡ_ngỡ/ quá đi!",
+      "pos": "adv",
+      "ipa": "はじめて",
+      "topic": "time",
+      "topics": [
+        "time",
+        "emotion"
+      ],
+      "level": "N5",
+      "usage": [
+        {
+          "en": "_____うみを見ました。",
+          "vi": "Lần đầu tiên tôi được thấy biển."
+        }
+      ],
+      "chars": 3,
+      "initial": "初",
+      "shareCode": "3GZ"
+    },
+    {
+      "id": "hajime-e0436a",
+      "word": "初め",
+      "meaningVi": "lúc đầu, phần đầu",
+      "defVi": "Khoảng thời_gian | ngay lúc một=việc | vừa mới /bắt_đầu/.",
+      "leadVi": "Tháng một | là trang /mở_màn/ | của=cả năm.",
+      "anticipateVi": "/Mở_màn/ ra sao?",
+      "pos": "noun",
+      "ipa": "はじめ",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "N5",
+      "usage": [
+        {
+          "en": "_____に名前を書いてください。",
+          "vi": "Trước tiên, hãy viết tên của bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "初",
+      "shareCode": "4CK"
+    },
+    {
+      "id": "atarashii-174962",
+      "word": "新しい",
+      "shareCode": "52G",
+      "meaningVi": "mới",
+      "defVi": "Vừa được làm ra, | /chưa/ ai dùng | qua lần nào.",
+      "leadVi": "Đôi giày | còn thơm mùi hộp, | bóc tem /sáng_nay/.",
+      "anticipateVi": "Còn nguyên tem nè!",
+      "pos": "adj",
+      "ipa": "あたらしい",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "N5",
+      "chars": 3,
+      "initial": "新",
+      "usage": [
+        {
+          "en": "_____くつをかいました。",
+          "vi": "Tôi đã mua đôi giày mới."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "種類": "い形容詞"
+        }
+      }
+    },
+    {
+      "id": "ichiban-ecf5d6",
+      "word": "一番",
+      "shareCode": "WTX",
+      "meaningVi": "nhất",
+      "defVi": "Hơn /tất_cả/ | những thứ khác | trong cùng một nhóm.",
+      "leadVi": "/Bao_nhiêu/ món ngon, | vẫn mê | cơm mẹ nấu hơn cả.",
+      "anticipateVi": "Đứng đầu bảng luôn!",
+      "pos": "adv",
+      "ipa": "いちばん",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "N5",
+      "chars": 2,
+      "initial": "一",
+      "usage": [
+        {
+          "en": "スポーツの中で、なにが_____すきですか。",
+          "vi": "Trong các môn thể thao, bạn thích môn nào nhất?"
+        }
+      ],
+      "grammar": {
+        "hanViet": "nhất phiên"
+      }
+    },
+    {
+      "id": "narau-24ace3",
+      "word": "習う",
+      "meaningVi": "học",
+      "defVi": "Được người khác | chỉ_dạy | để biết | một /kỹ_năng/ mới.",
+      "leadVi": "Chẳng tự /mày_mò/ được, | phải nhờ thầy | chỉ từng nốt.",
+      "anticipateVi": "Thầy chỉ từng nốt nhé!",
+      "pos": "verb",
+      "ipa": "ならう",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "N5",
+      "usage": [
+        {
+          "en": "先生にギターを_____います。",
+          "vi": "Tôi đang học ghi-ta với thầy.",
+          "fill": "習って"
+        }
+      ],
+      "chars": 2,
+      "initial": "習",
+      "grammar": {
+        "verbInfo": {
+          "種類": "五段動詞",
+          "自他": "他動詞"
+        },
+        "honorific": {
+          "尊敬語": "お習いになる"
+        }
+      },
+      "shareCode": "7WW"
+    },
+    {
+      "id": "benkyo-04315c",
+      "word": "勉強",
+      "shareCode": "XJJ",
+      "meaningVi": "học_tập",
+      "defVi": "Đọc sách, làm bài | để có thêm /kiến_thức/.",
+      "leadVi": "Mai thi rồi, | /đèn_bàn/ | vẫn sáng đến khuya.",
+      "anticipateVi": "/Sách_vở/ mở ra nào!",
+      "pos": "noun",
+      "ipa": "べんきょう",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "N5",
+      "chars": 2,
+      "initial": "勉",
+      "usage": [
+        {
+          "en": "毎日、学校で_____します。",
+          "vi": "Ngày nào tôi cũng học ở trường."
+        }
+      ],
+      "grammar": {
+        "hanViet": "miễn cường",
+        "verbInfo": {
+          "種類": "サ変動詞",
+          "自他": "他動詞"
+        },
+        "honorific": {
+          "尊敬語": "勉強なさる"
+        }
+      }
+    },
+    {
+      "id": "yasashii-c45b9a",
+      "word": "易しい",
+      "meaningVi": "dễ",
+      "defVi": "Không tốn | nhiều /công_sức/ | cũng hiểu | hay làm=được.",
+      "leadVi": "Bài đầu sách, | đọc một lượt | là nắm ngay.",
+      "anticipateVi": "Ngon ơ, xong liền!",
+      "pos": "adj",
+      "ipa": "やさしい",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "N5",
+      "usage": [
+        {
+          "en": "このテストは_____です。",
+          "vi": "Bài kiểm tra này dễ."
+        }
+      ],
+      "chars": 3,
+      "initial": "易",
+      "grammar": {
+        "verbInfo": {
+          "種類": "い形容詞"
+        }
+      },
+      "shareCode": "AKM"
+    },
+    {
+      "id": "aku-b02957",
+      "word": "開く",
+      "shareCode": "KTM",
+      "meaningVi": "mở",
+      "defVi": "Cửa hay nắp | tự chuyển | sang /trạng_thái/ không còn đóng.",
+      "leadVi": "Mười giờ sáng, | /cửa_tiệm/ | kéo lên, khách ùa vào.",
+      "anticipateVi": "/Cửa_tiệm/ chào khách!",
+      "pos": "verb",
+      "ipa": "あく",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "N5",
+      "chars": 2,
+      "initial": "開",
+      "usage": [
+        {
+          "en": "このみせは十時に_____。",
+          "vi": "Cửa hàng này mở cửa lúc mười giờ.",
+          "fill": "開きます"
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "種類": "五段動詞",
+          "自他": "自動詞 ↔ 開ける"
+        }
+      }
+    }
+  ]
+}

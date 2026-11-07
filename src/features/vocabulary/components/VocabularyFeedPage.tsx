@@ -40,6 +40,7 @@ import { readGrammarExpand, writeGrammarExpand } from "../lib/grammar-expand";
 import type { TargetLocale } from "../lib/target-language";
 import { CUSTOM_PACK_EVENT, clearCustomPack, readCustomPack } from "../lib/custom-pack";
 import { DeckLocaleContext } from "../lib/deck-locale";
+import { loadDemoDeck } from "../lib/demo-deck";
 import { Link } from "@tanstack/react-router";
 
 // The export studio and the recorder's scenes style themselves from this sheet. The recorder
@@ -170,6 +171,8 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
       // The demo plays the easiest level the deck has. That is not a choice: no level is
       // written until the reader picks one, so the next visit still asks.
       const difficulty = demoDifficulty(locale ?? "en", levelLadderFor(locale ?? "en"));
+      // Start fetching the demo's word list now rather than when the stream mounts.
+      void loadDemoDeck(locale ?? "en").catch(() => null);
       setFilters((current) => ({ ...current, difficulty }));
       setStage("demo");
       return;
@@ -214,9 +217,24 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
     setAfterDemo(true);
     setStage("handover");
   }, []);
+  // The demo plays its own short list from the page (lib/demo-deck), so a newcomer's first
+  // word never waits on the server, but only on the demo's own filters: a level or topic the
+  // reader picks mid-demo streams from the server like any feed.
+  const deckLocale = locale ?? "en";
+  const demoDeck =
+    inDemo &&
+    !packName &&
+    filters.topic === "" &&
+    filters.level === "" &&
+    filters.difficulty === demoDifficulty(deckLocale, levelLadderFor(deckLocale))
+      ? deckLocale
+      : undefined;
   const demo = useMemo<StreamDemo | undefined>(
-    () => (inDemo ? { badge: WORD_HOOK, badgeMs: DEMO_BADGE_MS, onDone: finishDemo } : undefined),
-    [inDemo, finishDemo],
+    () =>
+      inDemo
+        ? { badge: WORD_HOOK, badgeMs: DEMO_BADGE_MS, onDone: finishDemo, deck: demoDeck }
+        : undefined,
+    [inDemo, finishDemo, demoDeck],
   );
   // The saved drawer suspends the feed behind it rather than navigating away.
   const [savedOpen, setSavedOpen] = useState(false);

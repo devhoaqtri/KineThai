@@ -1,0 +1,290 @@
+{
+  "revision": "8198e46af01ca9b7bc4211a4",
+  "name": "deck-fr-A1 + 5 packs · demo",
+  "count": 9,
+  "topics": [
+    "attention",
+    "character",
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ],
+  "words": [
+    {
+      "id": "ami",
+      "word": "ami",
+      "meaningVi": "người bạn",
+      "defVi": "Người mình /quý_mến/ | và hay chơi cùng.",
+      "leadVi": "Buồn có người /an_ủi/, | vui có người cùng cười.",
+      "anticipateVi": "Ai sát cánh | cùng bạn?",
+      "emphasis": [
+        "quý mến",
+        "an ủi"
+      ],
+      "pos": "noun",
+      "ipa": "/a.mi/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "emotion"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Mon meilleur _____ habite à côté de chez moi.",
+          "vi": "Bạn thân nhất của=tôi | sống ngay | cạnh nhà tôi."
+        }
+      ],
+      "chars": 3,
+      "initial": "A",
+      "shareCode": "QS9"
+    },
+    {
+      "id": "matin",
+      "word": "matin",
+      "meaningVi": "buổi sáng",
+      "defVi": "Khoảng thời_gian | đầu ngày, | từ lúc /mặt_trời/ mọc.",
+      "leadVi": "/Gà_gáy/ ò_ó_o, | sương đêm | còn đọng trên lá.",
+      "anticipateVi": "/Gà_gáy/ | là lúc nào?",
+      "emphasis": [
+        "mặt trời",
+        "sương đêm"
+      ],
+      "pos": "noun",
+      "ipa": "/ma.tɛ̃/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Je bois toujours un café le _____.",
+          "vi": "Tôi luôn uống cà_phê | vào buổi_sáng."
+        }
+      ],
+      "chars": 5,
+      "initial": "M",
+      "shareCode": "K6Z"
+    },
+    {
+      "id": "apprendre",
+      "word": "apprendre",
+      "meaningVi": "học",
+      "defVi": "/Tiếp_thu/ | kiến_thức | hoặc kỹ_năng mới.",
+      "leadVi": "/Lần_đầu/ | ngã xe đau điếng, | lần sau đã vững.",
+      "anticipateVi": "Ngã rồi | mới khôn?",
+      "emphasis": [
+        "kiến thức",
+        "đau điếng"
+      ],
+      "pos": "verb",
+      "ipa": "/a.pʁɑ̃dʁ/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "J'aimerais _____ à nager cet été.",
+          "vi": "Hè này | tôi muốn học bơi."
+        }
+      ],
+      "chars": 9,
+      "initial": "A",
+      "shareCode": "X8P"
+    },
+    {
+      "id": "cole",
+      "word": "école",
+      "meaningVi": "trường_học",
+      "defVi": "Nơi học_sinh đến | để=học | với /thầy_cô/.",
+      "leadVi": "Tiếng trống | vang lên, | áo trắng | ùa vào lớp.",
+      "anticipateVi": "Trống đánh | ở đâu?",
+      "emphasis": [
+        "học sinh",
+        "áo trắng"
+      ],
+      "pos": "noun",
+      "ipa": "/e.kɔl/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Mon fils va à l'_____ à pied.",
+          "vi": "Con trai tôi | đi bộ | đến trường."
+        }
+      ],
+      "chars": 5,
+      "initial": "É",
+      "shareCode": "BP0"
+    },
+    {
+      "id": "lire",
+      "word": "lire",
+      "meaningVi": "đọc",
+      "defVi": "Nhìn chữ viết | và hiểu | /nội_dung/ của=nó.",
+      "leadVi": "Ôm cuốn_truyện, | mắt dõi theo | từng /dòng_chữ/.",
+      "anticipateVi": "Mắt lướt từng dòng ư?",
+      "emphasis": [
+        "nội dung",
+        "dõi theo"
+      ],
+      "pos": "verb",
+      "ipa": "/liʁ/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "J'aime _____ un roman avant de dormir.",
+          "vi": "Tôi thích đọc tiểu_thuyết | trước khi ngủ."
+        }
+      ],
+      "chars": 4,
+      "initial": "L",
+      "shareCode": "804"
+    },
+    {
+      "id": "crire",
+      "word": "écrire",
+      "meaningVi": "viết",
+      "defVi": "Dùng bút | để tạo ra chữ | trên giấy.",
+      "leadVi": "/Nắn_nót/ từng nét | trong cuốn_vở ô_li.",
+      "anticipateVi": "/Nắn_nót/ từng nét chưa?",
+      "emphasis": [
+        "tạo ra",
+        "Nắn nót"
+      ],
+      "pos": "verb",
+      "ipa": "/e.kʁiʁ/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "communication"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Mon fils apprend à _____ son prénom.",
+          "vi": "Con trai tôi | đang=học viết tên mình."
+        }
+      ],
+      "chars": 6,
+      "initial": "É",
+      "shareCode": "MPX"
+    },
+    {
+      "id": "pr-t",
+      "word": "prêt",
+      "meaningVi": "sẵn_sàng",
+      "defVi": "Đã /chuẩn_bị/ xong, | có_thể bắt_đầu ngay.",
+      "leadVi": "Giày đã buộc, | ba_lô đã đeo, | chỉ chờ /xuất_phát/.",
+      "anticipateVi": "/Xuất_phát/ | được chưa?",
+      "emphasis": [
+        "bắt đầu",
+        "xuất phát"
+      ],
+      "pos": "adj",
+      "ipa": "/pʁɛ/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Tu es _____ ? On part dans cinq minutes.",
+          "vi": "Bạn sẵn_sàng chưa? | Năm phút nữa | mình đi."
+        }
+      ],
+      "chars": 4,
+      "initial": "P",
+      "shareCode": "ZBW"
+    },
+    {
+      "id": "facile",
+      "word": "facile",
+      "meaningVi": "dễ",
+      "defVi": "Không cần nhiều sức | hay /suy_nghĩ/ | để làm.",
+      "leadVi": "Một cộng một, | em bé cũng | /trả_lời/ ngay.",
+      "anticipateVi": "Dễ như ăn kẹo?",
+      "emphasis": [
+        "nhiều sức",
+        "trả lời"
+      ],
+      "pos": "adj",
+      "ipa": "/fa.sil/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "general"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Cette recette est très _____, même pour un débutant.",
+          "vi": "Công_thức này | rất=dễ, | người mới cũng làm được."
+        }
+      ],
+      "chars": 6,
+      "initial": "F",
+      "shareCode": "927"
+    },
+    {
+      "id": "ouvrir",
+      "word": "ouvrir",
+      "meaningVi": "mở",
+      "defVi": "Kéo hoặc đẩy | cho cửa, nắp hay hộp | hé ra.",
+      "leadVi": "Kéo rèm, | đẩy cánh /cửa_sổ/ | cho nắng tràn vào.",
+      "anticipateVi": "Hé ra chút nào?",
+      "emphasis": [
+        "hé ra",
+        "nắng tràn"
+      ],
+      "pos": "verb",
+      "ipa": "/u.vʁiʁ/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Tu peux _____ la fenêtre ? Il fait chaud.",
+          "vi": "Bạn mở cửa_sổ được không? | Nóng quá."
+        }
+      ],
+      "chars": 6,
+      "initial": "O",
+      "shareCode": "2D6"
+    }
+  ]
+}

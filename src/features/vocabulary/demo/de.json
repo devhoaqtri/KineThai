@@ -1,0 +1,346 @@
+{
+  "revision": "68595145b6973b0865fa5f6b",
+  "name": "WordCrawler vocabulary + 5 packs · demo",
+  "count": 8,
+  "topics": [
+    "animals",
+    "art",
+    "attention",
+    "body",
+    "character",
+    "clothes",
+    "colors",
+    "communication",
+    "culture",
+    "daily",
+    "emotion",
+    "family",
+    "feelings",
+    "food",
+    "general",
+    "health",
+    "hobby",
+    "home",
+    "jobs",
+    "media",
+    "money",
+    "music",
+    "nature",
+    "perception",
+    "places",
+    "school",
+    "shopping",
+    "society",
+    "sport",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "transport",
+    "travel",
+    "weather",
+    "work"
+  ],
+  "levels": [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ],
+  "words": [
+    {
+      "id": "willkommen",
+      "word": "willkommen",
+      "shareCode": "7FW",
+      "meaningVi": "được chào_đón",
+      "defVi": "Được người khác | /vui_vẻ/ đón | khi mình ghé tới.",
+      "leadVi": "Bước vào nhà | bạn mới, | cả nhà ra | /mở_cửa/ cười.",
+      "anticipateVi": "Có trải thảm | đỏ không đây?",
+      "emphasis": [
+        "đón",
+        "cười",
+        "trải"
+      ],
+      "pos": "adj",
+      "ipa": "/vɪlˈkɔmən/",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "emotion"
+      ],
+      "level": "A1",
+      "chars": 10,
+      "initial": "W",
+      "usage": [
+        {
+          "en": "Du bist bei uns immer _____.",
+          "vi": "Ở nhà bọn mình | lúc nào | bạn cũng được chào_đón."
+        }
+      ],
+      "grammar": {
+        "tipVi": "Hai chữ l, | hai chữ m: | Herzlich willkommen!"
+      }
+    },
+    {
+      "id": "anfangen",
+      "word": "anfangen",
+      "shareCode": "Y3M",
+      "meaningVi": "bắt_đầu",
+      "defVi": "Làm /bước_đầu/ | của một việc hay hoạt_động.",
+      "leadVi": "Chuông vừa reo, | thầy /mở_đầu/ | chương mới.",
+      "anticipateVi": "Vừa /khởi_động/ đã=nghỉ?",
+      "emphasis": [
+        "bước đầu",
+        "mở đầu",
+        "khởi động"
+      ],
+      "pos": "verb",
+      "ipa": "/ˈanˌfaŋən/",
+      "topic": "general",
+      "topics": [
+        "general",
+        "time"
+      ],
+      "level": "A1",
+      "chars": 8,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Wann soll der Kurs ____?",
+          "vi": "Khóa học | bắt_đầu khi nào?"
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "Konjugation": "stark",
+          "Hilfsverb": "haben",
+          "trennbar": "an-",
+          "Vokalwechsel": "a → ä : er fängt an",
+          "Stammformen": {
+            "Präsens": "er fängt an",
+            "Präteritum": "er fing an",
+            "Perfekt": "er hat angefangen"
+          }
+        },
+        "tipVi": "an tách ra cuối câu: | Der Kurs fängt um acht an."
+      }
+    },
+    {
+      "id": "anfang",
+      "word": "Anfang",
+      "shareCode": "EP6",
+      "meaningVi": "phần đầu",
+      "defVi": "Lúc | mọi | thứ | vừa | mới | /bắt_đầu/, | chưa | tới | giữa.",
+      "leadVi": "Phim | vừa | chiếu, | Huy | /lật_đật/ | chạy | vào | rạp | tìm | ghế.",
+      "anticipateVi": "Lỡ | đoạn nào?",
+      "emphasis": [
+        "giữa",
+        "lật đật",
+        "đoạn"
+      ],
+      "pos": "noun",
+      "ipa": "/ˈanfaŋ/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Am _____ war es schwer.",
+          "vi": "Lúc | đầu | thì | khó."
+        }
+      ],
+      "grammar": {
+        "gender": "m",
+        "article": "der",
+        "plural": "die Anfänge",
+        "tipVi": "Đi với | am: | am Anfang."
+      }
+    },
+    {
+      "id": "neu",
+      "word": "neu",
+      "shareCode": "MPY",
+      "meaningVi": "mới",
+      "defVi": "Vừa có | hay vừa /xuất_hiện/, chưa dùng bao_lâu.",
+      "leadVi": "Ba_lô mình vẫn /tinh_tươm/, | còn thơm mùi vải.",
+      "anticipateVi": "/Nguyên_vẹn/ cả hộp, | khoe liền?",
+      "emphasis": [
+        "xuất hiện",
+        "tinh tươm",
+        "Nguyên vẹn"
+      ],
+      "pos": "adj",
+      "ipa": "/nɔʏ̯/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "A1",
+      "chars": 3,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "Mein Handy ist ganz ____.",
+          "vi": "Điện_thoại của=mình | mới_tinh."
+        }
+      ],
+      "grammar": {
+        "tipVi": "Trước danh_từ phải chia đuôi: | ein neues Handy."
+      }
+    },
+    {
+      "id": "lernen",
+      "word": "lernen",
+      "shareCode": "RT7",
+      "meaningVi": "học",
+      "defVi": "/Tiếp_thu/ | kiến_thức | hay | kỹ_năng | mới | cho mình.",
+      "leadVi": "Mỗi sáng, | Lan | nhẩm | mười từ mới | trên | /xe_buýt/.",
+      "anticipateVi": "Nhớ | được /bao_nhiêu/?",
+      "emphasis": [
+        "kỹ năng",
+        "nhẩm",
+        "Nhớ"
+      ],
+      "pos": "verb",
+      "ipa": "/ˈlɛʁnən/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "L",
+      "usage": [
+        {
+          "en": "Ich will schwimmen _____.",
+          "vi": "Tôi | muốn | học bơi."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "Konjugation": "schwach",
+          "Hilfsverb": "haben",
+          "Stammformen": {
+            "Präsens": "er lernt",
+            "Präteritum": "er lernte",
+            "Perfekt": "er hat gelernt"
+          }
+        },
+        "tipVi": "lernen | là | tự học; | dạy | là lehren | hay unterrichten."
+      }
+    },
+    {
+      "id": "versuchen",
+      "word": "versuchen",
+      "shareCode": "RDT",
+      "meaningVi": "thử, cố_gắng",
+      "defVi": "Bỏ /công_sức/ làm | dù chưa chắc | sẽ thành_công.",
+      "leadVi": "Trượt lần đầu, | bạn vẫn /kiên_trì/ | thi lại môn bơi.",
+      "anticipateVi": "Khó nhằn thế, /mạo_hiểm/ không?",
+      "emphasis": [
+        "công sức",
+        "kiên trì",
+        "mạo hiểm"
+      ],
+      "pos": "verb",
+      "ipa": "/fɛɐ̯ˈzuːxn̩/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "A1",
+      "chars": 9,
+      "initial": "V",
+      "usage": [
+        {
+          "en": "Du musst es noch einmal ____!",
+          "vi": "Bạn phải thử | thêm lần nữa!"
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "Konjugation": "schwach",
+          "Hilfsverb": "haben",
+          "Stammformen": {
+            "Präsens": "er versucht",
+            "Präteritum": "er versuchte",
+            "Perfekt": "er hat versucht"
+          }
+        },
+        "governs": "zu + Infinitiv",
+        "tipVi": "Với động_từ khác | cần zu: | Ich versuche zu schlafen."
+      }
+    },
+    {
+      "id": "bereit",
+      "word": "bereit",
+      "shareCode": "KQK",
+      "meaningVi": "sẵn_sàng",
+      "defVi": "Đã /chuẩn_bị/ | xong, | chỉ chờ bắt_đầu thôi.",
+      "leadVi": "Áo đã mặc, | /ba_lô/ đã đeo, | đứng chờ ở cửa.",
+      "anticipateVi": "/Đếm_ngược/ | nào?",
+      "emphasis": [
+        "chuẩn bị",
+        "chờ",
+        "Đếm"
+      ],
+      "pos": "adj",
+      "ipa": "/bəˈʁaɪ̯t/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "Bist du _____? Wir gehen jetzt.",
+          "vi": "Bạn sẵn_sàng chưa? | Mình đi đây."
+        }
+      ],
+      "grammar": {
+        "tipVi": "Đi với zu: | bereit zu helfen; | xong việc thì là fertig."
+      }
+    },
+    {
+      "id": "leicht",
+      "word": "leicht",
+      "shareCode": "N7C",
+      "meaningVi": "dễ",
+      "defVi": "Không tốn | sức, | làm một lát | là xong.",
+      "leadVi": "Đề /kiểm_tra/ | đầu khóa, | Nam làm | mười phút | đã nộp.",
+      "anticipateVi": "Như ăn kẹo | thật à?",
+      "emphasis": [
+        "sức",
+        "nộp",
+        "kẹo"
+      ],
+      "pos": "adj",
+      "ipa": "/laɪ̯çt/",
+      "topic": "study",
+      "topics": [
+        "study",
+        "general"
+      ],
+      "level": "A1",
+      "chars": 6,
+      "initial": "L",
+      "usage": [
+        {
+          "en": "Die Aufgabe ist sehr _____.",
+          "vi": "Bài này | rất dễ."
+        }
+      ],
+      "grammar": {
+        "tipVi": "Cũng có nghĩa | nhẹ: | eine leichte Tasche."
+      }
+    }
+  ]
+}

@@ -13,6 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "vocab:import": "npx tsx scripts/import-vocabulary.ts",
+    "demo:decks": "npx tsx scripts/build-demo-decks.ts",
     "check:gradients": "node scripts/check-canvas-gradients.ts",
     "check:ambient": "node scripts/check-ambient-single-stream.ts",
     "check:ambient-zh": "node scripts/check-ambient-zh-pool.ts",

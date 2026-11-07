@@ -1,0 +1,333 @@
+{
+  "revision": "0c3c7b8d2d380af29392caa7",
+  "name": "TOPIK K101–K105 + 16 packs · demo",
+  "count": 10,
+  "topics": [
+    "attention",
+    "character",
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "TOPIK1",
+    "TOPIK2",
+    "TOPIK3",
+    "TOPIK4",
+    "TOPIK5",
+    "TOPIK6"
+  ],
+  "words": [
+    {
+      "id": "annyeong-c19bbb",
+      "word": "안녕",
+      "meaningVi": "chào",
+      "defVi": "Lời chào /thân_mật/ | khi gặp hay chia_tay bạn_bè.",
+      "leadVi": "Vẫy_tay ở cổng trường, | /tạm_biệt/ đến ngày_mai.",
+      "anticipateVi": "Vừa thấy mặt | đã /rạng_rỡ/ vẫy_tay!",
+      "pos": "phrase",
+      "ipa": "annyeong",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "daily"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "_____! 내일 또 만나.",
+          "vi": "Chào nhé! Mai gặp lại."
+        }
+      ],
+      "chars": 2,
+      "initial": "안",
+      "grammar": {
+        "hanja": "安寧",
+        "hanViet": "an ninh",
+        "tipVi": "thân_mật, nói với bạn_bè hoặc người nhỏ_tuổi hơn"
+      },
+      "shareCode": "S4T"
+    },
+    {
+      "id": "bangapda-7f7c26",
+      "word": "반갑다",
+      "meaningVi": "vui_mừng",
+      "defVi": "Vui trong lòng khi /gặp_gỡ/ người=quen lâu ngày.",
+      "leadVi": "Mở cửa thấy bạn cũ, | gương_mặt bỗng /rạng_rỡ/ hẳn.",
+      "anticipateVi": "Lâu ngày /hội_ngộ/ rồi!",
+      "pos": "adj",
+      "ipa": "bangapda [반갑따]",
+      "topic": "emotion",
+      "topics": [
+        "emotion",
+        "communication"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "친구를 다시 만나서 _____.",
+          "vi": "Gặp lại bạn, tôi vui quá.",
+          "fill": "반가워요"
+        }
+      ],
+      "chars": 3,
+      "initial": "반",
+      "grammar": {
+        "verbInfo": {
+          "활용": "ㅂ 불규칙",
+          "활용형": {
+            "해요체": "반가워요",
+            "반말": "반가워",
+            "합쇼체": "반갑습니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "cheoeum-a946d9",
+      "word": "처음",
+      "meaningVi": "lần=đầu",
+      "defVi": "Thời_điểm /khởi_đầu/, | trước mọi lần làm sau đó.",
+      "leadVi": "Bước chân vào lớp mới, | tim đập /hồi_hộp/.",
+      "anticipateVi": "Nơi=này /lạ_lẫm/ quá!",
+      "pos": "noun",
+      "ipa": "cheoeum",
+      "topic": "time",
+      "topics": [
+        "time",
+        "daily"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "오늘 _____ 김치를 먹어 봤어요.",
+          "vi": "Hôm_nay tôi ăn thử kim_chi | lần=đầu."
+        }
+      ],
+      "chars": 2,
+      "initial": "처"
+    },
+    {
+      "id": "sijak-5cc146",
+      "word": "시작",
+      "meaningVi": "sự=bắt_đầu",
+      "defVi": "Bước /đầu_tiên/ | khi làm một việc mới.",
+      "leadVi": "Ngày=đầu đi_làm, | ai cũng /hồi_hộp/ một=chút.",
+      "anticipateVi": "Trang vở mới | còn /trắng_tinh/!",
+      "pos": "noun",
+      "ipa": "sijak",
+      "topic": "time",
+      "topics": [
+        "time",
+        "general"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "수업 _____ 시간이 몇 시예요?",
+          "vi": "Giờ vào lớp | là mấy giờ?"
+        }
+      ],
+      "chars": 2,
+      "initial": "시",
+      "grammar": {
+        "hanja": "始作",
+        "hanViet": "thủy tác"
+      }
+    },
+    {
+      "id": "sae-4ca67b",
+      "word": "새",
+      "meaningVi": "mới",
+      "defVi": "Vừa mua về, | còn /nguyên_vẹn/ và chưa ai dùng qua.",
+      "leadVi": "Đôi giày vừa mở hộp | thơm mùi da, /sáng_bóng/.",
+      "anticipateVi": "Vừa bóc tem, | /háo_hức/ diện ngay!",
+      "pos": "adj",
+      "ipa": "sae",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "general"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "어제 _____ 가방을 샀어요.",
+          "vi": "Hôm_qua tôi mua chiếc túi mới."
+        }
+      ],
+      "chars": 1,
+      "initial": "새"
+    },
+    {
+      "id": "baeuda-ec06fc",
+      "word": "배우다",
+      "meaningVi": "học",
+      "defVi": "/Tiếp_thu/ kiến_thức mới từ người=dạy mình.",
+      "leadVi": "Bà ngồi /đánh_vần/ từng chữ bên cháu nhỏ.",
+      "anticipateVi": "Cụ bà vẫn /chăm_chỉ/ tới lớp!",
+      "pos": "verb",
+      "ipa": "baeuda",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "저는 요즘 피아노를 _____.",
+          "vi": "Dạo=này tôi học đàn dương_cầm.",
+          "fill": "배워요"
+        }
+      ],
+      "chars": 3,
+      "initial": "배",
+      "grammar": {
+        "verbInfo": {
+          "활용": "규칙",
+          "활용형": {
+            "해요체": "배워요",
+            "반말": "배워",
+            "합쇼체": "배웁니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "gongbu-66ff42",
+      "word": "공부",
+      "meaningVi": "học_tập",
+      "defVi": "Đọc=sách, làm=bài | để /tiếp_thu/ kiến_thức mới.",
+      "leadVi": "Đêm trước kỳ_thi, | em vẫn /chăm_chỉ/ bên sách_vở.",
+      "anticipateVi": "Ôn mãi, | /kiến_thức/ vào đầu chưa?",
+      "pos": "noun",
+      "ipa": "gongbu",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "동생은 매일 _____를 열심히 해요.",
+          "vi": "Ngày=nào em tôi cũng học chăm_chỉ."
+        }
+      ],
+      "chars": 2,
+      "initial": "공",
+      "grammar": {
+        "hanja": "工夫",
+        "hanViet": "công phu"
+      }
+    },
+    {
+      "id": "junbi-991cb3",
+      "word": "준비",
+      "meaningVi": "chuẩn_bị",
+      "defVi": "Sắp_xếp đồ_đạc /sẵn_sàng/ | trước khi đi=làm.",
+      "leadVi": "Sáng_sớm ủi áo, | xếp /tài_liệu/ vào cặp đi=làm.",
+      "anticipateVi": "Chìa_khóa, ví tiền | /đầy_đủ/ chưa?",
+      "pos": "noun",
+      "ipa": "junbi",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "work"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "아침 일곱 시에 회사 갈 _____를 해요.",
+          "vi": "Bảy giờ sáng | tôi chuẩn_bị đi=làm."
+        }
+      ],
+      "chars": 2,
+      "initial": "준",
+      "grammar": {
+        "hanja": "準備",
+        "hanViet": "chuẩn bị"
+      }
+    },
+    {
+      "id": "swipda-2cca8b",
+      "word": "쉽다",
+      "meaningVi": "dễ",
+      "defVi": "Làm được ngay, | không tốn nhiều /công_sức/ hay thời_gian.",
+      "leadVi": "Đề_bài vừa đọc | là đã có /đáp_án/ ngay.",
+      "anticipateVi": "Việc /cỏn_con/ thôi mà!",
+      "pos": "adj",
+      "ipa": "swipda [쉽따]",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "이 문제는 _____.",
+          "vi": "Bài này dễ.",
+          "fill": "쉬워요"
+        }
+      ],
+      "chars": 2,
+      "initial": "쉽",
+      "grammar": {
+        "verbInfo": {
+          "활용": "ㅂ 불규칙",
+          "활용형": {
+            "해요체": "쉬워요",
+            "반말": "쉬워",
+            "합쇼체": "쉽습니다"
+          }
+        }
+      }
+    },
+    {
+      "id": "yeolda-105d5e",
+      "word": "열다",
+      "meaningVi": "mở",
+      "defVi": "Làm cho cửa hay nắp | không còn /khép_kín/ nữa.",
+      "leadVi": "Phòng nóng quá, | đẩy /cửa_sổ/ ra cho gió vào.",
+      "anticipateVi": "Gió mát | ùa vào /phòng_khách/!",
+      "pos": "verb",
+      "ipa": "yeolda",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "TOPIK1",
+      "usage": [
+        {
+          "en": "방이 더워서 창문을 _____.",
+          "vi": "Phòng nóng nên tôi mở cửa_sổ.",
+          "fill": "열어요"
+        }
+      ],
+      "chars": 2,
+      "initial": "열",
+      "grammar": {
+        "verbInfo": {
+          "활용": "ㄹ 탈락",
+          "활용형": {
+            "해요체": "열어요",
+            "반말": "열어",
+            "합쇼체": "엽니다"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -2,7 +2,9 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { loadVocabularyPage, VocabularyRequestError } from "../api/feed";
-import { VOCAB_MAX_PAGES } from "../lib/backfill";
+import { loadDemoDeck, readDemoPage } from "../lib/demo-deck";
+import type { TargetLocale } from "../lib/target-language";
+import { VOCAB_MAX_PAGES, VOCAB_PAGE_LIMIT } from "../lib/backfill";
 import { backgroundRetryDelay, classifyFeedFailure } from "../lib/feed-fallback";
 import type { FeedCursor, FeedPage, VocabularyFilters } from "../types";
 import { markReportedOnce, reportVisitorEvent } from "@/lib/session-tracker";
@@ -25,12 +27,44 @@ function rateLimitWait(error: unknown): number | null {
     : null;
 }
 
-/** Load deterministic pages, retaining at most VOCAB_MAX_PAGES of them. @param seed Stable visit seed. @param filters Content filters. @returns Query and flattened cards. */
-export function useVocabularyFeed(seed: string, filters: VocabularyFilters) {
+/**
+ * One page of a first visit's demo, from the list that ships with the page (lib/demo-deck),
+ * so the first word needs no server. A deck with no list, or a list that fails to load,
+ * streams from the server as any feed does.
+ */
+async function loadDemoOrServerPage(input: {
+  seed: string;
+  filters: VocabularyFilters;
+  cursor: FeedCursor;
+  signal: AbortSignal;
+  locale: TargetLocale;
+}): Promise<FeedPage> {
+  const deck = await loadDemoDeck(input.locale).catch(() => null);
+  if (!deck) return loadVocabularyPage(input);
+  return readDemoPage(deck, input.locale, {
+    seed: input.seed,
+    ...input.filters,
+    position: input.cursor.position,
+    limit: VOCAB_PAGE_LIMIT,
+  });
+}
+
+/**
+ * Load deterministic pages, retaining at most VOCAB_MAX_PAGES of them.
+ * @param seed Stable visit seed. @param filters Content filters.
+ * @param demoLocale Set while a first visit's demo plays on its own filters: the pages come
+ *   from that deck's demo list in the browser instead of the server.
+ * @returns Query and flattened cards.
+ */
+export function useVocabularyFeed(
+  seed: string,
+  filters: VocabularyFilters,
+  demoLocale?: TargetLocale,
+) {
   const client = useQueryClient();
   const queryKey = useMemo(
-    () => ["vocabulary", seed, filters.topic, filters.level, filters.difficulty],
-    [seed, filters.topic, filters.level, filters.difficulty],
+    () => ["vocabulary", seed, filters.topic, filters.level, filters.difficulty, demoLocale ?? ""],
+    [seed, filters.topic, filters.level, filters.difficulty, demoLocale],
   );
   const query = useInfiniteQuery({
     queryKey,
@@ -38,7 +72,9 @@ export function useVocabularyFeed(seed: string, filters: VocabularyFilters) {
     // Every fallback (backoff, fresh stream, wider filters) is spent inside the page load,
     // so what reaches the query as an error is what none of them could fix.
     queryFn: ({ pageParam, signal }) =>
-      loadVocabularyPage({ seed, filters, cursor: pageParam, signal }),
+      demoLocale
+        ? loadDemoOrServerPage({ seed, filters, cursor: pageParam, signal, locale: demoLocale })
+        : loadVocabularyPage({ seed, filters, cursor: pageParam, signal }),
     getNextPageParam: (last) =>
       last.nextPosition === null ? undefined : cursorFrom(last, last.nextPosition),
     getPreviousPageParam: (first) =>

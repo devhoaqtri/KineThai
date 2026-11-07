@@ -1,0 +1,344 @@
+{
+  "revision": "8733adaff88ef1483f5cab45",
+  "name": "WordCrawler vocabulary + 5 packs · demo",
+  "count": 8,
+  "topics": [
+    "attention",
+    "character",
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ],
+  "words": [
+    {
+      "id": "bienvenido",
+      "word": "bienvenido",
+      "shareCode": "MXG",
+      "meaningVi": "được chào_đón",
+      "defVi": "Được người=khác /đón_nhận/ | vui_vẻ, thấy như ở nhà.",
+      "leadVi": "Lần đầu ghé nhà=bạn, | tôi được mời cơm /nhiệt_tình/.",
+      "anticipateVi": "Khách lạ mà /niềm_nở/ thế?",
+      "emphasis": [
+        "đón nhận",
+        "nhiệt tình",
+        "niềm nở"
+      ],
+      "pos": "adj",
+      "ipa": "/bjembeˈnido/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "emotion"
+      ],
+      "level": "A1",
+      "chars": 10,
+      "initial": "B",
+      "usage": [
+        {
+          "en": "En nuestra casa siempre eres _____.",
+          "vi": "Nhà=mình | lúc=nào cũng | chào_đón bạn."
+        }
+      ],
+      "grammar": {
+        "feminine": "bienvenida",
+        "plural": "bienvenidos / bienvenidas",
+        "serEstar": "Thường dùng ser: | eres bienvenido.",
+        "tipVi": "Chào nhiều người | dùng ¡bienvenidos!"
+      }
+    },
+    {
+      "id": "empezar",
+      "word": "empezar",
+      "shareCode": "WH6",
+      "meaningVi": "bắt_đầu",
+      "defVi": "Làm bước /đầu_tiên/ | của một việc | từ con_số không.",
+      "leadVi": "Tiếng còi vang lên, | trận bóng | chính_thức /lăn_bánh/.",
+      "anticipateVi": "Ngại gì | mà chưa /khởi_động/?",
+      "emphasis": [
+        "đầu tiên",
+        "lăn bánh",
+        "khởi động"
+      ],
+      "pos": "verb",
+      "ipa": "/empeˈθaɾ/",
+      "topic": "time",
+      "topics": [
+        "time",
+        "study"
+      ],
+      "level": "A1",
+      "chars": 7,
+      "initial": "E",
+      "usage": [
+        {
+          "en": "La clase va a _____ a las nueve.",
+          "vi": "Lớp_học | sẽ=bắt_đầu | lúc chín giờ."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "e → ie : empiezo",
+          "tiempos": {
+            "presente": "yo empiezo",
+            "pretérito": "él empezó",
+            "participio": "empezado",
+            "gerundio": "empezando"
+          }
+        },
+        "governs": "a + infinitivo",
+        "tipVi": "Yo empecé: | z đổi thành c | trước e."
+      }
+    },
+    {
+      "id": "comenzar",
+      "word": "comenzar",
+      "shareCode": "GK0",
+      "meaningVi": "bắt_đầu",
+      "defVi": "Làm bước /đầu_tiên/ | của một việc gì đó.",
+      "leadVi": "Kỳ học mới, em | /khởi_động/ | bằng việc dọn bàn.",
+      "anticipateVi": "Bàn gọn rồi, /sẵn_sàng/ chưa?",
+      "emphasis": [
+        "đầu tiên",
+        "khởi động",
+        "sẵn sàng"
+      ],
+      "pos": "verb",
+      "ipa": "/komenˈθaɾ/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "chars": 8,
+      "initial": "C",
+      "usage": [
+        {
+          "en": "La clase va a _____ a las nueve.",
+          "vi": "Lớp_học | sẽ bắt_đầu | lúc chín giờ."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "raíz": "e → ie : comienzo",
+          "tiempos": {
+            "presente": "yo comienzo",
+            "pretérito": "él comenzó",
+            "participio": "comenzado",
+            "gerundio": "comenzando"
+          }
+        },
+        "governs": "a + infinitivo",
+        "tipVi": "Đổi z thành c | trước e: | yo comencé."
+      }
+    },
+    {
+      "id": "primero",
+      "word": "primero",
+      "shareCode": "H08",
+      "meaningVi": "đầu_tiên",
+      "defVi": "Trước mọi thứ=khác | theo đúng /thứ_tự/.",
+      "leadVi": "Vào phòng thi, chị | /rà_soát/ | cả đề trước.",
+      "anticipateVi": "Lướt hết đề, | /khởi_động/ câu nào?",
+      "emphasis": [
+        "thứ tự",
+        "rà soát",
+        "khởi động"
+      ],
+      "pos": "adv",
+      "ipa": "/pɾiˈmeɾo/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "chars": 7,
+      "initial": "P",
+      "usage": [
+        {
+          "en": "_____ lee las preguntas y después escribe las respuestas.",
+          "vi": "Đầu_tiên | đọc câu_hỏi, | sau đó viết câu trả_lời."
+        }
+      ],
+      "grammar": {
+        "tipVi": "Trước danh_từ giống_đực | thành primer: | el primer día."
+      }
+    },
+    {
+      "id": "nuevo",
+      "word": "nuevo",
+      "shareCode": "BAG",
+      "meaningVi": "mới",
+      "defVi": "Vừa có | hay vừa /xuất_hiện/, chưa dùng bao lâu.",
+      "leadVi": "Đầu năm_học, | ba_lô mình còn /thơm_phức/ mùi vải.",
+      "anticipateVi": "Còn nguyên hộp, /háo_hức/ chưa?",
+      "emphasis": [
+        "xuất hiện",
+        "thơm phức",
+        "háo hức"
+      ],
+      "pos": "adj",
+      "ipa": "/ˈnweβo/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "N",
+      "usage": [
+        {
+          "en": "Tengo un móvil _____.",
+          "vi": "Mình có | điện_thoại mới."
+        }
+      ],
+      "grammar": {
+        "feminine": "nueva",
+        "plural": "nuevos / nuevas",
+        "serEstar": "Thường dùng ser: | el coche es nuevo.",
+        "tipVi": "Đứng trước danh_từ | lại là cái=khác: | mi nuevo piso."
+      }
+    },
+    {
+      "id": "aprender",
+      "word": "aprender",
+      "shareCode": "ZRQ",
+      "meaningVi": "học",
+      "defVi": "/Tiếp_thu/ | kiến_thức | hay kỹ_năng mới.",
+      "leadVi": "Hè này, | bạn tự /mày_mò/ | đánh đàn qua mạng.",
+      "anticipateVi": "Tập từ đầu, /nản_lòng/ không?",
+      "emphasis": [
+        "Tiếp thu",
+        "mày mò",
+        "nản lòng"
+      ],
+      "pos": "verb",
+      "ipa": "/apɾenˈdeɾ/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "chars": 8,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "Quiero _____ a nadar este verano.",
+          "vi": "Hè này | mình muốn học bơi."
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "regular",
+          "tiempos": {
+            "presente": "yo aprendo",
+            "pretérito": "él aprendió",
+            "participio": "aprendido",
+            "gerundio": "aprendiendo"
+          }
+        },
+        "governs": "a + infinitivo",
+        "tipVi": "Học làm gì | cần a: | aprendo a nadar."
+      }
+    },
+    {
+      "id": "f-cil",
+      "word": "fácil",
+      "shareCode": "HXT",
+      "meaningVi": "dễ",
+      "defVi": "Làm được nhanh | mà chẳng /tốn_công/ mấy.",
+      "leadVi": "Đề mười lăm câu, | mình giải /ngon_ơ/ trong năm phút.",
+      "anticipateVi": "Nhìn đề xong, /mỉm_cười/ luôn?",
+      "emphasis": [
+        "tốn công",
+        "ngon ơ",
+        "mỉm cười"
+      ],
+      "pos": "adj",
+      "ipa": "/ˈfaθil/",
+      "topic": "general",
+      "topics": [
+        "general",
+        "study"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "F",
+      "usage": [
+        {
+          "en": "El examen de hoy es muy _____.",
+          "vi": "Bài thi hôm_nay | rất dễ."
+        }
+      ],
+      "grammar": {
+        "feminine": "fácil",
+        "plural": "fáciles",
+        "serEstar": "Thường dùng ser: | el examen es fácil.",
+        "tipVi": "Số_nhiều giữ dấu: | fácil → fáciles."
+      }
+    },
+    {
+      "id": "abrir",
+      "word": "abrir",
+      "shareCode": "MFG",
+      "meaningVi": "mở",
+      "defVi": "Kéo cửa | hay nắp hộp | cho /mở_toang/ hết=cỡ.",
+      "leadVi": "Trời oi_bức, | mình kéo cửa_sổ | /toang_hoác/ đón gió.",
+      "anticipateVi": "Quên /chìa_khóa/ thì tính sao?",
+      "emphasis": [
+        "mở toang",
+        "toang hoác",
+        "chìa khóa"
+      ],
+      "pos": "verb",
+      "ipa": "/aˈβɾiɾ/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "chars": 5,
+      "initial": "A",
+      "usage": [
+        {
+          "en": "¿Puedes _____ la ventana, por favor?",
+          "vi": "Bạn mở | cửa_sổ | giúp mình | được không?"
+        }
+      ],
+      "grammar": {
+        "verbInfo": {
+          "conjugación": "irregular",
+          "tiempos": {
+            "presente": "yo abro",
+            "pretérito": "él abrió",
+            "participio": "abierto",
+            "gerundio": "abriendo"
+          }
+        },
+        "tipVi": "Dạng đã xong | là abierto, | không nói abrido."
+      }
+    }
+  ]
+}

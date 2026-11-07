@@ -65,6 +65,21 @@ const clientSource = sourceFiles("src")
 for (const fingerprint of [...fingerprints.keys()]) {
   if (clientSource.includes(fingerprint)) fingerprints.delete(fingerprint);
 }
+// The first-visit demo ships a dozen words per language on purpose (lib/demo-deck): copies
+// taken by `npm run demo:decks`, bounded by MAX_DEMO_WORDS in demo-deck.test.ts.
+const DEMO = "src/features/vocabulary/demo";
+if (existsSync(DEMO)) {
+  for (const file of readdirSync(DEMO)) {
+    if (!file.endsWith(".json")) continue;
+    const demo = JSON.parse(readFileSync(join(DEMO, file), "utf8")) as {
+      words?: { defVi?: string }[];
+    };
+    for (const word of demo.words ?? []) {
+      const def = word.defVi?.trim();
+      if (def) fingerprints.delete(JSON.stringify(def).slice(1, -1));
+    }
+  }
+}
 if (fingerprints.size === 0) {
   console.error("no deck fingerprints were read; this guard would pass vacuously");
   process.exit(1);

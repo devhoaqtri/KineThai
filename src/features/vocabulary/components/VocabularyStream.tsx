@@ -8,7 +8,7 @@ import { formatCountdown, isWordAllowed, nextAvailableAt, type ViewHistory } fro
 import type { FeedEntry, FeedPage, Presentation, VocabularyFilters } from "../types";
 import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
 import { DeckLocaleContext } from "../lib/deck-locale";
-import { languageName } from "../lib/target-language";
+import { languageName, type TargetLocale } from "../lib/target-language";
 import { VocabularyCard } from "./VocabularyCard";
 
 // Local only: a production build has no export studio at all, and even in development it
@@ -38,6 +38,11 @@ export type StreamDemo = {
   badgeMs: number;
   /** A demo word reached its end (auto-finish or a coda tap). */
   onDone: () => void;
+  /**
+   * The deck whose demo list (lib/demo-deck) plays from the page itself, with no server
+   * request. Unset once the reader changes a filter mid-demo: that stream is the server's.
+   */
+  deck?: TargetLocale;
 };
 
 /** Row id of the page that closes the stream once every word in the pool has been shown. */
@@ -96,7 +101,7 @@ export function VocabularyStream({
   /** Play the stream as a first visit's demo. */
   demo?: StreamDemo;
 }) {
-  const query = useVocabularyFeed(seed, filters);
+  const query = useVocabularyFeed(seed, filters, demo?.deck);
   // Deck locale drives the "tiếng X" copy in the reader's labels and empty states, so a
   // Korean host never reads "Vốn từ tiếng Anh vô tận". Falls back to English without a
   // provider (see DeckLocaleContext).

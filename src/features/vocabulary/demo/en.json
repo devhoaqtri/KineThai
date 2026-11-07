@@ -1,0 +1,328 @@
+{
+  "revision": "9c947c8810f66ba1e2fd01aa",
+  "name": "WordCrawler base (en_vi) + 6 packs · demo",
+  "count": 12,
+  "topics": [
+    "attention",
+    "character",
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ],
+  "words": [
+    {
+      "id": "vi-hello",
+      "word": "hello",
+      "meaningVi": "lời chào",
+      "defVi": "Câu /mở_lời/ đầu tiên | khi gặp hay nhấc máy.",
+      "leadVi": "Ngày nhập học, em cười | /gật_đầu/ với bạn bàn bên.",
+      "anticipateVi": "Ngại thế, ai /mở_miệng/ trước?",
+      "pos": "noun",
+      "ipa": "/heˈləʊ/",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "society"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Say _____ to your new teacher.",
+          "vi": "Hãy chào giáo_viên mới của=bạn đi."
+        }
+      ],
+      "chars": 5,
+      "initial": "H",
+      "shareCode": "54D"
+    },
+    {
+      "id": "vi-welcome",
+      "word": "welcome",
+      "meaningVi": "được chào_đón",
+      "defVi": "Được người khác /đón_nhận/ | vui_vẻ, thấy như ở nhà.",
+      "leadVi": "Lần đầu ghé nhà bạn, | tôi được mời cơm /nhiệt_tình/.",
+      "anticipateVi": "Khách lạ mà /ấm_áp/ thế sao?",
+      "pos": "adj",
+      "ipa": "/ˈwel.kəm/",
+      "topic": "society",
+      "topics": [
+        "society",
+        "emotion"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "You are always _____ in our home.",
+          "vi": "Bạn luôn được chào_đón ở nhà mình."
+        }
+      ],
+      "chars": 7,
+      "initial": "W",
+      "shareCode": "BSX"
+    },
+    {
+      "id": "vi-start",
+      "word": "start",
+      "meaningVi": "bắt_đầu",
+      "defVi": "Làm /phần_đầu/ | của một việc hay hoạt_động.",
+      "leadVi": "Chuông reo tám giờ, | thầy mở /bài_giảng/ mới.",
+      "anticipateVi": "Mới mở=sách đã=/buồn_ngủ/?",
+      "pos": "verb",
+      "ipa": "/stɑːt/",
+      "topic": "general",
+      "topics": [
+        "general",
+        "time"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "The class will _____ at eight.",
+          "vi": "Lớp học bắt_đầu lúc tám giờ."
+        }
+      ],
+      "chars": 5,
+      "initial": "S",
+      "shareCode": "839"
+    },
+    {
+      "id": "vi-begin",
+      "word": "begin",
+      "meaningVi": "bắt_đầu",
+      "defVi": "Làm bước /đầu_tiên/ | của một việc gì đó.",
+      "leadVi": "Kỳ học mới, em | /khởi_động/ | bằng việc dọn bàn.",
+      "anticipateVi": "Bàn /gọn_gàng/ rồi, học vào?",
+      "pos": "verb",
+      "ipa": "/bɪˈɡɪn/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "The class will _____ at nine.",
+          "vi": "Lớp sẽ=vào học lúc chín giờ."
+        }
+      ],
+      "chars": 5,
+      "initial": "B",
+      "shareCode": "N0X"
+    },
+    {
+      "id": "vi-first",
+      "word": "first",
+      "meaningVi": "đầu_tiên",
+      "defVi": "Trước mọi thứ khác | theo đúng /thứ_tự/.",
+      "leadVi": "Vào phòng thi, chị | /đọc_lướt/ | cả đề trước.",
+      "anticipateVi": "Lướt xong, câu nào /đơn_giản/?",
+      "pos": "adv",
+      "ipa": "/fɜːst/",
+      "topic": "time",
+      "topics": [
+        "time"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "_____, read the question.",
+          "vi": "Trước hết, đọc câu hỏi."
+        }
+      ],
+      "chars": 5,
+      "initial": "F",
+      "shareCode": "G04"
+    },
+    {
+      "id": "vi-new",
+      "word": "new",
+      "meaningVi": "mới",
+      "defVi": "Vừa có | hay vừa /xuất_hiện/, chưa dùng bao lâu.",
+      "leadVi": "Đầu năm học, em | khoe chiếc=/ba_lô/ thơm mùi vải.",
+      "anticipateVi": "Chưa bóc tem, đã=/khoe_khoang/ khắp lớp?",
+      "pos": "adj",
+      "ipa": "/njuː/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "I have a _____ phone.",
+          "vi": "Mình có một chiếc=điện_thoại mới."
+        }
+      ],
+      "chars": 3,
+      "initial": "N",
+      "shareCode": "DXA"
+    },
+    {
+      "id": "vi-learn",
+      "word": "learn",
+      "meaningVi": "học",
+      "defVi": "/Tiếp_thu/ | kiến_thức | hay kỹ_năng mới.",
+      "leadVi": "Hè này, chị | tự /mày_mò/ | đánh đàn qua video.",
+      "anticipateVi": "Tự /mày_mò/, ngón đau chưa?",
+      "pos": "verb",
+      "ipa": "/lɜːn/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "I want to _____ to swim.",
+          "vi": "Mình muốn biết bơi."
+        }
+      ],
+      "chars": 5,
+      "initial": "L",
+      "shareCode": "8S6"
+    },
+    {
+      "id": "vi-lesson",
+      "word": "lesson",
+      "meaningVi": "bài_học",
+      "defVi": "Một buổi | hay một phần dạy | về một /nội_dung/.",
+      "leadVi": "/Tiết_bơi/ đầu tiên, | chị bám thành bể | tập thở.",
+      "anticipateVi": "Uống mấy ngụm nước rồi, /sảng_khoái/?",
+      "pos": "noun",
+      "ipa": "/ˈles.ən/",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "My piano _____ is on Monday.",
+          "vi": "Buổi học đàn của=mình vào thứ hai."
+        }
+      ],
+      "chars": 6,
+      "initial": "L",
+      "shareCode": "6F0"
+    },
+    {
+      "id": "vi-try",
+      "word": "try",
+      "meaningVi": "thử",
+      "defVi": "Làm /thử_nghiệm/ | xem có hợp với mình.",
+      "leadVi": "Lần đầu ăn sầu_riêng, | em /nhăn_mặt/ cắn miếng nhỏ.",
+      "anticipateVi": "/Nhăn_mặt/ mà vẫn nếm?",
+      "pos": "verb",
+      "ipa": "/traɪ/",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "_____ this cake. It's good!",
+          "vi": "Thử miếng bánh này đi. Ngon lắm!"
+        }
+      ],
+      "chars": 3,
+      "initial": "T",
+      "shareCode": "KJH"
+    },
+    {
+      "id": "vi-ready",
+      "word": "ready",
+      "meaningVi": "sẵn_sàng",
+      "defVi": "Đã=/chuẩn_bị/ xong | để bắt_đầu ngay.",
+      "leadVi": "Bảy giờ sáng, em | xếp đủ /bút_thước/ vào cặp.",
+      "anticipateVi": "Chuông reo, còn ai /lóng_ngóng/?",
+      "pos": "adj",
+      "ipa": "/ˈred.i/",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "time"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "Are you _____ for the test?",
+          "vi": "Bạn đã=sẵn_sàng cho bài kiểm_tra chưa?"
+        }
+      ],
+      "chars": 5,
+      "initial": "R",
+      "shareCode": "PHF"
+    },
+    {
+      "id": "vi-easy",
+      "word": "easy",
+      "meaningVi": "dễ",
+      "defVi": "Làm được /nhanh_chóng/ | mà chẳng tốn nhiều công.",
+      "leadVi": "Đề mười lăm phút, | mình giải /nhanh_chóng/ | trong năm phút.",
+      "anticipateVi": "Nhìn đề xong, /mỉm_cười/ luôn?",
+      "pos": "adj",
+      "ipa": "/ˈiː.zi/",
+      "topic": "general",
+      "topics": [
+        "general",
+        "study"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "This test is _____.",
+          "vi": "Bài kiểm_tra này đơn_giản."
+        }
+      ],
+      "chars": 4,
+      "initial": "E",
+      "shareCode": "W1F"
+    },
+    {
+      "id": "vi-open",
+      "word": "open",
+      "meaningVi": "mở",
+      "defVi": "Không=đóng | để người hay /không_khí/ vào được.",
+      "leadVi": "Trời nóng, chị kéo /cửa_sổ/ | cho gió lùa vào phòng.",
+      "anticipateVi": "Cửa /toang_hoác/, ai quên đóng?",
+      "pos": "adj",
+      "ipa": "/ˈəʊ.pən/",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "A1",
+      "usage": [
+        {
+          "en": "The shop is _____ on Sunday.",
+          "vi": "Cửa_hàng mở=cửa vào chủ_nhật."
+        }
+      ],
+      "chars": 4,
+      "initial": "O",
+      "shareCode": "8MT"
+    }
+  ]
+}

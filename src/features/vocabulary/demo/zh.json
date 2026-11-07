@@ -1,0 +1,381 @@
+{
+  "revision": "e9f1634d53698348704e066f",
+  "name": "HSK1 + 65 packs · demo",
+  "count": 9,
+  "topics": [
+    "attention",
+    "character",
+    "communication",
+    "daily",
+    "emotion",
+    "food",
+    "general",
+    "health",
+    "money",
+    "nature",
+    "perception",
+    "society",
+    "study",
+    "technology",
+    "thinking",
+    "time",
+    "travel",
+    "work"
+  ],
+  "levels": [
+    "HSK1",
+    "HSK2",
+    "HSK3",
+    "HSK4",
+    "HSK5",
+    "HSK6",
+    "HSK7"
+  ],
+  "words": [
+    {
+      "id": "huanying-bf7e2e",
+      "word": "欢迎",
+      "meaningVi": "chào_mừng, hoan_nghênh",
+      "defVi": "Vui_vẻ /đón_tiếp/ | người mới đến hay khách tới.",
+      "leadVi": "Bạn mới vào lớp, | cả=lớp vỗ_tay /rộn_ràng/.",
+      "anticipateVi": "Khách tới, /hân_hạnh/ quá!",
+      "pos": "verb",
+      "ipa": "huānyíng",
+      "topic": "communication",
+      "topics": [
+        "communication",
+        "society"
+      ],
+      "level": "HSK2",
+      "usage": [
+        {
+          "en": "____新同_学！",
+          "vi": "Chào_mừng | bạn_học mới!"
+        }
+      ],
+      "chars": 2,
+      "initial": "欢",
+      "grammar": {
+        "hanViet": "hoan nghênh",
+        "collocations": [
+          {
+            "text": "欢迎你",
+            "vi": "chào mừng bạn"
+          },
+          {
+            "text": "欢迎回家",
+            "vi": "chào mừng về nhà"
+          }
+        ],
+        "tipVi": "欢迎 là vui vẻ đón chào; 迎接 là ra tận nơi đón ai đến."
+      },
+      "shareCode": "PPX"
+    },
+    {
+      "id": "renshi-acac5b",
+      "word": "认识",
+      "meaningVi": "quen_biết",
+      "defVi": "Đã /tiếp_xúc/ | và biết người đó là ai.",
+      "leadVi": "Mới gặp hôm_qua | hôm_nay đã chào nhau /rối_rít/.",
+      "anticipateVi": "Gặp rồi, /quen_mặt/ chưa?",
+      "pos": "verb",
+      "ipa": "rènshi",
+      "topic": "society",
+      "topics": [
+        "society",
+        "communication"
+      ],
+      "level": "HSK1",
+      "usage": [
+        {
+          "en": "很高_兴____你。",
+          "vi": "Rất vui được quen bạn."
+        }
+      ],
+      "chars": 2,
+      "initial": "认",
+      "grammar": {
+        "hanViet": "nhận thức",
+        "collocations": [
+          {
+            "text": "认识你",
+            "vi": "quen bạn"
+          },
+          {
+            "text": "认识字",
+            "vi": "biết chữ"
+          }
+        ],
+        "tipVi": "认识 là quen biết người, chữ hay đường; 知道 là biết một thông tin."
+      },
+      "shareCode": "X5Q"
+    },
+    {
+      "id": "xin-b59b20",
+      "word": "新",
+      "meaningVi": "mới",
+      "defVi": "Vừa mới /xuất_hiện/ | hoặc chưa từng được dùng.",
+      "leadVi": "Đôi=giày vừa mua | đế còn /sạch_bong/.",
+      "anticipateVi": "/Tinh_tươm/ như vừa mua!",
+      "pos": "adj",
+      "ipa": "xīn",
+      "topic": "general",
+      "topics": [
+        "general"
+      ],
+      "level": "HSK1",
+      "usage": [
+        {
+          "en": "这是我今_天买的____衣_服。",
+          "vi": "Đây là bộ quần_áo mới tôi mua hôm_nay."
+        }
+      ],
+      "chars": 1,
+      "initial": "新",
+      "grammar": {
+        "hanViet": "tân",
+        "collocations": [
+          {
+            "text": "新年",
+            "vi": "năm mới"
+          },
+          {
+            "text": "新的",
+            "vi": "cái mới"
+          }
+        ]
+      },
+      "shareCode": "0AH"
+    },
+    {
+      "id": "shengci-9dadb1",
+      "word": "生词",
+      "meaningVi": "từ mới",
+      "defVi": "Những chữ /xa_lạ/ | trong bài mình chưa học.",
+      "leadVi": "Đầu buổi, | cô dán lên bảng | /danh_sách/ cần thuộc.",
+      "anticipateVi": "Chữ /lạ_hoắc/ thế?",
+      "pos": "noun",
+      "ipa": "shēngcí",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "HSK2",
+      "usage": [
+        {
+          "en": "这_些是今_天的____，大_家要记_住。",
+          "vi": "Đây là từ mới hôm_nay, | các em phải nhớ nhé."
+        }
+      ],
+      "chars": 2,
+      "initial": "生",
+      "grammar": {
+        "counter": "个 gè",
+        "hanViet": "sinh từ",
+        "collocations": [
+          {
+            "text": "学生词",
+            "vi": "học từ mới"
+          },
+          {
+            "text": "记生词",
+            "vi": "nhớ từ mới"
+          }
+        ],
+        "tipVi": "生词 là từ mới, chưa học; 词语 là từ và cụm từ nói chung."
+      }
+    },
+    {
+      "id": "xue-e34cb2",
+      "word": "学",
+      "meaningVi": "học",
+      "defVi": "/Tiếp_thu/ kiến_thức | hay kỹ_năng mới từ sách_vở.",
+      "leadVi": "Tối nào cũng luyện | giờ đã nói khá /trôi_chảy/.",
+      "anticipateVi": "Ngồi vào bàn, mở /sách_vở/ làm gì?",
+      "pos": "verb",
+      "ipa": "xué",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "HSK1",
+      "usage": [
+        {
+          "en": "我跟老_师____写字。",
+          "vi": "Mình học viết chữ với thầy_cô."
+        }
+      ],
+      "chars": 1,
+      "initial": "学",
+      "grammar": {
+        "hanViet": "học",
+        "collocations": [
+          {
+            "text": "学汉语",
+            "vi": "học tiếng Hán"
+          },
+          {
+            "text": "学写字",
+            "vi": "học viết chữ"
+          }
+        ],
+        "tipVi": "学 ngắn, hay đi với một việc cụ thể; 学习 là học tập nói chung, trang trọng hơn."
+      },
+      "shareCode": "G60"
+    },
+    {
+      "id": "xuexi-cb323b",
+      "word": "学习",
+      "meaningVi": "học_tập",
+      "defVi": "Đọc, nghe và luyện_tập | để có thêm /kiến_thức/ mới.",
+      "leadVi": "Muốn thi tốt | thì mỗi=tối phải /chăm_chỉ/ ôn bài.",
+      "anticipateVi": "/Đèn_sách/ thôi nào!",
+      "pos": "verb",
+      "ipa": "xuéxí",
+      "topic": "study",
+      "topics": [
+        "study"
+      ],
+      "level": "HSK1",
+      "usage": [
+        {
+          "en": "我在大_学____中_文。",
+          "vi": "Mình học tiếng_Trung ở trường đại_học."
+        }
+      ],
+      "chars": 2,
+      "initial": "学",
+      "grammar": {
+        "hanViet": "học tập",
+        "collocations": [
+          {
+            "text": "学习中文",
+            "vi": "học tiếng Trung"
+          },
+          {
+            "text": "在学校学习",
+            "vi": "học ở trường"
+          }
+        ],
+        "tipVi": "学习 trang trọng hơn, hay đứng một mình; 学 ngắn, thường đi với tân ngữ cụ thể."
+      },
+      "shareCode": "7ZA"
+    },
+    {
+      "id": "shi-4f36bb",
+      "word": "试",
+      "meaningVi": "thử",
+      "defVi": "Làm qua một lần | để /kiểm_tra/ có hợp không.",
+      "leadVi": "Áo mới chưa biết /vừa_vặn/ không | mặc lên đã.",
+      "anticipateVi": "Món lạ /hấp_dẫn/, dám không?",
+      "pos": "verb",
+      "ipa": "shì",
+      "topic": "daily",
+      "topics": [
+        "daily"
+      ],
+      "level": "HSK1",
+      "usage": [
+        {
+          "en": "衣_服很好_看，我能____一_下_儿吗？",
+          "vi": "Áo đẹp quá, mình mặc thử một chút được không?"
+        }
+      ],
+      "chars": 1,
+      "initial": "试",
+      "grammar": {
+        "hanViet": "thí",
+        "collocations": [
+          {
+            "text": "试一下儿",
+            "vi": "thử một chút"
+          },
+          {
+            "text": "试试",
+            "vi": "thử xem"
+          }
+        ],
+        "tipVi": "试 là thử làm; 考试 là kỳ thi, bài kiểm tra."
+      },
+      "shareCode": "QMV"
+    },
+    {
+      "id": "zhunbei-bd820e",
+      "word": "准备",
+      "meaningVi": "chuẩn_bị",
+      "defVi": "/Thu_xếp/ mọi thứ | trước_khi bắt_đầu làm việc gì.",
+      "leadVi": "Mai thi rồi | tối=nay sách_vở phải /sẵn_sàng/.",
+      "anticipateVi": "Mai đi xa, /hành_lý/ xếp chưa?",
+      "pos": "verb",
+      "ipa": "zhǔnbèi",
+      "topic": "study",
+      "topics": [
+        "study",
+        "work"
+      ],
+      "level": "HSK1",
+      "usage": [
+        {
+          "en": "我在____明_天的考_试。",
+          "vi": "Tôi đang chuẩn_bị cho bài_thi ngày_mai."
+        }
+      ],
+      "chars": 2,
+      "initial": "准",
+      "grammar": {
+        "hanViet": "chuẩn bị",
+        "collocations": [
+          {
+            "text": "准备好",
+            "vi": "chuẩn bị xong"
+          },
+          {
+            "text": "准备考试",
+            "vi": "ôn thi"
+          }
+        ],
+        "tipVi": "准备 là sửa soạn hoặc sắp làm; 打算 nhấn kế hoạch, dự định trong đầu."
+      },
+      "shareCode": "ZPS"
+    },
+    {
+      "id": "dakai-095ba7",
+      "word": "打开",
+      "meaningVi": "mở",
+      "defVi": "Làm cho thứ /khép_kín/ | được mở ra hay bật lên.",
+      "leadVi": "Nhận /hộp_quà/ xinh | chẳng chờ nổi, xé giấy ngay.",
+      "anticipateVi": "Nắp hộp /kín_bưng/, giờ làm gì?",
+      "pos": "verb",
+      "ipa": "dǎkāi",
+      "topic": "daily",
+      "topics": [
+        "daily",
+        "study"
+      ],
+      "level": "HSK1",
+      "usage": [
+        {
+          "en": "请____书，看第十页。",
+          "vi": "Mời các em mở sách, xem trang mười."
+        }
+      ],
+      "chars": 2,
+      "initial": "打",
+      "grammar": {
+        "hanViet": "đả khai",
+        "collocations": [
+          {
+            "text": "打开门",
+            "vi": "mở cửa"
+          },
+          {
+            "text": "打开电脑",
+            "vi": "bật máy tính"
+          }
+        ],
+        "tipVi": "Nghĩa gần nhau; 打开 nhấn mạnh động tác mở ra; 开 còn có nghĩa lái xe, tổ chức họp."
+      },
+      "shareCode": "NR1"
+    }
+  ]
+}
