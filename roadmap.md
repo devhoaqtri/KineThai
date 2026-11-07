@@ -6,6 +6,6 @@
 
 # Remaining English highlight review
 
-- [ ] Review and safely correct every remaining English clue highlight.
-- [ ] Preserve corrections in a durable review ledger and validate highlights and whole sentences.
-- [ ] Verify corrected clues in the reader.
+- [x] Review and safely correct every remaining English clue highlight.
+- [x] Preserve corrections in a durable review ledger and validate highlights and whole sentences.
+- [x] Verify corrected clues in the reader.
