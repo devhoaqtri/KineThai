@@ -736,7 +736,12 @@ export function RecallSheet({
   const summary = tallyLine(score);
 
   return (
-    <Dialog.Root open onOpenChange={(open) => !open && zoom.close()}>
+    // Not modal. A modal dialog turns off pointer events on everything outside it, which
+    // took the settings panel's close button with it and made a tap outside fold only this
+    // sheet. The sheet lives inside the panel, so the panel's own rule applies: the close
+    // button and any tap outside close the panel, sheet and all (FeedControls). Escape and
+    // the back button still fold just the sheet.
+    <Dialog.Root open modal={false} onOpenChange={(open) => !open && zoom.close()}>
       <Dialog.Portal container={container}>
         <Dialog.Content
           ref={sheet}
@@ -751,6 +756,9 @@ export function RecallSheet({
             event.preventDefault();
             returnFocus();
           }}
+          // A tap outside belongs to the panel, which closes with the sheet inside it; folding
+          // the sheet at the same time would fight the panel's exit.
+          onInteractOutside={(event) => event.preventDefault()}
           // The settings sheet behind must not read this Escape as its own.
           onKeyDown={(event) => event.stopPropagation()}
         >
