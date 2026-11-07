@@ -582,6 +582,7 @@ function MedalTile({
   goal,
   earned,
   caption,
+  scope,
   note,
   locale,
   onOpen,
@@ -589,6 +590,8 @@ function MedalTile({
   goal: BadgeGoal;
   earned: boolean;
   caption: string;
+  /** The level or pack a words badge counts ("Cấp độ A1"), on its own line under the count. */
+  scope?: string;
   /** Under an earned medal, when there is something to add ("4 lần"). */
   note?: string;
   locale: TargetLocale;
@@ -603,10 +606,11 @@ function MedalTile({
         className="vocab-medal-tile"
         data-locked={earned ? undefined : true}
         onClick={() => onOpen(goal, earned)}
-        aria-label={`${caption}${earned ? (note ? `, ${note}` : "") : `, chưa đạt, ${percent}%`}. Xem điều kiện`}
+        aria-label={`${caption}${scope ? `, ${scope}` : ""}${earned ? (note ? `, ${note}` : "") : `, chưa đạt, ${percent}%`}. Xem điều kiện`}
       >
         <StreakMedal days={look.value} tier={look.tier} unit={look.unit} count={look.count} />
         <span className="vocab-medal-tile-days">{caption}</span>
+        {scope && <span className="vocab-medal-tile-scope">{scope}</span>}
         {earned ? (
           note && (
             <span className="vocab-medal-tile-tier" data-scope>
@@ -626,10 +630,13 @@ function MedalTile({
 /** One rung of a ladder as a tile: its face, its caption, and its count or bar below. */
 function RungTile({
   rung,
+  scope,
   locale,
   onOpen,
 }: {
   rung: BadgeRung;
+  /** For a words badge: the level or pack it counts, shown under its count. */
+  scope?: string;
   locale: TargetLocale;
   onOpen: (goal: BadgeGoal, earned: boolean) => void;
 }) {
@@ -643,7 +650,19 @@ function RungTile({
     return <MedalTile {...shared} caption={`${goal.base} ${unit} ×${goal.times}`} />;
   }
   if (goal.kind === "streak") return <MedalTile {...shared} caption={`${goal.days} ngày`} />;
-  return <MedalTile {...shared} caption={goal.complete ? "Trọn bộ" : `${goal.words} từ`} />;
+  return (
+    <MedalTile {...shared} caption={goal.complete ? "Trọn bộ" : `${goal.words} từ`} scope={scope} />
+  );
+}
+
+/**
+ * A words badge's level or pack line: "Cấp độ A1", "Gói từ 🐣 vỡ lòng". Each half keeps
+ * its spaces unbreakable, so a name too long for the medal's width wraps whole onto the
+ * next line ("Gói từ" over "🐣 vỡ lòng") instead of being cut.
+ */
+function scopeLine(kind: string, label: string): string {
+  const keep = (text: string) => text.replace(/ /g, "\u00a0");
+  return `${keep(kind)} ${keep(label.replace(/^Cấp /, ""))}`;
 }
 
 function rungKey({ goal }: BadgeRung): string {
@@ -708,10 +727,10 @@ function MedalShelf({
   const nothingYet =
     !badges.length && !wordBadges.length && DAILY_GOALS.every((goal) => daily.times[goal] === 0);
   const open_ = (goal: BadgeGoal, earned: boolean) => setOpen({ goal, earned });
-  const shelf = (rungs: BadgeRung[]) => (
+  const shelf = (rungs: BadgeRung[], scope?: string) => (
     <ul className="vocab-medal-shelf">
       {rungs.map((rung) => (
-        <RungTile key={rungKey(rung)} rung={rung} locale={locale} onOpen={open_} />
+        <RungTile key={rungKey(rung)} rung={rung} scope={scope} locale={locale} onOpen={open_} />
       ))}
     </ul>
   );
@@ -736,15 +755,13 @@ function MedalShelf({
         </section>
       )}
       {wordRows.length > 0 && (
-        <section className="vocab-medal-group" aria-label="Số từ đã học">
-          <h3 className="vocab-medal-group-title">Số từ đã học</h3>
+        <section className="vocab-medal-group" aria-label="Số từ đã xem">
+          <h3 className="vocab-medal-group-title">Số từ đã xem</h3>
+          {/* Each medal names its own level or pack under its count ("100 từ", then
+              "Cấp độ A1"), so the rows need no label column beside them. */}
           {wordRows.map(({ kind, ladder }) => (
             <div key={kind} className="vocab-medal-ladder">
-              <h4 className="vocab-medal-ladder-title">
-                <small>{kind}</small>
-                {scopeLabel(ladder.scope, locale).replace(/^Cấp /, "")}
-              </h4>
-              {shelf(ladder.rungs)}
+              {shelf(ladder.rungs, scopeLine(kind, scopeLabel(ladder.scope, locale)))}
             </div>
           ))}
         </section>

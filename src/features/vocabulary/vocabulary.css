@@ -9445,23 +9445,10 @@
   text-transform: uppercase;
   color: var(--shell-text-mute);
 }
-/* One level's row in the words-per-level ladder: its name beside its medals, so a
-   catalog with a dozen tracks stays a short list. */
-.vocab-medal-ladder {
-  display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
-  align-items: center;
-}
-.vocab-medal-ladder-title {
-  margin: 0;
-  padding: 0 0 18px 16px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--shell-text);
-}
+/* One row of the words ladder (a level, then a pack). Each medal names its own level or
+   pack under its count (.vocab-medal-tile-scope), so the row is just its shelf. */
 .vocab-medal-ladder .vocab-medal-shelf {
-  padding: 8px 12px 4px 0;
+  padding: 8px 12px 4px;
 }
 .vocab-medal-ladder:nth-child(2) .vocab-medal-shelf {
   padding-top: 16px;
@@ -9469,13 +9456,17 @@
 .vocab-medal-ladder:last-child .vocab-medal-shelf {
   padding-bottom: 24px;
 }
-.vocab-medal-ladder-title small {
-  display: block;
-  margin-bottom: 2px;
-  font-size: 10px;
+/* The words badge's level or pack, under its count: one line ("Cấp độ A1"), or two when
+   a pack's name is wider than the medal ("Gói từ" over "🐣 vỡ lòng"; scopeLine keeps each
+   half whole). */
+.vocab-medal-tile-scope {
+  margin-top: -4px;
+  max-width: 100%;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
   color: var(--shell-text-mute);
 }
 /* Under a grey goal, in place of its metal: how close the reader is. */
