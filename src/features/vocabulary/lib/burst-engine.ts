@@ -574,7 +574,8 @@ export function drawBurst(
     }
   }
 
-  // Rings: thin outlines that start on the word's edge; the stroke thins as it travels.
+  // Rings: thin circles that start just clear of the word's corners, so they never cross
+  // the letters, and spread out round; the stroke thins as it travels.
   if (cfg.rings && !scene.calm) {
     const { count, grow, width, stagger, dur } = cfg.rings;
     ctx.globalCompositeOperation = glowMode;
@@ -585,12 +586,9 @@ export function drawBurst(
       const g = grow * k * (1 + i * 0.35) * easeOutExpo(u);
       ctx.globalAlpha = (i ? 0.6 : 0.95) * (1 - u) ** 1.5 * smoothstep(0, 0.1, u);
       ctx.lineWidth = Math.max(0.6, width * k * (1 - u) ** 1.2);
-      // The wave leaves the word's outline as a wide ellipse and rounds out as it
-      // travels: its height gains on its width, as a real front from a long source does.
-      const ax = (geo.hw + WORD_PAD * k) * 1.12 + g;
-      const ay = (geo.hh + WORD_PAD * k) * 1.5 + g * 1.25;
+      const radius = Math.hypot(geo.hw, geo.hh) + WORD_PAD * k + g;
       ctx.beginPath();
-      ctx.ellipse(geo.cx, geo.cy, ax, ay, 0, 0, Math.PI * 2);
+      ctx.arc(geo.cx, geo.cy, radius, 0, Math.PI * 2);
       ctx.stroke();
     }
   }
