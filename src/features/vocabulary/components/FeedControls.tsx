@@ -660,6 +660,18 @@ function DifficultyDropdown({
     const { seen, total } = scopeProgress(levels, levelProgress, ladder.levelCounts);
     return total > 0 ? { seen, total, ...tierProgress(seen, total) } : null;
   };
+  // The first row is "tất cả" only while nothing is picked. With some packs picked it is
+  // their total: "tổng cộng", its chip running from the lowest of their levels to the
+  // highest, beside the union count countFor already gives it.
+  const pickedLevels = tracksFor(activeLocale)
+    .filter((track) => draft.has(track.id))
+    .flatMap((track) => track.levels);
+  const rowLabel = (option: DifficultyOption) =>
+    option.id === DIFFICULTY_ALL && draft.size > 0 ? "tổng cộng" : option.label;
+  const rowBand = (option: DifficultyOption) =>
+    option.id === DIFFICULTY_ALL && pickedLevels.length > 0
+      ? formatLevelChip(pickedLevels)
+      : option.band;
   const pickRow = (id: string) => {
     // Shared by tap and keyboard: an empty track cannot be chosen by either.
     if (id !== DIFFICULTY_ALL && countFor(id) === 0) return;
@@ -912,8 +924,8 @@ function DifficultyDropdown({
                         begin on one vertical line. */}
                         <span
                           className="vocab-difficulty-band"
-                          data-empty={option.band ? undefined : true}
-                          aria-hidden={option.band ? undefined : true}
+                          data-empty={rowBand(option) ? undefined : true}
+                          aria-hidden={rowBand(option) ? undefined : true}
                           data-complete={(progress && progress.seen >= progress.total) || undefined}
                           style={
                             progress
@@ -923,7 +935,7 @@ function DifficultyDropdown({
                               : undefined
                           }
                         >
-                          {option.band}
+                          {rowBand(option)}
                           {progress && (
                             <span className="sr-only">
                               {progress.seen >= progress.total
@@ -932,7 +944,7 @@ function DifficultyDropdown({
                             </span>
                           )}
                         </span>
-                        {option.label}
+                        {rowLabel(option)}
                       </span>
                       {/* key=count re-mounts the figure whenever the sum moves, which is what
                       (re)triggers the spring-and-flash CSS entrance on it. */}
