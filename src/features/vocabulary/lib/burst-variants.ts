@@ -15,7 +15,8 @@
  * second accent, or a light or hot variant of them) and the engine resolves it against the
  * card's palette and tone, so every design re-skins itself on every card.
  *
- * Exports: BURST_VARIANTS, BurstVariant, DEFAULT_BURST_VARIANT, BURST_INFO, BurstConfig,
+ * Exports: BURST_VARIANTS, BurstVariant, DEFAULT_BURST_VARIANT, BURST_ROTATION,
+ *   pickBurstVariant, BURST_INFO, BurstConfig,
  *   BurstEmitter, ParticleShape, BurstTint, BURST_CONFIG, CALM_BURST, MAX_BURST_PARTICLES
  * Depends on: nothing (pure data)
  */
@@ -30,8 +31,27 @@ export const BURST_VARIANTS = [
 ] as const;
 export type BurstVariant = (typeof BURST_VARIANTS)[number];
 
-/** What the feed throws on every reveal. */
+/** The design a burst throws when nothing picks one (the lab's first, and the fallback). */
 export const DEFAULT_BURST_VARIANT: BurstVariant = "classic";
+
+/**
+ * The designs the feed takes turns with. Each word always gets the same one (it is picked
+ * from the word's id), so a replay or a revisit looks the same while the stream varies.
+ */
+export const BURST_ROTATION: readonly BurstVariant[] = ["classic", "stardust", "halo"];
+
+/**
+ * The rotation's design for one word.
+ * @pure true
+ */
+export function pickBurstVariant(wordId: string): BurstVariant {
+  let h = 2166136261;
+  for (let i = 0; i < wordId.length; i += 1) {
+    h ^= wordId.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return BURST_ROTATION[(h >>> 0) % BURST_ROTATION.length] ?? DEFAULT_BURST_VARIANT;
+}
 
 /** How each design is named and described where one is picked. */
 export const BURST_INFO: Record<BurstVariant, { label: string; blurb: string }> = {

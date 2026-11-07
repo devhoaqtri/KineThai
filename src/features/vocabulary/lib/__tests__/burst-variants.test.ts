@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   BURST_CONFIG,
   BURST_INFO,
+  BURST_ROTATION,
   BURST_VARIANTS,
   CALM_BURST,
   DEFAULT_BURST_VARIANT,
   MAX_BURST_PARTICLES,
+  pickBurstVariant,
 } from "../burst-variants";
 import {
   buildScene,
@@ -40,6 +42,18 @@ describe("burst-variants", () => {
       expect(BURST_INFO[variant].blurb).toBeTruthy();
       expect(BURST_CONFIG[variant].emitters.length).toBeGreaterThan(0);
     }
+  });
+
+  it("rotates the feed through classic, stardust and halo, the same design per word", () => {
+    expect([...BURST_ROTATION]).toEqual(["classic", "stardust", "halo"]);
+    const ids = Array.from({ length: 300 }, (_, i) => `word-${i}`);
+    const picks = ids.map(pickBurstVariant);
+    expect(new Set(picks)).toEqual(new Set(BURST_ROTATION));
+    for (const variant of BURST_ROTATION) {
+      // Each takes a fair share of the stream.
+      expect(picks.filter((pick) => pick === variant).length).toBeGreaterThan(70);
+    }
+    expect(ids.map(pickBurstVariant)).toEqual(picks);
   });
 
   it("keeps every design within the phone particle budget", () => {

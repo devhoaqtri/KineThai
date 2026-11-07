@@ -22,6 +22,7 @@ import { THEMES, type VocabularyTheme } from "../lib/presets";
 import {
   BURST_CONFIG,
   BURST_INFO,
+  BURST_ROTATION,
   BURST_VARIANTS,
   DEFAULT_BURST_VARIANT,
   type BurstConfig,
@@ -558,7 +559,14 @@ function Caption({
           {number}. {info.label}
         </strong>
         <code>{variant}</code>
-        {variant === DEFAULT_BURST_VARIANT && <span className="burst-lab-badge">mặc định</span>}
+        {BURST_ROTATION.includes(variant) && (
+          <span
+            className="burst-lab-badge"
+            title="Bảng tin xoay vòng giữa các kiểu này, mỗi từ một kiểu"
+          >
+            đang xoay vòng
+          </span>
+        )}
         <p>{info.blurb}</p>
         <p className="burst-lab-spec">{parts.join(" · ")}</p>
       </div>

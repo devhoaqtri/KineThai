@@ -8,6 +8,7 @@ import { EASE, SPRING } from "@/lib/motion";
 import type { VocabularyWord } from "../lib/schema";
 import type { LearningStage } from "../lib/stages";
 import { VOCAB_LINE_SPACING_SCALE } from "../lib/presets";
+import { pickBurstVariant } from "../lib/burst-variants";
 import { FilledUsage, MarkedText } from "./MarkedText";
 import { RevealBurst } from "./RevealBurst";
 import { ShareChallengeButton } from "./ShareChallengeButton";
@@ -194,11 +195,13 @@ export function VocabularyStage({
       <p className="sr-only" lang={stage.lang}>
         {stage.text}
       </p>
-      {/* The burst freezes with the card (a pause or an overlay) and, under reduced
-          motion, plays its calm form instead of disappearing. */}
+      {/* The burst takes its turn in the rotation by word, freezes with the card (a pause
+          or an overlay) and, under reduced motion, plays its calm form instead of
+          disappearing. */}
       {stage.reveal && staged && !still && (
         <RevealBurst
           key={playKey}
+          variant={pickBurstVariant(word.id)}
           originY={revealY}
           paused={!playing}
           delay={reducedMotion ? 0 : BURST_LEAD_SECONDS}
