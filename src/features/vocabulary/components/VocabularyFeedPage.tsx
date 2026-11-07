@@ -266,8 +266,8 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
   useScreenWakeLock(true);
   // The stream still mounts and fetches while fonts load; only the text is held.
   const fontsReady = useFontsReady();
-  // Each word that comes on screen is logged to the viewing history and counted
-  // towards the current music track's run.
+  // Each word that comes on screen counts towards the current music track's run; only a
+  // word fully viewed (its answer held the screen) enters the viewing history.
   const music = useTrackRotation();
   const recordView = viewHistory.record;
   // Fetch the active wording preset for the reveal button label
@@ -285,9 +285,8 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
       // An imported pack's words are not the catalog's, so they do not fill its levels. Nor
       // do the demo's: they were played for the reader, not chosen by them.
       if (word.level && !packName && !inDemo) recordLevel(word.level, word.id);
-      music.wordStarted();
     },
-    [recordView, recordLevel, packName, music, inDemo],
+    [recordView, recordLevel, packName, inDemo],
   );
   const shuffle = () => {
     setSeed(newSeed());
@@ -427,6 +426,7 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
               onCloseExport={closeExport}
               history={viewHistory.history}
               onRecordView={handleRecordView}
+              onWordShown={music.wordStarted}
               onWordEnding={music.wordEnding}
               // A demo word is not the reader's yet: it counts towards no streak or goal.
               onWordFinished={demo ? undefined : handleWordFinished}

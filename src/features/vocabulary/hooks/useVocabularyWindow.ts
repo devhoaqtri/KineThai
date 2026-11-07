@@ -15,6 +15,11 @@ import { feedLog } from "../lib/feed-log";
 const ACTIVE_HYSTERESIS = 0.08;
 /** Quiet time after the last scroll event before the scroll is considered at rest. */
 const SCROLL_IDLE_MS = 140;
+/**
+ * How long after the reader's last touch, wheel, pointer or key on the feed a change of word
+ * still counts as theirs. Long enough for a phone's momentum scroll to coast to rest.
+ */
+const INTENT_WINDOW_MS = 2500;
 
 /**
  * Take the feed away from the browser for the length of one programmatic glide.
@@ -138,6 +143,29 @@ export function useVocabularyWindow(
   heightRef.current = height;
   const activeIndexRef = useRef(activeIndex);
   activeIndexRef.current = activeIndex;
+  const activeIdRef = useRef(activeId);
+  activeIdRef.current = activeId;
+
+  // When the reader (or the stream itself, through moveTo/flick) last asked the feed to
+  // move. The word on screen may change for exactly three reasons: the reader moved it, the
+  // stream moved it (auto-advance, a swipe's glide), or the word left the list (the rebase
+  // adopts its neighbour). Anything else is drift — a snap container re-snapping after a
+  // layout change, a scroll offset clamped by a list that shrank — and it once walked the
+  // feed through word after word on its own, each one lasting just long enough to be
+  // recorded as seen. Drift is logged and pulled back to the anchored word.
+  const lastIntent = useRef(0);
+  const intended = useCallback(() => {
+    lastIntent.current = performance.now();
+  }, []);
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const events = ["wheel", "touchstart", "touchmove", "pointerdown", "keydown"] as const;
+    for (const name of events) element.addEventListener(name, intended, { passive: true });
+    return () => {
+      for (const name of events) element.removeEventListener(name, intended);
+    };
+  }, [intended]);
 
   /**
    * Anchor on the row the scroll offset rests on now. onScroll does this as the feed
@@ -155,7 +183,28 @@ export function useVocabularyWindow(
       list.length,
     );
     const id = list[index]?.occurrenceId ?? null;
-    if (id !== null) setActiveId(id);
+    if (id === null) return;
+    const anchor = activeIdRef.current;
+    const reason =
+      anchor === null ||
+      id === anchor ||
+      pending.current !== null ||
+      performance.now() - lastIntent.current < INTENT_WINDOW_MS;
+    if (!reason) {
+      const at = list.findIndex((entry) => entry.occurrenceId === anchor);
+      const top = at * heightRef.current;
+      // Pull back only to a word that is still in the list and that the scroll can reach;
+      // otherwise the list really did change under the reader, and the move stands.
+      if (at >= 0 && top <= element.scrollHeight - element.clientHeight + 1) {
+        feedLog("drift", { from: at, to: index, top: Math.round(element.scrollTop) });
+        writeTopRef.current(top);
+        requestAnimationFrame(() => {
+          adjusting.current = false;
+        });
+        return;
+      }
+    }
+    setActiveId(id);
   }, []);
 
   /** Write the scroll offset, shielding onScroll from the echo of our own write. */
@@ -166,6 +215,8 @@ export function useVocabularyWindow(
     element.scrollTop = top;
     lastTop.current = top;
   }, []);
+  const writeTopRef = useRef(writeTop);
+  writeTopRef.current = writeTop;
 
   // Rebase: keep the anchored word under the reader when the list or the row height
   // changes. `previous` remembers the geometry the current scroll offset was written in.
@@ -255,25 +306,29 @@ export function useVocabularyWindow(
   }, [armIdle, syncActive]);
 
   /** Jump straight to a row. The one programmatic way the stream changes word. */
-  const moveTo = useCallback((index: number, cause = "jump") => {
-    const run = () => {
-      const element = viewport.current;
-      const list = entriesRef.current;
-      if (!element || !list.length) return;
-      const target = Math.max(0, Math.min(list.length - 1, index));
-      direction.current = target < activeIndexRef.current ? "previous" : "next";
-      feedLog("move", {
-        cause,
-        from: activeIndexRef.current,
-        to: target,
-        deferred: adjusting.current,
-      });
-      element.scrollTo({ top: target * heightRef.current, behavior: "auto" });
-    };
-    // Never stack an advance on top of an in-flight scroll rebase; defer one frame.
-    if (adjusting.current) requestAnimationFrame(run);
-    else run();
-  }, []);
+  const moveTo = useCallback(
+    (index: number, cause = "jump") => {
+      const run = () => {
+        const element = viewport.current;
+        const list = entriesRef.current;
+        if (!element || !list.length) return;
+        intended();
+        const target = Math.max(0, Math.min(list.length - 1, index));
+        direction.current = target < activeIndexRef.current ? "previous" : "next";
+        feedLog("move", {
+          cause,
+          from: activeIndexRef.current,
+          to: target,
+          deferred: adjusting.current,
+        });
+        element.scrollTo({ top: target * heightRef.current, behavior: "auto" });
+      };
+      // Never stack an advance on top of an in-flight scroll rebase; defer one frame.
+      if (adjusting.current) requestAnimationFrame(run);
+      else run();
+    },
+    [intended],
+  );
   const move = useCallback(
     (delta: number, cause = "step") => moveTo(activeIndexRef.current + delta, cause),
     [moveTo],
@@ -319,6 +374,7 @@ export function useVocabularyWindow(
       const list = entriesRef.current;
       if (!element || !list.length) return;
       const target = Math.max(0, Math.min(list.length - 1, from + delta));
+      intended();
       pending.current = target;
       direction.current = delta < 0 ? "previous" : "next";
       feedLog("move", {
@@ -338,7 +394,7 @@ export function useVocabularyWindow(
       element.scrollTo({ top: target * heightRef.current, behavior: smooth ? "smooth" : "auto" });
       armIdle();
     },
-    [armIdle],
+    [armIdle, intended],
   );
 
   /**

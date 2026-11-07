@@ -5,7 +5,7 @@ import { useVocabularyWindow } from "../hooks/useVocabularyWindow";
 import { useFeedPagination } from "../hooks/useFeedPagination";
 import { canWalkFurther, getBlockedRun, selectVisibleEntries } from "../lib/backfill";
 import { formatCountdown, isWordAllowed, nextAvailableAt, type ViewHistory } from "../lib/history";
-import type { FeedPage, Presentation, VocabularyFilters } from "../types";
+import type { FeedEntry, FeedPage, Presentation, VocabularyFilters } from "../types";
 import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { languageName } from "../lib/target-language";
@@ -19,8 +19,12 @@ const ExportStudio =
     ? lazy(() => import("./ExportStudio").then((module) => ({ default: module.ExportStudio })))
     : null;
 
-/** How long a word must hold the screen before it counts as seen. */
-const VIEW_DWELL_MS = 900;
+/**
+ * How long a word must hold the screen before it counts as having come on screen, for the
+ * music's run of words only. Entering the history takes far more: the card's answer page
+ * has to have held the screen (VocabularyCard onViewed, lib/history VIEW_ANSWER_MS).
+ */
+const SHOWN_DWELL_MS = 900;
 
 /**
  * A first visit's demo (lib/first-visit). Every word that comes on screen opens with the
@@ -48,6 +52,7 @@ export function VocabularyStream({
   suspended,
   history,
   onRecordView,
+  onWordShown,
   onWordEnding,
   onWordFinished,
   exportOpen = false,
@@ -66,8 +71,13 @@ export function VocabularyStream({
   reducedMotion: boolean;
   suspended: boolean;
   history: ViewHistory;
-  /** A word was read: its id, and its level when it has one (for level progress). */
+  /**
+   * A word was fully viewed (its answer held the screen), so it enters the history: its id,
+   * and its level when it has one (for level progress).
+   */
   onRecordView: (word: VocabularyWord) => void;
+  /** A word has held the screen for a moment (the music counts its run of words by this). */
+  onWordShown?: () => void;
   /** The on-screen word reached its final page; ms left before the stream moves on. */
   onWordEnding?: (remainingMs: number) => void;
   /** A word was finished; the feed records it against the reader's daily streak. */
@@ -175,24 +185,30 @@ export function VocabularyStream({
     if (query.metadata) onMetadata(query.metadata);
   }, [query.metadata, onMetadata]);
 
-  // Record a view once per occurrence — but only for a word the reader actually stayed on.
-  // Recording the instant a card became active meant every card the scroll merely passed
-  // through (a long flick, a snap that overshot and came back) was written to the history
-  // and blocked for a day without ever having been read. The dwell is short enough that a
-  // word someone glances at and deliberately skips still counts.
+  // A word enters the history only once it has been fully viewed: its card reports that
+  // its answer held the screen (onViewed). Counting a word the moment it had been on screen
+  // for under a second let every word the feed merely passed through — a cascade of
+  // changing words, a long flick, a background tab — fill the history with words nobody
+  // read, each then blocked for a day. Recorded once per occurrence.
   const recorded = useRef(new Set<string>());
+  const recordViewed = (entry: FeedEntry) => {
+    if (recorded.current.has(entry.occurrenceId)) return;
+    recorded.current.add(entry.occurrenceId);
+    onRecordView(entry.word);
+  };
   const activeEntry = visibleEntries[activeIndex];
   const activeOccurrenceId = activeEntry?.occurrenceId;
-  const activeWord = activeEntry?.word;
+  // The music counts a word that held the screen for a moment, read or not.
+  const shown = useRef(new Set<string>());
   useEffect(() => {
-    if (!activeOccurrenceId || !activeWord || suspended) return;
-    if (recorded.current.has(activeOccurrenceId)) return;
+    if (!activeOccurrenceId || suspended || !onWordShown) return;
+    if (shown.current.has(activeOccurrenceId)) return;
     const timer = setTimeout(() => {
-      recorded.current.add(activeOccurrenceId);
-      onRecordView(activeWord);
-    }, VIEW_DWELL_MS);
+      shown.current.add(activeOccurrenceId);
+      onWordShown();
+    }, SHOWN_DWELL_MS);
     return () => clearTimeout(timer);
-  }, [activeOccurrenceId, activeWord, suspended, onRecordView]);
+  }, [activeOccurrenceId, suspended, onWordShown]);
 
   // The demo badge: the occurrence whose badge has already gone, so its card may play. It
   // only keeps the last one, so a word scrolled back to opens with the badge again, which
@@ -439,6 +455,7 @@ export function VocabularyStream({
                   onAdvance={demo ? demo.onDone : () => advanceFrom(entry.occurrenceId)}
                   onWordEnding={onWordEnding}
                   onWordFinished={onWordFinished}
+                  onViewed={() => recordViewed(entry)}
                   revealButtonLabel={revealButtonLabel}
                   onToggleAutoplay={onToggleAutoplay}
                 />

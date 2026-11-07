@@ -4,6 +4,13 @@ export const DAY_MS = 24 * 60 * 60 * 1000;
 export const THREE_DAYS_MS = 3 * DAY_MS;
 export const WEEK_MS = 7 * DAY_MS;
 export const HISTORY_KEY = "wordcrawler:view-history:v1";
+/**
+ * How long a word's answer page must hold the screen before the word counts as viewed and
+ * enters this history (VocabularyCard's onViewed). Only answer time counts, and only while
+ * the tab is visible and nothing covers the feed: a word that flashes past, one skipped on
+ * its clues, or one left in a background tab never enters it.
+ */
+export const VIEW_ANSWER_MS = 1500;
 
 export type ViewHistory = Record<string, number[]>;
 

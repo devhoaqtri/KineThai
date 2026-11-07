@@ -1,4 +1,5 @@
 /** One independent vocabulary learning card; clue navigation and heart/bookmark reactions stay on-device, and the reveal is followed by a spelling coda (letter-by-letter for Latin, stroke-by-stroke for Han, jamo assembling into blocks for Korean). Exports: VocabularyCard. Depends on: presets, playback, VocabularyStage, SpellingAnimation, HanziStrokeSpelling, HangulAssembly, reactions. */
+import { VIEW_ANSWER_MS } from "../lib/history";
 import {
   lazy,
   Suspense,
@@ -217,6 +218,7 @@ export function VocabularyCard({
   onAdvance,
   onWordEnding,
   onWordFinished,
+  onViewed,
   exportLayout,
   revealButtonLabel,
   onToggleAutoplay,
@@ -248,6 +250,12 @@ export function VocabularyCard({
    * and the id is the only thing stable across a shuffle or a remount.
    */
   onWordFinished?: (wordId: string) => void;
+  /**
+   * This word has been fully viewed: its answer page held the screen, in a visible tab with
+   * nothing covering the feed, for VIEW_ANSWER_MS (lib/history). Only then does it enter the
+   * reader's history; a word that flashed past or was skipped on its clues never does.
+   */
+  onViewed?: () => void;
   /**
    * Render for video export instead of for a reader: the text is confined to the
    * given clear zone, the interactive chrome is hidden and gestures are off. The
@@ -502,6 +510,28 @@ export function VocabularyCard({
   // The reveal page and the spelling coda both belong to the answer, so the emoji
   // burst stays mounted across the flip instead of remounting and restarting.
   const isRevealed = playback.page >= revealPage;
+  // Fully viewed: the answer has held the screen for VIEW_ANSWER_MS of time the reader could
+  // see it. The clock stops while the tab is hidden and restarts in full when it returns, so
+  // a background tab can never run it out.
+  const viewedRef = useRef(onViewed);
+  viewedRef.current = onViewed;
+  useEffect(() => {
+    if (!active || !isRevealed || exportLayout) return;
+    let timer: number | undefined;
+    const arm = () => {
+      window.clearTimeout(timer);
+      if (document.hidden) return;
+      timer = window.setTimeout(() => {
+        if (!document.hidden) viewedRef.current?.();
+      }, VIEW_ANSWER_MS);
+    };
+    arm();
+    document.addEventListener("visibilitychange", arm);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", arm);
+    };
+  }, [active, isRevealed, exportLayout]);
   // The burst fills both pages and fades out as the spelled word leaves.
   const burstSpanSeconds = ((pageDurations[revealPage] ?? 0) + spellingDuration) / 1000;
   // During the coda there is no matching stage; the answer stage stays mounted
