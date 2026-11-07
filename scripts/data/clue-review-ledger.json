@@ -1071,6 +1071,62 @@
       "text": "Đó là việc /điều_chỉnh/ từng chút | để làm cho tốt hơn.",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-exist",
+      "field": "leadVi",
+      "text": "Xem=phim | về khủng_long, | anh mê | loài đã=/biến_mất/.",
+      "verdict": "ok",
+      "note": "Reviewed 2026-11-07: a whole sentence, no word cut. Surfaced as a gap candidate when the Korean K604–K611 text attested new word pairs."
+    },
+    {
+      "id": "vi-indoors",
+      "field": "leadVi",
+      "text": "Nắng bốn mươi độ, | em nằm | /điều_hòa/ đọc truyện.",
+      "verdict": "ok",
+      "note": "Reviewed 2026-11-07: a whole sentence, no word cut. Surfaced as a gap candidate when the Korean K604–K611 text attested new word pairs. 'nằm điều hòa' is everyday speech."
+    },
+    {
+      "id": "vi-division",
+      "field": "anticipateVi",
+      "text": "/Vừa_sức/ từng người?",
+      "verdict": "ok",
+      "note": "Reviewed 2026-11-07: a whole sentence, no word cut. Surfaced as a gap candidate when the Korean K604–K611 text attested new word pairs."
+    },
+    {
+      "id": "vi-set-up",
+      "field": "leadVi",
+      "text": "Việt bày | góc /học_tập/ có đèn và cây xanh.",
+      "verdict": "ok",
+      "note": "Reviewed 2026-11-07: a whole sentence, no word cut. Surfaced as a gap candidate when the Korean K604–K611 text attested new word pairs."
+    },
+    {
+      "id": "vi-audit",
+      "field": "defVi",
+      "text": "Việc kiểm tra | kỹ /sổ_sách/ tiền bạc.",
+      "verdict": "ok",
+      "note": "Reviewed 2026-11-07: a whole sentence, no word cut. Surfaced as a gap candidate when the Korean K604–K611 text attested new word pairs."
+    },
+    {
+      "id": "vi-upcoming",
+      "field": "leadVi",
+      "text": "Mình tập | múa cho buổi /văn_nghệ/ tuần sau.",
+      "verdict": "ok",
+      "note": "Reviewed 2026-11-07: a whole sentence, no word cut. Surfaced as a gap candidate when the Korean K604–K611 text attested new word pairs."
+    },
+    {
+      "id": "vi-illness",
+      "field": "defVi",
+      "text": "Thời_gian | /cơ_thể/ yếu, | phải nghỉ chữa.",
+      "verdict": "broken",
+      "note": "bệnh cut: 'nghỉ chữa' has no object. Rewritten in the pack 2026-11-07 as 'Tình_trạng /cơ_thể/ không khỏe, | cần nghỉ_ngơi và chữa_trị.'"
+    },
+    {
+      "id": "vi-living",
+      "field": "leadVi",
+      "text": "Thăm bảo_tàng | /khủng_long/, | em hỏi | loài nào còn.",
+      "verdict": "broken",
+      "note": "sống cut: 'loài nào còn' trails off. Rewritten in the pack 2026-11-07 as 'Ở bảo_tàng | /khủng_long/, | em hỏi | giờ còn loài nào.'"
     }
   ]
 }
