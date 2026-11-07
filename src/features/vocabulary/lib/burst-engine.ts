@@ -27,6 +27,7 @@ import {
   type BurstConfig,
   type BurstEmitter,
   type BurstTint,
+  type ConfettiForm,
   type ParticleShape,
 } from "./burst-variants";
 
@@ -62,11 +63,15 @@ export type BurstPalette = {
 
 type Particle = {
   shape: ParticleShape;
-  /** Launch direction (unit vector) and where on the word's outline it was born. */
+  form: ConfettiForm;
+  /** Launch direction (unit vector). */
   dx: number;
   dy: number;
-  ox: number;
-  oy: number;
+  /** Where it is born: a point on the word's box, a point in the air, or (neither) the outline. */
+  anchor: [number, number] | null;
+  origin: [number, number] | null;
+  /** A rocket's destination; its launch velocity is solved to arrive at the end of its life. */
+  target: [number, number] | null;
   offset: number;
   speed: number;
   drag: number;
@@ -79,6 +84,11 @@ type Particle = {
   spin: number;
   flip: number;
   flipPhase: number;
+  flip2: number;
+  flip2Phase: number;
+  curl: number;
+  curlPhase: number;
+  fade: number;
   sway: number;
   swayRate: number;
   swayPhase: number;
@@ -222,10 +232,16 @@ export function buildScene(config: BurstConfig, seed: number, calm = false): Bur
       const slot = (i + 0.2 + rng() * 0.6) / em.count;
       const deg = em.aim + (slot - 0.5) * em.spread;
       const rad = (deg * Math.PI) / 180;
-      const p = makeParticle(em, rng, Math.cos(rad), Math.sin(rad));
-      // An all-round throw leans upward: the word's own stage is above it, the meaning
-      // below, so what heads down is thrown softer.
-      if (em.spread >= 300) p.speed *= 1 - LIFT * Math.max(0, p.dy);
+      const p = em.target
+        ? makeParticle(em, rng, ...unit(em.target[0], em.target[1]))
+        : makeParticle(em, rng, Math.cos(rad), Math.sin(rad));
+      // A shell bursts as a sphere seen from the front: most stars travel near its rim.
+      if (em.sphere) p.speed *= Math.sqrt(1 - (rng() * 2 - 1) ** 2) * 0.35 + 0.65;
+      // An all-round throw from the word leans upward: the word's own stage is above it,
+      // the meaning below, so what heads down is thrown softer.
+      else if (em.spread >= 300 && !em.origin && !em.anchor) {
+        p.speed *= 1 - LIFT * Math.max(0, p.dy);
+      }
       particles.push(p);
       end = Math.max(end, p.delay + p.life);
     }
@@ -238,13 +254,30 @@ export function buildScene(config: BurstConfig, seed: number, calm = false): Bur
   return { config: cfg, calm, release, duration: release + end, particles };
 }
 
+const unit = (x: number, y: number): [number, number] => {
+  const n = Math.hypot(x, y) || 1;
+  return [x / n, y / n];
+};
+
+/** Where each shape starts to fade by default (share of its life). */
+const FADE_FROM: Record<ParticleShape, number> = {
+  streak: 0.35,
+  glint: 0.5,
+  confetti: 0.72,
+  dot: 0.5,
+  flash: 0,
+};
+
 function makeParticle(em: BurstEmitter, rng: () => number, dx: number, dy: number): Particle {
+  const forms = em.forms ?? ["chip"];
   return {
     shape: em.shape,
+    form: forms[Math.floor(rng() * forms.length)] ?? "chip",
     dx,
     dy,
-    ox: 0,
-    oy: 0,
+    anchor: em.anchor ?? null,
+    origin: em.origin ?? null,
+    target: em.target ?? null,
     offset: em.offset ? between(rng, em.offset) : 0,
     speed: between(rng, em.speed),
     drag: em.drag,
@@ -255,10 +288,16 @@ function makeParticle(em: BurstEmitter, rng: () => number, dx: number, dy: numbe
     delay: between(rng, em.delay),
     rot: rng() * Math.PI * 2,
     spin: (em.spin ?? 0) * lerp(-1, 1, rng()),
-    flip: lerp(7, 15, rng()),
+    // Confetti tumbles about two axes at unrelated rates, so it never repeats a pose.
+    flip: lerp(4, 9, rng()),
     flipPhase: rng() * Math.PI * 2,
+    flip2: lerp(1.6, 4.2, rng()),
+    flip2Phase: rng() * Math.PI * 2,
+    curl: lerp(6, 11, rng()),
+    curlPhase: rng() * Math.PI * 2,
+    fade: em.fade ?? FADE_FROM[em.shape],
     sway: (em.sway ?? 0) * lerp(0.6, 1, rng()),
-    swayRate: lerp(4.5, 7.5, rng()),
+    swayRate: lerp(3.2, 5.2, rng()),
     swayPhase: rng() * Math.PI * 2,
     twinkle: em.twinkle ?? 0,
     twinkleRate: lerp(16, 30, rng()),
@@ -287,6 +326,10 @@ export type ParticleFrame = {
   rot: number;
   /** cos of the chip's turn about its long axis, for confetti; 1 otherwise. */
   turn: number;
+  /** cos of its turn about the other axis, for confetti; 1 otherwise. */
+  turn2: number;
+  /** -1..1: how a ribbon is curled at this moment. */
+  curl: number;
 };
 
 /**
@@ -303,12 +346,22 @@ export function particleAt(
   if (tau < 0 || tau >= p.life) return null;
   const k = geo.width / DESIGN_WIDTH;
   const u = tau / p.life;
-  const [bx, by] = outlinePoint(p.dx, p.dy, geo);
+  const pad = WORD_PAD * k;
+  let [bx, by] = [0, 0];
+  if (p.origin) [bx, by] = [p.origin[0] * k, p.origin[1] * k];
+  else if (p.anchor) [bx, by] = [p.anchor[0] * (geo.hw + pad), p.anchor[1] * (geo.hh + pad)];
+  else [bx, by] = outlinePoint(p.dx, p.dy, geo);
   const sx = geo.cx + bx + p.dx * p.offset * k;
   const sy = geo.cy + by + p.dy * p.offset * k;
+  // A rocket's launch is solved so it arrives at its target exactly as its life ends.
+  const vx = p.target ? (geo.cx + p.target[0] * k - sx) / p.life : p.dx * p.speed * k;
+  const vy = p.target
+    ? (geo.cy + p.target[1] * k - sy) / p.life - 0.5 * p.gravity * k * p.life
+    : p.dy * p.speed * k;
+  const drag = p.target ? 0 : p.drag;
   const pos = (time: number): [number, number] => {
-    let x = sx + travel(p.dx * p.speed * k, p.drag, 0, time);
-    const y = sy + travel(p.dy * p.speed * k, p.drag, p.gravity * k, time);
+    let x = sx + travel(vx, drag, 0, time);
+    const y = sy + travel(vy, drag, p.gravity * k, time);
     if (p.sway) {
       // The flutter grows as the throw's own speed dies away.
       const slow = 1 - Math.exp(-Math.max(p.drag, 1) * time);
@@ -325,9 +378,11 @@ export function particleAt(
     // Opacity only: up, hold, down. Nothing moves or scales.
     alpha = smoothstep(0, 0.3, u) * (1 - smoothstep(0.6, 1, u));
   } else {
-    const fadeFrom = p.shape === "streak" ? 0.35 : p.shape === "confetti" ? 0.72 : 0.5;
-    alpha = clamp01(tau / 0.04) * (1 - smoothstep(fadeFrom, 1, u));
-    if (p.shape === "glint") {
+    alpha = clamp01(tau / (p.shape === "flash" ? 0.025 : 0.04)) * (1 - smoothstep(p.fade, 1, u));
+    if (p.shape === "flash") {
+      alpha *= (1 - u) ** 1.6;
+      size *= lerp(0.45, 1, easeOutCubic(u));
+    } else if (p.shape === "glint") {
       size *= easeOutBack(clamp01(tau / 0.18)) * (1 - 0.55 * smoothstep(0.45, 1, u));
     } else if (p.shape === "dot") {
       size *= 1 - 0.5 * u;
@@ -343,9 +398,17 @@ export function particleAt(
   if (geo.floor !== undefined) alpha *= 1 - smoothstep(geo.floor - FLOOR_FADE * k, geo.floor, y);
   if (alpha <= 0.002 || size <= 0.05) return null;
   const spun = p.drag > 0 ? (1 - Math.exp(-p.drag * tau)) / p.drag : tau;
-  const rot = scene.calm ? p.rot : p.rot + p.spin * (0.65 * spun + 0.35 * tau);
-  const turn = p.shape === "confetti" ? Math.cos(p.flip * tau + p.flipPhase) : 1;
-  return { x, y, tx, ty, alpha, size, rot, turn };
+  let rot = scene.calm ? p.rot : p.rot + p.spin * (0.65 * spun + 0.35 * tau);
+  const paper = p.shape === "confetti" && !scene.calm;
+  if (paper && p.sway) {
+    // A falling piece leans into each swing, like a leaf.
+    const slow = 1 - Math.exp(-Math.max(p.drag, 1) * tau);
+    rot += 0.5 * slow * Math.cos(p.swayRate * tau + p.swayPhase);
+  }
+  const turn = paper ? Math.cos(p.flip * tau + p.flipPhase) : 1;
+  const turn2 = paper ? Math.cos(p.flip2 * tau + p.flip2Phase) : 1;
+  const curl = paper ? Math.sin(p.curl * tau + p.curlPhase) : 0;
+  return { x, y, tx, ty, alpha, size, rot, turn, turn2, curl };
 }
 
 /**
@@ -381,6 +444,66 @@ const css = (c: Rgb) => `rgb(${c.r},${c.g},${c.b})`;
 const WHITE: Rgb = { r: 255, g: 255, b: 255 };
 const BLACK: Rgb = { r: 0, g: 0, b: 0 };
 
+function toHsl({ r, g, b }: Rgb): [number, number, number] {
+  const [R, G, B] = [r / 255, g / 255, b / 255];
+  const max = Math.max(R, G, B);
+  const min = Math.min(R, G, B);
+  const l = (max + min) / 2;
+  if (max === min) return [0, 0, l];
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  const h =
+    max === R ? (G - B) / d + (G < B ? 6 : 0) : max === G ? (B - R) / d + 2 : (R - G) / d + 4;
+  return [h * 60, s, l];
+}
+
+function fromHsl(h: number, s: number, l: number): Rgb {
+  const hue = (((h % 360) + 360) % 360) / 360;
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const channel = (t: number) => {
+    const x = t < 0 ? t + 1 : t > 1 ? t - 1 : t;
+    const v =
+      x < 1 / 6
+        ? p + (q - p) * 6 * x
+        : x < 1 / 2
+          ? q
+          : x < 2 / 3
+            ? p + (q - p) * (2 / 3 - x) * 6
+            : p;
+    return Math.round(v * 255);
+  };
+  return { r: channel(hue + 1 / 3), g: channel(hue), b: channel(hue - 1 / 3) };
+}
+
+const hueGap = (a: number, b: number) => {
+  const d = Math.abs((((a - b) % 360) + 360) % 360);
+  return Math.min(d, 360 - d);
+};
+
+/**
+ * A third festive hue for the card: the turn of the accent's hue that sits farthest from
+ * both accents, at a lightness that reads on the card's tone.
+ * @pure true
+ */
+export function popHue(tone: "dark" | "light", accent: Rgb, alt: Rgb): Rgb {
+  const [h, s, l] = toHsl(accent);
+  const altHue = toHsl(alt)[0];
+  let best = h + 180;
+  for (const turn of [120, 150, 180, 210, 240]) {
+    const cand = h + turn;
+    if (
+      Math.min(hueGap(cand, h), hueGap(cand, altHue)) >
+      Math.min(hueGap(best, h), hueGap(best, altHue))
+    ) {
+      best = cand;
+    }
+  }
+  return tone === "dark"
+    ? fromHsl(best, Math.max(s, 0.7), Math.min(Math.max(l, 0.62), 0.72))
+    : fromHsl(best, Math.max(s, 0.62), Math.min(Math.max(l, 0.34), 0.44));
+}
+
 /**
  * Resolve the design's tints against the card. On a deep card the light tints climb
  * toward white so they glow; on a pale card (whose accents are deep inks) they stay
@@ -390,8 +513,22 @@ const BLACK: Rgb = { r: 0, g: 0, b: 0 };
 export function resolvePalette(tone: "dark" | "light", accent: Rgb, alt: Rgb): BurstPalette {
   const rgb: Record<BurstTint, Rgb> =
     tone === "dark"
-      ? { accent, alt, light: mix(accent, WHITE, 0.55), hot: mix(alt, WHITE, 0.82) }
-      : { accent, alt, light: mix(accent, alt, 0.5), hot: mix(accent, WHITE, 0.12) };
+      ? {
+          accent,
+          alt,
+          light: mix(accent, WHITE, 0.55),
+          hot: mix(alt, WHITE, 0.82),
+          pop: popHue(tone, accent, alt),
+          gold: { r: 255, g: 204, b: 92 },
+        }
+      : {
+          accent,
+          alt,
+          light: mix(accent, alt, 0.5),
+          hot: mix(accent, WHITE, 0.12),
+          pop: popHue(tone, accent, alt),
+          gold: { r: 184, g: 132, b: 18 },
+        };
   const tints = {} as BurstPalette["tints"];
   const shades = {} as BurstPalette["shades"];
   for (const key of Object.keys(rgb) as BurstTint[]) {
@@ -619,7 +756,7 @@ export function drawBurst(
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
-const PASSES: ParticleShape[] = ["confetti", "streak", "dot", "glint"];
+const PASSES: ParticleShape[] = ["flash", "confetti", "streak", "dot", "glint"];
 
 function drawParticle(
   ctx: CanvasRenderingContext2D,
@@ -632,6 +769,12 @@ function drawParticle(
 ) {
   ctx.globalAlpha = f.alpha;
   switch (p.shape) {
+    case "flash": {
+      const r = f.size;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.drawImage(sprites.glow[p.tint], f.x - r, f.y - r, r * 2, r * 2);
+      return;
+    }
     case "streak": {
       const dx = f.x - f.tx;
       const dy = f.y - f.ty;
@@ -651,6 +794,11 @@ function drawParticle(
         ctx.closePath();
       }
       ctx.fill();
+      if (p.target) {
+        // A rocket's head burns: a soft glow around the bright point.
+        const r = f.size * 3.2;
+        ctx.drawImage(sprites.glow[p.tint], f.x - r, f.y - r, r * 2, r * 2);
+      }
       return;
     }
     case "dot": {
@@ -684,18 +832,55 @@ function drawParticle(
       return;
     }
     case "confetti": {
-      const turn = Math.abs(f.turn);
-      const shade = palette.shades[p.tint][turn > 0.86 ? 0 : turn > 0.5 ? 1 : turn > 0.22 ? 2 : 3];
+      // A piece tumbling about two axes: its outline foreshortens on each, and it catches
+      // the light face-on and falls into shadow edge-on.
+      const facing = Math.abs(f.turn * f.turn2);
+      const shade =
+        palette.shades[p.tint][facing > 0.72 ? 0 : facing > 0.38 ? 1 : facing > 0.14 ? 2 : 3];
       const c = Math.cos(f.rot);
       const s = Math.sin(f.rot);
-      // rotate(rot) · scale(1, turn): the chip turning about its long axis.
-      const sy = Math.max(0.08, turn) * Math.sign(f.turn || 1);
-      ctx.setTransform(c * dpr, s * dpr, -s * sy * dpr, c * sy * dpr, f.x * dpr, f.y * dpr);
-      ctx.fillStyle = shade;
+      const sx = Math.max(0.12, Math.abs(f.turn2)) * Math.sign(f.turn2 || 1);
+      const sy = Math.max(0.08, Math.abs(f.turn)) * Math.sign(f.turn || 1);
+      ctx.setTransform(
+        c * sx * dpr,
+        s * sx * dpr,
+        -s * sy * dpr,
+        c * sy * dpr,
+        f.x * dpr,
+        f.y * dpr,
+      );
       const w = f.size;
-      const h = f.size * p.aspect;
-      ctx.fillRect(-w / 2, -h / 2, w, h);
-      return;
+      switch (p.form) {
+        case "square":
+          ctx.fillStyle = shade;
+          ctx.fillRect(-w * 0.36, -w * 0.36, w * 0.72, w * 0.72);
+          return;
+        case "disc":
+          ctx.fillStyle = shade;
+          ctx.beginPath();
+          ctx.arc(0, 0, w * 0.36, 0, Math.PI * 2);
+          ctx.fill();
+          return;
+        case "ribbon": {
+          // A streamer: a long thin strip whose curl rolls along it as it falls.
+          const half = w * 0.95;
+          const bend = w * 0.45 * f.curl;
+          ctx.strokeStyle = shade;
+          ctx.lineWidth = w * 0.2;
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.moveTo(-half, -bend * 0.4);
+          ctx.bezierCurveTo(-half / 3, -bend, half / 3, bend, half, bend * 0.4);
+          ctx.stroke();
+          return;
+        }
+        default: {
+          const h = w * p.aspect;
+          ctx.fillStyle = shade;
+          ctx.fillRect(-w / 2, -h / 2, w, h);
+          return;
+        }
+      }
     }
   }
 }

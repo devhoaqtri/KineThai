@@ -548,7 +548,12 @@ function Caption({
     cfg.bloom ? "quầng" : null,
     cfg.rings ? `${cfg.rings.count} vòng` : null,
     cfg.rays ? `${cfg.rays.count} tia sáng` : null,
-    ...cfg.emitters.map((em) => `${em.count} ${SHAPE_NAME[em.shape]}`),
+    ...Object.entries(
+      cfg.emitters.reduce<Record<string, number>>((sum, em) => {
+        sum[em.shape] = (sum[em.shape] ?? 0) + em.count;
+        return sum;
+      }, {}),
+    ).map(([shape, count]) => `${count} ${SHAPE_NAME[shape as keyof typeof SHAPE_NAME]}`),
     `${scene.particles.length} hạt`,
     `${scene.duration.toFixed(2)}s`,
   ].filter(Boolean);
@@ -585,4 +590,10 @@ function Caption({
   );
 }
 
-const SHAPE_NAME = { streak: "vệt", glint: "sao", confetti: "giấy", dot: "chấm" } as const;
+const SHAPE_NAME = {
+  streak: "vệt",
+  glint: "sao",
+  confetti: "giấy",
+  dot: "chấm",
+  flash: "chớp",
+} as const;

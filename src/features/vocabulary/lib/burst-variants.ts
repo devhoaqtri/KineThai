@@ -61,7 +61,8 @@ export const BURST_INFO: Record<BurstVariant, { label: string; blurb: string }> 
   },
   confetti: {
     label: "Hoa giấy",
-    blurb: "Giấy màu bắn vọt lên, lật mặt lấp lánh, rồi chao lượn rơi xuống như thật.",
+    blurb:
+      "Hai ống pháo giấy bắn từ hai góc chữ: giấy, đĩa tròn và ruy băng lộn nhào, chao lượn rơi xuống.",
   },
   stardust: {
     label: "Bụi sao",
@@ -73,7 +74,8 @@ export const BURST_INFO: Record<BurstVariant, { label: string; blurb: string }> 
   },
   fireworks: {
     label: "Pháo hoa",
-    blurb: "Những vệt sáng có đuôi vút ra, rủ xuống theo trọng lực, lóe sao ở cuối đường bay.",
+    blurb:
+      "Ba quả pháo vút lên từ chữ, chậm dần rồi nổ tung thành cầu sao có đuôi, rủ xuống và lấp lánh.",
   },
   halo: {
     label: "Hào quang",
@@ -83,13 +85,20 @@ export const BURST_INFO: Record<BurstVariant, { label: string; blurb: string }> 
 
 /**
  * A streak is a comet with a tapered tail along its own path; a glint is a four-point
- * sparkle that pops and twinkles; confetti is a paper chip that flips in 3D and flutters;
- * a dot is a round mote.
+ * sparkle that pops and twinkles; confetti is a paper piece that tumbles in 3D and
+ * flutters; a dot is a round mote; a flash is a soft puff of light that swells and fades.
  */
-export type ParticleShape = "streak" | "glint" | "confetti" | "dot";
+export type ParticleShape = "streak" | "glint" | "confetti" | "dot" | "flash";
 
-/** Colour roles, resolved against the card (see BurstPalette in lib/burst-engine). */
-export type BurstTint = "accent" | "alt" | "light" | "hot";
+/** The cuts of confetti: oblong chips, squares, round discs and curling ribbons. */
+export type ConfettiForm = "chip" | "square" | "disc" | "ribbon";
+
+/**
+ * Colour roles, resolved against the card (see BurstPalette in lib/burst-engine): its two
+ * accents, a light and a hot variant of them, a third hue turned off the accent (`pop`)
+ * and a warm metallic `gold`, so a festive design is not limited to the card's two inks.
+ */
+export type BurstTint = "accent" | "alt" | "light" | "hot" | "pop" | "gold";
 
 export type BurstEmitter = {
   shape: ParticleShape;
@@ -121,6 +130,25 @@ export type BurstEmitter = {
   trail?: number;
   /** Tints drawn from, weighted by repetition. */
   tints: BurstTint[];
+  /**
+   * Born at a point on the word's box instead of all around its outline: x and y in
+   * half-box units (-1 = left/top edge, 1 = right/bottom), e.g. a confetti cannon.
+   */
+  anchor?: [number, number];
+  /** Born at a point in the air, design px from the word's centre (a firework shell). */
+  origin?: [number, number];
+  /**
+   * A rocket: leaves the word's outline towards this point (design px from the word's
+   * centre) and reaches it exactly at the end of its life, slowing under gravity as a
+   * real shell does. Its `speed` and `aim` are ignored; `drag` should be 0.
+   */
+  target?: [number, number];
+  /** Speeds spread as a sphere seen from the front (edge-heavy), as a shell bursts. */
+  sphere?: boolean;
+  /** Where in its life (0–1) it starts to fade; each shape has a default. */
+  fade?: number;
+  /** Confetti cuts drawn from, weighted by repetition. */
+  forms?: ConfettiForm[];
 };
 
 export type BurstConfig = {
@@ -137,8 +165,118 @@ export type BurstConfig = {
   emitters: BurstEmitter[];
 };
 
-/** Every design stays under this many particles, so a mid-range phone holds 60 fps. */
-export const MAX_BURST_PARTICLES = 96;
+/**
+ * Every design stays under this many particles. The busiest design still holds 60 fps
+ * at DPR 3 under a 4× CPU throttle (a mid-range phone).
+ */
+export const MAX_BURST_PARTICLES = 128;
+
+/**
+ * One firework shell: a rocket that climbs from the word to `at` (design px from the
+ * word's centre), then at the moment it arrives a flash, an edge-heavy sphere of trailing
+ * stars that droop under gravity, and late glitter crackling around where they die.
+ */
+function shell(
+  at: [number, number],
+  launch: number,
+  climb: number,
+  tints: BurstTint[],
+  /** A willow: heavier, slower stars with long tails that weep down. */
+  willow = false,
+): BurstEmitter[] {
+  const burst = launch + climb;
+  return [
+    {
+      shape: "streak",
+      count: 1,
+      aim: -90,
+      spread: 0,
+      speed: [0, 0],
+      drag: 0,
+      gravity: 340,
+      size: [3.4, 3.4],
+      life: [climb, climb],
+      delay: [launch, launch],
+      target: at,
+      trail: 0.12,
+      fade: 0.9,
+      tints: ["hot"],
+    },
+    {
+      shape: "flash",
+      count: 1,
+      aim: 0,
+      spread: 0,
+      speed: [0, 0],
+      drag: 0,
+      gravity: 0,
+      size: [30, 30],
+      life: [0.32, 0.32],
+      delay: [burst, burst],
+      origin: at,
+      tints: ["hot"],
+    },
+    {
+      shape: "streak",
+      count: 26,
+      aim: 0,
+      spread: 360,
+      speed: willow ? [215, 240] : [232, 262],
+      drag: 2.4,
+      gravity: willow ? 300 : 140,
+      size: willow ? [2.4, 3.2] : [2.2, 3.2],
+      life: willow ? [1.5, 1.8] : [1.15, 1.45],
+      delay: [burst, burst + 0.015],
+      origin: at,
+      sphere: true,
+      trail: willow ? 0.26 : 0.15,
+      fade: willow ? 0.5 : 0.6,
+      twinkle: 0.45,
+      tints,
+    },
+    {
+      shape: "glint",
+      count: 6,
+      aim: 0,
+      spread: 360,
+      speed: [10, 40],
+      drag: 2,
+      gravity: 70,
+      size: [4, 7],
+      life: [0.4, 0.62],
+      delay: [burst + 0.6, burst + 0.95],
+      origin: at,
+      offset: [60, 112],
+      spin: 3,
+      twinkle: 0.9,
+      tints: ["hot", "gold", tints[0] ?? "light"],
+    },
+  ];
+}
+
+/** One confetti cannon fired from a top corner of the word, out and up. */
+function cannon(side: -1 | 1, delay: number): BurstEmitter {
+  return {
+    shape: "confetti",
+    count: 44,
+    // Halfway out along the word, aimed up and a touch inward, so even a long word's
+    // cannons keep their paper on the card.
+    anchor: [0.5 * side, -0.8],
+    aim: -90 - 6 * side,
+    spread: 64,
+    speed: [560, 980],
+    drag: 3,
+    gravity: 560,
+    size: [9, 14],
+    life: [2.1, 2.8],
+    delay: [delay, delay + 0.06],
+    spin: 6,
+    sway: 26,
+    fade: 0.78,
+    forms: ["chip", "chip", "chip", "square", "disc", "ribbon", "ribbon"],
+    tints: ["accent", "accent", "alt", "alt", "pop", "gold", "hot"],
+  };
+}
 
 export const BURST_CONFIG: Record<BurstVariant, BurstConfig> = {
   classic: {
@@ -181,42 +319,33 @@ export const BURST_CONFIG: Record<BurstVariant, BurstConfig> = {
     ],
   },
   confetti: {
-    anticipation: 0.07,
+    // Two cannons, a beat apart, from the word's top corners: pieces climb, hang at the
+    // top of their arc, then tumble and flutter down beside the word.
+    anticipation: 0.08,
     core: 12,
-    bloom: { size: 1.2, peak: 0.34, rise: 0.08, decay: 0.45 },
+    bloom: { size: 1.15, peak: 0.3, rise: 0.08, decay: 0.45 },
     rings: null,
     rays: null,
     emitters: [
-      {
-        shape: "confetti",
-        count: 52,
-        aim: -90,
-        spread: 168,
-        speed: [520, 1020],
-        drag: 3,
-        gravity: 700,
-        size: [8, 13],
-        life: [1.5, 2.2],
-        delay: [0, 0.06],
-        spin: 9,
-        sway: 16,
-        tints: ["accent", "accent", "alt", "alt", "light", "hot"],
-      },
-      {
+      cannon(-1, 0),
+      cannon(1, 0.07),
+      ...[-1, 1].map((side): BurstEmitter => ({
+        // A few sparks spat from each cannon's mouth with the paper.
         shape: "glint",
-        count: 8,
-        aim: -90,
-        spread: 200,
-        speed: [160, 380],
-        drag: 3,
-        gravity: 40,
+        count: 5,
+        anchor: [0.5 * side, -0.8],
+        aim: -90 - 6 * side,
+        spread: 70,
+        speed: [260, 520],
+        drag: 3.4,
+        gravity: 80,
         size: [4, 7],
-        life: [0.6, 0.95],
-        delay: [0.02, 0.14],
+        life: [0.55, 0.9],
+        delay: [0.02, 0.12],
         spin: 2,
         twinkle: 0.6,
-        tints: ["hot", "light"],
-      },
+        tints: ["hot", "gold", "light"],
+      })),
     ],
   },
   stardust: {
@@ -298,43 +427,18 @@ export const BURST_CONFIG: Record<BurstVariant, BurstConfig> = {
     ],
   },
   fireworks: {
-    anticipation: 0.08,
-    core: 18,
-    bloom: { size: 1.1, peak: 0.3, rise: 0.07, decay: 0.5 },
+    // Three rockets climb from the word, slowing as they rise, and burst one after another
+    // in the sky above it, each in its own colour.
+    anticipation: 0.06,
+    core: 10,
+    bloom: { size: 1, peak: 0.22, rise: 0.06, decay: 0.35 },
     rings: null,
     rays: null,
     emitters: [
-      {
-        shape: "streak",
-        count: 30,
-        aim: 0,
-        spread: 360,
-        speed: [560, 960],
-        drag: 2.1,
-        gravity: 430,
-        size: [2.2, 3.4],
-        life: [0.9, 1.25],
-        delay: [0, 0.05],
-        trail: 0.13,
-        tints: ["accent", "accent", "alt", "light"],
-      },
-      {
-        // The crackle: late sparkles out where the trails droop and die.
-        shape: "glint",
-        count: 18,
-        aim: 0,
-        spread: 360,
-        speed: [20, 80],
-        drag: 2,
-        gravity: 120,
-        size: [4.5, 8],
-        life: [0.38, 0.6],
-        delay: [0.5, 0.82],
-        offset: [150, 235],
-        spin: 3,
-        twinkle: 0.85,
-        tints: ["hot", "light", "alt"],
-      },
+      ...shell([-96, -138], 0, 0.34, ["accent", "accent", "light"]),
+      ...shell([98, -164], 0.14, 0.38, ["alt", "alt", "pop"]),
+      // The finale: a gold willow, highest and last.
+      ...shell([0, -196], 0.32, 0.42, ["gold", "gold", "hot"], true),
     ],
   },
   halo: {

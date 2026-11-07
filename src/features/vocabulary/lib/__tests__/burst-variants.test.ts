@@ -63,12 +63,12 @@ describe("burst-variants", () => {
     }
   });
 
-  it("anticipates, then settles: every design is over in under 2.6 s", () => {
+  it("anticipates, then settles: every design is over in under 3.2 s", () => {
     for (const variant of BURST_VARIANTS) {
       const scene = buildScene(BURST_CONFIG[variant], 1);
       expect(scene.release, variant).toBeGreaterThan(0);
       expect(scene.release, variant).toBeLessThan(0.15);
-      expect(scene.duration, variant).toBeLessThan(2.6);
+      expect(scene.duration, variant).toBeLessThan(3.2);
     }
   });
 });
@@ -144,6 +144,41 @@ describe("burst-engine physics", () => {
         expect(f.rot).toBeCloseTo(seen[0]!.rot, 6);
       }
     }
+  });
+
+  it("lands every firework rocket exactly on its shell as the shell bursts", () => {
+    const scene = buildScene(BURST_CONFIG.fireworks, 4);
+    const rockets = scene.particles.filter((p) => p.target);
+    expect(rockets).toHaveLength(3);
+    for (const rocket of rockets) {
+      // A rocket has burned out at the instant it arrives (the shell's flash takes over),
+      // so look at it in its last moments: it is within a pixel or two of the shell.
+      const late = scene.release + rocket.delay + rocket.life * 0.99;
+      const f = particleAt(rocket, scene, late, PHONE)!;
+      expect(Math.abs(f.x - (PHONE.cx + rocket.target![0]))).toBeLessThan(3);
+      expect(Math.abs(f.y - (PHONE.cy + rocket.target![1]))).toBeLessThan(3);
+      // Its shell's stars leave from that same point as the rocket goes out.
+      const stars = scene.particles.filter(
+        (p) => p.origin?.[0] === rocket.target![0] && p.origin?.[1] === rocket.target![1],
+      );
+      expect(Math.min(...stars.map((p) => p.delay))).toBeCloseTo(rocket.delay + rocket.life, 6);
+    }
+  });
+
+  it("lets confetti climb, hang and then fall", () => {
+    const scene = buildScene(BURST_CONFIG.confetti, 6);
+    const paper = scene.particles.filter((p) => p.shape === "confetti");
+    const fell = paper.filter((p) => {
+      const at = (u: number) => particleAt(p, scene, scene.release + p.delay + p.life * u, PHONE);
+      const early = at(0.08);
+      const late = at(0.6);
+      return early && late && late.y > early.y - 40;
+    });
+    // Nearly every piece that is still on screen is on its way down by mid-life.
+    expect(fell.length).toBeGreaterThan(paper.length * 0.5);
+    expect(new Set(paper.map((p) => p.form))).toEqual(
+      new Set(["chip", "square", "disc", "ribbon"]),
+    );
   });
 
   it("scales with the card, so a lab miniature is the phone picture shrunk", () => {
