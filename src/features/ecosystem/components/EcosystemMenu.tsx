@@ -19,7 +19,7 @@ import { Store, X } from "lucide-react";
 import { ECOSYSTEM_STORE_AVAILABLE } from "@/lib/feature-flags";
 import { usePresence } from "@/hooks/use-presence";
 import { ECOSYSTEM_APPS, type EcosystemApp } from "../data/apps";
-import { resolveTarget } from "@/features/vocabulary/lib/target-language";
+import { isLocaleShown, resolveTarget } from "@/features/vocabulary/lib/target-language";
 import "../ecosystem.css";
 
 /** Matches the exit keyframes in ecosystem.css. */
@@ -145,10 +145,11 @@ export function EcosystemMenu({
   const presence = usePresence(open, ECOSYSTEM_EXIT_MS);
   // Everything except the language the page is showing. Keyed on the resolved deck locale,
   // the same answer the title and deck use, so an unknown host that falls back to English
-  // hides Anh just as anh.chayla.app does.
+  // hides Anh just as anh.chayla.app does. A language withheld from readers
+  // (HIDDEN_LOCALES) has no tile either, since its address would only serve English.
   const apps = useMemo(() => {
     const current = resolveTarget(typeof window === "undefined" ? null : window.location.host);
-    return ECOSYSTEM_APPS.filter((app) => app.locale !== current);
+    return ECOSYSTEM_APPS.filter((app) => app.locale !== current && isLocaleShown(app.locale));
   }, []);
   const anchor = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);

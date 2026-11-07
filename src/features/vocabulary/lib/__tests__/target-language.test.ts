@@ -1,11 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { languageName, resolveTarget, siteAddress, siteBrand, siteTitle } from "../target-language";
 import { readVocabularyPage } from "../../api/catalog.server";
 
 describe("resolveTarget", () => {
   it("hoa.chayla.app serves Chinese", () => expect(resolveTarget("hoa.chayla.app")).toBe("zh"));
   it("anh.chayla.app serves English", () => expect(resolveTarget("anh.chayla.app")).toBe("en"));
-  it("han.chayla.app serves Korean", () => expect(resolveTarget("han.chayla.app")).toBe("ko"));
+  it("han.chayla.app serves Korean on a dev server", () =>
+    expect(resolveTarget("han.chayla.app")).toBe("ko"));
   it("nhat.chayla.app serves Japanese", () => expect(resolveTarget("nhat.chayla.app")).toBe("ja"));
   it("phap.chayla.app serves French", () => expect(resolveTarget("phap.chayla.app")).toBe("fr"));
   it("duc.chayla.app serves German", () => expect(resolveTarget("duc.chayla.app")).toBe("de"));
@@ -65,7 +66,14 @@ describe("Chinese deck", () => {
 });
 
 describe("French, German and Spanish decks", () => {
-  const request = { seed: "testseed01", position: 0, limit: 24, topic: "", level: "", difficulty: "" } as const;
+  const request = {
+    seed: "testseed01",
+    position: 0,
+    limit: 24,
+    topic: "",
+    level: "",
+    difficulty: "",
+  } as const;
   it("a phap request returns only French words", () => {
     const page = readVocabularyPage(request, "fr");
     expect(page.entries.length).toBeGreaterThan(0);
@@ -80,5 +88,36 @@ describe("French, German and Spanish decks", () => {
     const page = readVocabularyPage(request, "es");
     expect(page.entries.length).toBeGreaterThan(0);
     for (const e of page.entries) expect(e.word.word).not.toMatch(/^\p{Script=Han}+$/u);
+  });
+});
+
+describe("hidden languages", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  it("withholds Korean from readers: a production build serves han.* in English", async () => {
+    vi.stubEnv("DEV", false);
+    vi.resetModules();
+    const target = await import("../target-language");
+    expect(target.HIDDEN_LOCALES.has("ko")).toBe(true);
+    expect(target.isLocaleShown("ko")).toBe(false);
+    expect(target.resolveTarget("han.chayla.app")).toBe("en");
+    expect(target.resolveTarget("xn--hn-ula.chayla.app")).toBe("en");
+    // The address still names its language, for tooling that drives a dev server.
+    expect(target.addressLocale("han.chayla.app")).toBe("ko");
+    // Every other language is untouched.
+    expect(target.resolveTarget("anh.chayla.app")).toBe("en");
+    expect(target.resolveTarget("hoa.chayla.app")).toBe("zh");
+    expect(target.resolveTarget("nhat.chayla.app")).toBe("ja");
+  });
+
+  it("keeps Korean on a dev server so it can be checked", async () => {
+    vi.stubEnv("DEV", true);
+    vi.resetModules();
+    const target = await import("../target-language");
+    expect(target.isLocaleShown("ko")).toBe(true);
+    expect(target.resolveTarget("han.localhost:5195")).toBe("ko");
   });
 });

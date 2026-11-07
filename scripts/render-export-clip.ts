@@ -65,7 +65,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 
 import { getExportPreset } from "../src/features/vocabulary/lib/export-presets";
 import { SHOWCASE_CONTRACT } from "../src/features/vocabulary/lib/showcase-contract";
-import { resolveTarget, siteAddress } from "../src/features/vocabulary/lib/target-language";
+import { addressLocale, siteAddress } from "../src/features/vocabulary/lib/target-language";
 import { difficultyChoiceKey } from "../src/features/vocabulary/lib/difficulty-choice";
 import { DIFFICULTY_ALL } from "../src/features/vocabulary/lib/difficulty";
 import { launchChrome, type Cdp, type ChromeSession } from "./lib/cdp";
@@ -107,7 +107,7 @@ if (mode === "export" && !code) {
 const preset = flag("preset", "tiktok-clear");
 const base = flag("base", "http://localhost:5195");
 // The end card names the address of the deck being recorded (hoa.localhost → hoa.chayla.app).
-const target = resolveTarget(new URL(base).host);
+const target = addressLocale(new URL(base).host);
 const address = siteAddress(target);
 // Export and showcase modes only; the feed takes its dialect from the reader's own choice.
 const dialect = flag("dialect", "");

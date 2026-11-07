@@ -14,6 +14,7 @@ import type React from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { ECOSYSTEM_APPS, type EcosystemApp } from "../data/apps";
+import { isLocaleShown } from "@/features/vocabulary/lib/target-language";
 import "../store.css";
 
 function AppSection({ app }: { app: EcosystemApp }): React.ReactElement {
@@ -82,7 +83,7 @@ export function StorePage(): React.ReactElement {
       </header>
 
       <div className="store-list">
-        {ECOSYSTEM_APPS.map((app) => (
+        {ECOSYSTEM_APPS.filter((app) => isLocaleShown(app.locale)).map((app) => (
           <AppSection key={app.id} app={app} />
         ))}
       </div>

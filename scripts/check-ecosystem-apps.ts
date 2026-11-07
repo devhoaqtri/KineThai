@@ -14,7 +14,7 @@
  * Usage: npm run check:ecosystem-apps
  */
 import { ECOSYSTEM_APPS, ECOSYSTEM_MAX_APPS } from "../src/features/ecosystem/data/apps.ts";
-import { resolveTarget } from "../src/features/vocabulary/lib/target-language.ts";
+import { addressLocale } from "../src/features/vocabulary/lib/target-language.ts";
 
 const failures: string[] = [];
 const rows: string[] = [];
@@ -48,8 +48,8 @@ for (const app of ECOSYSTEM_APPS) {
 
   // The drawer hides the tile whose locale is the page's resolved deck, so a wrong locale
   // hides the wrong tile as well as mislabelling where this one leads.
-  check(`${app.id}: host serves its locale`, resolveTarget(host) === app.locale,
-    `${host} → ${resolveTarget(host)}, tile says ${app.locale}`);
+  check(`${app.id}: host serves its locale`, addressLocale(host) === app.locale,
+    `${host} → ${addressLocale(host)}, tile says ${app.locale}`);
   check(`${app.id}: locale is unique`, !locales.has(app.locale), app.locale);
   locales.add(app.locale);
 

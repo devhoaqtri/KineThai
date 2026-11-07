@@ -28,7 +28,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { RELAX_LINE_RULE_BELOW } from "../src/features/vocabulary/lib/line-relax";
-import { resolveTarget, type TargetLocale } from "../src/features/vocabulary/lib/target-language";
+import { addressLocale, type TargetLocale } from "../src/features/vocabulary/lib/target-language";
 
 type PageFont = {
   word: string | null;
@@ -85,7 +85,7 @@ for (const file of logFiles) {
     if (record.ev !== "page-font" || !record.word || !(record.fontPx > 0)) continue;
     if (onlyWord && record.word !== onlyWord) continue;
     if (since && (record.session ?? "") < since) continue;
-    record.site = resolveTarget(record.host ?? null);
+    record.site = addressLocale(record.host ?? null);
     if (onlySite && record.site !== onlySite) continue;
     const screen = `${record.boxWidthPx}x${record.boxHeightPx}`;
     pages.set(`${record.site}:${record.word}@${screen}|${record.stage}|${record.text}`, record);

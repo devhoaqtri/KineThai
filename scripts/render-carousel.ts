@@ -45,7 +45,7 @@ import {
   getSlideLayoutSize,
 } from "../src/features/vocabulary/lib/carousel-formats";
 import { getCarouselFolderName } from "../src/features/vocabulary/lib/carousel";
-import { resolveTarget } from "../src/features/vocabulary/lib/target-language";
+import { addressLocale } from "../src/features/vocabulary/lib/target-language";
 import { launchChrome, type Cdp } from "./lib/cdp";
 
 /** A slide that has not settled by now is stuck, not slow. */
@@ -249,7 +249,7 @@ export async function renderCarousel(
 ): Promise<CarouselRenderResult> {
   const format = getCarouselFormat(options.format);
   const layout = getSlideLayoutSize(format);
-  const locale = resolveTarget(new URL(options.base).host);
+  const locale = addressLocale(new URL(options.base).host);
   const folder = resolve(options.out, getCarouselFolderName(locale, options.code, format.id));
   const query = new URLSearchParams({ format: format.id });
   if (options.theme) query.set("theme", options.theme);
