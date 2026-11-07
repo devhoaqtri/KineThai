@@ -28,6 +28,1049 @@
       "text": "/Đầu_kỳ/, | em ghi | đạt tám điểm Toán.",
       "verdict": "broken",
       "note": "mục_tiêu cut; ghi has no object."
+    },
+    {
+      "id": "vi-address",
+      "field": "anticipateVi",
+      "text": "Ghi thiếu số nhà, /địa_chỉ/ sai rồi à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-shoe",
+      "field": "defVi",
+      "text": "Đây là đồ mang ở chân, | có đế cứng để /bảo_vệ/ chân.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-sleep",
+      "field": "leadVi",
+      "text": "Thi xong môn cuối, | anh ngủ /say_sưa/ đến trưa.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-laugh",
+      "field": "anticipateVi",
+      "text": "Nhịn mãi, rồi cười /khúc_khích/ à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-cooking",
+      "field": "leadVi",
+      "text": "Ra ở riêng, | tôi học mẹ /nấu_nướng/ qua video.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-cooking",
+      "field": "anticipateVi",
+      "text": "Mới /nấu_nướng/, bạn đã làm cháy nồi à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-best",
+      "field": "leadVi",
+      "text": "Hội thi văn_nghệ, | tiết_mục lớp em /xuất_sắc/ nhất.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-few",
+      "field": "anticipateVi",
+      "text": "Chỉ năm bạn, lớp /vắng_vẻ/ thế à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-high",
+      "field": "leadVi",
+      "text": "Lên đỉnh núi /chót_vót/, | cả nhóm ngắm mây dưới chân.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-ok",
+      "field": "anticipateVi",
+      "text": "Bạn thật_sự /khỏe_mạnh/ chứ?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-about",
+      "field": "anticipateVi",
+      "text": "Bạn /ước_lượng/ mười lăm phút hay nửa tiếng?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-up",
+      "field": "anticipateVi",
+      "text": "Leo /cầu_thang/ liền năm tầng à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-add",
+      "field": "anticipateVi",
+      "text": "Thêm /gia_vị/ nữa, canh mặn mất à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-get",
+      "field": "defVi",
+      "text": "Bạn /tiếp_nhận/ thứ người khác gửi hoặc trao cho.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-happen",
+      "field": "defVi",
+      "text": "Một sự_việc /xảy_ra/, | thường bất_chợt và chẳng ai ngờ.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-ear",
+      "field": "anticipateVi",
+      "text": "Ồn thế mà vẫn phân_biệt được /âm_thanh/ à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-mouth",
+      "field": "anticipateVi",
+      "text": "Bạn há miệng vì /ngạc_nhiên/ à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-swim",
+      "field": "leadVi",
+      "text": "Hè ở quê, | mình /bơi_lội/ cùng bạn dưới sông từ sáng.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-spend",
+      "field": "leadVi",
+      "text": "Lĩnh lương làm thêm, | em dùng hết tiền để /mua_sắm/ sách.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-fire",
+      "field": "defVi",
+      "text": "Đây là ngọn lửa nóng, | /rực_sáng/ khi gỗ hay giấy cháy.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-weather",
+      "field": "anticipateVi",
+      "text": "/Dự_báo/ nói nắng, rồi trời mưa ào à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-beautiful",
+      "field": "defVi",
+      "text": "Vẻ /xinh_đẹp/ khiến ai cũng muốn ngắm mãi.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-event",
+      "field": "anticipateVi",
+      "text": "/Sự_kiện/ đông khách, tờ=rơi hết rồi à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-grandfather",
+      "field": "anticipateVi",
+      "text": "Bạn chưa thắng ông ván /cờ_tướng/ nào à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-person",
+      "field": "leadVi",
+      "text": "Khi chia nhóm /học_tập/, | cô bảo mỗi=bàn chỉ có bốn người.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-sister",
+      "field": "defVi",
+      "text": "Đây là chị hoặc em gái cùng /cha_mẹ/ với mình.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-paint",
+      "field": "defVi",
+      "text": "Bạn dùng cọ phủ /màu_sắc/ lên tường hay mặt giấy.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-camera",
+      "field": "anticipateVi",
+      "text": "/Máy_ảnh/ cổ vẫn chụp rõ nét chứ?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-opinion",
+      "field": "anticipateVi",
+      "text": "Mỗi=người một /ý_kiến/, chọn sao đây?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-ever",
+      "field": "anticipateVi",
+      "text": "Bạn từng /du_lịch/ Nhật chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-age",
+      "field": "leadVi",
+      "text": "Làm /căn_cước/, | mình khai năm sinh trên tờ=đơn.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-year",
+      "field": "anticipateVi",
+      "text": "Bạn đạt /mục_tiêu/ năm cũ chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-wait",
+      "field": "anticipateVi",
+      "text": "Bạn /chờ_đợi/ xe lâu chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-beach",
+      "field": "anticipateVi",
+      "text": "Cát dính đầy người, bạn vẫn thích /bãi_biển/ chứ?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-bicycle",
+      "field": "leadVi",
+      "text": "Thuê trọ gần trường, | chị mua chiếc /xe_đạp/ cũ màu xanh.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-bicycle",
+      "field": "anticipateVi",
+      "text": "/Xe_đạp/ cũ còn phanh tốt chứ?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-road",
+      "field": "defVi",
+      "text": "Đây là đường rộng cho người và xe /lưu_thông/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-arrive",
+      "field": "defVi",
+      "text": "Bạn tới /địa_điểm/ cần đến sau chuyến đi.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-stay",
+      "field": "anticipateVi",
+      "text": "Ba đêm rồi, bạn còn /lưu_luyến/ chưa muốn về à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-job",
+      "field": "anticipateVi",
+      "text": "Mười chỗ, có nơi nào gọi /phỏng_vấn/ chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-work",
+      "field": "anticipateVi",
+      "text": "Bạn /bưng_bê/ cả ca, mỏi chân chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-toy",
+      "field": "anticipateVi",
+      "text": "Kín kệ rồi, bạn vẫn /sưu_tầm/ nữa à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-mirror",
+      "field": "anticipateVi",
+      "text": "Bạn soi gương chỉnh /cà_vạt/ xong chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-burn",
+      "field": "defVi",
+      "text": "Lửa hoặc /nhiệt_độ/ cao làm vật cháy, đen và hỏng.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-can",
+      "field": "anticipateVi",
+      "text": "Mở lon nước /giải_khát/, nghe xèo à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-candy",
+      "field": "anticipateVi",
+      "text": "Hũ /bánh_kẹo/ đầy, bạn lấy mấy viên?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-straight",
+      "field": "anticipateVi",
+      "text": "Thước lệch, nét kẻ còn /ngay_ngắn/ không?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-actually",
+      "field": "leadVi",
+      "text": "Tôi tưởng cậu khó gần, | thật ra cậu rất /vui_tính/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-any",
+      "field": "anticipateVi",
+      "text": "Bạn thấy /dễ_chịu/ hơn chút nào chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-firstly",
+      "field": "anticipateVi",
+      "text": "Bạn /trình_bày/ ý nào trước?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-instead",
+      "field": "anticipateVi",
+      "text": "Đổi sang /nước_cam/ ép, ngon hơn à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-side",
+      "field": "defVi",
+      "text": "Đây là phần ở bên trái hoặc bên phải | của /cơ_thể/ hay vật.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-reach",
+      "field": "defVi",
+      "text": "Bạn đến được một /vị_trí/ | hoặc chạm được vật cần với.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-score",
+      "field": "leadVi",
+      "text": "Hiệp hai sắp hết, | /tỷ_số/ vẫn là một đều.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-heat",
+      "field": "anticipateVi",
+      "text": "Bật quạt to mà vẫn /nóng_nực/ à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-attractive",
+      "field": "defVi",
+      "text": "Vẻ /hấp_dẫn/ khiến người khác muốn nhìn.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-male",
+      "field": "leadVi",
+      "text": "Lớp múa chỉ có hai /nam_sinh/, | nên hai bạn nổi bật hẳn.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-allow",
+      "field": "anticipateVi",
+      "text": "Bạn được /nấu_nướng/ ở đây à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-learning",
+      "field": "anticipateVi",
+      "text": "Khả_năng nghe đã /tiến_bộ/ sau ba tháng chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-fail",
+      "field": "anticipateVi",
+      "text": "Lần thi sau, bạn /thành_công/ chứ?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-impossible",
+      "field": "anticipateVi",
+      "text": "Ôn một đêm, bạn thấy /vô_vọng/ rồi à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-likely",
+      "field": "defVi",
+      "text": "Sự_việc này có /khả_năng/ cao xảy_ra trong thời_gian tới.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-suppose",
+      "field": "anticipateVi",
+      "text": "Bạn vẫn /tỉnh_táo/ chưa ngủ à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-recent",
+      "field": "defVi",
+      "text": "Sự_việc này mới xảy_ra trong /thời_gian/ gần đây.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-recent",
+      "field": "leadVi",
+      "text": "Đọc /tin_tức/ mới, | em biết giá vé tàu Tết vừa tăng.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-lorry",
+      "field": "leadVi",
+      "text": "Chuyển trọ, | bạn thuê /xe_tải/ chở đồ.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-lead",
+      "field": "anticipateVi",
+      "text": "Cả đoàn /theo_sát/ người dẫn đường chứ?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-cheerful",
+      "field": "anticipateVi",
+      "text": "Bạn luôn /vui_vẻ/ cả ngày nhỉ?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-talent",
+      "field": "anticipateVi",
+      "text": "Bạn /dự_thi/ vẽ chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-apart",
+      "field": "defVi",
+      "text": "Hai người /xa_cách/, | không còn ở cùng một chỗ.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-slightly",
+      "field": "leadVi",
+      "text": "Mặc thử áo, | tôi thấy /ống_tay/ hơi dài, chỉ thừa một phân.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-specifically",
+      "field": "leadVi",
+      "text": "Thầy dặn ôn cụ_thể chương ba, | bạn /đánh_dấu/ đúng phần đó.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-that",
+      "field": "leadVi",
+      "text": "Đề không khó đến thế, | anh /hoàn_thành/ sớm.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-row",
+      "field": "defVi",
+      "text": "Người hay vật được /sắp_xếp/ thẳng nối nhau thành một hàng.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-release",
+      "field": "anticipateVi",
+      "text": "Bạn /ưa_chuộng/ bài nào nhất?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-treat",
+      "field": "anticipateVi",
+      "text": "Hai bạn đã /thân_thiết/ chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-export",
+      "field": "anticipateVi",
+      "text": "Giá /xuất_khẩu/ thanh_long có tốt không?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-sight",
+      "field": "anticipateVi",
+      "text": "/Thị_lực/ lại giảm à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-episode",
+      "field": "leadVi",
+      "text": "Hết giờ học, | tôi /mong_đợi/ phần mới của bộ=phim.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-princess",
+      "field": "defVi",
+      "text": "Đó là con gái của nhà vua | hay vợ của /hoàng_tử/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-podcast",
+      "field": "anticipateVi",
+      "text": "Bạn có tăng /tốc_độ/ nghe không?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-tape",
+      "field": "defVi",
+      "text": "Đó là /băng_dính/ dạng dải nhựa mỏng, | dùng để dán.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-mystery",
+      "field": "anticipateVi",
+      "text": "Đã /phát_hiện/ được thủ_phạm chưa?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-meanwhile",
+      "field": "defVi",
+      "text": "Từ này chỉ lúc một /sự_việc/ khác cũng đang xảy_ra.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-meanwhile",
+      "field": "anticipateVi",
+      "text": "Bố đang /sơ_chế/ rau à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-leaflet",
+      "field": "leadVi",
+      "text": "Ngày tuyển_sinh, | em phát tờ=rơi để /giới_thiệu/ câu_lạc_bộ.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-scream",
+      "field": "leadVi",
+      "text": "Thấy con=gián bay, | tôi /hoảng_sợ/ nhảy lên ghế.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-beg",
+      "field": "leadVi",
+      "text": "Muốn nuôi mèo, | tôi /nài_nỉ/ mẹ suốt một=tuần.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-commute",
+      "field": "defVi",
+      "text": "Đó là /hành_trình/ thường xuyên giữa nhà và nơi làm việc.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-tear",
+      "field": "defVi",
+      "text": "Đó là giọt /nước_mắt/ trào ra khi khóc.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-remarkable",
+      "field": "anticipateVi",
+      "text": "/Hướng_dẫn/ anh với nhé?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-besides",
+      "field": "anticipateVi",
+      "text": "Bạn lấy /lý_do/ vì lười thôi à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-somehow",
+      "field": "defVi",
+      "text": "Từ này chỉ một cách làm | mà mình chưa biết /cụ_thể/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-somehow",
+      "field": "anticipateVi",
+      "text": "Ai /giúp_đỡ/ bạn tới nơi vậy?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-protection",
+      "field": "anticipateVi",
+      "text": "Ngã nhẹ vẫn /an_toàn/ chứ?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-ambulance",
+      "field": "defVi",
+      "text": "Đó là xe chuyên chở /bệnh_nhân/ | hay người bị thương.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-recovery",
+      "field": "leadVi",
+      "text": "Sau /phẫu_thuật/, | mình tập đi từng=bước.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-vitamin",
+      "field": "leadVi",
+      "text": "Ít ra nắng, | tôi /bổ_sung/ vitamin D dạng viên.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-creature",
+      "field": "defVi",
+      "text": "Đó là /sinh_vật/, | nhất là những con trông lạ.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-outer",
+      "field": "anticipateVi",
+      "text": "Rang thơm rồi /thưởng_thức/ ngay à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-fraction",
+      "field": "leadVi",
+      "text": "Chia bánh pizza, | mình /tính_toán/ mỗi=người được ba phần tám.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-index",
+      "field": "anticipateVi",
+      "text": "Bạn /tra_cứu/ được trang một trăm linh hai à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-pupil",
+      "field": "anticipateVi",
+      "text": "Em tự gói bó=hoa để /tri_ân/ cô à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-audio",
+      "field": "leadVi",
+      "text": "Học nghe, | tôi tải /âm_thanh/ thu sẵn về máy.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-attachment",
+      "field": "leadVi",
+      "text": "Gửi bài cho cô, | tôi quên /đính_kèm/ tệp.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-rocket",
+      "field": "defVi",
+      "text": "Đó là vật bay được phóng lên không_gian | nhờ /động_cơ/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-annual",
+      "field": "defVi",
+      "text": "Từ này chỉ việc xảy_ra /định_kỳ/, | mỗi=năm đúng một=lần.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-constant",
+      "field": "defVi",
+      "text": "Từ này chỉ việc xảy_ra /liên_tục/, | không ngừng lặp lại.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-nowadays",
+      "field": "anticipateVi",
+      "text": "Ông tập dùng /bàn_phím/ à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-shortly",
+      "field": "defVi",
+      "text": "Từ này chỉ việc sắp xảy_ra | sau một khoảng /thời_gian/ rất=ngắn.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-sequence",
+      "field": "anticipateVi",
+      "text": "Bạn quên bước thêm /nguyên_liệu/ là hành nướng à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-booking",
+      "field": "leadVi",
+      "text": "Đi Đà Nẵng, | bạn /đăng_ký/ chỗ nghỉ từ tháng trước.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-supposedly",
+      "field": "anticipateVi",
+      "text": "Bạn uống /liên_tiếp/ hai=cốc à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-assertion",
+      "field": "leadVi",
+      "text": "Em /khẳng_định/ | mình về nhất cuộc đua.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-bench",
+      "field": "defVi",
+      "text": "Đó là /ghế_băng/ bằng gỗ | cho nhiều=người cùng ngồi.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-weave",
+      "field": "anticipateVi",
+      "text": "Bạn tặng mẹ giỏ /thủ_công/ tự đan à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-distress",
+      "field": "leadVi",
+      "text": "Chó đi lạc ba=ngày, | em /lo_lắng/ dán tờ=rơi khắp phố.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-sole",
+      "field": "leadVi",
+      "text": "Mình là người con trai /duy_nhất/ trong nhà.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-adaptation",
+      "field": "defVi",
+      "text": "Đó là phim hay kịch | được /chuyển_thể/ từ một cuốn=sách.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-bulk",
+      "field": "leadVi",
+      "text": "Tôi dùng gần hết tiền /tiêu_vặt/ để mua sách.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-scope",
+      "field": "leadVi",
+      "text": "/Phạm_vi/ thi chỉ gồm ba=chương đầu sách_giáo_khoa.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-spin",
+      "field": "leadVi",
+      "text": "Em vặn con=quay, | nó /xoay_tròn/ vù vù trên bàn.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-render",
+      "field": "anticipateVi",
+      "text": "Mình dùng gạo /hút_ẩm/ cho máy à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-allowance",
+      "field": "leadVi",
+      "text": "Mỗi=tuần, | mẹ cho bạn hai trăm nghìn tiền /tiêu_vặt/ đi học.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-yield",
+      "field": "leadVi",
+      "text": "Năm nay, ruộng nhà bạn đạt /năng_suất/ lúa cao.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-parental",
+      "field": "anticipateVi",
+      "text": "Tôi nhờ mẹ ký /xác_nhận/ ngay à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-precedent",
+      "field": "leadVi",
+      "text": "Lớp từng được nghỉ sớm, | giờ ai cũng lấy đó làm /tiền_lệ/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-separation",
+      "field": "defVi",
+      "text": "Đó là sự /chia_lìa/ | hay việc tách rời nhau.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-trio",
+      "field": "defVi",
+      "text": "Đó là một nhóm gồm ba /thành_viên/ | hay ba=vật đi cùng nhau.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-defy",
+      "field": "anticipateVi",
+      "text": "Mẹ /phát_hiện/ tôi đang làm trái lời à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-dub",
+      "field": "defVi",
+      "text": "Đó là việc đặt /biệt_danh/ cho ai, | thường là tên vui hoặc khác lạ.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-intermediate",
+      "field": "defVi",
+      "text": "Đây là /trình_độ/ ở giữa, | không mới học cũng chưa giỏi.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-halt",
+      "field": "defVi",
+      "text": "Đó là việc /đình_chỉ/ hoạt_động, | không chạy hay làm tiếp nữa.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-charismatic",
+      "field": "defVi",
+      "text": "Người này có sức /hấp_dẫn/ | khiến người khác muốn nghe theo.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-courteous",
+      "field": "anticipateVi",
+      "text": "Cụ khen bạn /lễ_phép/ à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-long-lasting",
+      "field": "leadVi",
+      "text": "Đôi=giày da bố mua rất /bền_bỉ/, | mười năm vẫn còn tốt.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-long-running",
+      "field": "anticipateVi",
+      "text": "Ông vẫn /theo_dõi/ phim cùng cháu à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-merciful",
+      "field": "leadVi",
+      "text": "Bắt gặp đứa trộm xoài, | bác chỉ /nhắc_nhở/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-restrictive",
+      "field": "anticipateVi",
+      "text": "Mình xin ra ngoài thuê /nhà_trọ/ à?",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-unsure",
+      "field": "leadVi",
+      "text": "Giữa hai câu_lạc_bộ, | em còn /phân_vân/ chưa biết chọn bên nào.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-technically",
+      "field": "leadVi",
+      "text": "Em nộp lúc mười hai giờ một phút, | nên theo /quy_định/ là đã muộn.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-astronomy",
+      "field": "leadVi",
+      "text": "Mua kính_viễn_vọng cũ, | mình /quan_sát/ sao Mộc.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-impossibility",
+      "field": "leadVi",
+      "text": "Học hết cả cuốn=sách trong một=đêm | là chuyện /viển_vông/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-proverb",
+      "field": "leadVi",
+      "text": "Thấy tôi lười, | bà nhắc câu /tục_ngữ/ \"Có công mài sắt, có ngày nên kim\".",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-recollection",
+      "field": "leadVi",
+      "text": "Mở tập=ảnh cũ, | bạn /hồi_tưởng/ chuyến đi biển năm sáu=tuổi.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-saying",
+      "field": "leadVi",
+      "text": "Ông hay nhắc câu /tục_ngữ/ | \"Đi một ngày đàng, học một sàng khôn\".",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-trader",
+      "field": "leadVi",
+      "text": "Bà=ngoại mình /buôn_bán/ vải ở chợ bốn mươi năm.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-itch",
+      "field": "leadVi",
+      "text": "Bị muỗi đốt cả chân, | bạn gãi /liên_tục/.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
+    },
+    {
+      "id": "vi-refine",
+      "field": "defVi",
+      "text": "Đó là việc /điều_chỉnh/ từng chút | để làm cho tốt hơn.",
+      "verdict": "ok",
+      "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     }
   ]
 }

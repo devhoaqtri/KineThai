@@ -1,0 +1,1346 @@
+{
+  "about": "All 149 residual English clue fields reviewed 2026-11-07. Exact before/after corrections for source-batch handoff and re-import review; source batches are not stored in this repository.",
+  "fixes": [
+    {
+      "file": "en-a1.json",
+      "id": "vi-address",
+      "word": "address",
+      "field": "anticipateVi",
+      "before": "Ghi thiếu /một_số/, lạc luôn?",
+      "after": "Ghi thiếu số nhà, /địa_chỉ/ sai rồi à?",
+      "highlight": "địa chỉ"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-shoe",
+      "word": "shoe",
+      "field": "defVi",
+      "before": "Đồ mang ở chân | có /đế/ cứng để đi lại.",
+      "after": "Đây là đồ mang ở chân, | có đế cứng để /bảo_vệ/ chân.",
+      "highlight": "bảo vệ"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-sleep",
+      "word": "sleep",
+      "field": "leadVi",
+      "before": "Thi xong môn cuối, anh | đánh một /giấc/ đến trưa.",
+      "after": "Thi xong môn cuối, | anh ngủ /say_sưa/ đến trưa.",
+      "highlight": "say sưa"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-laugh",
+      "word": "laugh",
+      "field": "anticipateVi",
+      "before": "Nhịn mãi, rồi phì ra?",
+      "after": "Nhịn mãi, rồi cười /khúc_khích/ à?",
+      "highlight": "khúc khích"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-cooking",
+      "word": "cooking",
+      "field": "leadVi",
+      "before": "Ra ở riêng, tôi | học mẹ /kho/ cá qua video.",
+      "after": "Ra ở riêng, | tôi học mẹ /nấu_nướng/ qua video.",
+      "highlight": "nấu nướng"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-cooking",
+      "word": "cooking",
+      "field": "anticipateVi",
+      "before": "Mới vào bếp, đã=cháy nồi?",
+      "after": "Mới /nấu_nướng/, bạn đã làm cháy nồi à?",
+      "highlight": "nấu nướng"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-best",
+      "word": "best",
+      "field": "leadVi",
+      "before": "Hội thi văn_nghệ, tiết_mục lớp | em giành /giải_nhất/.",
+      "after": "Hội thi văn_nghệ, | tiết_mục lớp em /xuất_sắc/ nhất.",
+      "highlight": "xuất sắc"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-few",
+      "word": "few",
+      "field": "anticipateVi",
+      "before": "Năm bạn mà rộng cả phòng?",
+      "after": "Chỉ năm bạn, lớp /vắng_vẻ/ thế à?",
+      "highlight": "vắng vẻ"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-high",
+      "word": "high",
+      "field": "leadVi",
+      "before": "Leo hết dốc núi, | cả nhóm ngắm /mây/ dưới chân.",
+      "after": "Lên đỉnh núi /chót_vót/, | cả nhóm ngắm mây dưới chân.",
+      "highlight": "chót vót"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-ok",
+      "word": "ok",
+      "field": "anticipateVi",
+      "before": "Nói khỏe thôi, có chắc không?",
+      "after": "Bạn thật_sự /khỏe_mạnh/ chứ?",
+      "highlight": "khỏe mạnh"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-about",
+      "word": "about",
+      "field": "anticipateVi",
+      "before": "Mười lăm phút hay nửa tiếng?",
+      "after": "Bạn /ước_lượng/ mười lăm phút hay nửa tiếng?",
+      "highlight": "ước lượng"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-up",
+      "word": "up",
+      "field": "anticipateVi",
+      "before": "Leo /một_mạch/ năm tầng?",
+      "after": "Leo /cầu_thang/ liền năm tầng à?",
+      "highlight": "cầu thang"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-add",
+      "word": "add",
+      "field": "anticipateVi",
+      "before": "Nêm tí nữa, mặn liền?",
+      "after": "Thêm /gia_vị/ nữa, canh mặn mất à?",
+      "highlight": "gia vị"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-get",
+      "word": "get",
+      "field": "defVi",
+      "before": "Có thêm | thứ ai đó gửi hay /trao/ cho.",
+      "after": "Bạn /tiếp_nhận/ thứ người khác gửi hoặc trao cho.",
+      "highlight": "tiếp nhận"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-happen",
+      "word": "happen",
+      "field": "defVi",
+      "before": "/Diễn_ra/, | thường là bất_chợt và chẳng ai ngờ.",
+      "after": "Một sự_việc /xảy_ra/, | thường bất_chợt và chẳng ai ngờ.",
+      "highlight": "xảy ra"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-ear",
+      "word": "ear",
+      "field": "anticipateVi",
+      "before": "Ồn thế mà vẫn nghe ra?",
+      "after": "Ồn thế mà vẫn phân_biệt được /âm_thanh/ à?",
+      "highlight": "âm thanh"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-mouth",
+      "word": "mouth",
+      "field": "anticipateVi",
+      "before": "Há to tới vậy cơ?",
+      "after": "Bạn há miệng vì /ngạc_nhiên/ à?",
+      "highlight": "ngạc nhiên"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-swim",
+      "word": "swim",
+      "field": "leadVi",
+      "before": "Hè ở quê, mình | /lội/ sông cùng bạn từ sáng.",
+      "after": "Hè ở quê, | mình /bơi_lội/ cùng bạn dưới sông từ sáng.",
+      "highlight": "bơi lội"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-spend",
+      "word": "spend",
+      "field": "leadVi",
+      "before": "Lĩnh lương làm thêm, | em /dồn/ hết vào sách.",
+      "after": "Lĩnh lương làm thêm, | em dùng hết tiền để /mua_sắm/ sách.",
+      "highlight": "mua sắm"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-fire",
+      "word": "fire",
+      "field": "defVi",
+      "before": "Ngọn sáng nóng | bốc lên khi gỗ hay giấy /cháy/.",
+      "after": "Đây là ngọn lửa nóng, | /rực_sáng/ khi gỗ hay giấy cháy.",
+      "highlight": "rực sáng"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-weather",
+      "word": "weather",
+      "field": "anticipateVi",
+      "before": "Báo nắng, rồi mưa ào?",
+      "after": "/Dự_báo/ nói nắng, rồi trời mưa ào à?",
+      "highlight": "Dự báo"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-beautiful",
+      "word": "beautiful",
+      "field": "defVi",
+      "before": "Nhìn rất=/cuốn_hút/ | khiến ai cũng muốn ngắm mãi.",
+      "after": "Vẻ /xinh_đẹp/ khiến ai cũng muốn ngắm mãi.",
+      "highlight": "xinh đẹp"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-event",
+      "word": "event",
+      "field": "anticipateVi",
+      "before": "Phát /tờ_rơi/, hết veo?",
+      "after": "/Sự_kiện/ đông khách, tờ=rơi hết rồi à?",
+      "highlight": "Sự kiện"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-grandfather",
+      "word": "grandfather",
+      "field": "anticipateVi",
+      "before": "Chưa thắng ván nào bao_giờ?",
+      "after": "Bạn chưa thắng ông ván /cờ_tướng/ nào à?",
+      "highlight": "cờ tướng"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-person",
+      "word": "person",
+      "field": "leadVi",
+      "before": "/Bàn/ nhóm thiếu chỗ, | cô bảo mỗi=bàn | chỉ bốn bạn.",
+      "after": "Khi chia nhóm /học_tập/, | cô bảo mỗi=bàn chỉ có bốn người.",
+      "highlight": "học tập"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-sister",
+      "word": "sister",
+      "field": "defVi",
+      "before": "Người /con_gái/ | cùng cha_mẹ | sinh ra với mình.",
+      "after": "Đây là chị hoặc em gái cùng /cha_mẹ/ với mình.",
+      "highlight": "cha mẹ"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-paint",
+      "word": "paint",
+      "field": "defVi",
+      "before": "Phủ màu | lên tường | hay mặt giấy bằng /cọ/.",
+      "after": "Bạn dùng cọ phủ /màu_sắc/ lên tường hay mặt giấy.",
+      "highlight": "màu sắc"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-camera",
+      "word": "camera",
+      "field": "anticipateVi",
+      "before": "Máy cơ cổ, chụp được nét?",
+      "after": "/Máy_ảnh/ cổ vẫn chụp rõ nét chứ?",
+      "highlight": "Máy ảnh"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-opinion",
+      "word": "opinion",
+      "field": "anticipateVi",
+      "before": "Mỗi=người một kiểu, chốt sao?",
+      "after": "Mỗi=người một /ý_kiến/, chọn sao đây?",
+      "highlight": "ý kiến"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-ever",
+      "word": "ever",
+      "field": "anticipateVi",
+      "before": "Đi rồi, kể mãi không hết?",
+      "after": "Bạn từng /du_lịch/ Nhật chưa?",
+      "highlight": "du lịch"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-age",
+      "word": "age",
+      "field": "leadVi",
+      "before": "Làm căn_cước, mình | khai /năm_sinh/ | trên tờ đơn.",
+      "after": "Làm /căn_cước/, | mình khai năm sinh trên tờ=đơn.",
+      "highlight": "căn cước"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-year",
+      "word": "year",
+      "field": "anticipateVi",
+      "before": "Lời hứa cũ, làm được mấy?",
+      "after": "Bạn đạt /mục_tiêu/ năm cũ chưa?",
+      "highlight": "mục tiêu"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-wait",
+      "word": "wait",
+      "field": "anticipateVi",
+      "before": "Đợi dài_cổ, xe đâu?",
+      "after": "Bạn /chờ_đợi/ xe lâu chưa?",
+      "highlight": "chờ đợi"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-beach",
+      "word": "beach",
+      "field": "anticipateVi",
+      "before": "Cát dính đầy người, kệ?",
+      "after": "Cát dính đầy người, bạn vẫn thích /bãi_biển/ chứ?",
+      "highlight": "bãi biển"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-bicycle",
+      "word": "bicycle",
+      "field": "leadVi",
+      "before": "Thuê trọ gần trường, | chị mua | /con_xe/ cũ màu xanh.",
+      "after": "Thuê trọ gần trường, | chị mua chiếc /xe_đạp/ cũ màu xanh.",
+      "highlight": "xe đạp"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-bicycle",
+      "word": "bicycle",
+      "field": "anticipateVi",
+      "before": "Xe cũ, phanh còn ăn?",
+      "after": "/Xe_đạp/ cũ còn phanh tốt chứ?",
+      "highlight": "Xe đạp"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-road",
+      "word": "road",
+      "field": "defVi",
+      "before": "/Lối_đi/ rộng | cho xe và người qua lại.",
+      "after": "Đây là đường rộng cho người và xe /lưu_thông/.",
+      "highlight": "lưu thông"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-arrive",
+      "word": "arrive",
+      "field": "defVi",
+      "before": "Tới /điểm/ cần tới | sau khi đi xa.",
+      "after": "Bạn tới /địa_điểm/ cần đến sau chuyến đi.",
+      "highlight": "địa điểm"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-stay",
+      "word": "stay",
+      "field": "anticipateVi",
+      "before": "Ba đêm, tiếc không muốn về?",
+      "after": "Ba đêm rồi, bạn còn /lưu_luyến/ chưa muốn về à?",
+      "highlight": "lưu luyến"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-job",
+      "word": "job",
+      "field": "anticipateVi",
+      "before": "Mười chỗ, chỗ nào gọi?",
+      "after": "Mười chỗ, có nơi nào gọi /phỏng_vấn/ chưa?",
+      "highlight": "phỏng vấn"
+    },
+    {
+      "file": "en-a1.json",
+      "id": "vi-work",
+      "word": "work",
+      "field": "anticipateVi",
+      "before": "Trọn ca đứng, mỏi chân chưa?",
+      "after": "Bạn /bưng_bê/ cả ca, mỏi chân chưa?",
+      "highlight": "bưng bê"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-toy",
+      "word": "toy",
+      "field": "anticipateVi",
+      "before": "Kín kệ rồi, mua tiếp?",
+      "after": "Kín kệ rồi, bạn vẫn /sưu_tầm/ nữa à?",
+      "highlight": "sưu tầm"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-mirror",
+      "word": "mirror",
+      "field": "anticipateVi",
+      "before": "Soi đi soi lại, ổn chưa?",
+      "after": "Bạn soi gương chỉnh /cà_vạt/ xong chưa?",
+      "highlight": "cà vạt"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-burn",
+      "word": "burn",
+      "field": "defVi",
+      "before": "Bị lửa | hay /nhiệt/ | làm đen và hỏng.",
+      "after": "Lửa hoặc /nhiệt_độ/ cao làm vật cháy, đen và hỏng.",
+      "highlight": "nhiệt độ"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-can",
+      "word": "can",
+      "field": "anticipateVi",
+      "before": "Mở nắp nghe xèo, đã=khát?",
+      "after": "Mở lon nước /giải_khát/, nghe xèo à?",
+      "highlight": "giải khát"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-candy",
+      "word": "candy",
+      "field": "anticipateVi",
+      "before": "Hũ đầy, bốc mấy viên?",
+      "after": "Hũ /bánh_kẹo/ đầy, bạn lấy mấy viên?",
+      "highlight": "bánh kẹo"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-straight",
+      "word": "straight",
+      "field": "anticipateVi",
+      "before": "Thước lệch, nét có xiên?",
+      "after": "Thước lệch, nét kẻ còn /ngay_ngắn/ không?",
+      "highlight": "ngay ngắn"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-actually",
+      "word": "actually",
+      "field": "leadVi",
+      "before": "Tưởng cậu | khó gần, | /hóa_ra/ cậu rất=vui tính.",
+      "after": "Tôi tưởng cậu khó gần, | thật ra cậu rất /vui_tính/.",
+      "highlight": "vui tính"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-any",
+      "word": "any",
+      "field": "anticipateVi",
+      "before": "Đỡ tí rồi, phải chứ?",
+      "after": "Bạn thấy /dễ_chịu/ hơn chút nào chưa?",
+      "highlight": "dễ chịu"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-firstly",
+      "word": "firstly",
+      "field": "anticipateVi",
+      "before": "Ý hai, ý ba đâu?",
+      "after": "Bạn /trình_bày/ ý nào trước?",
+      "highlight": "trình bày"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-instead",
+      "word": "instead",
+      "field": "anticipateVi",
+      "before": "Cam ép, /hóa_ra/ ngon hơn?",
+      "after": "Đổi sang /nước_cam/ ép, ngon hơn à?",
+      "highlight": "nước cam"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-side",
+      "word": "side",
+      "field": "defVi",
+      "before": "Phần /trái/ | hoặc phải | của=người hay vật.",
+      "after": "Đây là phần ở bên trái hoặc bên phải | của /cơ_thể/ hay vật.",
+      "highlight": "cơ thể"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-reach",
+      "word": "reach",
+      "field": "defVi",
+      "before": "Đến được | một chỗ | hay /chạm/ được tới vật.",
+      "after": "Bạn đến được một /vị_trí/ | hoặc chạm được vật cần với.",
+      "highlight": "vị trí"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-score",
+      "word": "score",
+      "field": "leadVi",
+      "before": "Hiệp hai | sắp hết, | hai đội vẫn /hòa/ | một đều.",
+      "after": "Hiệp hai sắp hết, | /tỷ_số/ vẫn là một đều.",
+      "highlight": "tỷ số"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-heat",
+      "word": "heat",
+      "field": "anticipateVi",
+      "before": "Bật quạt to, còn hầm?",
+      "after": "Bật quạt to mà vẫn /nóng_nực/ à?",
+      "highlight": "nóng nực"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-attractive",
+      "word": "attractive",
+      "field": "defVi",
+      "before": "Có sức | /cuốn_hút/, | khiến người khác muốn nhìn.",
+      "after": "Vẻ /hấp_dẫn/ khiến người khác muốn nhìn.",
+      "highlight": "hấp dẫn"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-male",
+      "word": "male",
+      "field": "leadVi",
+      "before": "Lớp múa | chỉ hai cậu /con_trai/, | nổi bật hẳn.",
+      "after": "Lớp múa chỉ có hai /nam_sinh/, | nên hai bạn nổi bật hẳn.",
+      "highlight": "nam sinh"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-allow",
+      "word": "allow",
+      "field": "anticipateVi",
+      "before": "Nấu lẩu, được không?",
+      "after": "Bạn được /nấu_nướng/ ở đây à?",
+      "highlight": "nấu nướng"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-learning",
+      "word": "learning",
+      "field": "anticipateVi",
+      "before": "Nghe thấm chưa sau ba tháng?",
+      "after": "Khả_năng nghe đã /tiến_bộ/ sau ba tháng chưa?",
+      "highlight": "tiến bộ"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-fail",
+      "word": "fail",
+      "field": "anticipateVi",
+      "before": "Đậu chắc lần sau chứ?",
+      "after": "Lần thi sau, bạn /thành_công/ chứ?",
+      "highlight": "thành công"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-impossible",
+      "word": "impossible",
+      "field": "anticipateVi",
+      "before": "Nước đến chân mới nhảy?",
+      "after": "Ôn một đêm, bạn thấy /vô_vọng/ rồi à?",
+      "highlight": "vô vọng"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-likely",
+      "word": "likely",
+      "field": "defVi",
+      "before": "Rất có thể | sẽ=/diễn_ra/ | trong thời_gian tới.",
+      "after": "Sự_việc này có /khả_năng/ cao xảy_ra trong thời_gian tới.",
+      "highlight": "khả năng"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-suppose",
+      "word": "suppose",
+      "field": "anticipateVi",
+      "before": "/Hóa_ra/ đang=thức?",
+      "after": "Bạn vẫn /tỉnh_táo/ chưa ngủ à?",
+      "highlight": "tỉnh táo"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-recent",
+      "word": "recent",
+      "field": "defVi",
+      "before": "/Vừa/ diễn_ra | cách nay | chưa lâu lắm.",
+      "after": "Sự_việc này mới xảy_ra trong /thời_gian/ gần đây.",
+      "highlight": "thời gian"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-recent",
+      "word": "recent",
+      "field": "leadVi",
+      "before": "Đọc tin mới, | em biết | vé tàu Tết đã=/tăng/.",
+      "after": "Đọc /tin_tức/ mới, | em biết giá vé tàu Tết vừa tăng.",
+      "highlight": "tin tức"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-lorry",
+      "word": "lorry",
+      "field": "leadVi",
+      "before": "Chuyển trọ, | bạn thuê | xe /thùng/ chở đồ.",
+      "after": "Chuyển trọ, | bạn thuê /xe_tải/ chở đồ.",
+      "highlight": "xe tải"
+    },
+    {
+      "file": "en-a2.json",
+      "id": "vi-lead",
+      "word": "lead",
+      "field": "anticipateVi",
+      "before": "Bám kịp không, cả đoàn?",
+      "after": "Cả đoàn /theo_sát/ người dẫn đường chứ?",
+      "highlight": "theo sát"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-cheerful",
+      "word": "cheerful",
+      "field": "anticipateVi",
+      "before": "Cả ngày nắng theo nhỉ?",
+      "after": "Bạn luôn /vui_vẻ/ cả ngày nhỉ?",
+      "highlight": "vui vẻ"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-talent",
+      "word": "talent",
+      "field": "anticipateVi",
+      "before": "Gửi_thi vẽ chưa?",
+      "after": "Bạn /dự_thi/ vẽ chưa?",
+      "highlight": "dự thi"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-apart",
+      "word": "apart",
+      "field": "defVi",
+      "before": "/Xa/ nhau, | không ở cùng một chỗ nữa.",
+      "after": "Hai người /xa_cách/, | không còn ở cùng một chỗ.",
+      "highlight": "xa cách"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-slightly",
+      "word": "slightly",
+      "field": "leadVi",
+      "before": "Mặc thử áo, | tôi thấy | tay dài thêm một /phân/.",
+      "after": "Mặc thử áo, | tôi thấy /ống_tay/ hơi dài, chỉ thừa một phân.",
+      "highlight": "ống tay"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-specifically",
+      "word": "specifically",
+      "field": "leadVi",
+      "before": "Thầy dặn ôn | chương ba, | bạn /khoanh/ | đúng phần đó.",
+      "after": "Thầy dặn ôn cụ_thể chương ba, | bạn /đánh_dấu/ đúng phần đó.",
+      "highlight": "đánh dấu"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-that",
+      "word": "that",
+      "field": "leadVi",
+      "before": "Đề không khó lắm, | anh làm | xong /sớm/.",
+      "after": "Đề không khó đến thế, | anh /hoàn_thành/ sớm.",
+      "highlight": "hoàn thành"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-row",
+      "word": "row",
+      "field": "defVi",
+      "before": "/Dãy/ người hay vật | xếp thẳng nối nhau.",
+      "after": "Người hay vật được /sắp_xếp/ thẳng nối nhau thành một hàng.",
+      "highlight": "sắp xếp"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-release",
+      "word": "release",
+      "field": "anticipateVi",
+      "before": "Cuốn nhất bài nào?",
+      "after": "Bạn /ưa_chuộng/ bài nào nhất?",
+      "highlight": "ưa chuộng"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-treat",
+      "word": "treat",
+      "field": "anticipateVi",
+      "before": "Thân nhau chưa?",
+      "after": "Hai bạn đã /thân_thiết/ chưa?",
+      "highlight": "thân thiết"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-export",
+      "word": "export",
+      "field": "anticipateVi",
+      "before": "Giá /được_mùa/ không?",
+      "after": "Giá /xuất_khẩu/ thanh_long có tốt không?",
+      "highlight": "xuất khẩu"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-sight",
+      "word": "sight",
+      "field": "anticipateVi",
+      "before": "Cận thêm độ nữa?",
+      "after": "/Thị_lực/ lại giảm à?",
+      "highlight": "Thị lực"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-episode",
+      "word": "episode",
+      "field": "leadVi",
+      "before": "Hết giờ học, | tôi /hóng/ | phần mới của=bộ phim.",
+      "after": "Hết giờ học, | tôi /mong_đợi/ phần mới của bộ=phim.",
+      "highlight": "mong đợi"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-princess",
+      "word": "princess",
+      "field": "defVi",
+      "before": "/Con_gái/ | nhà vua | hay vợ của=hoàng tử.",
+      "after": "Đó là con gái của nhà vua | hay vợ của /hoàng_tử/.",
+      "highlight": "hoàng tử"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-podcast",
+      "word": "podcast",
+      "field": "anticipateVi",
+      "before": "Nghe tua nhanh không?",
+      "after": "Bạn có tăng /tốc_độ/ nghe không?",
+      "highlight": "tốc độ"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-tape",
+      "word": "tape",
+      "field": "defVi",
+      "before": "Dải nhựa mỏng | có /keo/, dùng để dán.",
+      "after": "Đó là /băng_dính/ dạng dải nhựa mỏng, | dùng để dán.",
+      "highlight": "băng dính"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-mystery",
+      "word": "mystery",
+      "field": "anticipateVi",
+      "before": "Bắt /quả_tang/ chưa?",
+      "after": "Đã /phát_hiện/ được thủ_phạm chưa?",
+      "highlight": "phát hiện"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-meanwhile",
+      "word": "meanwhile",
+      "field": "defVi",
+      "before": "Cùng lúc với | việc khác đang=/diễn_ra/.",
+      "after": "Từ này chỉ lúc một /sự_việc/ khác cũng đang xảy_ra.",
+      "highlight": "sự việc"
+    },
+    {
+      "file": "en-b1.json",
+      "id": "vi-meanwhile",
+      "word": "meanwhile",
+      "field": "anticipateVi",
+      "before": "Bố rửa_rau à?",
+      "after": "Bố đang /sơ_chế/ rau à?",
+      "highlight": "sơ chế"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-leaflet",
+      "word": "leaflet",
+      "field": "leadVi",
+      "before": "Ngày tuyển sinh, | em phát | /tờ_rơi/ về câu_lạc_bộ.",
+      "after": "Ngày tuyển_sinh, | em phát tờ=rơi để /giới_thiệu/ câu_lạc_bộ.",
+      "highlight": "giới thiệu"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-scream",
+      "word": "scream",
+      "field": "leadVi",
+      "before": "Thấy /con_gián/ bay, | tôi nhảy | lên ghế.",
+      "after": "Thấy con=gián bay, | tôi /hoảng_sợ/ nhảy lên ghế.",
+      "highlight": "hoảng sợ"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-beg",
+      "word": "beg",
+      "field": "leadVi",
+      "before": "Muốn nuôi mèo, | tôi /nịnh/ | mẹ suốt một tuần.",
+      "after": "Muốn nuôi mèo, | tôi /nài_nỉ/ mẹ suốt một=tuần.",
+      "highlight": "nài nỉ"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-commute",
+      "word": "commute",
+      "field": "defVi",
+      "before": "Chuyến /đi_lại/ | giữa nhà và nơi làm.",
+      "after": "Đó là /hành_trình/ thường xuyên giữa nhà và nơi làm việc.",
+      "highlight": "hành trình"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-tear",
+      "word": "tear",
+      "field": "defVi",
+      "before": "Giọt nước nhỏ | /trào_ra/ | từ mắt khi khóc.",
+      "after": "Đó là giọt /nước_mắt/ trào ra khi khóc.",
+      "highlight": "nước mắt"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-remarkable",
+      "word": "remarkable",
+      "field": "anticipateVi",
+      "before": "Dạy_anh với nhé?",
+      "after": "/Hướng_dẫn/ anh với nhé?",
+      "highlight": "Hướng dẫn"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-besides",
+      "word": "besides",
+      "field": "anticipateVi",
+      "before": "Thật ra lười thôi?",
+      "after": "Bạn lấy /lý_do/ vì lười thôi à?",
+      "highlight": "lý do"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-somehow",
+      "word": "somehow",
+      "field": "defVi",
+      "before": "Theo một cách | mà mình | /không_rõ/ lắm.",
+      "after": "Từ này chỉ một cách làm | mà mình chưa biết /cụ_thể/.",
+      "highlight": "cụ thể"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-somehow",
+      "word": "somehow",
+      "field": "anticipateVi",
+      "before": "Ai chở giúp vậy?",
+      "after": "Ai /giúp_đỡ/ bạn tới nơi vậy?",
+      "highlight": "giúp đỡ"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-protection",
+      "word": "protection",
+      "field": "anticipateVi",
+      "before": "Ngã_nhẹ vẫn ổn?",
+      "after": "Ngã nhẹ vẫn /an_toàn/ chứ?",
+      "highlight": "an toàn"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-ambulance",
+      "word": "ambulance",
+      "field": "defVi",
+      "before": "Xe chuyên | chở người | ốm hay /bị_thương/.",
+      "after": "Đó là xe chuyên chở /bệnh_nhân/ | hay người bị thương.",
+      "highlight": "bệnh nhân"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-recovery",
+      "word": "recovery",
+      "field": "leadVi",
+      "before": "Sau ca mổ, | mình tập | đi lại /từng_bước/.",
+      "after": "Sau /phẫu_thuật/, | mình tập đi từng=bước.",
+      "highlight": "phẫu thuật"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-vitamin",
+      "word": "vitamin",
+      "field": "leadVi",
+      "before": "Ít ra /nắng/, | tôi uống | thêm viên vitamin D.",
+      "after": "Ít ra nắng, | tôi /bổ_sung/ vitamin D dạng viên.",
+      "highlight": "bổ sung"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-creature",
+      "word": "creature",
+      "field": "defVi",
+      "before": "Loài vật sống, | nhất là | những=/con_lạ/.",
+      "after": "Đó là /sinh_vật/, | nhất là những con trông lạ.",
+      "highlight": "sinh vật"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-outer",
+      "word": "outer",
+      "field": "anticipateVi",
+      "before": "Rang_thơm ăn liền?",
+      "after": "Rang thơm rồi /thưởng_thức/ ngay à?",
+      "highlight": "thưởng thức"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-fraction",
+      "word": "fraction",
+      "field": "leadVi",
+      "before": "Chia bánh /pizza/, | mình bảo | mỗi=người ba phần tám.",
+      "after": "Chia bánh pizza, | mình /tính_toán/ mỗi=người được ba phần tám.",
+      "highlight": "tính toán"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-index",
+      "word": "index",
+      "field": "anticipateVi",
+      "before": "Trang một_trăm_hai?",
+      "after": "Bạn /tra_cứu/ được trang một trăm linh hai à?",
+      "highlight": "tra cứu"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-pupil",
+      "word": "pupil",
+      "field": "anticipateVi",
+      "before": "Bó=hoa tự_gói?",
+      "after": "Em tự gói bó=hoa để /tri_ân/ cô à?",
+      "highlight": "tri ân"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-audio",
+      "word": "audio",
+      "field": "leadVi",
+      "before": "Học nghe, | tôi /tải/ | bài thu sẵn về máy.",
+      "after": "Học nghe, | tôi tải /âm_thanh/ thu sẵn về máy.",
+      "highlight": "âm thanh"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-attachment",
+      "word": "attachment",
+      "field": "leadVi",
+      "before": "Gửi bài | cho cô, | tôi /quên/ kèm file.",
+      "after": "Gửi bài cho cô, | tôi quên /đính_kèm/ tệp.",
+      "highlight": "đính kèm"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-rocket",
+      "word": "rocket",
+      "field": "defVi",
+      "before": "Vật bay | phóng lên | /không_gian/ nhờ động cơ.",
+      "after": "Đó là vật bay được phóng lên không_gian | nhờ /động_cơ/.",
+      "highlight": "động cơ"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-annual",
+      "word": "annual",
+      "field": "defVi",
+      "before": "Diễn ra | đúng một lần | trong /mỗi_năm/.",
+      "after": "Từ này chỉ việc xảy_ra /định_kỳ/, | mỗi=năm đúng một=lần.",
+      "highlight": "định kỳ"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-constant",
+      "word": "constant",
+      "field": "defVi",
+      "before": "Diễn ra | /không_ngừng/, | lặp đi lặp lại.",
+      "after": "Từ này chỉ việc xảy_ra /liên_tục/, | không ngừng lặp lại.",
+      "highlight": "liên tục"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-nowadays",
+      "word": "nowadays",
+      "field": "anticipateVi",
+      "before": "Ông tập gõ_phím?",
+      "after": "Ông tập dùng /bàn_phím/ à?",
+      "highlight": "bàn phím"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-shortly",
+      "word": "shortly",
+      "field": "defVi",
+      "before": "Sau một /khoảng/ | rất=ngắn, | sắp diễn ra.",
+      "after": "Từ này chỉ việc sắp xảy_ra | sau một khoảng /thời_gian/ rất=ngắn.",
+      "highlight": "thời gian"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-sequence",
+      "word": "sequence",
+      "field": "anticipateVi",
+      "before": "Quên cho hành_nướng?",
+      "after": "Bạn quên bước thêm /nguyên_liệu/ là hành nướng à?",
+      "highlight": "nguyên liệu"
+    },
+    {
+      "file": "en-b2.json",
+      "id": "vi-booking",
+      "word": "booking",
+      "field": "leadVi",
+      "before": "Đi Đà Nẵng, | bạn đặt | /homestay/ từ tháng trước.",
+      "after": "Đi Đà Nẵng, | bạn /đăng_ký/ chỗ nghỉ từ tháng trước.",
+      "highlight": "đăng ký"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-supposedly",
+      "word": "supposedly",
+      "field": "anticipateVi",
+      "before": "Uống liền hai_cốc?",
+      "after": "Bạn uống /liên_tiếp/ hai=cốc à?",
+      "highlight": "liên tiếp"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-assertion",
+      "word": "assertion",
+      "field": "leadVi",
+      "before": "Em /quả_quyết/ | mình về nhất cuộc đua.",
+      "after": "Em /khẳng_định/ | mình về nhất cuộc đua.",
+      "highlight": "khẳng định"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-bench",
+      "word": "bench",
+      "field": "defVi",
+      "before": "Chỗ ngồi | dài bằng gỗ | cho /nhiều_người/ cùng ngồi.",
+      "after": "Đó là /ghế_băng/ bằng gỗ | cho nhiều=người cùng ngồi.",
+      "highlight": "ghế băng"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-weave",
+      "word": "weave",
+      "field": "anticipateVi",
+      "before": "Bạn tặng_mẹ chiếc giỏ?",
+      "after": "Bạn tặng mẹ giỏ /thủ_công/ tự đan à?",
+      "highlight": "thủ công"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-distress",
+      "word": "distress",
+      "field": "leadVi",
+      "before": "Lạc chó | ba ngày, | em dán /tờ_rơi/ khắp phố.",
+      "after": "Chó đi lạc ba=ngày, | em /lo_lắng/ dán tờ=rơi khắp phố.",
+      "highlight": "lo lắng"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-sole",
+      "word": "sole",
+      "field": "leadVi",
+      "before": "Mình là người | /con_trai/ độc nhất trong nhà.",
+      "after": "Mình là người con trai /duy_nhất/ trong nhà.",
+      "highlight": "duy nhất"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-adaptation",
+      "word": "adaptation",
+      "field": "defVi",
+      "before": "Phim hay kịch | làm lại từ một /cuốn_sách/.",
+      "after": "Đó là phim hay kịch | được /chuyển_thể/ từ một cuốn=sách.",
+      "highlight": "chuyển thể"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-bulk",
+      "word": "bulk",
+      "field": "leadVi",
+      "before": "Tôi dành | gần /hết/ | tiền_tiêu_vặt mua sách.",
+      "after": "Tôi dùng gần hết tiền /tiêu_vặt/ để mua sách.",
+      "highlight": "tiêu vặt"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-scope",
+      "word": "scope",
+      "field": "leadVi",
+      "before": "Đề chỉ thi | /ba_chương/ đầu | sách giáo khoa.",
+      "after": "/Phạm_vi/ thi chỉ gồm ba=chương đầu sách_giáo_khoa.",
+      "highlight": "Phạm vi"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-spin",
+      "word": "spin",
+      "field": "leadVi",
+      "before": "Em vặn /con_quay/, | nó chạy vù vù trên bàn.",
+      "after": "Em vặn con=quay, | nó /xoay_tròn/ vù vù trên bàn.",
+      "highlight": "xoay tròn"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-render",
+      "word": "render",
+      "field": "anticipateVi",
+      "before": "Mình ngâm vào gạo?",
+      "after": "Mình dùng gạo /hút_ẩm/ cho máy à?",
+      "highlight": "hút ẩm"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-allowance",
+      "word": "allowance",
+      "field": "leadVi",
+      "before": "Mỗi=tuần | mẹ cho | bạn /hai_trăm/ nghìn đi=học.",
+      "after": "Mỗi=tuần, | mẹ cho bạn hai trăm nghìn tiền /tiêu_vặt/ đi học.",
+      "highlight": "tiêu vặt"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-yield",
+      "word": "yield",
+      "field": "leadVi",
+      "before": "Năm nay, ruộng | nhà bạn /được_mùa/ lúa.",
+      "after": "Năm nay, ruộng nhà bạn đạt /năng_suất/ lúa cao.",
+      "highlight": "năng suất"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-parental",
+      "word": "parental",
+      "field": "anticipateVi",
+      "before": "Tôi nhờ mẹ ký_vội?",
+      "after": "Tôi nhờ mẹ ký /xác_nhận/ ngay à?",
+      "highlight": "xác nhận"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-precedent",
+      "word": "precedent",
+      "field": "leadVi",
+      "before": "Lớp được /nghỉ/ | sớm một lần, giờ ai cũng đòi nữa.",
+      "after": "Lớp từng được nghỉ sớm, | giờ ai cũng lấy đó làm /tiền_lệ/.",
+      "highlight": "tiền lệ"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-separation",
+      "word": "separation",
+      "field": "defVi",
+      "before": "Việc phải | xa nhau hay /tách_ra/ khỏi nhau.",
+      "after": "Đó là sự /chia_lìa/ | hay việc tách rời nhau.",
+      "highlight": "chia lìa"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-trio",
+      "word": "trio",
+      "field": "defVi",
+      "before": "Nhóm /ba_người/ | hay ba vật đi cùng nhau.",
+      "after": "Đó là một nhóm gồm ba /thành_viên/ | hay ba=vật đi cùng nhau.",
+      "highlight": "thành viên"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-defy",
+      "word": "defy",
+      "field": "anticipateVi",
+      "before": "Tôi bị mẹ bắt /quả_tang/?",
+      "after": "Mẹ /phát_hiện/ tôi đang làm trái lời à?",
+      "highlight": "phát hiện"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-dub",
+      "word": "dub",
+      "field": "defVi",
+      "before": "Gọi ai | bằng một /cái_tên/ vui hay khác.",
+      "after": "Đó là việc đặt /biệt_danh/ cho ai, | thường là tên vui hoặc khác lạ.",
+      "highlight": "biệt danh"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-intermediate",
+      "word": "intermediate",
+      "field": "defVi",
+      "before": "Ở /mức/ | giữa, không mới học cũng chưa giỏi.",
+      "after": "Đây là /trình_độ/ ở giữa, | không mới học cũng chưa giỏi.",
+      "highlight": "trình độ"
+    },
+    {
+      "file": "en-c1.json",
+      "id": "vi-halt",
+      "word": "halt",
+      "field": "defVi",
+      "before": "Việc /ngừng/ | hẳn, không chạy hay làm tiếp.",
+      "after": "Đó là việc /đình_chỉ/ hoạt_động, | không chạy hay làm tiếp nữa.",
+      "highlight": "đình chỉ"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-charismatic",
+      "word": "charismatic",
+      "field": "defVi",
+      "before": "Có sức | /cuốn_hút/ khiến người khác muốn nghe theo.",
+      "after": "Người này có sức /hấp_dẫn/ | khiến người khác muốn nghe theo.",
+      "highlight": "hấp dẫn"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-courteous",
+      "word": "courteous",
+      "field": "anticipateVi",
+      "before": "Bạn nghe cụ khen ngoan?",
+      "after": "Cụ khen bạn /lễ_phép/ à?",
+      "highlight": "lễ phép"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-long-lasting",
+      "word": "long-lasting",
+      "field": "leadVi",
+      "before": "Đôi /giày/ | da bố mua mười năm vẫn còn tốt.",
+      "after": "Đôi=giày da bố mua rất /bền_bỉ/, | mười năm vẫn còn tốt.",
+      "highlight": "bền bỉ"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-long-running",
+      "word": "long-running",
+      "field": "anticipateVi",
+      "before": "Ông vẫn xem cùng_cháu?",
+      "after": "Ông vẫn /theo_dõi/ phim cùng cháu à?",
+      "highlight": "theo dõi"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-merciful",
+      "word": "merciful",
+      "field": "leadVi",
+      "before": "Bắt /quả_tang/ | đứa trộm xoài, bác chỉ nhắc.",
+      "after": "Bắt gặp đứa trộm xoài, | bác chỉ /nhắc_nhở/.",
+      "highlight": "nhắc nhở"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-restrictive",
+      "word": "restrictive",
+      "field": "anticipateVi",
+      "before": "Mình xin ra ngoài trọ?",
+      "after": "Mình xin ra ngoài thuê /nhà_trọ/ à?",
+      "highlight": "nhà trọ"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-unsure",
+      "word": "unsure",
+      "field": "leadVi",
+      "before": "Giữa hai | câu lạc bộ, em chưa biết /chọn/.",
+      "after": "Giữa hai câu_lạc_bộ, | em còn /phân_vân/ chưa biết chọn bên nào.",
+      "highlight": "phân vân"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-technically",
+      "word": "technically",
+      "field": "leadVi",
+      "before": "Nộp /lúc/ | mười hai giờ một phút, em đã=muộn.",
+      "after": "Em nộp lúc mười hai giờ một phút, | nên theo /quy_định/ là đã muộn.",
+      "highlight": "quy định"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-astronomy",
+      "word": "astronomy",
+      "field": "leadVi",
+      "before": "Mua /kính/ | viễn vọng cũ, mình ngắm sao Mộc.",
+      "after": "Mua kính_viễn_vọng cũ, | mình /quan_sát/ sao Mộc.",
+      "highlight": "quan sát"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-impossibility",
+      "word": "impossibility",
+      "field": "leadVi",
+      "before": "Học /hết/ | cả sách trong một đêm là chuyện không tưởng.",
+      "after": "Học hết cả cuốn=sách trong một=đêm | là chuyện /viển_vông/.",
+      "highlight": "viển vông"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-proverb",
+      "word": "proverb",
+      "field": "leadVi",
+      "before": "Thấy tôi | lười, bà nhắc \"có công /mài/ sắt\".",
+      "after": "Thấy tôi lười, | bà nhắc câu /tục_ngữ/ \"Có công mài sắt, có ngày nên kim\".",
+      "highlight": "tục ngữ"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-recollection",
+      "word": "recollection",
+      "field": "leadVi",
+      "before": "Mở /album/ | cũ, bạn nhớ chuyến biển năm sáu tuổi.",
+      "after": "Mở tập=ảnh cũ, | bạn /hồi_tưởng/ chuyến đi biển năm sáu=tuổi.",
+      "highlight": "hồi tưởng"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-saying",
+      "word": "saying",
+      "field": "leadVi",
+      "before": "Ông hay | /nhắc/ \"đi một ngày đàng học một sàng khôn\".",
+      "after": "Ông hay nhắc câu /tục_ngữ/ | \"Đi một ngày đàng, học một sàng khôn\".",
+      "highlight": "tục ngữ"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-trader",
+      "word": "trader",
+      "field": "leadVi",
+      "before": "Bà /ngoại/ | mình buôn vải ở chợ bốn mươi năm.",
+      "after": "Bà=ngoại mình /buôn_bán/ vải ở chợ bốn mươi năm.",
+      "highlight": "buôn bán"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-itch",
+      "word": "itch",
+      "field": "leadVi",
+      "before": "Bị muỗi | đốt cả chân, bạn gãi /không_ngừng/.",
+      "after": "Bị muỗi đốt cả chân, | bạn gãi /liên_tục/.",
+      "highlight": "liên tục"
+    },
+    {
+      "file": "en-c2.json",
+      "id": "vi-refine",
+      "word": "refine",
+      "field": "defVi",
+      "before": "Sửa từng | chút một để làm cho /tốt_hơn/.",
+      "after": "Đó là việc /điều_chỉnh/ từng chút | để làm cho tốt hơn.",
+      "highlight": "điều chỉnh"
+    }
+  ]
+}
