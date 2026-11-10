@@ -69,6 +69,8 @@ import {
 import { rememberWord } from "../lib/saved-word-cache";
 import { EMOJI_PALETTE, formatEmojiTotal, mockEmojiTotals, withLocalEmojis } from "../lib/emoji";
 import { useLearningPlayback } from "../hooks/useLearningPlayback";
+import { usePageAttention } from "../hooks/usePageAttention";
+import { pageAttention } from "../lib/page-attention";
 import { usePresence } from "@/hooks/use-presence";
 import type { FeedEntry, Presentation, ReadingPace } from "../types";
 import { EmojiBurst } from "./EmojiBurst";
@@ -512,27 +514,20 @@ export function VocabularyCard({
   // burst stays mounted across the flip instead of remounting and restarting.
   const isRevealed = playback.page >= revealPage;
   // Fully viewed: the answer has held the screen for VIEW_ANSWER_MS of time the reader could
-  // see it. The clock stops while the tab is hidden and restarts in full when it returns, so
-  // a background tab can never run it out.
+  // see it. The clock stops the moment the page goes out of sight (lib/page-attention: a
+  // hidden tab, the browser in the background, a system sheet over a phone's page) and
+  // restarts in full when it returns, so nothing the reader did not see can run it out.
+  // `attended` is in the deps so a return re-arms it with the full duration.
   const viewedRef = useRef(onViewed);
   viewedRef.current = onViewed;
+  const attended = usePageAttention();
   useEffect(() => {
-    if (!active || !isRevealed || exportLayout) return;
-    let timer: number | undefined;
-    const arm = () => {
-      window.clearTimeout(timer);
-      if (document.hidden) return;
-      timer = window.setTimeout(() => {
-        if (!document.hidden) viewedRef.current?.();
-      }, VIEW_ANSWER_MS);
-    };
-    arm();
-    document.addEventListener("visibilitychange", arm);
-    return () => {
-      window.clearTimeout(timer);
-      document.removeEventListener("visibilitychange", arm);
-    };
-  }, [active, isRevealed, exportLayout]);
+    if (!active || !isRevealed || exportLayout || !attended) return;
+    const timer = window.setTimeout(() => {
+      if (pageAttention().attended()) viewedRef.current?.();
+    }, VIEW_ANSWER_MS);
+    return () => window.clearTimeout(timer);
+  }, [active, isRevealed, exportLayout, attended]);
   // The burst fills both pages and fades out as the spelled word leaves.
   const burstSpanSeconds = ((pageDurations[revealPage] ?? 0) + spellingDuration) / 1000;
   // During the coda there is no matching stage; the answer stage stays mounted

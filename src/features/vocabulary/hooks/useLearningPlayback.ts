@@ -1,5 +1,7 @@
-/** Visibility-aware clue playback that auto-plays pages and finishes the card. Exports: useLearningPlayback. Depends on: React. */
+/** Attention-aware clue playback that auto-plays pages and finishes the card. Exports: useLearningPlayback. Depends on: React. */
 import { useEffect, useRef, useState } from "react";
+import { usePageAttention } from "./usePageAttention";
+import { pageAttention } from "../lib/page-attention";
 
 /** How long after a word stops being on screen its card rewinds to the first page: past a swipe's glide, so the card is already out of view. */
 const REWIND_AFTER_LEAVE_MS = 700;
@@ -33,30 +35,11 @@ export function useLearningPlayback(options: {
 }) {
   const [page, setPage] = useState(options.initialPage ?? 0);
   const [replay, setReplay] = useState(0);
-  const [visible, setVisible] = useState(() => typeof document === "undefined" || !document.hidden);
-  useEffect(() => {
-    const update = () => setVisible(!document.hidden);
-    document.addEventListener("visibilitychange", update);
-    return () => document.removeEventListener("visibilitychange", update);
-  }, []);
-  // A physical rotation can strand `visible`: the rotate-to-portrait gate releases the
-  // screen wake lock while it is up, so a phone left in landscape may dim or sleep. On
-  // rotate-back the matching `visibilitychange -> visible` can be missed or race this
-  // hook's listeners, leaving `visible` stuck false — which keeps `playing` (and so the
-  // auto-advance timer) permanently off even though the card is active again. Re-read the
-  // authoritative `document.hidden` the moment the card becomes active, plus on focus and
-  // bfcache restore, so playback always resumes without needing a manual tap.
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    if (options.active) setVisible(!document.hidden);
-    const resync = () => setVisible(!document.hidden);
-    window.addEventListener("focus", resync);
-    window.addEventListener("pageshow", resync);
-    return () => {
-      window.removeEventListener("focus", resync);
-      window.removeEventListener("pageshow", resync);
-    };
-  }, [options.active]);
+  // Out of sight is a pause: another tab, the browser in the background, a locked screen,
+  // and on a phone anything the system draws over the page (lib/page-attention). Read
+  // through useSyncExternalStore, which re-reads the live state on every render, so a
+  // missed event (a rotation that let the screen sleep) cannot strand playback off.
+  const visible = usePageAttention();
   const playing = options.active && visible && options.autoplay && !options.reducedMotion;
   const isLast = page >= options.count - 1;
   const duration = options.durations[page] ?? 3200;
@@ -94,8 +77,8 @@ export function useLearningPlayback(options: {
     const timer = setTimeout(
       () => {
         // A timer the browser held back (screen dimmed, tab frozen) must not fire a
-        // page turn nobody can see; the visibility listener re-arms it on return.
-        if (typeof document !== "undefined" && document.hidden) return;
+        // page turn nobody can see; the attention signal re-arms it on return.
+        if (!pageAttention().attended()) return;
         if (isLast && options.loop) {
           setPage(0);
           setReplay((current) => current + 1);
@@ -108,8 +91,7 @@ export function useLearningPlayback(options: {
       clearTimeout(timer);
       // Bank at most the page's own length, and nothing for time spent with the page
       // hidden — otherwise a long pause returns with the clock already spent.
-      const shown =
-        typeof document !== "undefined" && document.hidden ? 0 : performance.now() - startedAt;
+      const shown = pageAttention().attended() ? performance.now() - startedAt : 0;
       elapsed.current = Math.min(duration, elapsed.current + shown);
     };
   }, [
