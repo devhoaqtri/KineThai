@@ -13,8 +13,12 @@
  * therefore mean different words on anh.chayla.app and a zh host, which is the
  * price of keeping 32,768 codes available to each of them.
  *
+ * A new code must also pass the screen (scripts/lib/share-code-screen): it may not read as
+ * an English word or a taboo shorthand. Codes retired for failing it
+ * (data/share-codes-retired.json, see scripts/rescreen-share-codes.ts) are never issued.
+ *
  * Usage: npx tsx scripts/assign-share-codes.ts [--dry]
- * Depends on: ../src/features/vocabulary/lib/share-code
+ * Depends on: ../src/features/vocabulary/lib/share-code, ./lib/share-code-screen
  */
 
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
@@ -25,10 +29,12 @@ import {
   isShareCode,
   randomShareCode,
 } from "../src/features/vocabulary/lib/share-code";
+import { screenShareCode } from "./lib/share-code-screen";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const DATA = resolve(here, "../src/features/vocabulary/data");
 const LEDGER = join(DATA, "share-codes.json");
+const RETIRED = join(DATA, "share-codes-retired.json");
 
 type Word = { id: string; shareCode?: string };
 type Deck = { words: Word[] };
@@ -59,12 +65,17 @@ try {
   // First run, or the pre-locale format; rebuilt below from what the decks carry.
 }
 
+/** locale -> retired code -> what it named; never issued again. */
+const retired = existsSync(RETIRED)
+  ? (JSON.parse(readFileSync(RETIRED, "utf8")) as Record<string, Record<string, unknown>>)
+  : {};
+
 let totalAssigned = 0;
 for (const locale of LOCALES) {
   const files = deckFiles(locale);
   if (!files.length) continue;
   const issued = (ledger[locale] ??= {});
-  const taken = new Set(Object.keys(issued));
+  const taken = new Set([...Object.keys(issued), ...Object.keys(retired[locale] ?? {})]);
   // A crawler re-import rewrites a deck file without its codes; a word the ledger
   // already knows gets its own code back rather than a second one.
   const earlier = new Map<string, string>();
@@ -109,7 +120,7 @@ for (const locale of LOCALES) {
         continue;
       }
       let code = randomShareCode();
-      while (taken.has(code)) code = randomShareCode();
+      while (taken.has(code) || screenShareCode(code)) code = randomShareCode();
       taken.add(code);
       word.shareCode = code;
       issued[code] = word.id;

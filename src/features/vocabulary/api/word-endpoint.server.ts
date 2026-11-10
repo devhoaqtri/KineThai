@@ -16,6 +16,9 @@ import { refreshBlockedWordIds } from "./word-block.server";
 import { isShareCode, normalizeShareCode } from "../lib/share-code";
 import { resolveTarget, type TargetLocale } from "../lib/target-language";
 import type { VocabularyWord } from "../lib/schema";
+// Codes retired for reading as a word or a taboo (scripts/rescreen-share-codes.ts). They are
+// never issued again, but a link already shared with one still opens the word it named.
+import retiredCodes from "../data/share-codes-retired.json";
 
 const requestSchema = z
   .object({
@@ -55,7 +58,11 @@ function wordForCode(locale: TargetLocale, code: string): VocabularyWord | undef
     };
     byShareCode.set(locale, index);
   }
-  return index.words.get(code);
+  const current = index.words.get(code);
+  if (current) return current;
+  const retiredId = (retiredCodes as Record<string, Record<string, { id: string }>>)[locale]?.[code]
+    ?.id;
+  return retiredId ? served.words.find((word) => word.id === retiredId) : undefined;
 }
 
 /**
