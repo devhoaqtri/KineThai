@@ -2770,15 +2770,96 @@
     transition: none;
   }
 }
+/* Forgetting is the one destructive control in the sheet: centred, in red, and never
+   one tap — it opens an inline warning with its own cancel and confirm. */
 .vocab-memory-clear {
-  align-self: flex-start;
+  align-self: center;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
+  margin-top: 4px;
+  padding: 0 18px;
+  border: 1px solid color-mix(in oklab, var(--destructive, #f87171) 40%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--destructive, #f87171) 12%, transparent);
+  color: var(--destructive, #f87171);
+  font: inherit;
   font-size: 13px;
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease-out),
+    transform var(--dur-move) var(--ease-spring);
+}
+.vocab-memory-clear:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--destructive, #f87171) 20%, transparent);
+}
+.vocab-memory-clear:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: var(--dur-press);
+}
+/* Nothing seen yet: nothing to forget. */
+.vocab-memory-clear:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.vocab-memory-clear:focus-visible,
+.vocab-memory-confirm-actions button:focus-visible {
+  outline: 2px solid var(--destructive, #f87171);
+  outline-offset: 2px;
+}
+.vocab-memory-confirm {
+  margin-top: 4px;
+  padding: 14px;
+  border: 1px solid color-mix(in oklab, var(--destructive, #f87171) 45%, transparent);
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--destructive, #f87171) 10%, var(--shell-surface));
+  text-align: center;
+  /* Scrolled into view when it opens; this keeps it clear of the sheet's rounded foot. */
+  scroll-margin-bottom: 18px;
+  animation: vocab-panel-in var(--dur-quick) var(--ease-out) both;
+}
+.vocab-memory-confirm p {
+  margin: 0 0 12px;
+  color: var(--shell-text);
+  font-size: 13px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.vocab-memory-confirm strong {
+  color: var(--destructive, #f87171);
+  white-space: nowrap;
+}
+.vocab-memory-confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+.vocab-memory-confirm-actions button {
+  flex: 1;
+  min-height: 44px;
+  border: 1px solid var(--shell-line-strong);
+  border-radius: 12px;
+  background: var(--shell-well);
+  color: var(--shell-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--dur-move) var(--ease-spring);
+}
+.vocab-memory-confirm-actions button[data-danger] {
+  border-color: transparent;
+  background: var(--destructive, #f87171);
+  color: var(--destructive-foreground, #fff);
+}
+.vocab-memory-confirm-actions button:active {
+  transform: scale(0.97);
+  transition-duration: var(--dur-press);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocab-memory-confirm {
+    animation: none;
+  }
 }
 .vocab-viewport {
   height: 100dvh;

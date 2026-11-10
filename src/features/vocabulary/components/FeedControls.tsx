@@ -73,6 +73,8 @@ const PACE_OPTIONS: { id: ReadingPace; label: string }[] = [
 
 /** Matches the exit keyframes' duration (--dur-quick) in vocabulary.css. */
 const POPUP_EXIT_MS = 180;
+/** A forget confirm ignores taps this soon after it appears (a double tap's second half). */
+const FORGET_ARM_MS = 400;
 /** How long the app info takes to roll back up before the settings return. */
 const INFO_FOLD_MS = 240;
 
@@ -1143,6 +1145,42 @@ export function FeedControls({
     setInfoOpen(false);
     setInfoReturned(false);
   }, [options.mounted]);
+  // "Forget history" asks first, inline: a warning and a confirm / cancel pair take the
+  // button's place. The confirm ignores a tap in its first moments, so the second tap of
+  // a double tap on the button can never land on it. A sheet always reopens unasked.
+  const [forgetAsked, setForgetAsked] = useState(false);
+  const forgetAskedAt = useRef(0);
+  const forgetCancel = useRef<HTMLButtonElement>(null);
+  const forgetButton = useRef<HTMLButtonElement>(null);
+  const seenWords = Object.keys(history).length;
+  useEffect(() => {
+    if (!options.mounted) setForgetAsked(false);
+  }, [options.mounted]);
+  const forgetPrompt = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!forgetAsked) return;
+    forgetCancel.current?.focus({ preventScroll: true });
+    // The button sits at the foot of the sheet, so the prompt that replaces it opens
+    // partly below the fold; bring all of it, buttons included, into view.
+    forgetPrompt.current?.scrollIntoView({
+      block: "nearest",
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }, [forgetAsked, reducedMotion]);
+  const askForget = () => {
+    forgetAskedAt.current = performance.now();
+    setForgetAsked(true);
+  };
+  const cancelForget = () => {
+    setForgetAsked(false);
+    // The button comes back on the next render; focus returns to it once it is there.
+    window.setTimeout(() => forgetButton.current?.focus({ preventScroll: true }), 0);
+  };
+  const confirmForget = () => {
+    if (performance.now() - forgetAskedAt.current < FORGET_ARM_MS) return;
+    onClearHistory();
+    setForgetAsked(false);
+  };
   const toggleInfo = () => {
     setInfoReturned(infoOpen);
     setInfoOpen(!infoOpen);
@@ -1424,8 +1462,10 @@ export function FeedControls({
           data-closing={options.closing || undefined}
           onKeyDown={(event) => {
             if (event.key !== "Escape") return;
-            // Escape folds the info away first; a second one closes the sheet.
-            if (infoOpen) toggleInfo();
+            // Escape steps back one thing at a time: an open forget prompt, then the
+            // info, then the sheet itself.
+            if (forgetAsked) cancelForget();
+            else if (infoOpen) toggleInfo();
             else close();
           }}
         >
@@ -1646,9 +1686,37 @@ export function FeedControls({
                 Chạm một ô để ôn lại những từ đã xem. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày,
                 hai lần trong ba ngày và ba lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
               </p>
-              <button type="button" className="vocab-memory-clear" onClick={onClearHistory}>
-                Quên lịch sử đã xem
-              </button>
+              {forgetAsked ? (
+                <div
+                  ref={forgetPrompt}
+                  className="vocab-memory-confirm"
+                  role="group"
+                  aria-labelledby={`${panelId}-forget`}
+                >
+                  <p id={`${panelId}-forget`}>
+                    Quên <strong>{seenWords} từ</strong> đã xem trên thiết bị này? Các ô ôn lại, dấu
+                    nhớ / quên và tiến độ cấp độ sẽ mất, không khôi phục được.
+                  </p>
+                  <div className="vocab-memory-confirm-actions">
+                    <button type="button" ref={forgetCancel} onClick={cancelForget}>
+                      Huỷ
+                    </button>
+                    <button type="button" data-danger="" onClick={confirmForget}>
+                      Quên hết
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  ref={forgetButton}
+                  className="vocab-memory-clear"
+                  onClick={askForget}
+                  disabled={seenWords === 0}
+                >
+                  Quên lịch sử đã xem
+                </button>
+              )}
             </div>
             <nav aria-label="Điều hướng trang" className="vocab-site-links">
               {/* Community is not open to readers yet; only the button is hidden, the
