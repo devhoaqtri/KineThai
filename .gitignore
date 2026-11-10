@@ -52,3 +52,6 @@ src/features/admin/data/llm-config.json
 /word-crawler/
 # Incomplete stroke-file builds (scripts/build-hanzi-strokes.ts)
 public/hanzi/.*.tmp
+
+# Local one-off scripts and their outputs; never committed.
+.scratch/
