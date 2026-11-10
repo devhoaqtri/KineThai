@@ -1124,8 +1124,6 @@
 .vocab-picker-option-label {
   flex: 1;
   min-width: 0;
-  /* Names line up on the right edge, the swatch keeps the left. */
-  text-align: right;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -9564,13 +9562,58 @@ button.vocab-info-row[aria-expanded="true"] {
     clip-path: inset(0 0 -40px 0);
   }
 }
-/* Folded away, the settings come back with a short fade rather than a cut. Only after a
-   fold: the sheet's own entrance already brings them in on open. */
-.vocab-options-zoom[data-info-returned] > :not(.vocab-info-row) {
-  animation: vocab-saved-fade var(--dur-quick) var(--ease-out) both;
+/* Folding away is the drop played backwards: the info rolls up under the row (it stays
+   mounted for INFO_FOLD_MS while it does)… */
+.vocab-info-drop[data-closing] {
+  animation: vocab-info-fold-up var(--dur-info-fold, 240ms) var(--ease-in) both;
+}
+@keyframes vocab-info-fold-up {
+  from {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 -40px 0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+    clip-path: inset(0 0 100% 0);
+  }
+}
+/* …and only then do the settings come back, one row after another from the top, each
+   easing down into its place the way the info's own lines arrived. Only after a fold:
+   the sheet's own entrance already brings them in on open. Fill is `backwards`, never
+   `both`: a held end-state transform would sit on top of the memory sheet's zoom, which
+   animates these rows itself. */
+.vocab-options-zoom[data-info-returned] > :not(.vocab-info-row, .vocab-info-drop) {
+  animation: vocab-settings-return var(--dur-move) var(--ease-out) backwards;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(3) {
+  animation-delay: 50ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(4) {
+  animation-delay: 100ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(5) {
+  animation-delay: 150ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(6) {
+  animation-delay: 200ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(7) {
+  animation-delay: 250ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(n + 8) {
+  animation-delay: 300ms;
+}
+@keyframes vocab-settings-return {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .vocab-info-drop,
+  .vocab-info-drop[data-closing],
   .vocab-info-drop .vocab-info-lines li,
   .vocab-options-zoom[data-info-returned] > * {
     animation: none;

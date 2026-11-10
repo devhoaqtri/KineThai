@@ -73,6 +73,8 @@ const PACE_OPTIONS: { id: ReadingPace; label: string }[] = [
 
 /** Matches the exit keyframes' duration (--dur-quick) in vocabulary.css. */
 const POPUP_EXIT_MS = 180;
+/** How long the app info takes to roll back up before the settings return. */
+const INFO_FOLD_MS = 240;
 
 /**
  * Invisible full-screen catcher behind a popup. A tap on it only dismisses, so it can
@@ -1133,6 +1135,9 @@ export function FeedControls({
   const infoId = useId();
   const [infoOpen, setInfoOpen] = useState(false);
   const [infoReturned, setInfoReturned] = useState(false);
+  // Folding away is animated: the info stays mounted while it rolls up, and the settings
+  // stay hidden until it is gone, then come back row by row (vocabulary.css).
+  const info = usePresence(infoOpen, INFO_FOLD_MS);
   useEffect(() => {
     if (options.mounted) return;
     setInfoOpen(false);
@@ -1428,7 +1433,7 @@ export function FeedControls({
             className="vocab-options-zoom"
             ref={zoomRef}
             inert={recallScope !== null || undefined}
-            data-info-open={infoOpen || undefined}
+            data-info-open={info.mounted || undefined}
             data-info-returned={infoReturned || undefined}
           >
             {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
@@ -1454,8 +1459,13 @@ export function FeedControls({
               </span>
               <ChevronRight size={17} aria-hidden="true" />
             </button>
-            {infoOpen && (
-              <div id={infoId} className="vocab-info-drop">
+            {info.mounted && (
+              <div
+                id={infoId}
+                className="vocab-info-drop"
+                data-closing={info.closing || undefined}
+                style={{ "--dur-info-fold": `${INFO_FOLD_MS}ms` } as React.CSSProperties}
+              >
                 <AppInfoContent locale={locale ?? "en"} />
               </div>
             )}
