@@ -1156,19 +1156,26 @@ export function FeedControls({
   useEffect(() => {
     if (!options.mounted) setForgetAsked(false);
   }, [options.mounted]);
-  const forgetPrompt = useRef<HTMLDivElement>(null);
+  // While the prompt is up the sheet keeps the height it had, so the prompt growing in
+  // at its foot pushes the content up instead of the sheet growing: the sheet then
+  // scrolls to its end, the info row leaves the top, and the warning and both buttons
+  // are in full view.
+  const [forgetHeight, setForgetHeight] = useState<number | null>(null);
   useEffect(() => {
-    if (!forgetAsked) return;
+    if (!forgetAsked) {
+      setForgetHeight(null);
+      return;
+    }
     forgetCancel.current?.focus({ preventScroll: true });
-    // The button sits at the foot of the sheet, so the prompt that replaces it opens
-    // partly below the fold; bring all of it, buttons included, into view.
-    forgetPrompt.current?.scrollIntoView({
-      block: "nearest",
+    const panel = panelRef.current;
+    panel?.scrollTo({
+      top: panel.scrollHeight - panel.clientHeight,
       behavior: reducedMotion ? "auto" : "smooth",
     });
   }, [forgetAsked, reducedMotion]);
   const askForget = () => {
     forgetAskedAt.current = performance.now();
+    setForgetHeight(panelRef.current?.offsetHeight ?? null);
     setForgetAsked(true);
   };
   const cancelForget = () => {
@@ -1460,6 +1467,7 @@ export function FeedControls({
           ref={panelRef}
           className="vocab-options"
           data-closing={options.closing || undefined}
+          style={forgetHeight !== null ? { height: forgetHeight } : undefined}
           onKeyDown={(event) => {
             if (event.key !== "Escape") return;
             // Escape steps back one thing at a time: an open forget prompt, then the
@@ -1705,17 +1713,17 @@ export function FeedControls({
               halves. Last in the sheet, so nothing sits between it and the edge. */}
             <div className="vocab-forget" data-asked={forgetAsked || undefined}>
               {forgetAsked ? (
-                <div ref={forgetPrompt} role="group" aria-labelledby={`${panelId}-forget`}>
+                <div role="group" aria-labelledby={`${panelId}-forget`}>
                   <p id={`${panelId}-forget`}>
                     Quên <strong>{seenWords} từ</strong> đã xem trên thiết bị này? Các ô ôn lại, dấu
                     nhớ / quên và tiến độ cấp độ sẽ mất, không khôi phục được.
                   </p>
                   <div className="vocab-forget-actions">
                     <button type="button" ref={forgetCancel} onClick={cancelForget}>
-                      Huỷ
+                      Thôi
                     </button>
                     <button type="button" data-danger="" onClick={confirmForget}>
-                      Quên hết
+                      Xác nhận
                     </button>
                   </div>
                 </div>
