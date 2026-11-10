@@ -10,6 +10,7 @@ import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { languageName, type TargetLocale } from "../lib/target-language";
 import { VocabularyCard } from "./VocabularyCard";
+import { DemoBadge } from "./DemoBadge";
 
 // Local only: a production build has no export studio at all, and even in development it
 // loads on demand, for an admin who opens it. Optional-chained like ambient.ts so bare-Node
@@ -548,24 +549,5 @@ export function VocabularyStream({
         </>
       )}
     </>
-  );
-}
-
-/**
- * The demo's opening badge. Markup only: the timeline is in vocabulary.css, written as
- * shares of `--demo-badge-dur` so it ends exactly when the card is let go. It takes no
- * pointer events, so the reader can scroll on to another word underneath it.
- */
-function DemoBadge({ text, durationMs }: { text: string; durationMs: number }) {
-  return (
-    <div
-      className="vocab-demo-badge"
-      role="status"
-      style={{ "--demo-badge-dur": `${durationMs}ms` } as React.CSSProperties}
-    >
-      <div className="vocab-demo-badge-veil" />
-      <div className="vocab-demo-badge-ring" />
-      <div className="vocab-demo-badge-card">{text}</div>
-    </div>
   );
 }

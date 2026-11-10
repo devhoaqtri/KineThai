@@ -9838,6 +9838,11 @@ button.vocab-info-row[aria-expanded="true"] {
   place-items: center;
   pointer-events: none;
   font-family: "Inter", sans-serif;
+  overflow: hidden;
+}
+/* The badge lab plays it inside a phone frame instead of over the screen. */
+.vocab-demo-badge[data-contained] {
+  position: absolute;
 }
 .vocab-demo-badge-veil {
   position: absolute;
@@ -9848,7 +9853,7 @@ button.vocab-info-row[aria-expanded="true"] {
   0%,
   70% {
     backdrop-filter: blur(18px);
-    background: #00000066;
+    background: var(--badge-veil, #00000066);
   }
   100% {
     backdrop-filter: blur(0px);
@@ -9978,5 +9983,382 @@ button.vocab-info-row[aria-expanded="true"] {
   94%,
   100% {
     opacity: 0;
+  }
+}
+
+/* ── Badge looks (lib/badge-variants) ─────────────────────────────────────────────────────
+   Paint only: every look rides the timeline above, so the card underneath still starts
+   exactly as the veil lifts. Two extra layers serve the looks that need them — the
+   backdrop (aurora, grid, wash, sparks) and the aura (a glow or rays behind the card) —
+   and both fade in with the veil and out as it lifts (vocab-demo-layer). Compared at
+   /badge-lab. */
+.vocab-demo-badge-backdrop,
+.vocab-demo-badge-aura {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+}
+.vocab-demo-badge-text {
+  position: relative;
+  z-index: 1;
+}
+@keyframes vocab-demo-layer {
+  0% {
+    opacity: 0;
+  }
+  14%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/* A ring of any colour: the looks recolour it with a variable. */
+.vocab-demo-badge[data-variant] .vocab-demo-badge-ring {
+  border-color: var(--badge-ring, #ffffff);
+  box-shadow: 0 0 22px var(--badge-ring-glow, transparent);
+}
+/* A gradient border drawn inside the card, for the looks that have one. */
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-card::before,
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--badge-border, 1.5px);
+  border-radius: inherit;
+  background: var(--badge-border-paint);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+/* AURORA: violet, teal and pink light drifting behind the blur; an indigo-to-pink card. */
+.vocab-demo-badge[data-variant="aurora"] {
+  --badge-veil: #0a0820a8;
+  --badge-ring: #c4b5fd;
+  --badge-ring-glow: #8b5cf6;
+}
+.vocab-demo-badge[data-variant="aurora"] .vocab-demo-badge-backdrop {
+  display: block;
+  inset: -25%;
+  background:
+    radial-gradient(38% 32% at 28% 34%, #7c3aedd9, #0000 70%),
+    radial-gradient(34% 30% at 72% 62%, #06b6d4b8, #0000 70%),
+    radial-gradient(30% 28% at 56% 22%, #ec4899b0, #0000 70%),
+    radial-gradient(28% 26% at 36% 78%, #22c55e80, #0000 70%);
+  filter: blur(28px);
+  /* Plain alpha, never a blend mode: a blending sibling stops the veil's backdrop blur. */
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-aurora var(--demo-badge-dur, 1600ms) ease-in-out both;
+}
+@keyframes vocab-demo-aurora {
+  from {
+    transform: rotate(-8deg) scale(1);
+  }
+  to {
+    transform: rotate(10deg) scale(1.12) translateY(-3%);
+  }
+}
+.vocab-demo-badge[data-variant="aurora"] .vocab-demo-badge-card {
+  color: #ffffff;
+  background: linear-gradient(135deg, #312e81 0%, #6d28d9 46%, #db2777 100%);
+  box-shadow:
+    0 26px 70px #6d28d98c,
+    0 0 0 1px #ffffff30 inset,
+    0 2px 0 #ffffff45 inset;
+}
+.vocab-demo-badge[data-variant="aurora"] .vocab-demo-badge-text {
+  text-shadow: 0 2px 14px #0007;
+}
+
+/* HOLO FOIL: an iridescent face sliding under the light, over a pale frost. */
+.vocab-demo-badge[data-variant="holo"] {
+  --badge-veil: #ffffff30;
+}
+.vocab-demo-badge[data-variant="holo"] .vocab-demo-badge-card {
+  color: #1d1533;
+  background: linear-gradient(
+    115deg,
+    #ffd1ec 0%,
+    #c7f0ff 18%,
+    #d9ffcf 34%,
+    #fff3c4 50%,
+    #e7d2ff 66%,
+    #c7f0ff 82%,
+    #ffd1ec 100%
+  );
+  background-size: 320% 100%;
+  box-shadow:
+    0 28px 70px #00000055,
+    0 0 0 1px #ffffffcc inset,
+    0 2px 0 #ffffff inset;
+  animation:
+    vocab-demo-badge var(--demo-badge-dur, 1600ms) linear both,
+    vocab-demo-holo var(--demo-badge-dur, 1600ms) linear both;
+}
+/* Fine foil grain over the colour. */
+.vocab-demo-badge[data-variant="holo"] .vocab-demo-badge-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(115deg, #fff0 0 5px, #ffffff55 5px 6px);
+  mix-blend-mode: overlay;
+}
+@keyframes vocab-demo-holo {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+.vocab-demo-badge[data-variant="holo"] .vocab-demo-badge-ring {
+  border: 0;
+  background: conic-gradient(#ff5f8f, #ffb347, #fff26b, #6bff95, #5fd4ff, #9d7bff, #ff5f8f);
+  -webkit-mask: radial-gradient(closest-side, #0000 calc(100% - 5px), #000 calc(100% - 4px));
+  mask: radial-gradient(closest-side, #0000 calc(100% - 5px), #000 calc(100% - 4px));
+}
+
+/* FROSTED GLASS: a glass card with a gradient rim, a warm glow behind it, a spotlight. */
+.vocab-demo-badge[data-variant="glass"] {
+  --badge-veil: #05060c70;
+  --badge-ring: #fdba74;
+  --badge-ring-glow: #fb7185;
+  --badge-border-paint: linear-gradient(135deg, #fda4af, #fcd34d 50%, #67e8f9);
+}
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-backdrop {
+  display: block;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, #0000 0 22%, #000000b0 78%);
+  animation: vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both;
+}
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-aura {
+  display: block;
+  width: 360px;
+  height: 230px;
+  background: radial-gradient(closest-side, #fb923c, #f43f5e99 55%, #0000);
+  filter: blur(26px);
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-breathe var(--demo-badge-dur, 1600ms) ease-in-out both;
+}
+@keyframes vocab-demo-breathe {
+  0% {
+    transform: scale(0.6);
+  }
+  40% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(0.95);
+  }
+}
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-card {
+  color: #ffffff;
+  background: linear-gradient(135deg, #ffffff40, #ffffff0f);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(170%);
+  box-shadow:
+    0 30px 80px #00000088,
+    0 1px 0 #ffffffb0 inset,
+    0 -1px 0 #ffffff26 inset;
+}
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-text {
+  text-shadow: 0 1px 12px #0006;
+}
+
+/* NEON GRID: a black card with a spinning neon rim and glowing gradient letters, over a
+   synthwave floor. */
+@property --badge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.vocab-demo-badge[data-variant="neon"] {
+  --badge-veil: #070512b0;
+  --badge-ring: #e879f9;
+  --badge-ring-glow: #e879f9;
+  --badge-border: 2px;
+  --badge-border-paint: conic-gradient(
+    from var(--badge-angle),
+    #22d3ee,
+    #e879f9,
+    #fb7185,
+    #facc15,
+    #22d3ee
+  );
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-backdrop {
+  display: block;
+  left: -60%;
+  right: -60%;
+  bottom: -4%;
+  height: 72%;
+  background:
+    linear-gradient(#0000, #ff2bd655 45%, #22d3ee22),
+    repeating-linear-gradient(90deg, #ff2bd6c0 0 2px, #0000 2px 40px),
+    repeating-linear-gradient(0deg, #22d3eeb0 0 2px, #0000 2px 30px);
+  transform: perspective(260px) rotateX(52deg);
+  transform-origin: 50% 100%;
+  -webkit-mask: linear-gradient(to top, #000 45%, #0000 100%);
+  mask: linear-gradient(to top, #000 45%, #0000 100%);
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-grid var(--demo-badge-dur, 1600ms) linear both;
+}
+@keyframes vocab-demo-grid {
+  from {
+    background-position:
+      0 0,
+      0 0,
+      0 0;
+  }
+  to {
+    background-position:
+      0 0,
+      0 0,
+      0 68px;
+  }
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card {
+  background: #0b0a14;
+  box-shadow:
+    0 0 40px #e879f955,
+    0 0 90px #22d3ee33,
+    0 30px 80px #000000b0;
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card::before {
+  animation: vocab-demo-spin var(--demo-badge-dur, 1600ms) linear both;
+}
+@keyframes vocab-demo-spin {
+  to {
+    --badge-angle: 360deg;
+  }
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card::after {
+  background: linear-gradient(100deg, #0000, #ffffff38, #0000);
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-text {
+  color: transparent;
+  background: linear-gradient(90deg, #22d3ee, #e879f9 55%, #fb7185);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 10px #e879f990);
+}
+
+/* SUNRISE: slow sun rays behind a cream-to-peach card, a warm wash rising from below. */
+.vocab-demo-badge[data-variant="sunrise"] {
+  --badge-veil: #2a0f0a70;
+  --badge-ring: #fdba74;
+  --badge-ring-glow: #f97316;
+}
+.vocab-demo-badge[data-variant="sunrise"] .vocab-demo-badge-backdrop {
+  display: block;
+  inset: 0;
+  background: linear-gradient(to top, #f97316a6 0%, #f43f5e55 38%, #0000 72%);
+  animation: vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both;
+}
+.vocab-demo-badge[data-variant="sunrise"] .vocab-demo-badge-aura {
+  display: block;
+  width: 560px;
+  height: 560px;
+  background: repeating-conic-gradient(from 0deg, #fde68a66 0deg 7deg, #0000 7deg 20deg);
+  -webkit-mask: radial-gradient(closest-side, #000 18%, #0000 74%);
+  mask: radial-gradient(closest-side, #000 18%, #0000 74%);
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-rays var(--demo-badge-dur, 1600ms) linear both;
+}
+@keyframes vocab-demo-rays {
+  from {
+    transform: rotate(0deg) scale(0.85);
+  }
+  to {
+    transform: rotate(38deg) scale(1.05);
+  }
+}
+.vocab-demo-badge[data-variant="sunrise"] .vocab-demo-badge-card {
+  background: linear-gradient(160deg, #fffbeb, #ffe4cc 58%, #fecdd3);
+  box-shadow:
+    0 26px 70px #f9731670,
+    0 2px 0 #ffffff inset,
+    0 0 0 1px #ffffff80 inset;
+}
+.vocab-demo-badge[data-variant="sunrise"] .vocab-demo-badge-text {
+  color: transparent;
+  background: linear-gradient(90deg, #ea580c, #e11d48);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* LÁ MINT: the brand's own green — a glossy mint card, a deep green veil, sparks rising. */
+.vocab-demo-badge[data-variant="mint"] {
+  --badge-veil: #022c1e99;
+  --badge-ring: #6ee7b7;
+  --badge-ring-glow: #10b981;
+}
+.vocab-demo-badge[data-variant="mint"] .vocab-demo-badge-backdrop {
+  display: block;
+  inset: 0 0 -40% 0;
+  background:
+    radial-gradient(6px 6px at 14% 62%, #a7f3d0, #0000),
+    radial-gradient(4px 4px at 26% 78%, #ecfdf5, #0000),
+    radial-gradient(8px 8px at 38% 70%, #6ee7b7, #0000),
+    radial-gradient(4px 4px at 52% 86%, #d1fae5, #0000),
+    radial-gradient(6px 6px at 64% 66%, #a7f3d0, #0000),
+    radial-gradient(5px 5px at 76% 80%, #ecfdf5, #0000),
+    radial-gradient(8px 8px at 88% 72%, #6ee7b7, #0000),
+    radial-gradient(6px 6px at 46% 94%, #a7f3d0, #0000),
+    radial-gradient(5px 5px at 8% 90%, #d1fae5, #0000),
+    radial-gradient(7px 7px at 60% 98%, #6ee7b7, #0000),
+    radial-gradient(4px 4px at 32% 58%, #ecfdf5, #0000),
+    radial-gradient(70% 45% at 50% 100%, #10b98170, #0000);
+  filter: drop-shadow(0 0 4px #6ee7b7);
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-rise var(--demo-badge-dur, 1600ms) ease-out both;
+}
+@keyframes vocab-demo-rise {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-30%);
+  }
+}
+.vocab-demo-badge[data-variant="mint"] .vocab-demo-badge-aura {
+  display: block;
+  width: 360px;
+  height: 230px;
+  background: radial-gradient(closest-side, #34d39977, #0000);
+  filter: blur(18px);
+  animation: vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both;
+}
+.vocab-demo-badge[data-variant="mint"] .vocab-demo-badge-card {
+  color: #052e1f;
+  background: linear-gradient(160deg, #d1fae5 0%, #6ee7b7 45%, #10b981 100%);
+  box-shadow:
+    0 26px 70px #10b98170,
+    0 2px 0 #ecfdf5 inset,
+    0 -2px 0 #04785740 inset;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Every look keeps its paint and loses its motion: the layers only fade. */
+  .vocab-demo-badge-backdrop,
+  .vocab-demo-badge-aura {
+    animation: vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both !important;
+  }
+  .vocab-demo-badge[data-variant] .vocab-demo-badge-card {
+    animation: vocab-demo-badge-fade var(--demo-badge-dur, 1600ms) linear both;
+  }
+  .vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card::before {
+    animation: none;
   }
 }
