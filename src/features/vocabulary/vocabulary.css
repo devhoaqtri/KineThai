@@ -743,7 +743,11 @@
   margin: 0;
   --vocab-corner-half: calc(var(--vocab-corner) / 2);
   --vocab-corner-notch: calc(var(--vocab-corner-half) + 9px);
-  padding: 16px 22px 22px;
+  /* Side and foot padding as variables, so the forget strip at the foot can bleed exactly
+     to the sheet's edges at every size. */
+  --vocab-options-pad-x: 22px;
+  --vocab-options-pad-bottom: 22px;
+  padding: 16px var(--vocab-options-pad-x) var(--vocab-options-pad-bottom);
   /* Panels are always dark surfaces; they must not inherit the toolbar's ink, which
      flips to dark over a pale card. */
   color: var(--shell-text);
@@ -2770,94 +2774,89 @@
     transition: none;
   }
 }
-/* Forgetting is the one destructive control in the sheet: centred, in red, and never
-   one tap — it opens an inline warning with its own cancel and confirm. */
-.vocab-memory-clear {
-  align-self: center;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  margin-top: 4px;
-  padding: 0 18px;
-  border: 1px solid color-mix(in oklab, var(--destructive, #f87171) 40%, transparent);
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--destructive, #f87171) 12%, transparent);
-  color: var(--destructive, #f87171);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    background-color var(--dur-quick) var(--ease-out),
-    transform var(--dur-move) var(--ease-spring);
+/* Forgetting is the sheet's foot: a strip flush with its bottom and sides (the margins
+   undo the sheet's padding; its rounded corners clip the strip), tinted red, never one
+   tap. Asked, the warning opens inside the same strip and cancel / confirm split its
+   bottom edge in two, like a phone's alert. */
+.vocab-forget {
+  margin: 20px calc(var(--vocab-options-pad-x, 22px) * -1)
+    calc(var(--vocab-options-pad-bottom, 22px) * -1);
+  border-top: 1px solid color-mix(in oklab, var(--destructive, #f87171) 32%, transparent);
+  background: color-mix(in oklab, var(--destructive, #f87171) 9%, var(--shell-surface));
 }
-.vocab-memory-clear:hover:not(:disabled) {
-  background: color-mix(in oklab, var(--destructive, #f87171) 20%, transparent);
-}
-.vocab-memory-clear:active:not(:disabled) {
-  transform: scale(0.97);
-  transition-duration: var(--dur-press);
-}
-/* Nothing seen yet: nothing to forget. */
-.vocab-memory-clear:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-.vocab-memory-clear:focus-visible,
-.vocab-memory-confirm-actions button:focus-visible {
-  outline: 2px solid var(--destructive, #f87171);
-  outline-offset: 2px;
-}
-.vocab-memory-confirm {
-  margin-top: 4px;
-  padding: 14px;
-  border: 1px solid color-mix(in oklab, var(--destructive, #f87171) 45%, transparent);
-  border-radius: 16px;
-  background: color-mix(in oklab, var(--destructive, #f87171) 10%, var(--shell-surface));
-  text-align: center;
-  /* Scrolled into view when it opens; this keeps it clear of the sheet's rounded foot. */
-  scroll-margin-bottom: 18px;
-  animation: vocab-panel-in var(--dur-quick) var(--ease-out) both;
-}
-.vocab-memory-confirm p {
-  margin: 0 0 12px;
-  color: var(--shell-text);
-  font-size: 13px;
-  line-height: 1.5;
-  text-wrap: pretty;
-}
-.vocab-memory-confirm strong {
-  color: var(--destructive, #f87171);
-  white-space: nowrap;
-}
-.vocab-memory-confirm-actions {
+.vocab-forget-open,
+.vocab-forget-actions button {
   display: flex;
-  gap: 8px;
-}
-.vocab-memory-confirm-actions button {
-  flex: 1;
-  min-height: 44px;
-  border: 1px solid var(--shell-line-strong);
-  border-radius: 12px;
-  background: var(--shell-well);
-  color: var(--shell-text);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 var(--vocab-options-pad-x, 22px);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--destructive, #f87171);
   font: inherit;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform var(--dur-move) var(--ease-spring);
+  transition: background-color var(--dur-quick) var(--ease-out);
 }
-.vocab-memory-confirm-actions button[data-danger] {
-  border-color: transparent;
+.vocab-forget-open:hover:not(:disabled),
+.vocab-forget-open:active:not(:disabled) {
+  background: color-mix(in oklab, var(--destructive, #f87171) 12%, transparent);
+}
+/* Nothing seen yet: nothing to forget. */
+.vocab-forget-open:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.vocab-forget-open:focus-visible,
+.vocab-forget-actions button:focus-visible {
+  outline: 2px solid var(--destructive, #f87171);
+  outline-offset: -4px;
+}
+.vocab-forget[data-asked] > div {
+  animation: vocab-saved-fade var(--dur-quick) var(--ease-out) both;
+}
+.vocab-forget p {
+  margin: 0;
+  padding: 16px var(--vocab-options-pad-x, 22px) 14px;
+  color: var(--shell-text);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: pretty;
+}
+.vocab-forget strong {
+  color: var(--destructive, #f87171);
+  white-space: nowrap;
+}
+.vocab-forget-actions {
+  display: flex;
+  border-top: 1px solid color-mix(in oklab, var(--destructive, #f87171) 32%, transparent);
+}
+.vocab-forget-actions button {
+  flex: 1;
+  color: var(--shell-text);
+}
+.vocab-forget-actions button:hover {
+  background: color-mix(in srgb, var(--shell-text) 6%, transparent);
+}
+.vocab-forget-actions button[data-danger] {
   background: var(--destructive, #f87171);
   color: var(--destructive-foreground, #fff);
 }
-.vocab-memory-confirm-actions button:active {
-  transform: scale(0.97);
-  transition-duration: var(--dur-press);
+.vocab-forget-actions button[data-danger]:hover {
+  background: color-mix(in oklab, var(--destructive, #f87171) 88%, #000);
+}
+/* The site links have nothing to show while community is off; an empty row would sit
+   between the foot and the sheet's edge. */
+.vocab-site-links:empty {
+  display: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .vocab-memory-confirm {
+  .vocab-forget[data-asked] > div {
     animation: none;
   }
 }
@@ -6106,7 +6105,9 @@
 @media (max-width: 640px) {
   .vocab-options {
     width: 100%;
-    padding: 14px 18px 18px;
+    --vocab-options-pad-x: 18px;
+    --vocab-options-pad-bottom: 18px;
+    padding: 14px var(--vocab-options-pad-x) var(--vocab-options-pad-bottom);
     max-height: min(74dvh, calc(100dvh - 104px));
     box-shadow:
       0 0 0 100vmax #05030c99,
@@ -6759,7 +6760,9 @@
    reads the viewport — see check-landscape-geometry's PAGE_LAYOUT allowlist. */
 .vocabulary-shell[data-short-viewport="landscape"] .vocab-options {
   width: min(720px, calc(100% - 28px));
-  padding: 12px 16px 16px;
+  --vocab-options-pad-x: 16px;
+  --vocab-options-pad-bottom: 16px;
+  padding: 12px var(--vocab-options-pad-x) var(--vocab-options-pad-bottom);
   /* Measured viewport height, NOT 100%: the sheet is positioned inside the toolbar,
      so a percentage here resolves against that thin bar and collapsed the panel to
      30px. --vocab-vh is the shell's real height. */

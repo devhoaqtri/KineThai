@@ -1686,37 +1686,6 @@ export function FeedControls({
                 Chạm một ô để ôn lại những từ đã xem. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày,
                 hai lần trong ba ngày và ba lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
               </p>
-              {forgetAsked ? (
-                <div
-                  ref={forgetPrompt}
-                  className="vocab-memory-confirm"
-                  role="group"
-                  aria-labelledby={`${panelId}-forget`}
-                >
-                  <p id={`${panelId}-forget`}>
-                    Quên <strong>{seenWords} từ</strong> đã xem trên thiết bị này? Các ô ôn lại, dấu
-                    nhớ / quên và tiến độ cấp độ sẽ mất, không khôi phục được.
-                  </p>
-                  <div className="vocab-memory-confirm-actions">
-                    <button type="button" ref={forgetCancel} onClick={cancelForget}>
-                      Huỷ
-                    </button>
-                    <button type="button" data-danger="" onClick={confirmForget}>
-                      Quên hết
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  ref={forgetButton}
-                  className="vocab-memory-clear"
-                  onClick={askForget}
-                  disabled={seenWords === 0}
-                >
-                  Quên lịch sử đã xem
-                </button>
-              )}
             </div>
             <nav aria-label="Điều hướng trang" className="vocab-site-links">
               {/* Community is not open to readers yet; only the button is hidden, the
@@ -1731,6 +1700,37 @@ export function FeedControls({
             </button>
             */}
             </nav>
+            {/* Forgetting is the sheet's foot: a strip flush with its bottom edge, never one
+              tap — the warning opens inside the strip with cancel and confirm as its two
+              halves. Last in the sheet, so nothing sits between it and the edge. */}
+            <div className="vocab-forget" data-asked={forgetAsked || undefined}>
+              {forgetAsked ? (
+                <div ref={forgetPrompt} role="group" aria-labelledby={`${panelId}-forget`}>
+                  <p id={`${panelId}-forget`}>
+                    Quên <strong>{seenWords} từ</strong> đã xem trên thiết bị này? Các ô ôn lại, dấu
+                    nhớ / quên và tiến độ cấp độ sẽ mất, không khôi phục được.
+                  </p>
+                  <div className="vocab-forget-actions">
+                    <button type="button" ref={forgetCancel} onClick={cancelForget}>
+                      Huỷ
+                    </button>
+                    <button type="button" data-danger="" onClick={confirmForget}>
+                      Quên hết
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  ref={forgetButton}
+                  className="vocab-forget-open"
+                  onClick={askForget}
+                  disabled={seenWords === 0}
+                >
+                  Quên lịch sử đã xem
+                </button>
+              )}
+            </div>
           </div>
           {recallScope !== null && (
             <RecallSheet
