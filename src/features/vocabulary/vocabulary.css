@@ -2800,9 +2800,12 @@
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  /* The browser's own tap flash is a translucent box over the tapped element. Here the
+     element is swapped and the sheet scrolls while it plays, so it hung over the next
+     button (or the strip's top line) for a moment. The press tint below is the feedback. */
+  -webkit-tap-highlight-color: transparent;
   transition: background-color var(--dur-quick) var(--ease-out);
 }
-.vocab-forget-open:hover:not(:disabled),
 .vocab-forget-open:active:not(:disabled) {
   background: color-mix(in oklab, var(--destructive, #f87171) 12%, transparent);
 }
@@ -2840,15 +2843,64 @@
   flex: 1;
   color: var(--shell-text);
 }
-.vocab-forget-actions button:hover {
-  background: color-mix(in srgb, var(--shell-text) 6%, transparent);
+.vocab-forget-actions button:active {
+  background: color-mix(in srgb, var(--shell-text) 8%, transparent);
 }
 .vocab-forget-actions button[data-danger] {
+  position: relative;
+  background: color-mix(in oklab, var(--destructive, #f87171) 28%, var(--shell-surface));
+  color: color-mix(in srgb, var(--destructive-foreground, #fff) 55%, transparent);
+  cursor: default;
+}
+/* Not armed yet, the confirm is a dim red and a fill runs across it from the left for
+   exactly FORGET_ARM_MS; once armed it is solid red and takes taps. */
+.vocab-forget-actions button[data-danger]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--destructive, #f87171);
+  transform-origin: left;
+  animation: vocab-forget-arm var(--forget-arm, 700ms) linear both;
+}
+.vocab-forget-actions button[data-danger] {
+  isolation: isolate;
+}
+.vocab-forget-actions button[data-danger]::before {
+  z-index: -1;
+}
+.vocab-forget-actions button[data-danger][data-armed] {
   background: var(--destructive, #f87171);
   color: var(--destructive-foreground, #fff);
+  cursor: pointer;
 }
-.vocab-forget-actions button[data-danger]:hover {
-  background: color-mix(in oklab, var(--destructive, #f87171) 88%, #000);
+.vocab-forget-actions button[data-danger][data-armed]::before {
+  display: none;
+}
+@keyframes vocab-forget-arm {
+  from {
+    transform: scaleX(0);
+    opacity: 0.35;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 0.35;
+  }
+}
+.vocab-forget-actions button[data-danger][data-armed]:active {
+  background: color-mix(in oklab, var(--destructive, #f87171) 85%, #000);
+}
+/* Hover tints only where a pointer really hovers. On a touch screen :hover sticks to
+   whatever was last tapped, and these buttons swap under the finger. */
+@media (hover: hover) and (pointer: fine) {
+  .vocab-forget-open:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--destructive, #f87171) 12%, transparent);
+  }
+  .vocab-forget-actions button:hover {
+    background: color-mix(in srgb, var(--shell-text) 6%, transparent);
+  }
+  .vocab-forget-actions button[data-danger][data-armed]:hover {
+    background: color-mix(in oklab, var(--destructive, #f87171) 88%, #000);
+  }
 }
 /* The site links have nothing to show while community is off; an empty row would sit
    between the foot and the sheet's edge. */
@@ -2856,6 +2908,9 @@
   display: none;
 }
 @media (prefers-reduced-motion: reduce) {
+  .vocab-forget-actions button[data-danger]::before {
+    display: none;
+  }
   .vocab-forget[data-asked] > div {
     animation: none;
   }

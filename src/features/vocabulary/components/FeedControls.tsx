@@ -73,8 +73,13 @@ const PACE_OPTIONS: { id: ReadingPace; label: string }[] = [
 
 /** Matches the exit keyframes' duration (--dur-quick) in vocabulary.css. */
 const POPUP_EXIT_MS = 180;
-/** A forget confirm ignores taps this soon after it appears (a double tap's second half). */
-const FORGET_ARM_MS = 400;
+/**
+ * A forget confirm ignores taps this soon after it appears: the second half of a double
+ * tap, or a finger still down while the sheet scrolls the button under it. Long enough to
+ * outlast the scroll, short enough that a reader who means it barely waits; the button
+ * shows it, dimmed until armed.
+ */
+const FORGET_ARM_MS = 700;
 /** How long the app info takes to roll back up before the settings return. */
 const INFO_FOLD_MS = 240;
 
@@ -1166,23 +1171,41 @@ export function FeedControls({
       setForgetHeight(null);
       return;
     }
-    forgetCancel.current?.focus({ preventScroll: true });
+    // Focus moves only for a keyboard reader. Moved by script after a tap, Safari draws
+    // its focus ring on the button, a box the reader never asked for.
+    if (forgetByKeyboard.current) forgetCancel.current?.focus({ preventScroll: true });
     const panel = panelRef.current;
     panel?.scrollTo({
       top: panel.scrollHeight - panel.clientHeight,
       behavior: reducedMotion ? "auto" : "smooth",
     });
   }, [forgetAsked, reducedMotion]);
-  const askForget = () => {
+  const forgetByKeyboard = useRef(false);
+  const askForget = (event: React.MouseEvent) => {
+    // A click from Enter or Space has no pointer behind it, so it reports detail 0.
+    forgetByKeyboard.current = event.detail === 0;
     forgetAskedAt.current = performance.now();
     setForgetHeight(panelRef.current?.offsetHeight ?? null);
     setForgetAsked(true);
   };
   const cancelForget = () => {
     setForgetAsked(false);
-    // The button comes back on the next render; focus returns to it once it is there.
+    // The button comes back on the next render; a keyboard reader's focus returns to it
+    // once it is there (Escape counts, being a key).
+    if (!forgetByKeyboard.current) return;
     window.setTimeout(() => forgetButton.current?.focus({ preventScroll: true }), 0);
   };
+  // Armed is state as well as a timestamp: the timestamp is the guard (a render can lag),
+  // the state is what the button shows.
+  const [forgetArmed, setForgetArmed] = useState(false);
+  useEffect(() => {
+    if (!forgetAsked) {
+      setForgetArmed(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setForgetArmed(true), FORGET_ARM_MS);
+    return () => window.clearTimeout(timer);
+  }, [forgetAsked]);
   const confirmForget = () => {
     if (performance.now() - forgetAskedAt.current < FORGET_ARM_MS) return;
     onClearHistory();
@@ -1472,8 +1495,10 @@ export function FeedControls({
             if (event.key !== "Escape") return;
             // Escape steps back one thing at a time: an open forget prompt, then the
             // info, then the sheet itself.
-            if (forgetAsked) cancelForget();
-            else if (infoOpen) toggleInfo();
+            if (forgetAsked) {
+              forgetByKeyboard.current = true;
+              cancelForget();
+            } else if (infoOpen) toggleInfo();
             else close();
           }}
         >
@@ -1722,7 +1747,14 @@ export function FeedControls({
                     <button type="button" ref={forgetCancel} onClick={cancelForget}>
                       Thôi
                     </button>
-                    <button type="button" data-danger="" onClick={confirmForget}>
+                    <button
+                      type="button"
+                      data-danger=""
+                      data-armed={forgetArmed || undefined}
+                      aria-disabled={!forgetArmed}
+                      style={{ "--forget-arm": `${FORGET_ARM_MS}ms` } as React.CSSProperties}
+                      onClick={confirmForget}
+                    >
                       Xác nhận
                     </button>
                   </div>
