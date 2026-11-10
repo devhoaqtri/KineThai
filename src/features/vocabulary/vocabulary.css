@@ -9447,7 +9447,9 @@
     opacity var(--dur-quick) var(--ease-out),
     transform var(--dur-move) var(--ease-spring);
 }
-.vocab-info-row:hover {
+/* The contents dim, not the row: pinned open, the row's own fill must stay opaque over
+   the info scrolling beneath it. */
+.vocab-info-row:hover > * {
   opacity: 0.85;
 }
 .vocab-info-row:active {
@@ -9490,6 +9492,82 @@
 .vocab-info-row > svg {
   flex: none;
   color: var(--shell-text-mute);
+  transition: transform var(--dur-move) var(--ease-spring);
+}
+/* In the sheet the row is a toggle, not a link: a bare button that drops the info down. */
+button.vocab-info-row {
+  width: calc(100% - var(--vocab-corner) + 4px);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.vocab-info-row[aria-expanded="true"] > svg {
+  transform: rotate(90deg);
+}
+/* Open, the row stays pinned at the top of the sheet while the info scrolls under it, so
+   the tap that folds the info away is never more than a reach away. */
+button.vocab-info-row[aria-expanded="true"] {
+  position: sticky;
+  top: -16px;
+  z-index: 1;
+  margin-top: -16px;
+  padding: 16px 0 6px;
+  background: var(--shell-surface);
+  /* The row stops short of the gear's notch; the first shadow carries its fill across
+     that gap so nothing scrolls by beside the gear, the second softens its lower edge. */
+  box-shadow:
+    calc(var(--vocab-corner) - 4px) 0 0 var(--shell-surface),
+    0 10px 12px -8px var(--shell-surface);
+}
+/* Open, the info takes the sheet: every other row steps out (hidden, still mounted, so
+   the memory cells keep the nodes the recall zoom measures)… */
+.vocab-options-zoom[data-info-open] > :not(.vocab-info-row, .vocab-info-drop) {
+  display: none;
+}
+/* …and the info drops down from under the row, uncovered top to bottom while its lines
+   arrive one by one (vocab-info-line-in). */
+.vocab-info-drop {
+  padding: 6px 0 4px;
+  animation: vocab-info-drop-in var(--dur-move) var(--ease-out) both;
+}
+.vocab-info-drop .vocab-info-hero {
+  padding-top: 2px;
+}
+.vocab-info-drop .vocab-info-hero-leaf {
+  display: none;
+}
+.vocab-info-drop .vocab-info-section:not([data-plain]) {
+  background: color-mix(in srgb, var(--shell-text) 4%, transparent);
+}
+@keyframes vocab-info-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 -40px 0);
+  }
+}
+/* Folded away, the settings come back with a short fade rather than a cut. Only after a
+   fold: the sheet's own entrance already brings them in on open. */
+.vocab-options-zoom[data-info-returned] > :not(.vocab-info-row) {
+  animation: vocab-saved-fade var(--dur-quick) var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocab-info-drop,
+  .vocab-info-drop .vocab-info-lines li,
+  .vocab-options-zoom[data-info-returned] > * {
+    animation: none;
+  }
+  .vocab-info-row > svg {
+    transition: none;
+  }
 }
 
 .vocab-info-shell {
@@ -9500,24 +9578,26 @@
   overscroll-behavior-y: contain;
 }
 .vocab-info-body {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
   width: min(100%, 620px);
   margin: 0 auto;
   padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
 }
+.vocab-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 /* On a section, a line (which then overrides its section) or the badge. */
-.vocab-info-shell [data-tone="citrus"] {
+.vocab-info-content [data-tone="citrus"] {
   --info-tone: var(--citrus);
 }
-.vocab-info-shell [data-tone="mint"] {
+.vocab-info-content [data-tone="mint"] {
   --info-tone: var(--mint);
 }
-.vocab-info-shell [data-tone="cyber"] {
+.vocab-info-content [data-tone="cyber"] {
   --info-tone: var(--cyber);
 }
-.vocab-info-shell [data-tone="magenta"] {
+.vocab-info-content [data-tone="magenta"] {
   --info-tone: var(--magenta);
 }
 .vocab-info-hero {

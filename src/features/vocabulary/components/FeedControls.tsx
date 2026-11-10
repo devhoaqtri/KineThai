@@ -52,6 +52,7 @@ import {
 } from "../lib/history";
 import { loadRecallMarks, type RecallMarks } from "../lib/recall-marks";
 import { RecallSheet } from "./RecallSheet";
+import { AppInfoContent } from "./AppInfoPage";
 import { douyinStyleLabelVi, styleLabelVi, themeLabelVi, topicLabelVi } from "../lib/i18n";
 import { siteBrand, type TargetLocale } from "../lib/target-language";
 import { useAmbientSound } from "../hooks/useAmbientSound";
@@ -1125,6 +1126,23 @@ export function FeedControls({
     toggleButton.current?.focus();
   };
   const options = usePresence(open, POPUP_EXIT_MS);
+  // The info row at the head of the sheet drops the app info down in place of the
+  // settings below it; tapping it again folds the info away and the settings return.
+  // The settings stay mounted underneath (only hidden), so the memory cells keep the
+  // nodes the recall zoom measures. A sheet always reopens on its settings.
+  const infoId = useId();
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [infoReturned, setInfoReturned] = useState(false);
+  useEffect(() => {
+    if (options.mounted) return;
+    setInfoOpen(false);
+    setInfoReturned(false);
+  }, [options.mounted]);
+  const toggleInfo = () => {
+    setInfoReturned(infoOpen);
+    setInfoOpen(!infoOpen);
+    panelRef.current?.scrollTo({ top: 0 });
+  };
   // A memory cell zoomed into the memory sheet. The scope stays set through the sheet's
   // own exit; it reports back once it has folded into its cell.
   const [recallScope, setRecallScope] = useState<HistoryScope | null>(null);
@@ -1401,18 +1419,28 @@ export function FeedControls({
           data-closing={options.closing || undefined}
           onKeyDown={(event) => {
             if (event.key !== "Escape") return;
-            close();
+            // Escape folds the info away first; a second one closes the sheet.
+            if (infoOpen) toggleInfo();
+            else close();
           }}
         >
           <div
             className="vocab-options-zoom"
             ref={zoomRef}
             inert={recallScope !== null || undefined}
+            data-info-open={infoOpen || undefined}
+            data-info-returned={infoReturned || undefined}
           >
             {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
               boxed: what the app is (an experiment, AI-written decks, roadmap, cooperation)
-              before how to tune it. */}
-            <Link to="/feed/about" className="vocab-info-row">
+              before how to tune it. Tapping it drops the info down in place of the rest. */}
+            <button
+              type="button"
+              className="vocab-info-row"
+              aria-expanded={infoOpen}
+              aria-controls={infoId}
+              onClick={toggleInfo}
+            >
               <span className="vocab-info-row-icon" aria-hidden="true">
                 🌿
               </span>
@@ -1425,7 +1453,12 @@ export function FeedControls({
                 </small>
               </span>
               <ChevronRight size={17} aria-hidden="true" />
-            </Link>
+            </button>
+            {infoOpen && (
+              <div id={infoId} className="vocab-info-drop">
+                <AppInfoContent locale={locale ?? "en"} />
+              </div>
+            )}
             <div className="vocab-options-secondary">
               {/* With only the theme picker left, the picker carries its own label and this
                 heading would just say the same word twice. */}

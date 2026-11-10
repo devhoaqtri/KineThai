@@ -4,7 +4,7 @@
  * Every statement is its own line, led by an emoji, with the words that carry it
  * highlighted, so the page reads in one glance instead of as a wall of paragraphs.
  *
- * Exports: AppInfoPage
+ * Exports: AppInfoContent, AppInfoPage
  * Depends on: router Link, lucide icons, target-language (brand, locale), vocabulary.css
  */
 
@@ -137,14 +137,81 @@ const SECTIONS: Section[] = [
 ];
 
 /**
- * Render the app info page for the visited address.
+ * The info itself — the app's name and languages, the quick facts, the call for
+ * cooperation — without a page around it. The Settings sheet drops it down in place of its
+ * own rows, and the standalone page wraps it in a header; both read the same copy.
+ * @param props.locale The address's deck locale; its language is marked among the rest.
+ * @returns The info content.
+ */
+export function AppInfoContent({ locale = "en" }: { locale?: TargetLocale }) {
+  // One running index across the whole page, so the lines arrive one after another top to
+  // bottom instead of every section starting its own count at once.
+  let order = 0;
+  return (
+    <div className="vocab-info-content">
+      <section className="vocab-info-hero" aria-label="Tóm tắt">
+        <span className="vocab-info-hero-leaf" aria-hidden="true">
+          🌿
+        </span>
+        <p className="vocab-info-hero-brand">{siteTitle(locale)}</p>
+        <span className="vocab-info-badge" data-tone="citrus">
+          🧪 Bản thử nghiệm
+        </span>
+        <ul className="vocab-info-langs" aria-label="Các ngôn ngữ trên chayLá">
+          {LANGUAGES.map((language) => (
+            <li
+              key={language.locale}
+              data-current={language.locale === locale || undefined}
+              aria-current={language.locale === locale ? "true" : undefined}
+            >
+              <span aria-hidden="true">{language.flag}</span> {language.name}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {SECTIONS.map((section) => (
+        <section
+          key={section.id}
+          className="vocab-info-section"
+          data-tone={section.tone}
+          data-plain={section.plain || undefined}
+          aria-label={section.plain ? section.title : undefined}
+          aria-labelledby={section.plain ? undefined : `info-${section.id}`}
+        >
+          {!section.plain && (
+            <h2 id={`info-${section.id}`} className="vocab-info-title">
+              <span className="vocab-info-title-emoji" aria-hidden="true">
+                {section.emoji}
+              </span>
+              {section.title}
+            </h2>
+          )}
+          <ul className="vocab-info-lines">
+            {section.lines.map((line, index) => (
+              <li key={index} data-tone={line.tone} style={{ "--i": order++ } as CSSProperties}>
+                <span className="vocab-info-emoji" aria-hidden="true">
+                  {line.emoji}
+                </span>
+                <span>{line.text}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+
+      <p className="vocab-info-thanks">💚 Cảm ơn bạn đã học cùng chayLá!</p>
+    </div>
+  );
+}
+
+/**
+ * Render the app info page for the visited address: the same content as the Settings
+ * sheet's drop-down, kept as a page so a shared /feed/about link still opens.
  * @param props.locale The address's deck locale; its language is marked among the rest.
  * @returns Public info page.
  */
 export function AppInfoPage({ locale = "en" }: { locale?: TargetLocale }) {
-  // One running index across the whole page, so the lines arrive one after another top to
-  // bottom instead of every section starting its own count at once.
-  let order = 0;
   return (
     <main className="vocabulary-shell vocab-info-shell">
       <header className="vocab-library-header">
@@ -158,58 +225,7 @@ export function AppInfoPage({ locale = "en" }: { locale?: TargetLocale }) {
       </header>
 
       <div className="vocab-info-body">
-        <section className="vocab-info-hero" aria-label="Tóm tắt">
-          <span className="vocab-info-hero-leaf" aria-hidden="true">
-            🌿
-          </span>
-          <p className="vocab-info-hero-brand">{siteTitle(locale)}</p>
-          <span className="vocab-info-badge" data-tone="citrus">
-            🧪 Bản thử nghiệm
-          </span>
-          <ul className="vocab-info-langs" aria-label="Các ngôn ngữ trên chayLá">
-            {LANGUAGES.map((language) => (
-              <li
-                key={language.locale}
-                data-current={language.locale === locale || undefined}
-                aria-current={language.locale === locale ? "true" : undefined}
-              >
-                <span aria-hidden="true">{language.flag}</span> {language.name}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {SECTIONS.map((section) => (
-          <section
-            key={section.id}
-            className="vocab-info-section"
-            data-tone={section.tone}
-            data-plain={section.plain || undefined}
-            aria-label={section.plain ? section.title : undefined}
-            aria-labelledby={section.plain ? undefined : `info-${section.id}`}
-          >
-            {!section.plain && (
-              <h2 id={`info-${section.id}`} className="vocab-info-title">
-                <span className="vocab-info-title-emoji" aria-hidden="true">
-                  {section.emoji}
-                </span>
-                {section.title}
-              </h2>
-            )}
-            <ul className="vocab-info-lines">
-              {section.lines.map((line, index) => (
-                <li key={index} data-tone={line.tone} style={{ "--i": order++ } as CSSProperties}>
-                  <span className="vocab-info-emoji" aria-hidden="true">
-                    {line.emoji}
-                  </span>
-                  <span>{line.text}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-
-        <p className="vocab-info-thanks">💚 Cảm ơn bạn đã học cùng chayLá!</p>
+        <AppInfoContent locale={locale} />
       </div>
     </main>
   );
