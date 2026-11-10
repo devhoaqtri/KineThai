@@ -953,6 +953,8 @@
 .vocab-tone-tabs {
   display: inline-flex;
   flex: none;
+  /* Right-aligned: the label holds the left edge, the tone shortcut the right. */
+  margin-left: auto;
   gap: 2px;
   padding: 2px;
   border: 1px solid var(--shell-line);
@@ -1066,10 +1068,14 @@
   padding: 6px;
   border: 1px solid var(--shell-line-strong);
   border-radius: 14px;
-  /* Opaque: the veil behind only lightly blurs the sheet, so any translucency here
-     would let the controls underneath read through the rows. */
-  background: var(--shell-surface);
-  box-shadow: 0 12px 40px #000a;
+  /* Opaque, and a step lighter than the sheet: in the sheet's own colour the list read as
+     a hole cut in it, with the blurred controls at its edges passing for glass. Both
+     colours in the mix are solid, so the result is too. */
+  background: color-mix(in srgb, var(--shell-text) 7%, var(--shell-surface));
+  border-color: color-mix(in srgb, var(--shell-text) 18%, var(--shell-surface));
+  box-shadow:
+    0 12px 40px #000c,
+    0 2px 8px #0008;
   animation: vocab-picker-in var(--dur-quick) var(--ease-out) both;
 }
 .vocab-picker-list[data-side="above"] {
@@ -1116,6 +1122,8 @@
 .vocab-picker-option-label {
   flex: 1;
   min-width: 0;
+  /* Names line up on the right edge, the swatch keeps the left. */
+  text-align: right;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
