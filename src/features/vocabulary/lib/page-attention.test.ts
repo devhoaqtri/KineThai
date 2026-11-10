@@ -89,6 +89,34 @@ describe("page attention", () => {
     expect(attention.attended()).toBe(true);
   });
 
+  it("pauses on a phone when the system takes the music, until it plays or the reader is back", () => {
+    const { attention, doc, fire } = setup(true);
+    attention.audioInterrupted(true);
+    expect(attention.reason()).toBe("interrupted");
+    attention.audioInterrupted(false);
+    expect(attention.attended()).toBe(true);
+    attention.audioInterrupted(true);
+    fire(doc, "pointerdown");
+    expect(attention.attended()).toBe(true);
+  });
+
+  it("never takes a desktop media-key pause for an interruption", () => {
+    const { attention } = setup(false);
+    attention.audioInterrupted(true);
+    expect(attention.attended()).toBe(true);
+  });
+
+  it("clears an audio interruption when focus or visibility returns", () => {
+    const { attention, win, fire, setHidden } = setup(true);
+    attention.audioInterrupted(true);
+    fire(win, "focus");
+    expect(attention.attended()).toBe(true);
+    attention.audioInterrupted(true);
+    setHidden(true);
+    setHidden(false);
+    expect(attention.attended()).toBe(true);
+  });
+
   it("tells listeners on every event, so a missed flip gets re-read", () => {
     const { win, fire, notified } = setup(true);
     fire(win, "focus");

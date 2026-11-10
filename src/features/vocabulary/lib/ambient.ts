@@ -9,8 +9,10 @@
  * pool below, and the default feed can never reach it — see AmbientScope.
  *
  * Exports: AmbientPlayer, AmbientScope, AMBIENT_SOURCES, FALLBACK_SOURCES, ZH_AMBIENT_SOURCES, WORDS_PER_TRACK, FADE_OUT_MS
- * Depends on: none (pure browser Audio API)
+ * Depends on: browser Audio API, ./page-attention (a system pause of the music pauses the feed)
  */
+
+import { pageAttention } from "./page-attention";
 
 type AudioSource = { url: string; name: string; bpm: number };
 
@@ -174,6 +176,12 @@ export const FADE_OUT_MS = 1400;
 const QUICK_FADE_OUT_MS = 800;
 const FADE_IN_MS = 1800;
 const FADE_TICK_MS = 40;
+/**
+ * A `pause` event this soon after the player paused its own element is its own. The event
+ * is queued a task after the call; half a second covers a busy main thread.
+ */
+const OWN_PAUSE_WINDOW_MS = 500;
+const nowMs = () => (typeof performance !== "undefined" ? performance.now() : Date.now());
 /** Slack on top of the fade when a track is running out: `timeupdate` only fires a few times a second. */
 const ENDING_SLACK_SECONDS = 0.35;
 
@@ -260,6 +268,13 @@ export class AmbientPlayer {
   private timeUpdateHandler: (() => void) | null = null;
   private endedHandler: (() => void) | null = null;
   private errorHandler: (() => void) | null = null;
+  private pauseHandler: (() => void) | null = null;
+  private playHandler: (() => void) | null = null;
+  /**
+   * When this player last paused its own element. A `pause` event arrives a task after the
+   * call, so one landing this soon after our own is ours, not the system's.
+   */
+  private ownPauseAt = -Infinity;
   /** Set once `destroy()` has run, so a re-created element is fully rebuilt. */
   private stopped = true;
 
@@ -348,9 +363,23 @@ export class AmbientPlayer {
       this.errorHandler = () => {
         if (!this.stopped) this.onError();
       };
+      // A pause this player did not ask for is the system taking the audio: a ringing
+      // call, Siri, another app. It is the only trace a web page gets of a call that rings
+      // in a banner, so it pauses the feed (lib/page-attention) until the reader is back.
+      this.pauseHandler = () => {
+        const audio = this.audio;
+        if (!audio || this.stopped || this.mode !== "playing") return;
+        // Already playing again (a track change pauses then plays at once) or just paused
+        // by us: not an interruption.
+        if (!audio.paused || nowMs() - this.ownPauseAt < OWN_PAUSE_WINDOW_MS) return;
+        pageAttention().audioInterrupted(true);
+      };
+      this.playHandler = () => pageAttention().audioInterrupted(false);
       this.audio.addEventListener("timeupdate", this.timeUpdateHandler);
       this.audio.addEventListener("ended", this.endedHandler);
       this.audio.addEventListener("error", this.errorHandler);
+      this.audio.addEventListener("pause", this.pauseHandler);
+      this.audio.addEventListener("playing", this.playHandler);
     }
     if (this.sourceIndex < 0) this.sourceIndex = this.randomFreshIndex();
     this.loadAndPlay();
@@ -411,7 +440,7 @@ export class AmbientPlayer {
         this.startNext();
         return;
       }
-      this.audio?.pause();
+      this.pauseOwn();
       this.mode = "held";
     });
   }
@@ -455,7 +484,7 @@ export class AmbientPlayer {
       this.retryTimer = null;
     }
     if (this.audio) {
-      this.audio.pause();
+      this.pauseOwn();
       this.audio.removeAttribute("src");
       this.audio.load(); // flush pipeline, guarantees no buffered audio plays
     }
@@ -481,10 +510,12 @@ export class AmbientPlayer {
     }
     const audio = this.audio;
     if (audio) {
-      audio.pause();
+      this.pauseOwn();
       if (this.timeUpdateHandler) audio.removeEventListener("timeupdate", this.timeUpdateHandler);
       if (this.endedHandler) audio.removeEventListener("ended", this.endedHandler);
       if (this.errorHandler) audio.removeEventListener("error", this.errorHandler);
+      if (this.pauseHandler) audio.removeEventListener("pause", this.pauseHandler);
+      if (this.playHandler) audio.removeEventListener("playing", this.playHandler);
       audio.removeAttribute("src");
       audio.load();
     }
@@ -492,6 +523,8 @@ export class AmbientPlayer {
     this.timeUpdateHandler = null;
     this.endedHandler = null;
     this.errorHandler = null;
+    this.pauseHandler = null;
+    this.playHandler = null;
     this.pendingIndex = null;
     this.sourceIndex = -1;
     this.consecutiveErrors = 0;
@@ -562,7 +595,7 @@ export class AmbientPlayer {
     this.clearFade();
     this.mode = "playing";
     this.afterLeave = "start";
-    this.audio.pause();
+    this.pauseOwn();
     this.audio.volume = 0;
     this.audio.src = source.url;
     this.lastUrl = source.url;
@@ -602,6 +635,13 @@ export class AmbientPlayer {
       this.clearFade();
       onDone?.();
     }, FADE_TICK_MS);
+  }
+
+  /** Pause the element on this player's own account, so its `pause` event is not taken
+   *  for the system's. */
+  private pauseOwn(): void {
+    this.ownPauseAt = nowMs();
+    this.audio?.pause();
   }
 
   private clearFade(): void {
