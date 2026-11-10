@@ -954,6 +954,13 @@
   align-items: center;
   gap: 10px;
 }
+/* The label is a row heading like "Tự động phát luồng" and "Tốc độ" below it: same size,
+   weight and ink, not the picker's small grey caption type. */
+.vocab-picker-label {
+  color: var(--shell-text);
+  font-size: 15px;
+  font-weight: 600;
+}
 .vocab-tone-tabs {
   display: inline-flex;
   flex: none;
