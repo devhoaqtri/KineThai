@@ -147,14 +147,19 @@ export function getCanvasEmphasisColor(
  * @param variant - variant argument
  * @param textColor - textColor argument
  * @param emphasisColor - emphasisColor argument
+ * @param exact - the surface chose `emphasisColor` from its own audited palette, so it is
+ *   used as given rather than swapped for a stock colour when it sits near the text. The
+ *   stock fallbacks are bright (yellow, white) and assume a deep backdrop.
  * @returns Color for the emphasized word (halo/glow keep body color)
  */
 export function getCanvasEmphasisWordColor(
   variant: string | null | undefined,
   textColor: string,
   emphasisColor: string,
+  exact = false,
 ): string {
   if (variant === "halo" || variant === "glow") return textColor;
+  if (exact) return emphasisColor;
   return getDistinctEmphasisColor(textColor, emphasisColor);
 }
 

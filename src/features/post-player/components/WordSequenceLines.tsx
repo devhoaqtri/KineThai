@@ -53,6 +53,8 @@ export type WordSequenceLinesProps = {
   leftAnchoredText: boolean;
   textColor: string;
   emphasisColor: string;
+  /** `emphasisColor` came from the surface's own palette (forwarded from WordSequenceText). */
+  emphasisColorExact?: boolean;
   entranceStyle: ResolvedEntranceStyle;
   /** Multiplier on every entrance's delay and length, forwarded from WordSequenceText. */
   timeScale?: number;
@@ -120,6 +122,7 @@ export function WordSequenceLines({
   leftAnchoredText,
   textColor,
   emphasisColor,
+  emphasisColorExact = false,
   entranceStyle,
   timeScale = 1,
 }: WordSequenceLinesProps): ReactElement {
@@ -150,6 +153,7 @@ export function WordSequenceLines({
       leftAnchoredText={leftAnchoredText}
       textColor={textColor}
       emphasisColor={emphasisColor}
+      emphasisColorExact={emphasisColorExact}
       entranceStyle={entranceStyle}
       skipFrame={skipFrame}
       allowFrame={allowFrame}
@@ -241,7 +245,14 @@ export function WordSequenceLines({
               {
                 // The bar paints in currentColor, which must be the syllables' emphasis color.
                 ...(lift === "underline"
-                  ? { color: getCanvasEmphasisWordColor(lift, textColor, emphasisColor) }
+                  ? {
+                      color: getCanvasEmphasisWordColor(
+                        lift,
+                        textColor,
+                        emphasisColor,
+                        emphasisColorExact,
+                      ),
+                    }
                   : {}),
                 "--kinetic-emphasis-delay": `${effectDelay.delay + effectDelay.duration + 0.18}s`,
                 ...(lift === "halo" || lift === "glow"

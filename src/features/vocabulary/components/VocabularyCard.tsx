@@ -38,6 +38,7 @@ import {
 } from "../lib/presets";
 import { getWideRevealY, isShortViewport } from "../lib/landscape-geometry";
 import { buildStages } from "../lib/stages";
+import { cardEmphasisColor, cardEmphasisPool } from "../lib/card-emphasis";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { relaxBelowFor } from "../lib/line-relax";
 import { grammarRows } from "../lib/grammar";
@@ -1150,8 +1151,11 @@ export function VocabularyCard({
           dragX={dragX}
           allowFrameEmphasis={!landscape}
           // The highlight comes from the reveal style's own short pool, so the effect is a
-          // property of the style and not of whichever word happened to land there.
-          emphasisPool={style.emphasis}
+          // property of the style and not of whichever word happened to land there. A pale
+          // card trades the pool's light effects for an accent underline or box, and colours
+          // the word in its own accent (lib/card-emphasis).
+          emphasisPool={cardEmphasisPool(style.emphasis, theme.tone)}
+          accentColor={cardEmphasisColor(theme)}
           textBudget={textBudget}
           revealY={revealY}
           timeScale={paceFactor}
