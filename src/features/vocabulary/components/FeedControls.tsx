@@ -1716,8 +1716,7 @@ export function FeedControls({
                 })}
               </div>
               <p className="vocab-options-summary">
-                Chạm một ô để ôn lại những từ đã xem. Mỗi từ chỉ quay lại tối đa một lần mỗi ngày,
-                hai lần trong ba ngày và ba lần mỗi tuần. Tất cả chỉ lưu trong trình duyệt này.
+                Lịch sử đọc chỉ lưu trên thiết bị này. Xoá đi là mất mọi tiến độ.
               </p>
             </div>
             <nav aria-label="Điều hướng trang" className="vocab-site-links">
