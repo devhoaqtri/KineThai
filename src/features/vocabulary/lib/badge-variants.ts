@@ -21,13 +21,13 @@ export const BADGE_VARIANTS = [
 export type BadgeVariant = (typeof BADGE_VARIANTS)[number];
 
 /** The look the feed ships with. */
-export const DEMO_BADGE_VARIANT: BadgeVariant = "classic";
+export const DEMO_BADGE_VARIANT: BadgeVariant = "aurora";
 
 /** Lab copy: a name and one line on what each look does. */
 export const BADGE_INFO: Record<BadgeVariant, { name: string; blurb: string }> = {
   classic: {
     name: "Classic",
-    blurb: "Thẻ trắng trên nền tối mờ — bản đang dùng.",
+    blurb: "Thẻ trắng trên nền tối mờ — bản đầu tiên.",
   },
   aurora: {
     name: "Aurora",
