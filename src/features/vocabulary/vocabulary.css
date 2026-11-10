@@ -1044,6 +1044,8 @@
 .vocab-picker-summary {
   flex: 1;
   min-width: 0;
+  /* On the right, like the theme names in the list it opens. */
+  text-align: right;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
