@@ -16,7 +16,7 @@ import { DemoBadge } from "./DemoBadge";
 import {
   BADGE_INFO,
   BADGE_VARIANTS,
-  DEMO_BADGE_VARIANT,
+  BADGE_ROTATION,
   type BadgeVariant,
 } from "../lib/badge-variants";
 import { DEMO_BADGE_MS, WORD_HOOK } from "../lib/first-visit";
@@ -114,8 +114,9 @@ export function BadgeLabPage() {
           <h1>Badge lab</h1>
           <p>
             Nền và hiệu ứng cho “{WORD_HOOK}” khi mở app lần đầu. Mọi kiểu dùng chung một nhịp (
-            {DEMO_BADGE_MS} ms), nên chọn kiểu nào thẻ bên dưới vẫn bắt đầu đúng lúc. Đang dùng:{" "}
-            <strong>{BADGE_INFO[DEMO_BADGE_VARIANT].name}</strong>.
+            {DEMO_BADGE_MS} ms), nên chọn kiểu nào thẻ bên dưới vẫn bắt đầu đúng lúc. Feed xoay
+            vòng, mỗi từ một kiểu:{" "}
+            <strong>{BADGE_ROTATION.map((v) => BADGE_INFO[v].name).join(" → ")}</strong>.
           </p>
         </div>
         <div className="badge-lab-controls">
@@ -195,7 +196,9 @@ export function BadgeLabPage() {
                 <div>
                   <strong>
                     {BADGE_INFO[variant].name}
-                    {variant === DEMO_BADGE_VARIANT && <em> · đang dùng</em>}
+                    {BADGE_ROTATION.includes(variant) && (
+                      <em> · vòng xoay #{BADGE_ROTATION.indexOf(variant) + 1}</em>
+                    )}
                   </strong>
                   <span>{BADGE_INFO[variant].blurb}</span>
                 </div>

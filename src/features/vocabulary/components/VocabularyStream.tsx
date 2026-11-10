@@ -11,6 +11,7 @@ import { DeckLocaleContext } from "../lib/deck-locale";
 import { languageName, type TargetLocale } from "../lib/target-language";
 import { VocabularyCard } from "./VocabularyCard";
 import { DemoBadge } from "./DemoBadge";
+import { pickBadgeVariant } from "../lib/badge-variants";
 
 // Local only: a production build has no export studio at all, and even in development it
 // loads on demand, for an admin who opens it. Optional-chained like ambient.ts so bare-Node
@@ -513,7 +514,13 @@ export function VocabularyStream({
       </div>
       {demo && introPending && !suspended && (
         // Keyed on the word, so scrolling on mid-badge starts the next one from its top.
-        <DemoBadge key={activeOccurrenceId} text={demo.badge} durationMs={demo.badgeMs} />
+        <DemoBadge
+          key={activeOccurrenceId}
+          text={demo.badge}
+          durationMs={demo.badgeMs}
+          // Each word arrives in the next look of the rotation (lib/badge-variants).
+          variant={pickBadgeVariant(activeIndex)}
+        />
       )}
       {ExportStudio && exportOpen && activeEntry && onCloseExport && (
         <Suspense fallback={null}>
