@@ -11,19 +11,25 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { siteTitle, type TargetLocale } from "../lib/target-language";
+import { isLocaleShown, siteTitle, type TargetLocale } from "../lib/target-language";
 import "../vocabulary.css";
 
-/** Every deck the app serves, in the reader's language, with the address that serves it. */
-const LANGUAGES: { locale: TargetLocale; flag: string; name: string }[] = [
-  { locale: "en", flag: "🇬🇧", name: "Anh" },
-  { locale: "zh", flag: "🇨🇳", name: "Hoa" },
-  { locale: "ko", flag: "🇰🇷", name: "Hàn" },
-  { locale: "ja", flag: "🇯🇵", name: "Nhật" },
-  { locale: "fr", flag: "🇫🇷", name: "Pháp" },
-  { locale: "de", flag: "🇩🇪", name: "Đức" },
-  { locale: "es", flag: "🇪🇸", name: "Tây Ban Nha" },
-];
+/**
+ * Every deck the app serves, in the reader's language. A language withheld from readers
+ * (HIDDEN_LOCALES) is left off, as it is in the language drawer: its address only serves
+ * English, so listing it would promise a deck nobody can open.
+ */
+const LANGUAGES: { locale: TargetLocale; flag: string; name: string }[] = (
+  [
+    { locale: "en", flag: "🇬🇧", name: "Anh" },
+    { locale: "zh", flag: "🇨🇳", name: "Hoa" },
+    { locale: "ko", flag: "🇰🇷", name: "Hàn" },
+    { locale: "ja", flag: "🇯🇵", name: "Nhật" },
+    { locale: "fr", flag: "🇫🇷", name: "Pháp" },
+    { locale: "de", flag: "🇩🇪", name: "Đức" },
+    { locale: "es", flag: "🇪🇸", name: "Tây Ban Nha" },
+  ] as const
+).filter((language) => isLocaleShown(language.locale));
 
 /** The highlighted words of a line; the line's tone, else its section's, picks the colour. */
 function Hl({ children }: { children: ReactNode }) {
