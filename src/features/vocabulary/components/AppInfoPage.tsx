@@ -12,20 +12,26 @@ import type { CSSProperties, ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { localeCopy, type Locale } from "../lib/locale";
-import { DEFAULT_TARGET, siteTitle, type TargetLocale } from "../lib/target-language";
+import { DEFAULT_TARGET, isLocaleShown, siteTitle, type TargetLocale } from "../lib/target-language";
 import { useLocale } from "../lib/useLocale";
 import "../vocabulary.css";
 
-/** Every deck the app serves, in the reader's language, with the address that serves it. */
-const LANGUAGES: { locale: TargetLocale; flag: string; names: Partial<Record<Locale, string>> }[] = [
-  { locale: "en", flag: "🇬🇧", names: { vi: "Anh", ja: "英語", th: "อังกฤษ" } },
-  { locale: "zh", flag: "🇨🇳", names: { vi: "Hoa", ja: "中国語", th: "จีน" } },
-  { locale: "ko", flag: "🇰🇷", names: { vi: "Hàn", ja: "韓国語", th: "เกาหลี" } },
-  { locale: "ja", flag: "🇯🇵", names: { vi: "Nhật", ja: "日本語", th: "ญี่ปุ่น" } },
-  { locale: "fr", flag: "🇫🇷", names: { vi: "Pháp", ja: "フランス語", th: "ฝรั่งเศส" } },
-  { locale: "de", flag: "🇩🇪", names: { vi: "Đức", ja: "ドイツ語", th: "เยอรมัน" } },
-  { locale: "es", flag: "🇪🇸", names: { vi: "Tây Ban Nha", ja: "スペイン語", th: "สเปน" } },
-];
+/**
+ * Every deck the app serves, in the reader's language. A language withheld from readers
+ * (HIDDEN_LOCALES) is left off, as it is in the language drawer: its address only serves
+ * the default site, so listing it would promise a deck nobody can open.
+ */
+const LANGUAGES: { locale: TargetLocale; flag: string; names: Partial<Record<Locale, string>> }[] = (
+  [
+    { locale: "en", flag: "🇬🇧", names: { vi: "Anh", ja: "英語", th: "อังกฤษ" } },
+    { locale: "zh", flag: "🇨🇳", names: { vi: "Hoa", ja: "中国語", th: "จีน" } },
+    { locale: "ko", flag: "🇰🇷", names: { vi: "Hàn", ja: "韓国語", th: "เกาหลี" } },
+    { locale: "ja", flag: "🇯🇵", names: { vi: "Nhật", ja: "日本語", th: "ญี่ปุ่น" } },
+    { locale: "fr", flag: "🇫🇷", names: { vi: "Pháp", ja: "フランス語", th: "ฝรั่งเศส" } },
+    { locale: "de", flag: "🇩🇪", names: { vi: "Đức", ja: "ドイツ語", th: "เยอรมัน" } },
+    { locale: "es", flag: "🇪🇸", names: { vi: "Tây Ban Nha", ja: "スペイン語", th: "สเปน" } },
+  ] as const
+).filter((language) => isLocaleShown(language.locale));
 
 /** The highlighted words of a line; the line's tone, else its section's, picks the colour. */
 function Hl({ children }: { children: ReactNode }) {
@@ -356,6 +362,78 @@ const PAGE_COPY: Partial<Record<
 };
 
 /**
+ * The info itself — the app's name and languages, the quick facts, the call for
+ * cooperation — without a page around it. The Settings sheet drops it down in place of its
+ * own rows, and the standalone page wraps it in a header; both read the same copy.
+ * @param props.locale The address's deck locale; its language is marked among the rest.
+ * @returns The info content.
+ */
+export function AppInfoContent({ locale = DEFAULT_TARGET }: { locale?: TargetLocale }) {
+  const ui = useLocale();
+  const copy = localeCopy(PAGE_COPY, ui);
+  const sections = localeCopy(SECTIONS_BY_LOCALE, ui);
+  // One running index across the whole page, so the lines arrive one after another top to
+  // bottom instead of every section starting its own count at once.
+  let order = 0;
+  return (
+    <div className="vocab-info-content">
+      <section className="vocab-info-hero" aria-label={copy.heroAria}>
+        <span className="vocab-info-hero-leaf" aria-hidden="true">
+          🌿
+        </span>
+        <p className="vocab-info-hero-brand">{siteTitle(locale)}</p>
+        <span className="vocab-info-badge" data-tone="citrus">
+          {copy.badge}
+        </span>
+        <ul className="vocab-info-langs" aria-label={copy.langsAria}>
+          {LANGUAGES.map((language) => (
+            <li
+              key={language.locale}
+              data-current={language.locale === locale || undefined}
+              aria-current={language.locale === locale ? "true" : undefined}
+            >
+              <span aria-hidden="true">{language.flag}</span> {localeCopy(language.names, ui)}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {sections.map((section) => (
+        <section
+          key={section.id}
+          className="vocab-info-section"
+          data-tone={section.tone}
+          data-plain={section.plain || undefined}
+          aria-label={section.plain ? section.title : undefined}
+          aria-labelledby={section.plain ? undefined : `info-${section.id}`}
+        >
+          {!section.plain && (
+            <h2 id={`info-${section.id}`} className="vocab-info-title">
+              <span className="vocab-info-title-emoji" aria-hidden="true">
+                {section.emoji}
+              </span>
+              {section.title}
+            </h2>
+          )}
+          <ul className="vocab-info-lines">
+            {section.lines.map((line, index) => (
+              <li key={index} data-tone={line.tone} style={{ "--i": order++ } as CSSProperties}>
+                <span className="vocab-info-emoji" aria-hidden="true">
+                  {line.emoji}
+                </span>
+                <span>{line.text}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+
+      <p className="vocab-info-thanks">{copy.thanks}</p>
+    </div>
+  );
+}
+
+/**
  * Render the app info page for the visited address.
  * @param props.locale The address's deck locale; its language is marked among the rest.
  * @returns Public info page.
@@ -363,10 +441,6 @@ const PAGE_COPY: Partial<Record<
 export function AppInfoPage({ locale = DEFAULT_TARGET }: { locale?: TargetLocale }) {
   const ui = useLocale();
   const copy = localeCopy(PAGE_COPY, ui);
-  const sections = localeCopy(SECTIONS_BY_LOCALE, ui);
-  // One running index across the whole page, so the lines arrive one after another top to
-  // bottom instead of every section starting its own count at once.
-  let order = 0;
   return (
     <main className="vocabulary-shell vocab-info-shell">
       <header className="vocab-library-header">
@@ -380,58 +454,7 @@ export function AppInfoPage({ locale = DEFAULT_TARGET }: { locale?: TargetLocale
       </header>
 
       <div className="vocab-info-body">
-        <section className="vocab-info-hero" aria-label={copy.heroAria}>
-          <span className="vocab-info-hero-leaf" aria-hidden="true">
-            🌿
-          </span>
-          <p className="vocab-info-hero-brand">{siteTitle(locale)}</p>
-          <span className="vocab-info-badge" data-tone="citrus">
-            {copy.badge}
-          </span>
-          <ul className="vocab-info-langs" aria-label={copy.langsAria}>
-            {LANGUAGES.map((language) => (
-              <li
-                key={language.locale}
-                data-current={language.locale === locale || undefined}
-                aria-current={language.locale === locale ? "true" : undefined}
-              >
-                <span aria-hidden="true">{language.flag}</span> {localeCopy(language.names, ui)}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {sections.map((section) => (
-          <section
-            key={section.id}
-            className="vocab-info-section"
-            data-tone={section.tone}
-            data-plain={section.plain || undefined}
-            aria-label={section.plain ? section.title : undefined}
-            aria-labelledby={section.plain ? undefined : `info-${section.id}`}
-          >
-            {!section.plain && (
-              <h2 id={`info-${section.id}`} className="vocab-info-title">
-                <span className="vocab-info-title-emoji" aria-hidden="true">
-                  {section.emoji}
-                </span>
-                {section.title}
-              </h2>
-            )}
-            <ul className="vocab-info-lines">
-              {section.lines.map((line, index) => (
-                <li key={index} data-tone={line.tone} style={{ "--i": order++ } as CSSProperties}>
-                  <span className="vocab-info-emoji" aria-hidden="true">
-                    {line.emoji}
-                  </span>
-                  <span>{line.text}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-
-        <p className="vocab-info-thanks">{copy.thanks}</p>
+        <AppInfoContent locale={locale} />
       </div>
     </main>
   );

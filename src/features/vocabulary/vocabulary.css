@@ -896,7 +896,11 @@
   margin: 0;
   --vocab-corner-half: calc(var(--vocab-corner) / 2);
   --vocab-corner-notch: calc(var(--vocab-corner-half) + 9px);
-  padding: 16px 22px 22px;
+  /* Side and foot padding as variables, so the forget strip at the foot can bleed exactly
+     to the sheet's edges at every size. */
+  --vocab-options-pad-x: 22px;
+  --vocab-options-pad-bottom: 22px;
+  padding: 16px var(--vocab-options-pad-x) var(--vocab-options-pad-bottom);
   /* Panels are always dark surfaces; they must not inherit the toolbar's ink, which
      flips to dark over a pale card. */
   color: var(--shell-text);
@@ -1103,9 +1107,18 @@
   align-items: center;
   gap: 10px;
 }
+/* The label is a row heading like "Tự động phát luồng" and "Tốc độ" below it: same size,
+   weight and ink, not the picker's small grey caption type. */
+.vocab-picker-label {
+  color: var(--shell-text);
+  font-size: 15px;
+  font-weight: 600;
+}
 .vocab-tone-tabs {
   display: inline-flex;
   flex: none;
+  /* Right-aligned: the label holds the left edge, the tone shortcut the right. */
+  margin-left: auto;
   gap: 2px;
   padding: 2px;
   border: 1px solid var(--shell-line);
@@ -1195,6 +1208,8 @@
 .vocab-picker-summary {
   flex: 1;
   min-width: 0;
+  /* On the right, like the theme names in the list it opens. */
+  text-align: right;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1219,10 +1234,14 @@
   padding: 6px;
   border: 1px solid var(--shell-line-strong);
   border-radius: 14px;
-  /* Opaque: the veil behind only lightly blurs the sheet, so any translucency here
-     would let the controls underneath read through the rows. */
-  background: var(--shell-surface);
-  box-shadow: 0 12px 40px #000a;
+  /* Opaque, and a step lighter than the sheet: in the sheet's own colour the list read as
+     a hole cut in it, with the blurred controls at its edges passing for glass. Both
+     colours in the mix are solid, so the result is too. */
+  background: color-mix(in srgb, var(--shell-text) 7%, var(--shell-surface));
+  border-color: color-mix(in srgb, var(--shell-text) 18%, var(--shell-surface));
+  box-shadow:
+    0 12px 40px #000c,
+    0 2px 8px #0008;
   animation: vocab-picker-in var(--dur-quick) var(--ease-out) both;
 }
 .vocab-picker-list[data-side="above"] {
@@ -2124,15 +2143,91 @@
 .vocab-memory-stats > button[data-empty] .vocab-memory-count {
   color: var(--shell-text-mute);
 }
-.vocab-memory-clear {
-  align-self: flex-start;
-  min-height: 44px;
-  display: inline-flex;
+/* Forgetting is the sheet's foot: a strip flush with its bottom and sides (the margins
+   undo the sheet's padding; its rounded corners clip the strip), tinted red, never one
+   tap. Asked, the warning opens inside the same strip and cancel / confirm split its
+   bottom edge in two, like a phone's alert. */
+.vocab-forget {
+  margin: 20px calc(var(--vocab-options-pad-x, 22px) * -1)
+    calc(var(--vocab-options-pad-bottom, 22px) * -1);
+  border-top: 1px solid color-mix(in oklab, var(--destructive, #f87171) 32%, transparent);
+  background: color-mix(in oklab, var(--destructive, #f87171) 9%, var(--shell-surface));
+}
+.vocab-forget-open,
+.vocab-forget-actions button {
+  display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 var(--vocab-options-pad-x, 22px);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--destructive, #f87171);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  /* The browser's own tap flash is a translucent box over the tapped element. Here the
+     element is swapped and the sheet scrolls while it plays, so it hung over the next
+     button (or the strip's top line) for a moment. The press tint below is the feedback. */
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--dur-quick) var(--ease-out);
+}
+.vocab-forget-open:active:not(:disabled) {
+  background: color-mix(in oklab, var(--destructive, #f87171) 12%, transparent);
+}
+/* Nothing seen yet: nothing to forget. */
+.vocab-forget-open:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.vocab-forget-open:focus-visible,
+.vocab-forget-actions button:focus-visible {
+  outline: 2px solid var(--destructive, #f87171);
+  outline-offset: -4px;
+}
+.vocab-forget[data-asked] > div {
+  animation: vocab-saved-fade var(--dur-quick) var(--ease-out) both;
+}
+.vocab-forget p {
+  margin: 0;
+  padding: 16px var(--vocab-options-pad-x, 22px) 14px;
+  color: var(--shell-text);
   font-size: 13px;
+  line-height: 1.45;
+}
+.vocab-forget p strong {
+  color: var(--shell-text-strong);
+  font-weight: 700;
+}
+.vocab-forget-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid color-mix(in oklab, var(--destructive, #f87171) 24%, transparent);
+}
+.vocab-forget-actions button:first-child {
+  border-right: 1px solid color-mix(in oklab, var(--destructive, #f87171) 24%, transparent);
+  color: var(--shell-text-mute);
   font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+}
+.vocab-forget-actions button:first-child:active {
+  background: color-mix(in srgb, var(--shell-text) 8%, transparent);
+}
+.vocab-forget-actions button[data-danger] {
+  /* Dimmed while disarmed so the reader sees the wait: a quick tap shows nothing happened
+     and invites a second, intentional tap. */
+  opacity: 0.45;
+  transition:
+    opacity var(--dur-quick) var(--ease-out),
+    background-color var(--dur-quick) var(--ease-out);
+}
+.vocab-forget-actions button[data-danger][data-armed] {
+  opacity: 1;
+}
+.vocab-forget-actions button[data-danger]:active[data-armed] {
+  background: color-mix(in oklab, var(--destructive, #f87171) 20%, transparent);
 }
 .vocab-viewport {
   height: 100dvh;
@@ -10620,6 +10715,125 @@ body:has(.vocab-intro) .vocab-resume {
   flex: none;
   color: var(--shell-text-mute);
 }
+button.vocab-info-row {
+  width: calc(100% - var(--vocab-corner) + 4px);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.vocab-info-row[aria-expanded="true"] > svg {
+  transform: rotate(90deg);
+}
+/* Open, the row stays pinned at the top of the sheet while the info scrolls under it, so
+   the tap that folds the info away is never more than a reach away. */
+button.vocab-info-row[aria-expanded="true"] {
+  position: sticky;
+  top: -16px;
+  z-index: 1;
+  margin-top: -16px;
+  padding: 16px 0 6px;
+  background: var(--shell-surface);
+  /* The row stops short of the gear's notch; the first shadow carries its fill across
+     that gap so nothing scrolls by beside the gear, the second softens its lower edge. */
+  box-shadow:
+    calc(var(--vocab-corner) - 4px) 0 0 var(--shell-surface),
+    0 10px 12px -8px var(--shell-surface);
+}
+/* Open, the info takes the sheet: every other row steps out (hidden, still mounted, so
+   the memory cells keep the nodes the recall zoom measures)… */
+.vocab-options-zoom[data-info-open] > :not(.vocab-info-row, .vocab-info-drop) {
+  display: none;
+}
+/* …and the info drops down from under the row, uncovered top to bottom while its lines
+   arrive one by one (vocab-info-line-in). */
+.vocab-info-drop {
+  padding: 6px 0 4px;
+  animation: vocab-info-drop-in var(--dur-move) var(--ease-out) both;
+}
+.vocab-info-drop .vocab-info-hero {
+  padding-top: 2px;
+}
+.vocab-info-drop .vocab-info-hero-leaf {
+  display: none;
+}
+.vocab-info-drop .vocab-info-section:not([data-plain]) {
+  background: color-mix(in srgb, var(--shell-text) 4%, transparent);
+}
+@keyframes vocab-info-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 -40px 0);
+  }
+}
+/* Folding away is the drop played backwards: the info rolls up under the row (it stays
+   mounted for INFO_FOLD_MS while it does)… */
+.vocab-info-drop[data-closing] {
+  animation: vocab-info-fold-up var(--dur-info-fold, 240ms) var(--ease-in) both;
+}
+@keyframes vocab-info-fold-up {
+  from {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 -40px 0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+    clip-path: inset(0 0 100% 0);
+  }
+}
+/* …and only then do the settings come back, one row after another from the top, each
+   easing down into its place the way the info's own lines arrived. Only after a fold:
+   the sheet's own entrance already brings them in on open. Fill is `backwards`, never
+   `both`: a held end-state transform would sit on top of the memory sheet's zoom, which
+   animates these rows itself. */
+.vocab-options-zoom[data-info-returned] > :not(.vocab-info-row, .vocab-info-drop) {
+  animation: vocab-settings-return var(--dur-move) var(--ease-out) backwards;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(3) {
+  animation-delay: 50ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(4) {
+  animation-delay: 100ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(5) {
+  animation-delay: 150ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(6) {
+  animation-delay: 200ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(7) {
+  animation-delay: 250ms;
+}
+.vocab-options-zoom[data-info-returned] > :nth-child(n + 8) {
+  animation-delay: 300ms;
+}
+@keyframes vocab-settings-return {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocab-info-drop,
+  .vocab-info-drop[data-closing],
+  .vocab-info-drop .vocab-info-lines li,
+  .vocab-options-zoom[data-info-returned] > * {
+    animation: none;
+  }
+  .vocab-info-row > svg {
+    transition: none;
+  }
+}
 
 .vocab-info-shell {
   display: flex;
@@ -10629,24 +10843,26 @@ body:has(.vocab-intro) .vocab-resume {
   overscroll-behavior-y: contain;
 }
 .vocab-info-body {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
   width: min(100%, 620px);
   margin: 0 auto;
   padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
 }
+.vocab-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 /* On a section, a line (which then overrides its section) or the badge. */
-.vocab-info-shell [data-tone="citrus"] {
+.vocab-info-content [data-tone="citrus"] {
   --info-tone: var(--citrus);
 }
-.vocab-info-shell [data-tone="mint"] {
+.vocab-info-content [data-tone="mint"] {
   --info-tone: var(--mint);
 }
-.vocab-info-shell [data-tone="cyber"] {
+.vocab-info-content [data-tone="cyber"] {
   --info-tone: var(--cyber);
 }
-.vocab-info-shell [data-tone="magenta"] {
+.vocab-info-content [data-tone="magenta"] {
   --info-tone: var(--magenta);
 }
 .vocab-info-hero {
@@ -11589,6 +11805,11 @@ body:has(.vocab-intro) .vocab-resume {
   place-items: center;
   pointer-events: none;
   font-family: "Inter", sans-serif;
+  overflow: hidden;
+}
+/* The badge lab plays it inside a phone frame instead of over the screen. */
+.vocab-demo-badge[data-contained] {
+  position: absolute;
 }
 .vocab-demo-badge-veil {
   position: absolute;
@@ -11599,7 +11820,7 @@ body:has(.vocab-intro) .vocab-resume {
   0%,
   70% {
     backdrop-filter: blur(18px);
-    background: #00000066;
+    background: var(--badge-veil, #00000066);
   }
   100% {
     backdrop-filter: blur(0px);
@@ -11729,5 +11950,355 @@ body:has(.vocab-intro) .vocab-resume {
   94%,
   100% {
     opacity: 0;
+  }
+}
+
+/* ── Badge looks (lib/badge-variants) ─────────────────────────────────────────────────────
+   Paint only: every look rides the timeline above, so the card underneath still starts
+   exactly as the veil lifts. Two extra layers serve the looks that need them — the
+   backdrop (aurora, grid, wash, sparks) and the aura (a glow or rays behind the card) —
+   and both fade in with the veil and out as it lifts (vocab-demo-layer). Compared at
+   /badge-lab. */
+.vocab-demo-badge-backdrop,
+.vocab-demo-badge-aura {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+}
+.vocab-demo-badge-text {
+  position: relative;
+  z-index: 1;
+}
+@keyframes vocab-demo-layer {
+  0% {
+    opacity: 0;
+  }
+  14%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/* A ring of any colour: the looks recolour it with a variable. */
+.vocab-demo-badge[data-variant] .vocab-demo-badge-ring {
+  border-color: var(--badge-ring, #ffffff);
+  box-shadow: 0 0 22px var(--badge-ring-glow, transparent);
+}
+/* A gradient border drawn inside the card, for the looks that have one. */
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-card::before,
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--badge-border, 1.5px);
+  border-radius: inherit;
+  background: var(--badge-border-paint);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+/* AURORA: violet, teal and pink light drifting behind the blur; an indigo-to-pink card. */
+.vocab-demo-badge[data-variant="aurora"] {
+  --badge-veil: #0a0820a8;
+  --badge-ring: #c4b5fd;
+  --badge-ring-glow: #8b5cf6;
+}
+.vocab-demo-badge[data-variant="aurora"] .vocab-demo-badge-backdrop {
+  display: block;
+  inset: -25%;
+  background:
+    radial-gradient(38% 32% at 28% 34%, #7c3aedd9, #0000 70%),
+    radial-gradient(34% 30% at 72% 62%, #06b6d4b8, #0000 70%),
+    radial-gradient(30% 28% at 56% 22%, #ec4899b0, #0000 70%),
+    radial-gradient(28% 26% at 36% 78%, #22c55e80, #0000 70%);
+  filter: blur(28px);
+  /* Plain alpha, never a blend mode: a blending sibling stops the veil's backdrop blur. */
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-aurora var(--demo-badge-dur, 1600ms) ease-in-out both;
+}
+@keyframes vocab-demo-aurora {
+  from {
+    transform: rotate(-8deg) scale(1);
+  }
+  to {
+    transform: rotate(10deg) scale(1.12) translateY(-3%);
+  }
+}
+.vocab-demo-badge[data-variant="aurora"] .vocab-demo-badge-card {
+  color: #ffffff;
+  background: linear-gradient(135deg, #312e81 0%, #6d28d9 46%, #db2777 100%);
+  box-shadow:
+    0 26px 70px #6d28d98c,
+    0 0 0 1px #ffffff30 inset,
+    0 2px 0 #ffffff45 inset;
+}
+.vocab-demo-badge[data-variant="aurora"] .vocab-demo-badge-text {
+  text-shadow: 0 2px 14px #0007;
+}
+
+/* HOLO FOIL: an iridescent face sliding under the light, over a pale frost. */
+.vocab-demo-badge[data-variant="holo"] {
+  --badge-veil: #ffffff30;
+}
+.vocab-demo-badge[data-variant="holo"] .vocab-demo-badge-card {
+  color: #1d1533;
+  background: linear-gradient(
+    115deg,
+    #ffd1ec 0%,
+    #c7f0ff 18%,
+    #d9ffcf 34%,
+    #fff3c4 50%,
+    #e7d2ff 66%,
+    #c7f0ff 82%,
+    #ffd1ec 100%
+  );
+  background-size: 320% 100%;
+  box-shadow:
+    0 28px 70px #00000055,
+    0 0 0 1px #ffffffcc inset,
+    0 2px 0 #ffffff inset;
+  animation:
+    vocab-demo-badge var(--demo-badge-dur, 1600ms) linear both,
+    vocab-demo-holo var(--demo-badge-dur, 1600ms) linear both;
+}
+@keyframes vocab-demo-holo {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+.vocab-demo-badge[data-variant="holo"] .vocab-demo-badge-card::after {
+  background: linear-gradient(100deg, #0000, #ffffffaa 50%, #0000);
+}
+.vocab-demo-badge[data-variant="holo"] .vocab-demo-badge-text {
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+/* FROSTED GLASS: blurred backdrop beneath the card, a fine gradient border. */
+.vocab-demo-badge[data-variant="glass"] {
+  --badge-veil: #00000077;
+  --badge-ring: #fde047;
+  --badge-ring-glow: #eab308;
+  --badge-border: 1.5px;
+  --badge-border-paint: linear-gradient(
+    135deg,
+    #ffffffdd 0%,
+    #fb7185 35%,
+    #fde047 70%,
+    #ffffff40 100%
+  );
+}
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-aura {
+  display: block;
+  width: 320px;
+  height: 200px;
+  background: radial-gradient(closest-side, #f43f5e99 0%, #f9731666 50%, #0000 100%);
+  filter: blur(24px);
+  animation: vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both;
+}
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-card {
+  color: #ffffff;
+  background: #ffffff14;
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  box-shadow:
+    0 30px 80px #00000088,
+    0 2px 0 #ffffff40 inset;
+}
+.vocab-demo-badge[data-variant="glass"] .vocab-demo-badge-text {
+  text-shadow:
+    0 2px 18px #000,
+    0 0 30px #f43f5e88;
+}
+
+/* NEON GRID: spinning conic gradient border, synthwave floor beneath. */
+@property --badge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.vocab-demo-badge[data-variant="neon"] {
+  --badge-veil: #05040dcc;
+  --badge-ring: #e879f9;
+  --badge-ring-glow: #c026d3;
+  --badge-border: 2px;
+  --badge-border-paint: conic-gradient(
+    from var(--badge-angle, 0deg),
+    #22d3ee,
+    #e879f9,
+    #f43f5e,
+    #e879f9,
+    #22d3ee
+  );
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-backdrop {
+  display: block;
+  inset: 40% -10% -20% -10%;
+  background:
+    linear-gradient(to top, #0000 0%, #05040d 85%),
+    linear-gradient(90deg, #e879f930 1px, #0000 1px),
+    linear-gradient(0deg, #e879f930 1px, #0000 1px);
+  background-size:
+    100% 100%,
+    34px 34px,
+    34px 34px;
+  transform: perspective(300px) rotateX(68deg);
+  transform-origin: 50% 100%;
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-grid var(--demo-badge-dur, 1600ms) linear both;
+}
+@keyframes vocab-demo-grid {
+  to {
+    background-position:
+      0 0,
+      0 68px,
+      0 68px;
+  }
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card {
+  background: #0b0a14;
+  box-shadow:
+    0 0 40px #e879f955,
+    0 0 90px #22d3ee33,
+    0 30px 80px #000000b0;
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card::before {
+  animation: vocab-demo-spin var(--demo-badge-dur, 1600ms) linear both;
+}
+@keyframes vocab-demo-spin {
+  to {
+    --badge-angle: 360deg;
+  }
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card::after {
+  background: linear-gradient(100deg, #0000, #ffffff38, #0000);
+}
+.vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-text {
+  color: transparent;
+  background: linear-gradient(90deg, #22d3ee, #e879f9 55%, #fb7185);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 10px #e879f990);
+}
+
+/* SUNRISE: slow sun rays behind a cream-to-peach card, a warm wash rising from below. */
+.vocab-demo-badge[data-variant="sunrise"] {
+  --badge-veil: #2a0f0a70;
+  --badge-ring: #fdba74;
+  --badge-ring-glow: #f97316;
+}
+.vocab-demo-badge[data-variant="sunrise"] .vocab-demo-badge-backdrop {
+  display: block;
+  inset: 0;
+  background: linear-gradient(to top, #f97316a6 0%, #f43f5e55 38%, #0000 72%);
+  animation: vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both;
+}
+.vocab-demo-badge[data-variant="sunrise"] .vocab-demo-badge-aura {
+  display: block;
+  width: 560px;
+  height: 560px;
+  background: repeating-conic-gradient(from 0deg, #fde68a66 0deg 7deg, #0000 7deg 20deg);
+  -webkit-mask: radial-gradient(closest-side, #000 18%, #0000 74%);
+  mask: radial-gradient(closest-side, #000 18%, #0000 74%);
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-rays var(--demo-badge-dur, 1600ms) linear both;
+}
+@keyframes vocab-demo-rays {
+  from {
+    transform: rotate(0deg) scale(0.85);
+  }
+  to {
+    transform: rotate(38deg) scale(1.05);
+  }
+}
+.vocab-demo-badge[data-variant="sunrise"] .vocab-demo-badge-card {
+  background: linear-gradient(160deg, #fffbeb, #ffe4cc 58%, #fecdd3);
+  box-shadow:
+    0 26px 70px #f9731670,
+    0 2px 0 #ffffff inset,
+    0 0 0 1px #ffffff80 inset;
+}
+.vocab-demo-badge[data-variant="sunrise"] .vocab-demo-badge-text {
+  color: transparent;
+  background: linear-gradient(90deg, #ea580c, #e11d48);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* LÁ MINT: the brand's own green — a glossy mint card, a deep green veil, sparks rising. */
+.vocab-demo-badge[data-variant="mint"] {
+  --badge-veil: #022c1e99;
+  --badge-ring: #6ee7b7;
+  --badge-ring-glow: #10b981;
+}
+.vocab-demo-badge[data-variant="mint"] .vocab-demo-badge-backdrop {
+  display: block;
+  inset: 0 0 -40% 0;
+  background:
+    radial-gradient(6px 6px at 14% 62%, #a7f3d0, #0000),
+    radial-gradient(4px 4px at 26% 78%, #ecfdf5, #0000),
+    radial-gradient(8px 8px at 38% 70%, #6ee7b7, #0000),
+    radial-gradient(4px 4px at 52% 86%, #d1fae5, #0000),
+    radial-gradient(6px 6px at 64% 66%, #a7f3d0, #0000),
+    radial-gradient(5px 5px at 76% 80%, #ecfdf5, #0000),
+    radial-gradient(8px 8px at 88% 72%, #6ee7b7, #0000),
+    radial-gradient(6px 6px at 46% 94%, #a7f3d0, #0000),
+    radial-gradient(5px 5px at 8% 90%, #d1fae5, #0000),
+    radial-gradient(7px 7px at 60% 98%, #6ee7b7, #0000),
+    radial-gradient(4px 4px at 32% 58%, #ecfdf5, #0000),
+    radial-gradient(70% 45% at 50% 100%, #10b98170, #0000);
+  filter: drop-shadow(0 0 4px #6ee7b7);
+  animation:
+    vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both,
+    vocab-demo-rise var(--demo-badge-dur, 1600ms) ease-out both;
+}
+@keyframes vocab-demo-rise {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-30%);
+  }
+}
+.vocab-demo-badge[data-variant="mint"] .vocab-demo-badge-aura {
+  display: block;
+  width: 360px;
+  height: 230px;
+  background: radial-gradient(closest-side, #34d39977, #0000);
+  filter: blur(18px);
+  animation: vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both;
+}
+.vocab-demo-badge[data-variant="mint"] .vocab-demo-badge-card {
+  color: #052e1f;
+  background: linear-gradient(160deg, #d1fae5 0%, #6ee7b7 45%, #10b981 100%);
+  box-shadow:
+    0 26px 70px #10b98170,
+    0 2px 0 #ecfdf5 inset,
+    0 -2px 0 #04785740 inset;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Every look keeps its paint and loses its motion: the layers only fade. */
+  .vocab-demo-badge-backdrop,
+  .vocab-demo-badge-aura {
+    animation: vocab-demo-layer var(--demo-badge-dur, 1600ms) ease-out both !important;
+  }
+  .vocab-demo-badge[data-variant] .vocab-demo-badge-card {
+    animation: vocab-demo-badge-fade var(--demo-badge-dur, 1600ms) linear both;
+  }
+  .vocab-demo-badge[data-variant="neon"] .vocab-demo-badge-card::before {
+    animation: none;
   }
 }

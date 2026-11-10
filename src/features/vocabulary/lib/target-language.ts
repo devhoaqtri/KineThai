@@ -27,6 +27,17 @@ const SUBDOMAINS: Record<string, TargetLocale> = {
   tbn: "es",
 };
 
+/** Languages readers cannot reach yet: their addresses serve the default site in production. */
+export const HIDDEN_LOCALES: ReadonlySet<TargetLocale> = new Set<TargetLocale>(["ko"]);
+
+/** A dev server (vite) shows hidden languages; a production build and plain node do not. */
+const SHOW_HIDDEN = Boolean(import.meta.env?.DEV);
+
+/** @param locale Deck locale. @returns Whether readers of this build can reach it. */
+export function isLocaleShown(locale: TargetLocale): boolean {
+  return SHOW_HIDDEN || !HIDDEN_LOCALES.has(locale);
+}
+
 /** @param host Host header or location.host (may carry a port). @returns The address's locale. */
 export function addressLocale(host: string | null | undefined): TargetLocale {
   if (!host) return DEFAULT_TARGET;
@@ -37,7 +48,8 @@ export function addressLocale(host: string | null | undefined): TargetLocale {
 
 /** @param host Host header or location.host (may carry a port). @returns The deck locale. */
 export function resolveTarget(host: string | null | undefined): TargetLocale {
-  return addressLocale(host);
+  const locale = addressLocale(host);
+  return isLocaleShown(locale) ? locale : DEFAULT_TARGET;
 }
 
 const TITLES: Record<TargetLocale, string> = {

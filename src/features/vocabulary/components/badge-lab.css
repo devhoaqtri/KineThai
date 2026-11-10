@@ -1,0 +1,186 @@
+/* /badge-lab (dev only): the "Từ gì mà ..." badge looks, side by side in phone frames. */
+.badge-lab {
+  min-height: 100dvh;
+  padding: 24px 20px 48px;
+  background: #0b0d14;
+  color: #e7e9f2;
+  font-family: "Inter", system-ui, sans-serif;
+}
+.badge-lab-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1600px;
+  margin: 0 auto 24px;
+}
+.badge-lab-head h1 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+.badge-lab-head p {
+  max-width: 640px;
+  margin: 0;
+  color: #9aa1b5;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.badge-lab-head strong {
+  color: #e7e9f2;
+}
+.badge-lab-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.badge-lab-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: #171a25;
+  border: 1px solid #262a3a;
+}
+.badge-lab-seg button,
+.badge-lab-button,
+.badge-lab-pick {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: #c9cddb;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.badge-lab-seg button[aria-checked="true"] {
+  background: #6ef2b6;
+  color: #062a1c;
+}
+.badge-lab-button {
+  background: #171a25;
+  border: 1px solid #262a3a;
+}
+.badge-lab-button[aria-pressed="true"] {
+  background: #e7e9f2;
+  color: #0b0d14;
+}
+.badge-lab-picked {
+  flex-basis: 100%;
+  color: #6ef2b6 !important;
+  font-weight: 600;
+}
+.badge-lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 28px 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.badge-lab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
+.badge-lab-item figcaption {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  width: 360px;
+}
+.badge-lab-item figcaption div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #9aa1b5;
+}
+.badge-lab-item figcaption strong {
+  color: #e7e9f2;
+  font-size: 14px;
+}
+.badge-lab-item figcaption em {
+  color: #6ef2b6;
+  font-style: normal;
+  font-weight: 600;
+}
+.badge-lab-pick {
+  flex: none;
+  background: #171a25;
+  border: 1px solid #262a3a;
+}
+.badge-lab-pick[aria-pressed="true"] {
+  background: #6ef2b6;
+  color: #062a1c;
+  border-color: transparent;
+}
+.badge-lab-item[data-picked] .badge-lab-phone {
+  outline: 3px solid #6ef2b6;
+  outline-offset: 4px;
+}
+
+/* A phone: 360 × 780, a feed card painted with a real theme, the badge over it. */
+.badge-lab-phone {
+  position: relative;
+  width: 360px;
+  height: 780px;
+  border-radius: 36px;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 20px 60px #0009;
+  font-family: "Inter", system-ui, sans-serif;
+}
+.badge-lab-chrome {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 22px 22px 0;
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.9;
+}
+.badge-lab-chrome span + span {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+.badge-lab-clue {
+  margin: 150px 22px 0;
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.badge-lab-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
+.badge-lab-dock span {
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+/* The badge as a phone shows it: its text is 9vw of a 360-wide screen. */
+.badge-lab-phone .vocab-demo-badge-card {
+  font-size: 32px;
+}
+/* Frozen at the badge's peak: landed, the shine crossing it, the veil at its fullest. */
+.badge-lab-phone[data-frozen] .vocab-demo-badge,
+.badge-lab-phone[data-frozen] .vocab-demo-badge *,
+.badge-lab-phone[data-frozen] .vocab-demo-badge *::before,
+.badge-lab-phone[data-frozen] .vocab-demo-badge *::after {
+  animation-delay: calc(var(--demo-badge-dur, 1600ms) * -0.48) !important;
+  animation-play-state: paused !important;
+}

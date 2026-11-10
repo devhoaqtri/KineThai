@@ -106,6 +106,7 @@ function StageText({
   | "secondaryEmphasis"
   | "allowFrameEmphasis"
   | "emphasisPool"
+  | "accentColor"
   | "timeScale"
   | "measuredLayout"
 >) {
@@ -137,6 +138,7 @@ export function VocabularyStage({
   dragX,
   allowFrameEmphasis,
   emphasisPool,
+  accentColor,
   revealY,
   timeScale = 1,
   textBudget,
@@ -167,6 +169,8 @@ export function VocabularyStage({
   allowFrameEmphasis: boolean;
   /** The highlight effects the reveal style authored for itself. */
   emphasisPool?: readonly EmphasisVariant[];
+  /** The colour highlighted words take; absent, the player picks one (a deep card). */
+  accentColor?: string;
   /**
    * Where the answer sits, as a percentage of its band's height. Portrait uses the fixed
    * 34% the card was designed at; a wide card passes the centre of the shorter band the
@@ -276,6 +280,7 @@ export function VocabularyStage({
                 secondaryEmphasis={stage.secondaryEmphasis}
                 allowFrameEmphasis={allowFrameEmphasis}
                 emphasisPool={emphasisPool}
+                accentColor={accentColor}
                 timeScale={timeScale}
                 // The answer is one word fitted as a unit; only clue pages are broken
                 // into lines.

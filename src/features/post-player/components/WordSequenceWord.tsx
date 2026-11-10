@@ -61,6 +61,8 @@ export type WordSequenceWordProps = {
   leftAnchoredText: boolean;
   textColor: string;
   emphasisColor: string;
+  /** `emphasisColor` came from the surface's own palette: words take it as given. */
+  emphasisColorExact?: boolean;
   entranceStyle: ResolvedEntranceStyle;
   skipFrame?: boolean;
   /** False where the box-drawing frame is not allowed; it is drawn as an underline. */
@@ -105,6 +107,7 @@ export function WordSequenceWord({
   leftAnchoredText,
   textColor,
   emphasisColor,
+  emphasisColorExact = false,
   entranceStyle,
   skipFrame = false,
   allowFrame = true,
@@ -159,7 +162,7 @@ export function WordSequenceWord({
   // the word keeps its color and weight but adds no moving effect of its own.
   const ownEffect = runEffect ? null : displayVariant;
   const wordColor = important
-    ? getCanvasEmphasisWordColor(displayVariant, textColor, emphasisColor)
+    ? getCanvasEmphasisWordColor(displayVariant, textColor, emphasisColor, emphasisColorExact)
     : textColor;
   const entranceDelay = staticRender
     ? 0

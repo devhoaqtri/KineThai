@@ -51,6 +51,7 @@ import {
 } from "../lib/history";
 import { loadRecallMarks, type RecallMarks } from "../lib/recall-marks";
 import { RecallSheet } from "./RecallSheet";
+import { AppInfoContent } from "./AppInfoPage";
 import {
   douyinStyleLabel,
   douyinStyleLabelVi,
@@ -80,6 +81,15 @@ const PACE_OPTIONS: { id: ReadingPace }[] = [{ id: "slow" }, { id: "normal" }, {
 
 /** Matches the exit keyframes' duration (--dur-quick) in vocabulary.css. */
 const POPUP_EXIT_MS = 180;
+/**
+ * A forget confirm ignores taps this soon after it appears: the second half of a double
+ * tap, or a finger still down while the sheet scrolls the button under it. Long enough to
+ * outlast the scroll, short enough that a reader who means it barely waits; the button
+ * shows it, dimmed until armed.
+ */
+const FORGET_ARM_MS = 700;
+/** How long the app info takes to roll back up before the settings return. */
+const INFO_FOLD_MS = 240;
 
 /**
  * Invisible full-screen catcher behind a popup. A tap on it only dismisses, so it can
@@ -1157,6 +1167,87 @@ export function FeedControls({
     toggleButton.current?.focus();
   };
   const options = usePresence(open, POPUP_EXIT_MS);
+  // The info row at the head of the sheet drops the app info down in place of the
+  // settings below it; tapping it again folds the info away and the settings return.
+  // The settings stay mounted underneath (only hidden), so the memory cells keep the
+  // nodes the recall zoom measures. A sheet always reopens on its settings.
+  const infoId = useId();
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [infoReturned, setInfoReturned] = useState(false);
+  // Folding away is animated: the info stays mounted while it rolls up, and the settings
+  // stay hidden until it is gone, then come back row by row (vocabulary.css).
+  const info = usePresence(infoOpen, INFO_FOLD_MS);
+  useEffect(() => {
+    if (options.mounted) return;
+    setInfoOpen(false);
+    setInfoReturned(false);
+  }, [options.mounted]);
+  const toggleInfo = () => {
+    setInfoReturned(infoOpen);
+    setInfoOpen(!infoOpen);
+    panelRef.current?.scrollTo({ top: 0 });
+  };
+  // "Forget history" asks first, inline: a warning and a confirm / cancel pair take the
+  // button's place. The confirm ignores a tap in its first moments, so the second tap of
+  // a double tap on the button can never land on it. A sheet always reopens unasked.
+  const [forgetAsked, setForgetAsked] = useState(false);
+  const forgetAskedAt = useRef(0);
+  const forgetCancel = useRef<HTMLButtonElement>(null);
+  const forgetButton = useRef<HTMLButtonElement>(null);
+  const seenWords = Object.keys(history).length;
+  useEffect(() => {
+    if (!options.mounted) setForgetAsked(false);
+  }, [options.mounted]);
+  // While the prompt is up the sheet keeps the height it had, so the prompt growing in
+  // at its foot pushes the content up instead of the sheet growing: the sheet then
+  // scrolls to its end, the info row leaves the top, and the warning and both buttons
+  // are in full view.
+  const [forgetHeight, setForgetHeight] = useState<number | null>(null);
+  const forgetByKeyboard = useRef(false);
+  useEffect(() => {
+    if (!forgetAsked) {
+      setForgetHeight(null);
+      return;
+    }
+    // Focus moves only for a keyboard reader. Moved by script after a tap, Safari draws
+    // its focus ring on the button, a box the reader never asked for.
+    if (forgetByKeyboard.current) forgetCancel.current?.focus({ preventScroll: true });
+    const panel = panelRef.current;
+    panel?.scrollTo({
+      top: panel.scrollHeight - panel.clientHeight,
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }, [forgetAsked, reducedMotion]);
+  const askForget = (event: React.MouseEvent) => {
+    // A click from Enter or Space has no pointer behind it, so it reports detail 0.
+    forgetByKeyboard.current = event.detail === 0;
+    forgetAskedAt.current = performance.now();
+    setForgetHeight(panelRef.current?.offsetHeight ?? null);
+    setForgetAsked(true);
+  };
+  const cancelForget = () => {
+    setForgetAsked(false);
+    // The button comes back on the next render; a keyboard reader's focus returns to it
+    // once it is there (Escape counts, being a key).
+    if (!forgetByKeyboard.current) return;
+    window.setTimeout(() => forgetButton.current?.focus({ preventScroll: true }), 0);
+  };
+  // Armed is state as well as a timestamp: the timestamp is the guard (a render can lag),
+  // the state is what the button shows.
+  const [forgetArmed, setForgetArmed] = useState(false);
+  useEffect(() => {
+    if (!forgetAsked) {
+      setForgetArmed(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setForgetArmed(true), FORGET_ARM_MS);
+    return () => window.clearTimeout(timer);
+  }, [forgetAsked]);
+  const confirmForget = () => {
+    if (performance.now() - forgetAskedAt.current < FORGET_ARM_MS) return;
+    onClearHistory();
+    setForgetAsked(false);
+  };
   const panelRef = useRef<HTMLElement>(null);
   const zoomRef = useRef<HTMLDivElement>(null);
   // A memory cell zoomed into the memory sheet. The scope stays set through the sheet's
@@ -1438,19 +1529,35 @@ export function FeedControls({
           data-closing={options.closing || undefined}
           inert={options.closing || undefined}
           aria-label={t(ui, "options.title")}
+          style={forgetHeight !== null ? { height: forgetHeight } : undefined}
           onKeyDown={(event) => {
-            if (event.key === "Escape") close();
+            if (event.key !== "Escape") return;
+            // Escape steps back one thing at a time: an open forget prompt, then the
+            // info, then the sheet itself.
+            if (forgetAsked) {
+              forgetByKeyboard.current = true;
+              cancelForget();
+            } else if (infoOpen) toggleInfo();
+            else close();
           }}
         >
           <div
             className="vocab-options-zoom"
             ref={zoomRef}
             inert={recallScope !== null || undefined}
+            data-info-open={info.mounted || undefined}
+            data-info-returned={infoReturned || undefined}
           >
             {/* App info leads the sheet, alone beside the gear's notch and drawn bare, not
               boxed: what the app is (an experiment, AI-written decks, roadmap, cooperation)
-              before how to tune it. */}
-            <Link to="/feed/about" className="vocab-info-row">
+              before how to tune it. Tapping it drops the info down in place of the rest. */}
+            <button
+              type="button"
+              className="vocab-info-row"
+              aria-expanded={infoOpen}
+              aria-controls={infoId}
+              onClick={toggleInfo}
+            >
               <span className="vocab-info-row-icon" aria-hidden="true">
                 🌿
               </span>
@@ -1463,7 +1570,17 @@ export function FeedControls({
                 </small>
               </span>
               <ChevronRight size={17} aria-hidden="true" />
-            </Link>
+            </button>
+            {info.mounted && (
+              <div
+                id={infoId}
+                className="vocab-info-drop"
+                data-closing={info.closing || undefined}
+                style={{ "--dur-info-fold": `${INFO_FOLD_MS}ms` } as React.CSSProperties}
+              >
+                <AppInfoContent locale={locale} />
+              </div>
+            )}
             <div className="vocab-options-secondary">
               <span className="vocab-group-label">{t(ui, "options.secondary")}</span>
               <div className="vocab-select-grid">
@@ -1627,10 +1744,9 @@ export function FeedControls({
                   );
                 })}
               </div>
-              <p className="vocab-options-summary">{t(ui, "memory.rules")}</p>
-              <button type="button" className="vocab-memory-clear" onClick={onClearHistory}>
-                {t(ui, "memory.forget")}
-              </button>
+              <p className="vocab-options-summary">
+                Lịch sử đọc chỉ lưu trên thiết bị này. Xoá đi là mất mọi tiến độ.
+              </p>
             </div>
             <nav aria-label={t(ui, "nav.aria")} className="vocab-site-links">
               {/* Community is not open to readers yet; only the button is hidden, the
@@ -1645,6 +1761,44 @@ export function FeedControls({
             </button>
             */}
             </nav>
+            {/* Forgetting is the sheet's foot: a strip flush with its bottom edge, never one
+              tap — the warning opens inside the strip with cancel and confirm as its two
+              halves. Last in the sheet, so nothing sits between it and the edge. */}
+            <div className="vocab-forget" data-asked={forgetAsked || undefined}>
+              {forgetAsked ? (
+                <div role="group" aria-labelledby={`${panelId}-forget`}>
+                  <p id={`${panelId}-forget`}>
+                    Quên <strong>{seenWords} từ</strong> đã xem trên thiết bị này? Các ô ôn lại, dấu
+                    nhớ / quên và tiến độ cấp độ sẽ mất, không khôi phục được.
+                  </p>
+                  <div className="vocab-forget-actions">
+                    <button type="button" ref={forgetCancel} onClick={cancelForget}>
+                      Thôi
+                    </button>
+                    <button
+                      type="button"
+                      data-danger=""
+                      data-armed={forgetArmed || undefined}
+                      aria-disabled={!forgetArmed}
+                      style={{ "--forget-arm": `${FORGET_ARM_MS}ms` } as React.CSSProperties}
+                      onClick={confirmForget}
+                    >
+                      Xác nhận
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  ref={forgetButton}
+                  className="vocab-forget-open"
+                  onClick={askForget}
+                  disabled={seenWords === 0}
+                >
+                  {t(ui, "memory.forget")}
+                </button>
+              )}
+            </div>
           </div>
           {recallScope !== null && (
             <RecallSheet

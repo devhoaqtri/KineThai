@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AdminAccessDeniedRouteImport } from './routes/admin-access-denied'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BadgeLabRouteImport } from './routes/badge-lab'
 import { Route as BurstLabRouteImport } from './routes/burst-lab'
 import { Route as StoreRouteImport } from './routes/store'
 import { Route as AuthenticatedAboutRouteImport } from './routes/_authenticated/about'
@@ -49,6 +50,7 @@ import { Route as ApiPublicEngagementRouteImport } from './routes/api/public/eng
 import { Route as ApiPublicTelemetryRouteImport } from './routes/api/public/telemetry'
 import { Route as ApiPublicVocabularyRouteImport } from './routes/api/public/vocabulary'
 import { Route as ApiPublicVocabularyRefillRouteImport } from './routes/api/public/vocabulary-refill'
+import { Route as ApiPublicWordRouteImport } from './routes/api/public/word'
 import { Route as ApiPublicWordReportRouteImport } from './routes/api/public/word-report'
 
 const IndexRoute = IndexRouteImport.update({
@@ -73,6 +75,11 @@ const AdminAccessDeniedRoute = AdminAccessDeniedRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BadgeLabRoute = BadgeLabRouteImport.update({
+  id: '/badge-lab',
+  path: '/badge-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BurstLabRoute = BurstLabRouteImport.update({
@@ -253,6 +260,11 @@ const ApiPublicVocabularyRefillRoute =
     path: '/api/public/vocabulary-refill',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicWordRoute = ApiPublicWordRouteImport.update({
+  id: '/api/public/word',
+  path: '/api/public/word',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWordReportRoute = ApiPublicWordReportRouteImport.update({
   id: '/api/public/word-report',
   path: '/api/public/word-report',
@@ -264,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
   '/store': typeof StoreRoute
   '/about': typeof AuthenticatedAboutRoute
@@ -299,12 +312,14 @@ export interface FileRoutesByFullPath {
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
   '/api/public/vocabulary-refill': typeof ApiPublicVocabularyRefillRoute
+  '/api/public/word': typeof ApiPublicWordRoute
   '/api/public/word-report': typeof ApiPublicWordReportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
   '/store': typeof StoreRoute
   '/about': typeof AuthenticatedAboutRoute
@@ -340,6 +355,7 @@ export interface FileRoutesByTo {
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
   '/api/public/vocabulary-refill': typeof ApiPublicVocabularyRefillRoute
+  '/api/public/word': typeof ApiPublicWordRoute
   '/api/public/word-report': typeof ApiPublicWordReportRoute
 }
 export interface FileRoutesById {
@@ -349,6 +365,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRouteWithChildren
   '/admin-access-denied': typeof AdminAccessDeniedRoute
   '/auth': typeof AuthRoute
+  '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
   '/store': typeof StoreRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
@@ -384,6 +401,7 @@ export interface FileRoutesById {
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
   '/api/public/vocabulary-refill': typeof ApiPublicVocabularyRefillRoute
+  '/api/public/word': typeof ApiPublicWordRoute
   '/api/public/word-report': typeof ApiPublicWordReportRoute
 }
 export interface FileRouteTypes {
@@ -393,6 +411,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-access-denied'
     | '/auth'
+    | '/badge-lab'
     | '/burst-lab'
     | '/store'
     | '/about'
@@ -428,12 +447,14 @@ export interface FileRouteTypes {
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
     | '/api/public/vocabulary-refill'
+    | '/api/public/word'
     | '/api/public/word-report'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin-access-denied'
     | '/auth'
+    | '/badge-lab'
     | '/burst-lab'
     | '/store'
     | '/about'
@@ -469,6 +490,7 @@ export interface FileRouteTypes {
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
     | '/api/public/vocabulary-refill'
+    | '/api/public/word'
     | '/api/public/word-report'
   id:
     | '__root__'
@@ -477,6 +499,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-access-denied'
     | '/auth'
+    | '/badge-lab'
     | '/burst-lab'
     | '/store'
     | '/_authenticated/about'
@@ -512,6 +535,7 @@ export interface FileRouteTypes {
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
     | '/api/public/vocabulary-refill'
+    | '/api/public/word'
     | '/api/public/word-report'
   fileRoutesById: FileRoutesById
 }
@@ -521,6 +545,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AdminAccessDeniedRoute: typeof AdminAccessDeniedRoute
   AuthRoute: typeof AuthRoute
+  BadgeLabRoute: typeof BadgeLabRoute
   BurstLabRoute: typeof BurstLabRoute
   StoreRoute: typeof StoreRoute
   FeedAboutRoute: typeof FeedAboutRoute
@@ -533,6 +558,7 @@ export interface RootRouteChildren {
   ApiPublicTelemetryRoute: typeof ApiPublicTelemetryRoute
   ApiPublicVocabularyRoute: typeof ApiPublicVocabularyRoute
   ApiPublicVocabularyRefillRoute: typeof ApiPublicVocabularyRefillRoute
+  ApiPublicWordRoute: typeof ApiPublicWordRoute
   ApiPublicWordReportRoute: typeof ApiPublicWordReportRoute
 }
 
@@ -571,6 +597,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/badge-lab': {
+      id: '/badge-lab'
+      path: '/badge-lab'
+      fullPath: '/badge-lab'
+      preLoaderRoute: typeof BadgeLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/burst-lab': {
@@ -818,6 +851,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicVocabularyRefillRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/word': {
+      id: '/api/public/word'
+      path: '/api/public/word'
+      fullPath: '/api/public/word'
+      preLoaderRoute: typeof ApiPublicWordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/word-report': {
       id: '/api/public/word-report'
       path: '/api/public/word-report'
@@ -899,6 +939,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AdminAccessDeniedRoute: AdminAccessDeniedRoute,
   AuthRoute: AuthRoute,
+  BadgeLabRoute: BadgeLabRoute,
   BurstLabRoute: BurstLabRoute,
   StoreRoute: StoreRoute,
   FeedAboutRoute: FeedAboutRoute,
@@ -911,6 +952,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicTelemetryRoute: ApiPublicTelemetryRoute,
   ApiPublicVocabularyRoute: ApiPublicVocabularyRoute,
   ApiPublicVocabularyRefillRoute: ApiPublicVocabularyRefillRoute,
+  ApiPublicWordRoute: ApiPublicWordRoute,
   ApiPublicWordReportRoute: ApiPublicWordReportRoute,
 }
 export const routeTree = rootRouteImport

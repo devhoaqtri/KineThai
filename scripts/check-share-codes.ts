@@ -13,8 +13,12 @@
  * reassignment, the failure that would silently point a shared link at the wrong
  * word.
  *
+ * It also holds the screen (scripts/lib/share-code-screen): no issued code may read as an
+ * English word or a taboo shorthand, and a code retired for that
+ * (data/share-codes-retired.json) may never come back into a deck or the ledger.
+ *
  * Usage: npx tsx scripts/check-share-codes.ts
- * Depends on: ../src/features/vocabulary/lib/share-code
+ * Depends on: ../src/features/vocabulary/lib/share-code, ./lib/share-code-screen
  */
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
@@ -26,6 +30,7 @@ import {
   isShareCode,
   normalizeShareCode,
 } from "../src/features/vocabulary/lib/share-code";
+import { screenShareCode } from "./lib/share-code-screen";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const DATA = resolve(here, "../src/features/vocabulary/data");
@@ -47,6 +52,13 @@ function deckFiles(locale: string): string[] {
 }
 
 const ledger = JSON.parse(readFileSync(join(DATA, "share-codes.json"), "utf8")) as Ledger;
+const retiredPath = join(DATA, "share-codes-retired.json");
+const retiredAll = existsSync(retiredPath)
+  ? (JSON.parse(readFileSync(retiredPath, "utf8")) as Record<
+      string,
+      Record<string, { id: string }>
+    >)
+  : {};
 
 let failures = 0;
 function check(condition: boolean, message: string): void {
@@ -58,7 +70,7 @@ function check(condition: boolean, message: string): void {
   failures += 1;
 }
 
-for (const locale of ["en", "zh", "ko", "ja"]) {
+for (const locale of ["en", "zh", "ko", "ja", "fr", "de", "es"]) {
   const files = deckFiles(locale);
   if (!files.length) continue;
   const words: Word[] = files.flatMap(
@@ -131,6 +143,31 @@ for (const locale of ["en", "zh", "ko", "ja"]) {
   check(
     unrecorded.length === 0,
     `${label} every code is recorded in the ledger${unrecorded.length ? ` (${unrecorded.slice(0, 4).join(", ")})` : ""}`,
+  );
+
+  // The screen: nothing issued reads as a word or a taboo, and nothing retired comes back.
+  const screened = Object.keys(issued)
+    .map((code) => [code, screenShareCode(code)] as const)
+    .filter(([, why]) => why !== null);
+  check(
+    screened.length === 0,
+    `${label} no issued code reads as a word or a taboo${
+      screened.length
+        ? ` (${screened.length}: ${screened
+            .slice(0, 6)
+            .map(([code, why]) => `${code}=${why}`)
+            .join(", ")} — run scripts/rescreen-share-codes.ts)`
+        : ""
+    }`,
+  );
+  const retired = retiredAll[locale] ?? {};
+  const revived = [
+    ...words.filter((word) => word.shareCode && retired[word.shareCode]).map((w) => w.shareCode!),
+    ...Object.keys(issued).filter((code) => retired[code]),
+  ];
+  check(
+    revived.length === 0,
+    `${label} no retired code is back in the deck or the ledger${revived.length ? ` (${[...new Set(revived)].slice(0, 6).join(", ")})` : ` (${Object.keys(retired).length} retired)`}`,
   );
 
   const count = Object.keys(issued).length;

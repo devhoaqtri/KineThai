@@ -107,6 +107,12 @@ export type WordSequenceTextProps = {
    */
   emphasisPool?: readonly EmphasisVariant[];
   /**
+   * The colour emphasised words take, chosen by the surface from its own palette. Absent,
+   * the player picks one against the backdrop; on a pale backdrop that pick lands on
+   * near-black, which reads as the ink itself.
+   */
+  accentColor?: string;
+  /**
    * Multiplier on how fast the words are read out — every word's start delay and its
    * entrance length, springs included. 1 keeps the tempo's own pace; the vocabulary
    * card raises it for a reader who picked a slower reading speed.
@@ -154,6 +160,7 @@ export function WordSequenceText({
   secondaryEmphasis,
   allowFrameEmphasis = true,
   emphasisPool,
+  accentColor,
   timeScale = 1,
   measuredLayout,
 }: WordSequenceTextProps): ReactElement {
@@ -369,7 +376,8 @@ export function WordSequenceText({
   const textColor = photoBackdrop
     ? resolveTextColorOnPhotoBackdrop(spec)
     : getCanvasTextColor(spec, background);
-  const emphasisColor = getCanvasEmphasisColor({ ...spec, color: textColor }, background);
+  const emphasisColor =
+    accentColor ?? getCanvasEmphasisColor({ ...spec, color: textColor }, background);
   const photoTextShadow = photoBackdrop ? getPhotoBackdropTextShadow(textColor) : undefined;
   const textSafeMaxWidth = hasVisibleStickerAccent(spec.stickers, spec.text)
     ? "min(90%, calc(100% - 2.5rem))"
@@ -446,6 +454,7 @@ export function WordSequenceText({
             leftAnchoredText={leftAnchoredText}
             textColor={textColor}
             emphasisColor={emphasisColor}
+            emphasisColorExact={accentColor !== undefined}
             entranceStyle={entranceStyle}
             timeScale={timeScale}
           />

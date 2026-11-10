@@ -43,6 +43,7 @@ import {
 import { HANDOVER_CHROME_MS, HANDOVER_RECEDE_MS, pickerEntrance } from "../lib/picker-entrance";
 import { readDialectChoice, writeDialectChoice } from "../lib/dialect-choice";
 import { readGrammarExpand, writeGrammarExpand } from "../lib/grammar-expand";
+import { useServedWord } from "../hooks/useServedWord";
 import { readPreferences, writePreferences } from "@/features/settings/lib/preferences";
 import { DEFAULT_TARGET, type TargetLocale } from "../lib/target-language";
 import { CUSTOM_PACK_EVENT, clearCustomPack, readCustomPack } from "../lib/custom-pack";
@@ -71,7 +72,27 @@ const ALL_FILTERS: VocabularyFilters = { topic: "", level: "", difficulty: DIFFI
  * @param props.locale Visited address's deck locale; the toolbar title follows it.
  * @returns Public feed and preferences.
  */
-export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
+export function VocabularyFeedPage({
+  locale,
+  sharedCode,
+}: {
+  locale?: TargetLocale;
+  /**
+   * A shared link's word code (`/w/<code>`): the feed opens on that word, played like any
+   * other, and carries on with the reader's own stream after it.
+   */
+  sharedCode?: string;
+}) {
+  // The shared word is fetched before the stream mounts, so it is the first word on
+  // screen rather than one that slides in above a word already playing. A code the deck no
+  // longer has (or a failed lookup) opens the feed as usual.
+  const sharedLookup = useMemo(() => (sharedCode ? { code: sharedCode } : null), [sharedCode]);
+  const { word: sharedWord } = useServedWord(sharedLookup);
+  const sharedPending = sharedCode !== undefined && sharedWord === undefined;
+  // Passed to one stream only: the first to mount takes it, and a later one (a new level,
+  // the feed after the level picker) opens on its own words.
+  const [sharedTaken, setSharedTaken] = useState(false);
+  const takeShared = useCallback(() => setSharedTaken(true), []);
   const [prefs] = useState(() => readPreferences());
   // Use targetLanguage from preferences if set, otherwise use the host-based locale.
   const effectiveLocale: TargetLocale =
@@ -457,41 +478,45 @@ export function VocabularyFeedPage({ locale }: { locale?: TargetLocale }) {
                 }}
               />
             )}
-            <VocabularyStream
-              key={`${packName ?? ""}:${seed}:${filters.topic}:${filters.level}:${filters.difficulty}`}
-              seed={seed}
-              filters={filters}
-              locale={effectiveLocale}
-              presentation={presentation}
-              reducedMotion={reducedMotion}
-              suspended={
-                optionsOpen ||
-                savedOpen ||
-                !fontsReady ||
-                exportOpen ||
-                badge !== null ||
-                stage === "handover"
-              }
-              exportOpen={isAdmin && exportOpen}
-              onCloseExport={closeExport}
-              history={viewHistory.history}
-              onRecordView={handleRecordView}
-              onWordShown={music.wordStarted}
-              onWordEnding={music.wordEnding}
-              // A demo word is not the reader's yet: it counts towards no streak or goal.
-              onWordFinished={demo ? undefined : handleWordFinished}
-              onClearHistory={viewHistory.clear}
-              onMetadata={setMetadata}
-              onRestart={shuffle}
-              onClearFilters={() => {
-                if (!demo) writeDifficultyChoice(effectiveLocale, ALL_FILTERS.difficulty);
-                rememberJapaneseLevel("");
-                setFilters(ALL_FILTERS);
-              }}
-              revealButtonLabel={activeWording?.reveal_button}
-              onToggleAutoplay={() => setPresentation((p) => ({ ...p, autoplay: !p.autoplay }))}
-              demo={demo}
-            />
+            {!sharedPending && (
+              <VocabularyStream
+                key={`${packName ?? ""}:${seed}:${filters.topic}:${filters.level}:${filters.difficulty}`}
+                seed={seed}
+                filters={filters}
+                locale={effectiveLocale}
+                presentation={presentation}
+                reducedMotion={reducedMotion}
+                suspended={
+                  optionsOpen ||
+                  savedOpen ||
+                  !fontsReady ||
+                  exportOpen ||
+                  badge !== null ||
+                  stage === "handover"
+                }
+                exportOpen={isAdmin && exportOpen}
+                onCloseExport={closeExport}
+                history={viewHistory.history}
+                onRecordView={handleRecordView}
+                onWordShown={music.wordStarted}
+                onWordEnding={music.wordEnding}
+                // A demo word is not the reader's yet: it counts towards no streak or goal.
+                onWordFinished={demo ? undefined : handleWordFinished}
+                onClearHistory={viewHistory.clear}
+                onMetadata={setMetadata}
+                onRestart={shuffle}
+                onClearFilters={() => {
+                  if (!demo) writeDifficultyChoice(effectiveLocale, ALL_FILTERS.difficulty);
+                  rememberJapaneseLevel("");
+                  setFilters(ALL_FILTERS);
+                }}
+                revealButtonLabel={activeWording?.reveal_button}
+                onToggleAutoplay={() => setPresentation((p) => ({ ...p, autoplay: !p.autoplay }))}
+                demo={demo}
+                lead={sharedTaken ? undefined : (sharedWord ?? undefined)}
+                onLeadTaken={takeShared}
+              />
+            )}
           </>
         )}
         {showPicker && (
