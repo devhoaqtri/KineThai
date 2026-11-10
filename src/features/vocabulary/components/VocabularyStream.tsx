@@ -49,6 +49,9 @@ export type StreamDemo = {
 const FEED_END_ID = "feed-end";
 
 /** Render a single mounted session; remount on shuffle/filter changes. @param props Session and UI choices. @returns Virtualized feed. */
+/** Occurrence id prefix of a shared word leading the stream; no server id starts so. */
+const SHARED_OCCURRENCE = "shared:";
+
 export function VocabularyStream({
   seed,
   filters,
@@ -69,6 +72,8 @@ export function VocabularyStream({
   revealButtonLabel,
   onToggleAutoplay,
   demo,
+  lead,
+  onLeadTaken,
 }: {
   seed: string;
   filters: VocabularyFilters;
@@ -100,8 +105,37 @@ export function VocabularyStream({
   onToggleAutoplay?: () => void;
   /** Play the stream as a first visit's demo. */
   demo?: StreamDemo;
+  /**
+   * A word someone shared (`/w/<code>`), played first and then the stream as usual. Taken
+   * once, at mount: a stream that remounts (a new level, topic or seed) opens on its own.
+   */
+  lead?: VocabularyWord;
+  /** The stream has put the shared word first; the page passes it to no later stream. */
+  onLeadTaken?: () => void;
 }) {
   const query = useVocabularyFeed(seed, filters, demo?.deck);
+  // The shared word leads, as one extra occurrence outside every server page, and the
+  // stream's own copy of it (if it has one) is dropped so it never plays twice.
+  const [leadWord] = useState(lead);
+  useEffect(() => {
+    if (leadWord) onLeadTaken?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const entries = useMemo<FeedEntry[]>(
+    () =>
+      leadWord
+        ? [
+            {
+              occurrenceId: `${SHARED_OCCURRENCE}${leadWord.id}`,
+              position: -1,
+              cycle: 0,
+              word: leadWord,
+            },
+            ...query.entries.filter((entry) => entry.word.id !== leadWord.id),
+          ]
+        : query.entries,
+    [leadWord, query.entries],
+  );
   // Deck locale drives the "tiếng X" copy in the reader's labels and empty states, so a
   // Korean host never reads "Vốn từ tiếng Anh vô tận". Falls back to English without a
   // provider (see DeckLocaleContext).
@@ -117,17 +151,19 @@ export function VocabularyStream({
   // current card never vanishes the moment its view is stored. When no more words can be
   // loaded (every fallback failed, or the device is offline), words already on the device
   // are served even if seen today, rather than an error.
-  const admitted = useRef(new Set<string>());
+  // A shared word is admitted from the start: the reader came for it, so the day history
+  // that hides words already seen never hides it.
+  const admitted = useRef(new Set<string>(leadWord ? [`${SHARED_OCCURRENCE}${leadWord.id}`] : []));
   const loadStalled = query.entries.length > 0 && (query.isError || query.isPaused);
   const visibleEntries = useMemo(
     () =>
       selectVisibleEntries(
-        query.entries,
+        entries,
         admitted.current,
         (id) => isWordAllowed(history, id, now),
         loadStalled,
       ),
-    [query.entries, history, now, loadStalled],
+    [entries, history, now, loadStalled],
   );
   const visibleIds = useMemo(
     () => new Set(visibleEntries.map((entry) => entry.occurrenceId)),
@@ -146,7 +182,12 @@ export function VocabularyStream({
   );
   // Every word the pool holds is buffered: the stream ends on a page of its own after
   // the last word, rather than a toast that can only restart the feed.
-  const poolDone = visibleEntries.length > 0 && (!query.hasNextPage || !canFetchMorePositions);
+  // Only once the server has answered: a shared word can be on screen before the first
+  // page, while hasNextPage still reads false, and must not be followed by the end page.
+  const poolDone =
+    query.entries.length > 0 &&
+    visibleEntries.length > 0 &&
+    (!query.hasNextPage || !canFetchMorePositions);
   const rows = useMemo(
     () => (poolDone ? [...visibleEntries, { occurrenceId: FEED_END_ID }] : visibleEntries),
     [poolDone, visibleEntries],

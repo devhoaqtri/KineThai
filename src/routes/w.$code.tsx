@@ -1,20 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ChallengePage } from "@/features/vocabulary/components/ChallengePage";
+import { VocabularyFeedPage } from "@/features/vocabulary/components/VocabularyFeedPage";
 import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
-import { languageName, sitePageHead } from "@/features/vocabulary/lib/target-language";
+import { sitePageHead } from "@/features/vocabulary/lib/target-language";
 
+// A shared word: the feed itself, opening on that word and playing it like any other, then
+// the reader's own stream. Not a separate page. The link preview is the site's own, with
+// nothing about the word in it, since the feed still opens on the word's clues.
 export const Route = createFileRoute("/w/$code")({
-  // The word itself is fetched by the page after the reader arrives (/api/public/word);
-  // the loader only resolves the locale, for the title.
+  ssr: "data-only",
   loader: async () => ({ locale: await getSiteLocale() }),
-  // DELIBERATELY generic. These tags are what a chat app renders as a link
-  // preview, so putting the word (or anything derived from it) here would spoil
-  // the guess before the receiver even taps.
-  head: ({ loaderData }) =>
-    sitePageHead(
-      loaderData?.locale,
-      "Đoán từ này đi!",
-      `Một người bạn thách bạn đoán từ tiếng ${languageName(loaderData?.locale ?? "en")} này.`,
-    ),
-  component: ChallengePage,
+  head: ({ loaderData }) => sitePageHead(loaderData?.locale),
+  component: function SharedWordRoute() {
+    const { locale } = Route.useLoaderData();
+    const { code } = Route.useParams();
+    return <VocabularyFeedPage locale={locale} sharedCode={code} />;
+  },
 });
