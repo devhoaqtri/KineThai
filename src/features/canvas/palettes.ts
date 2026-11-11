@@ -14,7 +14,8 @@
  * Exports: Palette types, PALETTE_SCHEMES, PALETTE_THRESHOLDS, generatePalette,
  *          auditPalette, ensureReadablePalette, paletteSwatches, rgbToHex, hslHex,
  *          paletteBackgroundStops, paletteBackdropColors, VIETNAMESE_SAFE_FONTS,
- *          HANDWRITING_FONTS, DEFAULT_PALETTE_FONT, isVietnameseCapableFont
+ *          HANDWRITING_FONTS, PALETTE_FONTS, DEFAULT_PALETTE_FONT, isVietnameseCapableFont,
+ *          isPaletteFont
  * Depends on: ./contrast/color-math
  *
  * This module is intentionally free of data imports so `scripts/check-palette-contrast.ts`
@@ -148,8 +149,21 @@ export const VIETNAMESE_SAFE_FONTS = [
   ...HANDWRITING_FONTS,
 ] as const;
 
+/**
+ * The faces a palette (so a feed card) may name: the safe list without JetBrains Mono.
+ * A monospace cell has to squeeze `m` and shorten its middle leg, which reads as a broken
+ * letter in large kinetic Vietnamese ("mười", "mình"), so the feed never paints in it.
+ * Create Studio keeps it through catalog.FONTS.
+ */
+export const PALETTE_FONTS = [
+  "Inter",
+  "Space Grotesk",
+  "Playfair Display",
+  ...HANDWRITING_FONTS,
+] as const;
+
 /** A palette's default face, used when none is stored or a stored one is unsupported. */
-export const DEFAULT_PALETTE_FONT: string = VIETNAMESE_SAFE_FONTS[1];
+export const DEFAULT_PALETTE_FONT: string = PALETTE_FONTS[1];
 
 /**
  * Whether a font family carries the Vietnamese subset the feed needs. Unknown or
@@ -159,6 +173,16 @@ export const DEFAULT_PALETTE_FONT: string = VIETNAMESE_SAFE_FONTS[1];
 export function isVietnameseCapableFont(font: string | null | undefined): boolean {
   if (!font) return false;
   return (VIETNAMESE_SAFE_FONTS as readonly string[]).includes(font.trim());
+}
+
+/**
+ * Whether a palette may name this font (PALETTE_FONTS). A face outside it, monospace
+ * included, is healed to DEFAULT_PALETTE_FONT when a palette loads.
+ * @pure true
+ */
+export function isPaletteFont(font: string | null | undefined): boolean {
+  if (!font) return false;
+  return (PALETTE_FONTS as readonly string[]).includes(font.trim());
 }
 
 /**
@@ -522,7 +546,7 @@ export function generatePalette(input: {
     accentA,
     accentB,
     onAccent,
-    font: isVietnameseCapableFont(input.font) ? input.font!.trim() : DEFAULT_PALETTE_FONT,
+    font: isPaletteFont(input.font) ? input.font!.trim() : DEFAULT_PALETTE_FONT,
   };
 }
 
@@ -775,7 +799,7 @@ export function normalizePalette(raw: Palette): Palette {
     hue: Number.isFinite(raw.hue) ? raw.hue : 0,
     // Heal any font outside the Vietnamese-capable allowlist (a hand-edited or stale
     // row naming, say, Bebas Neue) so the feed never paints broken diacritics.
-    font: isVietnameseCapableFont(raw.font) ? raw.font!.trim() : DEFAULT_PALETTE_FONT,
+    font: isPaletteFont(raw.font) ? raw.font!.trim() : DEFAULT_PALETTE_FONT,
   };
 }
 

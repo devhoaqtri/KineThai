@@ -47,6 +47,8 @@ export {
   ensureReadablePalette,
   generatePalette,
   HANDWRITING_FONTS,
+  PALETTE_FONTS,
+  isPaletteFont,
   hslHex,
   liftBackgroundUntilPaintable,
   normalizePalette,

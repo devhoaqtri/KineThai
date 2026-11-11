@@ -15,7 +15,7 @@ import {
   auditPalette,
   describePaletteCheck,
   ensureReadablePalette,
-  FONTS,
+  PALETTE_FONTS,
   generatePalette,
   PALETTE_SCHEMES,
   paletteBackdropColors,
@@ -344,7 +344,7 @@ export function PaletteManagerPage() {
                     onChange={(event) => patch({ font: event.target.value })}
                     className="rounded border border-border bg-background px-2 py-1 text-xs"
                   >
-                    {FONTS.map((font) => (
+                    {PALETTE_FONTS.map((font) => (
                       <option key={font} value={font}>
                         {font}
                       </option>

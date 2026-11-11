@@ -21,7 +21,7 @@ import {
   describePaletteCheck,
   normalizePalette,
   PALETTE_SCHEMES,
-  VIETNAMESE_SAFE_FONTS,
+  PALETTE_FONTS,
   type Palette,
   type PaletteScheme,
 } from "@/features/canvas/palettes";
@@ -59,10 +59,10 @@ const paletteSchema = z.object({
   accentA: hexColor,
   accentB: hexColor,
   onAccent: hexColor,
-  // Only a Vietnamese-capable face is accepted: the feed paints Vietnamese clue text
-  // in the theme font, so an accent-less family must be rejected, not silently healed.
-  font: z.enum(VIETNAMESE_SAFE_FONTS as unknown as [string, ...string[]], {
-    message: `Pick a font with Vietnamese diacritics support (${VIETNAMESE_SAFE_FONTS.join(", ")})`,
+  // Only a palette face is accepted: the feed paints Vietnamese clue text in the theme
+  // font, so an accent-less family (or the monospace one) is rejected, not silently healed.
+  font: z.enum(PALETTE_FONTS as unknown as [string, ...string[]], {
+    message: `Pick a feed font with Vietnamese diacritics support (${PALETTE_FONTS.join(", ")})`,
   }),
 });
 

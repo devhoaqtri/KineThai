@@ -17,7 +17,7 @@ import {
   auditPalette,
   describePaletteCheck,
   ensureReadablePalette,
-  isVietnameseCapableFont,
+  isPaletteFont,
   normalizePalette,
   type Palette,
 } from "../src/features/canvas/palettes.ts";
@@ -41,9 +41,9 @@ try {
     // replaces an accent-less family with a safe default, so the feed would render
     // fine while /admin/palettes showed a font the collection never actually paints.
     // Fail loudly instead, so the JSON is corrected at the source.
-    if (!isVietnameseCapableFont(raw.font)) {
+    if (!isPaletteFont(raw.font)) {
       failures.push(
-        `${raw.id}: font "${raw.font}" has no Vietnamese diacritics subset — the feed paints Vietnamese clue text in it and would show broken accents`,
+        `${raw.id}: font "${raw.font}" is not a palette font (PALETTE_FONTS): either it has no Vietnamese diacritics subset, or it is monospace, which squeezes Vietnamese letters on a card`,
       );
     }
     const palette = normalizePalette(raw);
