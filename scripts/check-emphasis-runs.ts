@@ -467,11 +467,12 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
   check(`a Han run can still be given one (${reached} of ${hanWords.length * 12})`, reached > 0);
 }
 
-// ── Shipped decks: a clue page glows one marked, connected word, or nothing.
+// ── Shipped decks: a clue page glows one marked, connected word, one pivot, or nothing.
 // Every clue page is put through the real selection function, exactly as WordSequenceText
 // calls it. What it draws must be the deck's own `/…/` mark, written as exactly two
-// syllables connected with `_` or `=`, holding no bare conjunction. A page carrying such a
-// mark may not stay dark; a page carrying none must. This restates
+// syllables connected with `_` or `=`, holding no bare conjunction, or a lone pivot
+// syllable (không, rất, …) that no join in the field ties to another syllable. A page
+// carrying such a mark may not stay dark; a page carrying none must. This restates
 // vocabulary/lib/highlight-gate.ts without importing it, so a broken gate cannot vouch for
 // itself.
 {
@@ -487,7 +488,7 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
           : [],
     );
   // A ratchet: lower it as decks improve, never raise it to let a deck through.
-  const MAX_DARK_CLUE_PAGES = 3568;
+  const MAX_DARK_CLUE_PAGES = 3409;
   const CONJUNCTIONS = new Set(["và", "hoặc", "nhưng"]);
   const CLUE_FIELD: Record<string, string> = {
     lead: "leadVi",
@@ -496,6 +497,31 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
   };
   const CLUE_STAGE = /^(lead|definition|anticipation)-\d+$/;
   const CONNECTED_PAIR = /^[^\s_=]+[_=][^\s_=]+$/;
+  // The syllables that may glow alone, restated from highlight-gate PIVOT_SYLLABLES.
+  const PIVOTS = new Set([
+    "không",
+    "chẳng",
+    "chả",
+    "chưa",
+    "đừng",
+    "chớ",
+    "rất",
+    "quá",
+    "lắm",
+    "hơi",
+    "khá",
+    "chỉ",
+    "vẫn",
+  ]);
+  /** Every syllable the field ties to another with `_` or `=`. */
+  const joinedIn = (field: string) =>
+    new Set(
+      field
+        .replace(/[/|]/g, " ")
+        .split(/\s+/)
+        .filter((token) => /[_=]/.test(token))
+        .flatMap(keysOf),
+    );
   const keysOf = (phrase: string) => phrase.split(/[\s_=]+/).map(getCompoundTokenKey);
   const hasRun = (haystack: string[], needle: string[]) =>
     haystack.some((_, start) => needle.every((key, offset) => haystack[start + offset] === key));
@@ -513,9 +539,17 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
         pages += 1;
         const tokens = getWords(stage.text);
         const pageKeys = tokens.map(getCompoundTokenKey);
-        const eligible = [...String(entry[CLUE_FIELD[clue]!] ?? "").matchAll(/\/([^/]+)\//g)]
+        const field = String(entry[CLUE_FIELD[clue]!] ?? "");
+        const joined = joinedIn(field);
+        const eligible = [...field.matchAll(/\/([^/]+)\//g)]
           .map((match) => match[1]!.trim())
-          .filter((mark) => CONNECTED_PAIR.test(mark))
+          .filter(
+            (mark) =>
+              CONNECTED_PAIR.test(mark) ||
+              (!/[\s_=]/.test(mark) &&
+                PIVOTS.has(getCompoundTokenKey(mark)) &&
+                !joined.has(getCompoundTokenKey(mark))),
+          )
           .map(keysOf)
           .filter((keys) => hasRun(pageKeys, keys))
           .filter((keys) => !keys.some((key) => CONJUNCTIONS.has(key)));
@@ -532,8 +566,12 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
         drawn += 1;
         const keys = picked.map((index) => pageKeys[index] ?? "");
         const label = `${where}: "${keys.join(" ")}"`;
-        if (keys.length !== 2 || picked[1] !== picked[0]! + 1) {
-          bad.push(`${label} — not exactly one two-syllable word`);
+        if (
+          keys.length === 1
+            ? !PIVOTS.has(keys[0]!)
+            : keys.length !== 2 || picked[1] !== picked[0]! + 1
+        ) {
+          bad.push(`${label} — not exactly one two-syllable word or one pivot syllable`);
         } else if (!eligible.some((mark) => mark.join(" ") === keys.join(" "))) {
           bad.push(`${label} — not a connected /mark/ the deck wrote on this page`);
         }
@@ -557,14 +595,23 @@ function pageLayoutKeys(words: string[], emphasized: Set<number>, dataEmphasis?:
 // mark on a filler or weak pair (`/lần_thử/`, `/xem_lại/`). A ratchet: lower, never raise.
 {
   const { classifyField, FIELDS } = await import("./lib/highlight-scan");
-  const packDir = join(dirname(fileURLToPath(import.meta.url)), "../src/features/vocabulary/data/packs");
+  const packDir = join(
+    dirname(fileURLToPath(import.meta.url)),
+    "../src/features/vocabulary/data/packs",
+  );
   const MAX_WEAK_EN_FIELDS = 0;
   let weak = 0;
   for (const f of readdirSync(packDir).filter((n) => /^en-.*\.json$/.test(n))) {
-    for (const w of JSON.parse(readFileSync(join(packDir, f), "utf8")).words as Record<string, unknown>[])
+    for (const w of JSON.parse(readFileSync(join(packDir, f), "utf8")).words as Record<
+      string,
+      unknown
+    >[])
       for (const field of FIELDS) if (classifyField(String(w[field] ?? "")) !== "ok") weak += 1;
   }
-  check(`English clue fields with a missing or weak mark (${weak} of at most ${MAX_WEAK_EN_FIELDS})`, weak <= MAX_WEAK_EN_FIELDS);
+  check(
+    `English clue fields with a missing or weak mark (${weak} of at most ${MAX_WEAK_EN_FIELDS})`,
+    weak <= MAX_WEAK_EN_FIELDS,
+  );
 }
 
 console.log(checks.join("\n"));

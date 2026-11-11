@@ -17,6 +17,9 @@ const BAD_SECOND = new Set(["nhất", "hơn", "nào", "đâu", "gì", "khác", "
 // is the one number allowed: easy's lead turns on fifteen minutes done in five.
 const WHOLE_OK = new Set(["một mình", "không khí", "nhận ra", "xảy ra", "ngược lại", "còn lại", "ba lô", "duy nhất", "năm học", "con người", "cái đẹp", "năm phút"]);
 
+/** Restated from vocabulary lib/highlight-gate PIVOT_SYLLABLES, so the grader stands apart from the gate. */
+const PIVOTS = new Set(["không", "chẳng", "chả", "chưa", "đừng", "chớ", "rất", "quá", "lắm", "hơi", "khá", "chỉ", "vẫn"]);
+
 export type Verdict = "ok" | "no-mark" | "one-syllable" | "too-long" | "two-marks" | "filler" | "weak-pair";
 
 export function classifyField(text: string): Verdict {
@@ -24,7 +27,9 @@ export function classifyField(text: string): Verdict {
   if (marks.length === 0) return "no-mark";
   if (marks.length > 1) return "two-marks";
   const parts = marks[0].split(/[_=\s]+/).filter(Boolean);
-  if (parts.length === 1) return "one-syllable";
+  // A lone pivot (không, rất, …) turns the sentence, so it may glow alone
+  // (vocabulary lib/highlight-gate PIVOT_SYLLABLES); any other lone syllable is weak.
+  if (parts.length === 1) return PIVOTS.has(parts[0].toLowerCase()) ? "ok" : "one-syllable";
   if (parts.length > 2 || !/^[^\s_=]+[_=][^\s_=]+$/.test(marks[0])) return "too-long";
   const pair = parts.join(" ").toLowerCase();
   if (FILLER_MARKS.has(pair)) return "filler";

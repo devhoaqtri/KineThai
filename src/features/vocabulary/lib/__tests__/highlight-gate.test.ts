@@ -17,8 +17,20 @@ describe("gateHighlight", () => {
   it("never picks a joined word nobody marked", () =>
     expect(gateHighlight(page, undefined, ["ba lô", "quan trọng"])).toEqual([]));
 
-  it("refuses a lone-syllable mark, even with joined words beside it", () =>
+  it("refuses a lone-syllable mark that is not a pivot, even with joined words beside it", () =>
     expect(gateHighlight(page, ["đựng"], ["ba lô"])).toEqual([]));
+
+  it("lets a pivot syllable glow alone", () =>
+    expect(gateHighlight(page, ["rất"], ["ba lô", "quan trọng"])).toEqual(["rất"]));
+
+  it("reads a capitalised pivot at the start of a sentence", () =>
+    expect(gateHighlight("Không ai đến cả.", ["Không"], undefined)).toEqual(["không"]));
+
+  it("refuses a pivot that is half of a joined word", () =>
+    expect(gateHighlight("Hít thở không khí trong lành.", ["không"], ["không khí"])).toEqual([]));
+
+  it("ignores a pivot that is not on this page", () =>
+    expect(gateHighlight("Trang này khác.", ["không"], undefined)).toEqual([]));
 
   it("does not grow a mark on half a joined word", () =>
     expect(gateHighlight(page, ["trọng"], ["quan trọng"])).toEqual([]));
@@ -126,4 +138,17 @@ describe("the gate in the feed", () => {
     it(`${name}: the composed letters clue keeps its own highlight`, () =>
       expect(stage("letters").dataEmphasis?.length ?? 1).toBeGreaterThan(0));
   }
+});
+
+describe("a pivot in the feed", () => {
+  const word = makeWord({ leadVi: "Mưa to thế mà nó /vẫn/ đi học=đúng giờ." });
+  const stages = buildStages(withWordJoiners(makeCatalog([word])).words[0]!, "detective");
+  const lead = stages.find((item) => item.id.startsWith("lead"))!;
+
+  it("glows that one syllable and nothing beside it", () => {
+    const tokens = getWords(lead.text);
+    const lit = [...getEmphasizedWordIndexes(tokens, lead.dataEmphasis, lead.boundPhrases)];
+    expect(lead.dataEmphasis).toEqual(["vẫn"]);
+    expect(lit.map((index) => tokens[index])).toEqual(["vẫn"]);
+  });
 });

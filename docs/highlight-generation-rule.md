@@ -7,7 +7,7 @@
 ## Why it is this strict
 
 The reader glows a word only when the deck wrote it inside `/…/`, as two connected
-syllables (`lib/highlight-gate.ts`). A connector alone proves nothing: `_` also stops a line
+syllables, or as one pivot syllable standing alone (Rule 1b) (`lib/highlight-gate.ts`). A connector alone proves nothing: `_` also stops a line
 break, so the decks hold joins like `cả_lớp` that are not words. The app never picks a word
 for you. A field without a valid mark shows no highlight.
 
@@ -35,6 +35,17 @@ Every defVi, leadVi and anticipateVi contains exactly one mark, written inline a
 - No field may have zero marks. No field may have two.
 - Each clue field is one sentence.
 
+RULE 1b. A PIVOT MAY BE MARKED ALONE
+One syllable may be the mark, written /không/, only when it is the word that turns or scales
+the whole sentence, so the clue's point is that syllable:
+  không, chẳng, chả, chưa, đừng, chớ   (negation, prohibition)
+  rất, quá, lắm, hơi, khá              (degree)
+  chỉ, vẫn                             (only, still)
+- It stands alone: never /không/ inside không_khí, never đã=/không/.
+- Mark a pivot only when it IS the point: "Mưa to thế mà nó /vẫn/ đi học." Otherwise mark the
+  word it acts on, by Rules 1 to 4.
+- No other single syllable may be marked.
+
 RULE 2. THE MARKED WORD MUST PASS ALL FOUR TESTS
 1. DICTIONARY: it is a headword in a Vietnamese dictionary, on its own.
 2. INSEPARABLE: no word can sit between the two syllables without breaking the meaning.
@@ -44,7 +55,7 @@ RULE 2. THE MARKED WORD MUST PASS ALL FOUR TESTS
 If you hesitate on any test, it fails. Choose another word.
 
 RULE 3. NEVER MARK THESE
-- One syllable: /hỏi/, /phanh/, /gắt/
+- One syllable: /hỏi/, /phanh/, /gắt/ (only a Rule 1b pivot may stand alone)
 - Two words with a space: /nắng gắt/
 - Three or more syllables, even real words: /thời_khóa_biểu/, /ký_túc_xá/
 - Number + anything: ba_lần, năm_phút, mười_tám, hai_bên
