@@ -13,7 +13,9 @@ const BAD_FIRST = new Set([
   "từng", "một", "hai", "ba", "bốn", "năm", "con", "cái", "chiếc", "cuốn", "tờ", "quả",
 ]);
 const BAD_SECOND = new Set(["nhất", "hơn", "nào", "đâu", "gì", "khác", "ra", "lại", "xong", "đi"]);
-const WHOLE_OK = new Set(["một mình", "không khí", "nhận ra", "xảy ra", "ngược lại", "còn lại", "ba lô", "duy nhất", "năm học", "con người", "cái đẹp"]);
+// Pairs that look weak by their first or second syllable but carry the point. "năm phút"
+// is the one number allowed: easy's lead turns on fifteen minutes done in five.
+const WHOLE_OK = new Set(["một mình", "không khí", "nhận ra", "xảy ra", "ngược lại", "còn lại", "ba lô", "duy nhất", "năm học", "con người", "cái đẹp", "năm phút"]);
 
 export type Verdict = "ok" | "no-mark" | "one-syllable" | "too-long" | "two-marks" | "filler" | "weak-pair";
 
