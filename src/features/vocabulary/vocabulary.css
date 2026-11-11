@@ -5195,6 +5195,9 @@
   font-size: clamp(22px, 6vw, 30px);
   font-weight: 800;
   letter-spacing: -0.02em;
+  /* On a narrow phone the title wraps; balance it ("Chọn nhóm / từ vựng phù hợp", the
+     no-break space keeping từ vựng whole) instead of leaving one word alone. */
+  text-wrap: balance;
 }
 .vocab-onboard-head p:last-child {
   margin: 0 auto;
@@ -5202,6 +5205,10 @@
   font-size: 13px;
   line-height: 1.5;
   color: var(--shell-text-mute);
+}
+/* Each sentence of the hint starts its own line. */
+.vocab-onboard-hint-line {
+  display: block;
 }
 .vocab-onboard-gauge {
   position: relative;

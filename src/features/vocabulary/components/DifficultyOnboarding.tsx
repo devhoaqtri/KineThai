@@ -243,8 +243,14 @@ export function DifficultyOnboarding({
         <p className="vocab-eyebrow">
           {afterDemo ? "Giờ bạn đã biết cách chơi" : "Bắt đầu từ đâu?"}
         </p>
-        <h1 id="vocab-onboard-title">Chọn nhóm từ bạn muốn học và ôn</h1>
-        <p>Kéo nút trượt để xem mỗi mức trông thế nào. Đổi lại lúc nào cũng được.</p>
+        <h1 id="vocab-onboard-title">Chọn nhóm từ{"\u00a0"}vựng phù hợp</h1>
+        {/* One sentence per line, so the two lines sit balanced under the title. */}
+        <p>
+          <span className="vocab-onboard-hint-line">
+            Kéo nút trượt để xem mỗi mức trông thế nào.
+          </span>
+          <span className="vocab-onboard-hint-line">Có thể đổi lại sau.</span>
+        </p>
       </header>
 
       <div className="vocab-onboard-gauge">
