@@ -5579,6 +5579,52 @@
     font-size: 18px;
   }
 }
+/* Short phones in portrait (an iPhone SE is 667px tall, less inside Safari): each rung
+   collapses to ONE line, its CEFR chip standing where the emoji was and the word count
+   dropped, so the ten names stay apart instead of two stacked lines crowding the next
+   rung. 700px, not the 640px above, because the SE as an installed app sits between.
+   Landscape has its own layout (data-landscape) and is left alone. */
+@media (max-height: 700px) {
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-name {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-meta {
+    order: -1;
+  }
+  .vocab-onboard:not([data-landscape]) :is(.vocab-onboard-emoji, .vocab-onboard-count) {
+    display: none;
+  }
+}
+/* The smallest of those (320px wide): the name column is 104px, and "văn chương" with its
+   chip needs 121px. Give it room evenly from both sides, so the rail stays centred: a
+   narrower page margin and row gap (column 119px), and a tighter chip and name. Measured
+   to fit with the longest name selected. */
+@media (max-height: 700px) and (max-width: 359px) {
+  .vocab-onboard:not([data-landscape]) {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-rung {
+    column-gap: 5px;
+  }
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-name {
+    gap: 4px;
+  }
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-band {
+    padding: 0 4px;
+    font-size: 8px;
+    letter-spacing: 0.02em;
+  }
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-label {
+    font-size: 12px;
+  }
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-rung[data-on] .vocab-onboard-label {
+    font-size: 14px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .vocab-onboard-rung .vocab-onboard-sample,
   .vocab-onboard-knob,

@@ -267,11 +267,14 @@ export function DifficultyOnboarding({
             >
               <span className="vocab-onboard-name">
                 <span className="vocab-onboard-label">
-                  <span aria-hidden="true">{rung.track.emoji}</span> {rung.track.label}
+                  <span className="vocab-onboard-emoji" aria-hidden="true">
+                    {rung.track.emoji}{" "}
+                  </span>
+                  {rung.track.label}
                 </span>
                 <span className="vocab-onboard-meta">
                   <span className="vocab-onboard-band">{rung.band}</span>
-                  {`${rung.count.toLocaleString("vi-VN")} từ`}
+                  <span className="vocab-onboard-count">{`${rung.count.toLocaleString("vi-VN")} từ`}</span>
                 </span>
               </span>
               <span className="vocab-onboard-tick" aria-hidden="true" />
