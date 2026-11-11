@@ -1253,6 +1253,69 @@
       "text": "Làm được | hoặc xảy ra được, | không /hão_huyền/.",
       "verdict": "ok",
       "note": "The fix for the bất khả clue: a whole sentence; the gap is the heuristic reading được … hoặc."
+    },
+    {
+      "id": "vi-august",
+      "field": "defVi",
+      "text": "Tháng /thứ_tám/ | trong năm, | giữa mùa hè.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
+    },
+    {
+      "id": "vi-front",
+      "field": "leadVi",
+      "text": "Lên giảng_đường sớm, chị | giành /hàng_ghế/ đầu.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
+    },
+    {
+      "id": "vi-nice",
+      "field": "defVi",
+      "text": "Dễ thương | khiến người khác thấy /thoải_mái/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
+    },
+    {
+      "id": "vi-programme",
+      "field": "defVi",
+      "text": "Một /tiết_mục/ | phát trên ti_vi hay đài theo giờ.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
+    },
+    {
+      "id": "vi-song",
+      "field": "defVi",
+      "text": "/Lời_ca/ | đi cùng giai_điệu | để cất lên.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
+    },
+    {
+      "id": "vi-degree",
+      "field": "defVi",
+      "text": "Giấy /chứng_nhận/ | học xong | một khóa đại_học.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
+    },
+    {
+      "id": "vi-engaged",
+      "field": "leadVi",
+      "text": "Tối qua, | /anh_họ/ em | trao nhẫn trước cả nhà.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
+    },
+    {
+      "id": "vi-leap",
+      "field": "leadVi",
+      "text": "Thi /nhảy_xa/, | bạn bật qua vạch bốn mét.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
+    },
+    {
+      "id": "vi-elapse",
+      "field": "defVi",
+      "text": "Thời gian | qua đi dần mà không ai /để_ý/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new ko bigrams (Korean release rebuild, 2026-11-11)."
     }
   ]
 }

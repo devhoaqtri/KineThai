@@ -1,6 +1,6 @@
 {
-  "revision": "0c3c7b8d2d380af29392caa7",
-  "name": "TOPIK K101–K105 + 16 packs · demo",
+  "revision": "158b9f86d4beae87fb38fe90",
+  "name": "TOPIK K101–K109 + 5 packs · demo",
   "count": 10,
   "topics": [
     "attention",
@@ -57,7 +57,7 @@
       "grammar": {
         "hanja": "安寧",
         "hanViet": "an ninh",
-        "tipVi": "thân_mật, nói với bạn_bè hoặc người nhỏ_tuổi hơn"
+        "tipVi": "thân_mật, nói với bạn_bè hoặc người=nhỏ_tuổi hơn"
       },
       "shareCode": "S4T"
     },
@@ -94,7 +94,8 @@
             "합쇼체": "반갑습니다"
           }
         }
-      }
+      },
+      "shareCode": "047"
     },
     {
       "id": "cheoeum-a946d9",
@@ -118,7 +119,8 @@
         }
       ],
       "chars": 2,
-      "initial": "처"
+      "initial": "처",
+      "shareCode": "HJ6"
     },
     {
       "id": "sijak-5cc146",
@@ -146,7 +148,8 @@
       "grammar": {
         "hanja": "始作",
         "hanViet": "thủy tác"
-      }
+      },
+      "shareCode": "JW5"
     },
     {
       "id": "sae-4ca67b",
@@ -170,7 +173,8 @@
         }
       ],
       "chars": 1,
-      "initial": "새"
+      "initial": "새",
+      "shareCode": "CPW"
     },
     {
       "id": "baeuda-ec06fc",
@@ -204,7 +208,8 @@
             "합쇼체": "배웁니다"
           }
         }
-      }
+      },
+      "shareCode": "QBY"
     },
     {
       "id": "gongbu-66ff42",
@@ -231,7 +236,8 @@
       "grammar": {
         "hanja": "工夫",
         "hanViet": "công phu"
-      }
+      },
+      "shareCode": "KKW"
     },
     {
       "id": "junbi-991cb3",
@@ -259,7 +265,8 @@
       "grammar": {
         "hanja": "準備",
         "hanViet": "chuẩn bị"
-      }
+      },
+      "shareCode": "A07"
     },
     {
       "id": "swipda-2cca8b",
@@ -293,7 +300,8 @@
             "합쇼체": "쉽습니다"
           }
         }
-      }
+      },
+      "shareCode": "DRR"
     },
     {
       "id": "yeolda-105d5e",
@@ -327,7 +335,8 @@
             "합쇼체": "엽니다"
           }
         }
-      }
+      },
+      "shareCode": "31H"
     }
   ]
 }
