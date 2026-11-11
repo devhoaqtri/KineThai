@@ -336,9 +336,19 @@ export function DifficultyOnboarding({
           type="button"
           className="vocab-onboard-go"
           disabled={!ready}
+          aria-label={ready ? `Bắt đầu với “${current.track.label}”` : undefined}
           onClick={() => pick(current.track.id)}
         >
-          {ready ? `Bắt đầu với “${current.track.label}”` : "Đang tải…"}
+          {ready ? (
+            <>
+              {/* One line always: a narrow button shows the short wording instead of
+                  wrapping (container query in vocabulary.css). */}
+              <span className="vocab-onboard-go-long">Bắt đầu với “{current.track.label}”</span>
+              <span className="vocab-onboard-go-short">Học “{current.track.label}”</span>
+            </>
+          ) : (
+            "Đang tải…"
+          )}
         </button>
       </footer>
     </section>

@@ -5483,7 +5483,9 @@
    than the start button used to be alone. */
 .vocab-onboard-foot {
   display: flex;
-  align-items: stretch;
+  /* Not stretch: each button keeps its own fixed height, so a long label can never make
+     the row (and "Tất cả" with it) grow into a tall pill. */
+  align-items: center;
   justify-content: center;
   gap: 10px;
   width: min(420px, 100%);
@@ -5494,8 +5496,16 @@
 .vocab-onboard-go {
   flex: 1;
   min-width: 0;
-  min-height: 50px;
-  padding: 12px 24px;
+  /* Always one line at one height. The full "Bắt đầu với “văn chương”" needs ~190px of
+     text (15px bold, the longest level name); a button with less room than that inside
+     its padding switches to the short "Học “…”" (at most ~137px) rather than wrapping,
+     and an ellipsis is the last guard against a fallback font. */
+  height: 50px;
+  padding: 0 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  container: onboard-go / inline-size;
   border-radius: 40px;
   background: var(--rung);
   color: #14101f;
@@ -5508,14 +5518,26 @@
 .vocab-onboard-go:active {
   transform: scale(0.97);
 }
+.vocab-onboard-go-short {
+  display: none;
+}
+/* The container is the button's content box (padding excluded): under 192px of text. */
+@container onboard-go (max-width: 191px) {
+  .vocab-onboard-go-long {
+    display: none;
+  }
+  .vocab-onboard-go-short {
+    display: inline;
+  }
+}
 .vocab-onboard-go:disabled {
   background: var(--shell-hover);
   color: var(--shell-text-mute);
 }
 .vocab-onboard-all {
   flex: none;
-  min-height: 50px;
-  padding: 12px 20px;
+  height: 50px;
+  padding: 0 20px;
   border: 1px solid var(--shell-line-strong);
   border-radius: 40px;
   background: color-mix(in oklab, var(--shell-text) 6%, transparent);
@@ -5809,13 +5831,13 @@
     width: auto;
     flex: 1;
     max-width: 240px;
-    min-height: 38px;
+    height: 38px;
     font-size: 13px;
-    padding: 8px 14px;
+    padding: 0 14px;
   }
   .vocab-onboard[data-landscape] .vocab-onboard-all {
-    min-height: 38px;
-    padding: 8px 14px;
+    height: 38px;
+    padding: 0 14px;
     font-size: 13px;
   }
 }
