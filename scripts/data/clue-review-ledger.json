@@ -1127,6 +1127,132 @@
       "text": "Thăm bảo_tàng | /khủng_long/, | em hỏi | loài nào còn.",
       "verdict": "broken",
       "note": "sống cut: 'loài nào còn' trails off. Rewritten in the pack 2026-11-07 as 'Ở bảo_tàng | /khủng_long/, | em hỏi | giờ còn loài nào.'"
+    },
+    {
+      "id": "vi-away",
+      "field": "anticipateVi",
+      "text": "Ba trăm cây mà chưa /nhớ_nhà/?",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-different",
+      "field": "defVi",
+      "text": "Không_giống | về /hình_dáng/, tính_chất hay cách làm.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-possible",
+      "field": "defVi",
+      "text": "Làm được | hoặc xảy ra được, | không /bất_khả/.",
+      "verdict": "broken",
+      "note": "thi cut from bất khả thi to hide khả thi; không bất khả is not a phrase. Fixed in the pack."
+    },
+    {
+      "id": "vi-there",
+      "field": "anticipateVi",
+      "text": "Chỉ tay một cái, /hiểu_ý/ liền?",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-trousers",
+      "field": "anticipateVi",
+      "text": "Hai ống so_le, ai /để_ý/?",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-plate",
+      "field": "defVi",
+      "text": "Đồ dẹt và tròn | dùng để bày /thức_ăn/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-quantity",
+      "field": "defVi",
+      "text": "Mức nhiều hay ít | đếm hoặc /đo_lường/ | được của=thứ gì.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-recession",
+      "field": "defVi",
+      "text": "Thời kỳ | kinh tế | /đi_xuống/, ít việc.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-regulation",
+      "field": "defVi",
+      "text": "Luật lệ | do tổ chức | đặt ra để /tuân_theo/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-breakthrough",
+      "field": "defVi",
+      "text": "/Phát_hiện/ | quan trọng | giúp vượt qua một khó khăn lớn.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-entity",
+      "field": "defVi",
+      "text": "Một thứ | tồn tại | riêng biệt và /độc_lập/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-halfway",
+      "field": "leadVi",
+      "text": "Leo /lưng_chừng/ | núi, mình đã=đòi ngồi nghỉ.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-memoir",
+      "field": "leadVi",
+      "text": "Bạn đọc | sách ông /bộ_đội/ cũ viết về thời chiến.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-offspring",
+      "field": "anticipateVi",
+      "text": "Mình đi tìm người_nuôi /phù_hợp/?",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-passing",
+      "field": "defVi",
+      "text": "Việc thời gian | cứ /dần_dần/ trôi đi qua.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-turnover",
+      "field": "defVi",
+      "text": "Tổng số tiền | /cửa_hàng/ | bán được trong kỳ.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-developer",
+      "field": "leadVi",
+      "text": "Học /lập_trình/ | hai năm, em làm app đặt bàn.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new zh bigrams (HSK7-9 16–25 import)."
+    },
+    {
+      "id": "vi-possible",
+      "field": "defVi",
+      "text": "Làm được | hoặc xảy ra được, | không /hão_huyền/.",
+      "verdict": "ok",
+      "note": "The fix for the bất khả clue: a whole sentence; the gap is the heuristic reading được … hoặc."
     }
   ]
 }

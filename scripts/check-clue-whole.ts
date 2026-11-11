@@ -33,7 +33,7 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 // A ratchet: lower it as decks improve, never raise it to let a deck through.
-const MAX_UNREVIEWED_CLUE_GAPS = 329;
+const MAX_UNREVIEWED_CLUE_GAPS = 325;
 // A ratchet: the ledger's broken clues still shipped. Lower it with every fix.
 const MAX_KNOWN_BROKEN_CLUES = 3;
 
