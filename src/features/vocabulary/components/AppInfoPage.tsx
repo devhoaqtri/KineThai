@@ -11,25 +11,8 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { isLocaleShown, siteTitle, type TargetLocale } from "../lib/target-language";
+import { siteTitle, type TargetLocale } from "../lib/target-language";
 import "../vocabulary.css";
-
-/**
- * Every deck the app serves, in the reader's language. A language withheld from readers
- * (HIDDEN_LOCALES) is left off, as it is in the language drawer: its address only serves
- * English, so listing it would promise a deck nobody can open.
- */
-const LANGUAGES: { locale: TargetLocale; flag: string; name: string }[] = (
-  [
-    { locale: "en", flag: "🇬🇧", name: "Anh" },
-    { locale: "zh", flag: "🇨🇳", name: "Hoa" },
-    { locale: "ko", flag: "🇰🇷", name: "Hàn" },
-    { locale: "ja", flag: "🇯🇵", name: "Nhật" },
-    { locale: "fr", flag: "🇫🇷", name: "Pháp" },
-    { locale: "de", flag: "🇩🇪", name: "Đức" },
-    { locale: "es", flag: "🇪🇸", name: "Tây Ban Nha" },
-  ] as const
-).filter((language) => isLocaleShown(language.locale));
 
 /** The highlighted words of a line; the line's tone, else its section's, picks the colour. */
 function Hl({ children }: { children: ReactNode }) {
@@ -75,6 +58,16 @@ const SECTIONS: Section[] = [
         text: (
           <>
             Thỉnh thoảng bạn sẽ gặp <Hl>lỗi nhỏ</Hl> — mong bạn thông cảm nhé.
+          </>
+        ),
+      },
+      {
+        emoji: "📊",
+        tone: "citrus",
+        text: (
+          <>
+            Số đếm trên các emoji hiện chỉ là <Hl>số minh hoạ</Hl>, sẽ chuyển sang{" "}
+            <Hl>thống kê thật</Hl> vào thời điểm thích hợp.
           </>
         ),
       },
@@ -143,10 +136,10 @@ const SECTIONS: Section[] = [
 ];
 
 /**
- * The info itself — the app's name and languages, the quick facts, the call for
+ * The info itself — the app's name, the quick facts, the call for
  * cooperation — without a page around it. The Settings sheet drops it down in place of its
  * own rows, and the standalone page wraps it in a header; both read the same copy.
- * @param props.locale The address's deck locale; its language is marked among the rest.
+ * @param props.locale The address's deck locale; it names the site in the hero.
  * @returns The info content.
  */
 export function AppInfoContent({ locale = "en" }: { locale?: TargetLocale }) {
@@ -163,17 +156,6 @@ export function AppInfoContent({ locale = "en" }: { locale?: TargetLocale }) {
         <span className="vocab-info-badge" data-tone="citrus">
           🧪 Bản thử nghiệm
         </span>
-        <ul className="vocab-info-langs" aria-label="Các ngôn ngữ trên chayLá">
-          {LANGUAGES.map((language) => (
-            <li
-              key={language.locale}
-              data-current={language.locale === locale || undefined}
-              aria-current={language.locale === locale ? "true" : undefined}
-            >
-              <span aria-hidden="true">{language.flag}</span> {language.name}
-            </li>
-          ))}
-        </ul>
       </section>
 
       {SECTIONS.map((section) => (
@@ -214,7 +196,7 @@ export function AppInfoContent({ locale = "en" }: { locale?: TargetLocale }) {
 /**
  * Render the app info page for the visited address: the same content as the Settings
  * sheet's drop-down, kept as a page so a shared /feed/about link still opens.
- * @param props.locale The address's deck locale; its language is marked among the rest.
+ * @param props.locale The address's deck locale; it names the site in the hero.
  * @returns Public info page.
  */
 export function AppInfoPage({ locale = "en" }: { locale?: TargetLocale }) {

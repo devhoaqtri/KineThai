@@ -9518,7 +9518,9 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 2px;
+  /* Room between the title and its tags, so the tags read as a caption, not a second
+     line of the title. */
+  gap: 5px;
   min-width: 0;
 }
 .vocab-info-row-text strong {
@@ -9530,9 +9532,10 @@
 .vocab-info-row-text small {
   display: flex;
   flex-wrap: wrap;
-  gap: 1px 8px;
+  gap: 4px 8px;
   color: var(--shell-text-mute);
   font-size: 11px;
+  line-height: 1.45;
 }
 .vocab-info-row-text small > span {
   white-space: nowrap;
@@ -9722,27 +9725,6 @@ button.vocab-info-row[aria-expanded="true"] {
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-.vocab-info-langs {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  margin: 6px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.vocab-info-langs li {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--shell-hover);
-  color: var(--shell-text-soft);
-  font-size: 12px;
-  font-weight: 600;
-}
-.vocab-info-langs li[data-current] {
-  background: var(--mint);
-  color: var(--shell-on-text);
 }
 .vocab-info-section {
   padding: 16px 16px 6px;
