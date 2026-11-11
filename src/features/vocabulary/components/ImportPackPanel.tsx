@@ -13,6 +13,7 @@ import { Download, Eye, FileText, FileUp, Link2, Sparkles } from "lucide-react";
 import {
   addCustomPack,
   loadCustomPackFromUrl,
+  packSizeError,
   parseCustomPack,
   type CustomPack,
 } from "../lib/custom-pack";
@@ -106,7 +107,12 @@ export function ImportPackPanel() {
               const picked = e.target.files?.[0];
               e.target.value = "";
               if (!picked) return;
-              void run(async () => parseCustomPack(await picked.text(), picked.name));
+              // A file over the limit is refused before it is read into memory.
+              void run(async () => {
+                const tooBig = packSizeError(picked.size);
+                if (tooBig) throw new Error(tooBig);
+                return parseCustomPack(await picked.text(), picked.name);
+              });
             }}
           />
           <form

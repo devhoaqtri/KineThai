@@ -13,7 +13,8 @@
  *
  * Exports: CustomPack, PackLibrary, parseCustomPack, loadCustomPackFromUrl, readPackLibrary,
  *   readCustomPack, addCustomPack, activateCustomPack, writeCustomPack, clearCustomPack,
- *   removeCustomPack, readCustomPage, packLevelCounts, CUSTOM_PACK_EVENT, CUSTOM_PACKS_EVENT
+ *   removeCustomPack, readCustomPage, packLevelCounts, CUSTOM_PACK_EVENT, CUSTOM_PACKS_EVENT,
+ *   MAX_PACK_BYTES, packSizeError
  * Depends on: ./crawler-shared (markPhrase), ./schema (normalizeDeck), ./word-joiner, ./paging
  */
 import { markPhrase } from "./crawler-shared";
@@ -29,8 +30,33 @@ const LIBRARY_KEY = "vocab.customPacks.v2";
 export const CUSTOM_PACK_EVENT = "vocab-custom-pack-change";
 /** The list of packs changed in any way, the active one included. */
 export const CUSTOM_PACKS_EVENT = "vocab-custom-packs-change";
-/** Same ceiling as the CLI importer would choke on in localStorage. */
-const MAX_BYTES = 4 * 1024 * 1024;
+/**
+ * The largest pack file a reader may import, in bytes as a file manager shows them. Packs
+ * live in localStorage (about 5 MB a site, shared with everything else the app keeps), and
+ * 4 MB of word data is already about 5,800 cards in the app's own format (en-a1.json is
+ * 530 KB for 778 words), so a bigger file is a deck to split, not a limit to raise.
+ */
+export const MAX_PACK_BYTES = 4 * 1024 * 1024;
+
+/**
+ * The reader-facing refusal for a pack over MAX_PACK_BYTES, or null when it fits. Three
+ * short lines (the import panel shows up to four): the size against the limit, why the
+ * limit is roomy, and what to do.
+ * @param bytes - the file's size in bytes
+ * @pure true
+ */
+export function packSizeError(bytes: number): string | null {
+  if (bytes <= MAX_PACK_BYTES) return null;
+  const size = (bytes / (1024 * 1024)).toLocaleString("vi-VN", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+  return [
+    `Gói này nặng ${size} MB, vượt mức 4 MB cho mỗi gói.`,
+    "4 MB chữ đã chứa được khoảng 5.000 từ kèm nghĩa và ví dụ, dư cho một bộ từ trọn vẹn.",
+    "Bạn tách thành vài gói nhỏ hơn rồi nhập từng gói nhé.",
+  ].join("\n");
+}
 
 /** `id` is the catalog's content hash, so importing the same pack twice keeps one copy. */
 export type CustomPack = { id: string; catalog: Catalog; source: string; importedAt: number };
@@ -161,7 +187,10 @@ export function toDeck(
 
 /** Validate raw JSON text against the app's pack formats. Throws a readable message on failure. */
 export function parseCustomPack(text: string, source: string): CustomPack {
-  if (text.length > MAX_BYTES) throw new Error("Gói quá lớn (tối đa 4 MB).");
+  // Bytes, not characters: a Vietnamese letter is two or three bytes in the file, and the
+  // reader judges the limit by the size their file manager shows.
+  const tooBig = packSizeError(new TextEncoder().encode(text).length);
+  if (tooBig) throw new Error(tooBig);
   let json: unknown;
   try {
     json = JSON.parse(text);
