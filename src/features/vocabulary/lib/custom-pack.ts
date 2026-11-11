@@ -39,23 +39,13 @@ export const CUSTOM_PACKS_EVENT = "vocab-custom-packs-change";
 export const MAX_PACK_BYTES = 4 * 1024 * 1024;
 
 /**
- * The reader-facing refusal for a pack over MAX_PACK_BYTES, or null when it fits. Three
- * short lines (the import panel shows up to four): the size against the limit, why the
- * limit is roomy, and what to do.
+ * The reader-facing refusal for a pack over MAX_PACK_BYTES, or null when it fits: one
+ * short line naming the limit, nothing more.
  * @param bytes - the file's size in bytes
  * @pure true
  */
 export function packSizeError(bytes: number): string | null {
-  if (bytes <= MAX_PACK_BYTES) return null;
-  const size = (bytes / (1024 * 1024)).toLocaleString("vi-VN", {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  });
-  return [
-    `Gói này nặng ${size} MB, vượt mức 4 MB cho mỗi gói.`,
-    "4 MB chữ đã chứa được khoảng 5.000 từ kèm nghĩa và ví dụ, dư cho một bộ từ trọn vẹn.",
-    "Bạn tách thành vài gói nhỏ hơn rồi nhập từng gói nhé.",
-  ].join("\n");
+  return bytes > MAX_PACK_BYTES ? "Gói vượt quá giới hạn 4 MB." : null;
 }
 
 /** `id` is the catalog's content hash, so importing the same pack twice keeps one copy. */
