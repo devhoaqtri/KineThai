@@ -10,6 +10,7 @@ import {
 import { defaultRangeExtractor, useVirtualizer, type Range } from "@tanstack/react-virtual";
 import type { FeedEntry } from "../types";
 import { feedLog } from "../lib/feed-log";
+import { acceptsWordChange, type ScriptedMove } from "../lib/feed-intent";
 
 /** Fraction of one card the scroll must pass beyond a boundary before the active index may switch. */
 const ACTIVE_HYSTERESIS = 0.08;
@@ -154,8 +155,13 @@ export function useVocabularyWindow(
   // feed through word after word on its own, each one lasting just long enough to be
   // recorded as seen. Drift is logged and pulled back to the anchored word.
   const lastIntent = useRef(0);
+  // The stream's own last move (auto advance, coda tap, key) names exactly one row; while
+  // its window lasts only that row is accepted (lib/feed-intent). A reader's input clears
+  // it: from then on wherever their gesture lands is theirs.
+  const scripted = useRef<ScriptedMove | null>(null);
   const intended = useCallback(() => {
     lastIntent.current = performance.now();
+    scripted.current = null;
   }, []);
   useEffect(() => {
     const element = viewport.current;
@@ -185,11 +191,15 @@ export function useVocabularyWindow(
     const id = list[index]?.occurrenceId ?? null;
     if (id === null) return;
     const anchor = activeIdRef.current;
-    const reason =
-      anchor === null ||
-      id === anchor ||
-      pending.current !== null ||
-      performance.now() - lastIntent.current < INTENT_WINDOW_MS;
+    const reason = acceptsWordChange({
+      id,
+      anchor,
+      gliding: pending.current !== null,
+      scripted: scripted.current,
+      lastIntent: lastIntent.current,
+      now: performance.now(),
+      intentWindowMs: INTENT_WINDOW_MS,
+    });
     if (!reason) {
       const at = list.findIndex((entry) => entry.occurrenceId === anchor);
       const top = at * heightRef.current;
@@ -311,15 +321,30 @@ export function useVocabularyWindow(
     syncActive();
   }, [armIdle, syncActive]);
 
-  /** Jump straight to a row. The one programmatic way the stream changes word. */
+  // Hands the feed back to snapping once a scripted move has landed. See moveTo.
+  const releaseTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(releaseTimer.current), []);
+
+  /**
+   * Jump straight to a row. The one programmatic way the stream changes word.
+   *
+   * It vouches for that ONE row, not for wherever the scroll goes next (lib/feed-intent):
+   * it used to open the reader's 2.5 s intent window instead, and on every auto advance the
+   * feed then walked on by itself, a word per frame, until the window closed. Snapping is
+   * also held off while the jump lands, as a swipe's glide does (`hold`), so a re-snap after
+   * the new card renders has no box to pull the feed to.
+   */
   const moveTo = useCallback(
     (index: number, cause = "jump") => {
       const run = () => {
         const element = viewport.current;
         const list = entriesRef.current;
         if (!element || !list.length) return;
-        intended();
         const target = Math.max(0, Math.min(list.length - 1, index));
+        scripted.current = {
+          id: list[target].occurrenceId,
+          until: performance.now() + INTENT_WINDOW_MS,
+        };
         direction.current = target < activeIndexRef.current ? "previous" : "next";
         feedLog("move", {
           cause,
@@ -327,13 +352,19 @@ export function useVocabularyWindow(
           to: target,
           deferred: adjusting.current,
         });
+        if (pending.current === null) hold(element);
         element.scrollTo({ top: target * heightRef.current, behavior: "auto" });
+        clearTimeout(releaseTimer.current);
+        releaseTimer.current = setTimeout(() => {
+          // A swipe that began meanwhile owns the feed now and releases it itself.
+          if (pending.current === null) release(element);
+        }, SCROLL_IDLE_MS * 2);
       };
       // Never stack an advance on top of an in-flight scroll rebase; defer one frame.
       if (adjusting.current) requestAnimationFrame(run);
       else run();
     },
-    [intended],
+    [],
   );
   const move = useCallback(
     (delta: number, cause = "step") => moveTo(activeIndexRef.current + delta, cause),
