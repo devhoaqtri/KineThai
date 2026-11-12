@@ -1,7 +1,8 @@
 /**
  * Resolved and sliding post canvas backgrounds for page transitions.
  *
- * Exports: getResolvedPostBackground, getSlidingCanvasBackground, isBackdropJump, DEFAULT_CANVAS_BACKGROUND
+ * Exports: getResolvedPostBackground, getSlidingCanvasBackground, buildStripWindow,
+ *   isBackdropJump, DEFAULT_CANVAS_BACKGROUND
  * Depends on: lib/canvas resolve/isUsable/isTooDark, Post type
  */
 
@@ -48,14 +49,21 @@ export function getResolvedPostBackground(post: Post): string | null {
  *   vocabulary card) passes one and the extra stops are laid out inside each step, so
  *   a step is still exactly one screen wide.
  * @returns Strip background, width, offset, and the offset one page moves it (in % of
- *   the strip), or null when there is nothing to slide
+ *   the strip), plus `window`, which paints only a few segments of it; or null when there
+ *   is nothing to slide
  */
 export function getSlidingCanvasBackground(
   spec: CanvasSpec,
   fallback: string | null,
   shiftPage: number,
   blend?: (from: string, to: string) => string[],
-): { background: string; width: string; x: string; pageShift: number } | null {
+): {
+  background: string;
+  width: string;
+  x: string;
+  pageShift: number;
+  window: (first: number, count: number) => string;
+} | null {
   const colors = getTransitionColorCycle(spec, fallback);
   if (colors.length < 2) return null;
 
@@ -66,7 +74,50 @@ export function getSlidingCanvasBackground(
     width: `${segmentCount * 100}%`,
     x: `-${shiftPage * pageShift}%`,
     pageShift,
+    window: (first, count) => buildStripWindow(colors, first, count, blend),
   };
+}
+
+/**
+ * A few segments of the strip, as their own gradient: segment k runs from colour k to
+ * colour k + 1 of the cycle, exactly as in the whole strip, so a window lines up with its
+ * neighbours. The backdrop paints only this, never the whole strip: a page turn then holds
+ * the two colour bands it moves between and nothing else, so no glitch — a glide cut short,
+ * a strip painted late after a long session — can show any other background.
+ * @param colors - the colour cycle
+ * @param first - the first segment (any integer; the cycle wraps both ways)
+ * @param count - how many segments, at least 1
+ * @param blend - the same perceptual in-between colours the full strip uses
+ * @returns a linear-gradient as wide as `count` segments
+ * @pure true (cached)
+ */
+export function buildStripWindow(
+  colors: string[],
+  first: number,
+  count: number,
+  blend?: (from: string, to: string) => string[],
+): string {
+  const size = Math.max(1, Math.floor(count));
+  const at = (index: number) => colors[((index % colors.length) + colors.length) % colors.length]!;
+  const key = `window|${blend ? "blend" : "plain"}|${first}|${size}|${colors.join("|")}`;
+  const cached = stripCache.get(key);
+  if (cached) return cached;
+
+  const stops: string[] = [];
+  for (let step = 0; step <= size; step += 1) {
+    const color = at(first + step);
+    stops.push(`${color} ${((step / size) * 100).toFixed(3)}%`);
+    if (!blend || step === size) continue;
+    const between = blend(color, at(first + step + 1));
+    between.forEach((mid, index) => {
+      const position = (step + (index + 1) / (between.length + 1)) / size;
+      stops.push(`${mid} ${(position * 100).toFixed(4)}%`);
+    });
+  }
+  const strip = `linear-gradient(100deg, ${stops.join(", ")})`;
+  if (stripCache.size > 256) stripCache.clear();
+  stripCache.set(key, strip);
+  return strip;
 }
 
 /**

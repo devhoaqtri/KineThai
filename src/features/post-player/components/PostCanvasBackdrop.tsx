@@ -21,6 +21,8 @@ export type PostCanvasBackdropProps = {
     width: string;
     x: string;
     pageShift: number;
+    /** A few segments of the strip as their own gradient (post-background buildStripWindow). */
+    window: (first: number, count: number) => string;
   } | null;
   staticCanvasBackground: string | null | undefined;
   hasTransitionBackground: boolean;
@@ -31,22 +33,70 @@ const JUMP_FADE_S = 0.45;
 
 /** The glide between neighbouring pages, shared by every backdrop kind. */
 const GLIDE = "1.25s cubic-bezier(0.22,1,0.36,1)";
+const GLIDE_S = 1.25;
+const GLIDE_EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Where the strip sits for a page, as a background-position.
+ * The sliding gradient, painted as a window of the strip rather than the strip itself.
  *
- * The strip is `segments` card-widths wide (pageShift is one segment, in % of the strip),
- * and a page shows segment `page`. A percentage position p lines up p% of the image with
- * p% of the box, so with an image N boxes wide the offset is (1 − N)·p% of the box, and
- * page × one box needs p = page / (N − 1).
- * @param page - The page shown
- * @param pageShift - One segment, in % of the strip
- * @returns The background-position-x value
- * @pure true
+ * The strip is dozens of colour bands long, one per page. It used to be painted whole —
+ * first as a transformed element ~88,000 device px wide, then as one background that size
+ * moved by background-position — and a page turn slid it one band. Whatever moved the strip
+ * to the wrong offset or painted it late (a glide cut short, a jump read as a glide, a phone
+ * dropping its tiles after a long session) showed the bands in between racing past: the
+ * "flash of several backgrounds", rarer after each fix and never gone, because the other
+ * bands were always there to show.
+ *
+ * Now a page paints only its own band with one on each side (the tilted gradient needs the
+ * margin), and a one-page turn paints the four bands around the two it moves between and
+ * glides across them, its start written on mount. Nothing else exists in the layer, so a
+ * turn can show its two backgrounds and no third.
  */
-function stripPosition(page: number, pageShift: number): string {
-  const segments = 100 / pageShift;
-  return `${((page * 100) / Math.max(1, segments - 1)).toFixed(4)}%`;
+function StripWindow({
+  strip,
+  page,
+  glideFrom,
+  turn,
+}: {
+  strip: NonNullable<PostCanvasBackdropProps["slidingCanvasBackground"]>;
+  page: number;
+  glideFrom: number | null;
+  turn: number;
+}): ReactElement {
+  const base = {
+    // The same shorthand-then-image order as before: the fallback fills the box, the
+    // window paints over it. no-repeat keeps the gradient drawn straight into the box.
+    background: DEFAULT_CANVAS_BACKGROUND,
+    backgroundRepeat: "no-repeat",
+    backgroundPositionY: "0",
+  } as const;
+  if (glideFrom !== null && Math.abs(glideFrom - page) === 1) {
+    const first = Math.min(glideFrom, page) - 1;
+    const at = (segment: number) => `${(((segment - first) / 3) * 100).toFixed(4)}%`;
+    return (
+      <motion.div
+        key={`glide-${turn}`}
+        aria-hidden
+        className="absolute inset-0"
+        style={{ ...base, backgroundImage: strip.window(first, 4), backgroundSize: "400% 100%" }}
+        initial={{ backgroundPositionX: at(glideFrom) }}
+        animate={{ backgroundPositionX: at(page) }}
+        transition={{ duration: GLIDE_S, ease: GLIDE_EASE }}
+      />
+    );
+  }
+  return (
+    <div
+      aria-hidden
+      className="absolute inset-0"
+      style={{
+        ...base,
+        backgroundImage: strip.window(page - 1, 3),
+        backgroundSize: "300% 100%",
+        backgroundPositionX: "50%",
+      }}
+    />
+  );
 }
 
 /**
@@ -65,11 +115,15 @@ export function PostCanvasBackdrop({
 }: PostCanvasBackdropProps): ReactElement {
   // A one-page turn glides the backdrop to the next colour. A longer jump (reveal, replay,
   // restart) lands on its colour at once while the colour it left fades out above it.
+  // `glideFrom` is the page a one-page turn started from, and `turn` keys that glide, so
+  // every turn mounts its own glide with its start written explicitly.
   const [shown, setShown] = useState({
     page: backgroundShiftPage,
     instant: false,
     from: null as number | null,
     jump: 0,
+    glideFrom: null as number | null,
+    turn: 0,
   });
   if (shown.page !== backgroundShiftPage) {
     const instant = isBackdropJump(shown.page, backgroundShiftPage);
@@ -78,10 +132,12 @@ export function PostCanvasBackdrop({
       instant,
       from: instant ? shown.page : shown.from,
       jump: instant ? shown.jump + 1 : shown.jump,
+      glideFrom: instant ? null : shown.page,
+      turn: shown.turn + 1,
     });
   }
 
-  const layer = (page: number, instant: boolean) =>
+  const layer = (page: number, instant: boolean, glideFrom: number | null = null, turn = 0) =>
     sceneTheme ? (
       <div
         aria-hidden
@@ -105,28 +161,11 @@ export function PostCanvasBackdrop({
         }}
       />
     ) : slidingCanvasBackground ? (
-      // The strip is dozens of card-widths long. It used to be an element that long, slid
-      // by a transform — on a phone a single composited layer ~88,000 device px wide per
-      // card. A mobile GPU cannot keep that rastered, so as the strip moved between words
-      // its tiles arrived late and other stretches of the strip flashed through. Now the
-      // strip is this box's background, sized to its full length and moved by
-      // background-position, so only the box itself is ever painted: no layer is larger
-      // than the card. no-repeat keeps WebKit drawing the gradient straight into the box
-      // rather than building a tile as large as the strip.
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          // The same shorthand-then-image order as before: the fallback fills the box,
-          // the strip paints over it.
-          background: DEFAULT_CANVAS_BACKGROUND,
-          backgroundImage: slidingCanvasBackground.background,
-          backgroundSize: `${((100 / slidingCanvasBackground.pageShift) * 100).toFixed(2)}% 100%`,
-          backgroundRepeat: "no-repeat",
-          backgroundPositionX: stripPosition(page, slidingCanvasBackground.pageShift),
-          backgroundPositionY: "0",
-          transition: instant ? "none" : `background-position ${GLIDE}`,
-        }}
+      <StripWindow
+        strip={slidingCanvasBackground}
+        page={page}
+        glideFrom={instant ? null : glideFrom}
+        turn={turn}
       />
     ) : (
       <div
@@ -141,7 +180,7 @@ export function PostCanvasBackdrop({
 
   return (
     <>
-      {layer(shown.page, shown.instant)}
+      {layer(shown.page, shown.instant, shown.glideFrom, shown.turn)}
       {shown.from !== null && (
         <motion.div
           key={`jump-${shown.jump}`}
