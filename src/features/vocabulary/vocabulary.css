@@ -5981,6 +5981,19 @@
   padding: 0 24px;
   pointer-events: none;
 }
+/* Not tight against the saved drawer's tab. The tab rides the right edge with its centre at
+   62% of the screen and is 118px tall (.vocab-saved-dock, .vocab-saved-handle), so its
+   top edge is at 62% − 59px. Centred, a large spelled word's baseline landed right on that
+   edge. Outside a short landscape screen (which lays the coda out on its own), the coda
+   column now ends a small gap above the tab, so the word's baseline sits just above it.
+   An export frame has no tab and keeps the centred slot. */
+.vocabulary-shell:not([data-short-viewport="landscape"])
+  .vocab-card:not([data-export])
+  :is(.vocab-spelling, .vocab-stroke) {
+  --vocab-handle-top: calc(62% - 59px);
+  bottom: calc(100% - var(--vocab-handle-top) + 14px);
+  justify-content: flex-end;
+}
 .vocab-spelling-label {
   font-size: 11px;
   font-weight: 700;
@@ -6850,9 +6863,13 @@
    below unchanged — it already reads --vocab-reveal-word as "the word's share". */
 .vocab-card[data-reveal-split="two-column"] {
   --vocab-reveal-word: var(--vocab-reveal-free);
-  /* Breathing room between the two columns, and the panel's own right margin. */
+  /* Breathing room between the two columns, and the panel's own right margin. The margin
+     clears the saved drawer's tab, which rides this edge 30px wide (.vocab-saved-handle,
+     offset like .vocab-saved-dock) and sat over the panel's right side, plus 12px. */
   --vocab-col-gap: 18px;
-  --vocab-col-edge: 16px;
+  --vocab-col-edge: calc(
+    env(safe-area-inset-right, 0px) + var(--vocab-chrome-side, 0px) + 30px + 12px
+  );
 }
 /* The band is cut to the left column. The -72/-132 offsets are the fit pipeline's own
    reserved margins, exactly as in the stacked rule above. */
@@ -6873,7 +6890,11 @@
   bottom: var(--vocab-chrome-top);
   left: auto;
   right: var(--vocab-col-edge);
-  width: var(--vocab-panel-col);
+  /* Narrowed by what the wider margin takes, so the gap to the word's column holds. */
+  width: min(
+    var(--vocab-panel-col),
+    calc(100% - var(--vocab-word-col) - var(--vocab-col-gap) - var(--vocab-col-edge))
+  );
   height: fit-content;
   margin-block: auto;
   margin-inline: 0;
