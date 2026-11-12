@@ -8,7 +8,7 @@ import {
   isBrowserRequest,
   isLocalRequest,
 } from "./lib/bot-gate";
-import { sharePageGuard } from "./lib/share-page-guard";
+import { pageGuard } from "./lib/page-guard";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 
 /**
@@ -19,9 +19,9 @@ import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
  * Running it in the request chain means a new route under /api/public is limited by
  * adding a line to RATE_LIMITS, not by remembering to call something.
  *
- * Only paths named in RATE_LIMITS are touched, plus the share-link page (lib/share-page-guard),
- * the one page made to travel off-site: other page loads, assets and server functions pass
- * straight through.
+ * Only paths named in RATE_LIMITS are touched, plus the two pages a visitor arrives on, the
+ * home feed and the share link (lib/page-guard): other page loads, assets and server
+ * functions pass straight through.
  *
  * Local hosts are exempt, as they are from the bot gate. Without a forwarding header every
  * local caller shares one limiter key, so a developer reloading, the clip recorder and any
@@ -29,8 +29,8 @@ import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
  */
 const rateLimitMiddleware = createMiddleware().server(async ({ next, request }) => {
   const path = new URL(request.url).pathname;
-  const shareAnswer = sharePageGuard(request);
-  if (shareAnswer) return shareAnswer;
+  const pageAnswer = pageGuard(request);
+  if (pageAnswer) return pageAnswer;
   // Tools and crawlers are turned away before they cost a token: an endpoint that hands
   // out word content only answers the app's own pages (see lib/bot-gate).
   if (WORD_DATA_PATHS.has(path) && !isBrowserRequest(request)) return browserOnlyResponse();

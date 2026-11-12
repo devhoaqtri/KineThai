@@ -19,8 +19,8 @@
  * a budget you can prove, so anything that must hold exactly — a spend cap, a quota —
  * belongs in Postgres where every instance can see the same counter.
  *
- * Exports: RATE_LIMITS, NEW_STREAM_BUDGET, SHARE_PAGE_BUDGET, callerKey, checkRateLimit, checkRateLimitOnce,
- *   rateLimitedResponse, resetRateLimits
+ * Exports: RATE_LIMITS, NEW_STREAM_BUDGET, SHARE_PAGE_BUDGET, FEED_PAGE_BUDGET, callerKey,
+ *   checkRateLimit, checkRateLimitOnce, rateLimitedResponse, resetRateLimits
  * Depends on: none (leaf module)
  */
 
@@ -97,6 +97,17 @@ export const NEW_STREAM_BUDGET: RateBudget = [
 export const SHARE_PAGE_BUDGET: RateBudget = [
   { limit: 30, windowMs: MINUTE },
   { limit: 300, windowMs: HOUR },
+];
+
+/**
+ * Home feed page loads (`/feed`) from one address. Every visit, reload and return to the
+ * site is one, and a household, a classroom or a carrier's NAT shares an address, so this
+ * sits well above the share page's cap; it is there to stop a flood of renders, not to
+ * pace a reader. The words themselves are bounded by RATE_LIMITS["/api/public/vocabulary"].
+ */
+export const FEED_PAGE_BUDGET: RateBudget = [
+  { limit: 60, windowMs: MINUTE },
+  { limit: 600, windowMs: HOUR },
 ];
 
 /** How long a charged stream is remembered, so asking for it again costs nothing. */

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { resetRateLimits } from "../rate-limit";
-import { sharePageGuard } from "../share-page-guard";
+import { pageGuard } from "../page-guard";
 
 const SAFARI =
   "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1";
@@ -15,14 +15,14 @@ function visit(
 ) {
   const headers = new Headers({ host, "user-agent": agent, "cf-connecting-ip": ip });
   if (language) headers.set("accept-language", language);
-  return sharePageGuard(new Request(`https://${host}${path}`, { headers }));
+  return pageGuard(new Request(`https://${host}${path}`, { headers }));
 }
 
-describe("sharePageGuard", () => {
+describe("pageGuard: share link", () => {
   afterEach(() => resetRateLimits());
 
   it("leaves every other page alone", () => {
-    expect(visit("/", { agent: "curl/8.0" })).toBeNull();
+    expect(visit("/feed/saved", { agent: "curl/8.0" })).toBeNull();
     expect(visit("/api/public/word?code=K7F", { agent: "curl/8.0" })).toBeNull();
     expect(visit("/w/K7F/extra")).toBeNull();
   });
@@ -35,7 +35,7 @@ describe("sharePageGuard", () => {
   it("sends a path that cannot be a code to the feed without rendering", () => {
     const answer = visit("/w/not-a-code");
     expect(answer?.status).toBe(302);
-    expect(answer?.headers.get("location")).toBe("https://anh.chayla.app/");
+    expect(answer?.headers.get("location")).toBe("https://anh.chayla.app/feed");
     expect(visit("/w/%E0%A4%A")?.status).toBe(302);
   });
 
@@ -64,5 +64,37 @@ describe("sharePageGuard", () => {
     for (let i = 0; i < 40; i++) {
       expect(visit("/w/K7F", { host: "hoa.localhost:8080", agent: "curl/8.0" })).toBeNull();
     }
+  });
+});
+
+describe("pageGuard: home feed", () => {
+  afterEach(() => resetRateLimits());
+
+  it("renders the feed for a person's browser", () => {
+    expect(visit("/")).toBeNull();
+    expect(visit("/feed")).toBeNull();
+    expect(visit("/feed/", { agent: ZALO_IN_APP })).toBeNull();
+  });
+
+  it("gives automated agents only the site's head, without a noindex", async () => {
+    for (const path of ["/", "/feed", "/feed/"]) {
+      const answer = visit(path, { agent: "curl/8.0", host: "anh.chayla.app" });
+      expect(answer?.status).toBe(200);
+      expect(answer?.headers.get("x-robots-tag")).toBeNull();
+      expect(await answer!.text()).toContain("<title>anh.chayLá</title>");
+    }
+    expect(visit("/w/K7F", { agent: "curl/8.0" })?.headers.get("x-robots-tag")).toBe(
+      "noindex, nofollow",
+    );
+  });
+
+  it("charges /feed, not the redirect at /, and apart from share links", () => {
+    for (let i = 0; i < 100; i++) expect(visit("/")).toBeNull();
+    for (let i = 0; i < 60; i++) expect(visit(i % 2 ? "/feed" : "/feed/")).toBeNull();
+    const refused = visit("/feed");
+    expect(refused?.status).toBe(429);
+    expect(Number(refused?.headers.get("retry-after"))).toBeGreaterThan(0);
+    expect(visit("/w/K7F")).toBeNull();
+    expect(visit("/feed", { ip: "198.51.100.2" })).toBeNull();
   });
 });
