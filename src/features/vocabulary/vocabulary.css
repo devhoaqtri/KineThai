@@ -3247,6 +3247,31 @@
 .vocab-grammar[data-open] .vocab-grammar-chevron {
   transform: rotate(180deg);
 }
+/* The closed row is the panel's footer line, beside the share tab. The scroller otherwise
+   keeps a whole band clear under the text for the tab (--vocab-reveal-badge-room) and the
+   panel adds its bottom padding below that, though the tab fills only the right end of the
+   band. On a short phone with a large Han answer, that band plus the closed row came to more
+   than the panel was allowed to grow, so the row sat out of sight below the scroller's edge.
+   Here the closed row takes the band: the panel drops its bottom padding, the scroller its
+   clearance, and the row stops short of the tab, so its 40px tap height ends on the panel's
+   inner edge and its label lines up with the tab's. Opened, the section needs the full width
+   for its table, so the band comes back. Stills and export frames are fitted to the pixel by
+   their own checks and keep their geometry. */
+.vocab-card:not([data-still]):not([data-export])
+  .vocab-reveal-details:has(> .vocab-reveal-scroll > .vocab-grammar:last-child:not([data-open])) {
+  padding-block-end: 0;
+}
+.vocab-card:not([data-still]):not([data-export])
+  .vocab-reveal-scroll:has(> .vocab-grammar:last-child:not([data-open])) {
+  margin-bottom: 0;
+  padding-block-end: 0;
+}
+.vocab-card:not([data-still]):not([data-export])
+  .vocab-reveal-scroll
+  > .vocab-grammar:last-child:not([data-open]) {
+  /* The tab and the dock's padding to its left, plus a gap. */
+  margin-inline-end: var(--vocab-share-room, 86px);
+}
 .vocab-grammar-body {
   overflow: hidden;
 }
