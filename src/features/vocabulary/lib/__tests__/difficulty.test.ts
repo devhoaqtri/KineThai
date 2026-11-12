@@ -139,7 +139,7 @@ describe("JLPT_TRACKS", () => {
 });
 
 describe("trackCeiling", () => {
-  it("vỡ lòng tops out at A2", () => expect(trackCeiling(cefr("vo-long"))).toBe("A2"));
+  it("vỡ lòng tops out at A1", () => expect(trackCeiling(cefr("vo-long"))).toBe("A1"));
   it("cơ bản tops out at A2", () => expect(trackCeiling(cefr("co-ban"))).toBe("A2"));
   it("đọc hiểu tops out at B2", () => expect(trackCeiling(cefr("doc-hieu"))).toBe("B2"));
   it("văn chương tops out at C2", () => expect(trackCeiling(cefr("van-chuong"))).toBe("C2"));
@@ -171,29 +171,29 @@ describe("difficultyLevels", () => {
   it("returns null for the empty sentinel", () => expect(difficultyLevels("")).toBeNull());
   it("returns null for whitespace only", () => expect(difficultyLevels("   ")).toBeNull());
   it("resolves a single track to its band in canonical order", () =>
-    expect(difficultyLevels("vo-long")).toEqual(["A1", "A2"]));
+    expect(difficultyLevels("vo-long")).toEqual(["A1"]));
   it("unions a multi-select and keeps canonical order", () =>
-    expect(difficultyLevels("co-ban,van-chuong")).toEqual(["A2", "B2", "C1", "C2"]));
+    expect(difficultyLevels("co-ban,van-chuong")).toEqual(["A1", "A2", "B2", "C1", "C2"]));
   it("deduplicates shared levels across tracks", () => {
     const levels = difficultyLevels("doc-hieu,chuyen-sau")!;
     expect(new Set(levels).size).toBe(levels.length);
     expect(levels).toEqual(["B1", "B2"]);
   });
   it("ignores an unknown id alongside a known one", () =>
-    expect(difficultyLevels("co-ban,ghost")).toEqual(["A2"]));
+    expect(difficultyLevels("co-ban,ghost")).toEqual(["A1", "A2"]));
   it("returns an empty band when only unknown ids are given", () =>
     expect(difficultyLevels("ghost1,ghost2")).toEqual([]));
   it("trims whitespace around ids", () =>
-    expect(difficultyLevels(" co-ban , du-lich ")).toEqual(["A2", "B1"]));
+    expect(difficultyLevels(" co-ban , du-lich ")).toEqual(["A1", "A2", "B1"]));
   it("an unavailable track contributes nothing", () =>
     expect(difficultyLevels("van-chuong", ["A1", "A2"])).toEqual([]));
   it("an available track resolves through its own level system", () =>
     // The same id picks the HSK band when only HSK levels exist in the catalog.
     expect(difficultyLevels("co-ban", ["HSK1", "HSK2", "HSK3"])).toEqual(["HSK2"]));
   it("prefers the CEFR track when no catalog levels are given", () =>
-    expect(difficultyLevels("co-ban")).toEqual(["A2"]));
+    expect(difficultyLevels("co-ban")).toEqual(["A1", "A2"]));
   it("mixes available tracks and drops unavailable ones", () =>
-    expect(difficultyLevels("co-ban,van-chuong", ["A2", "B2"])).toEqual(["A2"]));
+    expect(difficultyLevels("co-ban,van-chuong", ["A2", "B2"])).toEqual(["A1", "A2"]));
 });
 
 describe("clampDifficultyToDeck", () => {
@@ -243,15 +243,15 @@ describe("countTrackWords", () => {
   const counts: Partial<Record<VocabularyLevel, number>> = { A1: 5, A2: 10, B1: 8 };
   const levels: VocabularyLevel[] = ["A1", "A2", "B1"];
   it("counts a single track's band", () =>
-    expect(countTrackWords(["vo-long"], counts, levels)).toBe(15));
+    expect(countTrackWords(["vo-long"], counts, levels)).toBe(5));
   it("counts the union without double-counting a shared level", () =>
-    // co-ban (A2) + du-lich (A2,B1) → union A2,B1 = 18, not 10 + 18.
-    expect(countTrackWords(["co-ban", "du-lich"], counts, levels)).toBe(18));
+    // co-ban (A1,A2) + du-lich (A2,B1) → union A1,A2,B1 = 23, not 15 + 18.
+    expect(countTrackWords(["co-ban", "du-lich"], counts, levels)).toBe(23));
   it("returns zero for no tracks", () => expect(countTrackWords([], counts, levels)).toBe(0));
   it("treats a missing level count as zero", () =>
     expect(countTrackWords(["doc-hieu"], { B1: 4 }, ["B1", "B2"])).toBe(4));
   it("ignores duplicate ids", () =>
-    expect(countTrackWords(["co-ban", "co-ban"], counts, levels)).toBe(10));
+    expect(countTrackWords(["co-ban", "co-ban"], counts, levels)).toBe(15));
 });
 
 describe("LEVEL_SAMPLE_PRIORITY", () => {

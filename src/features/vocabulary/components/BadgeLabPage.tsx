@@ -67,7 +67,7 @@ function Frame({
     >
       <div className="badge-lab-chrome">
         <span>anh.chayLá</span>
-        <span>vỡ lòng · A1–A2</span>
+        <span>vỡ lòng · A1</span>
       </div>
       <p className="badge-lab-clue">{CLUE}</p>
       <div className="badge-lab-dock">

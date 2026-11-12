@@ -68,7 +68,7 @@ export const CEFR_TRACKS: readonly DifficultyTrack[] = [
     label: "vỡ lòng",
     hint: "Mới bắt đầu, toàn từ rất quen",
     emoji: "🐣",
-    levels: ["A1", "A2"],
+    levels: ["A1"],
     sampleLevel: "A1",
   },
   {
@@ -76,7 +76,7 @@ export const CEFR_TRACKS: readonly DifficultyTrack[] = [
     label: "cơ bản",
     hint: "Vốn từ nền tảng hằng ngày",
     emoji: "🌱",
-    levels: ["A2"],
+    levels: ["A1", "A2"],
     sampleLevel: "A2",
   },
   {

@@ -180,7 +180,7 @@ describe("badge criteria", () => {
       complete: false,
       seen: 37,
     } as const;
-    expect(badgeGoalCriteria(goal, "en")).toContain("vỡ lòng (A1–A2)");
+    expect(badgeGoalCriteria(goal, "en")).toContain("vỡ lòng (A1)");
     expect(badgeGoalProgress(goal)).toBe("Đã xem: 37/100 từ");
   });
 
