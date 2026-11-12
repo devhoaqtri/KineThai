@@ -228,8 +228,14 @@ export function useVocabularyWindow(
     previous.current = { index: activeIndex, height, id };
     lastIndex.current = activeIndex;
     // The anchor vanished (or there was none yet): adopt the row now standing in its place.
+    // The stream holds the row on screen through a dropped page (lib/backfill
+    // holdAnchorRows), so losing an anchor is a change of word nobody asked for: it is logged
+    // as drift. It cannot be pulled back, because the row is gone.
     const adopted = id !== activeId;
     if (adopted) setActiveId(id);
+    if (adopted && activeId !== null) {
+      feedLog("drift", { cause: "anchor-lost", to: activeIndex, rows: entries.length });
+    }
     if (!element || !entries.length) return;
     // Three things call for a rebase, and the reader scrolling to another word is NOT one
     // of them — that changes the anchor, not the geometry, and writing the offset then

@@ -3,7 +3,14 @@ import { Suspense, lazy, useContext, useEffect, useMemo, useRef, useState } from
 import { useVocabularyFeed } from "../hooks/useVocabularyFeed";
 import { useVocabularyWindow } from "../hooks/useVocabularyWindow";
 import { useFeedPagination } from "../hooks/useFeedPagination";
-import { canWalkFurther, getBlockedRun, selectVisibleEntries } from "../lib/backfill";
+import {
+  canWalkFurther,
+  getBlockedRun,
+  holdAnchorRows,
+  selectVisibleEntries,
+  VOCAB_MAX_PAGES,
+  wantsWordsAhead,
+} from "../lib/backfill";
 import { formatCountdown, isWordAllowed, nextAvailableAt, type ViewHistory } from "../lib/history";
 import type { FeedEntry, FeedPage, Presentation, VocabularyFilters } from "../types";
 import type { VocabularyLevel, VocabularyWord } from "../lib/schema";
@@ -123,7 +130,7 @@ export function VocabularyStream({
     if (leadWord) onLeadTaken?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const entries = useMemo<FeedEntry[]>(
+  const streamEntries = useMemo<FeedEntry[]>(
     () =>
       leadWord
         ? [
@@ -138,6 +145,19 @@ export function VocabularyStream({
         : query.entries,
     [leadWord, query.entries],
   );
+  // The word on screen never leaves the list under the reader. The query keeps ten pages and
+  // drops the oldest as one arrives, whatever it holds; the rows from the on-screen one up to
+  // the first that survived are kept in place until the reader has moved past them
+  // (lib/backfill holdAnchorRows). The anchor is the previous render's word on screen.
+  const anchorId = useRef<string | null>(null);
+  const heldRows = useRef<readonly FeedEntry[]>([]);
+  const entries = useMemo(
+    () => holdAnchorRows(heldRows.current, streamEntries, anchorId.current),
+    [streamEntries],
+  );
+  useEffect(() => {
+    heldRows.current = entries;
+  }, [entries]);
   // Deck locale drives the "tiếng X" copy in the reader's labels and empty states, so a
   // Korean host never reads "Vốn từ tiếng Anh vô tận". Falls back to English without a
   // provider (see DeckLocaleContext).
@@ -213,10 +233,14 @@ export function VocabularyStream({
       visibleEntries,
     ],
   );
+  // A full buffer drops a page for every page that arrives, so it fetches only to find the
+  // very next word (lib/backfill wantsWordsAhead), never a lookahead.
+  const bufferFull = (query.data?.pages.length ?? 0) >= VOCAB_MAX_PAGES;
   const retry = useFeedPagination(
     feedForPaging as unknown as ReturnType<typeof useVocabularyFeed>,
     windowState,
     canFetchMorePositions,
+    bufferFull,
   );
   const {
     viewport,
@@ -246,6 +270,9 @@ export function VocabularyStream({
   };
   const activeEntry = visibleEntries[activeIndex];
   const activeOccurrenceId = activeEntry?.occurrenceId;
+  useEffect(() => {
+    if (activeOccurrenceId) anchorId.current = activeOccurrenceId;
+  }, [activeOccurrenceId]);
   // The music counts a word that held the screen for a moment, read or not.
   const shown = useRef(new Set<string>());
   useEffect(() => {
@@ -312,6 +339,7 @@ export function VocabularyStream({
     if (
       query.entries.length > 0 &&
       visibleEntries.length < 6 &&
+      (!bufferFull || wantsWordsAhead(visibleEntries.length - 1 - activeIndex, true)) &&
       canFetchMorePositions &&
       query.hasNextPage &&
       !query.isFetching &&
@@ -323,6 +351,8 @@ export function VocabularyStream({
   }, [
     query.entries.length,
     visibleEntries.length,
+    bufferFull,
+    activeIndex,
     canFetchMorePositions,
     query.hasNextPage,
     query.isFetching,

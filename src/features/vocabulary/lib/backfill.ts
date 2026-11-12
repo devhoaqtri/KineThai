@@ -6,7 +6,8 @@
  * a backfill. These bounds answer the only question that matters: can the next page
  * still contain a word this stream has not been offered yet?
  *
- * Exports: VOCAB_PAGE_LIMIT, VOCAB_MAX_PAGES, getBlockedRun, canWalkFurther, selectVisibleEntries
+ * Exports: VOCAB_PAGE_LIMIT, VOCAB_MAX_PAGES, PREFETCH_AHEAD, getBlockedRun, canWalkFurther,
+ *   selectVisibleEntries, holdAnchorRows, wantsWordsAhead
  * Depends on: types (FeedEntry)
  */
 
@@ -17,6 +18,12 @@ export const VOCAB_PAGE_LIMIT = 12;
 
 /** Pages retained by the infinite query (see hooks/useVocabularyFeed.ts). */
 export const VOCAB_MAX_PAGES = 10;
+
+/**
+ * Showable words the stream likes to have ahead of the one on screen while its buffer still
+ * has room. A full buffer asks for a page only when nothing is left ahead (wantsWordsAhead).
+ */
+export const PREFETCH_AHEAD = 4;
 
 /**
  * How many buffered positions trail the last word the reader can be shown.
@@ -101,4 +108,70 @@ export function selectVisibleEntries(
     }
   });
   return out;
+}
+
+/**
+ * Keep the row on screen, and the rows after it, when the list under them loses them.
+ *
+ * The infinite query keeps VOCAB_MAX_PAGES pages and drops the oldest when one more arrives,
+ * whatever it holds. On a level whose words are nearly all in the day history, the showable
+ * rows are so sparse that the page holding the word on screen can be the oldest, and losing
+ * it made the window adopt whatever row then stood at that index: the screen walked through
+ * several words in a second with no gesture. The rows from the anchor up to the first one
+ * still present are kept, in place, until the reader has moved past them; rows behind the
+ * reader are let go as before.
+ * @param previous - What this returned last time (the stream's rows before this change).
+ * @param next - The new list (lead word plus the query's entries).
+ * @param anchorId - The occurrence on screen, or null before any.
+ * @returns `next`, unchanged when it still holds the anchor, else with the kept rows put back.
+ * @pure true
+ */
+export function holdAnchorRows(
+  previous: readonly FeedEntry[],
+  next: readonly FeedEntry[],
+  anchorId: string | null,
+): readonly FeedEntry[] {
+  if (anchorId === null) return next;
+  const present = new Map(next.map((entry, index) => [entry.occurrenceId, index]));
+  if (present.has(anchorId)) return next;
+  const at = previous.findIndex((entry) => entry.occurrenceId === anchorId);
+  if (at < 0) return next;
+  const kept: FeedEntry[] = [];
+  let insertAt: number | undefined;
+  for (let index = at; index < previous.length; index += 1) {
+    const found = present.get(previous[index].occurrenceId);
+    if (found !== undefined) {
+      insertAt = found;
+      break;
+    }
+    kept.push(previous[index]);
+  }
+  if (insertAt === undefined) {
+    // Nothing after the anchor survived (a fresh stream): go after whatever still stands
+    // before it, such as a shared lead word, so that is not played a second time.
+    insertAt = 0;
+    for (let index = 0; index < at; index += 1) {
+      const found = present.get(previous[index].occurrenceId);
+      if (found !== undefined) insertAt = Math.max(insertAt, found + 1);
+    }
+  }
+  return [...next.slice(0, insertAt), ...kept, ...next.slice(insertAt)];
+}
+
+/**
+ * Whether the stream should ask for another forward page, given what lies ahead.
+ *
+ * While the buffer has room it keeps PREFETCH_AHEAD showable words in hand. Once it is full,
+ * every page that arrives drops the oldest, so a page is fetched only to find the very next
+ * word. Asking for a lookahead there chained a page per response on a level the day history
+ * had nearly emptied (~100 requests a view in a few minutes), each dropping a page under the
+ * reader. What still bounds a hunt for the next word is the run of unshowable positions
+ * (getBlockedRun, canWalkFurther).
+ * @param ahead - Showable rows after the one on screen.
+ * @param bufferFull - The query already holds VOCAB_MAX_PAGES pages.
+ * @returns True when a forward page should be requested.
+ * @pure true
+ */
+export function wantsWordsAhead(ahead: number, bufferFull: boolean): boolean {
+  return ahead < (bufferFull ? 1 : PREFETCH_AHEAD);
 }

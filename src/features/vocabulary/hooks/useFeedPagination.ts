@@ -1,14 +1,16 @@
 /** Edge prefetch, reconnect recovery and a bounded background retry. Exports: useFeedPagination. Depends on: query/window hooks, feed fallbacks. */
 import { useCallback, useEffect, useRef } from "react";
+import { wantsWordsAhead } from "../lib/backfill";
 import { backgroundRetryDelay } from "../lib/feed-fallback";
 import type { useVocabularyFeed } from "./useVocabularyFeed";
 import type { useVocabularyWindow } from "./useVocabularyWindow";
 
-/** Prefetch only in the direction of travel. @param query Feed query. @param windowState Virtual viewport. @param canFetchMore Whether another forward page can still hold an unseen word. @returns Explicit retry handler. */
+/** Prefetch only in the direction of travel. @param query Feed query. @param windowState Virtual viewport. @param canFetchMore Whether another forward page can still hold an unseen word. @param bufferFull Whether the query already holds VOCAB_MAX_PAGES pages, so a page that arrives drops one (lib/backfill wantsWordsAhead). @returns Explicit retry handler. */
 export function useFeedPagination(
   query: ReturnType<typeof useVocabularyFeed>,
   windowState: ReturnType<typeof useVocabularyWindow>,
   canFetchMore = true,
+  bufferFull = false,
 ) {
   const { activeIndex, direction, adjusting } = windowState;
   const {
@@ -25,7 +27,7 @@ export function useFeedPagination(
     if (
       direction.current === "next" &&
       canFetchMore &&
-      activeIndex >= entries.length - 4 &&
+      wantsWordsAhead(entries.length - 1 - activeIndex, bufferFull) &&
       hasNextPage
     ) {
       void fetchNextPage({ cancelRefetch: false });
@@ -35,6 +37,7 @@ export function useFeedPagination(
   }, [
     activeIndex,
     canFetchMore,
+    bufferFull,
     direction,
     adjusting,
     entries,
