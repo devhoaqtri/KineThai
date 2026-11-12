@@ -47,6 +47,7 @@ import { getExportStageBox, type CardExportLayout } from "../lib/export-layout";
 import { siteBrand } from "../lib/target-language";
 import { hasReportedWord } from "../lib/reported-words";
 import { sceneSkipLimiter } from "../lib/skip-limiter";
+import { createTapGesture, type TapSource } from "../lib/tap-gesture";
 import { getSpellingDurationMs, pickSpellingVariant } from "../lib/spelling";
 import {
   getStrokeSpellingDurationMs,
@@ -399,8 +400,10 @@ export function VocabularyCard({
   }, []);
   const report = usePresence(reportOpen, REPORT_EXIT_MS);
   const markReported = useCallback(() => setReported(true), []);
-  // Ending a word plays the strip's exit first, then moves on. Advances only come from
-  // the answer (auto-finish or a coda tap), so the strip is always what is showing.
+  // Ending a word plays the strip's exit first, then moves on. Advances come from the
+  // answer's own clock (auto-finish), or from a reader's tap or swipe on the coda, so the
+  // strip is always what is showing. Nothing else may move the feed on: see the rule in
+  // AGENTS.md (a scene is skipped only by a tap).
   const [leaving, setLeaving] = useState(false);
   const leaveTimer = useRef<number | undefined>(undefined);
   /**
@@ -442,29 +445,17 @@ export function VocabularyCard({
     }, STRIP_EXIT_MS);
   }, [reducedMotion, canAdvance, exportLayout, onAdvance]);
   useEffect(() => () => window.clearTimeout(leaveTimer.current), []);
-  // An overlay opening mid-exit must not let the timer carry the stream on to the next
-  // word underneath it. Drop the exit, and leave the moment the overlay closes. The word
-  // is already finished; waiting for the playback clock instead replays the whole coda,
-  // since a last page that resumes is timed afresh, and the spelled word sat on screen
-  // after a badge looking stuck. A word the reader has moved away from forgets it.
-  const exitDropped = useRef(false);
+  // An overlay (or the word leaving the screen) that interrupts the exit drops the exit
+  // strip, and nothing more. It must not move the feed on when the overlay closes: that
+  // would be a state effect skipping a scene with no tap. The word stays where it is; the
+  // playback clock restarts its last page on resume and ends the word itself, or the reader
+  // taps on.
   useEffect(() => {
-    if (!current) {
-      exitDropped.current = false;
-      return;
-    }
-    if (active) {
-      if (!exitDropped.current) return;
-      exitDropped.current = false;
-      advanceWithExit();
-      return;
-    }
-    if (leaveTimer.current === undefined) return;
+    if (active || leaveTimer.current === undefined) return;
     window.clearTimeout(leaveTimer.current);
     leaveTimer.current = undefined;
     setLeaving(false);
-    exitDropped.current = true;
-  }, [active, current, advanceWithExit]);
+  }, [active]);
   // The page's text is on stage from the first moment this card PLAYS and stays there
   // until the reader leaves the word. It used to be tied straight to `active`, so anything
   // that paused the feed (the options sheet, the saved drawer) unmounted the text and its
@@ -749,13 +740,15 @@ export function VocabularyCard({
   } as CSSProperties;
 
   // Gesture handling: tap left/right + horizontal swipe for clue navigation.
-  const gestureStart = useRef<{ x: number; y: number; t: number } | null>(null);
+  // One tap is one gesture, whichever events the browser reports it with (lib/tap-gesture):
+  // a touch's compatibility mouse events are not a second tap.
+  const [gesture] = useState(createTapGesture);
   // The page follows the finger while it is dragged sideways and springs back on
   // release, so a swipe is felt before it commits rather than jumping at a threshold.
   const dragX = useMotionValue(0);
   const handlePointerMove = useCallback(
     (clientX: number, clientY: number) => {
-      const start = gestureStart.current;
+      const start = gesture.current();
       if (!start || reducedMotion) return;
       const dx = clientX - start.x;
       const dy = clientY - start.y;
@@ -765,35 +758,36 @@ export function VocabularyCard({
         dragX.set(dx * DRAG_FOLLOW);
       }
     },
-    [dragX, reducedMotion],
+    [dragX, reducedMotion, gesture],
   );
   const releaseDrag = useCallback(() => {
     if (dragX.get() !== 0) animate(dragX, 0, SPRING.snappy);
   }, [dragX]);
   const handlePointerStart = useCallback(
-    (clientX: number, clientY: number, target: EventTarget | null) => {
+    (clientX: number, clientY: number, target: EventTarget | null, source: TapSource) => {
       if (
         target instanceof Element &&
         target.closest("button, a, input, select, textarea, [data-no-gesture]")
       ) {
         // Element (not HTMLElement): taps land on SVG icons inside buttons, and
         // SVGElement must be excluded or reaction taps would also flip pages.
-        gestureStart.current = null;
+        gesture.cancel();
         return;
       }
-      gestureStart.current = { x: clientX, y: clientY, t: Date.now() };
+      gesture.begin(source, clientX, clientY, Date.now());
     },
-    [],
+    [gesture],
   );
   const handlePointerEnd = useCallback(
-    (clientX: number, clientY: number) => {
-      const start = gestureStart.current;
-      gestureStart.current = null;
+    (clientX: number, clientY: number, source: TapSource) => {
+      const ended = gesture.end(source, clientX, clientY, Date.now());
       releaseDrag();
-      if (!start) return;
+      // Null for a touch's emulated mouse event: that tap was already handled.
+      if (!ended) return;
+      const { start } = ended;
       const dx = clientX - start.x;
       const dy = clientY - start.y;
-      const dt = Date.now() - start.t;
+      const dt = ended.t - start.t;
       const ax = Math.abs(dx);
       const ay = Math.abs(dy);
       // Forward skips share one limiter; once it trips, the gesture is swallowed silently.
@@ -867,6 +861,8 @@ export function VocabularyCard({
       isSpelling,
       advanceWithExit,
       releaseDrag,
+      gesture,
+      markWordFinished,
       onToggleAutoplay,
       presentation.autoplay,
       reducedMotion,
@@ -1030,7 +1026,7 @@ export function VocabularyCard({
       aria-setsize={-1}
       onTouchStart={(e) => {
         const t = e.touches[0];
-        if (t) handlePointerStart(t.clientX, t.clientY, e.target);
+        if (t) handlePointerStart(t.clientX, t.clientY, e.target, "touch");
       }}
       onTouchMove={(e) => {
         const t = e.touches[0];
@@ -1038,18 +1034,18 @@ export function VocabularyCard({
       }}
       onTouchEnd={(e) => {
         const t = e.changedTouches[0];
-        if (t) handlePointerEnd(t.clientX, t.clientY);
+        if (t) handlePointerEnd(t.clientX, t.clientY, "touch");
       }}
       onTouchCancel={() => {
-        gestureStart.current = null;
+        gesture.cancel();
         releaseDrag();
       }}
       onMouseDown={(e) => {
         // Only for desktop click preview; store for mouse up
         if (e.button !== 0) return;
-        handlePointerStart(e.clientX, e.clientY, e.target);
+        handlePointerStart(e.clientX, e.clientY, e.target, "mouse");
       }}
-      onMouseUp={(e) => handlePointerEnd(e.clientX, e.clientY)}
+      onMouseUp={(e) => handlePointerEnd(e.clientX, e.clientY, "mouse")}
     >
       <div className="vocab-backdrop" aria-hidden="true">
         {/* The backdrop, not the text, carries the idle motion: a slow sideways
