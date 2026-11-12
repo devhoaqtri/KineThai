@@ -19,7 +19,7 @@
  * a budget you can prove, so anything that must hold exactly — a spend cap, a quota —
  * belongs in Postgres where every instance can see the same counter.
  *
- * Exports: RATE_LIMITS, NEW_STREAM_BUDGET, callerKey, checkRateLimit, checkRateLimitOnce,
+ * Exports: RATE_LIMITS, NEW_STREAM_BUDGET, SHARE_PAGE_BUDGET, callerKey, checkRateLimit, checkRateLimitOnce,
  *   rateLimitedResponse, resetRateLimits
  * Depends on: none (leaf module)
  */
@@ -86,6 +86,17 @@ const SWEEP_AT = 5000;
 export const NEW_STREAM_BUDGET: RateBudget = [
   { limit: 60, windowMs: 10 * MINUTE },
   { limit: 300, windowMs: DAY },
+];
+
+/**
+ * Share-link page loads (`/w/<code>`) from one address. Not in RATE_LIMITS, which is keyed
+ * by exact path, because every code is its own path. A person opens a shared link a few
+ * times; a class on one school network opening the same link at once is the honest peak,
+ * so the minute cap leaves room for that. Past it the page is not rendered at all.
+ */
+export const SHARE_PAGE_BUDGET: RateBudget = [
+  { limit: 30, windowMs: MINUTE },
+  { limit: 300, windowMs: HOUR },
 ];
 
 /** How long a charged stream is remembered, so asking for it again costs nothing. */

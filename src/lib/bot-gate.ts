@@ -16,7 +16,8 @@
  * localhost by default) keep working. Plain-http requests without Fetch Metadata fall back to
  * a same-origin Referer, because browsers only send Fetch Metadata on secure origins.
  *
- * Exports: WORD_DATA_PATHS, isLocalRequest, isBrowserRequest, browserOnlyResponse
+ * Exports: WORD_DATA_PATHS, isLocalRequest, isBrowserRequest, isAutomatedAgent,
+ *   browserOnlyResponse
  * Depends on: none (leaf module)
  */
 
@@ -42,6 +43,21 @@ const LOCAL_HOST = /^(localhost|[a-z0-9-]+\.localhost|127\.0\.0\.1|\[::1\]|0\.0\
  */
 export function isLocalRequest(request: Request): boolean {
   return LOCAL_HOST.test(new URL(request.url).host);
+}
+
+/**
+ * Whether a page request comes from something other than a person's browser: a tool, a
+ * crawler, or a link-preview fetcher (facebookexternalhit, Twitterbot, Slackbot, iMessage,
+ * Discordbot…). Unlike isBrowserRequest this judges a navigation, so it reads only the user
+ * agent and Accept-Language, which every browser sends on one; in-app browsers (Zalo,
+ * Messenger) send a Mozilla agent and a language, so they read as people.
+ * @param request - the incoming request
+ * @returns True when the caller announces itself as automated or lacks a browser's headers
+ */
+export function isAutomatedAgent(request: Request): boolean {
+  const agent = request.headers.get("user-agent") ?? "";
+  if (!/^Mozilla\/5\.0 /.test(agent) || TOOL_AGENT.test(agent)) return true;
+  return !request.headers.get("accept-language");
 }
 
 /**
