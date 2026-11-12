@@ -6815,6 +6815,17 @@
    Export frames keep the portrait geometry, hence the [data-export] exclusion. The card
    applies the same wider-than-tall test when it centres the word in the band
    (getWideRevealY in lib/landscape-geometry.ts) and when it withholds the boxed highlight. */
+/* Portrait: a clue stops 12px above the stage label ("BỐI CẢNH", "Ý NGHĨA"), not on it.
+   The fit solver keeps text 132px above its band's foot, which on a full-height band ends
+   at the progress row — but the label sits over that row (its bottom 10px above the
+   row's, ~12px tall), so long clues ran into it by up to 20px. Lifting the band's foot
+   puts the solver's margin on the label's top plus 12px. The estimate's portrait budget
+   (height − 320) is already smaller than this band, so it is unchanged. */
+@media (orientation: portrait) {
+  .vocab-card:not([data-export]) .vocab-stage-band:not([data-reveal]) {
+    bottom: calc(var(--vocab-chrome-progress-bottom) + 10px + 12px + 12px - 132px);
+  }
+}
 @media (orientation: landscape) {
   .vocab-card:not([data-export]) {
     --vocab-reveal-head: 72px;
@@ -6822,6 +6833,10 @@
     /* Clearance between the panel's foot and the progress row: room for the page label
        that sits on top of that row. */
     --vocab-reveal-foot: 30px;
+    /* Clue text keeps its own clearance above the chrome: the reveal foot drops to 12px
+       on a compact screen so the meaning panel can reach the progress row, but 12px under
+       a clue's last line is less than its ink (ạ, ệ, g) hangs below the line box. */
+    --vocab-clue-foot: 30px;
     --vocab-reveal-free: calc(
       100% - var(--vocab-reveal-head) - var(--vocab-chrome-top) - var(--vocab-reveal-foot)
     );
@@ -6846,7 +6861,7 @@
      long clue can no longer run into the button row). getClueBandStretch in
      lib/landscape-geometry.ts mirrors this for the size budget. */
   .vocab-card:not([data-export]) .vocab-stage-band:not([data-reveal]) {
-    bottom: calc(var(--vocab-chrome-top) + var(--vocab-reveal-foot) - 132px);
+    bottom: calc(var(--vocab-chrome-top) + var(--vocab-clue-foot) - 132px);
   }
 }
 /* ── Two-column answer page (landscape phone) ────────────────────────────────
@@ -6987,6 +7002,7 @@
   .vocab-card:not([data-export]) {
     --vocab-reveal-foot: 12px;
     --vocab-reveal-seam: 12px;
+    --vocab-clue-foot: 24px;
   }
 }
 /* ── Douyin dialect (hoa.* only) ─────────────────────────────────────────────

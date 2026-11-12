@@ -301,8 +301,11 @@ export function useMeasuredLines({
   ]);
 
   // The proof: read the lines back as drawn. Scaling em sizes is exact on paper and a
-  // pixel loose in a browser, so a line found over its box steps the page down — once,
-  // and only ever down, so this cannot loop.
+  // pixel loose in a browser, so a line found over its box, or a block found taller than
+  // the band's safe height, steps the page down — once, and only ever down, so this cannot
+  // loop. Height used to go unchecked: the solver's height model ran ~10% short on some
+  // pages (213px drawn against a 192px bound on a 540×365 card), and since a measured
+  // page skips the fit pass, nothing caught it and the last line sat on the progress bars.
   useIsomorphicLayoutEffect(() => {
     if (!solution || solution.checked || solution.signature !== signature) return;
     const wrapper = wrapperRef.current;
@@ -310,9 +313,20 @@ export function useMeasuredLines({
     if (!wrapper || !text) return;
     const room = wrapper.clientWidth * LINE_BOX_SHARE;
     const widest = getWidestLineWidth(text);
+    // The same safe height the solver was handed, without its 0.92 head start: the layout
+    // box of the drawn block (scrollHeight ignores the entrance's transforms).
+    const band = wrapper.parentElement?.parentElement;
+    const bandHeight = band ? band.offsetHeight || band.getBoundingClientRect().height : 0;
+    const insets = getTextSafeInsets(bandHeight);
+    const roomHeight = Math.max(160, bandHeight - insets.top - insets.bottom);
+    const drawnHeight = text.scrollHeight;
+    const factor = Math.min(
+      widest > room + 0.5 ? room / widest : 1,
+      bandHeight > 0 && drawnHeight > roomHeight + 0.5 ? roomHeight / drawnHeight : 1,
+    );
     let fontSize = solution.fontSize;
-    if (widest > room + 0.5) {
-      fontSize = settle(solution.fontSize * (room / widest) * 0.995);
+    if (factor < 1) {
+      fontSize = settle(solution.fontSize * factor * 0.995);
       setSolution({ ...solution, fontSize, checked: true });
     } else {
       solution.checked = true;

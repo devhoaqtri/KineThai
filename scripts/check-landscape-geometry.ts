@@ -45,6 +45,8 @@ has(
 has(`--vocab-reveal-head: ${G.head}px;`, "reveal head");
 has(`--vocab-reveal-foot: ${G.foot}px;`, "reveal foot");
 has(`--vocab-reveal-foot: ${G.compactFoot}px;`, "compact reveal foot");
+has(`--vocab-clue-foot: ${G.clueFoot}px;`, "clue foot");
+has(`--vocab-clue-foot: ${G.compactClueFoot}px;`, "compact clue foot");
 has(
   `@media (orientation: landscape) and (max-height: ${COMPACT_VIEWPORT_MAX_H}px)`,
   "compact landscape tier",
@@ -59,7 +61,7 @@ has(
   "reveal band bottom stretch",
 );
 has(
-  `bottom: calc(var(--vocab-chrome-top) + var(--vocab-reveal-foot) - ${TEXT_SAFE_BOTTOM_PX}px);`,
+  `bottom: calc(var(--vocab-chrome-top) + var(--vocab-clue-foot) - ${TEXT_SAFE_BOTTOM_PX}px);`,
   "clue band stretch",
 );
 has(".vocabulary-shell[data-short-viewport] {", "short-viewport chrome tier");
@@ -121,7 +123,7 @@ for (const height of HEIGHTS) {
     `${width}×${height} budget ${budget} vs ${expected}`,
   );
 }
-assert.equal(getVocabularyTextHeightBudget(844, 390), 234, "844×390 clue budget");
+assert.equal(getVocabularyTextHeightBudget(844, 390), 222, "844×390 clue budget (24px clue clearance)");
 // Portrait and export are byte-identical.
 assert.equal(getVocabularyTextHeightBudget(390, 844), 844 - 320);
 assert.equal(getVocabularyTextHeightBudget(844, 390, 0), 390);

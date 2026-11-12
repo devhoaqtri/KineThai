@@ -52,6 +52,9 @@ export const LANDSCAPE_GEOMETRY = {
   /** `--vocab-reveal-foot`, and its value under COMPACT_VIEWPORT_MAX_H. */
   foot: 30,
   compactFoot: 12,
+  /** `--vocab-clue-foot`: a clue's clearance above the chrome, and under COMPACT_VIEWPORT_MAX_H. */
+  clueFoot: 30,
+  compactClueFoot: 24,
   /** Stacked answer page: `--vocab-reveal-word: max(136px, free * 0.5)`. */
   wordMin: 136,
   wordShare: 0.5,
@@ -83,6 +86,17 @@ export function getRevealFoot(height: number): number {
     : LANDSCAPE_GEOMETRY.foot;
 }
 
+/**
+ * Clearance a wide card keeps between a CLUE's last line and the chrome below. Wider than
+ * the compact reveal foot, which lets the meaning panel reach the progress row: a clue's
+ * ink hangs below its line box. @pure true
+ */
+export function getClueFoot(height: number): number {
+  return height <= COMPACT_VIEWPORT_MAX_H
+    ? LANDSCAPE_GEOMETRY.compactClueFoot
+    : LANDSCAPE_GEOMETRY.clueFoot;
+}
+
 /** `--vocab-reveal-free`: the height between the toolbar and the chrome's clearance. @pure true */
 export function getWideFreeHeight(height: number): number {
   return height - LANDSCAPE_GEOMETRY.head - getFeedChromeTop(height) - getRevealFoot(height);
@@ -95,7 +109,7 @@ export function getWideFreeHeight(height: number): number {
  * @pure true
  */
 export function getClueBandStretch(height: number): number {
-  return TEXT_SAFE_BOTTOM_PX - getFeedChromeTop(height) - getRevealFoot(height);
+  return TEXT_SAFE_BOTTOM_PX - getFeedChromeTop(height) - getClueFoot(height);
 }
 
 /**
