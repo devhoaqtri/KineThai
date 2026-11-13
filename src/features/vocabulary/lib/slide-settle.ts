@@ -11,7 +11,7 @@
  * the final layout, and the same slide would come out differently from run to run.
  *
  * Exports: FontRequest, FitInput, getSlideFontRequests, loadFontStylesheet, loadSlideFonts,
- *   PRONUNCIATION_FONT,
+ *   PRONUNCIATION_FONT, pronunciationText,
  *   findFitProblems,
  *   readLayoutSignature, settleSlide
  * Depends on: ./export-presets SafeInsets (type only)
@@ -33,6 +33,20 @@ const CJK = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hang
  * from one face. One face for the whole line also keeps each mark seated on its letter.
  */
 export const PRONUNCIATION_FONT = "Noto Sans";
+
+/**
+ * The characters of a transcription that PRONUNCIATION_FONT draws. A Japanese deck writes
+ * its reading in kana, which Noto Sans has none of: Google answers a subset with no glyphs
+ * by refusing it, which the page sees as a network error. The CJK face draws those instead,
+ * so they are left out here, and a reading with nothing else asks this face for nothing.
+ * @param transcription - the word's transcription, in whatever script the deck wrote it
+ * @returns Its non-CJK characters, or "" when only whitespace is left
+ * @pure true
+ */
+export function pronunciationText(transcription: string): string {
+  const text = [...transcription].filter((glyph) => !CJK.test(glyph)).join("");
+  return text.trim() ? text : "";
+}
 
 /** Gap between layout samples. A timer, because frames stall in a background tab. */
 const SAMPLE_MS = 50;

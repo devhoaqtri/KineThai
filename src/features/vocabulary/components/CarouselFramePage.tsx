@@ -40,9 +40,11 @@ import { DeckLocaleContext } from "../lib/deck-locale";
 import type { SafeInsets } from "../lib/export-presets";
 import type { CardStill } from "../lib/export-layout";
 import { grammarRows } from "../lib/grammar";
+import { posLabelVi } from "../lib/i18n";
 import { choosePresentation } from "../lib/presets";
 import {
   PRONUNCIATION_FONT,
+  pronunciationText,
   getSlideFontRequests,
   loadFontStylesheet,
   loadSlideFonts,
@@ -187,7 +189,8 @@ export function CarouselFramePage() {
       word.meaningVi ?? "",
       word.defVi,
       word.ipa ?? "",
-      word.pos ?? "",
+      // The meaning panel says the word type in Vietnamese beside the gloss.
+      word.pos ? posLabelVi(word.pos) : "",
       ...word.usage.map((example) => example.en),
       ...FIXED_TEXT,
       CAROUSEL_HOOK,
@@ -199,9 +202,12 @@ export function CarouselFramePage() {
       // The rows, not word.grammar: their labels come from the app's own tables.
       JSON.stringify(grammarParts),
     ];
-    const pronunciation = `${word.ipa ?? ""} · ${word.pos ?? ""}`;
+    // The pronunciation line is the transcription alone (the word type moved to the
+    // meaning). Only what this face draws is asked of it: a kana reading is the CJK
+    // face's, and empty text would ask for the family's whole weight range instead.
+    const pronunciation = pronunciationText(word.ipa ?? "");
     Promise.all([
-      loadFontStylesheet(PRONUNCIATION_FONT, pronunciation),
+      ...(pronunciation ? [loadFontStylesheet(PRONUNCIATION_FONT, pronunciation)] : []),
       ...(cjkFont ? [loadFontStylesheet(cjkFont)] : []),
     ])
       .then(() =>

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { findFitProblems, getSlideFontRequests, type FitInput } from "../slide-settle";
+import {
+  findFitProblems,
+  getSlideFontRequests,
+  pronunciationText,
+  type FitInput,
+} from "../slide-settle";
 
 const safe = { top: 0.1, right: 0.1, bottom: 0.1, left: 0.1 };
 const base: FitInput = { width: 400, height: 500, safe, words: [], panel: null };
@@ -72,5 +77,17 @@ describe("getSlideFontRequests", () => {
   it("sends each character once", () => {
     const [first] = getSlideFontRequests("Inter", ["aaaa", "aa"]);
     expect(first!.text).toBe("a ");
+  });
+});
+
+describe("pronunciationText", () => {
+  it("keeps a transcription the pronunciation face draws", () => {
+    expect(pronunciationText("/həˈraɪ.zən/")).toBe("/həˈraɪ.zən/");
+  });
+  it("asks nothing for a kana reading, which the CJK face draws", () => {
+    expect(pronunciationText("きょうしつ")).toBe("");
+  });
+  it("keeps only the Latin part of a mixed reading", () => {
+    expect(pronunciationText("きょうしつ (kyōshitsu)")).toBe(" (kyōshitsu)");
   });
 });

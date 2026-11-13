@@ -9,6 +9,7 @@ import type { VocabularyWord } from "../lib/schema";
 import type { LearningStage } from "../lib/stages";
 import { VOCAB_LINE_SPACING_SCALE } from "../lib/presets";
 import { pickBurstVariant } from "../lib/burst-variants";
+import { posLabelVi } from "../lib/i18n";
 import { ANSWER_HEAD_PX, allocateAnswer, type AnswerAllocation } from "../lib/answer-allocation";
 import { FilledUsage, MarkedText } from "./MarkedText";
 import { RevealBurst } from "./RevealBurst";
@@ -612,12 +613,14 @@ export function VocabularyStage({
             {shareFloat && (
               <span className="vocab-reveal-share-float" aria-hidden="true" style={shareFloat} />
             )}
-            {(word.ipa || word.pos) && (
+            {/* The word type is said in Vietnamese beside the meaning below, so this line
+                is the pronunciation alone. */}
+            {word.ipa && (
               <p
                 className="vocab-pronunciation"
                 lang={stage.lang === "ja" || stage.lang === "ko" ? stage.lang : "en"}
               >
-                {word.ipa} {word.pos && <span>· {word.pos}</span>}
+                {word.ipa}
               </p>
             )}
             {/* The gloss, not the definition. `defVi` is written to work as a CLUE
@@ -627,6 +630,9 @@ export function VocabularyStage({
                 `meaningVi` existed fall back to the sentence they do have. */}
             <p className="vocab-meaning" lang="vi">
               <MarkedText text={word.meaningVi || word.defVi} />
+              {/* The word type in Vietnamese ("danh từ", "động từ"…): a new learner reads
+                  the deck's "noun" / "adj" as jargon. */}
+              {word.pos && <span className="vocab-meaning-pos">{posLabelVi(word.pos)}</span>}
             </p>
             {word.usage.map((example, index) => (
               <div className="vocab-example" key={index}>

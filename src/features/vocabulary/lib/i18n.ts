@@ -109,6 +109,7 @@ export const POS_LABELS_VI: Record<string, string> = {
   conj: "liên từ",
   pron: "đại từ",
   pronoun: "đại từ",
+  phrase: "cụm từ",
 };
 
 /**
