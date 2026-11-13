@@ -223,9 +223,14 @@ export function WordSequenceLines({
           flex: "0 0 auto",
           alignItems: "baseline",
           columnGap: "0.24em",
-          padding: "0.05em 0.3em 0.1em",
+          // Vertical room only. The run never draws a box of its own (a `frame` inside
+          // a run becomes an underline; a lone word's box carries its own padding), so
+          // side padding here was empty space: it set a highlight that opens a line in
+          // from the line's edge and widened the gap on both sides of it past the
+          // sentence's 0.24em. The line's word gap is the only space beside a highlight.
+          padding: "0.05em 0 0.1em",
           borderRadius: "0.28em",
-          border: "0.05em solid transparent",
+          borderBlock: "0.05em solid transparent",
           isolation: "isolate",
         }}
       >
