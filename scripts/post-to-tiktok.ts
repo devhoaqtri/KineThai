@@ -27,9 +27,10 @@
  *     --boot           start the emulator first if nothing is attached
  *     --keep           leave the pushed file on the device afterwards
  */
-import { spawnSync } from "node:child_process";
-import { existsSync, statSync } from "node:fs";
-import { basename, resolve } from "node:path";
+import { spawn, spawnSync } from "node:child_process";
+import { existsSync, openSync, readFileSync, statSync } from "node:fs";
+import { homedir } from "node:os";
+import { basename, join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 
 const TIKTOK_PACKAGES = [
@@ -73,16 +74,62 @@ function attachedDevices(): string[] {
     .map((line) => line.split("\t")[0]!);
 }
 
+/** Where the emulator's own output goes; the first place to look when a boot fails. */
+const BOOT_LOG = "/tmp/emulator-boot.log";
+
+/**
+ * The SDK that can boot this AVD: one with an emulator binary AND the system image the
+ * AVD names. This machine has two SDKs (Homebrew's, which the shell's ANDROID_HOME points
+ * at, and Android Studio's), and the TikTok AVD's Play Store image is only in one of them.
+ * Trusting ANDROID_HOME booted it against the other, where it died at once.
+ * @returns the SDK root
+ * @throws when no candidate has both, naming every root it checked
+ */
+function sdkForAvd(): string {
+  const config = join(homedir(), ".android", "avd", `${avd}.avd`, "config.ini");
+  if (!existsSync(config)) throw new Error(`no AVD named ${avd} (looked for ${config})`);
+  const sysdir = /^image\.sysdir\.1\s*=\s*(.+)$/m.exec(readFileSync(config, "utf8"))?.[1]?.trim();
+  const roots = [
+    process.env.ANDROID_SDK_ROOT,
+    process.env.ANDROID_HOME,
+    join(homedir(), "Library", "Android", "sdk"),
+  ].filter((root, at, all): root is string => !!root && all.indexOf(root) === at);
+  const found = roots.find(
+    (root) =>
+      existsSync(join(root, "emulator", "emulator")) &&
+      (!sysdir || existsSync(join(root, sysdir))),
+  );
+  if (found) return found;
+  throw new Error(
+    `no Android SDK here has both an emulator and ${avd}'s system image (${sysdir}).\n` +
+      `  checked: ${roots.join(", ")}`,
+  );
+}
+
 async function bootEmulator() {
-  const sdk = process.env.ANDROID_HOME ?? `${process.env.HOME}/Library/Android/sdk`;
-  console.log(`→ booting ${avd}`);
-  spawnSync("sh", ["-c", `nohup "${sdk}/emulator/emulator" -avd ${avd} >/tmp/emulator-boot.log 2>&1 &`]);
-  adb(["wait-for-device"], { quiet: true });
-  for (let i = 0; i < 150; i += 1) {
-    if (shell("getprop sys.boot_completed") === "1") return;
+  const sdk = sdkForAvd();
+  console.log(`→ booting ${avd} (SDK ${sdk})`);
+  const log = openSync(BOOT_LOG, "w");
+  const emulator = spawn(join(sdk, "emulator", "emulator"), ["-avd", avd], {
+    detached: true,
+    stdio: ["ignore", log, log],
+    // The emulator finds the system image through these, not through its own path.
+    env: { ...process.env, ANDROID_SDK_ROOT: sdk, ANDROID_HOME: sdk },
+  });
+  let exited: number | null = null;
+  emulator.on("exit", (code) => (exited = code ?? 1));
+  emulator.unref();
+  // Polled rather than `adb wait-for-device`, which waits forever on an emulator that has
+  // already died: the boot log says why, and this says so instead of hanging.
+  for (let i = 0; i < 180; i += 1) {
+    if (exited !== null) {
+      const tail = readFileSync(BOOT_LOG, "utf8").trim().split("\n").slice(-4).join("\n  ");
+      throw new Error(`the emulator exited (code ${exited}) before booting:\n  ${tail}`);
+    }
+    if (attachedDevices().length && shell("getprop sys.boot_completed") === "1") return;
     await sleep(2000);
   }
-  throw new Error(`${avd} did not finish booting; see /tmp/emulator-boot.log`);
+  throw new Error(`${avd} did not finish booting in 6 minutes; see ${BOOT_LOG}`);
 }
 
 /**
