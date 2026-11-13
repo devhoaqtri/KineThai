@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   LEVEL_PROGRESS_KEY,
+  lapsFilled,
   milestonesReached,
   parseMilestoneKey,
   readProgress,
@@ -38,6 +39,25 @@ describe("tierProgress", () => {
   });
   it("is empty for a scope with no words", () => {
     expect(tierProgress(0, 0).ratio).toBe(0);
+  });
+});
+
+describe("lapsFilled", () => {
+  it("counts one fill per 100 words passed", () => {
+    expect(lapsFilled(0, 635)).toBe(0);
+    expect(lapsFilled(99, 635)).toBe(0);
+    expect(lapsFilled(100, 635)).toBe(1);
+    expect(lapsFilled(199, 635)).toBe(1);
+    expect(lapsFilled(200, 635)).toBe(2);
+    expect(lapsFilled(300, 635)).toBe(3);
+  });
+  it("counts a finished scope's short last stretch as a fill", () => {
+    expect(lapsFilled(635, 635)).toBe(7);
+    expect(lapsFilled(600, 600)).toBe(6);
+    expect(lapsFilled(40, 40)).toBe(1);
+  });
+  it("is 0 for an empty scope", () => {
+    expect(lapsFilled(0, 0)).toBe(0);
   });
 });
 

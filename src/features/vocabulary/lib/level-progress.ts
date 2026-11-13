@@ -16,7 +16,7 @@
  *
  * Exports: MILESTONE_STEP, LEVEL_PROGRESS_KEY, LEVEL_PROGRESS_EVENT, LevelProgress,
  *   ProgressStore, ProgressScope, WordMilestone, milestoneKey, parseMilestoneKey,
- *   scopeProgress, tierProgress, milestonesReached, recordSeenWord, readProgress,
+ *   scopeProgress, tierProgress, lapsFilled, milestonesReached, recordSeenWord, readProgress,
  *   writeProgress
  * Depends on: ./schema
  */
@@ -100,6 +100,21 @@ export function tierProgress(
   const from = Math.floor(seen / MILESTONE_STEP) * MILESTONE_STEP;
   const target = Math.min(total, from + MILESTONE_STEP);
   return { from, target, ratio: (seen - from) / (target - from) };
+}
+
+/**
+ * How many times a scope's bar has been filled: one per 100 words passed, and a finished
+ * scope's last, shorter stretch counts as a fill of its own. The chip shows it as a dot at
+ * the bar's start: empty after the first fill, the number from the second on.
+ * @param seen Words seen in the scope
+ * @param total The scope's size
+ * @returns Completed fills; 0 before the first 100 words
+ * @pure true
+ */
+export function lapsFilled(seen: number, total: number): number {
+  if (total <= 0) return 0;
+  if (seen >= total) return Math.ceil(total / MILESTONE_STEP);
+  return Math.floor(seen / MILESTONE_STEP);
 }
 
 /**

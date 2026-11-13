@@ -1214,6 +1214,34 @@
 .vocab-difficulty-band[data-empty] {
   background: transparent;
 }
+/* How many times the bar has been filled (lapsFilled in lib/level-progress): a dot the
+   chip's full height seated in its left cap, light on the accent fill so it reads as a
+   bead on the bar. Empty after the first 100 words, then 2, 3… in the sheet's own ink.
+   It never narrows below a circle and grows into a pill for two digits; the band's name
+   moves over by its width so the two never touch. */
+.vocab-difficulty-band[data-laps] {
+  /* Tighter on the right and untracked, so the longest band ("TOPIK 1–6") still fits. */
+  padding-inline: calc(1.5em + 2px) 1px;
+  letter-spacing: 0;
+}
+.vocab-difficulty-laps {
+  position: absolute;
+  inset: 0 auto 0 0;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 0 0.25em;
+  border-radius: 999px;
+  background: color-mix(in srgb, #ffffff 92%, var(--pop-accent, var(--vocab-accent)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pop-accent, var(--vocab-accent)) 55%, transparent);
+  color: var(--shell-surface, #15102a);
+  font-size: 0.86em;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1;
+}
 .vocab-difficulty-pop {
   /* The highlight tracks the on-screen card: VocabularyStream copies that card's
      computed --vocab-accent / --vocab-button-ink onto the shared .vocabulary-shell as

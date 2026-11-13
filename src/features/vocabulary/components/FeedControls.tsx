@@ -37,7 +37,12 @@ import {
   difficultyLevels,
   tracksFor,
 } from "../lib/difficulty";
-import { scopeProgress, tierProgress, type LevelProgress } from "../lib/level-progress";
+import {
+  lapsFilled,
+  scopeProgress,
+  tierProgress,
+  type LevelProgress,
+} from "../lib/level-progress";
 import { levelLadderFor } from "../lib/level-ladder";
 import { activateCustomPack } from "../lib/custom-pack";
 import { useCustomPacks } from "../hooks/useCustomPacks";
@@ -668,7 +673,9 @@ function DifficultyDropdown({
         : difficultyLevels(id, ladder.levels);
     if (!levels?.length) return null;
     const { seen, total } = scopeProgress(levels, levelProgress, ladder.levelCounts);
-    return total > 0 ? { seen, total, ...tierProgress(seen, total) } : null;
+    return total > 0
+      ? { seen, total, laps: lapsFilled(seen, total), ...tierProgress(seen, total) }
+      : null;
   };
   // The first row is "tất cả" only while nothing is picked. With some packs picked it is
   // their total: "tổng cộng", its chip running from the lowest of their levels to the
@@ -937,6 +944,7 @@ function DifficultyDropdown({
                           data-empty={rowBand(option) ? undefined : true}
                           aria-hidden={rowBand(option) ? undefined : true}
                           data-complete={(progress && progress.seen >= progress.total) || undefined}
+                          data-laps={progress?.laps || undefined}
                           style={
                             progress
                               ? ({
@@ -945,12 +953,20 @@ function DifficultyDropdown({
                               : undefined
                           }
                         >
+                          {/* A dot at the bar's start for every time it has been filled:
+                          empty after the first 100 words, then the count, 2, 3… */}
+                          {progress && progress.laps > 0 && (
+                            <span className="vocab-difficulty-laps" aria-hidden="true">
+                              {progress.laps > 1 ? progress.laps : ""}
+                            </span>
+                          )}
                           {rowBand(option)}
                           {progress && (
                             <span className="sr-only">
                               {progress.seen >= progress.total
                                 ? `, đã xem trọn ${progress.total} từ`
                                 : `, đã xem ${progress.seen}/${progress.target} từ`}
+                              {progress.laps > 0 && `, thanh đã đầy ${progress.laps} lần`}
                             </span>
                           )}
                         </span>
