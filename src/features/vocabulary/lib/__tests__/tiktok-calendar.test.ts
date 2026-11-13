@@ -1,0 +1,193 @@
+import { describe, expect, it } from "vitest";
+import {
+  captionFor,
+  dateOfDay,
+  dayOfDate,
+  eligibleWords,
+  levelForDay,
+  parseDaySpec,
+  planDays,
+  summarize,
+  todayInVietnam,
+  type Calendar,
+  type CalendarDay,
+  type CandidateWord,
+} from "../../../../../scripts/lib/tiktok-calendar";
+
+const word = (id: string, level: string, topic: string): CandidateWord => ({
+  id,
+  word: id.replace(/^vi-/, ""),
+  level,
+  topic,
+  shareCode: id.toUpperCase().slice(-3),
+  ipa: "/x/",
+  meaningVi: "nghĩa",
+  pos: "noun",
+  usage: [{ en: "An _____." }],
+});
+
+describe("parseDaySpec", () => {
+  it("reads days, ranges and lists", () => {
+    expect(parseDaySpec("3")).toEqual([3]);
+    expect(parseDaySpec("1-3,5,4-6")).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+  it("refuses what is not a day", () => {
+    expect(() => parseDaySpec("a")).toThrow();
+    expect(() => parseDaySpec("5-2")).toThrow();
+    expect(() => parseDaySpec("0")).toThrow();
+  });
+});
+
+describe("dates", () => {
+  it("counts days from the start, across a month and a year", () => {
+    expect(dateOfDay("2026-11-15", 1)).toBe("2026-11-15");
+    expect(dateOfDay("2026-11-15", 17)).toBe("2026-12-01");
+    expect(dateOfDay("2026-11-15", 365)).toBe("2027-11-14");
+    expect(dayOfDate("2026-11-15", "2027-11-14")).toBe(365);
+    expect(dayOfDate("2026-11-15", "2026-11-14")).toBe(0);
+  });
+  it("takes today in Vietnam, seven hours ahead of UTC", () => {
+    expect(todayInVietnam(Date.UTC(2026, 10, 14, 16, 59))).toBe("2026-11-14");
+    expect(todayInVietnam(Date.UTC(2026, 10, 14, 17, 0))).toBe("2026-11-15");
+  });
+});
+
+describe("levelForDay", () => {
+  it("climbs a quarter at a time when rising", () => {
+    expect(levelForDay("rising", 1, "2026-11-15")).toBe("A1");
+    expect(levelForDay("rising", 92, "2026-11-15")).toBe("A1");
+    expect(levelForDay("rising", 93, "2026-11-15")).toBe("A2");
+    expect(levelForDay("rising", 365, "2026-11-15")).toBe("B2");
+  });
+  it("keeps B1 and B2 for the weekend when weekly", () => {
+    expect(levelForDay("weekly", 1, "2026-11-14")).toBe("B1"); // Saturday
+    expect(levelForDay("weekly", 2, "2026-11-15")).toBe("B2"); // Sunday
+    expect(levelForDay("weekly", 3, "2026-11-16")).toBe("A1"); // Monday, odd day
+    expect(levelForDay("weekly", 4, "2026-11-17")).toBe("A2");
+  });
+});
+
+describe("eligibleWords", () => {
+  it("leaves out an incomplete, reported or broken word", () => {
+    const words = [
+      word("vi-good", "A1", "t"),
+      { ...word("vi-noipa", "A1", "t"), ipa: "" },
+      word("vi-reported", "A1", "t"),
+      word("vi-agree", "A1", "t"),
+      word("vi-broken", "A1", "t"),
+    ];
+    const kept = eligibleWords(words, new Set(["vi-reported", "agree"]), new Set(["vi-broken"]));
+    expect(kept.map((w) => w.id)).toEqual(["vi-good"]);
+  });
+});
+
+describe("planDays", () => {
+  const words = Array.from({ length: 40 }, (_, i) =>
+    word(`vi-w${i}`, i < 20 ? "A1" : "A2", `topic${i % 4}`),
+  );
+  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+  const levelOf = (day: number) => (day <= 15 ? "A1" : "A2");
+
+  it("uses each word once, from the day's level, with no topic two days running", () => {
+    const plan = planDays({ words, taken: new Map(), dayNumbers: days, levelOf, seed: 1 });
+    const picked = days.map((d) => plan.get(d)!);
+    expect(new Set(picked.map((w) => w.id)).size).toBe(30);
+    for (const d of days) expect(plan.get(d)!.level).toBe(levelOf(d));
+    for (let i = 1; i < picked.length; i += 1) expect(picked[i]!.topic).not.toBe(picked[i - 1]!.topic);
+  });
+
+  it("plans the same year from the same seed", () => {
+    const a = planDays({ words, taken: new Map(), dayNumbers: days, levelOf, seed: 7 });
+    const b = planDays({ words, taken: new Map(), dayNumbers: days, levelOf, seed: 7 });
+    expect([...a.values()].map((w) => w.id)).toEqual([...b.values()].map((w) => w.id));
+  });
+
+  it("refills one day without touching or reusing the others", () => {
+    const first = planDays({ words, taken: new Map(), dayNumbers: days, levelOf, seed: 1 });
+    const taken = new Map(first);
+    taken.delete(5);
+    const again = planDays({ words, taken, dayNumbers: [5], levelOf, seed: 2 });
+    const replacement = again.get(5)!;
+    expect([...taken.values()].map((w) => w.id)).not.toContain(replacement.id);
+    expect(replacement.topic).not.toBe(taken.get(4)!.topic);
+    expect(replacement.topic).not.toBe(taken.get(6)!.topic);
+  });
+
+  it("says when a level has run out", () => {
+    expect(() =>
+      planDays({ words: words.slice(0, 3), taken: new Map(), dayNumbers: [1, 2, 3, 4], levelOf, seed: 1 }),
+    ).toThrow(/A1/);
+  });
+});
+
+describe("captionFor", () => {
+  it("names the day and level, never the word", () => {
+    const caption = captionFor({
+      day: 12,
+      total: 365,
+      level: "A2",
+      hook: "Từ gì mà ...",
+      address: "anh.chayla.app",
+    });
+    expect(caption).toContain("Ngày 12/365");
+    expect(caption).toContain("#a2");
+    expect(caption).toContain("anh.chayla.app");
+  });
+});
+
+describe("summarize", () => {
+  const day = (n: number, status: CalendarDay["status"]): CalendarDay => ({
+    day: n,
+    date: dateOfDay("2026-11-15", n),
+    wordId: `vi-w${n}`,
+    word: `w${n}`,
+    code: "ABC",
+    level: "A1",
+    topic: "t",
+    status,
+    caption: "",
+    clip: null,
+    durationSec: null,
+    renderedAt: null,
+    scheduledAt: null,
+    postedAt: null,
+    url: null,
+    note: null,
+  });
+  const calendar: Calendar = {
+    version: 1,
+    locale: "en",
+    startDate: "2026-11-15",
+    postTime: "19:00",
+    order: "rising",
+    seed: 1,
+    clipDir: "~/clips",
+    excluded: [],
+    days: [
+      day(1, "posted"),
+      day(2, "posted"),
+      day(3, "scheduled"), // gone, never marked
+      day(4, "scheduled"), // today
+      day(5, "scheduled"),
+      day(6, "rendered"),
+      day(7, "planned"),
+    ],
+  };
+
+  it("finds today's runway, the overdue day and the streak", () => {
+    const s = summarize(calendar, "2026-11-18");
+    expect(s.todayDay).toBe(4);
+    expect(s.scheduledThrough?.day).toBe(5);
+    expect(s.renderedThrough?.day).toBe(6);
+    expect(s.overdue.map((d) => d.day)).toEqual([3]);
+    expect(s.streak).toBe(0);
+    expect(summarize(calendar, "2026-11-17").streak).toBe(2);
+    expect(s.counts).toEqual({ planned: 1, rendered: 1, scheduled: 3, posted: 2, missed: 0 });
+  });
+
+  it("measures the runway from day 1 before the start", () => {
+    const s = summarize({ ...calendar, days: calendar.days.map((d) => ({ ...d, status: "scheduled" as const })) }, "2026-11-10");
+    expect(s.todayDay).toBeLessThan(1);
+    expect(s.scheduledThrough?.day).toBe(7);
+  });
+});
