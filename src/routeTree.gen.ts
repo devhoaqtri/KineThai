@@ -33,6 +33,7 @@ import { Route as AdminErrorsRouteImport } from './routes/admin/errors'
 import { Route as AdminLibraryRouteImport } from './routes/admin/library'
 import { Route as AdminLinksRouteImport } from './routes/admin/links'
 import { Route as AdminModelRouteImport } from './routes/admin/model'
+import { Route as AdminNumbersRouteImport } from './routes/admin/numbers'
 import { Route as AdminPalettesRouteImport } from './routes/admin/palettes'
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminSystemRouteImport } from './routes/admin/system'
@@ -177,6 +178,11 @@ const AdminLinksRoute = AdminLinksRouteImport.update({
 const AdminModelRoute = AdminModelRouteImport.update({
   id: '/model',
   path: '/model',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminNumbersRoute = AdminNumbersRouteImport.update({
+  id: '/numbers',
+  path: '/numbers',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminPalettesRoute = AdminPalettesRouteImport.update({
@@ -324,6 +330,7 @@ export interface FileRoutesByFullPath {
   '/admin/library': typeof AdminLibraryRoute
   '/admin/links': typeof AdminLinksRoute
   '/admin/model': typeof AdminModelRoute
+  '/admin/numbers': typeof AdminNumbersRoute
   '/admin/palettes': typeof AdminPalettesRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/system': typeof AdminSystemRoute
@@ -372,6 +379,7 @@ export interface FileRoutesByTo {
   '/admin/library': typeof AdminLibraryRoute
   '/admin/links': typeof AdminLinksRoute
   '/admin/model': typeof AdminModelRoute
+  '/admin/numbers': typeof AdminNumbersRoute
   '/admin/palettes': typeof AdminPalettesRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/system': typeof AdminSystemRoute
@@ -423,6 +431,7 @@ export interface FileRoutesById {
   '/admin/library': typeof AdminLibraryRoute
   '/admin/links': typeof AdminLinksRoute
   '/admin/model': typeof AdminModelRoute
+  '/admin/numbers': typeof AdminNumbersRoute
   '/admin/palettes': typeof AdminPalettesRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/system': typeof AdminSystemRoute
@@ -474,6 +483,7 @@ export interface FileRouteTypes {
     | '/admin/library'
     | '/admin/links'
     | '/admin/model'
+    | '/admin/numbers'
     | '/admin/palettes'
     | '/admin/reports'
     | '/admin/system'
@@ -522,6 +532,7 @@ export interface FileRouteTypes {
     | '/admin/library'
     | '/admin/links'
     | '/admin/model'
+    | '/admin/numbers'
     | '/admin/palettes'
     | '/admin/reports'
     | '/admin/system'
@@ -572,6 +583,7 @@ export interface FileRouteTypes {
     | '/admin/library'
     | '/admin/links'
     | '/admin/model'
+    | '/admin/numbers'
     | '/admin/palettes'
     | '/admin/reports'
     | '/admin/system'
@@ -796,6 +808,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminModelRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/numbers': {
+      id: '/admin/numbers'
+      path: '/numbers'
+      fullPath: '/admin/numbers'
+      preLoaderRoute: typeof AdminNumbersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/palettes': {
       id: '/admin/palettes'
       path: '/palettes'
@@ -1003,6 +1022,7 @@ interface AdminRouteRouteChildren {
   AdminLibraryRoute: typeof AdminLibraryRoute
   AdminLinksRoute: typeof AdminLinksRoute
   AdminModelRoute: typeof AdminModelRoute
+  AdminNumbersRoute: typeof AdminNumbersRoute
   AdminPalettesRoute: typeof AdminPalettesRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminSystemRoute: typeof AdminSystemRoute
@@ -1020,6 +1040,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLibraryRoute: AdminLibraryRoute,
   AdminLinksRoute: AdminLinksRoute,
   AdminModelRoute: AdminModelRoute,
+  AdminNumbersRoute: AdminNumbersRoute,
   AdminPalettesRoute: AdminPalettesRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminSystemRoute: AdminSystemRoute,

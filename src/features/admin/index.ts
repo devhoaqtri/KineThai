@@ -14,6 +14,7 @@ export { ErrorsPage } from "./components/errors/ErrorsPage";
 export { SystemPage } from "./components/system/SystemPage";
 export { VocabularyWorkbenchPage } from "./components/vocabulary/VocabularyWorkbenchPage";
 export { WordLibraryPage } from "./components/library/WordLibraryPage";
+export { NumberReviewPage } from "./components/numbers/NumberReviewPage";
 export { WordReportsPage } from "./components/reports/WordReportsPage";
 export { TemplateManagerPage } from "./components/templates/TemplateManagerPage";
 export { PaletteManagerPage } from "./components/palettes/PaletteManagerPage";

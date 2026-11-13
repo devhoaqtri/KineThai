@@ -19,6 +19,7 @@ import {
 import type { SessionHealthSummary } from "../types/telemetry";
 import { listWordReportGroups } from "./word-report.functions";
 import { getLibraryWord, getWordLibrary, listLibraryWords } from "./word-library.functions";
+import { getNumberReview } from "./number-review.functions";
 import type { TargetLocale } from "@/features/vocabulary/lib/target-language";
 import { listWorkbenchWords, type WorkbenchListResult } from "./workbench.functions";
 import { listWorkbenchViews, type WorkbenchView } from "./workbench-views.functions";
@@ -181,6 +182,17 @@ export function adminLibraryPageQueryOptions(query: {
     queryKey: adminKeys.libraryPage(JSON.stringify(query)),
     staleTime: 15_000,
     queryFn: () => listLibraryWords({ data: query }),
+  });
+}
+
+/**
+ * The English deck's unsure number words and the choices made on them.
+ */
+export function adminNumberReviewQueryOptions() {
+  return queryOptions({
+    queryKey: adminKeys.numberReview(),
+    staleTime: 60_000,
+    queryFn: () => getNumberReview(),
   });
 }
 

@@ -20,6 +20,7 @@ export const adminKeys = {
   libraryPage: (query: string) => [...adminKeys.library(), "page", query] as const,
   libraryWord: (locale: string, id: string) =>
     [...adminKeys.library(), "word", locale, id] as const,
+  numberReview: () => [...adminKeys.all, "number-review"] as const,
   workbench: (query: string) => [...adminKeys.all, "workbench", query] as const,
   workbenchViews: () => [...adminKeys.all, "workbench-views"] as const,
   templates: () => [...adminKeys.all, "templates"] as const,
