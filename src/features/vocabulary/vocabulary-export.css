@@ -25,6 +25,8 @@
   .vocab-reveal-details {
   left: var(--vocab-chrome-side, 0px);
   right: var(--vocab-chrome-side, 0px);
+  width: var(--vocab-reveal-width);
+  margin-inline: auto;
 }
 /* A milestone is the reader's, not the clip's. It is a sibling of the dock rather than a
    child of the card, so the blanket showcase rules that clear the card's own children do

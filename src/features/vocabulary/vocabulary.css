@@ -28,6 +28,10 @@
      these were audited at; the short-viewport tier at the end of the file re-derives the
      same four from a fraction of the screen height. */
   --vocab-chrome-inset: max(44px, calc(env(safe-area-inset-bottom) + 34px));
+  /* The progress row's and the button row's side gutter. Below 488px (where the rows
+     reach their 440px cap) it is also the line a small portrait screen hangs the title
+     and the meaning panel on. */
+  --vocab-chrome-gutter: 24px;
   --vocab-chrome-bar: 44px;
   --vocab-chrome-gap: 40px;
   --vocab-chrome-progress: 3px;
@@ -3215,6 +3219,30 @@
       var(--vocab-reveal-tab-reserve)
   );
 }
+/* A small portrait screen hangs its furniture on one vertical line, the progress row's
+   left edge (--vocab-chrome-gutter): the title above and the meaning panel in between.
+   Below 488px the centred panel above starts left of that line, nudged by the tab; here
+   its left edge moves onto it and its right edge stays where centring put it, so the gap
+   to the tab is unchanged. At 488px the two layouts meet (both edges 24px in), so the
+   panel does not jump at the breakpoint. */
+@media (orientation: portrait) and (max-width: 488px) {
+  .vocab-card:not([data-export]):not([data-reveal-split="two-column"]) .vocab-reveal-details {
+    --vocab-reveal-centred-side: calc(
+      (var(--vocab-reveal-slack) - var(--vocab-reveal-tab-reserve)) / 2
+    );
+    left: calc(var(--vocab-chrome-side, 0px) + var(--vocab-chrome-gutter));
+    right: calc(
+      env(safe-area-inset-right, 0px) + var(--vocab-chrome-side, 0px) +
+        var(--vocab-reveal-tab-reserve) + var(--vocab-reveal-centred-side)
+    );
+    width: auto;
+    margin-inline: 0;
+  }
+  /* The title column steps in from the toolbar's 16px edge to the same line. */
+  .vocab-toolbar-left {
+    margin-left: calc(var(--vocab-chrome-gutter) - max(16px, env(safe-area-inset-left)));
+  }
+}
 /* The gloss that replaced the definition sentence. It is a word or two where a paragraph
    used to be, so it is set to carry the panel rather than sit in it as body copy — this is
    the thing the reader opened the card for. `balance` keeps a two-part gloss from leaving
@@ -3435,7 +3463,10 @@
   bottom: var(--vocab-chrome-progress-bottom);
   left: 50%;
   transform: translateX(-50%);
-  width: min(440px, calc(100% - 48px - 2 * var(--vocab-chrome-side, 0px)));
+  width: min(
+    440px,
+    calc(100% - 2 * var(--vocab-chrome-gutter) - 2 * var(--vocab-chrome-side, 0px))
+  );
   display: flex;
   gap: 5px;
 }
@@ -3482,7 +3513,10 @@
   /* Exactly the progress bar's box, which is the row's alignment anchor: the report
      button's left edge sits under the first progress segment and the bookmark's right
      edge under the last. */
-  width: min(440px, calc(100% - 48px - 2 * var(--vocab-chrome-side, 0px)));
+  width: min(
+    440px,
+    calc(100% - 2 * var(--vocab-chrome-gutter) - 2 * var(--vocab-chrome-side, 0px))
+  );
   display: flex;
   align-items: center;
   gap: var(--action-gap);
