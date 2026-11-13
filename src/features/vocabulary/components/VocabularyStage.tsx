@@ -1,5 +1,5 @@
 /** Readable clue text and reveal detail, reusing existing kinetic primitives. Exports: VocabularyStage. Depends on: canvas, kinetic-text, stages, motion tokens. */
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, motion, type MotionValue, type Variants } from "framer-motion";
 import type { CanvasSpec } from "@/features/canvas";
 import { WordSequenceText } from "@/features/post-player";
@@ -26,6 +26,11 @@ const REVEAL_HOLD_SECONDS = 0.14;
 const BURST_LEAD_SECONDS = REVEAL_HOLD_SECONDS + 0.06;
 /** The meaning follows the word instead of competing with it. */
 const DETAILS_DELAY_SECONDS = 0.34;
+/**
+ * Clearance between the answer's layout box and the meaning panel. Landscape uses the
+ * same 16px as its own seam (--vocab-reveal-seam).
+ */
+const PANEL_SEAM_PX = 16;
 
 type PageMotion = { direction: number; reveal: boolean };
 
@@ -185,12 +190,61 @@ export function VocabularyStage({
   onGrammarHold?: (held: boolean) => void;
 }) {
   const details = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [panelTop, setPanelTop] = useState<number | null>(null);
   useLayoutEffect(() => {
     if (details.current) details.current.scrollTop = 0;
   }, [stage.id, playKey]);
+  /**
+   * The meaning panel starts under the answer, not on a fixed midline. The answer is
+   * fitted per word, so a short one leaves the lower half mostly empty while a tall one
+   * comes within a few pixels of the 50% mark. Measuring the answer's layout box lets
+   * the panel take whatever height is actually free, and the fixed midline is kept only
+   * when the word already reaches it. A wide card lays the two out in columns and sets
+   * its own top, so it is left alone.
+   */
+  useLayoutEffect(() => {
+    setPanelTop(null);
+    if (!stage.reveal || still) return;
+    const stageEl = stageRef.current;
+    const card = stageEl?.closest<HTMLElement>(".vocab-card");
+    // The answer's own band, not an outgoing clue page that is still in AnimatePresence.
+    const box = stageEl?.querySelector<HTMLElement>(
+      ".vocab-stage-band[data-reveal] [data-word-box]",
+    );
+    if (!card || !box) return;
+    const measure = () => {
+      const cardRect = card.getBoundingClientRect();
+      if (cardRect.width > cardRect.height || card.dataset.revealSplit === "two-column") {
+        setPanelTop(null);
+        return;
+      }
+      // The answer's own layout box, not its painted rect: the page enters under a
+      // scale, and a transform never resizes the box the ResizeObserver watches.
+      const bottom = box.offsetTop + box.offsetHeight / 2;
+      const midline = card.clientHeight / 2;
+      setPanelTop(bottom + PANEL_SEAM_PX < midline ? bottom + PANEL_SEAM_PX : null);
+    };
+    measure();
+    const frame = requestAnimationFrame(measure);
+    const observer = new ResizeObserver(measure);
+    observer.observe(box);
+    observer.observe(card);
+    // The fit solver moves the answer by changing the wrapper's `top` percentage, which
+    // is not a resize; without this the panel would keep the seam it measured a frame
+    // before the word settled.
+    const position = new MutationObserver(measure);
+    position.observe(box, { attributes: true, attributeFilter: ["style"] });
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      position.disconnect();
+    };
+  }, [stage.reveal, stage.id, word.id, playKey, still]);
   const pageMotion: PageMotion = { direction, reveal: !!stage.reveal };
   return (
     <motion.div
+      ref={stageRef}
       className="vocab-stage"
       style={{ x: dragX }}
       aria-live={active ? "polite" : "off"}
@@ -288,6 +342,11 @@ export function VocabularyStage({
           className="vocab-reveal-details"
           tabIndex={0}
           aria-label="Nghĩa và ví dụ của từ"
+          style={
+            panelTop === null
+              ? undefined
+              : ({ "--vocab-reveal-top": `${panelTop}px` } as CSSProperties)
+          }
           initial={reducedMotion || still ? false : { opacity: 0, y: 30, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={

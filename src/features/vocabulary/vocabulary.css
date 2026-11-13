@@ -3108,7 +3108,9 @@
      half — top + max-height always lands --vocab-reveal-gap above the bottom chrome,
      whatever seam the two variables put the panel at. overflow-y stays only as a
      last-resort safety valve for pathologically long text on very short screens.
-     Portrait keeps the audited midline; the wide-ratio tiers at the end of the file
+     Portrait starts at the audited midline; VocabularyStage measures the answer's box
+     and moves that start up to just under it when the word leaves room, so the panel
+     gets every pixel the word does not need. The wide-ratio tiers at the end of the file
      re-declare both variables for the panels that share a shallow card with the answer
      word. */
   --vocab-reveal-top: 50%;

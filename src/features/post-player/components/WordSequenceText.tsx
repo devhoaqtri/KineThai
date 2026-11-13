@@ -352,6 +352,10 @@ export function WordSequenceText({
         ref={wrapperRef}
         aria-hidden={measure || undefined}
         className="pointer-events-none absolute select-none"
+        // The layout box of the text, before its own entrance transform. A card that
+        // places something under the text (the vocabulary meaning panel) measures this
+        // rather than the word's painted rect, which the entrance scales.
+        data-word-box=""
         style={{
           left: `${spec.x}%`,
           top: `${safeCenterY}%`,
