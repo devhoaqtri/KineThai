@@ -8577,6 +8577,15 @@
   overscroll-behavior-y: contain;
   scrollbar-width: thin;
 }
+/* The answer chip's inline padding and the emphasis underline's pseudo-element hang
+   below the last line box, and a scroll container clips that overflow rather than
+   counting it in scrollHeight. This is the room they need, so a wrapped example's last
+   line is never shaved at the scroller's edge. Export frames are measured to the pixel
+   by check:carousel-fit and already budget their own overshoot, so they keep their own
+   geometry. */
+.vocab-card:not([data-still]) .vocab-reveal-scroll {
+  padding-block-end: 0.3em;
+}
 
 /* ── The notch around the saved drawer's tab ─────────────────
    On a narrow phone the panel reaches the drawer's tab on the card's right edge. Where the
