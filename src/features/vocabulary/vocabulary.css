@@ -8645,6 +8645,15 @@
 .vocab-reveal-details[data-share-top] .vocab-share-face {
   margin-inline-end: var(--vocab-notch-share, 0px);
 }
+/* TEMPORARY — up top the tab is only its icon, so it sits quietly beside the word's
+   pronunciation instead of reading as a second heading. The button keeps its aria-label
+   and title, so its name is unchanged; delete this block to bring the label back. */
+.vocab-reveal-details[data-share-top] .vocab-share-label {
+  display: none;
+}
+.vocab-reveal-details[data-share-top] .vocab-share-button {
+  padding-inline: 11px 10px;
+}
 .vocab-reveal-details[data-share-top] > .vocab-reveal-scroll {
   margin-bottom: 0;
 }
