@@ -172,6 +172,33 @@ function findShareActivity(pkg: string): string | null {
   return line?.trim().match(/([\w.]+\/[\w.$]+)/)?.[1] ?? null;
 }
 
+/** The package of the activity on screen, or "" when it cannot be read. */
+function foregroundPackage(): string {
+  const line = shell("dumpsys activity activities")
+    .split("\n")
+    .find((l) => l.includes("topResumedActivity") || l.includes("mResumedActivity"));
+  return line?.match(/ u\d+ ([\w.]+)\//)?.[1] ?? "";
+}
+
+/**
+ * Whether a package reaches the front and stays there for three seconds. Reaching it is
+ * not enough: a share screen that cannot read the clip opens for a moment and closes.
+ * @param pkg - the package to wait for
+ */
+async function waitForForeground(pkg: string): Promise<boolean> {
+  let held = 0;
+  for (let i = 0; i < 40; i += 1) {
+    if (foregroundPackage() === pkg) {
+      held += 1;
+      if (held >= 6) return true;
+    } else if (held > 0) {
+      return false;
+    }
+    await sleep(500);
+  }
+  return false;
+}
+
 async function main() {
   if (!clip) throw new Error("give me a path to an .mp4");
   const file = resolve(clip);
@@ -212,13 +239,19 @@ async function main() {
   console.log(`  ${uri}`);
 
   const component = findShareActivity(tiktok);
-  // --grant-read-uri-permission is what lets TikTok read a URI owned by MediaProvider.
+  // --grant-read-uri-permission is what lets TikTok read a URI owned by MediaProvider, but
+  // a grant covers only the intent's data (and ClipData), never an extra. An app's own
+  // startActivity copies EXTRA_STREAM into ClipData for it; `am` does not, so with the URI
+  // in the extra alone TikTok got a SecurityException, opened its share screen and closed
+  // it again. `-d` puts the same URI in the data, where the grant reaches it.
   const intent = [
     "shell",
     "am",
     "start",
     "-a",
     "android.intent.action.SEND",
+    "-d",
+    uri,
     "-t",
     "video/mp4",
     "--grant-read-uri-permission",
@@ -229,6 +262,15 @@ async function main() {
   ];
   console.log(`→ handing it to ${component ?? "the system chooser"}`);
   adb(intent);
+  // `am start` succeeds once the intent is delivered, not once TikTok shows anything: an
+  // app still installing, or one that bounces to its own login, leaves another screen on
+  // top. So the success line waits for TikTok to be the screen in front.
+  if (!(await waitForForeground(tiktok))) {
+    throw new Error(
+      `TikTok did not come to the front (${foregroundPackage() || "nothing"} is showing).\n` +
+        "  Is it still installing, or not yet opened and signed in? Open it once, then rerun.",
+    );
+  }
 
   if (!has("keep")) {
     // The device copy is TikTok's to read until it has imported the clip, so this only
