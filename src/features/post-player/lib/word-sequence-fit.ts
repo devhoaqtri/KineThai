@@ -41,6 +41,13 @@ export type WordSequenceFitInput = {
   visualScaleGuard: number;
   specSize: number;
   specY: number;
+  /**
+   * The room the text is fitted inside, as clearances from the band's top and foot,
+   * replacing the fit solver's own safe insets and its 160px floor. A layout that has
+   * already split the band between this text and something else passes the share it
+   * gave the text; omitted, the solver keeps its own margins exactly as before.
+   */
+  fitInsets?: { top: number; bottom: number };
 };
 
 export type WordSequenceFitOutput = {
@@ -108,8 +115,10 @@ export function computeWordSequenceFit(input: WordSequenceFitInput): WordSequenc
   const canvasHeight = canvas.getBoundingClientRect().height;
   if (!wrapperWidth || !canvasHeight) return null;
 
-  const safeInsets = getTextSafeInsets(canvasHeight);
-  const safeHeight = Math.max(160, canvasHeight - safeInsets.top - safeInsets.bottom);
+  const safeInsets = input.fitInsets ?? getTextSafeInsets(canvasHeight);
+  const safeHeight = input.fitInsets
+    ? Math.max(1, canvasHeight - safeInsets.top - safeInsets.bottom)
+    : Math.max(160, canvasHeight - safeInsets.top - safeInsets.bottom);
   const maxHeight = safeHeight * 0.92;
   // A solo page's text container is forced to width:100% so it centers within the
   // wrapper — its scrollWidth is just that 100% width, not the word's actual glyph

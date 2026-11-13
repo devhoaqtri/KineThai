@@ -124,6 +124,13 @@ export type WordSequenceTextProps = {
    * exactly as before. Han pages keep their own packing either way.
    */
   measuredLayout?: MeasuredLayoutBudget;
+  /**
+   * The room the text is fitted inside, as clearances from the band's top and foot,
+   * replacing the fit solver's own safe insets and its 160px floor. A layout that has
+   * already split the band between this text and something else passes the share it
+   * gave the text; omitted, the solver keeps its own margins exactly as before.
+   */
+  fitInsets?: { top: number; bottom: number };
 };
 
 /**
@@ -154,6 +161,7 @@ export function WordSequenceText({
   accentColor,
   timeScale = 1,
   measuredLayout,
+  fitInsets,
 }: WordSequenceTextProps): ReactElement {
   // A Han page tokenizes per character before anything else: a whole Chinese sample
   // sentence is one whitespace token, and as one token it rendered as a single
@@ -333,6 +341,7 @@ export function WordSequenceText({
     visualScaleGuard,
     wrapperRef,
     textRef,
+    fitInsets,
   });
   const textColor = photoBackdrop
     ? resolveTextColorOnPhotoBackdrop(spec)

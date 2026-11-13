@@ -37,6 +37,13 @@ export type UseWordSequenceFitArgs = {
   visualScaleGuard: number;
   wrapperRef: RefObject<HTMLDivElement | null>;
   textRef: RefObject<HTMLDivElement | null>;
+  /**
+   * The room the text is fitted inside, as clearances from the band's top and foot,
+   * replacing the fit solver's own safe insets and its 160px floor. A layout that has
+   * already split the band between this text and something else passes the share it
+   * gave the text; omitted, the solver keeps its own margins exactly as before.
+   */
+  fitInsets?: { top: number; bottom: number };
 };
 
 export type UseWordSequenceFitResult = {
@@ -66,6 +73,7 @@ export function useWordSequenceFit({
   visualScaleGuard,
   wrapperRef,
   textRef,
+  fitInsets,
 }: UseWordSequenceFitArgs): UseWordSequenceFitResult {
   const [fitScale, setFitScale] = useState(initialFit);
   const [soloInlineScale, setSoloInlineScale] = useState(1);
@@ -143,6 +151,7 @@ export function useWordSequenceFit({
       visualScaleGuard,
       specSize: spec.size,
       specY: spec.y,
+      fitInsets,
     });
     if (!next) return;
     // Solo pages may need to grow fitScale past its initial 1 (to fill the
@@ -195,6 +204,8 @@ export function useWordSequenceFit({
     visualScaleGuard,
     soloInlineScale,
     safeCenterY,
+    fitInsets?.top,
+    fitInsets?.bottom,
   ]);
 
   return { fitScale, soloInlineScale, safeCenterY, fontSize, setFitScale };
