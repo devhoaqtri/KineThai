@@ -119,6 +119,14 @@ RULE 8. EVERY CLUE IS A WHOLE SENTENCE. NEVER DELETE A WORD TO HIDE THE ANSWER.
 - Wrong: Đi /dã_ngoại/, tôi | gói sẵn mấy ổ kẹp trứng.        (bánh_mì was cut)
   Right: Đi /dã_ngoại/, tôi | gói sẵn mấy ổ=bánh_mì kẹp trứng.
 
+RULE 9. COUNTS ARE DIGITS
+- Write a count, a time, an age, a price or a measure in digits: 3 ngày, 7 giờ, 18 tuổi,
+  25 mét, 300 nghìn, 10 triệu. nghìn, triệu and tỷ stay words after the digits.
+- Keep the word where it means something else or is not a count: ba (father), năm (year),
+  tám (to chat), chín (ripe), một before a noun (a, an), thứ hai, tháng một, cả hai,
+  hai bên, một mình, any set phrase, and the card's own answer.
+- A number is never marked (Rule 3), so a digit is never half of a mark.
+
 CHECK EVERY FIELD BEFORE RETURNING. ANY "NO" MEANS REWRITE.
 1. Exactly one /x_y/ in this field?
 2. Does it pass all four tests in Rule 2?
@@ -128,6 +136,7 @@ CHECK EVERY FIELD BEFORE RETURNING. ANY "NO" MEANS REWRITE.
 6. Is it one sentence, inside its length limit?
 7. Does removing every mark leave a natural sentence?
 8. Read cold, by someone who has never seen the card: is it complete, with no word cut out?
+9. Is every count, time, age, price and measure written in digits?
 ```
 
 ## Worked fixes
