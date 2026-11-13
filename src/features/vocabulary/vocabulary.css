@@ -6038,12 +6038,21 @@
    edge. Outside a short landscape screen (which lays the coda out on its own), the coda
    column now ends a small gap above the tab, so the word's baseline sits just above it.
    An export frame has no tab and keeps the centred slot. */
+/* On a near-square screen that leaves little above the tab, and the column used to grow
+   upwards into the toolbar, the label landing on the brand (worse on a device whose top
+   safe area pushes the toolbar down). The column now starts below the toolbar's two rows
+   (58px from its top offset, as .vocab-toolbar places it) plus a gap; the label-to-word gap
+   gives way first on a short screen, and `safe` alignment lets a column that still does not
+   fit run on downwards past the tab's top rather than up over the chrome. */
 .vocabulary-shell:not([data-short-viewport="landscape"])
   .vocab-card:not([data-export])
   :is(.vocab-spelling, .vocab-stroke) {
   --vocab-handle-top: calc(62% - 59px);
+  top: calc(max(var(--vocab-chrome-head, 12px), env(safe-area-inset-top, 0px)) + 58px + 14px);
   bottom: calc(100% - var(--vocab-handle-top) + 14px);
-  justify-content: flex-end;
+  min-height: max-content;
+  justify-content: safe flex-end;
+  gap: clamp(6px, 2.4vh, 18px);
 }
 .vocab-spelling-label {
   font-size: 11px;
