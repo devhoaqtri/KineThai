@@ -9,6 +9,7 @@ import type { VocabularyWord } from "../lib/schema";
 import type { LearningStage } from "../lib/stages";
 import { VOCAB_LINE_SPACING_SCALE } from "../lib/presets";
 import { pickBurstVariant } from "../lib/burst-variants";
+import { useDrawerTabNotch } from "../hooks/useDrawerTabNotch";
 import { FilledUsage, MarkedText } from "./MarkedText";
 import { RevealBurst } from "./RevealBurst";
 import { ShareChallengeButton } from "./ShareChallengeButton";
@@ -190,6 +191,7 @@ export function VocabularyStage({
   onGrammarHold?: (held: boolean) => void;
 }) {
   const details = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [panelTop, setPanelTop] = useState<number | null>(null);
   useLayoutEffect(() => {
@@ -241,6 +243,17 @@ export function VocabularyStage({
       position.disconnect();
     };
   }, [stage.reveal, stage.id, word.id, playKey, still]);
+  /**
+   * On a narrow phone the panel reaches the saved drawer's tab on the card's right edge.
+   * Where it comes closer than the minimum gap it is notched around the tab; anywhere else
+   * this is null and the panel is untouched.
+   */
+  const tabNotch = useDrawerTabNotch({
+    panel: panelRef,
+    scroll: details,
+    enabled: !!stage.reveal && !still,
+    placement: panelTop,
+  });
   const pageMotion: PageMotion = { direction, reveal: !!stage.reveal };
   return (
     <motion.div
@@ -339,13 +352,19 @@ export function VocabularyStage({
       </AnimatePresence>
       {stage.reveal && (
         <motion.div
+          ref={panelRef}
           className="vocab-reveal-details"
           tabIndex={0}
           aria-label="Nghĩa và ví dụ của từ"
+          data-tab-notch={tabNotch ? "" : undefined}
           style={
-            panelTop === null
-              ? undefined
-              : ({ "--vocab-reveal-top": `${panelTop}px` } as CSSProperties)
+            {
+              ...(panelTop === null ? null : { "--vocab-reveal-top": `${panelTop}px` }),
+              ...(tabNotch && {
+                clipPath: tabNotch.clipPath,
+                "--vocab-notch-share": `${tabNotch.shareInset}px`,
+              }),
+            } as CSSProperties
           }
           initial={reducedMotion || still ? false : { opacity: 0, y: 30, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -358,6 +377,19 @@ export function VocabularyStage({
               the definition. `details` follows the scroller, because its one job is
               resetting scrollTop when the word changes. */}
           <div className="vocab-reveal-scroll" ref={details}>
+            {/* Shortens only the lines that pass the notch: its shape is the band beside
+                the cut, so a line clear of it keeps the full width. */}
+            {tabNotch?.float && (
+              <span
+                className="vocab-reveal-notch-float"
+                aria-hidden="true"
+                style={{
+                  width: tabNotch.float.width,
+                  height: tabNotch.float.height,
+                  shapeOutside: tabNotch.float.shape,
+                }}
+              />
+            )}
             {(word.ipa || word.pos) && (
               <p
                 className="vocab-pronunciation"
@@ -394,6 +426,19 @@ export function VocabularyStage({
             )}
           </div>
           <ShareChallengeButton code={word.shareCode} />
+          {/* The clip takes the panel's border with it along the cut; this draws it back. */}
+          {tabNotch && (
+            <svg
+              className="vocab-reveal-notch-edge"
+              aria-hidden="true"
+              width={tabNotch.edge.width}
+              height={tabNotch.edge.height}
+              viewBox={`0 0 ${tabNotch.edge.width} ${tabNotch.edge.height}`}
+              style={{ left: tabNotch.edge.left, top: tabNotch.edge.top }}
+            >
+              <path d={tabNotch.edge.d} />
+            </svg>
+          )}
         </motion.div>
       )}
     </motion.div>

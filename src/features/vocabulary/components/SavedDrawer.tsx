@@ -31,17 +31,13 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Bookmark, Heart } from "lucide-react";
 import { usePresence } from "@/hooks/use-presence";
 import { useSavedCount } from "../hooks/useSavedCount";
+// The tab's outline (30 × 118 px, screen edge on the right). It draws the tab's edge and
+// clips its blur here, and the meaning panel's notch is grown from it.
+import { HANDLE_EDGE } from "../lib/drawer-tab-notch";
 import { BookmarksPage } from "./BookmarksPage";
 
 /** Matches the panel's exit duration in vocabulary.css and this module's retract timer. */
 export const SAVED_DRAWER_EXIT_MS = 260;
-/**
- * The tab's outline in its own 30 × 118 px box, the screen edge on the right. It leaves
- * the edge on a soft S (tangent to the edge, then rounding over to full width), runs
- * straight past the glyphs and curves back the same way. One path draws the tab's edge
- * and clips its blur, so the two can never disagree.
- */
-const HANDLE_EDGE = "M30 0 C30 19.5 0 19.5 0 39 L0 79 C0 98.5 30 98.5 30 118";
 
 /**
  * The drawer's own width, mirroring `min(420px, 85vw)` in vocabulary.css. The handle is a tab

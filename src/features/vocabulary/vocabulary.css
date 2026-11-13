@@ -3271,8 +3271,9 @@
 .vocab-card:not([data-still]):not([data-export])
   .vocab-reveal-scroll
   > .vocab-grammar:last-child:not([data-open]) {
-  /* The tab and the dock's padding to its left, plus a gap. */
-  margin-inline-end: var(--vocab-share-room, 86px);
+  /* The tab, the dock's padding to its left and a gap, plus what a notch around the
+     drawer tab moves the tab's label in by. */
+  margin-inline-end: calc(var(--vocab-share-room, 86px) + var(--vocab-notch-share, 0px));
 }
 .vocab-grammar-body {
   overflow: hidden;
@@ -8575,6 +8576,39 @@
   overflow-x: hidden;
   overscroll-behavior-y: contain;
   scrollbar-width: thin;
+}
+
+/* ── The notch around the saved drawer's tab ─────────────────
+   On a narrow phone the panel reaches the drawer's tab on the card's right edge. Where the
+   two come closer than DRAWER_TAB_MIN_GAP_PX (lib/drawer-tab-notch.ts), VocabularyStage
+   clips the panel to the tab's outline grown by that gap (an inline clip-path, which takes
+   the background, the border and the backdrop blur with it) and marks it [data-tab-notch].
+   Anywhere else none of this applies and the panel is the plain box above. */
+/* A right float at the top of the text. Its shape is the band beside the cut, so only the
+   lines that pass the notch are shortened; it holds no content and takes no input. */
+.vocab-reveal-notch-float {
+  float: right;
+  pointer-events: none;
+}
+/* The border the clip cut away, drawn back along the cut: 2px on the clip's edge, of
+   which the clip keeps the inner 1px, the panel's own border width, in its colour. The
+   SVG is the panel's border box and clips to it, because past the panel's foot the clip
+   stays open for the shadow and would show the stroke's outer half there. */
+.vocab-reveal-notch-edge {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+.vocab-reveal-notch-edge path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--vocab-ink) 14%, transparent);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+/* The share tab keeps its seat, its face running off into the cut as it otherwise runs off
+   the panel's edge; only its label moves in, by what the cut takes at its rows. */
+.vocab-reveal-details[data-tab-notch] .vocab-share-face {
+  margin-inline-end: var(--vocab-notch-share, 0px);
 }
 
 /* ── Share-a-challenge button ──────────────────────────────
