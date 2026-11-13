@@ -101,6 +101,36 @@ function useShareTopFloat({
   return box;
 }
 
+/**
+ * The panel top that sets its first divider (the rule over the example, or over the grammar
+ * row when there is no example) through the saved drawer tab's vertical centre, in the
+ * panel's offsetParent coordinates, or null when there is no visible tab or no divider.
+ * Read from layout boxes, not painted rects, because the panel springs in under a scale.
+ */
+function tabAlignedPanelTop(panel: HTMLElement): number | null {
+  const handle = document.querySelector<HTMLElement>(
+    ".vocab-saved-dock:not([data-hidden]) .vocab-saved-handle",
+  );
+  const parent = panel.offsetParent as HTMLElement | null;
+  const scroller = panel.querySelector<HTMLElement>(":scope > .vocab-reveal-scroll");
+  const divider = scroller?.querySelector<HTMLElement>(
+    ":scope > :is(.vocab-example, .vocab-grammar)",
+  );
+  if (!handle || !parent || !scroller || !divider) return null;
+  const handleRect = handle.getBoundingClientRect();
+  if (handleRect.height === 0) return null;
+  let offset = 0;
+  for (let el: HTMLElement | null = divider; el !== panel; el = el.offsetParent as HTMLElement) {
+    if (!el) return null;
+    offset += el.offsetTop;
+  }
+  // offsetTop is measured from the panel's padding edge; the panel's `top` places its border.
+  offset += panel.clientTop - scroller.scrollTop;
+  const tabMid =
+    handleRect.top + handleRect.height / 2 - parent.getBoundingClientRect().top - parent.clientTop;
+  return tabMid - offset;
+}
+
 type PageMotion = { direction: number; reveal: boolean };
 
 /**
@@ -308,6 +338,10 @@ export function VocabularyStage({
     // text, so it settles within a pass or two.
     let changes = 0;
     let cardHeight = card.clientHeight;
+    // Whether this page's panel was moved down onto the drawer tab. Held once given, so a
+    // panel that grows afterwards (the reader opening "Nâng cao") scrolls inside its cap
+    // rather than jumping back up under the reader's finger.
+    let tabHeld = false;
     const measure = () => {
       if (card.dataset.revealSplit === "two-column") {
         setPanelTop(null);
@@ -323,6 +357,7 @@ export function VocabularyStage({
         given = null;
         applied = "";
         changes = 0;
+        tabHeld = false;
         setAnswerFit(null);
       }
       // The answer's own layout box, not its painted rect: the page enters under a
@@ -389,8 +424,32 @@ export function VocabularyStage({
           });
         }
       }
-      if (!wide) setPanelTop(top < midline ? top : null);
-      else setPanelTop(given?.wordFoot != null ? bottom + PANEL_SEAM_PX : null);
+      if (!wide) {
+        // On a tall portrait screen the panel ends well above the bottom chrome, and its
+        // divider runs past the drawer tab at no particular height. Where the panel can drop
+        // to put that divider through the tab's centre and still end inside its cap, it
+        // does, so the two read as one line. Only ever down: `top` is already as high as
+        // the answer allows. Never on a page whose height had to be shared out.
+        const aligned =
+          given === null && panel && card.dataset.export === undefined
+            ? tabAlignedPanelTop(panel)
+            : null;
+        let placed = top;
+        if (aligned !== null && aligned >= top) {
+          if (!tabHeld) {
+            const height = panel!.style.height;
+            panel!.style.height = "100000px";
+            const capBottom = panel!.offsetTop + panel!.offsetHeight;
+            panel!.style.height = height;
+            const natural = panel!.offsetHeight;
+            tabHeld = aligned + natural <= capBottom;
+          }
+          if (tabHeld) placed = aligned;
+        } else {
+          tabHeld = false;
+        }
+        setPanelTop(placed !== top || top < midline ? placed : null);
+      } else setPanelTop(given?.wordFoot != null ? bottom + PANEL_SEAM_PX : null);
     };
     measure();
     const frame = requestAnimationFrame(measure);
