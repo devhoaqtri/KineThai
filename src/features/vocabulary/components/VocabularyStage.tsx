@@ -418,7 +418,7 @@ export function VocabularyStage({
             {
               ...(panelTop === null ? null : { "--vocab-reveal-top": `${panelTop}px` }),
               ...(tabNotch && {
-                clipPath: tabNotch.clipPath,
+                ...(tabNotch.clipPath !== "none" && { clipPath: tabNotch.clipPath }),
                 "--vocab-notch-share": `${tabNotch.shareInset}px`,
               }),
             } as CSSProperties
@@ -484,7 +484,7 @@ export function VocabularyStage({
           </div>
           <ShareChallengeButton code={word.shareCode} />
           {/* The clip takes the panel's border with it along the cut; this draws it back. */}
-          {tabNotch && (
+          {tabNotch?.edge.d && (
             <svg
               className="vocab-reveal-notch-edge"
               aria-hidden="true"

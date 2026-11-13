@@ -26,7 +26,11 @@ const TAB_SELECTOR = ".vocab-saved-handle";
 
 const round = (n: number) => Math.round(n * 10) / 10;
 
-function measureNotch(panel: HTMLElement, scroll: HTMLElement | null): PanelNotch | null {
+function measureNotch(
+  panel: HTMLElement,
+  scroll: HTMLElement | null,
+  hold: boolean,
+): PanelNotch | null {
   const tab = document.querySelector<HTMLElement>(TAB_SELECTOR);
   const parent = panel.offsetParent as HTMLElement | null;
   if (!tab || !parent) return null;
@@ -50,6 +54,7 @@ function measureNotch(panel: HTMLElement, scroll: HTMLElement | null): PanelNotc
       width: tabRect.width,
       height: tabRect.height,
     },
+    hold,
   });
   // For headless checks: the clearance as laid out, before any cut.
   panel.dataset.tabGap = String(round(gap));
@@ -58,6 +63,28 @@ function measureNotch(panel: HTMLElement, scroll: HTMLElement | null): PanelNotc
   const borderLeft = panel.clientLeft;
   const borderTop = panel.clientTop;
   const borderRight = width - borderLeft - panel.clientWidth;
+
+  // A notched panel seats the share tab in its top-right corner instead of the bottom
+  // one the cut runs through ([data-tab-notch] .vocab-share-dock). The tab may still be in
+  // its old seat on this measure, so its new rows are taken from its size, not its place.
+  const button = panel.querySelector<HTMLElement>(".vocab-share-button");
+  const dock = button?.parentElement;
+  const face = button?.querySelector<HTMLElement>(".vocab-share-face");
+  let share: { bottom: number; left: number; labelRight: number; buttonBottom: number } | null =
+    null;
+  if (button && dock) {
+    // The button's own width, without the inset this hook last moved its label by.
+    const inset = face ? parseFloat(getComputedStyle(face).marginRight) || 0 : 0;
+    const right = width - borderRight;
+    share = {
+      bottom: borderTop + dock.offsetHeight,
+      left: right - (button.offsetWidth - inset),
+      // The label's right edge in its usual seat: the dock is flush with the panel's inner
+      // right edge and the button pads the label in from there.
+      labelRight: right - (parseFloat(getComputedStyle(button).paddingRight) || 0),
+      buttonBottom: borderTop + button.offsetHeight,
+    };
+  }
 
   let float: PanelNotch["float"] = null;
   if (scroll) {
@@ -74,7 +101,11 @@ function measureNotch(panel: HTMLElement, scroll: HTMLElement | null): PanelNotc
     rows = Math.min(rows, scroll.clientHeight);
     const band: number[] = [];
     for (let y = 0; y <= rows; y++) {
-      band.push(Math.max(0, insetBeside(notch.right, top + y, top + y, right)));
+      const beside = insetBeside(notch.right, top + y, top + y, right);
+      // Beside the share tab the text stops the same gap short of it.
+      const besideShare =
+        share && top + y <= share.bottom ? right - (share.left - NOTCH_TEXT_GAP_PX) : 0;
+      band.push(Math.max(0, beside, besideShare));
     }
     const last = band.reduce((end, inset, y) => (inset > 0 ? y : end), -1);
     if (last >= 0) {
@@ -89,19 +120,17 @@ function measureNotch(panel: HTMLElement, scroll: HTMLElement | null): PanelNotc
     }
   }
 
-  let shareInset = 0;
-  const button = panel.querySelector<HTMLElement>(".vocab-share-button");
-  const dock = button?.parentElement;
-  if (button && dock) {
-    const top = dock.offsetTop + button.offsetTop + borderTop;
-    // The label's right edge in its usual seat: the dock is flush with the panel's inner
-    // right edge and the button pads the label in from there.
-    const labelRight =
-      width - borderRight - (parseFloat(getComputedStyle(button).paddingRight) || 0);
-    shareInset = Math.ceil(
-      insetBeside(notch.right, top, top + button.offsetHeight, labelRight, NOTCH_TEXT_GAP_PX),
-    );
-  }
+  const shareInset = share
+    ? Math.ceil(
+        insetBeside(
+          notch.right,
+          borderTop,
+          share.buttonBottom,
+          share.labelRight,
+          NOTCH_TEXT_GAP_PX,
+        ),
+      )
+    : 0;
 
   return {
     clipPath: notch.clipPath,
@@ -136,8 +165,12 @@ export function useDrawerTabNotch({
     // Unset, so this run's first result always lands even when it is "no notch": a notch
     // from the previous placement must not outlive it.
     let key: string | undefined;
+    // Once this page is notched it stays notched until the window changes size (see
+    // solveTabNotch's `hold`).
+    let held = false;
     const measure = () => {
-      const next = measureNotch(element, scroll.current);
+      const next = measureNotch(element, scroll.current, held);
+      held = next !== null;
       // The float reflows the text and so the panel's height, which comes back here
       // through the observer; an unchanged result ends that round trip.
       const nextKey = next ? JSON.stringify(next) : "";
@@ -150,13 +183,17 @@ export function useDrawerTabNotch({
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     if (element.offsetParent) observer.observe(element.offsetParent);
-    window.addEventListener("resize", measure);
-    window.addEventListener("orientationchange", measure);
+    const remeasure = () => {
+      held = false;
+      measure();
+    };
+    window.addEventListener("resize", remeasure);
+    window.addEventListener("orientationchange", remeasure);
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("orientationchange", measure);
+      window.removeEventListener("resize", remeasure);
+      window.removeEventListener("orientationchange", remeasure);
     };
   }, [panel, scroll, enabled, placement]);
   return notch;

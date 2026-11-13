@@ -172,6 +172,13 @@ function open(profile: number[], radius: number): number[] {
   });
 }
 
+/** A held notch with nothing to cut: the panel keeps its box, the share tab its top seat. */
+const UNCUT = (height: number): TabNotch => ({
+  clipPath: "none",
+  edge: "",
+  right: Array.from({ length: Math.max(2, Math.round(height) + 1) }, () => Infinity),
+});
+
 const fmt = (n: number) => `${Math.round(n * 10) / 10}px`;
 
 /**
@@ -185,6 +192,7 @@ export function solveTabNotch({
   tab,
   minGap = DRAWER_TAB_MIN_GAP_PX,
   fillet = NOTCH_FILLET_PX,
+  hold = false,
 }: {
   width: number;
   height: number;
@@ -192,10 +200,18 @@ export function solveTabNotch({
   tab: Rect;
   minGap?: number;
   fillet?: number;
+  /**
+   * Keep a notch already given: return one (possibly with nothing cut) even when the tab is
+   * now clear. Moving the share tab off the panel's foot shortens the panel, which can lift
+   * it clear of the tab; without this the share tab would go back and the panel would
+   * lengthen and be cut again, over and over.
+   */
+  hold?: boolean;
 }): { gap: number; notch: TabNotch | null } {
   const edge = tabEdgePoints(tab);
   const gap = panelTabGap({ width, height, radius }, edge);
-  if (!(gap < minGap) || width <= 0 || height <= 0) return { gap, notch: null };
+  if (width <= 0 || height <= 0) return { gap, notch: null };
+  if (!(gap < minGap)) return { gap, notch: hold ? UNCUT(height) : null };
 
   const rows = Math.max(2, Math.round(height) + 1);
   const box = boxProfile(width, rows, radius);
@@ -212,7 +228,7 @@ export function solveTabNotch({
   const grown = box.map((_, y) => grownAt(y));
   const bitten = box.map((x, y) => grown[y] < x);
   const firstBite = bitten.indexOf(true);
-  if (firstBite < 0) return { gap, notch: null };
+  if (firstBite < 0) return { gap, notch: hold ? UNCUT(height) : null };
   const lastBite = bitten.lastIndexOf(true);
   // Rounding only reaches a fillet past the rows the tab bites into. Elsewhere the panel's
   // own edge and corners stand as drawn: the opening is exact there in theory, and on whole
@@ -228,7 +244,7 @@ export function solveTabNotch({
 
   const cut = right.map((x, y) => x < box[y] - CUT_EPSILON);
   const first = cut.indexOf(true);
-  if (first < 0) return { gap, notch: null };
+  if (first < 0) return { gap, notch: hold ? UNCUT(height) : null };
   const last = cut.lastIndexOf(true);
   // One fillet's run either side, so the clip and the drawn border both start on the
   // panel's own edge and lean into the cut.

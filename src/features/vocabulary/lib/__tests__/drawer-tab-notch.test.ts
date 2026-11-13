@@ -83,4 +83,14 @@ describe("drawer tab notch", () => {
       expect(253 - beside).toBeLessThanOrEqual(notch!.right[y] - 6 + 1e-9);
     }
   });
+
+  it("keeps a held notch, uncut, once the panel has come clear of the tab", () => {
+    const clear = { width: 278, height: 140, radius: 20, tab: tabAt(290, 58) };
+    expect(solveTabNotch(clear).notch).toBeNull();
+    const held = solveTabNotch({ ...clear, hold: true }).notch;
+    expect(held).not.toBeNull();
+    expect(held!.clipPath).toBe("none");
+    expect(held!.edge).toBe("");
+    expect(held!.right.every((x) => x === Infinity)).toBe(true);
+  });
 });

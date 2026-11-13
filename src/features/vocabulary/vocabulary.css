@@ -3259,21 +3259,26 @@
    inner edge and its label lines up with the tab's. Opened, the section needs the full width
    for its table, so the band comes back. Stills and export frames are fitted to the pixel by
    their own checks and keep their geometry. */
+/* A panel notched around the drawer tab carries the share tab at its top instead
+   ([data-tab-notch]), so its footer is an ordinary row. */
 .vocab-card:not([data-still]):not([data-export])
-  .vocab-reveal-details:has(> .vocab-reveal-scroll > .vocab-grammar:last-child:not([data-open])) {
+  .vocab-reveal-details:not([data-tab-notch]):has(
+    > .vocab-reveal-scroll > .vocab-grammar:last-child:not([data-open])
+  ) {
   padding-block-end: 0;
 }
 .vocab-card:not([data-still]):not([data-export])
-  .vocab-reveal-scroll:has(> .vocab-grammar:last-child:not([data-open])) {
+  .vocab-reveal-details:not([data-tab-notch])
+  > .vocab-reveal-scroll:has(> .vocab-grammar:last-child:not([data-open])) {
   margin-bottom: 0;
   padding-block-end: 0;
 }
 .vocab-card:not([data-still]):not([data-export])
-  .vocab-reveal-scroll
+  .vocab-reveal-details:not([data-tab-notch])
+  > .vocab-reveal-scroll
   > .vocab-grammar:last-child:not([data-open]) {
-  /* The tab, the dock's padding to its left and a gap, plus what a notch around the
-     drawer tab moves the tab's label in by. */
-  margin-inline-end: calc(var(--vocab-share-room, 86px) + var(--vocab-notch-share, 0px));
+  /* The tab, the dock's padding to its left, plus a gap. */
+  margin-inline-end: var(--vocab-share-room, 86px);
 }
 .vocab-grammar-body {
   overflow: hidden;
@@ -8614,10 +8619,33 @@
   stroke-width: 2px;
   stroke-linejoin: round;
 }
-/* The share tab keeps its seat, its face running off into the cut as it otherwise runs off
-   the panel's edge; only its label moves in, by what the cut takes at its rows. */
+/* The cut runs through the panel's bottom-right corner, where the share tab sits, so a
+   notched panel seats the tab in its top-right corner instead: the same tab turned over.
+   Its drawn edges are now the bottom and the left, with the panel's arc on the left foot,
+   and the panel's own top-right arc shapes the corner it is set into. The band the
+   scroller kept clear at the foot for it is given back to the text, and the first lines
+   stop short of it (useDrawerTabNotch's float). Should the cut reach the top as well, the
+   label moves in by what the cut takes at its rows. */
+.vocab-reveal-details[data-tab-notch] .vocab-share-dock {
+  top: 0;
+  bottom: auto;
+  padding: 0 0 6px 6px;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: calc(var(--vocab-reveal-radius) - 1px);
+}
+.vocab-reveal-details[data-tab-notch] .vocab-share-button {
+  transform-origin: top right;
+}
+.vocab-reveal-details[data-tab-notch] .vocab-share-face-bg {
+  inset: -2px -2px 0 0;
+  border-width: 0 0 1px 1px;
+  border-radius: 0 0 0 var(--vocab-reveal-radius);
+}
 .vocab-reveal-details[data-tab-notch] .vocab-share-face {
   margin-inline-end: var(--vocab-notch-share, 0px);
+}
+.vocab-reveal-details[data-tab-notch] > .vocab-reveal-scroll {
+  margin-bottom: 0;
 }
 
 /* ── Share-a-challenge button ──────────────────────────────
