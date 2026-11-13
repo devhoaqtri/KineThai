@@ -202,6 +202,14 @@ const PORTRAIT_REVEAL_Y = 34;
  */
 /** The answer word's share of the width. */
 const WIDE_WORD_COLUMN = 0.6;
+/**
+ * Narrowest card that splits into columns. The meaning column is the 40% the word leaves,
+ * less the 18px between the columns and the ~42px the drawer tab's edge takes, so under
+ * 600px it is under ~180px: at 360 × 320 it was 84px wide and its example was cut off.
+ * A narrower landscape card stacks the two and shares its height out instead
+ * (lib/answer-allocation).
+ */
+const TWO_COLUMN_MIN_WIDTH = 600;
 /** The meaning panel's share. The remainder is the gap between them and the edges. */
 const WIDE_PANEL_COLUMN = 0.35;
 
@@ -663,7 +671,7 @@ export function VocabularyCard({
   // Only a SHORT landscape card goes two-column: a landscape desktop window is tall
   // enough that the stacked proportional split still reads well, and splitting it
   // would leave both columns half empty.
-  const twoColumn = wideCard && isShortViewport(height);
+  const twoColumn = wideCard && isShortViewport(height) && width >= TWO_COLUMN_MIN_WIDTH;
   // A wide card's answer band is stretched by the fit solver's uneven margins (72px
   // above, 132px below), so the middle of the room the word is given is NOT the middle
   // of the band; it is derived from the same geometry the stylesheet lays out, which is

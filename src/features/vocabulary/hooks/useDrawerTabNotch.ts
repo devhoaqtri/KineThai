@@ -7,11 +7,17 @@
  * also clips its background, border and backdrop blur), the border the clip takes away, a
  * float whose shape-outside shortens only the lines that pass the cut, and how far the share
  * tab's label moves in. No notch is null, and the panel is then exactly what it was.
+ *
+ * A panel whose height was shared out (`shareTop`) seats the share tab at its top too, to
+ * give its foot band back to the text; it gets the same float beside the tab, uncut.
  */
 import { useLayoutEffect, useState, type RefObject } from "react";
 import { insetBeside, NOTCH_TEXT_GAP_PX, solveTabNotch } from "../lib/drawer-tab-notch";
 
 export type PanelNotch = {
+  /** The panel is cut (or holds a cut it was given) round the drawer tab. */
+  cut: boolean;
+  /** `none` when nothing is cut. */
   clipPath: string;
   /** The cut's border, in an SVG laid over the panel's border box. */
   edge: { d: string; width: number; height: number; left: number; top: number };
@@ -26,11 +32,8 @@ const TAB_SELECTOR = ".vocab-saved-handle";
 
 const round = (n: number) => Math.round(n * 10) / 10;
 
-function measureNotch(
-  panel: HTMLElement,
-  scroll: HTMLElement | null,
-  hold: boolean,
-): PanelNotch | null {
+/** The drawer tab's cut for this panel, or null where there is no tab or no cut. */
+function solveForTab(panel: HTMLElement, hold: boolean) {
   const tab = document.querySelector<HTMLElement>(TAB_SELECTOR);
   const parent = panel.offsetParent as HTMLElement | null;
   if (!tab || !parent) return null;
@@ -41,13 +44,10 @@ function measureNotch(
   const parentRect = parent.getBoundingClientRect();
   const originX = parentRect.left + parent.clientLeft + panel.offsetLeft;
   const originY = parentRect.top + parent.clientTop + panel.offsetTop;
-  const width = panel.offsetWidth;
-  const height = panel.offsetHeight;
-  const style = getComputedStyle(panel);
   const { gap, notch } = solveTabNotch({
-    width,
-    height,
-    radius: parseFloat(style.borderBottomRightRadius) || 0,
+    width: panel.offsetWidth,
+    height: panel.offsetHeight,
+    radius: parseFloat(getComputedStyle(panel).borderBottomRightRadius) || 0,
     tab: {
       left: tabRect.left - originX,
       top: tabRect.top - originY,
@@ -58,14 +58,29 @@ function measureNotch(
   });
   // For headless checks: the clearance as laid out, before any cut.
   panel.dataset.tabGap = String(round(gap));
-  if (!notch) return null;
+  return notch;
+}
+
+function measureNotch(
+  panel: HTMLElement,
+  scroll: HTMLElement | null,
+  hold: boolean,
+  shareTop: boolean,
+): PanelNotch | null {
+  const notch = solveForTab(panel, hold);
+  if (!notch && !shareTop) return null;
+  // Where the cut stands, row by row; an uncut panel has none (insetBeside reads nothing).
+  const cutRight = notch?.right ?? [];
+  const width = panel.offsetWidth;
+  const height = panel.offsetHeight;
 
   const borderLeft = panel.clientLeft;
   const borderTop = panel.clientTop;
   const borderRight = width - borderLeft - panel.clientWidth;
 
   // A notched panel seats the share tab in its top-right corner instead of the bottom
-  // one the cut runs through ([data-tab-notch] .vocab-share-dock). The tab may still be in
+  // one the cut runs through ([data-share-top] .vocab-share-dock), and so does a panel
+  // whose height was shared out. The tab may still be in
   // its old seat on this measure, so its new rows are taken from its size, not its place.
   const button = panel.querySelector<HTMLElement>(".vocab-share-button");
   const dock = button?.parentElement;
@@ -101,7 +116,7 @@ function measureNotch(
     rows = Math.min(rows, scroll.clientHeight);
     const band: number[] = [];
     for (let y = 0; y <= rows; y++) {
-      const beside = insetBeside(notch.right, top + y, top + y, right);
+      const beside = insetBeside(cutRight, top + y, top + y, right);
       // Beside the share tab the text stops the same gap short of it.
       const besideShare =
         share && top + y <= share.bottom ? right - (share.left - NOTCH_TEXT_GAP_PX) : 0;
@@ -122,19 +137,14 @@ function measureNotch(
 
   const shareInset = share
     ? Math.ceil(
-        insetBeside(
-          notch.right,
-          borderTop,
-          share.buttonBottom,
-          share.labelRight,
-          NOTCH_TEXT_GAP_PX,
-        ),
+        insetBeside(cutRight, borderTop, share.buttonBottom, share.labelRight, NOTCH_TEXT_GAP_PX),
       )
     : 0;
 
   return {
-    clipPath: notch.clipPath,
-    edge: { d: notch.edge, width, height, left: -borderLeft, top: -borderTop },
+    cut: notch !== null,
+    clipPath: notch?.clipPath ?? "none",
+    edge: { d: notch?.edge ?? "", width, height, left: -borderLeft, top: -borderTop },
     float,
     shareInset: Math.max(0, shareInset),
   };
@@ -143,17 +153,20 @@ function measureNotch(
 /**
  * The panel's notch around the drawer tab, re-measured whenever the panel or its card is
  * resized, the window turns or resizes, or `placement` (the panel's top) changes.
+ * `shareTop` seats the share tab at the panel's top even where nothing is cut.
  */
 export function useDrawerTabNotch({
   panel,
   scroll,
   enabled,
   placement,
+  shareTop = false,
 }: {
   panel: RefObject<HTMLElement | null>;
   scroll: RefObject<HTMLElement | null>;
   enabled: boolean;
   placement: unknown;
+  shareTop?: boolean;
 }): PanelNotch | null {
   const [notch, setNotch] = useState<PanelNotch | null>(null);
   useLayoutEffect(() => {
@@ -169,8 +182,8 @@ export function useDrawerTabNotch({
     // solveTabNotch's `hold`).
     let held = false;
     const measure = () => {
-      const next = measureNotch(element, scroll.current, held);
-      held = next !== null;
+      const next = measureNotch(element, scroll.current, held, shareTop);
+      held = next?.cut ?? false;
       // The float reflows the text and so the panel's height, which comes back here
       // through the observer; an unchanged result ends that round trip.
       const nextKey = next ? JSON.stringify(next) : "";
@@ -195,6 +208,6 @@ export function useDrawerTabNotch({
       window.removeEventListener("resize", remeasure);
       window.removeEventListener("orientationchange", remeasure);
     };
-  }, [panel, scroll, enabled, placement]);
+  }, [panel, scroll, enabled, placement, shareTop]);
   return notch;
 }
