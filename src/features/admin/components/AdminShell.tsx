@@ -1,5 +1,6 @@
 /**
- * Admin dashboard chrome: left nav + top bar with date range and live indicator.
+ * Admin dashboard chrome: left nav (a scrolling row on a phone) + top bar with date range
+ * and live indicator.
  *
  * Exports: AdminShell
  * Depends on: outlet, DateRangeBar, LiveIndicator, critical error badge
@@ -24,6 +25,7 @@ const NAV: { to: string; label: string; exact?: boolean }[] = [
   { to: "/admin/users", label: "Users" },
   { to: "/admin/content", label: "Content" },
   { to: "/admin/library", label: "Word library" },
+  { to: "/admin/numbers", label: "Numbers" },
   { to: "/admin/vocabulary", label: "Vocabulary" },
   { to: "/admin/wordings", label: "Câu chữ" },
   { to: "/admin/reports", label: "Word reports" },
@@ -71,57 +73,67 @@ export function AdminShell(): React.ReactElement {
     [errorsQuery.data],
   );
 
+  // One list of links: a column beside the page, or a scrolling row above it on a phone.
+  const navLinks = (compact: boolean) =>
+    NAV.map((item) => {
+      const active = item.exact
+        ? pathname === item.to
+        : pathname === item.to || pathname.startsWith(`${item.to}/`);
+      return (
+        <Link
+          key={item.to}
+          to={item.to}
+          search={{ range: preset, app: "kinetic-canvas" }}
+          className={`${compact ? "shrink-0 whitespace-nowrap" : ""} rounded-md px-3 py-2 text-sm ${
+            active ? "bg-foreground text-background" : "hover:bg-muted"
+          }`}
+        >
+          {item.label}
+          {item.to === "/admin/errors" && criticalCount > 0 ? (
+            <span className="ml-2 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] text-white">
+              {criticalCount}
+            </span>
+          ) : null}
+          {item.to === "/admin/reports" && hiddenWords > 0 ? (
+            <span className="ml-2 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] text-white">
+              {hiddenWords}
+            </span>
+          ) : null}
+          {item.to === "/admin/reports" && openWordReports > 0 ? (
+            <span className="ml-2 rounded-full bg-amber-500 px-1.5 py-0.5 text-[10px] text-black">
+              {openWordReports}
+            </span>
+          ) : null}
+        </Link>
+      );
+    });
+
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      <aside className="flex w-56 shrink-0 flex-col border-r border-border bg-muted/30 p-4">
+      <aside className="hidden w-56 shrink-0 flex-col border-r border-border bg-muted/30 p-4 md:flex">
         <div className="mb-6">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">Admin</p>
           <h1 className="text-lg font-semibold">kinetic-canvas</h1>
         </div>
         <nav className="flex flex-col gap-1" aria-label="Admin sections">
-          {NAV.map((item) => {
-            const active = item.exact
-              ? pathname === item.to
-              : pathname === item.to || pathname.startsWith(`${item.to}/`);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                search={{ range: preset, app: "kinetic-canvas" }}
-                className={`rounded-md px-3 py-2 text-sm ${
-                  active ? "bg-foreground text-background" : "hover:bg-muted"
-                }`}
-              >
-                {item.label}
-                {item.to === "/admin/errors" && criticalCount > 0 ? (
-                  <span className="ml-2 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] text-white">
-                    {criticalCount}
-                  </span>
-                ) : null}
-                {item.to === "/admin/reports" && hiddenWords > 0 ? (
-                  <span className="ml-2 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] text-white">
-                    {hiddenWords}
-                  </span>
-                ) : null}
-                {item.to === "/admin/reports" && openWordReports > 0 ? (
-                  <span className="ml-2 rounded-full bg-amber-500 px-1.5 py-0.5 text-[10px] text-black">
-                    {openWordReports}
-                  </span>
-                ) : null}
-              </Link>
-            );
-          })}
+          {navLinks(false)}
         </nav>
         <Link to="/feed" className="mt-auto text-xs text-muted-foreground hover:underline">
           ← Back to app
         </Link>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-3">
+        <nav
+          className="flex gap-1 overflow-x-auto border-b border-border px-4 py-2 md:hidden"
+          aria-label="Admin sections"
+        >
+          {navLinks(true)}
+        </nav>
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3 md:px-6">
           <DateRangeBar preset={preset} from={from} to={to} basePath={pathname} />
           <LiveIndicator lastUpdatedAt={updatedAt} sseConnected={sse.connected} />
         </header>
-        <main className="flex-1 overflow-auto px-6 py-5">
+        <main className="flex-1 overflow-auto px-4 py-5 md:px-6">
           <Outlet />
         </main>
       </div>
