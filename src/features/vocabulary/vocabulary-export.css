@@ -19,6 +19,13 @@
 .vocab-recording .vocab-saved-dock {
   display: none;
 }
+/* Without the saved drawer tab, the meaning panel stays centred in the frame. */
+.vocab-recording
+  .vocab-card:not([data-export]):not([data-reveal-split="two-column"])
+  .vocab-reveal-details {
+  left: var(--vocab-chrome-side, 0px);
+  right: var(--vocab-chrome-side, 0px);
+}
 /* A milestone is the reader's, not the clip's. It is a sibling of the dock rather than a
    child of the card, so the blanket showcase rules that clear the card's own children do
    not reach it and this has to be said explicitly. check-streak asserts the rule exists —

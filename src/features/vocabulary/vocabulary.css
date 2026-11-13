@@ -3118,10 +3118,11 @@
   top: var(--vocab-reveal-top);
   /* Centred with auto margins rather than a translate: the panel springs in, and the
      spring owns `transform`. */
+  --vocab-reveal-width: min(680px, 84%);
   left: 0;
   right: 0;
   margin-inline: auto;
-  width: min(680px, 84%);
+  width: var(--vocab-reveal-width);
   height: auto;
   max-height: calc(
     100% - var(--vocab-reveal-top) - var(--vocab-chrome-top) - var(--vocab-reveal-gap)
@@ -3168,6 +3169,23 @@
   background: color-mix(in srgb, var(--vocab-button-ink) 42%, transparent);
   backdrop-filter: blur(16px);
   color: var(--vocab-ink);
+}
+/* On tight screens, the saved drawer's 30px tab on the right edge crowds or overlaps a
+   centred 84%-wide panel. Reserve up to the tab's full 30px on the right so the panel
+   shifts leftwards (up to 15px) until its left edge and its gap to the tab are balanced;
+   as the screen widens past 488px, that reserve eases down to 0 so by 675px (where the
+   tab already has 24px of air) the panel returns to strict centre-alignment. */
+.vocab-card:not([data-export]):not([data-reveal-split="two-column"]) .vocab-reveal-details {
+  --vocab-reveal-slack: calc(
+    100% - var(--vocab-reveal-width) - env(safe-area-inset-left, 0px) -
+      env(safe-area-inset-right, 0px) - 2 * var(--vocab-chrome-side, 0px)
+  );
+  --vocab-reveal-tab-reserve: clamp(0px, calc(108px - var(--vocab-reveal-slack)), 30px);
+  left: calc(env(safe-area-inset-left, 0px) + var(--vocab-chrome-side, 0px));
+  right: calc(
+    env(safe-area-inset-right, 0px) + var(--vocab-chrome-side, 0px) +
+      var(--vocab-reveal-tab-reserve)
+  );
 }
 /* The gloss that replaced the definition sentence. It is a word or two where a paragraph
    used to be, so it is set to carry the panel rather than sit in it as body copy — this is
@@ -3259,8 +3277,8 @@
    inner edge and its label lines up with the tab's. Opened, the section needs the full width
    for its table, so the band comes back. Stills and export frames are fitted to the pixel by
    their own checks and keep their geometry. */
-/* A panel that carries the share tab at its top instead ([data-share-top]: notched round
-   the drawer tab, or its height shared out) has an ordinary footer row. */
+/* A panel that carries the share tab at its top instead ([data-share-top]: its height
+   shared out on a short screen) has an ordinary footer row. */
 .vocab-card:not([data-still]):not([data-export])
   .vocab-reveal-details:not([data-share-top]):has(
     > .vocab-reveal-scroll > .vocab-grammar:last-child:not([data-open])
@@ -8592,41 +8610,18 @@
   padding-block-end: 0.3em;
 }
 
-/* ── The notch around the saved drawer's tab ─────────────────
-   On a narrow phone the panel reaches the drawer's tab on the card's right edge. Where the
-   two come closer than DRAWER_TAB_MIN_GAP_PX (lib/drawer-tab-notch.ts), VocabularyStage
-   clips the panel to the tab's outline grown by that gap (an inline clip-path, which takes
-   the background, the border and the backdrop blur with it) and marks it [data-tab-notch].
-   Anywhere else none of this applies and the panel is the plain box above. */
-/* A right float at the top of the text. Its shape is the band beside the cut, so only the
-   lines that pass the notch are shortened; it holds no content and takes no input. */
-.vocab-reveal-notch-float {
+/* ── Top-right share tab seat (shared-height answer pages) ──────────────
+   A right float at the top of the text keeps only the first lines clear of the share tab
+   when height-sharing moves it up from the foot; it holds no content and takes no input. */
+.vocab-reveal-share-float {
   float: right;
   pointer-events: none;
 }
-/* The border the clip cut away, drawn back along the cut: 2px on the clip's edge, of
-   which the clip keeps the inner 1px, the panel's own border width, in its colour. The
-   SVG is the panel's border box and clips to it, because past the panel's foot the clip
-   stays open for the shadow and would show the stroke's outer half there. */
-.vocab-reveal-notch-edge {
-  position: absolute;
-  overflow: hidden;
-  pointer-events: none;
-}
-.vocab-reveal-notch-edge path {
-  fill: none;
-  stroke: color-mix(in srgb, var(--vocab-ink) 14%, transparent);
-  stroke-width: 2px;
-  stroke-linejoin: round;
-}
-/* The cut runs through the panel's bottom-right corner, where the share tab sits, so a
-   notched panel seats the tab in its top-right corner instead: the same tab turned over.
-   Its drawn edges are now the bottom and the left, with the panel's arc on the left foot,
-   and the panel's own top-right arc shapes the corner it is set into. The band the
-   scroller kept clear at the foot for it is given back to the text, and the first lines
-   stop short of it (useDrawerTabNotch's float). A page whose height had to be shared out
-   seats it there too ([data-share-top] covers both), for that same band. Should the cut
-   reach the top as well, the label moves in by what the cut takes at its rows. */
+/* When height-sharing moves the share tab to the panel's top-right corner ([data-share-top]),
+   its drawn edges are the bottom and the left, with the panel's arc on the left foot, and
+   the panel's own top-right arc shapes the corner it is set into. The band the scroller
+   kept clear at the foot for it is given back to the text, and the first lines stop short
+   of it via .vocab-reveal-share-float. */
 .vocab-reveal-details[data-share-top] .vocab-share-dock {
   top: 0;
   bottom: auto;
@@ -8641,9 +8636,6 @@
   inset: -2px -2px 0 0;
   border-width: 0 0 1px 1px;
   border-radius: 0 0 0 var(--vocab-reveal-radius);
-}
-.vocab-reveal-details[data-share-top] .vocab-share-face {
-  margin-inline-end: var(--vocab-notch-share, 0px);
 }
 /* TEMPORARY — up top the tab is only its icon, so it sits quietly beside the word's
    pronunciation instead of reading as a second heading. The button keeps its aria-label

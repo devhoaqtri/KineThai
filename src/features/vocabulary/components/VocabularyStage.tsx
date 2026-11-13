@@ -1,5 +1,5 @@
 /** Readable clue text and reveal detail, reusing existing kinetic primitives. Exports: VocabularyStage. Depends on: canvas, kinetic-text, stages, motion tokens. */
-import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { AnimatePresence, motion, type MotionValue, type Variants } from "framer-motion";
 import type { CanvasSpec } from "@/features/canvas";
 import { WordSequenceText } from "@/features/post-player";
@@ -9,7 +9,6 @@ import type { VocabularyWord } from "../lib/schema";
 import type { LearningStage } from "../lib/stages";
 import { VOCAB_LINE_SPACING_SCALE } from "../lib/presets";
 import { pickBurstVariant } from "../lib/burst-variants";
-import { useDrawerTabNotch } from "../hooks/useDrawerTabNotch";
 import { ANSWER_HEAD_PX, allocateAnswer, type AnswerAllocation } from "../lib/answer-allocation";
 import { FilledUsage, MarkedText } from "./MarkedText";
 import { RevealBurst } from "./RevealBurst";
@@ -33,6 +32,74 @@ const DETAILS_DELAY_SECONDS = 0.34;
  * same 16px as its own seam (--vocab-reveal-seam).
  */
 const PANEL_SEAM_PX = 16;
+/** Clear space between text inside the meaning panel and the top-right share button. */
+const SHARE_TEXT_GAP_PX = 6;
+
+/**
+ * When height-sharing seats the share tab at the panel's top-right (`data-share-top`),
+ * returns the right-float box that keeps the first lines of text clear of that button.
+ */
+function useShareTopFloat({
+  panel,
+  scroll,
+  enabled,
+}: {
+  panel: RefObject<HTMLElement | null>;
+  scroll: RefObject<HTMLElement | null>;
+  enabled: boolean;
+}): { width: number; height: number } | null {
+  const [box, setBox] = useState<{ width: number; height: number } | null>(null);
+  useLayoutEffect(() => {
+    const element = panel.current;
+    if (!enabled || !element) {
+      setBox(null);
+      return;
+    }
+    let key = "";
+    const measure = () => {
+      const scroller = scroll.current;
+      const button = element.querySelector<HTMLElement>(".vocab-share-button");
+      const dock = button?.parentElement;
+      if (!scroller || !button || !dock) {
+        if (key !== "") {
+          key = "";
+          setBox(null);
+        }
+        return;
+      }
+      const borderTop = element.clientTop;
+      const borderLeft = element.clientLeft;
+      const borderRight = element.offsetWidth - borderLeft - element.clientWidth;
+      const shareBottom = borderTop + dock.offsetHeight;
+      const shareLeft = element.offsetWidth - borderRight - button.offsetWidth;
+      const top = scroller.offsetTop + borderTop;
+      const right = scroller.offsetLeft + borderLeft + scroller.clientWidth;
+      // Only as deep as the text itself so the float never stretches a short scroller.
+      let rows = 0;
+      for (const child of Array.from(scroller.children) as HTMLElement[]) {
+        if (child.classList.contains("vocab-reveal-share-float")) continue;
+        rows = Math.max(rows, child.offsetTop - scroller.offsetTop + child.offsetHeight);
+      }
+      rows = Math.min(rows, scroller.clientHeight);
+      const width = Math.ceil(Math.max(0, right - (shareLeft - SHARE_TEXT_GAP_PX)));
+      const height = Math.min(rows, Math.ceil(Math.max(0, shareBottom - top + 1)));
+      const next = width > 0 && height > 0 ? { width, height } : null;
+      const nextKey = next ? `${next.width}x${next.height}` : "";
+      if (nextKey === key) return;
+      key = nextKey;
+      setBox(next);
+    };
+    measure();
+    const frame = requestAnimationFrame(measure);
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [panel, scroll, enabled]);
+  return box;
+}
 
 type PageMotion = { direction: number; reveal: boolean };
 
@@ -274,7 +341,7 @@ export function VocabularyStage({
         panel.style.height = height;
         // What the panel adds around its text, read from its styles rather than its
         // laid-out height, which a cap or a pass not yet drawn can squeeze. It follows the
-        // share tab's seat: a notched panel drops the band kept at its foot for the tab.
+        // share tab's seat: a shared-height panel drops the band kept at its foot for the tab.
         const px = (value: string) => parseFloat(value) || 0;
         const panelStyle = getComputedStyle(panel);
         const scrollerStyle = getComputedStyle(scroller);
@@ -342,19 +409,11 @@ export function VocabularyStage({
       position.disconnect();
     };
   }, [stage.reveal, stage.id, word.id, playKey, still]);
-  /**
-   * On a narrow phone the panel reaches the saved drawer's tab on the card's right edge.
-   * Where it comes closer than the minimum gap it is notched around the tab; anywhere else
-   * this is null and the panel is untouched.
-   */
-  const tabNotch = useDrawerTabNotch({
+  const shareTop = answerFit !== null;
+  const shareFloat = useShareTopFloat({
     panel: panelRef,
     scroll: details,
-    enabled: !!stage.reveal && !still,
-    placement: panelTop,
-    // A page whose height was shared out seats the share tab at the top as well, which
-    // gives the band kept for it at the panel's foot back to the text.
-    shareTop: answerFit !== null,
+    enabled: !!stage.reveal && !still && shareTop,
   });
   const pageMotion: PageMotion = { direction, reveal: !!stage.reveal };
   return (
@@ -463,16 +522,11 @@ export function VocabularyStage({
           className="vocab-reveal-details"
           tabIndex={0}
           aria-label="Nghĩa và ví dụ của từ"
-          data-tab-notch={tabNotch?.cut ? "" : undefined}
-          data-share-top={tabNotch ? "" : undefined}
+          data-share-top={shareTop ? "" : undefined}
           style={
-            {
-              ...(panelTop === null ? null : { "--vocab-reveal-top": `${panelTop}px` }),
-              ...(tabNotch && {
-                ...(tabNotch.clipPath !== "none" && { clipPath: tabNotch.clipPath }),
-                "--vocab-notch-share": `${tabNotch.shareInset}px`,
-              }),
-            } as CSSProperties
+            panelTop === null
+              ? undefined
+              : ({ "--vocab-reveal-top": `${panelTop}px` } as CSSProperties)
           }
           initial={reducedMotion || still ? false : { opacity: 0, y: 30, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -495,18 +549,9 @@ export function VocabularyStage({
                 : undefined
             }
           >
-            {/* Shortens only the lines that pass the notch: its shape is the band beside
-                the cut, so a line clear of it keeps the full width. */}
-            {tabNotch?.float && (
-              <span
-                className="vocab-reveal-notch-float"
-                aria-hidden="true"
-                style={{
-                  width: tabNotch.float.width,
-                  height: tabNotch.float.height,
-                  shapeOutside: tabNotch.float.shape,
-                }}
-              />
+            {/* Shortens only the top lines that pass beside the top-right share button. */}
+            {shareFloat && (
+              <span className="vocab-reveal-share-float" aria-hidden="true" style={shareFloat} />
             )}
             {(word.ipa || word.pos) && (
               <p
@@ -544,19 +589,6 @@ export function VocabularyStage({
             )}
           </div>
           <ShareChallengeButton code={word.shareCode} />
-          {/* The clip takes the panel's border with it along the cut; this draws it back. */}
-          {tabNotch?.edge.d && (
-            <svg
-              className="vocab-reveal-notch-edge"
-              aria-hidden="true"
-              width={tabNotch.edge.width}
-              height={tabNotch.edge.height}
-              viewBox={`0 0 ${tabNotch.edge.width} ${tabNotch.edge.height}`}
-              style={{ left: tabNotch.edge.left, top: tabNotch.edge.top }}
-            >
-              <path d={tabNotch.edge.d} />
-            </svg>
-          )}
         </motion.div>
       )}
     </motion.div>
