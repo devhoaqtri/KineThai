@@ -284,7 +284,8 @@ async function main() {
 
   console.log(
     "\n✓ TikTok has the clip. Finish in the emulator:\n" +
-      "  add the caption, then Post — or save it as a draft and publish from your phone.\n" +
+      "  add the caption, then Post. A draft saved here stays in this emulator: TikTok keeps\n" +
+      "  drafts on the device that made them, so it will not appear on your phone.\n" +
       "  (The caption is not settable from here; TikTok ignores intent text in the editor.)",
   );
 }
