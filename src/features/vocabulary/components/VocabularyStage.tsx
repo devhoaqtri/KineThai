@@ -3,6 +3,11 @@ import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, motion, type MotionValue, type Variants } from "framer-motion";
 import type { CanvasSpec } from "@/features/canvas";
 import { WordSequenceText } from "@/features/post-player";
+import {
+  TEXT_SAFE_BOTTOM_PX,
+  TEXT_SAFE_TOP_PX,
+  getTextSafeInsets,
+} from "@/features/post-player/lib/playback-timing";
 import type { EmphasisVariant } from "@/features/kinetic-text";
 import { EASE, SPRING } from "@/lib/motion";
 import type { VocabularyWord } from "../lib/schema";
@@ -32,6 +37,22 @@ const DETAILS_DELAY_SECONDS = 0.34;
  * same 16px as its own seam (--vocab-reveal-seam).
  */
 const PANEL_SEAM_PX = 16;
+
+/** The answer band never gets shorter than the fit solver's smallest safe box. */
+const MIN_REVEAL_BAND_PX = TEXT_SAFE_TOP_PX + TEXT_SAFE_BOTTOM_PX + 160;
+
+/**
+ * How far above the card's foot the answer band must end for the fit solver to keep the
+ * word's box above `wordFoot` (px from the card's top). The solver keeps the word
+ * getTextSafeInsets(band).bottom clear of the band's foot, so the band ends that far
+ * below `wordFoot`.
+ */
+function getRevealBandFoot(cardHeight: number, wordFoot: number): number {
+  let band = wordFoot + TEXT_SAFE_BOTTOM_PX;
+  // The inset grows with the band past a point; settle the band on its own inset.
+  for (let i = 0; i < 4; i++) band = wordFoot + getTextSafeInsets(band).bottom;
+  return Math.max(0, cardHeight - Math.max(MIN_REVEAL_BAND_PX, band));
+}
 
 type PageMotion = { direction: number; reveal: boolean };
 
@@ -194,6 +215,7 @@ export function VocabularyStage({
   const panelRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [panelTop, setPanelTop] = useState<number | null>(null);
+  const [bandFoot, setBandFoot] = useState<number | null>(null);
   useLayoutEffect(() => {
     if (details.current) details.current.scrollTop = 0;
   }, [stage.id, playKey]);
@@ -204,27 +226,60 @@ export function VocabularyStage({
    * the panel take whatever height is actually free, and the fixed midline is kept only
    * when the word already reaches it. A wide card lays the two out in columns and sets
    * its own top, so it is left alone.
+   *
+   * When the panel's text needs more height than is left under the word (a short word on
+   * a wide, short card such as a folded iPhone Duo, which fits the word 200px tall around
+   * the 34% line), the word gives way: the answer band's foot is raised to where the panel
+   * has to start, so the fit solver lifts the word and only shrinks it if it still cannot
+   * fit. The foot holds for the rest of the page once set, because the panel it made room
+   * for would otherwise look roomy again and hand the height back.
    */
   useLayoutEffect(() => {
     setPanelTop(null);
+    setBandFoot(null);
     if (!stage.reveal || still) return;
     const stageEl = stageRef.current;
     const card = stageEl?.closest<HTMLElement>(".vocab-card");
+    const panel = panelRef.current;
     // The answer's own band, not an outgoing clue page that is still in AnimatePresence.
     const box = stageEl?.querySelector<HTMLElement>(
       ".vocab-stage-band[data-reveal] [data-word-box]",
     );
     if (!card || !box) return;
+    // Where the panel's height cap ends (its top plus its max-height, which is the same
+    // line wherever the top is), seen the first time the panel is held by it.
+    let capBottom: number | null = null;
+    let foot: number | null = null;
+    let cardHeight = card.clientHeight;
     const measure = () => {
       const cardRect = card.getBoundingClientRect();
       if (cardRect.width > cardRect.height || card.dataset.revealSplit === "two-column") {
         setPanelTop(null);
+        setBandFoot(null);
         return;
+      }
+      if (card.clientHeight !== cardHeight) {
+        cardHeight = card.clientHeight;
+        capBottom = null;
+        foot = null;
+        setBandFoot(null);
       }
       // The answer's own layout box, not its painted rect: the page enters under a
       // scale, and a transform never resizes the box the ResizeObserver watches.
       const bottom = box.offsetTop + box.offsetHeight / 2;
-      const midline = card.clientHeight / 2;
+      const midline = cardHeight / 2;
+      const scroller = panel?.querySelector<HTMLElement>(".vocab-reveal-scroll");
+      if (panel && scroller && foot === null) {
+        const need = panel.offsetHeight - scroller.clientHeight + scroller.scrollHeight;
+        if (capBottom === null && need > panel.offsetHeight + 0.5) {
+          capBottom = panel.offsetTop + panel.offsetHeight;
+        }
+        const room = capBottom === null ? Infinity : capBottom - need - PANEL_SEAM_PX;
+        if (bottom > room) {
+          foot = getRevealBandFoot(cardHeight, room);
+          setBandFoot(foot);
+        }
+      }
       setPanelTop(bottom + PANEL_SEAM_PX < midline ? bottom + PANEL_SEAM_PX : null);
     };
     measure();
@@ -232,6 +287,7 @@ export function VocabularyStage({
     const observer = new ResizeObserver(measure);
     observer.observe(box);
     observer.observe(card);
+    if (panel) observer.observe(panel);
     // The fit solver moves the answer by changing the wrapper's `top` percentage, which
     // is not a resize; without this the panel would keep the seam it measured a frame
     // before the word settled.
@@ -298,6 +354,7 @@ export function VocabularyStage({
             key={`${stage.id}-${playKey}`}
             className="vocab-stage-band"
             data-reveal={stage.reveal ? "" : undefined}
+            style={stage.reveal && bandFoot !== null ? { bottom: bandFoot } : undefined}
             custom={pageMotion}
             variants={BAND_VARIANTS}
             initial="enter"
