@@ -122,6 +122,9 @@ RULE 8. EVERY CLUE IS A WHOLE SENTENCE. NEVER DELETE A WORD TO HIDE THE ANSWER.
 RULE 9. COUNTS ARE DIGITS
 - Write a count, a time, an age, a price or a measure in digits: 3 ngày, 7 giờ, 18 tuổi,
   25 mét, 300 nghìn, 10 triệu. nghìn, triệu and tỷ stay words after the digits.
+- Write a number whole: ba chục → 30, năm chục nghìn → 50 nghìn, ba tám độ → 38 độ,
+  a height as said (mét tám → 1m8, mét bảy mốt → 1m71), a score's half as a decimal
+  (điểm IELTS sáu rưỡi → 6.5). Never half digits: 3 một, 1 mét sáu, 5 chục.
 - Keep the word where it means something else or is not a count: ba (father), năm (year),
   tám (to chat), chín (ripe), một before a noun (a, an), thứ hai, tháng một, cả hai,
   hai bên, một mình, any set phrase, and the card's own answer.
