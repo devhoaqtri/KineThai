@@ -1,22 +1,49 @@
 /**
- * Overview section: topline cards, activity feed, 7d sparklines.
+ * Overview section: every live operating number on one screen, as small tiles.
+ *
+ * No charts: the old 7-day sparklines drew three mostly empty plot areas for a
+ * handful of points. Each group polls on its own interval, so the page stays
+ * current without a reload. Only measured values are shown: the health snapshot's
+ * uptime and p95 are derived from its status and a single ping, so they are left out.
  *
  * Exports: OverviewPage
- * Depends on: queries, recharts
+ * Depends on: admin queries (health, session health, rollups, errors, events, word reports)
  */
 
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import { useRouterState } from "@tanstack/react-router";
 import {
+  adminErrorsQueryOptions,
   adminEventsQueryOptions,
   adminHealthQueryOptions,
   adminRollupsQueryOptions,
   adminSessionHealthQueryOptions,
+  adminWordReportsQueryOptions,
 } from "../../api/queries";
 import { useAdminMode, useAdminSearchRange } from "../../hooks/useAdminMode";
 import type { AdminRangePreset } from "../../lib/date-range";
-import { daysAgo } from "../../lib/date-range";
+import type { SystemHealthStatus } from "../../types/telemetry";
+
+/** Rollups are cached for a minute elsewhere; the overview keeps them moving. */
+const ROLLUP_REFRESH_MS = 30_000;
+const RECENT_EVENTS = 8;
+
+const RANGE_LABEL: Record<AdminRangePreset, string> = {
+  "24h": "last 24h",
+  "7d": "last 7 days",
+  "30d": "last 30 days",
+  custom: "selected range",
+};
+
+const STATUS_STYLE: Record<SystemHealthStatus, { dot: string; label: string }> = {
+  operational: { dot: "bg-emerald-500", label: "Operational" },
+  degraded: { dot: "bg-amber-400", label: "Degraded" },
+  partial_outage: { dot: "bg-orange-500", label: "Partial outage" },
+  major_outage: { dot: "bg-red-600", label: "Major outage" },
+};
+
+type Tone = "default" | "warn" | "bad";
 
 /**
  * Admin overview landing page.
@@ -28,156 +55,292 @@ export function OverviewPage(): React.ReactElement {
       (s.location.search ?? {}) as { range?: AdminRangePreset; from?: string; to?: string },
   });
   const mode = useAdminMode();
-  const { from, to } = useAdminSearchRange(search);
-  const sparkFrom = daysAgo(7);
-  const rollups = useQuery(adminRollupsQueryOptions(from, to, mode));
-  const spark = useQuery(adminRollupsQueryOptions(sparkFrom, to, mode));
-  const events = useQuery(adminEventsQueryOptions(from, to, mode));
-  const health = useQuery(adminHealthQueryOptions(mode));
-  const sessionHealth = useQuery(adminSessionHealthQueryOptions(from, to, mode));
+  const { from, to, preset } = useAdminSearchRange(search);
 
-  const rows = rollups.data ?? [];
-  const totals = rows.reduce(
+  const health = useQuery(adminHealthQueryOptions(mode));
+  const sessions = useQuery(adminSessionHealthQueryOptions(from, to, mode));
+  const rollups = useQuery({
+    ...adminRollupsQueryOptions(from, to, mode),
+    refetchInterval: ROLLUP_REFRESH_MS,
+  });
+  const openErrors = useQuery(adminErrorsQueryOptions(from, to, mode, "new"));
+  const events = useQuery(adminEventsQueryOptions(from, to, mode));
+  const wordReports = useQuery(adminWordReportsQueryOptions());
+
+  const totals = (rollups.data ?? []).reduce(
     (acc, r) => {
-      acc.users += r.new_users;
+      acc.newUsers += r.new_users;
+      acc.activeUsers += r.active_users;
       acc.content += r.content_created;
+      acc.contentUpdated += r.content_updated;
+      acc.links += r.links_created;
+      acc.linkTaps += r.link_interactions;
       acc.errors += r.errors_total;
-      acc.links += r.link_interactions;
+      acc.critical += r.errors_critical;
       return acc;
     },
-    { users: 0, content: 0, errors: 0, links: 0 },
+    {
+      newUsers: 0,
+      activeUsers: 0,
+      content: 0,
+      contentUpdated: 0,
+      links: 0,
+      linkTaps: 0,
+      errors: 0,
+      critical: 0,
+    },
   );
 
-  if (rollups.isLoading) {
-    return <div className="h-40 animate-pulse rounded-lg bg-muted" aria-busy />;
-  }
-
-  if (rollups.isError) {
-    return (
-      <p className="text-sm text-red-600">
-        Telemetry unreachable: {rollups.error instanceof Error ? rollups.error.message : "error"}
-      </p>
-    );
-  }
+  const snap = health.data;
+  const visits = sessions.data;
+  const status = snap ? STATUS_STYLE[snap.status] : null;
+  const updatedAt = Math.max(
+    health.dataUpdatedAt,
+    sessions.dataUpdatedAt,
+    rollups.dataUpdatedAt,
+    openErrors.dataUpdatedAt,
+    events.dataUpdatedAt,
+  );
+  const openErrorCount = openErrors.data
+    ? `${openErrors.data.items.length}${openErrors.data.nextCursor ? "+" : ""}`
+    : null;
+  const rangeLabel = RANGE_LABEL[preset];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-semibold">Live operating data</h2>
-        <p className="text-sm text-muted-foreground">
-          Status: {health.data?.status ?? "…"} · queue {health.data?.queue_depth ?? "n/a"}
-        </p>
+    <div className="mx-auto max-w-5xl space-y-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 className="text-lg font-semibold">Live numbers</h2>
+        <UpdatedAgo at={updatedAt} />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="New users" value={totals.users} />
-        <StatCard label="Content created" value={totals.content} />
-        <StatCard label="Link interactions" value={totals.links} />
-        <StatCard label="Errors" value={totals.errors} />
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Spark title="New users (7d)" data={(spark.data ?? []).map((r) => ({ v: r.new_users }))} />
-        <Spark
-          title="Content (7d)"
-          data={(spark.data ?? []).map((r) => ({ v: r.content_created }))}
+      <Group title="Right now" note="every 15s">
+        <Tile
+          label="Status"
+          value={
+            status ? (
+              <span className="flex items-center gap-1.5">
+                <span className={`size-2 rounded-full ${status.dot}`} aria-hidden />
+                {status.label}
+              </span>
+            ) : null
+          }
+          small
+          state={health}
         />
-        <Spark title="Errors (7d)" data={(spark.data ?? []).map((r) => ({ v: r.errors_total }))} />
-      </div>
+        <Tile
+          label="DB ping"
+          value={snap ? `${snap.p50_latency_ms} ms` : null}
+          tone={snap && snap.p50_latency_ms > 800 ? "warn" : "default"}
+          state={health}
+        />
+        <Tile
+          label="Errors · 5 min"
+          value={snap?.errors_5m ?? null}
+          tone={(snap?.errors_5m ?? 0) > 0 ? "bad" : "default"}
+          state={health}
+        />
+        <Tile label="Content queue" value={snap?.queue_depth ?? null} state={health} />
+        <Tile
+          label="New error reports"
+          value={openErrorCount}
+          tone={openErrors.data?.items.length ? "bad" : "default"}
+          state={openErrors}
+        />
+        <Tile
+          label="Word reports open"
+          value={wordReports.data?.openTotal ?? null}
+          tone={wordReports.data?.openTotal ? "warn" : "default"}
+          state={wordReports}
+        />
+        <Tile
+          label="Words hidden"
+          value={wordReports.data?.urgentTotal ?? null}
+          tone={wordReports.data?.urgentTotal ? "bad" : "default"}
+          state={wordReports}
+        />
+      </Group>
 
-      <section>
-        <h3 className="mb-3 text-sm font-medium">Activity feed</h3>
-        {(events.data?.items.length ?? 0) === 0 ? (
-          <p className="text-sm text-muted-foreground">No data in this range</p>
-        ) : (
-          <ul className="divide-y divide-border rounded-lg border border-border">
-            {(events.data?.items ?? []).slice(0, 50).map((ev) => (
-              <li key={ev.id} className="px-3 py-2 text-sm">
+      <Group title="Visitors" note={`${rangeLabel} · every 30s`}>
+        <Tile label="Unique visitors" value={visits?.uniqueVisitors ?? null} state={sessions} />
+        <Tile label="Visits" value={visits?.sessionDays ?? null} state={sessions} />
+        <Tile label="Feed loads" value={visits?.totalLoads ?? null} state={sessions} />
+        <Tile
+          label="Feed failures"
+          value={visits?.totalFailures ?? null}
+          tone={(visits?.totalFailures ?? 0) > 0 ? "bad" : "default"}
+          state={sessions}
+        />
+        <Tile
+          label="Failure rate"
+          value={visits ? formatPct(visits.failureRate) : null}
+          tone={(visits?.failureRate ?? 0) > 0.02 ? "bad" : "default"}
+          state={sessions}
+        />
+        <Tile
+          label="Session errors"
+          value={visits?.totalErrors ?? null}
+          tone={(visits?.totalErrors ?? 0) > 0 ? "warn" : "default"}
+          state={sessions}
+        />
+        <Tile
+          label="Visitors hit an error"
+          value={visits?.sessionsWithErrors ?? null}
+          state={sessions}
+        />
+      </Group>
+
+      <Group title="Activity" note={`${rangeLabel} · every 30s`}>
+        <Tile label="New users" value={rollups.data ? totals.newUsers : null} state={rollups} />
+        <Tile
+          label="Active users (sum of days)"
+          value={rollups.data ? totals.activeUsers : null}
+          state={rollups}
+        />
+        <Tile
+          label="Content created"
+          value={rollups.data ? totals.content : null}
+          state={rollups}
+        />
+        <Tile
+          label="Content updated"
+          value={rollups.data ? totals.contentUpdated : null}
+          state={rollups}
+        />
+        <Tile label="Links created" value={rollups.data ? totals.links : null} state={rollups} />
+        <Tile label="Link taps" value={rollups.data ? totals.linkTaps : null} state={rollups} />
+        <Tile
+          label="Errors"
+          value={rollups.data ? totals.errors : null}
+          tone={totals.errors > 0 ? "warn" : "default"}
+          state={rollups}
+        />
+        <Tile
+          label="Critical errors"
+          value={rollups.data ? totals.critical : null}
+          tone={totals.critical > 0 ? "bad" : "default"}
+          state={rollups}
+        />
+      </Group>
+
+      <div className="grid gap-5 md:grid-cols-2">
+        <ListSection title="Top visitor errors" empty="No visitor errors in this range">
+          {(visits?.topErrors ?? []).map((err, i) => (
+            <li key={i} className="flex items-baseline justify-between gap-3 px-3 py-1.5 text-xs">
+              <span className="min-w-0 truncate text-muted-foreground" title={err.message}>
+                {err.message}
+              </span>
+              <span className="shrink-0 font-medium tabular-nums">{err.count}</span>
+            </li>
+          ))}
+        </ListSection>
+        <ListSection title="Latest events" empty="No events in this range">
+          {(events.data?.items ?? []).slice(0, RECENT_EVENTS).map((ev) => (
+            <li
+              key={ev.id}
+              className="flex items-baseline justify-between gap-3 px-3 py-1.5 text-xs"
+            >
+              <span className="min-w-0 truncate">
                 <span className="font-medium">{ev.event_type}</span>
                 {ev.entity_type ? (
                   <span className="text-muted-foreground"> · {ev.entity_type}</span>
                 ) : null}
-                <span className="float-right text-xs text-muted-foreground">
-                  {new Date(ev.occurred_at).toLocaleString()}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section>
-        <h3 className="mb-3 text-sm font-medium">Visitors &amp; session health</h3>
-        {sessionHealth.isLoading ? (
-          <div className="h-20 animate-pulse rounded-lg bg-muted" aria-busy />
-        ) : sessionHealth.isError ? (
-          <p className="text-sm text-red-600">Session health unavailable</p>
-        ) : sessionHealth.data ? (
-          <div className="space-y-3">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard label="Unique visitors" value={sessionHealth.data.uniqueVisitors} />
-              <StatCard label="Visits" value={sessionHealth.data.sessionDays} />
-              <StatCard
-                label="Visitors with errors"
-                value={sessionHealth.data.sessionsWithErrors}
-              />
-              <StatCard label="Page failures" value={sessionHealth.data.totalFailures} />
-            </div>
-            {sessionHealth.data.failureRate > 0 && (
-              <p className="text-xs text-muted-foreground">
-                Failure rate: {(sessionHealth.data.failureRate * 100).toFixed(1)}%
-              </p>
-            )}
-            {sessionHealth.data.topErrors.length > 0 && (
-              <div>
-                <p className="mb-2 text-xs font-medium text-muted-foreground">Top errors</p>
-                <ul className="space-y-1 text-xs">
-                  {sessionHealth.data.topErrors.map((err, i) => (
-                    <li key={i} className="flex justify-between">
-                      <span className="truncate text-muted-foreground">{err.message}</span>
-                      <span className="ml-2 font-medium tabular-nums">{err.count}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ) : null}
-      </section>
+              </span>
+              <time
+                className="shrink-0 tabular-nums text-muted-foreground"
+                dateTime={ev.occurred_at}
+                title={new Date(ev.occurred_at).toLocaleString()}
+              >
+                {formatAgo(Date.parse(ev.occurred_at))}
+              </time>
+            </li>
+          ))}
+        </ListSection>
+      </div>
     </div>
   );
 }
 
-function StatCard(props: { label: string; value: number }): React.ReactElement {
+type QueryState = { isLoading: boolean; isError: boolean };
+
+function Group(props: { title: string; note: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-border p-4">
-      <p className="text-xs text-muted-foreground">{props.label}</p>
-      <p className="mt-1 text-2xl font-semibold tabular-nums">{props.value}</p>
+    <section aria-label={props.title}>
+      <div className="mb-2 flex items-baseline gap-2">
+        <h3 className="text-sm font-medium">{props.title}</h3>
+        <span className="text-xs text-muted-foreground">{props.note}</span>
+      </div>
+      <dl className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">{props.children}</dl>
+    </section>
+  );
+}
+
+function Tile(props: {
+  label: string;
+  value: React.ReactNode;
+  state: QueryState;
+  tone?: Tone;
+  small?: boolean;
+}): React.ReactElement {
+  const tone = props.tone ?? "default";
+  const toneClass =
+    tone === "bad" ? "text-red-500" : tone === "warn" ? "text-amber-500" : "text-foreground";
+  let body: React.ReactNode;
+  if (props.value != null) body = props.value;
+  else if (props.state.isError) body = <span className="text-sm text-red-500">unavailable</span>;
+  else if (props.state.isLoading)
+    body = <span className="inline-block h-5 w-10 animate-pulse rounded bg-muted" aria-busy />;
+  else body = "—";
+  return (
+    <div className="rounded-md border border-border px-3 py-2">
+      <dt className="truncate text-[11px] text-muted-foreground">{props.label}</dt>
+      <dd
+        className={`mt-0.5 font-semibold tabular-nums ${props.small ? "text-sm leading-7" : "text-xl"} ${toneClass}`}
+      >
+        {body}
+      </dd>
     </div>
   );
 }
 
-function Spark(props: { title: string; data: { v: number }[] }): React.ReactElement {
+function ListSection(props: { title: string; empty: string; children: React.ReactNode[] }) {
   return (
-    <div className="rounded-lg border border-border p-3">
-      <p className="mb-2 text-xs text-muted-foreground">{props.title}</p>
-      {props.data.length === 0 ? (
-        <p className="text-xs text-muted-foreground">No data in this range</p>
+    <section aria-label={props.title}>
+      <h3 className="mb-2 text-sm font-medium">{props.title}</h3>
+      {props.children.length === 0 ? (
+        <p className="text-xs text-muted-foreground">{props.empty}</p>
       ) : (
-        <div className="h-16" role="img" aria-label={props.title}>
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={props.data}>
-              <Area
-                type="monotone"
-                dataKey="v"
-                stroke="currentColor"
-                fill="currentColor"
-                fillOpacity={0.15}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+        <ul className="divide-y divide-border rounded-md border border-border">{props.children}</ul>
       )}
-    </div>
+    </section>
   );
+}
+
+/** Ticks every few seconds so "updated" stays honest between polls. */
+function UpdatedAgo(props: { at: number }): React.ReactElement | null {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 5_000);
+    return () => window.clearInterval(id);
+  }, []);
+  if (!props.at) return null;
+  return (
+    <p className="text-xs text-muted-foreground">
+      Updated {formatAgo(props.at, Math.max(now, props.at))}
+    </p>
+  );
+}
+
+function formatPct(ratio: number): string {
+  const pct = ratio * 100;
+  return `${pct === 0 ? "0" : pct < 10 ? pct.toFixed(1) : Math.round(pct)}%`;
+}
+
+function formatAgo(at: number, now = Date.now()): string {
+  const seconds = Math.max(0, Math.round((now - at) / 1000));
+  if (seconds < 60) return `${seconds}s ago`;
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 48) return `${hours}h ago`;
+  return `${Math.round(hours / 24)}d ago`;
 }
