@@ -292,12 +292,16 @@ export function VocabularyFeedPage({
   const daily = useDailyGoal();
   const finishStreak = streak.finish;
   const finishDaily = daily.finish;
+  const releaseLevel = levelProgress.release;
   const handleWordFinished = useCallback(
     (wordId: string) => {
       finishStreak(wordId);
       finishDaily(wordId);
+      // A word milestone was earned when the word was viewed; it is shown now, at the
+      // word's end, with the streak and daily badges (useLevelProgress).
+      releaseLevel();
     },
-    [finishStreak, finishDaily],
+    [finishStreak, finishDaily, releaseLevel],
   );
   // No rotate-to-portrait gate here: the feed has its own landscape layout (two-column
   // answer page, compact chrome, measured shell height). The post-player surfaces, which

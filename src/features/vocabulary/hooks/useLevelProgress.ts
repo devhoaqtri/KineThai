@@ -1,13 +1,20 @@
 /**
- * Files each read word under its level and surfaces a word milestone the moment it is
- * earned. The same split as ./useStreak: lib/level-progress decides what is earned, this
+ * Files each read word under its level and surfaces a word milestone once that word is
+ * finished. The same split as ./useStreak: lib/level-progress decides what is earned, this
  * owns the read, the write and which badge is being celebrated right now.
+ *
+ * A milestone is EARNED when the word is viewed (its answer held the screen, lib/history),
+ * because that is when a word counts. It is SHOWN only at `release`, which the feed calls
+ * when the word finishes, the moment a streak or daily badge appears: celebrating at the
+ * view put the badge over the reveal and the spelling coda, and the word was cut off.
+ * Shown at the word's end, the badge stands between two words; the stream is suspended
+ * under it, so the next word starts from its first clue when the badge goes.
  *
  * Exports: useLevelProgress
  * Depends on: React, ../lib/level-progress, ../lib/word-badges
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ALL_SCOPE, progressScopes } from "../lib/word-badges";
 import {
   LEVEL_PROGRESS_EVENT,
@@ -39,11 +46,15 @@ export function useLevelProgress(locale: TargetLocale): {
   seen: LevelProgress;
   record: (level: VocabularyLevel, wordId: string) => void;
   celebrating: WordMilestone | null;
+  /** Show the milestone the last viewed word earned, if any: call when that word finishes. */
+  release: () => void;
   dismiss: () => void;
 } {
   const { scopes, levelCounts } = useMemo(() => progressScopes(locale), [locale]);
   const [seen, setSeen] = useState<LevelProgress>(() => readProgress().seen);
   const [celebrating, setCelebrating] = useState<WordMilestone | null>(null);
+  // Earned, waiting for its word to finish. A ref: holding it changes nothing on screen.
+  const pending = useRef<WordMilestone[]>([]);
 
   useEffect(() => {
     const refresh = () => setSeen(readProgress().seen);
@@ -66,12 +77,19 @@ export function useLevelProgress(locale: TargetLocale): {
       const { store, reached } = recordSeenWord(before, level, wordId, scopes, levelCounts);
       if (store === before) return;
       writeProgress(store);
-      if (reached.length) setCelebrating(headline(reached));
+      if (reached.length) pending.current = [...pending.current, ...reached];
     },
     [scopes, levelCounts],
   );
 
+  const release = useCallback(() => {
+    if (!pending.current.length) return;
+    const milestone = headline(pending.current);
+    pending.current = [];
+    setCelebrating(milestone);
+  }, []);
+
   const dismiss = useCallback(() => setCelebrating(null), []);
 
-  return { seen, record, celebrating, dismiss };
+  return { seen, record, celebrating, release, dismiss };
 }
