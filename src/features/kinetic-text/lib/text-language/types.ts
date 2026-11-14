@@ -34,6 +34,12 @@ export type VietnameseLineLayoutOptions = {
   // Data-annotated phrase keys (diacritic-preserving) that must stay unbreakable
   // on a line, exactly like the curated bound phrases.
   phraseKeys?: readonly (readonly string[])[];
+  /**
+   * Most syllables one line may hold. Defaults to VIETNAMESE_MAX_LINE_SYLLABLES; a page of
+   * Latin-script words set on the same waterfall lines (the vocabulary usage sentence)
+   * passes Infinity, because the cap is a Vietnamese reading rule, not a layout one.
+   */
+  maxLineSyllables?: number;
 };
 /**
  * @responsibility Packed lines plus a pre-shrink fit scale suggestion.

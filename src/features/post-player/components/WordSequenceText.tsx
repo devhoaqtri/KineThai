@@ -76,6 +76,15 @@ export type WordSequenceTextProps = {
    * the factor the reader actually gets. Never touches glyph width.
    */
   lineSpacingScale?: number;
+  /**
+   * Set a multi-word page that is neither Vietnamese nor Han (the vocabulary card's
+   * usage sentence) on the same measured waterfall lines as a Vietnamese clue: left
+   * anchored, each line on its staggered indent, no line cap, the comma rule only a
+   * preference. Such a page otherwise wraps freely and may be centred or give its
+   * highlighted word a centred line of its own, which zig-zags against the clue pages
+   * around it. Off by default, so community posts keep their free layouts.
+   */
+  waterfall?: boolean;
   /** Optional upstream emphasis annotations; only phrases occurring in this page's text match. */
   dataEmphasis?: string[];
   /**
@@ -153,6 +162,7 @@ export function WordSequenceText({
   entrance,
   fitAsUnit = false,
   lineSpacingScale = 1,
+  waterfall = false,
   dataEmphasis,
   boundPhrases,
   secondaryEmphasis,
@@ -173,10 +183,12 @@ export function WordSequenceText({
     [fitAsUnit, isHan, spec.text],
   );
   const isVietnamese = !isHan && words.length > 1 && isLikelyVietnameseText(spec.text);
+  // Any other multi-word page the caller asked to set on the waterfall (see `waterfall`).
+  const isWaterfallWords = waterfall && !fitAsUnit && !isHan && !isVietnamese && words.length > 1;
   // Vietnamese syllables and Han glyphs share every downstream decision that is not
   // about glyph width: packed unbreakable lines, left anchor, tight leading, and the
   // packed-page fit floor. `fitAsUnit` pages (solo reveals) always stay one line.
-  const isPackedLines = isVietnamese || isHan;
+  const isPackedLines = isVietnamese || isHan || isWaterfallWords;
   const emphasized = useMemo(
     () => getEmphasizedWordIndexes(words, dataEmphasis, boundPhrases),
     [words, dataEmphasis, boundPhrases],
@@ -243,9 +255,20 @@ export function WordSequenceText({
               spec.size,
               visualScaleGuard,
               layoutPhraseKeys,
+              // The four-syllable cap is a Vietnamese rule; words on the waterfall have none.
+              isVietnamese ? undefined : Number.POSITIVE_INFINITY,
             )
         : { lines: [], suggestedFitScale: 1 },
-    [isPackedLines, isHan, words, canvasWidth, spec.size, visualScaleGuard, layoutPhraseKeys],
+    [
+      isPackedLines,
+      isHan,
+      isVietnamese,
+      words,
+      canvasWidth,
+      spec.size,
+      visualScaleGuard,
+      layoutPhraseKeys,
+    ],
   );
   const entranceStyle = getEntranceStyle(entranceSeed ?? spec.text, spec.rhythm, entrance);
   const layoutMode = getKineticTextLayoutMode(spec.text, isPackedLines, words.length, emphasized);
@@ -313,9 +336,10 @@ export function WordSequenceText({
     lines: packedLayout.lines,
     signature: measuredSignature,
     phraseEdges,
-    softPhraseEdges: isHan,
-    // A Vietnamese line never holds more than four syllables; Han text has no such cap.
-    maxLineSyllables: isHan ? undefined : VIETNAMESE_MAX_LINE_SYLLABLES,
+    // Only Vietnamese holds the comma rule strictly; elsewhere a phrase edge is a preference.
+    softPhraseEdges: !isVietnamese,
+    // A Vietnamese line never holds more than four syllables; other text has no such cap.
+    maxLineSyllables: isVietnamese ? VIETNAMESE_MAX_LINE_SYLLABLES : undefined,
     lineSpacingScale,
     wrapperRef,
     textRef,
@@ -353,6 +377,7 @@ export function WordSequenceText({
     ? "min(90%, calc(100% - 2.5rem))"
     : TEXT_SAFE_MAX_WIDTH;
   const loopAnimation = getLoopAnimation(spec.loop, spec.tempo);
+  const lineHeight = (isPackedLines ? 1.04 : 0.9) * lineSpacingScale;
   const entranceClock = useEntranceClock(paused, `${playKey}-${staticRender}`);
 
   return (
@@ -398,7 +423,10 @@ export function WordSequenceText({
             color: textColor,
             fontWeight: spec.weight,
             letterSpacing: `${spec.letterSpacing}em`,
-            lineHeight: (isPackedLines ? 1.04 : 0.9) * lineSpacingScale,
+            lineHeight,
+            // Read by an emphasised word's enlarged glyphs, so they keep inside this
+            // line's pitch instead of making their line taller than the rest.
+            ["--kinetic-line-height" as string]: lineHeight,
             textAlign: leftAnchoredText ? "left" : "center",
             textShadow: photoTextShadow ?? "0 4px 40px rgba(0,0,0,0.45)",
             transform: `rotate(${spec.rotation}deg)`,

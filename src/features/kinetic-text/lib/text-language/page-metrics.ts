@@ -104,6 +104,7 @@ export function getVietnameseCharBudgetForLine(
  * @param fontSizePx - fontSizePx argument
  * @param visualScaleGuard - visualScaleGuard argument
  * @param phraseKeys - data-annotated phrase keys kept unbreakable on a line
+ * @param maxLineSyllables - line cap; omitted, the Vietnamese one (Infinity for Latin words)
  * @returns Lines + suggestedFitScale (≥ VIETNAMESE_MIN_FIT_SCALE)
  */
 export function getVietnameseLayoutMetrics(
@@ -112,11 +113,12 @@ export function getVietnameseLayoutMetrics(
   fontSizePx: number,
   visualScaleGuard = 1,
   phraseKeys?: readonly (readonly string[])[],
+  maxLineSyllables?: number,
 ): VietnameseLayoutMetrics {
   const innerWidth = getVietnameseCanvasInnerWidth(canvasWidthPx);
   const getLineCapacity = (lineIndex: number) =>
     getVietnameseCharBudgetForLine(lineIndex, innerWidth, fontSizePx);
-  const lines = getVietnameseWordLines(words, { getLineCapacity, phraseKeys });
+  const lines = getVietnameseWordLines(words, { getLineCapacity, phraseKeys, maxLineSyllables });
   return {
     lines,
     suggestedFitScale: suggestPackedFitScale(lines, getLineCapacity, visualScaleGuard),
@@ -241,6 +243,7 @@ export function getVietnameseWordLines(
     // decorative.
     let hanRescueUsed = false;
     let lineSyllables = 0;
+    const maxLineSyllables = options?.maxLineSyllables ?? VIETNAMESE_MAX_LINE_SYLLABLES;
 
     while (index < segments.length) {
       const segment = segments[index];
@@ -260,7 +263,7 @@ export function getVietnameseWordLines(
       }
 
       // A Vietnamese line never grows past the syllable cap, whatever room is left.
-      if (!lineIsHan && lineSyllables + segmentSyllables > VIETNAMESE_MAX_LINE_SYLLABLES) break;
+      if (!lineIsHan && lineSyllables + segmentSyllables > maxLineSyllables) break;
 
       // Within the soft capacity — keep filling.
       if (projected <= capacity) {

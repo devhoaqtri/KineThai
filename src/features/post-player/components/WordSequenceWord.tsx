@@ -293,6 +293,18 @@ export function WordSequenceWord({
             style={{
               display: "inline-block",
               fontSize: important ? `${EMPHASIS_FONT_SCALE}em` : undefined,
+              // Larger glyphs inherit the line's unitless line-height, so their box was
+              // EMPHASIS_FONT_SCALE times a plain word's and a highlighted line stood
+              // taller than the rest. Set back to the line's own pitch, less the extra
+              // ascent the larger glyphs carry (about 0.07em of the line's font), the box
+              // rides inside the plain line's strut and every line keeps the same pitch.
+              // The glyphs still draw at full size; only the space they claim changes.
+              // Never on a solo answer word: the meaning panel is placed from that word's
+              // box, so it keeps every pixel its glyphs need.
+              lineHeight:
+                important && !isSolo
+                  ? `calc((var(--kinetic-line-height, 1.2) - 0.07) / ${EMPHASIS_FONT_SCALE})`
+                  : undefined,
             }}
           >
             {blank ? (

@@ -218,6 +218,8 @@ function StageText({
       paused={!playing}
       revealed={still || reducedMotion}
       lineSpacingScale={VOCAB_LINE_SPACING_SCALE}
+      // The usage sentence follows the clue pages' waterfall lines (see WordSequenceText).
+      waterfall
     />
   );
 }

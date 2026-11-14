@@ -231,6 +231,10 @@ export function WordSequenceLines({
           padding: "0.05em 0 0.1em",
           borderRadius: "0.28em",
           borderBlock: "0.05em solid transparent",
+          // The padding and border above are room for the run's effect to draw in, not
+          // room on the line: given back as negative margin, a highlighted run claims
+          // exactly the height of its words and its line keeps the page's pitch.
+          marginBlock: "-0.1em -0.15em",
           isolation: "isolate",
         }}
       >
