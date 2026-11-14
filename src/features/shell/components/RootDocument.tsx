@@ -9,6 +9,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, useRouter, HeadContent, Scripts } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
+import { buildLegacyBrowserWarningScript } from "@/lib/browser-support";
+import { UnsupportedBrowserWarning } from "./UnsupportedBrowserWarning";
+
+const LEGACY_BROWSER_WARNING_SCRIPT = buildLegacyBrowserWarningScript();
 
 /**
  * HTML document shell that hosts head content, body children, and scripts.
@@ -24,6 +28,7 @@ export function RootShell({ children }: { children: ReactNode }) {
       <body>
         {children}
         <Scripts />
+        <script dangerouslySetInnerHTML={{ __html: LEGACY_BROWSER_WARNING_SCRIPT }} />
       </body>
     </html>
   );
@@ -67,6 +72,7 @@ export function RootApp({ queryClient }: { queryClient: QueryClient }) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <UnsupportedBrowserWarning />
       <Outlet />
       <Toaster position="top-center" theme="dark" richColors />
     </QueryClientProvider>
