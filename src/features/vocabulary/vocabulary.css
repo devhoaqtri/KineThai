@@ -6159,6 +6159,15 @@
   display: inline-block;
   white-space: pre;
   will-change: transform, opacity;
+  /* Room for the ink. A handwriting face draws past its letter's advance (Charm's f and j
+     tails, Dancing Script's swashes), and WebKit paints a letter that is animating its
+     transform into a layer cut to the letter's own box, so those strokes were sliced off
+     left and right while the letter moved. The padding widens that box and the equal
+     negative margin hands the room back, so the row's layout, and the offsetWidth
+     SpellingAnimation fits the word by, are unchanged. It also leaves room for the flip
+     variant's glow. */
+  padding: 0.3em 0.45em;
+  margin: -0.3em -0.45em;
 }
 /* Korean coda (HangulAssembly). A letter and the syllable it becomes share one box:
    one em, weight 800, the card's own ink. Nothing is scaled, and the only colour
