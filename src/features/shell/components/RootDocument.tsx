@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
 import { buildLegacyBrowserWarningScript } from "@/lib/browser-support";
 import { UnsupportedBrowserWarning } from "./UnsupportedBrowserWarning";
+import { DesktopModeNotice } from "./DesktopModeNotice";
 
 const LEGACY_BROWSER_WARNING_SCRIPT = buildLegacyBrowserWarningScript();
 
@@ -73,6 +74,7 @@ export function RootApp({ queryClient }: { queryClient: QueryClient }) {
   return (
     <QueryClientProvider client={queryClient}>
       <UnsupportedBrowserWarning />
+      <DesktopModeNotice />
       <Outlet />
       <Toaster position="top-center" theme="dark" richColors />
     </QueryClientProvider>
