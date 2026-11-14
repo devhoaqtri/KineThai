@@ -4,10 +4,11 @@
  * consume but that must never reach a reader as literal slashes or underscores.
  *
  * Exports: MarkedText, FilledUsage
- * Depends on: React, ../lib/stages
+ * Depends on: React, ../lib/stages, ../lib/usage-fill
  */
 import { Fragment } from "react";
 import { splitEmphasisMarkers } from "../lib/stages";
+import { caseFill } from "../lib/usage-fill";
 
 /**
  * Render a deck sentence with its /markers/ turned into highlights.
@@ -46,14 +47,24 @@ export function MarkedText({ text }: { text: string }) {
  */
 export function FilledUsage({ text, word }: { text: string; word: string }) {
   const runs = text.split(/_{2,}/);
+  // What a reader sees before each blank, markers dropped, so a fill that opens its
+  // sentence is capitalized (caseFill); the chip is inline and grows with it.
+  let before = "";
   return (
     <>
-      {runs.map((run, index) => (
-        <Fragment key={index}>
-          <MarkedText text={run} />
-          {index < runs.length - 1 && <mark className="vocab-def-answer">{word}</mark>}
-        </Fragment>
-      ))}
+      {runs.map((run, index) => {
+        before += splitEmphasisMarkers(run)
+          .map((part) => part.text)
+          .join("");
+        const fill = caseFill(before, word);
+        before += fill;
+        return (
+          <Fragment key={index}>
+            <MarkedText text={run} />
+            {index < runs.length - 1 && <mark className="vocab-def-answer">{fill}</mark>}
+          </Fragment>
+        );
+      })}
     </>
   );
 }
