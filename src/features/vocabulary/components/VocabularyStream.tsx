@@ -452,7 +452,7 @@ export function VocabularyStream({
                           ? ` Từ tiếp theo sẽ mở sau ${formatCountdown(nextUnlock, now)}.`
                           : ""
                       }`
-                    : `Gợi ý tiếng Việt, từ mới tiếng ${deckLanguage}. Không cần đăng nhập.`}
+                    : `Gợi ý tiếng Việt, từ mới tiếng ${deckLanguage}.`}
             </p>
             {initialError && !query.retryAt && (
               <button

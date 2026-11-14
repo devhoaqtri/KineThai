@@ -873,9 +873,7 @@ export function BookmarksPage({ onClose }: { onClose?: () => void } = {}) {
         )}
         <div>
           <h1 className="vocab-saved-title">Từ vựng của bạn</h1>
-          <p className="vocab-saved-subtitle">
-            Lưu trên thiết bị này thôi — không tài khoản, không đăng nhập.
-          </p>
+          <p className="vocab-saved-subtitle">Chỉ lưu trên thiết bị này.</p>
         </div>
       </header>
 

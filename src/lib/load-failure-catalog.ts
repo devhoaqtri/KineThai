@@ -54,7 +54,7 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     existing:
       "shell ReaderNotices (offline / back online) and the error screen; lib/feed-fallback retries",
     action: "Say the device is offline; retry by itself on the window 'online' event.",
-    readerHintVi: "Bạn đang không có mạng. Ứng dụng sẽ tự tải lại khi có mạng.",
+    readerHintVi: "Không có kết nối mạng. Ứng dụng sẽ tự tải lại khi có mạng.",
     offerReport: false,
   },
   {

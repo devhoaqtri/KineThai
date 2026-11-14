@@ -101,7 +101,7 @@ export function ReaderNotices() {
       }}
     >
       {showOffline ? (
-        <ShellNotice title="Bạn đang không có mạng" onDismiss={() => setOfflineDismissed(true)}>
+        <ShellNotice title="Không có kết nối mạng" onDismiss={() => setOfflineDismissed(true)}>
           Các từ đã tải vẫn xem được. Khi có mạng lại, trang sẽ tự tải tiếp.
         </ShellNotice>
       ) : null}
