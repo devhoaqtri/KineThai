@@ -12,9 +12,17 @@
  * Depends on: React, lucide-react, ../lib/word-report, ../lib/reported-words
  */
 
-import { useCallback, useEffect, useRef, useState, type Ref, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type Ref,
+  type RefObject,
+} from "react";
 import { createPortal } from "react-dom";
-import { Check, X } from "lucide-react";
+import { Check, Reply, X } from "lucide-react";
 import {
   MAX_REPORT_REASONS,
   REPORT_REASONS,
@@ -78,6 +86,14 @@ export function WordReportButton({
  * @param props.closing - fade out and ignore input while the card waits to unmount it
  * @returns Scrim plus dialog, positioned over the card
  */
+/**
+ * How the report panel makes room when its reasons do not fit, in order: "top" lets it
+ * grow up to the screen's top edge (over the toolbar); "compact" also folds the send
+ * button into a round arrow at the panel's foot, beside the note, so the chips get its
+ * row. Each step is taken only if the one before still leaves the reasons scrolling.
+ */
+const FIT_STEPS = ["top", "compact"] as const;
+
 export function WordReportPanel({
   wordId,
   stageId,
@@ -108,11 +124,38 @@ export function WordReportPanel({
   const [phase, setPhase] = useState<Phase>(alreadyReported ? "sent" : "choosing");
   const [selected, setSelected] = useState<ReportReasonId[]>([]);
   const panel = useRef<HTMLDivElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
   const openedOn = useRef(stageId);
   // Resolved once, when the panel opens: the card is mounted by then, and a card never
   // moves to another shell while its panel is up. No shell (a stage outside the feed)
   // keeps the panel inline, where it used to be.
   const [host] = useState(() => anchor.current?.closest<HTMLElement>(".vocabulary-shell") ?? null);
+
+  // A short or near-square screen (an Android half-screen window, a foldable's cover) left
+  // the panel too short for its own reasons: they scrolled in a sliver between the note
+  // and the send button. The panel gives itself room one step at a time, and only as far
+  // as it needs: first the height up to the screen's top edge, then the send button's row
+  // (see FIT_STEPS). Measured, not guessed from the screen size, because what fits depends
+  // on the width the chips wrap in as much as on the height. Written to the layer directly
+  // so a re-measure is synchronous and never a render.
+  useLayoutEffect(() => {
+    const fit = () => {
+      const layer = layerRef.current;
+      const box = panel.current;
+      if (!layer || !box) return;
+      const area = box.querySelector<HTMLElement>(".vocab-report-reasons") ?? box;
+      const overflows = () => area.scrollHeight > area.clientHeight + 1;
+      delete layer.dataset.fit;
+      for (const step of FIT_STEPS) {
+        if (!overflows()) return;
+        layer.dataset.fit = step;
+      }
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    void document.fonts?.ready.then(fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [phase, host]);
 
   useEffect(() => {
     panel.current?.querySelector<HTMLElement>("button")?.focus();
@@ -169,7 +212,7 @@ export function WordReportPanel({
     // Opts out of the card's tap-to-turn-page gestures. The layer is fixed over the whole
     // screen just above the saved-words tab and under the toolbar, so the panel is the one
     // thing in focus while the tab stays where it is, dimmed under the scrim.
-    <div className="vocab-report-layer" data-no-gesture="" data-reveal-split={split}>
+    <div ref={layerRef} className="vocab-report-layer" data-no-gesture="" data-reveal-split={split}>
       <div
         className="vocab-report-scrim"
         data-closing={closing || undefined}
@@ -227,7 +270,12 @@ export function WordReportPanel({
               onClick={() => void send()}
               disabled={!selected.length || phase === "sending"}
             >
-              {phase === "sending" ? "Đang gửi…" : "Gửi báo cáo ẩn danh"}
+              {/* The arrow shows only once the button is a round one (data-fit="compact");
+                  the label stays in the button's name, hidden to the eye. */}
+              <Reply className="vocab-report-send-icon" size={22} aria-hidden="true" />
+              <span className="vocab-report-send-label">
+                {phase === "sending" ? "Đang gửi…" : "Gửi báo cáo ẩn danh"}
+              </span>
             </button>
           </>
         )}

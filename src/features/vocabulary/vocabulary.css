@@ -7227,6 +7227,75 @@
   min-height: 42px;
 }
 
+/* ── Report panel on a short or near-square screen ───────────────────────────
+   WordReportPanel measures whether its reasons fit and, only if they do not, sets
+   data-fit on its layer one step at a time (FIT_STEPS). On an Android half-screen
+   window (412×430) the panel held half its chips in a scrolling sliver between the
+   note and the send button.
+
+   "top": the panel may grow up to the screen's top edge. It then covers the toolbar,
+   so the layer is lifted over it (50); a modal sheet over the toolbar is what the
+   saved-words drawer already is. */
+.vocab-report-send-icon {
+  display: none;
+}
+.vocab-report-layer[data-fit] {
+  z-index: 51;
+}
+.vocab-report-layer[data-fit] .vocab-report-panel {
+  max-height: calc(
+    100% - var(--vocab-chrome-inset) - var(--vocab-chrome-bar) - 10px -
+      max(12px, calc(env(safe-area-inset-top) + 8px))
+  );
+}
+/* "compact": the send button folds into a round arrow in the panel's foot corner and
+   the note moves down beside it, so the chips take the row the button used to fill.
+   The label stays in the button, hidden to the eye, so it still says what it does. */
+/* A tighter frame too: the shortest windows (360×400) were 12px short of the last row. */
+.vocab-report-layer[data-fit="compact"] .vocab-report-panel {
+  padding: 12px 14px;
+}
+.vocab-report-layer[data-fit="compact"] .vocab-report-reasons {
+  order: 1;
+  margin-top: 8px;
+}
+.vocab-report-layer[data-fit="compact"] .vocab-report-error {
+  order: 2;
+}
+.vocab-report-layer[data-fit="compact"] .vocab-report-note {
+  order: 3;
+  align-items: center;
+  min-height: 48px;
+  margin-top: 8px;
+  /* Clears the 48px button and the gap before it. */
+  padding-right: 60px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.vocab-report-layer[data-fit="compact"] .vocab-report-send {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+.vocab-report-layer[data-fit="compact"] .vocab-report-send-icon {
+  display: block;
+}
+.vocab-report-layer[data-fit="compact"] .vocab-report-send-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* The page label is hidden on short screens (see the max-height: 620px rule above), so
    the panel can run down to just above the progress row. */
 @media (orientation: landscape) and (max-height: 620px) {
