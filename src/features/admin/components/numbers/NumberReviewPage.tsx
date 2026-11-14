@@ -200,7 +200,7 @@ function ReviewCard({
         <ChoiceButton
           tone="digits"
           active={item.choice === "number"}
-          disabled={locked || (item.inMark && item.choice !== "number")}
+          disabled={locked}
           onClick={() => onChoose("number")}
           icon={<Hash size={16} aria-hidden="true" />}
           label={`Digits “${item.digits}”`}
@@ -219,8 +219,8 @@ function ReviewCard({
       {item.inMark && (
         <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
           {written
-            ? "Written as digits inside a highlight, which turns the highlight off. Keep words puts it back."
-            : "Inside a highlight, digits would turn the highlight off. Keep the words, or move the mark to another word in the library first."}
+            ? "Written as digits inside a highlight, which turns the highlight off until the mark moves to another word. Keep words puts it back."
+            : "Inside a highlight: digits turn the highlight off until the mark moves to another word."}
         </p>
       )}
       {written && !item.current && (
@@ -341,7 +341,6 @@ export function NumberReviewPage(): React.ReactElement {
       if (!writable || pendingKeys.has(item.key)) return;
       if (item.choice === choice) return;
       if (item.choice === "number" && !item.current) return;
-      if (choice === "number" && item.inMark) return;
       decide.mutate({ item, choice });
       // Move on to the next card still waiting, so a run of taps or keys flows.
       const at = shown.findIndex((entry) => entry.key === item.key);

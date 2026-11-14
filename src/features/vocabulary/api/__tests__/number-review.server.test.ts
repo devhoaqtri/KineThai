@@ -111,7 +111,7 @@ describe("number review", () => {
     expect((await stored()).leadVi).toBe(card.leadVi);
   });
 
-  it("never writes digits inside a highlight mark, but keeps the words on request", async () => {
+  it("writes digits inside a highlight mark when chosen, and can put the words back", async () => {
     const marked = "Chạy /năm_phút/ là tới nhà.";
     await writeFile(
       packPath(),
@@ -119,11 +119,22 @@ describe("number review", () => {
     );
     const item = (await listNumberReview(root)).items.find((entry) => entry.field === "leadVi")!;
     expect(item.inMark).toBe(true);
-    await expect(
-      decideNumber({ key: item.key, choice: "number", expected: marked }, root),
-    ).rejects.toThrow(/highlight/);
+    const written = await decideNumber({ key: item.key, choice: "number", expected: marked }, root);
+    expect((await stored()).leadVi).toBe("Chạy /5_phút/ là tới nhà.");
+    expect(written.inMark).toBe(true);
+    await decideNumber({ key: item.key, choice: "word", expected: written.after }, root);
     expect((await stored()).leadVi).toBe(marked);
-    const kept = await decideNumber({ key: item.key, choice: "word", expected: marked }, root);
-    expect(kept.choice).toBe("word");
+  });
+
+  it("writes a range whole, never half of it", async () => {
+    const range = "Nhà mình | nghỉ hai ba ngày.";
+    await writeFile(
+      packPath(),
+      `${JSON.stringify({ ...deck, words: [{ ...card, leadVi: range }] }, null, 2)}\n`,
+    );
+    const items = (await listNumberReview(root)).items.filter((entry) => entry.field === "leadVi");
+    expect(items.map((entry) => [entry.words, entry.digits])).toEqual([["hai ba", "2-3"]]);
+    await decideNumber({ key: items[0]!.key, choice: "number", expected: range }, root);
+    expect((await stored()).leadVi).toBe("Nhà mình | nghỉ 2-3 ngày.");
   });
 });

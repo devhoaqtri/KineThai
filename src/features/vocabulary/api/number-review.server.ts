@@ -10,6 +10,10 @@
  * the text. Choosing "word" after "number" puts the words back, as long as the field
  * still reads the way the write left it.
  *
+ * A number inside a `/…/` highlight may be written as digits too, but a digit turns the
+ * highlight off (the gate refuses a lone digit, the English mark grade refuses number +
+ * unit), so such a clue needs its mark moved to another word before the deck checks pass.
+ *
  * A clue whose words change carries its clue-review verdict along
  * (scripts/data/clue-review-ledger.json), as the bulk scan does, so a reviewed clue never
  * becomes an unreviewed gap candidate.
@@ -312,13 +316,6 @@ export function decideNumber(
     if (hit && hit.digits !== undefined) {
       // The words are there: write the digits, or just note that they stay.
       const after = applyHit(text, hit);
-      if (choice === "number" && insideMark(text, hit.start)) {
-        // A digit is never half of a highlight: the gate refuses a lone digit and the
-        // English mark grade refuses number + unit, so the page would go dark or weak.
-        throw new Error(
-          "This number is inside a highlight mark, so digits would break the highlight. Keep the words, or move the mark to another word in the library first.",
-        );
-      }
       if (choice === "number") {
         const { edit, expected: was } = fieldEdit(card, field, text, after);
         await updateDeckWord("en", id, edit, was, dataRoot(root));
