@@ -1484,6 +1484,13 @@
       "text": "Học xong | lớp 9, em vào /trường_nghề/ sửa xe.",
       "verdict": "ok",
       "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-subsidy",
+      "field": "defVi",
+      "text": "Tiền nhà_nước | chi để /hỗ_trợ/ | người_dân hay ngành_nghề.",
+      "verdict": "ok",
+      "note": "Whole sentence: \"chi để hỗ trợ\" is spends to support, nothing cut between chi and để. Rewritten for the meaning tiền trợ cấp (2026-11-14)."
     }
   ]
 }
