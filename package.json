@@ -21,6 +21,7 @@
     "check:saved-groups": "npx tsx scripts/check-saved-groups.ts",
     "check:emphasis-runs": "npx tsx scripts/check-emphasis-runs.ts",
     "check:clue-whole": "npx tsx scripts/check-clue-whole.ts",
+    "check:pronoun-agreement": "npx tsx scripts/check-pronoun-agreement.ts",
     "format": "prettier --write .",
     "check:workbench": "npx tsx scripts/check-vocabulary-workbench.ts",
     "check:hanzi": "npx tsx scripts/check-hanzi-spelling.ts",
