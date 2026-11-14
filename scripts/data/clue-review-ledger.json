@@ -81,7 +81,7 @@
     {
       "id": "vi-few",
       "field": "anticipateVi",
-      "text": "Chỉ năm bạn, lớp /vắng_vẻ/ thế à?",
+      "text": "Chỉ 5 bạn, lớp /vắng_vẻ/ thế à?",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     },
@@ -1358,6 +1358,20 @@
       "text": "Chia bánh, bạn | cắt đều /tám_miếng/ bằng thước.",
       "verdict": "ok",
       "note": "Whole sentence; flagged only by new bigrams once counts became digits (worded-number pass, 2026-11-14)."
+    },
+    {
+      "id": "vi-boy",
+      "field": "leadVi",
+      "text": "Đội tuyển toán khối 10 | có ba /nam_sinh/ lanh lợi.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-june",
+      "field": "leadVi",
+      "text": "Hoa phượng nở, | lớp 12 | ký /lưu_bút/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
     }
   ]
 }
