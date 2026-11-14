@@ -622,6 +622,15 @@
   opacity: 0;
   pointer-events: none;
 }
+/* The word report panel lives inside the card's stacking context, so no z-index of its
+   own can lift it over this fixed dock: the drawer tab sat on top of the open panel.
+   While the panel is open the tab steps aside the way it does for the drawer itself, and
+   comes back as the panel starts to close. */
+.vocabulary-shell:has(.vocab-report-panel:not([data-closing])) .vocab-saved-dock {
+  --handle-slide: 320ms;
+  opacity: 0;
+  pointer-events: none;
+}
 
 /* Saved-words drawer -------------------------------------------------------- */
 
