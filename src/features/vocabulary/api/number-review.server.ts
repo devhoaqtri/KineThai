@@ -179,6 +179,10 @@ function itemOf(deck: string, card: Card, hit: Hit, choice: NumberChoice | null)
   };
 }
 
+/** Whether a place in deck text sits inside a `/…/` highlight mark. */
+const insideMark = (text: string, at: number) =>
+  (text.slice(0, at).match(/\//g)?.length ?? 0) % 2 === 1;
+
 /** The item a "number" choice left behind, once its words are digits. */
 function writtenItem(card: Card, decision: Decision): NumberReviewItem {
   const start = decision.before.indexOf(decision.words);
@@ -196,7 +200,7 @@ function writtenItem(card: Card, decision: Decision): NumberReviewItem {
     words: decision.words,
     digits: decision.digits,
     reason: "written as digits",
-    inMark: false,
+    inMark: start >= 0 && insideMark(decision.before, start),
     choice: "number",
     current: fieldText(card, decision.field) === decision.after,
   };
@@ -308,6 +312,13 @@ export function decideNumber(
     if (hit && hit.digits !== undefined) {
       // The words are there: write the digits, or just note that they stay.
       const after = applyHit(text, hit);
+      if (choice === "number" && insideMark(text, hit.start)) {
+        // A digit is never half of a highlight: the gate refuses a lone digit and the
+        // English mark grade refuses number + unit, so the page would go dark or weak.
+        throw new Error(
+          "This number is inside a highlight mark, so digits would break the highlight. Keep the words, or move the mark to another word in the library first.",
+        );
+      }
       if (choice === "number") {
         const { edit, expected: was } = fieldEdit(card, field, text, after);
         await updateDeckWord("en", id, edit, was, dataRoot(root));

@@ -110,4 +110,20 @@ describe("number review", () => {
     ).rejects.toThrow(/Unknown number key/);
     expect((await stored()).leadVi).toBe(card.leadVi);
   });
+
+  it("never writes digits inside a highlight mark, but keeps the words on request", async () => {
+    const marked = "Chạy /năm_phút/ là tới nhà.";
+    await writeFile(
+      packPath(),
+      `${JSON.stringify({ ...deck, words: [{ ...card, leadVi: marked }] }, null, 2)}\n`,
+    );
+    const item = (await listNumberReview(root)).items.find((entry) => entry.field === "leadVi")!;
+    expect(item.inMark).toBe(true);
+    await expect(
+      decideNumber({ key: item.key, choice: "number", expected: marked }, root),
+    ).rejects.toThrow(/highlight/);
+    expect((await stored()).leadVi).toBe(marked);
+    const kept = await decideNumber({ key: item.key, choice: "word", expected: marked }, root);
+    expect(kept.choice).toBe("word");
+  });
 });
