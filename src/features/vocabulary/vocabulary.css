@@ -496,6 +496,13 @@
   --handle-slide: 260ms;
   transition: opacity var(--handle-slide) var(--drawer-ease);
 }
+/* In landscape, centre the rail vertically on the edge so the handle aligns with the
+   answer page's details panel rather than dropping below centre. */
+@media (orientation: landscape) {
+  .vocab-saved-dock {
+    top: 50%;
+  }
+}
 .vocab-saved-handle {
   position: relative;
   display: flex;
@@ -6154,6 +6161,13 @@
   min-height: max-content;
   justify-content: safe flex-end;
   gap: clamp(6px, 2.4vh, 18px);
+}
+@media (orientation: landscape) {
+  .vocabulary-shell:not([data-short-viewport="landscape"])
+    .vocab-card:not([data-export])
+    :is(.vocab-spelling, .vocab-stroke) {
+    --vocab-handle-top: calc(50% - 59px);
+  }
 }
 .vocab-spelling-label {
   font-size: 11px;
