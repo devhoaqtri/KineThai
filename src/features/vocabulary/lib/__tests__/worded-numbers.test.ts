@@ -40,12 +40,59 @@ describe("worded numbers", () => {
   });
 
   it("keeps a multiplier's word and leaves longer large numbers to a person", () => {
-    expect(digitsOf("Giá ly nước | ba_trăm_nghìn.")).toBe("Giá ly nước | 300 nghìn.");
+    expect(digitsOf("Giá ly nước | ba_trăm_nghìn.")).toBe("Giá ly nước | 300_nghìn.");
     expect(digitsOf("Thành phố mười triệu dân.")).toBe("Thành phố 10 triệu dân.");
-    expect(verdicts("Mỗi tuần em bỏ heo năm chục nghìn.")).toEqual([
-      "năm:unsure",
-      "nghìn:other-meaning",
+  });
+
+  it("reads tens counted with chục, and numbers said short, as one number", () => {
+    expect(digitsOf("Mỗi tuần em bỏ heo năm chục nghìn.")).toBe("Mỗi tuần em bỏ heo 50 nghìn.");
+    expect(digitsOf("Thuê ba chục người.")).toBe("Thuê 30 người.");
+    expect(digitsOf("Mượn bạn | hai_chục.")).toBe("Mượn bạn | 20.");
+    expect(digitsOf("Phòng máy để hai lăm độ.")).toBe("Phòng máy để 25 độ.");
+    expect(digitsOf("Ba tám độ, nóng quá!")).toBe("38 độ, nóng quá!");
+    // Approximate tens, a range and a fourth-year student stay words.
+    expect(digitsOf("Hàng chục người, mấy chục năm.")).toBe("Hàng chục người, mấy chục năm.");
+    expect(verdicts("Hai ba độ thôi.")).toEqual(["Hai ba:unsure"]);
+    expect(digitsOf("Sinh viên năm tư.")).toBe("Sinh viên năm tư.");
+  });
+
+  it("reads năm before an age as the year, and một after a price as per", () => {
+    expect(digitsOf("Cô ấy ra mắt năm mười sáu tuổi.")).toBe("Cô ấy ra mắt năm 16 tuổi.");
+    expect(digitsOf("Quán bán ba lăm nghìn một_suất.")).toBe("Quán bán 35 nghìn một_suất.");
+    expect(digitsOf("Mình gửi bài lúc mười một giờ năm chín.")).toBe("Mình gửi bài lúc 11 giờ 59.");
+    expect(digitsOf("Thành phố /mười_triệu/ dân.", "x").includes("/10_triệu/")).toBe(false);
+    expect(
+      scanCard("packs/en-a1.json", card({ leadVi: "Lọc dưới /mười_triệu/." }))[0]?.digits,
+    ).toBe("10_triệu");
+  });
+
+  it("finishes a number a tap left half in digits", () => {
+    expect(digitsOf("Em bỏ heo | 5 chục nghìn.")).toBe("Em bỏ heo | 50 nghìn.");
+    expect(digitsOf("3 tám độ, liều ra đường?")).toBe("38 độ, liều ra đường?");
+  });
+
+  it("never offers half a number: scores, ranges and a number after its unit come whole", () => {
+    expect(digitsOf("Đội mình thắng họ ba một.")).toBe("Đội mình thắng họ 3-1.");
+    expect(digitsOf("Tỷ_số vẫn là một đều.")).toBe("Tỷ_số vẫn là 1-1.");
+    expect(digitsOf("Em đoán đội nhà thắng 2 không.")).toBe("Em đoán đội nhà thắng 2-0.");
+    // Not a score: make peace after ten years.
+    expect(digitsOf("Hai nhà /làm_hòa/ | sau 10 năm.")).toBe("2 nhà /làm_hòa/ | sau 10 năm.");
+    const range = scanCard("packs/en-a1.json", card({ leadVi: "Nghỉ hai ba ngày." }));
+    expect(range.map((hit) => [hit.words, hit.verdict, hit.digits])).toEqual([
+      ["hai ba", "unsure", "2-3"],
     ]);
+    const steps = scanCard("packs/en-a1.json", card({ leadVi: "Nhảy ba bậc một." }));
+    expect(steps.map((hit) => [hit.words, hit.digits])).toEqual([["ba bậc một", "3 bậc 1"]]);
+  });
+
+  it("writes heights as said and a score's half as a decimal", () => {
+    expect(digitsOf("Xà cao một mét sáu.")).toBe("Xà cao 1m6.");
+    expect(digitsOf("Anh ấy mét tám, | mình mét bảy=lăm.")).toBe("Anh ấy 1m8, | mình 1m75.");
+    expect(digitsOf("Xà cao 1 mét sáu.")).toBe("Xà cao 1m6.");
+    expect(digitsOf("Em cần điểm IELTS sáu rưỡi.")).toBe("Em cần điểm IELTS 6.5.");
+    // Half past eight, and a length of two and a half metres, stay as they are.
+    expect(digitsOf("Giờ học bắt đầu từ tám rưỡi.")).toBe("Giờ học bắt đầu từ tám rưỡi.");
+    expect(verdicts("Dây dài hai mét rưỡi.")).toEqual(["hai:unsure", "rưỡi:unsure"]);
   });
 
   it("keeps the joins around a converted number", () => {
@@ -79,7 +126,7 @@ describe("worded numbers", () => {
   it("is unsure where a person must decide", () => {
     // Inside a highlight mark, a range, a label, a lone number.
     expect(verdicts("Chạy /năm_phút/ là tới.")).toEqual(["năm:unsure"]);
-    expect(verdicts("Nghỉ hai ba ngày.")).toEqual(["hai:unsure", "ba:unsure"]);
+    expect(verdicts("Nghỉ hai ba ngày.")).toEqual(["hai ba:unsure"]);
     expect(verdicts("Phòng ở tầng hai.")).toEqual(["hai:unsure"]);
     expect(verdicts("Hai bạn ngồi cạnh nhau.")).toEqual(["Hai:unsure"]);
     expect(verdicts("Đếm một, hai, ba.")).toEqual(["một:other-meaning", "hai:unsure", "ba:unsure"]);

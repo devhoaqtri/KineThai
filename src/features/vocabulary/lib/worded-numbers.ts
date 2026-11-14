@@ -74,7 +74,12 @@ const NUMBER_WORDS = new Set([
   "linh",
   "lẻ",
   "rưỡi",
+  "chục",
 ]);
+/** A number pair right after these is a score: thắng ba một is 3-1. */
+const SCORE_BEFORE = new Set(["thắng", "thua", "hòa", "hoà"]);
+/** The ones that only ever follow a ten, so "hai lăm" is 25 said short, never two numbers. */
+const SHORT_ONES: Record<string, number> = { mốt: 1, tư: 4, lăm: 5 };
 
 // ── What follows a count ─────────────────────────────────────────────────────
 
@@ -784,6 +789,27 @@ function parseTens(
       };
     return { end: index + 2, value: DIGIT[first]! * 10, hasMultiplier: false, groups: 1 };
   }
+  // Tens counted with chục: ba chục is 30, một chục is 10.
+  if (first !== undefined && first in DIGIT && next === "chục")
+    return { end: index + 2, value: DIGIT[first]! * 10, hasMultiplier: false, groups: 1 };
+  if (!linked && first !== undefined && first in DIGIT && first !== "một" && first !== "năm") {
+    const ten = DIGIT[first]! * 10;
+    // Said short: hai lăm is 25, hai tư is 24, bảy mốt is 71. Not năm (sinh viên năm tư is
+    // a fourth-year student) and not Ba Tư (Persia).
+    if (next !== undefined && next in SHORT_ONES && !(first === "ba" && next === "tư"))
+      return { end: index + 2, value: ten + SHORT_ONES[next]!, hasMultiplier: false, groups: 1 };
+    // A temperature said short: ba tám độ is 38 độ. Two numbers a step apart are a range
+    // (hai ba độ), so those stay apart.
+    const unit = links[index + 2] ? keys[index + 2] : undefined;
+    if (
+      next !== undefined &&
+      next in DIGIT &&
+      next !== "một" &&
+      unit === "độ" &&
+      DIGIT[next] !== DIGIT[first]! + 1
+    )
+      return { end: index + 2, value: ten + DIGIT[next]!, hasMultiplier: false, groups: 1 };
+  }
   if (!linked && first !== undefined && first in DIGIT)
     return { end: index + 1, value: DIGIT[first]!, hasMultiplier: false, groups: 1 };
   return null;
@@ -901,7 +927,8 @@ function render(parsed: Parsed, tokens: Token[], from: number): string | null {
   const links = tokens.map((token, index) => index > 0 && flows(token.before));
   const head = parseGroup(keys, links, from);
   if (!head || head.end !== parsed.end - 1) return null;
-  return `${head.value} ${multiplier.raw}`;
+  // Keep the deck's own join: /mười_triệu/ becomes /10_triệu/, never /10 triệu/.
+  return `${head.value}${multiplier.before.includes("_") ? "_" : " "}${multiplier.raw}`;
 }
 
 type Follow = {
@@ -969,6 +996,116 @@ export function classifyField(
   const hits: Hit[] = [];
   const consumed = new Set<number>();
 
+  // Heights, written the way they are said: mét tám is 1m8, một mét sáu 1m6, mét bảy mốt
+  // 1m71. Only one metre and change: "hai mét rưỡi" is a length the rules below read.
+  for (let index = 0; index < tokens.length; index += 1) {
+    if (keys[index] !== "mét") continue;
+    const before = index > 0 && links[index] ? keys[index - 1] : undefined;
+    if (before !== undefined && NUMBER_WORDS.has(before) && before !== "một") continue;
+    if (before !== undefined && /^\d+$/.test(before) && before !== "1") continue;
+    const from = before === "một" || before === "1" ? index - 1 : index;
+    const first = links[index + 1] ? keys[index + 1] : undefined;
+    if (first === undefined || !(first in DIGIT || first === "rưỡi")) continue;
+    let end = index + 2;
+    let cm = first === "rưỡi" ? "5" : String(DIGIT[first]);
+    const second = first !== "rưỡi" && links[end] ? keys[end] : undefined;
+    if (second !== undefined && (second in SHORT_ONES || (second in DIGIT && second !== "một"))) {
+      cm += String(SHORT_ONES[second] ?? DIGIT[second]);
+      end += 1;
+    }
+    const start = tokens[from]!.start;
+    const hit: Hit = {
+      deck,
+      id,
+      field,
+      text,
+      words: text.slice(start, tokens[end - 1]!.end),
+      start,
+      end: tokens[end - 1]!.end,
+      verdict: "number",
+      reason: `a height (${keys.slice(from, end).join(" ")} is 1m${cm})`,
+      digits: `1m${cm}`,
+      key: `${deck}|${id}|${field}|${from > 0 ? keys[from - 1] : ""}[${keys.slice(from, end).join(" ")}]${end < tokens.length ? keys[end] : ""}#0`,
+    };
+    // A metre card's own answer, and a height inside a highlight, are left to a person.
+    if (containsPhrase(card.meaning, "mét") || card.numberCard || field === "meaningVi") {
+      hit.verdict = "other-meaning";
+      hit.reason = "a height on a card whose answer is the metre or a number";
+    } else if (tokens.slice(from, end).some((token) => token.inMark)) {
+      hit.verdict = "unsure";
+      hit.reason = `inside a /…/ mark: a height (1m${cm}) would break the highlight pair`;
+    }
+    hits.push(hit);
+    for (let at = from; at < end; at += 1) consumed.add(at);
+  }
+
+  // Scores, written the way a scoreboard is: thắng ba một is 3-1, thắng năm không 5-0,
+  // tỷ số một đều 1-1. Only right after thắng, thua, hòa or tỷ số.
+  const valueAt = (at: number): number | undefined => {
+    const key = keys[at];
+    if (key === undefined) return undefined;
+    if (/^\d+$/.test(key)) return Number(key);
+    const parsed = parseNumber(keys, links, at);
+    return parsed && parsed.end === at + 1 && !parsed.hasMultiplier ? parsed.value : undefined;
+  };
+  for (let index = 1; index + 1 < tokens.length; index += 1) {
+    if (consumed.has(index) || consumed.has(index + 1)) continue;
+    const scored = [1, 2, 3].some((back) => {
+      const at = index - back;
+      // A highlight's slash may sit between: /tỷ_số/ vẫn là một đều.
+      if (at < 0 || !/^[\s/|_=]+$/.test(tokens[at + 1]!.before)) return false;
+      const key = keys[at]!;
+      // Not half of a joined word: /làm_hòa/ is to make peace, not a draw.
+      const joined =
+        /_/.test(tokens[at]!.before) ||
+        (at + 1 < tokens.length && /^\/?_/.test(tokens[at + 1]!.before));
+      return (
+        (SCORE_BEFORE.has(key) && !joined) ||
+        (key === "số" && (keys[at - 1] === "tỷ" || keys[at - 1] === "tỉ"))
+      );
+    });
+    if (!scored || !links[index] || !links[index + 1]) continue;
+    const home = valueAt(index);
+    const second = keys[index + 1]!;
+    // After a number, năm is years (sau 10 năm), never a score of five.
+    const away =
+      second === "không"
+        ? 0
+        : second === "đều"
+          ? home
+          : second === "năm"
+            ? undefined
+            : valueAt(index + 1);
+    if (home === undefined || away === undefined) continue;
+    // Plain digits on both sides are a score already written.
+    if (/^\d+$/.test(keys[index]!) && /^\d+$/.test(second)) continue;
+    const start = tokens[index]!.start;
+    const stop = tokens[index + 1]!.end;
+    const hit: Hit = {
+      deck,
+      id,
+      field,
+      text,
+      words: text.slice(start, stop),
+      start,
+      end: stop,
+      verdict: "number",
+      reason: `a score (${keys[index]} ${second} is ${home}-${away})`,
+      digits: `${home}-${away}`,
+      key: `${deck}|${id}|${field}|${keys[index - 1]}[${keys[index]} ${second}]${keys[index + 2] ?? ""}#0`,
+    };
+    if (card.numberCard || field === "meaningVi") {
+      hit.verdict = "other-meaning";
+      hit.reason = "a score on a card whose answer is a number";
+    } else if (tokens[index]!.inMark || tokens[index + 1]!.inMark) {
+      hit.verdict = "unsure";
+      hit.reason = `inside a /…/ mark: a score (${home}-${away}) would break the highlight pair`;
+    }
+    hits.push(hit);
+    consumed.add(index);
+    consumed.add(index + 1);
+  }
+
   for (let index = 0; index < tokens.length; index += 1) {
     if (consumed.has(index) || !NUMBER_WORDS.has(keys[index]!)) continue;
     const parsed = parseNumber(keys, links, index);
@@ -1022,14 +1159,56 @@ export function classifyField(
     // The unit right after a count is not a number of its own: "mười năm" is ten years.
     if (parsed && follow.word === "năm" && unitAfter) consumed.add(end);
 
+    // Finish a number a tap left half in digits: "3 chục" is 30, "3 tám độ" is 38 độ.
+    const digitBefore =
+      index > 0 && flows(first.before) && /^\d$/.test(keys[index - 1]!)
+        ? keys[index - 1]
+        : undefined;
+    const keyAfter = end < tokens.length && flows(tokens[end]!.before) ? keys[end] : undefined;
+    if (
+      digitBefore !== undefined &&
+      single &&
+      (head === "chục" || (head in DIGIT && head !== "một" && keyAfter === "độ"))
+    ) {
+      const tens = Number(digitBefore) * 10;
+      hit.start = tokens[index - 1]!.start;
+      hit.words = text.slice(hit.start, hit.end);
+      hit.digits = String(head === "chục" ? tens : tens + DIGIT[head]!);
+      set("number", `a number half in digits (${digitBefore} ${head}): written whole`);
+      continue;
+    }
+    // A score with a half: điểm IELTS sáu rưỡi is 6.5. Only after điểm or IELTS, because
+    // a bare "tám rưỡi" is also half past eight.
+    const scoring = /điểm|ielts/i.test(text.slice(0, first.start).normalize("NFC"));
+    if (scoring && single && head === "rưỡi" && digitBefore !== undefined) {
+      hit.start = tokens[index - 1]!.start;
+      hit.words = text.slice(hit.start, hit.end);
+      hit.digits = `${digitBefore}.5`;
+      set("number", `a score with a half (${digitBefore} rưỡi is ${digitBefore}.5)`);
+      continue;
+    }
+    if (scoring && parsed && !parsed.hasMultiplier && keyAfter === "rưỡi") {
+      hit.end = tokens[end]!.end;
+      hit.words = text.slice(hit.start, hit.end);
+      hit.digits = `${parsed.value}.5`;
+      consumed.add(end);
+      set("number", `a score with a half (${runText} rưỡi is ${parsed.value}.5)`);
+      continue;
+    }
+    // A height: một mét sáu is 1m60, written whole by a person.
+    if (prev === "mét") {
+      set("unsure", `the rest of a height (mét ${runText}): written whole as 1m…`);
+      continue;
+    }
+
     if (!parsed) {
       const reason =
         head === "rưỡi"
           ? "rưỡi (a half) has no digit form here"
           : head === "tư"
             ? "tư outside a compound numeral (tư duy, thứ tư, một phần tư)"
-            : head in MULTIPLIER || head === "trăm"
-              ? `${head} with no count before it (triệu chứng, tỷ lệ, trăm năm)`
+            : head in MULTIPLIER || head === "trăm" || head === "chục"
+              ? `${head} with no count before it (triệu chứng, tỷ lệ, trăm năm, hàng chục)`
               : `${head} outside a compound numeral (ngày mốt, linh hoạt, lẻ loi)`;
       set("other-meaning", reason);
       continue;
@@ -1106,9 +1285,46 @@ export function classifyField(
       set("other-meaning", "năm = year (năm 2000)");
       continue;
     }
+    // Minutes said short after a clock hour: mười một giờ năm chín is 11 giờ 59.
+    const clockHour = index > 1 ? keys[index - 2] : undefined;
+    if (
+      prev === "giờ" &&
+      clockHour !== undefined &&
+      (NUMBER_WORDS.has(clockHour) || /^\d+$/.test(clockHour)) &&
+      single &&
+      head in DIGIT &&
+      next !== undefined &&
+      next in DIGIT &&
+      links[end]
+    ) {
+      hit.end = tokens[end]!.end;
+      hit.words = text.slice(hit.start, hit.end);
+      hit.digits = `${DIGIT[head]}${DIGIT[next]}`;
+      consumed.add(end);
+      set("number", `minutes said short (${head} ${next} is ${hit.digits})`);
+      continue;
+    }
+    // năm before an age or a number of ten or more is the year: ra mắt năm 16 tuổi.
+    const nextRun = parseNumber(keys, links, end);
+    const ageOrBig =
+      nextRun !== null &&
+      (nextRun.value >= 10 || (nextRun.end < tokens.length && keys[nextRun.end] === "tuổi"));
+    if (single && head === "năm" && ageOrBig) {
+      set("other-meaning", "năm = the year (năm 16 tuổi, năm 2000)");
+      continue;
+    }
+    const yearBefore =
+      prev === "năm" && (parsed.value >= 10 || (end < tokens.length && keys[end] === "tuổi"));
     // Two numbers side by side are a range or a saying: hai ba ngày, ba chân bốn cẳng.
-    const prevIsNumber = prev !== undefined && NUMBER_WORDS.has(prev) && prev !== "rưỡi";
-    const nextIsNumber = next !== undefined && NUMBER_WORDS.has(next) && !countable;
+    // A "một" after a price is "per": 35 nghìn một suất, 2 triệu một tuần.
+    const prevIsNumber =
+      prev !== undefined &&
+      NUMBER_WORDS.has(prev) &&
+      prev !== "rưỡi" &&
+      !yearBefore &&
+      !(single && head === "một");
+    const nextIsNumber =
+      next !== undefined && NUMBER_WORDS.has(next) && next !== "một" && !countable;
     if (prevIsNumber || nextIsNumber) {
       set("unsure", "two number words side by side (a range or a saying?)");
       continue;
@@ -1229,6 +1445,53 @@ export function classifyField(
     // A suggestion for a person deciding: the full value, grouped the Vietnamese way.
     if (hit.verdict !== "number" && digits === null)
       hit.digits = parsed.value.toLocaleString("vi-VN");
+  }
+  // Never offer half a number: two numbers side by side become one range or score
+  // (hai ba ngày → 2-3 ngày), and a number after the unit joins it (ba bậc một → 3 bậc 1).
+  hits.sort((a, b) => a.start - b.start);
+  for (let at = 0; at < hits.length; at += 1) {
+    const hit = hits[at]!;
+    if (hit.verdict !== "unsure" || hit.digits === undefined) continue;
+    const last = tokens.findIndex((token) => token.end === hit.end);
+    if (last < 0) continue;
+    if (/^two number words side by side/.test(hit.reason)) {
+      const other = hits[at + 1];
+      const otherFirst = other ? tokens.findIndex((token) => token.start === other.start) : -1;
+      if (
+        !other ||
+        other.digits === undefined ||
+        other.verdict !== "unsure" ||
+        // A range goes up (hai ba, năm sáu); anything else is not one number pair.
+        !(Number(other.digits) > Number(hit.digits)) ||
+        otherFirst !== last + 1 ||
+        !/^\s+$/.test(tokens[otherFirst]!.before)
+      )
+        continue;
+      const words = text.slice(hit.start, other.end);
+      hit.digits = `${hit.digits}-${other.digits}`;
+      hit.reason = `two numbers side by side, a range or a score (${words} → ${hit.digits})`;
+      hit.end = other.end;
+      hit.words = words;
+      hits.splice(at + 1, 1);
+    } else if (/^a number after the unit/.test(hit.reason)) {
+      // The number after the unit is within a word or two: một mét sáu, ba bậc một.
+      const target = [last + 2, last + 3].find(
+        (index) =>
+          index < tokens.length &&
+          flows(tokens[index]!.before) &&
+          (keys[index]! in DIGIT || /^\d+$/.test(keys[index]!)),
+      );
+      if (target === undefined) continue;
+      const tail = tokens[target]!;
+      const digit = /^\d+$/.test(tail.key) ? tail.key : String(DIGIT[tail.key]);
+      const words = text.slice(hit.start, tail.end);
+      hit.digits = `${hit.digits}${text.slice(hit.end, tail.start)}${digit}`;
+      hit.reason = `a number, its unit and another number (${words} → ${hit.digits})`;
+      hit.end = tail.end;
+      hit.words = words;
+      const swallowed = hits.findIndex((other) => other !== hit && other.start === tail.start);
+      if (swallowed >= 0) hits.splice(swallowed, 1);
+    }
   }
   for (const hit of hits) {
     if (hit.verdict !== "number") continue;
