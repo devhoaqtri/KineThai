@@ -7,7 +7,7 @@
  * a fallback even if the sheet is dismissed — and on a phone the native share sheet is
  * then raised on top of it as the fastest route into a chat thread.
  *
- * The shape — a tab cropped flush into the panel's bottom-right corner — is entirely
+ * The shape — a tab cropped flush into the panel's top-right corner — is entirely
  * vocabulary.css's; this file only supplies the boxes it paints.
  *
  * Exports: ShareChallengeButton
@@ -15,7 +15,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { Check, Share2 } from "lucide-react";
+import { Check, Share } from "lucide-react";
 
 /** How long the confirmation stays up before the button returns to its idle face. */
 const CONFIRM_MS = 2200;
@@ -87,7 +87,7 @@ export function ShareChallengeButton({ code }: { code?: string }): React.ReactEl
       >
         <span className="vocab-share-face-bg" aria-hidden="true" />
         <span className="vocab-share-face">
-          {done ? <Check size={15} /> : <Share2 size={15} />}
+          {done ? <Check size={15} /> : <Share size={15} />}
           <span className="vocab-share-label">{done ? "Đã chép!" : "Chia sẻ"}</span>
         </span>
       </button>

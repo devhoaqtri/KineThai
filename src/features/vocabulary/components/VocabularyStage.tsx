@@ -37,7 +37,7 @@ const PANEL_SEAM_PX = 16;
 const SHARE_TEXT_GAP_PX = 6;
 
 /**
- * When height-sharing seats the share tab at the panel's top-right (`data-share-top`),
+ * The share tab sits at the panel's top-right (`data-share-top`); this
  * returns the right-float box that keeps the first lines of text clear of that button.
  */
 function useShareTopFloat({
@@ -469,11 +469,15 @@ export function VocabularyStage({
       position.disconnect();
     };
   }, [stage.reveal, stage.id, word.id, playKey, still]);
-  const shareTop = answerFit !== null;
+  // The share tab always sits in the panel's top-right corner. It used to move up there
+  // only when the page's height had been shared out (answerFit), and sat in the bottom-
+  // right corner otherwise, so the reader found it in one place on one word and the other
+  // place on the next.
+  const shareTop = true;
   const shareFloat = useShareTopFloat({
     panel: panelRef,
     scroll: details,
-    enabled: !!stage.reveal && !still && shareTop,
+    enabled: !!stage.reveal && !still,
   });
   const pageMotion: PageMotion = { direction, reveal: !!stage.reveal };
   return (
