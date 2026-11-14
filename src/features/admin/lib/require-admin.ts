@@ -21,10 +21,16 @@ export type AdminActor = {
 };
 
 /**
- * Whether demo sessions may access /admin (VITE_DEMO_ADMIN=1|true).
+ * Whether demo sessions may access /admin (VITE_DEMO_ADMIN=1|true under `npm run dev`).
+ *
+ * A demo admin has no login behind it: the browser only sends a header saying so.
+ * `.env` is committed and Vite loads it in every mode, so the flag alone would reach
+ * the hosted build and make that header an admin key. A production build never
+ * honours it, whatever the environment says.
  * @returns true when demo admin is enabled
  */
 export function isDemoAdminEnabled(): boolean {
+  if (!import.meta.env.DEV) return false;
   const raw =
     (typeof import.meta !== "undefined" &&
       (import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_DEMO_ADMIN) ||
