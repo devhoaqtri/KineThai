@@ -33,6 +33,16 @@ const DETAILS_DELAY_SECONDS = 0.34;
  * same 16px as its own seam (--vocab-reveal-seam).
  */
 const PANEL_SEAM_PX = 16;
+/**
+ * Ink the answer draws below its layout box, in em of its own font size. The box is the
+ * word's line, and the panel was placed from it as if nothing hung lower; an underline
+ * highlight does: its bar sits 0.1em under the glyphs and its glow reaches about as far
+ * again, which ate the seam and touched the panel. Every other effect (a glow, a halo, a
+ * descender's shadow) bleeds only a little. Counted as part of the word wherever its foot
+ * is read, so the seam is always clear space under the drawn word.
+ */
+const ANSWER_INK_FOOT_EM = 0.06;
+const ANSWER_UNDERLINE_FOOT_EM = 0.22;
 /** Clear space between text inside the meaning panel and the top-right share button. */
 const SHARE_TEXT_GAP_PX = 6;
 
@@ -312,9 +322,12 @@ export function VocabularyStage({
    * The meaning panel starts under the answer, not on a fixed midline. The answer is
    * fitted per word, so a short one leaves the lower half mostly empty while a tall one
    * comes within a few pixels of the 50% mark. Measuring the answer's layout box lets
-   * the panel take whatever height is actually free, and the fixed midline is kept only
-   * when the word already reaches it. A wide card lays the two out in columns and sets
-   * its own top, so it is left alone.
+   * the panel take whatever height is actually free. It never starts above the word's
+   * foot (its box plus the ink it draws below, ANSWER_INK_FOOT_EM) and the seam: a word
+   * reaching past the midline used to leave the panel on the midline, over the word's
+   * foot; now it pushes the panel down and, if the panel then has too little room, the
+   * height is shared out below. A wide card lays the two out in columns and sets its own
+   * top, so it is left alone.
    *
    * When the two do not both fit (a short word on a wide, short card such as a folded
    * iPhone Duo, or anything on an Android split-screen half), the height is shared out
@@ -364,10 +377,17 @@ export function VocabularyStage({
         setAnswerFit(null);
       }
       // The answer's own layout box, not its painted rect: the page enters under a
-      // scale, and a transform never resizes the box the ResizeObserver watches.
-      const bottom = band.offsetTop + box.offsetTop + box.offsetHeight / 2;
+      // scale, and a transform never resizes the box the ResizeObserver watches. Its foot
+      // is the box's bottom plus the ink drawn under it (ANSWER_INK_FOOT_EM).
+      const fontPx = parseFloat(getComputedStyle(box.firstElementChild ?? box).fontSize) || 0;
+      const underlined = !!box.querySelector(
+        ".kinetic-emph-underline, [data-kinetic-run='underline']",
+      );
+      const ink = fontPx * (underlined ? ANSWER_UNDERLINE_FOOT_EM : ANSWER_INK_FOOT_EM);
+      const bottom = band.offsetTop + box.offsetTop + box.offsetHeight / 2 + ink;
       const midline = cardHeight / 2;
-      const top = bottom + PANEL_SEAM_PX < midline ? bottom + PANEL_SEAM_PX : midline;
+      // Under the word's foot, wherever that is: never the midline over a tall word.
+      const top = bottom + PANEL_SEAM_PX;
       const laidTop = wide ? (panel?.offsetTop ?? top) : top;
       const scroller = panel?.querySelector<HTMLElement>(".vocab-reveal-scroll");
       if (panel && scroller && changes < 8) {
@@ -421,8 +441,9 @@ export function VocabularyStage({
                 ? null
                 : {
                     top: ANSWER_HEAD_PX - bandTop,
-                    bottom: bandTop + bandHeight - wordFoot,
-                    y: (((ANSWER_HEAD_PX + wordFoot) / 2 - bandTop) / bandHeight) * 100,
+                    // The box ends above the foot by the ink it draws under itself.
+                    bottom: bandTop + bandHeight - (wordFoot - ink),
+                    y: (((ANSWER_HEAD_PX + wordFoot - ink) / 2 - bandTop) / bandHeight) * 100,
                   },
           });
         }
@@ -451,7 +472,7 @@ export function VocabularyStage({
         } else {
           tabHeld = false;
         }
-        setPanelTop(placed !== top || top < midline ? placed : null);
+        setPanelTop(placed !== midline ? placed : null);
       } else setPanelTop(given?.wordFoot != null ? bottom + PANEL_SEAM_PX : null);
     };
     measure();
