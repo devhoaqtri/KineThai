@@ -63,7 +63,34 @@ export const ENTRANCE_REST: TargetAndTransition = {
  * @pure true
  */
 export function getEntranceRest(hidden: TargetAndTransition): TargetAndTransition {
-  return hidden.filter === undefined ? ENTRANCE_REST : { ...ENTRANCE_REST, filter: "blur(0px)" };
+  return hidden.filter === undefined
+    ? ENTRANCE_REST
+    : { ...ENTRANCE_REST, filter: entranceBlur(0) };
+}
+
+/**
+ * Room for the word's own glow while its filter animates. Two transparent, unblurred
+ * drop-shadows a 1.2em step out on each diagonal paint nothing but widen the filter
+ * region, because WebKit (every iPhone browser) clips an element whose filter is
+ * animating to its border box plus the filter's outsets. A word's text-shadow reaches
+ * far past its box, so a blurred entrance showed it cut off as a hard, darker rectangle
+ * until the word had landed. Padding the word instead would grow the text's scroll
+ * size, which the fit pass reads, and shrink the page. The emphasis keyframes in
+ * styles.css carry the same pair. `rgba(0, 0, 0, 0)` rather than `transparent`, so
+ * framer-motion reads it as a colour while it interpolates the list.
+ */
+export const FILTER_BLEED =
+  "drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0)) drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0))";
+
+/**
+ * A blurred entrance's filter: the blur and the bleed, in one list shape at every radius
+ * so the two ends of the animation interpolate.
+ * @param px - blur radius in CSS px
+ * @returns CSS filter list
+ * @pure true
+ */
+export function entranceBlur(px: number): string {
+  return `blur(${px}px) ${FILTER_BLEED}`;
 }
 
 /**
@@ -108,7 +135,7 @@ export function getEntranceHidden(
         opacity: 0,
         y: important ? 14 : 10,
         scale: important ? 1.12 : 1.06,
-        filter: "blur(18px)",
+        filter: entranceBlur(18),
       };
     case "poetic-drift":
       // A barely-there lateral drift, like a line settling on paper.
@@ -117,7 +144,7 @@ export function getEntranceHidden(
         x: dir * (important ? 16 : 10),
         y: important ? 12 : 8,
         scale: important ? 1.08 : 1.03,
-        filter: "blur(16px)",
+        filter: entranceBlur(16),
       };
     // The five styles below are deliberately crisp: only the two poetic reveals and
     // `focus` animate blur. A per-word `filter: blur()` is the most expensive thing a
@@ -142,7 +169,7 @@ export function getEntranceHidden(
       };
     case "focus":
       // Cinematic rack-focus: bloom in from slightly oversized + heavy blur.
-      return { opacity: 0, scale: important ? 1.5 : 1.2, filter: "blur(16px)" };
+      return { opacity: 0, scale: important ? 1.5 : 1.2, filter: entranceBlur(16) };
     case "rise":
     default:
       // The original: float up from below.

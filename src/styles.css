@@ -490,6 +490,16 @@
   }
 }
 
+/* ── filter bleed ─────────────────────────────────────────────────────────
+   Every filter a word ANIMATES ends in two transparent, unblurred drop-shadows a
+   1.2em step out on each diagonal. They paint nothing; they widen the filter region.
+   WebKit (every iPhone browser) clips an animated filter's element to its own border
+   box plus the filter's outsets, and the word's text-shadow and emphasis glow reach
+   well past that box, so without them the glow was cut off as a hard, darker
+   rectangle for as long as the animation ran. Padding the element instead would grow
+   its scroll size and shrink every fitted word. The same pair rides on the blurred
+   entrances (FILTER_BLEED in post-player/lib/entrances.ts); keep the two in step.
+   Lists must match across keyframes to interpolate, so every keyframe carries it. ── */
 /* ── fringe: a one-shot chromatic tear that settles back into register ────────────
    Written as transparent drop-shadows rather than a colour-stop gradient, so the word
    itself never moves and nothing is clipped. The final keyframe is a ZERO-OFFSET
@@ -498,22 +508,27 @@
 @keyframes kinetic-emphasis-fringe {
   0% {
     filter: drop-shadow(-0.05em 0 0 rgba(0, 255, 255, 0))
-      drop-shadow(0.05em 0 0 rgba(255, 0, 64, 0));
+      drop-shadow(0.05em 0 0 rgba(255, 0, 64, 0)) drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0))
+      drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
   22% {
     filter: drop-shadow(-0.07em 0.01em 0 rgba(0, 255, 255, 0.85))
-      drop-shadow(0.07em -0.01em 0 rgba(255, 0, 64, 0.85));
+      drop-shadow(0.07em -0.01em 0 rgba(255, 0, 64, 0.85))
+      drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0)) drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
   46% {
     filter: drop-shadow(0.04em -0.01em 0 rgba(0, 255, 255, 0.6))
-      drop-shadow(-0.04em 0.01em 0 rgba(255, 0, 64, 0.6));
+      drop-shadow(-0.04em 0.01em 0 rgba(255, 0, 64, 0.6))
+      drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0)) drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
   70% {
     filter: drop-shadow(-0.02em 0 0 rgba(0, 255, 255, 0.3))
-      drop-shadow(0.02em 0 0 rgba(255, 0, 64, 0.3));
+      drop-shadow(0.02em 0 0 rgba(255, 0, 64, 0.3)) drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0))
+      drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
   100% {
-    filter: drop-shadow(0 0 0 rgba(0, 255, 255, 0)) drop-shadow(0 0 0 rgba(255, 0, 64, 0));
+    filter: drop-shadow(0 0 0 rgba(0, 255, 255, 0)) drop-shadow(0 0 0 rgba(255, 0, 64, 0))
+      drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0)) drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
 }
 
@@ -524,10 +539,12 @@
 @keyframes kinetic-emphasis-flash {
   0%,
   100% {
-    filter: brightness(1) saturate(1);
+    filter: brightness(1) saturate(1) drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0))
+      drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
   40% {
-    filter: brightness(1.55) saturate(1.12);
+    filter: brightness(1.55) saturate(1.12) drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0))
+      drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
 }
 
@@ -548,11 +565,13 @@
   0%,
   100% {
     transform: scale(1);
-    filter: brightness(1);
+    filter: brightness(1) drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0))
+      drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
   50% {
     transform: scale(1.07);
-    filter: brightness(1.18);
+    filter: brightness(1.18) drop-shadow(1.2em 1.2em 0 rgba(0, 0, 0, 0))
+      drop-shadow(-1.2em -1.2em 0 rgba(0, 0, 0, 0));
   }
 }
 
