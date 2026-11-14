@@ -1252,6 +1252,8 @@ export function VocabularyCard({
           alreadyReported={reported}
           onSent={markReported}
           onClose={closeReport}
+          anchor={cardRef}
+          split={twoColumn ? "two-column" : undefined}
         />
       )}
       {!still && (

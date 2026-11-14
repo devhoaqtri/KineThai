@@ -629,15 +629,6 @@
   opacity: 0;
   pointer-events: none;
 }
-/* The word report panel lives inside the card's stacking context, so no z-index of its
-   own can lift it over this fixed dock: the drawer tab sat on top of the open panel.
-   While the panel is open the tab steps aside the way it does for the drawer itself, and
-   comes back as the panel starts to close. */
-.vocabulary-shell:has(.vocab-report-panel:not([data-closing])) .vocab-saved-dock {
-  --handle-slide: 320ms;
-  opacity: 0;
-  pointer-events: none;
-}
 
 /* Saved-words drawer -------------------------------------------------------- */
 
@@ -6563,6 +6554,15 @@
   background: #05030c73;
   animation: vocab-report-fade var(--dur-quick) var(--ease-out) both;
 }
+/* The report panel's own layer, drawn in the shell rather than in the card (see
+   WordReportPanel): fixed over the screen, the card's own box, at 47 so the panel and its
+   scrim sit over the saved-words tab (46) and under the toolbar (50). The tab is left as
+   it is, dimmed under the scrim, and a tap on it lands on the scrim and closes the panel. */
+.vocab-report-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 47;
+}
 .vocab-report-panel {
   position: absolute;
   z-index: 8;
@@ -7207,7 +7207,7 @@
    two rows and whose content fits without scrolling. The toolbar clearance also
    drops from the portrait 102px to 72px, because in this tier the toolbar ends at
    56px rather than sitting low on a tall screen. */
-.vocab-card[data-reveal-split="two-column"] .vocab-report-panel {
+.vocab-report-layer[data-reveal-split="two-column"] .vocab-report-panel {
   --vocab-report-w: min(680px, calc(100% - 24px));
   width: var(--vocab-report-w);
   /* Centred on the card rather than pinned to the report button's end: at this width
@@ -7217,12 +7217,12 @@
   padding: 12px 16px;
   transform-origin: bottom center;
 }
-.vocab-card[data-reveal-split="two-column"] .vocab-report-reasons {
+.vocab-report-layer[data-reveal-split="two-column"] .vocab-report-reasons {
   /* Centred so a short last row sits under the middle of the rows above it. */
   justify-content: center;
   margin-top: 10px;
 }
-.vocab-card[data-reveal-split="two-column"] .vocab-report-send {
+.vocab-report-layer[data-reveal-split="two-column"] .vocab-report-send {
   margin-top: 12px;
   min-height: 42px;
 }

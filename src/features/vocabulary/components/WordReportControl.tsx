@@ -12,7 +12,8 @@
  * Depends on: React, lucide-react, ../lib/word-report, ../lib/reported-words
  */
 
-import { useCallback, useEffect, useRef, useState, type Ref } from "react";
+import { useCallback, useEffect, useRef, useState, type Ref, type RefObject } from "react";
+import { createPortal } from "react-dom";
 import { Check, X } from "lucide-react";
 import {
   MAX_REPORT_REASONS,
@@ -84,9 +85,20 @@ export function WordReportPanel({
   onSent,
   onClose,
   closing = false,
+  anchor,
+  split,
 }: {
   /** Playing its exit animation; the card unmounts it once that finishes. */
   closing?: boolean;
+  /**
+   * The card that opened the panel. The panel is drawn in the shell that holds it, not
+   * inside it: the card sits in its slot's stacking context, which no z-index of the
+   * panel's can leave, so the fixed saved-words tab (z 46 on the shell) was drawn over
+   * the open panel.
+   */
+  anchor: RefObject<HTMLElement | null>;
+  /** The card's `data-reveal-split`, which the landscape sheet's rules key on. */
+  split?: string;
   wordId: string;
   stageId: string;
   alreadyReported: boolean;
@@ -97,6 +109,10 @@ export function WordReportPanel({
   const [selected, setSelected] = useState<ReportReasonId[]>([]);
   const panel = useRef<HTMLDivElement>(null);
   const openedOn = useRef(stageId);
+  // Resolved once, when the panel opens: the card is mounted by then, and a card never
+  // moves to another shell while its panel is up. No shell (a stage outside the feed)
+  // keeps the panel inline, where it used to be.
+  const [host] = useState(() => anchor.current?.closest<HTMLElement>(".vocabulary-shell") ?? null);
 
   useEffect(() => {
     panel.current?.querySelector<HTMLElement>("button")?.focus();
@@ -149,9 +165,11 @@ export function WordReportPanel({
     }
   }, [onSent, phase, selected, wordId]);
 
-  return (
-    // Opts out of the card's tap-to-turn-page gestures.
-    <div data-no-gesture="">
+  const layer = (
+    // Opts out of the card's tap-to-turn-page gestures. The layer is fixed over the whole
+    // screen just above the saved-words tab and under the toolbar, so the panel is the one
+    // thing in focus while the tab stays where it is, dimmed under the scrim.
+    <div className="vocab-report-layer" data-no-gesture="" data-reveal-split={split}>
       <div
         className="vocab-report-scrim"
         data-closing={closing || undefined}
@@ -216,4 +234,5 @@ export function WordReportPanel({
       </div>
     </div>
   );
+  return host ? createPortal(layer, host) : layer;
 }
