@@ -83,8 +83,11 @@ function main() {
       for (const hit of hits) {
         const decided = decisions.get(hit.key);
         if (decided === undefined || hit.verdict === "number") continue;
-        // A person's choice outranks the scan, but only where digits exist to write.
-        if (decided === "number" && hit.digits !== undefined) {
+        // A person's choice outranks the scan, but only where digits exist to write and
+        // never inside a highlight mark: a re-import brings the old mark back, and a digit
+        // there turns the highlight off (the review moved those marks by hand instead).
+        const inMark = hit.reason.startsWith("inside a /");
+        if (decided === "number" && hit.digits !== undefined && !inMark) {
           hit.verdict = "number";
           hit.reason = "decided by hand: digits";
         } else if (decided === "word") {
