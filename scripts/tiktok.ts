@@ -1,5 +1,7 @@
 /**
- * Run the TikTok calendar: one word a day for a year (scripts/data/tiktok-calendar.json).
+ * Run the TikTok calendar: a word a post, a post a day for a year, optionally opening with a
+ * burst of several a day (scripts/data/tiktok-calendar.json). A "day" number below is a
+ * post's number; its date and time come from the schedule (lib/tiktok-calendar slotOfPost).
  *
  *   plan      choose a word for every day of the year (keeps days already under way)
  *   render    make the clips for the next days, with their captions beside them
@@ -12,6 +14,7 @@
  * Usage:
  *   npm run tiktok -- plan [--start 2026-11-15] [--time 19:00] [--order rising|weekly|easiest]
  *                          [--seed 1] [--clip-dir ~/KineMedia-tiktok/clips] [--days 365]
+ *                          [--burst 7x3 [--burst-times 11:30,19:00,21:30] | --burst none]
  *   npm run tiktok -- render [--days 14] [--day 3,5-7] [--base http://localhost:5195]
  *   npm run tiktok -- status
  *   npm run tiktok -- mark 1-10 scheduled
@@ -25,7 +28,7 @@
  * exists only there, and records in real time: about a minute a day.
  */
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -37,6 +40,9 @@ import {
   captionFor,
   dateOfDay,
   dayOfDate,
+  firstPostOnDate,
+  parseBurst,
+  slotOfPost,
   eligibleWords,
   levelForDay,
   parseDaySpec,
@@ -56,6 +62,8 @@ const DECK_DIR = join(ROOT, "src/features/vocabulary/data/packs");
 const REPORTS_FILE = join(ROOT, "src/features/vocabulary/data/word-reports.json");
 const CLUE_LEDGER_FILE = join(ROOT, "scripts/data/clue-review-ledger.json");
 const DEFAULT_CLIP_DIR = "~/KineMedia-tiktok/clips";
+/** Vietnam's lunch and evening peaks, for a burst given without its own times. */
+const DEFAULT_BURST_TIMES = "11:30,19:00,21:30";
 
 const [command, ...rest] = process.argv.slice(2);
 function flag(name: string): string | undefined {
@@ -79,7 +87,7 @@ function loadCalendar(): Calendar {
 }
 
 function saveCalendar(calendar: Calendar) {
-  for (const day of calendar.days) day.date = dateOfDay(calendar.startDate, day.day);
+  for (const day of calendar.days) Object.assign(day, slotOf(calendar, day.day));
   calendar.days.sort((a, b) => a.day - b.day);
   writeFileSync(CALENDAR_FILE, `${JSON.stringify(calendar, null, 2)}\n`);
 }
@@ -108,10 +116,15 @@ function loadEligible(): CandidateWord[] {
   return eligibleWords(loadDeck(), reported, broken);
 }
 
+/** A post's date and time, as the file stores them. */
+function slotOf(calendar: Calendar, day: number): { date: string; time: string } {
+  return slotOfPost(calendar, day);
+}
+
 function newDay(calendar: Calendar, day: number, word: CandidateWord): CalendarDay {
   return {
     day,
-    date: dateOfDay(calendar.startDate, day),
+    ...slotOf(calendar, day),
     wordId: word.id,
     word: word.word,
     code: word.shareCode!,
@@ -155,7 +168,7 @@ function fill(calendar: Calendar, words: CandidateWord[], dayNumbers: number[], 
     words: words.filter((w) => !excluded.has(w.id)),
     taken,
     dayNumbers,
-    levelOf: (day) => levelForDay(calendar.order, day, dateOfDay(calendar.startDate, day), total),
+    levelOf: (day) => levelForDay(calendar.order, day, slotOf(calendar, day).date, total),
     seed: calendar.seed,
   });
   calendar.days = calendar.days.filter((d) => !refill.has(d.day));
@@ -188,6 +201,9 @@ function plan() {
     if (flag("seed")) calendar.seed = Number(flag("seed"));
     if (flag("clip-dir")) calendar.clipDir = flag("clip-dir")!;
   }
+  if (flag("burst")) {
+    calendar.burst = parseBurst(flag("burst")!, flag("burst-times") ?? DEFAULT_BURST_TIMES);
+  }
   dateOfDay(calendar.startDate, 1); // throws on a malformed --start
   const total = Number(flag("days") ?? Math.max(CALENDAR_DAYS, calendar.days.length));
   const have = new Set(calendar.days.map((d) => d.day));
@@ -196,15 +212,54 @@ function plan() {
     (day) => !have.has(day) || (orderChanged && calendar.days.find((d) => d.day === day)?.status === "planned"),
   );
   fill(calendar, loadEligible(), toFill, total);
-  for (const day of calendar.days) if (day.status === "planned") day.caption = caption(calendar, day.day, day.level);
+  // Nothing scheduled or posted is touched: its caption is already in TikTok.
+  for (const day of calendar.days) {
+    if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.day, day.level);
+  }
+  const moved = refileClips(calendar);
   saveCalendar(calendar);
 
   const levels = new Map<string, number>();
   for (const day of calendar.days) levels.set(day.level, (levels.get(day.level) ?? 0) + 1);
   console.log(`✓ ${CALENDAR_FILE.replace(`${ROOT}/`, "")}: ${calendar.days.length} days, ${toFill.length} newly planned`);
   console.log(`  day 1 is ${calendar.startDate}, posting at ${calendar.postTime} (Vietnam), order "${calendar.order}"`);
+  if (calendar.burst) {
+    const { days, perDay, times } = calendar.burst;
+    const after = slotOf(calendar, days * perDay + 1);
+    console.log(
+      `  opening burst: ${perDay} a day for ${days} day(s) at ${times.join(", ")} (posts 1-${days * perDay}), ` +
+        `then one a day at ${calendar.postTime} from ${after.date}`,
+    );
+  }
+  if (moved) console.log(`  ${moved} rendered clip(s) renamed to their new date, captions beside them rewritten`);
   console.log(`  levels: ${[...levels].map(([l, n]) => `${l} ${n}`).join(", ")}`);
   console.log(`  clips go to ${expandHome(calendar.clipDir)}`);
+}
+
+/**
+ * A rendered clip is named after its post's date. When the schedule moves a post, rename the
+ * clip (and its caption file) to match, and write the caption afresh beside it, so the file
+ * picked in TikTok Studio says the day it is for.
+ * @returns How many clips moved
+ */
+function refileClips(calendar: Calendar): number {
+  let moved = 0;
+  for (const day of calendar.days) {
+    if (day.status !== "rendered" || !day.clip) continue;
+    const { date } = slotOf(calendar, day.day);
+    const from = expandHome(day.clip);
+    const to = join(dirname(from), `day-${pad(day.day)}-${date}-${slug(day.word)}.mp4`);
+    if (from !== to && existsSync(from) && !existsSync(to)) {
+      renameSync(from, to);
+      const text = from.replace(/\.mp4$/, ".txt");
+      if (existsSync(text)) renameSync(text, to.replace(/\.mp4$/, ".txt"));
+      day.clip = to.startsWith(homedir()) ? `~${to.slice(homedir().length)}` : to;
+      moved += 1;
+    }
+    const target = expandHome(day.clip);
+    if (existsSync(target)) writeFileSync(target.replace(/\.mp4$/, ".txt"), `${day.caption}\n`);
+  }
+  return moved;
 }
 
 /** A word as a file name can hold it. */
@@ -235,7 +290,7 @@ async function render() {
   } catch (error) {
     throw new Error(`the dev server does not answer at ${base}/showcase (${(error as Error).message}); start it with \`npm run dev\``);
   }
-  const todayDay = dayOfDate(calendar.startDate, todayInVietnam(Date.now()));
+  const todayDay = firstPostOnDate(calendar, todayInVietnam(Date.now()));
   const chosen = flag("day")
     ? parseDaySpec(flag("day")!).map((n) => {
         const day = calendar.days.find((d) => d.day === n);
@@ -294,26 +349,32 @@ function status() {
   const today = todayInVietnam(Date.now());
   const s = summarize(calendar, today);
   const total = calendar.days.length;
-  const dayLabel = (d: CalendarDay | null) => (d ? `day ${d.day} (${d.date})` : "nothing");
-  const daysAhead = (d: CalendarDay | null) => (d ? d.day - Math.max(1, s.todayDay) + 1 : 0);
-  console.log(`TikTok calendar · ${total} days from ${calendar.startDate} · posts at ${calendar.postTime} Vietnam time · order "${calendar.order}"`);
+  const dayLabel = (d: CalendarDay | null) => (d ? `post ${d.day} (${d.date} ${d.time ?? calendar.postTime})` : "nothing");
+  // Runway in calendar days, not posts: during a burst three posts are one day.
+  const firstDate = dateOfDay(calendar.startDate, 1);
+  const fromDay = Math.max(1, dayOfDate(calendar.startDate, today));
+  const daysAhead = (d: CalendarDay | null) => (d ? dayOfDate(firstDate, d.date) - fromDay + 1 : 0);
+  const cadence = calendar.burst
+    ? `${calendar.burst.perDay} a day for the first ${calendar.burst.days} day(s) at ${calendar.burst.times.join(", ")}, then 1 a day at ${calendar.postTime}`
+    : `1 a day at ${calendar.postTime}`;
+  console.log(`TikTok calendar · ${total} posts from ${calendar.startDate} · ${cadence} (Vietnam time) · order "${calendar.order}"`);
   console.log(
     s.todayDay < 1
-      ? `Today is ${today}: day 1 is in ${1 - s.todayDay} day(s).`
+      ? `Today is ${today}: post 1 goes out in ${1 - s.todayDay} day(s).`
       : s.todayDay > total
-        ? `Today is ${today}: the year ended on ${dateOfDay(calendar.startDate, total)}.`
-        : `Today is ${today}: day ${s.todayDay} of ${total}.`,
+        ? `Today is ${today}: the year ended on ${slotOf(calendar, total).date}.`
+        : `Today is ${today}: post ${s.todayDay} of ${total} is today's first.`,
   );
   console.log(
     `  posted ${s.counts.posted} · scheduled ${s.counts.scheduled} · rendered ${s.counts.rendered} · planned ${s.counts.planned} · missed ${s.counts.missed}`,
   );
-  console.log(`  streak: ${s.streak} day(s) posted in a row`);
+  console.log(`  streak: ${s.streak} post(s) out in a row`);
   console.log(`  scheduled through ${dayLabel(s.scheduledThrough)}: ${daysAhead(s.scheduledThrough)} day(s) in hand`);
   console.log(`  rendered through ${dayLabel(s.renderedThrough)}: ${daysAhead(s.renderedThrough)} day(s) of clips`);
 
   const warnings: string[] = [];
   for (const day of s.overdue) {
-    warnings.push(`day ${day.day} (${day.date}) has gone but is still "${day.status}": mark it posted (with --url) or missed`);
+    warnings.push(`post ${day.day} (${day.date}) has gone but is still "${day.status}": mark it posted (with --url) or missed`);
   }
   if (s.todayDay <= total) {
     if (daysAhead(s.scheduledThrough) < 3) warnings.push("fewer than 3 days are scheduled: upload the next clips in TikTok Studio");
@@ -324,10 +385,12 @@ function status() {
     for (const warning of warnings) console.log(`  ! ${warning}`);
   }
 
-  console.log("\nNext days:");
+  console.log("\nNext posts:");
   const from = Math.max(1, s.todayDay);
-  for (const day of calendar.days.filter((d) => d.day >= from).slice(0, 10)) {
-    console.log(`  ${String(day.day).padStart(3)}  ${day.date}  ${day.level}  ${day.status.padEnd(9)}  ${day.word} (${day.code})`);
+  for (const day of calendar.days.filter((d) => d.day >= from).slice(0, 12)) {
+    console.log(
+      `  ${String(day.day).padStart(3)}  ${day.date} ${day.time ?? calendar.postTime}  ${day.level}  ${day.status.padEnd(9)}  ${day.word} (${day.code})`,
+    );
   }
 }
 

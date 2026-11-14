@@ -3,6 +3,9 @@ import {
   captionFor,
   dateOfDay,
   dayOfDate,
+  firstPostOnDate,
+  parseBurst,
+  slotOfPost,
   eligibleWords,
   levelForDay,
   parseDaySpec,
@@ -121,7 +124,7 @@ describe("planDays", () => {
 });
 
 describe("captionFor", () => {
-  it("names the day and level, never the word", () => {
+  it("counts the word and names the level, never the word itself", () => {
     const caption = captionFor({
       day: 12,
       total: 365,
@@ -129,7 +132,8 @@ describe("captionFor", () => {
       hook: "Từ gì mà ...",
       address: "anh.chayla.app",
     });
-    expect(caption).toContain("Ngày 12/365");
+    expect(caption).toContain("Từ số 12/365");
+    expect(caption).not.toContain("Ngày");
     expect(caption).toContain("#a2");
     expect(caption).toContain("anh.chayla.app");
   });
@@ -189,5 +193,48 @@ describe("summarize", () => {
     const s = summarize({ ...calendar, days: calendar.days.map((d) => ({ ...d, status: "scheduled" as const })) }, "2026-11-10");
     expect(s.todayDay).toBeLessThan(1);
     expect(s.scheduledThrough?.day).toBe(7);
+  });
+});
+
+describe("the opening burst", () => {
+  const schedule = {
+    startDate: "2026-11-15",
+    postTime: "19:00",
+    burst: { days: 7, perDay: 3, times: ["11:30", "19:00", "21:30"] },
+  };
+
+  it("reads a burst as typed, and none", () => {
+    expect(parseBurst("7x3", "19:00, 11:30,21:30")).toEqual(schedule.burst);
+    expect(parseBurst("none", "")).toBeNull();
+    expect(() => parseBurst("7x3", "11:30,19:00")).toThrow(/3 times/);
+    expect(() => parseBurst("7-3", "11:30,19:00,21:30")).toThrow(/DAYSxPERDAY/);
+    expect(() => parseBurst("7x3", "11:30,19:00,25:00")).toThrow(/HH:MM/);
+  });
+
+  it("puts three posts on each of the first 7 days, then one a day", () => {
+    expect(slotOfPost(schedule, 1)).toEqual({ date: "2026-11-15", time: "11:30" });
+    expect(slotOfPost(schedule, 3)).toEqual({ date: "2026-11-15", time: "21:30" });
+    expect(slotOfPost(schedule, 4)).toEqual({ date: "2026-11-16", time: "11:30" });
+    expect(slotOfPost(schedule, 21)).toEqual({ date: "2026-11-21", time: "21:30" });
+    expect(slotOfPost(schedule, 22)).toEqual({ date: "2026-11-22", time: "19:00" });
+    expect(slotOfPost(schedule, 23)).toEqual({ date: "2026-11-23", time: "19:00" });
+  });
+
+  it("finds the first post of any date, before, in and after the burst", () => {
+    expect(firstPostOnDate(schedule, "2026-11-14")).toBe(0);
+    expect(firstPostOnDate(schedule, "2026-11-15")).toBe(1);
+    expect(firstPostOnDate(schedule, "2026-11-17")).toBe(7);
+    expect(firstPostOnDate(schedule, "2026-11-22")).toBe(22);
+    expect(firstPostOnDate(schedule, "2026-11-30")).toBe(30);
+    for (let post = 1; post <= 40; post += 1) {
+      const { date } = slotOfPost(schedule, post);
+      expect(firstPostOnDate(schedule, date)).toBeLessThanOrEqual(post);
+    }
+  });
+
+  it("without a burst is one a day, as before", () => {
+    const plain = { startDate: "2026-11-15", postTime: "19:00" };
+    expect(slotOfPost(plain, 17)).toEqual({ date: dateOfDay("2026-11-15", 17), time: "19:00" });
+    expect(firstPostOnDate(plain, "2026-12-01")).toBe(dayOfDate("2026-11-15", "2026-12-01"));
   });
 });

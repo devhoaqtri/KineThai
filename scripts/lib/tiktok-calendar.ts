@@ -7,14 +7,20 @@
  * posted (or missed); `scripts/tiktok.ts` is the command that moves it.
  *
  * Dates are calendar dates in Vietnam (UTC+7, no daylight saving), the audience's day. A
- * day's date is never stored on its own: it is always the start date plus the day's number,
- * so moving the start re-dates the year without touching which word falls where.
+ * post's date and time are never decided on their own: they come from the schedule (the
+ * start date, the daily time and an optional opening burst, see slotOfPost), so moving the
+ * start or changing the cadence re-dates the year without touching which word falls where.
+ *
+ * A "day" in the file is a POST: entry N is the N-th word to go out. With no burst that is
+ * also the N-th day; with one (say 3 a day for the first 7 days) the first 21 posts share
+ * 7 dates, and one a day follows.
  *
  * Everything here is pure. The command does the reading, writing, rendering and printing.
  *
- * Exports: CALENDAR_DAYS, LEVEL_ORDERS, LevelOrder, DayStatus, CalendarDay, Calendar,
- *   CandidateWord, parseDaySpec, dateOfDay, todayInVietnam, dayOfDate, weekdayOf, levelForDay,
- *   eligibleWords, planDays, captionFor, summarize
+ * Exports: CALENDAR_DAYS, LEVEL_ORDERS, LevelOrder, DayStatus, CalendarDay, Calendar, Burst,
+ *   PostSchedule, CandidateWord, parseDaySpec, parseBurst, dateOfDay, todayInVietnam,
+ *   dayOfDate, weekdayOf, burstPosts, slotOfPost, firstPostOnDate, levelForDay, eligibleWords,
+ *   planDays, captionFor, summarize
  */
 
 /** A year of days. */
@@ -32,9 +38,12 @@ export type LevelOrder = (typeof LEVEL_ORDERS)[number];
 export type DayStatus = "planned" | "rendered" | "scheduled" | "posted" | "missed";
 
 export type CalendarDay = {
+  /** The post's number: the N-th word to go out (the N-th day when there is no burst). */
   day: number;
-  /** Derived from the calendar's start; kept in the file so it can be read there. */
+  /** Derived from the schedule (slotOfPost); kept in the file so it can be read there. */
   date: string;
+  /** When it goes out, Vietnam time, HH:MM; derived like `date`. */
+  time?: string;
   wordId: string;
   word: string;
   code: string;
@@ -60,6 +69,8 @@ export type Calendar = {
   startDate: string;
   /** When each post goes out, Vietnam time; what TikTok Studio is set to. */
   postTime: string;
+  /** Several posts a day at the start, then one a day at `postTime`. Absent: one a day. */
+  burst?: Burst | null;
   order: LevelOrder;
   seed: number;
   /** Where clips are written; outside the repo, a year is several gigabytes. */
@@ -68,6 +79,15 @@ export type Calendar = {
   excluded: string[];
   days: CalendarDay[];
 };
+
+/**
+ * An opening run of several posts a day: `perDay` posts on each of the first `days` dates,
+ * at `times` (one per post, Vietnam time). After it the calendar posts once a day.
+ */
+export type Burst = { days: number; perDay: number; times: string[] };
+
+/** What a post's date and time are worked out from. */
+export type PostSchedule = Pick<Calendar, "startDate" | "postTime" | "burst">;
 
 /** The part of a deck word the planner and the caption read. */
 export type CandidateWord = {
@@ -142,6 +162,72 @@ export function todayInVietnam(now: number): string {
  */
 export function dayOfDate(startDate: string, date: string): number {
   return Math.round((parseDate(date) - parseDate(startDate)) / DAY_MS) + 1;
+}
+
+/**
+ * Read a burst as typed: "7x3" (7 days, 3 a day) and its times "11:30,19:00,21:30".
+ * @param spec - DAYSxPERDAY, or "none" / "0" for no burst
+ * @param times - comma-separated HH:MM, one per post of a day
+ * @returns The burst, or null for none
+ * @throws On a malformed spec, a time that is not HH:MM, or the wrong number of times
+ * @pure true
+ */
+export function parseBurst(spec: string, times: string): Burst | null {
+  if (spec === "none" || spec === "0") return null;
+  const match = /^(\d+)x(\d+)$/.exec(spec.trim());
+  if (!match) throw new Error(`"${spec}" is not a burst: write DAYSxPERDAY, e.g. 7x3`);
+  const days = Number(match[1]);
+  const perDay = Number(match[2]);
+  if (days < 1 || perDay < 2) throw new Error(`"${spec}": a burst is at least 1 day of 2 or more posts`);
+  const list = times.split(",").map((t) => t.trim()).filter(Boolean);
+  for (const time of list) {
+    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) throw new Error(`"${time}" is not a time (HH:MM)`);
+  }
+  if (list.length !== perDay) throw new Error(`a ${perDay}-a-day burst needs ${perDay} times, got ${list.length}`);
+  return { days, perDay, times: [...list].sort() };
+}
+
+/** @returns How many posts the opening burst holds (0 without one). @pure true */
+export function burstPosts(schedule: PostSchedule): number {
+  return schedule.burst ? schedule.burst.days * schedule.burst.perDay : 0;
+}
+
+/**
+ * When a post goes out.
+ * @param schedule - start date, daily time and burst
+ * @param post - the post's number, from 1
+ * @returns Its date and time, Vietnam time
+ * @pure true
+ */
+export function slotOfPost(schedule: PostSchedule, post: number): { date: string; time: string } {
+  const burst = schedule.burst;
+  const opening = burstPosts(schedule);
+  if (burst && post <= opening) {
+    const index = post - 1;
+    return {
+      date: dateOfDay(schedule.startDate, Math.floor(index / burst.perDay) + 1),
+      time: burst.times[index % burst.perDay] ?? schedule.postTime,
+    };
+  }
+  return {
+    date: dateOfDay(schedule.startDate, (burst?.days ?? 0) + (post - opening)),
+    time: schedule.postTime,
+  };
+}
+
+/**
+ * The first post that goes out on a date: the counterpart of dayOfDate for posts.
+ * @param schedule - start date, daily time and burst
+ * @param date - any date
+ * @returns That post's number; 0 or less before the start (as dayOfDate)
+ * @pure true
+ */
+export function firstPostOnDate(schedule: PostSchedule, date: string): number {
+  const day = dayOfDate(schedule.startDate, date);
+  const burst = schedule.burst;
+  if (day < 1) return day;
+  if (burst && day <= burst.days) return (day - 1) * burst.perDay + 1;
+  return burstPosts(schedule) + (day - (burst?.days ?? 0));
 }
 
 /** @returns 0 for Sunday … 6 for Saturday. @pure true */
@@ -268,9 +354,10 @@ export function planDays(input: {
 
 /**
  * The post's caption. It never names the word or its meaning: the clip is a guess, and a
- * caption is on screen while it plays (the same rule as a share link's message).
- * @param input.day - the day's number
- * @param input.total - days in the year
+ * caption is on screen while it plays (the same rule as a share link's message). It counts
+ * words, not days ("Từ số 12/365"): with several posts a day, a day count would repeat.
+ * @param input.day - the post's number
+ * @param input.total - posts in the year
  * @param input.level - the word's level
  * @param input.hook - the clip's own opening line (WORD_HOOK)
  * @param input.address - the site, for viewers who want more
@@ -286,7 +373,7 @@ export function captionFor(input: {
 }): string {
   return [
     `${input.hook} 🤔 Đoán trước khi đáp án hiện ra!`,
-    `Ngày ${input.day}/${input.total} · trình độ ${input.level}`,
+    `Từ số ${input.day}/${input.total} · trình độ ${input.level}`,
     "Bình luận đáp án của bạn nhé 👇",
     `Học thêm mỗi ngày tại ${input.address}`,
     "",
@@ -297,7 +384,7 @@ export function captionFor(input: {
 /** What `status` prints, worked out from the calendar and today's date. */
 export type CalendarSummary = {
   today: string;
-  /** Today's day number; 0 or less before the start, above the total after the end. */
+  /** The first post due today; 0 or less before the start, above the total after the end. */
   todayDay: number;
   counts: Record<DayStatus, number>;
   /** The last day, from today on, up to which every day is scheduled or posted. */
@@ -325,7 +412,7 @@ export function summarize(calendar: Calendar, today: string): CalendarSummary {
     missed: 0,
   };
   for (const day of calendar.days) counts[day.status] += 1;
-  const todayDay = dayOfDate(calendar.startDate, today);
+  const todayDay = firstPostOnDate(calendar, today);
   const from = Math.max(1, todayDay);
   const ahead = calendar.days.filter((d) => d.day >= from).sort((a, b) => a.day - b.day);
   const through = (ok: (d: CalendarDay) => boolean): CalendarDay | null => {
