@@ -10,8 +10,10 @@ import { Outlet, useRouter, HeadContent, Scripts } from "@tanstack/react-router"
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
 import { buildLegacyBrowserWarningScript } from "@/lib/browser-support";
+import { installStaleChunkReload } from "@/lib/stale-chunk";
 import { UnsupportedBrowserWarning } from "./UnsupportedBrowserWarning";
 import { DesktopModeNotice } from "./DesktopModeNotice";
+import { ReaderNotices } from "./ReaderNotices";
 
 const LEGACY_BROWSER_WARNING_SCRIPT = buildLegacyBrowserWarningScript();
 
@@ -22,8 +24,12 @@ const LEGACY_BROWSER_WARNING_SCRIPT = buildLegacyBrowserWarningScript();
  */
 export function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    // translate="no" and the notranslate meta keep the browser from translating the page:
+    // a phone set to English offers to translate the Vietnamese, the translation rewrites
+    // text nodes React owns, and React then crashes on them (removeChild/insertBefore).
+    <html lang="en" translate="no">
       <head>
+        <meta name="google" content="notranslate" />
         <HeadContent />
       </head>
       <body>
@@ -42,6 +48,9 @@ export function RootShell({ children }: { children: ReactNode }) {
  */
 export function RootApp({ queryClient }: { queryClient: QueryClient }) {
   const router = useRouter();
+
+  // A page left open across a deploy reloads once to fetch the new version's chunks.
+  useEffect(() => installStaleChunkReload(), []);
 
   useEffect(() => {
     // Public vocabulary browsing does not require a configured auth provider.
@@ -75,6 +84,7 @@ export function RootApp({ queryClient }: { queryClient: QueryClient }) {
     <QueryClientProvider client={queryClient}>
       <UnsupportedBrowserWarning />
       <DesktopModeNotice />
+      <ReaderNotices />
       <Outlet />
       <Toaster position="top-center" theme="dark" richColors />
     </QueryClientProvider>
