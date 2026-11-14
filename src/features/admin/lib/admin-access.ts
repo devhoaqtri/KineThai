@@ -2,7 +2,7 @@
  * Server-fn access gate for admin write actions that must also work in the
  * local demo session (VITE_DEMO_ADMIN), where there is no Supabase login.
  *
- * Exports: requireAdminAccess
+ * Exports: requireAdminAccess, requireAdmin
  * Depends on: demo-session flag, require-admin demo check, Supabase bearer validation
  *
  * Why not reuse requireSupabaseAuth: that middleware hard-requires a Bearer
@@ -20,7 +20,7 @@ import { createClient } from "@supabase/supabase-js";
 import { DEMO_AUTH_USER_ID, isDemoSession } from "@/features/session/demo-session";
 import type { Database } from "@/integrations/supabase/types";
 
-import { isDemoAdminEnabled } from "./require-admin";
+import { isDemoAdminEnabled, requireAdminContext } from "./require-admin";
 
 const DEMO_HEADER = "x-kinetic-demo-admin";
 
@@ -68,4 +68,17 @@ export const requireAdminAccess = createMiddleware({ type: "function" })
     }
 
     return next({ context: { userId: data.claims.sub as string } });
+  });
+
+/**
+ * The whole admin check for a server function: who is asking ({@link requireAdminAccess})
+ * and whether they are an admin (requireAdminContext). For reads, which have no
+ * handler-side check of their own; a server function is a public HTTP endpoint,
+ * so the /admin route's own gate does not protect it.
+ */
+export const requireAdmin = createMiddleware({ type: "function" })
+  .middleware([requireAdminAccess])
+  .server(async ({ next, context }) => {
+    await requireAdminContext({ authUserId: context.userId });
+    return next();
   });

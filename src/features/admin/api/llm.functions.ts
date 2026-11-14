@@ -12,7 +12,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireAdminAccess } from "../lib/admin-access";
+import { requireAdmin, requireAdminAccess } from "../lib/admin-access";
 import { requireAdminContext } from "../lib/require-admin";
 import {
   DEFAULT_MODELS,
@@ -65,8 +65,9 @@ function makeId(provider: LlmProvider, key: string, existing: LlmProfile[]): str
 /**
  * Return all saved key profiles (masked) plus the active one.
  */
-export const listLlmSettings = createServerFn({ method: "GET" }).handler(
-  async (): Promise<LlmSettingsView> => {
+export const listLlmSettings = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
+  .handler(async (): Promise<LlmSettingsView> => {
     const store = await readLlmStore();
     return {
       profiles: store.profiles.map(toView),
@@ -74,8 +75,7 @@ export const listLlmSettings = createServerFn({ method: "GET" }).handler(
       defaultModels: DEFAULT_MODELS,
       providerLabels: PROVIDER_LABELS,
     };
-  },
-);
+  });
 
 const profileSchema = z.object({
   id: z.string().max(80).optional(),

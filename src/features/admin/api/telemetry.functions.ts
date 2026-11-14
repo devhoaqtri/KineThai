@@ -11,6 +11,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { backfillTelemetryFromSources } from "../lib/backfill";
 import { buildHealthSnapshot } from "../lib/health";
+import { requireAdmin } from "../lib/admin-access";
 import { requireAdminContext } from "../lib/require-admin";
 import {
   listDailyRollups,
@@ -39,11 +40,9 @@ const rangeSchema = z.object({
  * @returns server function handle
  */
 export const getAdminRollups = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
   .inputValidator((d: unknown) => rangeSchema.parse(d))
   .handler(async ({ data }) => {
-    if (data.mode === "live") {
-      // Auth checked by caller route; still log access when possible.
-    }
     return listDailyRollups({ mode: data.mode, from: data.from, to: data.to });
   });
 
@@ -52,6 +51,7 @@ export const getAdminRollups = createServerFn({ method: "GET" })
  * @returns server function handle
  */
 export const getAdminEvents = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
   .inputValidator((d: unknown) =>
     z
       .object({
@@ -80,6 +80,7 @@ export const getAdminEvents = createServerFn({ method: "GET" })
  * @returns server function handle
  */
 export const getAdminHealth = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
   .inputValidator((d: unknown) =>
     z.object({ mode: z.enum(["demo", "live"]).default("live") }).parse(d),
   )
@@ -90,6 +91,7 @@ export const getAdminHealth = createServerFn({ method: "GET" })
  * @returns server function handle
  */
 export const getAdminHealthHistory = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
   .inputValidator((d: unknown) =>
     z
       .object({
@@ -135,6 +137,7 @@ export const getAdminHealthHistory = createServerFn({ method: "GET" })
  * @returns server function handle
  */
 export const getAdminErrors = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
   .inputValidator((d: unknown) =>
     z
       .object({
@@ -169,6 +172,7 @@ export const getAdminErrors = createServerFn({ method: "GET" })
  * @returns server function handle
  */
 export const getAdminSessionHealth = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
   .inputValidator((d: unknown) => rangeSchema.parse(d))
   .handler(async ({ data }): Promise<SessionHealthSummary> => {
     if (data.mode === "demo") {

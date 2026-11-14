@@ -25,7 +25,7 @@ import {
   type Palette,
   type PaletteScheme,
 } from "@/features/canvas/palettes";
-import { requireAdminAccess } from "../lib/admin-access";
+import { requireAdmin, requireAdminAccess } from "../lib/admin-access";
 import { requireAdminContext } from "../lib/require-admin";
 
 const PALETTES_PATH = resolve(process.cwd(), "src/features/canvas/data/palettes.json");
@@ -89,11 +89,11 @@ function describeFailures(palette: Palette): string[] {
 
 /**
  * List the stored palette collection.
- * Ungated GET, matching the other admin read functions.
+ * Admin only, like every admin read.
  */
-export const listPalettes = createServerFn({ method: "GET" }).handler(
-  async (): Promise<Palette[]> => readPalettes(),
-);
+export const listPalettes = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
+  .handler(async (): Promise<Palette[]> => readPalettes());
 
 /**
  * Insert or replace one palette, refusing any combination that fails the audit.

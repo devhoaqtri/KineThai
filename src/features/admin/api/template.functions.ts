@@ -10,7 +10,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireAdminAccess } from "../lib/admin-access";
+import { requireAdmin, requireAdminAccess } from "../lib/admin-access";
 import { requireAdminContext } from "../lib/require-admin";
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -145,9 +145,9 @@ function getItemId(item: unknown): string {
 /**
  * List all template data from the local JSON file.
  */
-export const listTemplates = createServerFn({ method: "GET" }).handler(
-  async (): Promise<TemplateData> => readTemplates(),
-);
+export const listTemplates = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
+  .handler(async (): Promise<TemplateData> => readTemplates());
 
 /**
  * Replace an entire section of the template data.
