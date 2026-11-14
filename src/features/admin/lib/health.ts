@@ -22,6 +22,10 @@ export async function buildHealthSnapshot(mode: "demo" | "live"): Promise<System
     const recentErrors = store.errors.filter(
       (e) => new Date(e.created_at).getTime() >= hourAgo && e.status !== "resolved",
     ).length;
+    const fiveMinAgo = Date.now() - 5 * 60 * 1000;
+    const errors5m = store.events.filter(
+      (e) => e.event_type === "error.reported" && new Date(e.occurred_at).getTime() >= fiveMinAgo,
+    ).length;
     const status: SystemHealthStatus =
       recentErrors >= 10 ? "degraded" : recentErrors >= 25 ? "partial_outage" : "operational";
     const snapshot: SystemHealthSnapshot = {
@@ -32,6 +36,7 @@ export async function buildHealthSnapshot(mode: "demo" | "live"): Promise<System
       p50_latency_ms: 12,
       p95_latency_ms: 48,
       error_rate_pct: Math.min(100, recentErrors * 0.5),
+      errors_5m: errors5m,
       queue_depth: 0,
     };
     store.healthHistory = [snapshot, ...store.healthHistory].slice(0, 500);
@@ -81,6 +86,7 @@ export async function buildHealthSnapshot(mode: "demo" | "live"): Promise<System
     p50_latency_ms: Math.round(latency),
     p95_latency_ms: Math.round(latency * 1.8),
     error_rate_pct,
+    errors_5m: errors,
     queue_depth,
   };
 

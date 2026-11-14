@@ -70,6 +70,8 @@ export type SystemHealthSnapshot = {
   p50_latency_ms: number;
   p95_latency_ms: number;
   error_rate_pct: number;
+  /** `error.reported` events counted in the last five minutes (returned, not stored). */
+  errors_5m?: number;
   queue_depth?: number;
   db_connections_used?: number;
   db_connections_max?: number;
