@@ -10,7 +10,9 @@ import { resolveTarget } from "../lib/target-language";
 import { isLocalRequest } from "@/lib/bot-gate";
 import {
   NEW_STREAM_BUDGET,
+  STREAM_PAGE_BUDGET,
   callerKey,
+  checkRateLimit,
   checkRateLimitOnce,
   rateLimitedResponse,
 } from "@/lib/rate-limit";
@@ -124,11 +126,11 @@ export async function vocabularyResponse(request: Request): Promise<Response> {
     difficulty: page.difficulty,
     revision,
   };
+  const stream = [page.seed, page.topic, page.level, page.difficulty].join("|");
   if (page.position === 0) {
     // Charged per distinct stream: asking for the same first page again is free. Local
     // hosts are exempt, as they are from the path budgets (see start.ts).
     if (!isLocalRequest(request)) {
-      const stream = [page.seed, page.topic, page.level, page.difficulty].join("|");
       const verdict = checkRateLimitOnce(
         "vocabulary:new-stream",
         callerKey(request),
@@ -142,6 +144,15 @@ export async function vocabularyResponse(request: Request): Promise<Response> {
       { code: "STREAM_EXPIRED", error: "This stream can no longer be resumed. Start a fresh one." },
       { status: 403, headers },
     );
+  } else if (!isLocalRequest(request)) {
+    // One reader's own pace, whatever address they share (STREAM_PAGE_BUDGET): the
+    // address budget is sized for a whole carrier NAT and cannot pace one stream.
+    const verdict = checkRateLimit(
+      "vocabulary:stream-page",
+      `${callerKey(request)}|${stream}`,
+      STREAM_PAGE_BUDGET,
+    );
+    if (!verdict.allowed) return rateLimitedResponse(verdict.retryAfterSeconds);
   }
   try {
     const served = readVocabularyPage(page, locale);

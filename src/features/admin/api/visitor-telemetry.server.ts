@@ -12,11 +12,10 @@
  * be used to forge activity metrics.
  *
  * Exports: visitorTelemetryPostResponse
- * Depends on: zod, rate-limit, supabase admin (lazily, server only)
+ * Depends on: zod, supabase admin (lazily, server only)
  */
 
 import { z } from "zod";
-import { allowTelemetryRequest } from "../lib/rate-limit";
 import { APP_ID } from "../types/telemetry";
 
 /** Event types a browser is allowed to report about itself. */
@@ -82,12 +81,9 @@ function countDeltas(events: VisitorEvent[]) {
  * @returns JSON { accepted } — the number of events written.
  */
 export async function visitorTelemetryPostResponse(request: Request): Promise<Response> {
-  const ip =
-    request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? "anon";
-  if (!allowTelemetryRequest(ip)) {
-    return json({ error: "Rate limit exceeded" }, 429);
-  }
-
+  // Limited per address by the request middleware (RATE_LIMITS in lib/rate-limit), sized
+  // for a carrier NAT. This used to take a second, tighter token per address here too, so
+  // a busy shared address lost its telemetry at 120 a minute.
   let parsed: z.infer<typeof bodySchema>;
   try {
     parsed = bodySchema.parse(await request.json());

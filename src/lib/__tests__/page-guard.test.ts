@@ -1,6 +1,15 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { resetRateLimits } from "../rate-limit";
+import {
+  FEED_PAGE_BUDGET,
+  SHARE_PAGE_BUDGET,
+  resetRateLimits,
+  type RateBudget,
+} from "../rate-limit";
 import { pageGuard } from "../page-guard";
+
+/** A budget's per-minute cap. */
+const perMinute = (budget: RateBudget) =>
+  (Array.isArray(budget) ? budget : [budget]).find((window) => window.windowMs === 60_000)!.limit;
 
 const SAFARI =
   "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1";
@@ -53,7 +62,7 @@ describe("pageGuard: share link", () => {
   });
 
   it("stops one address past its budget, and only that address", () => {
-    for (let i = 0; i < 30; i++) expect(visit("/w/K7F")).toBeNull();
+    for (let i = 0; i < perMinute(SHARE_PAGE_BUDGET); i++) expect(visit("/w/K7F")).toBeNull();
     const refused = visit("/w/K7F");
     expect(refused?.status).toBe(429);
     expect(Number(refused?.headers.get("retry-after"))).toBeGreaterThan(0);
@@ -89,8 +98,9 @@ describe("pageGuard: home feed", () => {
   });
 
   it("charges /feed, not the redirect at /, and apart from share links", () => {
-    for (let i = 0; i < 100; i++) expect(visit("/")).toBeNull();
-    for (let i = 0; i < 60; i++) expect(visit(i % 2 ? "/feed" : "/feed/")).toBeNull();
+    const feedMinute = perMinute(FEED_PAGE_BUDGET);
+    for (let i = 0; i < feedMinute + 40; i++) expect(visit("/")).toBeNull();
+    for (let i = 0; i < feedMinute; i++) expect(visit(i % 2 ? "/feed" : "/feed/")).toBeNull();
     const refused = visit("/feed");
     expect(refused?.status).toBe(429);
     expect(Number(refused?.headers.get("retry-after"))).toBeGreaterThan(0);
