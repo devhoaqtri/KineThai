@@ -3271,6 +3271,19 @@
   vertical-align: 0.2em;
   color: color-mix(in srgb, var(--vocab-ink) 74%, transparent);
 }
+/* Two slots, one shown (VocabularyStage usePosChipPlacement): the chip follows the gloss,
+   and only when the two cannot share one line does it stand on its own line above it. */
+.vocab-meaning-pos[data-slot="lead"] {
+  display: none;
+}
+.vocab-meaning[data-pos-above] .vocab-meaning-pos[data-slot="lead"] {
+  display: table;
+  margin: 0 0 0.35em;
+  vertical-align: baseline;
+}
+.vocab-meaning[data-pos-above] .vocab-meaning-pos[data-slot="tail"] {
+  display: none;
+}
 .vocab-pronunciation {
   margin-bottom: 18px;
   font-size: 0.82em;

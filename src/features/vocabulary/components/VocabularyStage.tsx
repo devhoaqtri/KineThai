@@ -184,6 +184,41 @@ const STILL_VARIANTS: Variants = {
 };
 
 /**
+ * Where the word-type chip ("danh từ") sits beside the gloss. It rides at the end of the
+ * gloss's line; only when the two cannot share one line does it move to the line above,
+ * instead of dropping under a gloss that already wrapped. The chip is rendered in both
+ * slots and `data-pos-above` on the gloss line picks one. The choice is always measured
+ * in the plain inline layout (the attribute is lifted, read, and set again in the same
+ * task, before anything is drawn), so it never flips on its own result, and a resize,
+ * a smaller panel scale or a new word measures it again.
+ * @param ref - the gloss line (`.vocab-meaning`)
+ * @param key - changes when the gloss or the word changes
+ */
+function usePosChipPlacement(ref: RefObject<HTMLParagraphElement | null>, key: string) {
+  useLayoutEffect(() => {
+    const line = ref.current;
+    if (!line) return;
+    const place = () => {
+      const text = line.querySelector<HTMLElement>(".vocab-meaning-text");
+      const tail = line.querySelector<HTMLElement>(".vocab-meaning-pos[data-slot='tail']");
+      if (!text || !tail) return;
+      line.removeAttribute("data-pos-above");
+      const rects = text.getClientRects();
+      const first = rects[0];
+      // The gloss wrapped, or the chip could not follow it on its line.
+      const above =
+        !!first &&
+        (rects.length > 1 || tail.getBoundingClientRect().top > first.top + first.height / 2);
+      if (above) line.setAttribute("data-pos-above", "");
+    };
+    place();
+    const observer = new ResizeObserver(place);
+    observer.observe(line.parentElement ?? line);
+    return () => observer.disconnect();
+  }, [ref, key]);
+}
+
+/**
  * One page's kinetic text, with the animate-or-not decision made ONCE, when the page
  * arrives.
  *
@@ -304,6 +339,11 @@ export function VocabularyStage({
 }) {
   const details = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const meaningRef = useRef<HTMLParagraphElement>(null);
+  usePosChipPlacement(
+    meaningRef,
+    `${word.id}|${word.meaningVi || word.defVi}|${word.pos ?? ""}|${stage.reveal ? 1 : 0}`,
+  );
   const stageRef = useRef<HTMLDivElement>(null);
   const [panelTop, setPanelTop] = useState<number | null>(null);
   /**
@@ -661,11 +701,24 @@ export function VocabularyStage({
                 naming it — and that is the wrong register once the reader can see the
                 word: they want the equivalent, not a description. Decks authored before
                 `meaningVi` existed fall back to the sentence they do have. */}
-            <p className="vocab-meaning" lang="vi">
-              <MarkedText text={word.meaningVi || word.defVi} />
+            <p className="vocab-meaning" lang="vi" ref={meaningRef}>
               {/* The word type in Vietnamese ("danh từ", "động từ"…): a new learner reads
-                  the deck's "noun" / "adj" as jargon. */}
-              {word.pos && <span className="vocab-meaning-pos">{posLabelVi(word.pos)}</span>}
+                  the deck's "noun" / "adj" as jargon. Two slots, one shown: at the end of
+                  the gloss, or above it when the two cannot share a line
+                  (usePosChipPlacement). */}
+              {word.pos && (
+                <span className="vocab-meaning-pos" data-slot="lead">
+                  {posLabelVi(word.pos)}
+                </span>
+              )}
+              <span className="vocab-meaning-text">
+                <MarkedText text={word.meaningVi || word.defVi} />
+              </span>
+              {word.pos && (
+                <span className="vocab-meaning-pos" data-slot="tail">
+                  {posLabelVi(word.pos)}
+                </span>
+              )}
             </p>
             {word.usage.map((example, index) => (
               <div className="vocab-example" key={index}>
