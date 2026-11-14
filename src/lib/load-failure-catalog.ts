@@ -1,6 +1,7 @@
 /**
- * Every way the app can fail to load or keep loading for a reader, as data: a design
- * record for a future "something went wrong" flow, NOT wired into anything yet.
+ * Every way the app can fail to load or keep loading for a reader, as data: the design
+ * record for the failure flow. The error screen (shell ErrorComponent, lib/error-report)
+ * settles on these ids; `coverage` says which cases are handled so far.
  *
  * The flow it is written for runs three checks in order, and stops at the first that
  * explains the failure:
@@ -49,9 +50,9 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     title: "Device is offline",
     frequency: "common",
     detect: "navigator.onLine === false, or a fetch rejects with TypeError while it is false.",
-    coverage: "partial",
+    coverage: "covered",
     existing:
-      "lib/feed-fallback retries with backoff; 'Không tải thêm từ được.' shows on the last word only",
+      "shell ReaderNotices (offline / back online) and the error screen; lib/feed-fallback retries",
     action: "Say the device is offline; retry by itself on the window 'online' event.",
     readerHintVi: "Bạn đang không có mạng. Ứng dụng sẽ tự tải lại khi có mạng.",
     offerReport: false,
@@ -241,7 +242,8 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     frequency: "occasional",
     detect:
       "<html> gets class 'translated-ltr'/'translated-rtl' (Chrome) or text is wrapped in <font>; React then throws NotFoundError on removeChild/insertBefore. Likely when the phone's language is English and the page is Vietnamese.",
-    coverage: "none",
+    coverage: "covered",
+    existing: 'translate="no" + notranslate meta in RootShell; the error screen names it',
     action:
       'Prevention, not recovery: translate="no" on <html> plus <meta name="google" content="notranslate">. Detect the crash signature and say \'turn off translation\'.',
     readerHintVi: "Tắt tính năng dịch trang của trình duyệt rồi tải lại nhé.",
@@ -254,7 +256,8 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     frequency: "occasional",
     detect:
       "localStorage.setItem/removeItem of a probe key throws (SecurityError or QuotaExceededError at size 0).",
-    coverage: "none",
+    coverage: "covered",
+    existing: "lib/storage-probe + shell ReaderNotices",
     action: "Keep reading working in memory; tell the reader progress will not be kept.",
     readerHintVi:
       "Trình duyệt đang chặn lưu dữ liệu (chế độ ẩn danh?). Tiến độ học sẽ không được lưu.",
@@ -314,7 +317,8 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     title: "Local storage full (large imported packs)",
     frequency: "rare",
     detect: "QuotaExceededError on setItem after earlier writes worked.",
-    coverage: "none",
+    coverage: "covered",
+    existing: "lib/storage-probe + shell ReaderNotices",
     action: "Say what cannot be saved; offer to remove imported packs.",
     readerHintVi: "Bộ nhớ của trang đã đầy. Xóa bớt bộ từ đã nhập để lưu tiếp.",
     offerReport: false,
@@ -365,7 +369,8 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     frequency: "common",
     detect:
       "A dynamic import rejects: 'Failed to fetch dynamically imported module' (Chromium), 'Importing a module script failed' (Safari), 'error loading dynamically imported module' (Firefox).",
-    coverage: "none",
+    coverage: "covered",
+    existing: "lib/stale-chunk: vite:preloadError and the error screen reload once",
     action:
       "Reload once, guarded by a sessionStorage flag so it cannot loop; report only if it fails again.",
     readerHintVi: "Trang vừa được cập nhật. Đang tải lại…",
@@ -389,8 +394,9 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     title: "A component throws (error boundary screen)",
     frequency: "occasional",
     detect: "Root errorComponent / React error boundary.",
-    coverage: "partial",
-    existing: "shell ErrorComponent (English copy) + reportLovableError telemetry",
+    coverage: "covered",
+    existing:
+      "shell ErrorComponent (Vietnamese) with the opt-in report (lib/error-report, /api/public/error-report)",
     action: "Vietnamese screen: try again, go home, and the opt-in report.",
     readerHintVi: "Có lỗi xảy ra. Bạn thử tải lại, hoặc gửi báo cáo để tụi mình sửa.",
     offerReport: true,
@@ -486,8 +492,8 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     title: "Infinite render loop ('Maximum update depth exceeded')",
     frequency: "rare",
     detect: "That React error message, usually from a fit or measure loop.",
-    coverage: "partial",
-    existing: "caught by the root error boundary",
+    coverage: "covered",
+    existing: "shell ErrorComponent names it render-loop and offers the report",
     action: "As render-crash; the report should carry the stage and word id.",
     readerHintVi: "Có lỗi xảy ra. Bạn thử tải lại, hoặc gửi báo cáo để tụi mình sửa.",
     offerReport: true,

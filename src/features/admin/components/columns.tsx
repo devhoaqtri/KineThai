@@ -126,6 +126,33 @@ export function createErrorColumns(options: {
       header: "message",
       cell: (info) => <span className="max-w-xs truncate block">{info.getValue()}</span>,
     }),
+    // Reader error reports and word reports carry their content in metadata; the message
+    // alone is one truncated line.
+    errorHelper.display({
+      id: "details",
+      header: "details",
+      cell: (info) => {
+        const entries = Object.entries(info.row.original.metadata ?? {}).filter(
+          ([, value]) => value !== null && value !== "",
+        );
+        if (!entries.length) return null;
+        return (
+          <details className="max-w-md text-xs">
+            <summary className="cursor-pointer text-muted-foreground">
+              {String(info.row.original.metadata?.kind ?? "metadata")}
+            </summary>
+            <dl className="mt-1 space-y-1">
+              {entries.map(([key, value]) => (
+                <div key={key}>
+                  <dt className="font-semibold">{key}</dt>
+                  <dd className="whitespace-pre-wrap break-words font-mono">{String(value)}</dd>
+                </div>
+              ))}
+            </dl>
+          </details>
+        );
+      },
+    }),
     errorHelper.accessor("status", { header: "status" }),
     errorHelper.accessor("created_at", {
       header: "when",

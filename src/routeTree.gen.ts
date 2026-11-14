@@ -53,6 +53,7 @@ import { Route as AuthenticatedUUsernameRouteImport } from './routes/_authentica
 import { Route as ApiDevCarouselRouteImport } from './routes/api/dev/carousel'
 import { Route as ApiDevFeedLogRouteImport } from './routes/api/dev/feed-log'
 import { Route as ApiPublicEngagementRouteImport } from './routes/api/public/engagement'
+import { Route as ApiPublicErrorReportRouteImport } from './routes/api/public/error-report'
 import { Route as ApiPublicTelemetryRouteImport } from './routes/api/public/telemetry'
 import { Route as ApiPublicVocabularyRouteImport } from './routes/api/public/vocabulary'
 import { Route as ApiPublicVocabularyRefillRouteImport } from './routes/api/public/vocabulary-refill'
@@ -280,6 +281,11 @@ const ApiPublicEngagementRoute = ApiPublicEngagementRouteImport.update({
   path: '/api/public/engagement',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicErrorReportRoute = ApiPublicErrorReportRouteImport.update({
+  id: '/api/public/error-report',
+  path: '/api/public/error-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicTelemetryRoute = ApiPublicTelemetryRouteImport.update({
   id: '/api/public/telemetry',
   path: '/api/public/telemetry',
@@ -351,6 +357,7 @@ export interface FileRoutesByFullPath {
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
+  '/api/public/error-report': typeof ApiPublicErrorReportRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
   '/api/public/vocabulary-refill': typeof ApiPublicVocabularyRefillRoute
@@ -400,6 +407,7 @@ export interface FileRoutesByTo {
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
+  '/api/public/error-report': typeof ApiPublicErrorReportRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
   '/api/public/vocabulary-refill': typeof ApiPublicVocabularyRefillRoute
@@ -452,6 +460,7 @@ export interface FileRoutesById {
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
+  '/api/public/error-report': typeof ApiPublicErrorReportRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
   '/api/public/vocabulary': typeof ApiPublicVocabularyRoute
   '/api/public/vocabulary-refill': typeof ApiPublicVocabularyRefillRoute
@@ -504,6 +513,7 @@ export interface FileRouteTypes {
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
     | '/api/public/engagement'
+    | '/api/public/error-report'
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
     | '/api/public/vocabulary-refill'
@@ -553,6 +563,7 @@ export interface FileRouteTypes {
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
     | '/api/public/engagement'
+    | '/api/public/error-report'
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
     | '/api/public/vocabulary-refill'
@@ -604,6 +615,7 @@ export interface FileRouteTypes {
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
     | '/api/public/engagement'
+    | '/api/public/error-report'
     | '/api/public/telemetry'
     | '/api/public/vocabulary'
     | '/api/public/vocabulary-refill'
@@ -631,6 +643,7 @@ export interface RootRouteChildren {
   ApiDevCarouselRoute: typeof ApiDevCarouselRoute
   ApiDevFeedLogRoute: typeof ApiDevFeedLogRoute
   ApiPublicEngagementRoute: typeof ApiPublicEngagementRoute
+  ApiPublicErrorReportRoute: typeof ApiPublicErrorReportRoute
   ApiPublicTelemetryRoute: typeof ApiPublicTelemetryRoute
   ApiPublicVocabularyRoute: typeof ApiPublicVocabularyRoute
   ApiPublicVocabularyRefillRoute: typeof ApiPublicVocabularyRefillRoute
@@ -948,6 +961,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicEngagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/error-report': {
+      id: '/api/public/error-report'
+      path: '/api/public/error-report'
+      fullPath: '/api/public/error-report'
+      preLoaderRoute: typeof ApiPublicErrorReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/telemetry': {
       id: '/api/public/telemetry'
       path: '/api/public/telemetry'
@@ -1075,6 +1095,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDevCarouselRoute: ApiDevCarouselRoute,
   ApiDevFeedLogRoute: ApiDevFeedLogRoute,
   ApiPublicEngagementRoute: ApiPublicEngagementRoute,
+  ApiPublicErrorReportRoute: ApiPublicErrorReportRoute,
   ApiPublicTelemetryRoute: ApiPublicTelemetryRoute,
   ApiPublicVocabularyRoute: ApiPublicVocabularyRoute,
   ApiPublicVocabularyRefillRoute: ApiPublicVocabularyRefillRoute,

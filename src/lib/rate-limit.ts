@@ -44,6 +44,8 @@ const DAY = 24 * HOUR;
 export const RATE_LIMITS: Record<string, RateBudget> = {
   // A reader fixing a deck by hand might file a handful; a script files hundreds.
   "/api/public/word-report": { limit: 12, windowMs: 10 * MINUTE },
+  // A reader sends one from an error screen; a crash loop or a script would send many.
+  "/api/public/error-report": { limit: 5, windowMs: 10 * MINUTE },
   // Unauthenticated AND writes through the service-role key, so this is the one that most
   // needs a ceiling: rows it accepts land in the tables the admin dashboards read.
   "/api/public/telemetry": { limit: 120, windowMs: MINUTE },
