@@ -4626,6 +4626,8 @@
   width: min(300px, 100%);
   height: 280px;
   padding-top: var(--vault-head);
+  /* The bubbles read the vault's width (cqw) to stay inside it on a narrow screen. */
+  container-type: inline-size;
   color: var(--vocab-ink);
   --vault-accent: var(--chrome-accent, #a78bfa);
   /* The heart keeps a pink of its own so the two keys never read as the same reaction. */
@@ -4897,10 +4899,14 @@
      ±17 from centre) and fixes where the tail lands. The bubble then grows OUTWARD from that
      anchored edge to fit its sentence on one line, instead of wrapping inside a width cap. */
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.3em;
+  gap: 0 0.3em;
   width: max-content;
+  /* One line wherever the vault is wide enough; on a screen narrower than the sentence (a
+     folded Galaxy Fold's 280px cover) it wraps rather than run past the edge. */
+  max-width: 100cqw;
+  box-sizing: border-box;
   white-space: nowrap;
   padding: 8px 13px;
   color: var(--vocab-ink);
@@ -4986,10 +4992,15 @@
      the button — a small breathing gap (pointer length unchanged). */
   top: 7px;
   left: calc(50% - var(--vault-key-x));
-  transform: translateX(-66.6%);
+  /* Two thirds of the bubble to the left of its key, unless that would cross the vault's
+     left edge: then only as far as the edge allows. The tail below moves by the same
+     amount, so it still points at the key's centre. */
+  transform: translateX(max(-66.6%, calc(var(--vault-key-x) - 50cqw)));
 }
 .vocab-vault-tip[data-tip="heart"] .vocab-vault-tip-shape::after {
-  left: 66.6%;
+  /* The key's centre, measured from the bubble's left edge (see the transform above), kept
+     clear of the rounded corners. */
+  left: clamp(14px, min(66.6%, calc(50cqw - var(--vault-key-x))), calc(100% - 14px));
   right: auto;
   /* ~25% shorter again: reaches 10px toward the key (was 13) with the same 3px body overlap. */
   bottom: -10px;
@@ -5007,14 +5018,16 @@
   top: var(--vault-tip);
   left: calc(50% + var(--vault-key-x));
   right: auto;
-  transform: translateX(-33.3%);
+  /* One third to the left of its key, unless the rest would cross the vault's right edge:
+     then shifted left just enough to end on it. The tail follows, as on the heart's. */
+  transform: translateX(min(-33.3%, calc(50cqw - var(--vault-key-x) - 100%)));
 }
 .vocab-vault-tip[data-tip="bookmark"] .vocab-vault-tip-shape::after {
   /* Mirrors the heart's second cut: same 3px body overlap, ~25% shorter again — reaches ~11px up
      toward the key (was 15); the bubble moved up with it so the tip still lands on the icon. */
   top: -11px;
   height: 14px;
-  left: 33.3%;
+  left: clamp(14px, max(33.3%, calc(100% - 50cqw + var(--vault-key-x))), calc(100% - 14px));
   right: auto;
   transform: translateX(-50%);
   /* A 1px wider base than the heart's, keeping the same ~50° joint over its extra height. */
