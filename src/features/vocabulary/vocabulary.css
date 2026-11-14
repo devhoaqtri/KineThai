@@ -5577,6 +5577,14 @@
     display: inline;
   }
 }
+/* A folded Galaxy Fold's 280px cover screen leaves the column ~110px, and even the short
+   wording needs 110px at 11.5px: its last letters were clipped. Set it a step smaller there
+   rather than cut it. */
+@container (max-width: 112px) {
+  .vocab-onboard-curiosity {
+    font-size: 10.5px;
+  }
+}
 .vocab-onboard-rung[data-on] .vocab-onboard-curiosity {
   opacity: 1;
   color: var(--rung-own);
@@ -5817,6 +5825,24 @@
   }
   .vocab-onboard:not([data-landscape]) .vocab-onboard-rung[data-on] .vocab-onboard-label {
     font-size: 14px;
+  }
+}
+/* Narrower still: a folded Galaxy Fold's 280px cover screen. The 320px numbers above leave
+   each column 99px, and "B2–C2 văn chương" ran past the screen's left edge. The rail column
+   gives the room back: the knob is 30px, so 34px still holds it (the rail element keeps its
+   56px touch strip and stays centred), and each text column gains 11px. */
+@media (max-height: 700px) and (max-width: 300px) {
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-rung {
+    grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr);
+  }
+  /* The chosen rung's name grows a step less here: "văn chương" with its chip, chosen, is
+     the widest row, and at 14px it still reached the screen's edge. Its colour already
+     marks it as chosen. */
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-name {
+    gap: 3px;
+  }
+  .vocab-onboard:not([data-landscape]) .vocab-onboard-rung[data-on] .vocab-onboard-label {
+    font-size: 13px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
