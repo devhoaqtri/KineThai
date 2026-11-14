@@ -9213,6 +9213,23 @@
   color: transparent;
   filter: drop-shadow(0 2px 12px color-mix(in srgb, var(--m-glow) 45%, transparent));
 }
+.vocab-streak-flash-subtitle {
+  margin: -2px 0 2px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--m-hi) 55%, transparent);
+  background: color-mix(in srgb, var(--m-mid) 22%, transparent);
+  color: var(--m-hi);
+  font-size: clamp(15px, 4.4vw, 18px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 10px color-mix(in srgb, var(--m-glow) 55%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--m-glow) 28%, transparent);
+  transform-origin: center;
+  will-change: transform;
+  animation: vocab-streak-jiggle 1.65s ease-in-out 900ms infinite;
+}
 .vocab-streak-flash-caption {
   margin: 0;
   text-wrap: balance;
@@ -9413,6 +9430,33 @@
   from {
     opacity: 0;
     transform: translateY(18px);
+  }
+}
+@keyframes vocab-streak-jiggle {
+  0%,
+  55%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  8% {
+    transform: translate3d(0, -2px, 0) rotate(-3.5deg) scale(1.06);
+  }
+  16% {
+    transform: translate3d(0, -2px, 0) rotate(3.5deg) scale(1.07);
+  }
+  24% {
+    transform: translate3d(0, -1px, 0) rotate(-3deg) scale(1.05);
+  }
+  32% {
+    transform: translate3d(0, 0, 0) rotate(2.2deg) scale(1.03);
+  }
+  40% {
+    transform: translate3d(0, 0, 0) rotate(-1.2deg) scale(1.01);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocab-streak-flash-subtitle {
+    animation: none;
   }
 }
 @keyframes vocab-streak-drain {

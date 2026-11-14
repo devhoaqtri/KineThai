@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   STREAK_TIER_LABEL,
   dailyBadgeBlurb,
+  dailyBadgeSubtitle,
   dailyBadgeTitle,
   dailyTier,
   streakBlurb,
@@ -66,10 +67,18 @@ describe("dailyTier", () => {
 describe("dailyBadgeTitle", () => {
   it("celebrates the first time without a counter", () =>
     expect(dailyBadgeTitle(10, 1)).toBe("10 từ trong một ngày!"));
-  it("counts the second time", () =>
-    expect(dailyBadgeTitle(25, 2)).toBe("Lần thứ 2: 25 từ trong ngày!"));
-  it("counts a large repeat", () =>
-    expect(dailyBadgeTitle(50, 30)).toBe("Lần thứ 30: 50 từ trong ngày!"));
+  it("keeps the daily count as the main title on repeats", () =>
+    expect(dailyBadgeTitle(25, 2)).toBe("25 từ trong ngày!"));
+  it("keeps the daily count clean for large repeats", () =>
+    expect(dailyBadgeTitle(50, 30)).toBe("50 từ trong ngày!"));
+});
+
+describe("dailyBadgeSubtitle", () => {
+  it("omits a subtitle on the first award", () => expect(dailyBadgeSubtitle(1)).toBeUndefined());
+  it("names the lap count as the subtitle on repeats", () => {
+    expect(dailyBadgeSubtitle(3)).toBe("Lần thứ 3");
+    expect(dailyBadgeSubtitle(30)).toBe("Lần thứ 30");
+  });
 });
 
 describe("dailyBadgeBlurb", () => {

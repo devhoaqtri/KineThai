@@ -16,7 +16,12 @@ import { useTrackRotation } from "../hooks/useTrackRotation";
 import { useViewHistory } from "../hooks/useViewHistory";
 import { useLevelProgress } from "../hooks/useLevelProgress";
 import { useDailyGoal } from "../hooks/useDailyGoal";
-import { dailyBadgeBlurb, dailyBadgeTitle, dailyTier } from "../lib/streak-tiers";
+import {
+  dailyBadgeBlurb,
+  dailyBadgeSubtitle,
+  dailyBadgeTitle,
+  dailyTier,
+} from "../lib/streak-tiers";
 import { usePresence } from "@/hooks/use-presence";
 import { getActiveVocabWording } from "@/features/admin/api/wording.functions";
 import { FeedControls } from "./FeedControls";
@@ -429,6 +434,7 @@ export function VocabularyFeedPage({
                   unit: "từ",
                   count: daily.celebrating.times,
                   title: dailyBadgeTitle(daily.celebrating.goal, daily.celebrating.times),
+                  subtitle: dailyBadgeSubtitle(daily.celebrating.times),
                   blurb: dailyBadgeBlurb(daily.celebrating.goal, daily.celebrating.times),
                 }}
               />

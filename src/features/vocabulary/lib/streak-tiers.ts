@@ -10,7 +10,7 @@
  * been earned, and the goal's size picks its metal.
  *
  * Exports: StreakTier, streakTier, STREAK_TIER_LABEL, streakBlurb, dailyTier, repeatTier,
- *   dailyBadgeTitle, dailyBadgeBlurb
+ *   dailyBadgeTitle, dailyBadgeSubtitle, dailyBadgeBlurb
  * Depends on: nothing
  */
 
@@ -82,8 +82,13 @@ export function repeatTier(of: "daily" | "streak", base: number, times: number):
 }
 
 /** @param goal - Words in a day @param times - The count just reached @returns The headline */
-export function dailyBadgeTitle(goal: number, times: number): string {
-  return times === 1 ? `${goal} từ trong một ngày!` : `Lần thứ ${times}: ${goal} từ trong ngày!`;
+export function dailyBadgeTitle(goal: number, times = 1): string {
+  return times === 1 ? `${goal} từ trong một ngày!` : `${goal} từ trong ngày!`;
+}
+
+/** @param times - The count just reached @returns Lap-count subtitle on repeats, else undefined */
+export function dailyBadgeSubtitle(times: number): string | undefined {
+  return times > 1 ? `Lần thứ ${times}` : undefined;
 }
 
 /** @param goal - Words in a day @param times - The count just reached @returns The line under it */

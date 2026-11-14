@@ -41,6 +41,7 @@ export type CelebrationBadge = {
   tier: StreakTier;
   unit: string;
   title: string;
+  subtitle?: string;
   blurb: string;
   /** A repeatable badge's count, shown on the medal's corner. */
   count?: number;
@@ -268,6 +269,7 @@ export function StreakCelebration({
           <h2 className="vocab-streak-flash-title" id={`${uid}-title`}>
             {badge?.title ?? `Chuỗi ${days} ngày liên tiếp!`}
           </h2>
+          {badge?.subtitle ? <p className="vocab-streak-flash-subtitle">{badge.subtitle}</p> : null}
           <p className="vocab-streak-flash-caption" id={`${uid}-blurb`}>
             {badge?.blurb ?? streakBlurb(days)}
           </p>
