@@ -403,7 +403,7 @@
     {
       "id": "vi-score",
       "field": "leadVi",
-      "text": "Hiệp hai sắp hết, | /tỷ_số/ vẫn là một đều.",
+      "text": "Hiệp 2 sắp hết, | /tỷ_số/ vẫn là 1-1.",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     },
@@ -424,7 +424,7 @@
     {
       "id": "vi-male",
       "field": "leadVi",
-      "text": "Lớp múa chỉ có hai /nam_sinh/, | nên hai bạn nổi bật hẳn.",
+      "text": "Lớp múa chỉ có 2 /nam_sinh/, | nên 2 bạn nổi bật hẳn.",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     },
@@ -529,7 +529,7 @@
     {
       "id": "vi-specifically",
       "field": "leadVi",
-      "text": "Thầy dặn ôn cụ_thể chương ba, | bạn /đánh_dấu/ đúng phần đó.",
+      "text": "Thầy dặn ôn cụ_thể chương 3, | bạn /đánh_dấu/ đúng phần đó.",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     },
@@ -557,7 +557,7 @@
     {
       "id": "vi-treat",
       "field": "anticipateVi",
-      "text": "Hai bạn đã /thân_thiết/ chưa?",
+      "text": "2 bạn đã /thân_thiết/ chưa?",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     },
@@ -732,14 +732,14 @@
     {
       "id": "vi-fraction",
       "field": "leadVi",
-      "text": "Chia bánh pizza, | mình /tính_toán/ mỗi=người được ba phần tám.",
+      "text": "Chia bánh pizza, | mình /tính_toán/ mỗi=người được 3 phần 8.",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     },
     {
       "id": "vi-index",
       "field": "anticipateVi",
-      "text": "Bạn /tra_cứu/ được trang một trăm linh hai à?",
+      "text": "Bạn /tra_cứu/ được trang 102 à?",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     },
@@ -1040,7 +1040,7 @@
     {
       "id": "vi-recollection",
       "field": "leadVi",
-      "text": "Mở tập=ảnh cũ, | bạn /hồi_tưởng/ chuyến đi biển năm sáu=tuổi.",
+      "text": "Mở tập=ảnh cũ, | bạn /hồi_tưởng/ chuyến đi biển năm 6=tuổi.",
       "verdict": "ok",
       "note": "Reviewed complete Vietnamese clue and one meaningful two-syllable highlight; remaining English highlight review."
     },
@@ -1327,7 +1327,7 @@
     {
       "id": "vi-airline",
       "field": "leadVi",
-      "text": "Săn vé rẻ, | mình so giá | ba /hãng_bay/.",
+      "text": "Săn vé rẻ, | mình so giá | 3 /hãng_bay/.",
       "verdict": "ok",
       "note": "Whole sentence; flagged only by new bigrams once counts became digits (worded-number pass, 2026-11-14)."
     },
@@ -1348,21 +1348,21 @@
     {
       "id": "vi-elderly",
       "field": "defVi",
-      "text": "Đã=sống lâu, | thường từ | /sáu_mươi/ trở lên.",
+      "text": "Đã sống /lâu_năm/, | thường từ | 60 trở lên.",
       "verdict": "ok",
       "note": "Whole sentence; flagged only by new bigrams once counts became digits (worded-number pass, 2026-11-14)."
     },
     {
       "id": "vi-fairness",
       "field": "leadVi",
-      "text": "Chia bánh, bạn | cắt đều /tám_miếng/ bằng thước.",
+      "text": "Chia bánh, bạn | cắt đều /8_miếng/ bằng thước.",
       "verdict": "ok",
       "note": "Whole sentence; flagged only by new bigrams once counts became digits (worded-number pass, 2026-11-14)."
     },
     {
       "id": "vi-boy",
       "field": "leadVi",
-      "text": "Đội tuyển toán khối 10 | có ba /nam_sinh/ lanh lợi.",
+      "text": "Đội tuyển toán khối 10 | có 3 /nam_sinh/ lanh lợi.",
       "verdict": "ok",
       "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
     },
@@ -1370,6 +1370,118 @@
       "id": "vi-june",
       "field": "leadVi",
       "text": "Hoa phượng nở, | lớp 12 | ký /lưu_bút/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-unit",
+      "field": "leadVi",
+      "text": "Sách /tiếng_Anh/ | có 10 bài, | tôi ôn | xong bài 3.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-pick",
+      "field": "leadVi",
+      "text": "Vào hàng | /áo_phông/, | bạn ướm thử 3 mẫu.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-consider",
+      "field": "leadVi",
+      "text": "2 lời mời | thực_tập, | tôi lập | bảng /so_sánh/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-equal",
+      "field": "leadVi",
+      "text": "Chia tiền /ăn_uống/, | mình tính | mỗi=người 80.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-layer",
+      "field": "leadVi",
+      "text": "Trời /lạnh_giá/, | bạn mặc | 3 áo chồng lên.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-profession",
+      "field": "anticipateVi",
+      "text": "Học 6_năm /đại_học/ à?",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-panel",
+      "field": "leadVi",
+      "text": "Bảo vệ đồ án, | bạn đứng | trước 3 /thầy_cô/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-teens",
+      "field": "defVi",
+      "text": "Khoảng tuổi | từ /13/ | tới 19.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-justification",
+      "field": "leadVi",
+      "text": "Chị xin | thêm tiền_tiêu_vặt, đưa ra 3 /lý_do/.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-year",
+      "field": "defVi",
+      "text": "/Ước_chừng/ 12 tháng, | 365 ngày.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-bond",
+      "field": "defVi",
+      "text": "Mối liên hệ | /bền_chặt/ | giữa 2 hay nhiều người.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-kindergarten",
+      "field": "defVi",
+      "text": "Nơi /chăm_sóc/, | dạy trẻ | từ 3 tới 6 tuổi.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-procedure",
+      "field": "leadVi",
+      "text": "Làm /hộ_chiếu/, | em qua | 3 quầy liền.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-teens",
+      "field": "defVi",
+      "text": "/Độ_tuổi/ | từ 13 | tới 19.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-enthusiast",
+      "field": "leadVi",
+      "text": "Bạn /sưu_tầm/ tem | từ năm | lớp 5.",
+      "verdict": "ok",
+      "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
+    },
+    {
+      "id": "vi-vocational",
+      "field": "leadVi",
+      "text": "Học xong | lớp 9, em vào /trường_nghề/ sửa xe.",
       "verdict": "ok",
       "note": "Whole sentence; flagged only by new bigrams once counts became digits (number review at /admin/numbers, 2026-11-14)."
     }
