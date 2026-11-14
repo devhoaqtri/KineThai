@@ -40,7 +40,7 @@ import { DeckLocaleContext } from "../lib/deck-locale";
 import type { SafeInsets } from "../lib/export-presets";
 import type { CardStill } from "../lib/export-layout";
 import { grammarRows } from "../lib/grammar";
-import { posLabelVi } from "../lib/i18n";
+import { posLabelEn, posLabelVi } from "../lib/i18n";
 import { choosePresentation } from "../lib/presets";
 import {
   PRONUNCIATION_FONT,
@@ -189,7 +189,8 @@ export function CarouselFramePage() {
       word.meaningVi ?? "",
       word.defVi,
       word.ipa ?? "",
-      // The meaning panel says the word type in Vietnamese beside the gloss.
+      // Both the English label beside the phonetic and the Vietnamese tag beside the gloss.
+      word.pos ? posLabelEn(word.pos) : "",
       word.pos ? posLabelVi(word.pos) : "",
       ...word.usage.map((example) => example.en),
       ...FIXED_TEXT,
@@ -202,10 +203,15 @@ export function CarouselFramePage() {
       // The rows, not word.grammar: their labels come from the app's own tables.
       JSON.stringify(grammarParts),
     ];
-    // The pronunciation line is the transcription alone (the word type moved to the
-    // meaning). Only what this face draws is asked of it: a kana reading is the CJK
-    // face's, and empty text would ask for the family's whole weight range instead.
-    const pronunciation = pronunciationText(word.ipa ?? "");
+    // Only what PRONUNCIATION_FONT draws is asked of it: a kana reading is the CJK
+    // face's, while the Latin "· verb" / "· noun" suffix belongs to PRONUNCIATION_FONT.
+    const rawPronunciation = [
+      word.ipa ?? "",
+      word.pos ? `${word.ipa ? "· " : ""}${posLabelEn(word.pos)}` : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+    const pronunciation = pronunciationText(rawPronunciation);
     Promise.all([
       ...(pronunciation ? [loadFontStylesheet(PRONUNCIATION_FONT, pronunciation)] : []),
       ...(cjkFont ? [loadFontStylesheet(cjkFont)] : []),

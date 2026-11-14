@@ -9,7 +9,7 @@ import type { VocabularyWord } from "../lib/schema";
 import type { LearningStage } from "../lib/stages";
 import { VOCAB_LINE_SPACING_SCALE } from "../lib/presets";
 import { pickBurstVariant } from "../lib/burst-variants";
-import { posLabelVi } from "../lib/i18n";
+import { posLabelEn, posLabelVi } from "../lib/i18n";
 import { ANSWER_HEAD_PX, allocateAnswer, type AnswerAllocation } from "../lib/answer-allocation";
 import { FilledUsage, MarkedText } from "./MarkedText";
 import { RevealBurst } from "./RevealBurst";
@@ -617,14 +617,20 @@ export function VocabularyStage({
             {shareFloat && (
               <span className="vocab-reveal-share-float" aria-hidden="true" style={shareFloat} />
             )}
-            {/* The word type is said in Vietnamese beside the meaning below, so this line
-                is the pronunciation alone. */}
-            {word.ipa && (
+            {/* Show the English word type next to the phonetic while keeping the Vietnamese
+                pill beside the gloss below. */}
+            {(word.ipa || word.pos) && (
               <p
                 className="vocab-pronunciation"
                 lang={stage.lang === "ja" || stage.lang === "ko" ? stage.lang : "en"}
               >
                 {word.ipa}
+                {word.pos && (
+                  <span>
+                    {word.ipa ? " · " : ""}
+                    {posLabelEn(word.pos)}
+                  </span>
+                )}
               </p>
             )}
             {/* The gloss, not the definition. `defVi` is written to work as a CLUE

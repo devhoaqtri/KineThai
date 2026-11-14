@@ -58,7 +58,7 @@ export const addAmbientTrack = createServerFn({ method: "POST" })
   .middleware([requireAdminAccess])
   .inputValidator(addSchema.parse)
   .handler(async ({ context, data: input }) => {
-    requireAdminContext({ authUserId: context.userId });
+    await requireAdminContext({ authUserId: context.userId });
     const table = await tracksTable();
     // Auto-assign sort_order as max + 1
     const { data: existing } = await table
@@ -84,7 +84,7 @@ export const deleteAmbientTrack = createServerFn({ method: "POST" })
   .middleware([requireAdminAccess])
   .inputValidator(deleteSchema.parse)
   .handler(async ({ context, data: input }) => {
-    requireAdminContext({ authUserId: context.userId });
+    await requireAdminContext({ authUserId: context.userId });
     const table = await tracksTable();
     const { error } = await table.delete().eq("id", input.id);
     if (error) throw new Error(error.message);

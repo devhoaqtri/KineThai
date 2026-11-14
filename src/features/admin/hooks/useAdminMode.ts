@@ -8,14 +8,15 @@
 import { useMemo } from "react";
 import { isDemoSession } from "@/features/session";
 import { parseAdminRange, type AdminRangePreset } from "../lib/date-range";
+import { isDemoAdminEnabled } from "../lib/demo-admin-flag";
 import type { AdminMode } from "../api/queries";
 
 /**
- * Demo when local demo session is active; otherwise live.
+ * Demo when local demo admin session is active in dev; otherwise live.
  * @returns admin mode
  */
 export function useAdminMode(): AdminMode {
-  return isDemoSession() ? "demo" : "live";
+  return isDemoSession() && isDemoAdminEnabled() ? "demo" : "live";
 }
 
 /**

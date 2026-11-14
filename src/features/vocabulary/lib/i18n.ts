@@ -9,8 +9,8 @@
  * label as a fallback rather than rendering a blank or an id.
  *
  * Exports: TOPIC_LABELS_VI, THEME_LABELS_VI, STYLE_LABELS_VI, DOUYIN_STYLE_LABELS_VI,
- *   POS_LABELS_VI, topicLabelVi, themeLabelVi, styleLabelVi, douyinStyleLabelVi,
- *   posLabelVi
+ *   POS_LABELS_VI, POS_LABELS_EN, topicLabelVi, themeLabelVi, styleLabelVi,
+ *   douyinStyleLabelVi, posLabelVi, posLabelEn
  * Depends on: none (leaf module)
  */
 
@@ -107,9 +107,30 @@ export const POS_LABELS_VI: Record<string, string> = {
   prep: "giới từ",
   preposition: "giới từ",
   conj: "liên từ",
+  conjunction: "liên từ",
   pron: "đại từ",
   pronoun: "đại từ",
   phrase: "cụm từ",
+};
+
+/**
+ * Catalog part-of-speech code → full English grammar label ("adj" → "adjective").
+ */
+export const POS_LABELS_EN: Record<string, string> = {
+  adj: "adjective",
+  adjective: "adjective",
+  adv: "adverb",
+  adverb: "adverb",
+  noun: "noun",
+  v: "verb",
+  verb: "verb",
+  prep: "preposition",
+  preposition: "preposition",
+  conj: "conjunction",
+  conjunction: "conjunction",
+  pron: "pronoun",
+  pronoun: "pronoun",
+  phrase: "phrase",
 };
 
 /**
@@ -161,4 +182,13 @@ export function douyinStyleLabelVi(id: string, fallback: string): string {
  */
 export function posLabelVi(pos: string): string {
   return POS_LABELS_VI[pos.toLowerCase()] ?? pos;
+}
+
+/**
+ * Full English part-of-speech label, falling back to the stored code when unknown.
+ * @param pos - Catalog part-of-speech code
+ * @returns Display label
+ */
+export function posLabelEn(pos: string): string {
+  return POS_LABELS_EN[pos.toLowerCase()] ?? pos;
 }

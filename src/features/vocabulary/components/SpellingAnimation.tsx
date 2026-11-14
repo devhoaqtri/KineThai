@@ -119,8 +119,17 @@ export function SpellingAnimation({
     const host = hostRef.current;
     const row = wordRef.current;
     if (!host || !row) return;
+    let cancelled = false;
     const measure = () => {
-      const available = host.clientWidth * SPELLING_FIT_GUARD;
+      if (cancelled) return;
+      // Subtract the host's own horizontal padding so the fitted row stays inside the
+      // content box and leaves room on both sides for first/last-letter handwriting
+      // swashes before .vocab-card's overflow: hidden clips them.
+      const hostStyle = getComputedStyle(host);
+      const padX =
+        (Number.parseFloat(hostStyle.paddingLeft) || 0) +
+        (Number.parseFloat(hostStyle.paddingRight) || 0);
+      const available = Math.max(0, host.clientWidth - padX) * SPELLING_FIT_GUARD;
       row.style.fontSize = `${SPELLING_NOMINAL_FONT_SIZE}px`;
       const natural = row.offsetWidth;
       if (!natural || !available) {
@@ -141,7 +150,17 @@ export function SpellingAnimation({
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(host);
-    return () => observer.disconnect();
+    // Handwriting faces warm up without blocking the stream, so one can finish
+    // loading after this coda mounts; re-fit when it arrives because a script face
+    // is often wider than the sans-serif fallback.
+    const fonts = typeof document !== "undefined" ? document.fonts : undefined;
+    fonts?.addEventListener?.("loadingdone", measure);
+    void fonts?.ready.then(measure);
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      fonts?.removeEventListener?.("loadingdone", measure);
+    };
   }, [word]);
 
   const containerVariants: Variants = {

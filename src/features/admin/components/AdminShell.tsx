@@ -6,12 +6,15 @@
  * Depends on: outlet, DateRangeBar, LiveIndicator, critical error badge
  */
 
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { Link, Outlet, useRouter, useRouterState } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Lock } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DateRangeBar } from "./DateRangeBar";
 import { LiveIndicator } from "./LiveIndicator";
 import { useAdminMode, useAdminSearchRange } from "../hooks/useAdminMode";
+import { adminKeys } from "../api/keys";
+import { lockAdminSession } from "../api/pin.functions";
 import {
   adminErrorsQueryOptions,
   adminHealthQueryOptions,
@@ -50,6 +53,8 @@ type AdminSearch = {
  * @returns admin chrome with outlet
  */
 export function AdminShell(): React.ReactElement {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const search = useRouterState({
     select: (s) => (s.location.search ?? {}) as AdminSearch,
@@ -65,6 +70,12 @@ export function AdminShell(): React.ReactElement {
   const sse = useAdminSse(mode);
   const [lastUpdatedAt] = useState(() => Date.now());
   const updatedAt = healthQuery.dataUpdatedAt || lastUpdatedAt;
+
+  async function handleLock() {
+    await lockAdminSession();
+    queryClient.removeQueries({ queryKey: adminKeys.all });
+    await router.invalidate();
+  }
 
   const criticalCount = useMemo(
     () =>
@@ -118,9 +129,20 @@ export function AdminShell(): React.ReactElement {
         <nav className="flex flex-col gap-1" aria-label="Admin sections">
           {navLinks(false)}
         </nav>
-        <Link to="/feed" className="mt-auto text-xs text-muted-foreground hover:underline">
-          ← Back to app
-        </Link>
+        <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+          <Link to="/feed" className="text-xs text-muted-foreground hover:underline">
+            ← Back to app
+          </Link>
+          <button
+            type="button"
+            onClick={() => void handleLock()}
+            className="inline-flex items-center gap-1 rounded px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+            title="Lock admin board"
+          >
+            <Lock className="size-3" aria-hidden="true" />
+            Lock
+          </button>
+        </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <nav
@@ -131,7 +153,18 @@ export function AdminShell(): React.ReactElement {
         </nav>
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3 md:px-6">
           <DateRangeBar preset={preset} from={from} to={to} basePath={pathname} />
-          <LiveIndicator lastUpdatedAt={updatedAt} sseConnected={sse.connected} />
+          <div className="flex items-center gap-3">
+            <LiveIndicator lastUpdatedAt={updatedAt} sseConnected={sse.connected} />
+            <button
+              type="button"
+              onClick={() => void handleLock()}
+              className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+              title="Lock admin board"
+            >
+              <Lock className="size-3" aria-hidden="true" />
+              Lock
+            </button>
+          </div>
         </header>
         <main className="flex-1 overflow-auto px-4 py-5 md:px-6">
           <Outlet />

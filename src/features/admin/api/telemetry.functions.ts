@@ -7,11 +7,10 @@
  */
 
 import { createServerFn } from "@tanstack/react-start";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { backfillTelemetryFromSources } from "../lib/backfill";
 import { buildHealthSnapshot } from "../lib/health";
-import { requireAdmin } from "../lib/admin-access";
+import { requireAdmin, requireAdminAccess } from "../lib/admin-access";
 import { requireAdminContext } from "../lib/require-admin";
 import {
   listDailyRollups,
@@ -273,7 +272,7 @@ function summarizeDemoSessions(from: string, to: string): SessionHealthSummary {
  * @returns server function handle
  */
 export const runAdminBackfill = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAdminAccess])
   .handler(async ({ context }) => {
     const actor = await requireAdminContext({ authUserId: context.userId });
     await logAdminAccess({
@@ -292,7 +291,7 @@ export const runAdminBackfill = createServerFn({ method: "POST" })
  * @returns server function handle
  */
 export const updateLiveErrorStatus = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAdminAccess])
   .inputValidator((d: unknown) =>
     z
       .object({

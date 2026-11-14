@@ -9,6 +9,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { emitTelemetryEvent } from "../lib/emit";
+import { requireAdminAccess } from "../lib/admin-access";
 import { AdminForbiddenError, requireAdminContext } from "../lib/require-admin";
 import { updateErrorStatus } from "./telemetry.core";
 
@@ -54,7 +55,7 @@ export const reportAdminError = createServerFn({ method: "POST" })
  * @returns server function handle
  */
 export const updateAdminErrorStatus = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAdminAccess])
   .inputValidator((d: { id: string; status: "new" | "acknowledged" | "resolved" }) =>
     z
       .object({

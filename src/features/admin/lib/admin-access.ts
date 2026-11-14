@@ -35,9 +35,14 @@ export const requireAdminAccess = createMiddleware({ type: "function" })
     }
     return next({ headers });
   })
-  // Server: resolve the acting user from the demo header or a Supabase bearer.
+  // Server: resolve the acting user from the signed PIN cookie, demo header, or Supabase bearer.
   .server(async ({ next }) => {
     const request = getRequest();
+
+    const { ADMIN_PIN_ACTOR_ID, hasValidAdminPinCookie } = await import("./admin-pin.server");
+    if (await hasValidAdminPinCookie(request)) {
+      return next({ context: { userId: ADMIN_PIN_ACTOR_ID } });
+    }
 
     if (request?.headers?.get(DEMO_HEADER) === "1" && isDemoAdminEnabled()) {
       return next({ context: { userId: DEMO_AUTH_USER_ID } });
@@ -46,7 +51,7 @@ export const requireAdminAccess = createMiddleware({ type: "function" })
     const authHeader = request?.headers?.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       throw new Error(
-        "Unauthorized: sign in, or start a demo session, before editing admin settings.",
+        "Unauthorized: unlock /admin with the PIN, sign in, or start a demo session.",
       );
     }
 

@@ -13,7 +13,7 @@
 
 import { useEffect, useState } from "react";
 import { isDemoSession } from "@/features/session";
-import { isDemoAdminEnabled } from "../lib/require-admin";
+import { isDemoAdminEnabled } from "../lib/demo-admin-flag";
 
 /**
  * Resolve admin status once per mount.

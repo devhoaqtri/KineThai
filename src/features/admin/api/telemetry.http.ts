@@ -19,6 +19,10 @@ import { APP_ID, type ErrorReportStatus, type TelemetryEventType } from "../type
 import { readDemoTelemetry } from "../lib/demo-store";
 
 async function resolveActor(request: Request) {
+  const { ADMIN_PIN_ACTOR_ID, hasValidAdminPinCookie } = await import("../lib/admin-pin.server");
+  if (await hasValidAdminPinCookie(request)) {
+    return requireAdminContext({ authUserId: ADMIN_PIN_ACTOR_ID, pinVerified: true });
+  }
   const url = new URL(request.url);
   const demoHeader = request.headers.get("x-kinetic-demo-admin");
   if (demoHeader === "1" || url.searchParams.get("demo") === "1") {

@@ -1,11 +1,14 @@
 /**
- * Server-side admin gate: profile.is_admin, ADMIN_USER_IDS allowlist, or demo flag.
+ * Server-side admin gate: signed PIN session, profile.is_admin, ADMIN_USER_IDS allowlist, or demo flag.
  *
  * Exports: isDemoAdminEnabled, requireAdminContext, AdminActor, AdminForbiddenError
- * Depends on: session demo ids, supabase admin client, getRequest headers
+ * Depends on: session demo ids, demo-admin-flag, admin-pin.server (lazy), supabase admin client (lazy)
  */
 
 import { DEMO_AUTH_USER_ID } from "@/features/session/demo-session";
+import { isDemoAdminEnabled } from "./demo-admin-flag";
+
+export { isDemoAdminEnabled };
 
 export class AdminForbiddenError extends Error {
   status = 403 as const;
@@ -21,48 +24,21 @@ export type AdminActor = {
 };
 
 /**
- * Whether demo sessions may access /admin (VITE_DEMO_ADMIN=1|true under `npm run dev`).
- *
- * A demo admin has no login behind it: the browser only sends a header saying so.
- * `.env` is committed and Vite loads it in every mode, so the flag alone would reach
- * the hosted build and make that header an admin key. A production build never
- * honours it, whatever the environment says.
- * @returns true when demo admin is enabled
- */
-export function isDemoAdminEnabled(): boolean {
-  if (!import.meta.env.DEV) return false;
-  const raw =
-    (typeof import.meta !== "undefined" &&
-      (import.meta as ImportMeta & { env?: Record<string, string> }).env?.VITE_DEMO_ADMIN) ||
-    process.env.VITE_DEMO_ADMIN ||
-    "";
-  return raw === "1" || raw.toLowerCase() === "true";
-}
-
-/**
- * Parse comma-separated ADMIN_USER_IDS bootstrap allowlist.
- * @returns Set of auth user UUIDs
- */
-function adminAllowlist(): Set<string> {
-  const raw = process.env.ADMIN_USER_IDS ?? "";
-  return new Set(
-    raw
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean),
-  );
-}
-
-/**
- * Resolve an admin actor from Authorization bearer or demo header.
+ * Resolve an admin actor from a verified PIN session, Authorization bearer, or demo header.
  * Throws AdminForbiddenError when not admin.
- * @param options - optional auth user id already resolved
+ * @param options - optional auth user id, demo flag, or server-verified PIN flag
  * @returns Admin actor context
  */
 export async function requireAdminContext(options?: {
   authUserId?: string | null;
   isDemo?: boolean;
+  pinVerified?: boolean;
 }): Promise<AdminActor> {
+  if (options?.pinVerified) {
+    const { ADMIN_PIN_ACTOR_ID } = await import("./admin-pin.server");
+    return { authUserId: options.authUserId ?? ADMIN_PIN_ACTOR_ID, mode: "live" };
+  }
+
   if (options?.isDemo || options?.authUserId === DEMO_AUTH_USER_ID) {
     if (!isDemoAdminEnabled()) {
       throw new AdminForbiddenError("Demo admin disabled (set VITE_DEMO_ADMIN=1)");
@@ -75,7 +51,22 @@ export async function requireAdminContext(options?: {
     throw new AdminForbiddenError("Unauthorized");
   }
 
-  if (adminAllowlist().has(authUserId)) {
+  const { ADMIN_PIN_ACTOR_ID, hasValidAdminPinCookie } = await import("./admin-pin.server");
+  if (authUserId === ADMIN_PIN_ACTOR_ID) {
+    if (await hasValidAdminPinCookie()) {
+      return { authUserId: ADMIN_PIN_ACTOR_ID, mode: "live" };
+    }
+    throw new AdminForbiddenError("Admin PIN required");
+  }
+
+  const allowlistRaw = process.env.ADMIN_USER_IDS ?? "";
+  const allowlist = new Set(
+    allowlistRaw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+  if (allowlist.has(authUserId)) {
     return { authUserId, mode: "live" };
   }
 
