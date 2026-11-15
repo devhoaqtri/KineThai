@@ -18,14 +18,26 @@
 import { useContext } from "react";
 import { Pause, Settings, Shuffle, VolumeX } from "lucide-react";
 import { DeckLocaleContext } from "../lib/deck-locale";
+import { trackCeiling, tracksFor } from "../lib/difficulty";
 import { siteBrand } from "../lib/target-language";
+import type { VocabularyLevel } from "../lib/schema";
 
 /**
  * @param hidden - true while the intro's badge is up, so the bar can slide in afterwards
  *   rather than being there from the first frame
+ * @param level - the showcased word's level, so the subtitle mirrors the feed's track line
  */
-export function ShowcaseChrome({ hidden }: { hidden: boolean }) {
-  const brand = siteBrand(useContext(DeckLocaleContext));
+export function ShowcaseChrome({ hidden, level }: { hidden: boolean; level?: VocabularyLevel }) {
+  const locale = useContext(DeckLocaleContext);
+  const brand = siteBrand(locale);
+  const tracks = tracksFor(locale);
+  const track = level
+    ? (tracks.find((t) => t.levels.length === 1 && t.levels[0] === level) ??
+      tracks.find((t) => t.sampleLevel === level) ??
+      tracks.find((t) => trackCeiling(t) === level) ??
+      tracks.find((t) => t.levels.includes(level)))
+    : undefined;
+  const filter = track ? { emoji: track.emoji, label: track.label } : { emoji: "🤯", label: "tất cả" };
   return (
     <header className="vocab-toolbar" data-showcase-chrome="" data-hidden={hidden || undefined}>
       <div className="vocab-toolbar-row">
@@ -37,7 +49,7 @@ export function ShowcaseChrome({ hidden }: { hidden: boolean }) {
             <span>{brand.accent}</span>
           </div>
           <div className="vocab-showcase-filter">
-            <span aria-hidden="true">🤯</span> tất cả
+            <span aria-hidden="true">{filter.emoji}</span> {filter.label}
           </div>
         </div>
         <div className="vocab-player-controls">

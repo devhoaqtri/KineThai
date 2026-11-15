@@ -207,7 +207,10 @@ export function ShowcasePage() {
           {/* The chrome a reader taps is drawn here as scenery instead: a clip cannot be
               tapped, and reusing the live toolbar would drag its dropdowns, sheets and
               focus handling into a surface that has no one to serve them. */}
-          <ShowcaseChrome hidden={phase === "loading" || phase === "ready" || phase === "intro"} />
+          <ShowcaseChrome
+            hidden={phase === "loading" || phase === "ready" || phase === "intro"}
+            level={word.level}
+          />
           <VocabularyCard
             entry={entry}
             presentation={presentation}

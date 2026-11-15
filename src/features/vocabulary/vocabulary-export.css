@@ -2110,9 +2110,9 @@ body:has(.vocab-intro) .vocab-resume {
   --showcase-band: max(0px, calc((100dvh - 125vw) / 2));
   --vocab-chrome-side: 16px;
   /* Shifted upwards from the 4:5 canvas centre: top chrome sits 40px higher (into the
-     fading upper band where TikTok has less UI) and the bottom progress sits 20px higher
+     fading upper band where TikTok has less UI) and the bottom progress sits 10px higher
      (above TikTok's taller caption/audio overlay). The text band derives from both, so
-     the content viewport expands by the 20px difference. */
+     the content viewport expands by the 30px difference. */
   --vocab-safe-top: calc(var(--showcase-band) - 26px);
   --vocab-rec-top: calc(var(--showcase-band) - 6px);
   /* One row up there, not the recorded bar's two (its filter line is hidden in this frame):
@@ -2122,7 +2122,7 @@ body:has(.vocab-intro) .vocab-resume {
   --vocab-rec-top-h: calc((42px * 1.12 + 2 * 0.55 * 42px) * var(--hook-dock-scale));
   /* No action row in this frame, so the progress row drops to the foot of the canvas: the
      row and its gap take no room, and only the inset is left under the progress. */
-  --vocab-chrome-inset: calc(var(--showcase-band) + 36px);
+  --vocab-chrome-inset: calc(var(--showcase-band) + 26px);
   --vocab-chrome-bar: 0px;
   --vocab-chrome-gap: 0px;
   /* Restated from vocabulary.css, where they are derived once at the root from the default

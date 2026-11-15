@@ -182,6 +182,8 @@ const outroStyle = styleFlag("outro-style", SHOWCASE_CONTRACT.outroVariants);
 const showcaseLook = styleFlag("look", BADGE_ROTATION);
 const fadeFrom = flag("fade-from", "");
 const fadeTo = flag("fade-to", "");
+const saturation = Number(flag("saturation", "1.2"));
+const contrast = Number(flag("contrast", "1.04"));
 // The safe area comes from the EXPORT preset rather than from numbers invented here, so
 // the frame the feed is recorded into and the frame Export Studio draws agree by
 // construction. The margins are fractions of the frame, so they carry to any capture size.
@@ -537,8 +539,20 @@ async function main() {
   }
 
   const deadline = Date.now() + maxSeconds * 1000;
+  let hintFirstAtMs: number | null = null;
+  let hintLastAtMs: number | null = null;
   for (;;) {
     if (await isFinished()) break;
+    if (mode === "showcase") {
+      const onHint = await cdp.evaluate<boolean>(
+        `!!document.querySelector('.vocab-card')?.textContent?.toLowerCase().includes('bắt đầu bằng')`,
+      );
+      if (onHint) {
+        const now = Date.now() - startedAt;
+        if (hintFirstAtMs === null) hintFirstAtMs = now;
+        hintLastAtMs = now;
+      }
+    }
     if (Date.now() > deadline) {
       console.warn(`! never finished within ${maxSeconds}s; using what was captured`);
       break;
@@ -656,11 +670,10 @@ async function main() {
       "anullsrc=channel_layout=stereo:sample_rate=48000",
       "-shortest",
       "-vf",
-      // Frames arrive as lossless sRGB PNGs (full-range RGB24). Convert directly to BT.709
-      // TV-range YUV420p so the color matrix matches the bt709 stream tags below (the old
-      // JPEG path handed ffmpeg BT.601 YUV and tagged it BT.709 without converting, which
-      // shifted and washed out saturated colors).
-      `fps=${fps},scale=${width}:${height}:flags=lanczos:out_color_matrix=bt709:out_range=tv,format=yuv420p`,
+      // Frames arrive as lossless sRGB PNGs (full-range RGB24). Boost saturation/contrast
+      // slightly so YUV420p chroma subsampling + platform re-encoding keep the feed's punch,
+      // then convert directly to BT.709 TV-range YUV420p matching the bt709 stream tags.
+      `fps=${fps},eq=saturation=${saturation}:contrast=${contrast},scale=${width}:${height}:flags=lanczos:out_color_matrix=bt709:out_range=tv,format=yuv420p`,
       "-c:v",
       "libx264",
       "-preset",
@@ -694,6 +707,19 @@ async function main() {
   );
   if (ffmpeg.status !== 0)
     throw new Error(`ffmpeg failed:\n${ffmpeg.stderr?.toString().slice(-1500)}`);
+  const firstMs = captured[0]!.atMs;
+  const lastMs = captured[captured.length - 1]!.atMs;
+  const totalMs = Math.max(1, lastMs - firstMs);
+  const hintFraction =
+    hintFirstAtMs !== null && hintLastAtMs !== null
+      ? Math.min(0.85, Math.max(0.15, ((hintFirstAtMs + hintLastAtMs) / 2 - firstMs) / totalMs))
+      : undefined;
+  if (code || hintFraction !== undefined) {
+    writeFileSync(
+      `${out}.meta.json`,
+      JSON.stringify({ shareCode: code ?? null, hintFraction: hintFraction ?? null }, null, 2),
+    );
+  }
   console.log(`✓ ${subject} → ${out}`);
 }
 
