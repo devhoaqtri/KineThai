@@ -5924,6 +5924,11 @@
   .vocab-onboard[data-landscape] .vocab-onboard-rung[data-on] .vocab-onboard-label {
     font-size: 13px;
   }
+  /* The rung's column is what gets tight, so it is measured, not the viewport: the
+     same phone width holds more or fewer rungs. */
+  .vocab-onboard[data-landscape] .vocab-onboard-rung {
+    container: onboard-rung / inline-size;
+  }
   /* Chip and word count stacked, so a narrow column never packs them side by side. */
   .vocab-onboard[data-landscape] .vocab-onboard-meta {
     flex-direction: column;
@@ -6079,6 +6084,15 @@
 }
 .vocab-onboard[data-entrance] .vocab-onboard-foot {
   animation: vocab-enter-rise var(--enter-foot-dur) var(--ease-out) var(--enter-foot) backwards;
+}
+/* Tight landscape (a rung column of 72px or less: phones up to about 740px wide with
+   ten rungs). The names wrap to two or three lines there and the emoji, chip and word
+   count crowd the neighbouring rungs, so the emoji and the count step aside and each
+   name keeps only its CEFR chip. Measured at 568, 667 and 740 wide; 812 (78px) has room. */
+@container onboard-rung (max-width: 72px) {
+  .vocab-onboard[data-landscape] :is(.vocab-onboard-emoji, .vocab-onboard-count) {
+    display: none;
+  }
 }
 @media (orientation: landscape) {
   /* The spine runs across in landscape, so it draws from the left. */
