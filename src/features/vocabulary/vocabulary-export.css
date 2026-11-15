@@ -2111,6 +2111,72 @@ body:has(.vocab-intro) .vocab-resume {
   --vocab-chrome-inset: 18px;
   --vocab-chrome-bar: 36px;
   --vocab-chrome-gap: 22px;
+  /* Where the opening question docks, and how small it gets there: on the title's row (the
+     recorded bar's top, which clears the lab's top fade), at about the title's height. */
+  --hook-dock-x: var(--vocab-chrome-side);
+  --hook-dock-y: var(--vocab-rec-top);
+  --hook-dock-scale: 0.36;
+}
+/* Only the page progress and the app's title stay: no transport icons, gear, filter line,
+   page label or action row. The top-left corner belongs to the docked question. */
+.vocab-showcase-stage[data-frame="4x5"]
+  :is(
+    .vocab-player-controls,
+    .vocab-corner-button,
+    .vocab-showcase-filter,
+    .vocab-stage-label,
+    .vocab-action-bar
+  ) {
+  display: none;
+}
+/* The intro keeps its veil, ring and confetti; its badge is the hook below instead. */
+.vocab-showcase-stage[data-frame="4x5"] .vocab-intro-badge {
+  visibility: hidden;
+}
+/* The opening question: in with the intro, full size and centred over the frame, then where
+   the intro's badge would pop away (1250ms) it shrinks into the top-left corner and stays.
+   The outer box moves and scales; the card inside plays the pop-in, so the two transforms
+   never fight. */
+.vocab-showcase-hook {
+  position: absolute;
+  z-index: 210;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  transform-origin: 0 0;
+  pointer-events: none;
+  font-family: "Inter", sans-serif;
+  animation: vocab-showcase-hook-dock 640ms cubic-bezier(0.65, 0, 0.35, 1) 1250ms forwards;
+}
+@keyframes vocab-showcase-hook-dock {
+  from {
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    scale: 1;
+  }
+  to {
+    left: var(--hook-dock-x);
+    top: var(--hook-dock-y);
+    translate: 0 0;
+    scale: var(--hook-dock-scale);
+  }
+}
+.vocab-showcase-hook-card {
+  padding: 24px 40px;
+  border-radius: 30px;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: #10121a;
+  background: linear-gradient(180deg, #ffffff, #f2f4fb);
+  box-shadow:
+    0 30px 80px #00000070,
+    0 3px 0 #ffffff inset,
+    0 0 0 1px #ffffff40;
+  animation: vocab-intro-badge-in 620ms var(--intro-ease) 200ms backwards;
 }
 /* A clip cannot be tapped, so the share tab is dead weight in the panel's corner. */
 .vocab-showcase .vocab-share-dock {

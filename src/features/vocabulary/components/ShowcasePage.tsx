@@ -213,6 +213,11 @@ export function ShowcasePage() {
           {phase === "intro" && (
             <ShowcaseIntro text={search.badge ?? WORD_HOOK} variant={variants.intro} />
           )}
+          {/* The 4:5 frame keeps its opening question on screen: it fills the frame as the
+              intro's badge would, then docks in the top-left corner for the whole word. */}
+          {search.frame === "4x5" && phase !== "loading" && phase !== "ready" && (
+            <ShowcaseHook text={search.badge ?? WORD_HOOK} />
+          )}
           {(phase === "outro" || phase === "done") && <ShowcaseOutro variant={variants.outro} />}
         </div>
       </main>
@@ -232,6 +237,18 @@ function ShowcaseIntro({ text, variant }: { text: string; variant: ShowcaseIntro
         ))}
       </div>
       <div className="vocab-intro-badge">{text}</div>
+    </div>
+  );
+}
+
+/**
+ * The opening question that stays (4:5 frame only). Markup only: vocabulary-export.css
+ * pops it in full size, then shrinks it into the top-left corner, where it stays.
+ */
+function ShowcaseHook({ text }: { text: string }) {
+  return (
+    <div className="vocab-showcase-hook" aria-hidden="true">
+      <div className="vocab-showcase-hook-card">{text}</div>
     </div>
   );
 }
