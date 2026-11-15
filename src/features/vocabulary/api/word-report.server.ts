@@ -19,6 +19,7 @@ import { reporterDigest } from "./reporter-digest.server";
 import { invalidateBlockedWordIds } from "./word-block.server";
 import { addWordReport } from "./word-report-store.server";
 import { callerKey } from "@/lib/rate-limit";
+import { classifyWriter } from "@/lib/bot-signals";
 
 const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
 
@@ -61,6 +62,8 @@ export async function wordReportPostResponse(request: Request): Promise<Response
       reasons: parsed.data.reasons,
       stage: toReportStage(parsed.data.stage ?? null),
       reporter: reporterDigest(caller, word.id),
+      // Recorded, not judged: a report the middleware let through still counts.
+      botSignals: classifyWriter(request).shadow.join(",") || null,
     });
   } catch {
     return refuse(503, "UNAVAILABLE", "Could not save the report. Please retry.");

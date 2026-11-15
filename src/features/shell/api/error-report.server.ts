@@ -14,6 +14,7 @@
 import { appendFile, mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { errorReportSchema, type ErrorReport } from "@/lib/error-report";
+import { classifyWriter } from "@/lib/bot-signals";
 
 export const READER_ERROR_KIND = "reader_error";
 const APP_ID = "kinetic-canvas";
@@ -28,10 +29,12 @@ function refuse(status: number, code: string, error: string): Response {
 function toMetadata(
   report: ErrorReport,
   host: string,
+  botSignals: string | null,
 ): Record<string, string | number | boolean | null> {
   return {
     kind: READER_ERROR_KIND,
     host,
+    bot_signals: botSignals,
     case_id: report.caseId,
     error_name: report.errorName,
     error_message: report.message,
@@ -54,8 +57,12 @@ function toMetadata(
   };
 }
 
-async function storeReport(report: ErrorReport, host: string): Promise<void> {
-  const metadata = toMetadata(report, host);
+async function storeReport(
+  report: ErrorReport,
+  host: string,
+  botSignals: string | null,
+): Promise<void> {
+  const metadata = toMetadata(report, host, botSignals);
   const message = `Reader error report: ${report.caseId} — ${report.message}`.slice(0, 2000);
   if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -93,7 +100,7 @@ export async function errorReportPostResponse(request: Request): Promise<Respons
   if (!parsed.success) return refuse(400, "INVALID_REQUEST", "Invalid report");
   const host = (request.headers.get("host") ?? new URL(request.url).host).slice(0, 120);
   try {
-    await storeReport(parsed.data, host);
+    await storeReport(parsed.data, host, classifyWriter(request).shadow.join(",") || null);
   } catch {
     return refuse(503, "UNAVAILABLE", "Could not save the report. Please retry.");
   }

@@ -45,6 +45,8 @@ const APP_ID = "kinetic-canvas";
 type NewReport = Pick<WordReport, "locale" | "wordId" | "word" | "reasons" | "stage"> & {
   /** Opaque per-word reporter key, or null when the caller could not be distinguished. */
   reporter: string | null;
+  /** Shadow bot signals on the request (lib/bot-signals), comma-joined; null when none. */
+  botSignals?: string | null;
 };
 
 /** A report as kept in the local file. The reporter key rides alongside. */
@@ -146,6 +148,7 @@ export async function addWordReport(report: NewReport): Promise<string> {
           reasons: report.reasons.join(","),
           stage: report.stage,
           reporter: report.reporter,
+          bot_signals: report.botSignals ?? null,
         },
       })
       .select("id")

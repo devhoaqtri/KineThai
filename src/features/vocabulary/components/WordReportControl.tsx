@@ -31,6 +31,7 @@ import {
   type ReportReasonId,
 } from "../lib/word-report";
 import { rememberReportedWord } from "../lib/reported-words";
+import { clientSignalHeaders } from "@/lib/client-signals";
 
 type Phase = "choosing" | "sending" | "sent" | "failed";
 
@@ -192,7 +193,7 @@ export function WordReportPanel({
     try {
       const response = await fetch("/api/public/word-report", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", ...clientSignalHeaders() },
         body: JSON.stringify({
           id: wordId,
           reasons: selected,

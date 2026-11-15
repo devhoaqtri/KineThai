@@ -11,8 +11,10 @@
  * browser.
  *
  * Exports: getSessionId, resetSessionId, reportVisitorEvent, markReportedOnce
- * Depends: none (browser localStorage + fetch/sendBeacon)
+ * Depends: ./client-signals (browser localStorage + fetch/sendBeacon)
  */
+
+import { isAutomatedBrowser } from "./client-signals";
 
 const STORAGE_KEY = "kinetic.session.id";
 const INGEST_PATH = "/api/public/telemetry";
@@ -76,6 +78,9 @@ export function markReportedOnce(key: string): boolean {
  */
 export function reportVisitorEvent(event: VisitorEventInput): void {
   if (typeof window === "undefined") return;
+  // A browser under automation (a test run, a recorder, a scraper as it comes) is not a
+  // visitor: it is not reported at all, so it never reaches a count (lib/bot-signals).
+  if (isAutomatedBrowser()) return;
   const sessionId = getSessionId();
   if (!sessionId) return;
 

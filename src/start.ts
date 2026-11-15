@@ -9,6 +9,7 @@ import {
   isLocalRequest,
 } from "./lib/bot-gate";
 import { pageGuard } from "./lib/page-guard";
+import { PUBLIC_WRITE_PATHS, classifyWriter, noteBotRefusal } from "./lib/bot-signals";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 
 /**
@@ -34,6 +35,16 @@ const rateLimitMiddleware = createMiddleware().server(async ({ next, request }) 
   // Tools and crawlers are turned away before they cost a token: an endpoint that hands
   // out word content only answers the app's own pages (see lib/bot-gate).
   if (WORD_DATA_PATHS.has(path) && !isBrowserRequest(request)) return browserOnlyResponse();
+  // A write that is certainly not our page in a reader's browser (a tool, another site, a
+  // browser under automation) is refused before it costs a token or lands in a table;
+  // weaker signals are only recorded by the handlers (lib/bot-signals).
+  if (PUBLIC_WRITE_PATHS.has(path) && request.method === "POST" && !isLocalRequest(request)) {
+    const verdict = classifyWriter(request);
+    if (verdict.reject) {
+      noteBotRefusal(path, verdict);
+      return browserOnlyResponse();
+    }
+  }
   const budget = RATE_LIMITS[path];
   if (!budget || isLocalRequest(request)) return next();
   const verdict = checkRateLimit(path, callerKey(request), budget);

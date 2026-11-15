@@ -17,6 +17,7 @@
 
 import { z } from "zod";
 import { APP_ID } from "../types/telemetry";
+import { classifyWriter } from "@/lib/bot-signals";
 
 /** Event types a browser is allowed to report about itself. */
 const VISITOR_EVENT_TYPES = ["page.loaded", "page.failed", "session.error"] as const;
@@ -98,6 +99,9 @@ export async function visitorTelemetryPostResponse(request: Request): Promise<Re
 
   const { sessionId, events } = parsed;
   const now = new Date().toISOString();
+  // Weak bot signals ride along on every row, so a dashboard can tell how much of a count
+  // looks automated; certain bots were already refused by the middleware (lib/bot-signals).
+  const botSignals = classifyWriter(request).shadow.join(",") || null;
 
   try {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -108,6 +112,7 @@ export async function visitorTelemetryPostResponse(request: Request): Promise<Re
         ...(event.metadata ?? {}),
       };
       if (event.message) metadata.message = event.message.slice(0, MAX_MESSAGE_LENGTH);
+      if (botSignals) metadata.bot_signals = botSignals;
       return {
         app_id: APP_ID,
         event_type: event.type,

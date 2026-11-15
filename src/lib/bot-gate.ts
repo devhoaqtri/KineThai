@@ -16,7 +16,7 @@
  * localhost by default) keep working. Plain-http requests without Fetch Metadata fall back to
  * a same-origin Referer, because browsers only send Fetch Metadata on secure origins.
  *
- * Exports: WORD_DATA_PATHS, isLocalRequest, isBrowserRequest, isAutomatedAgent,
+ * Exports: WORD_DATA_PATHS, isLocalRequest, isBrowserRequest, isAutomatedAgent, isToolAgent,
  *   browserOnlyResponse
  * Depends on: none (leaf module)
  */
@@ -30,6 +30,15 @@ export const WORD_DATA_PATHS: ReadonlySet<string> = new Set([
 // HTTP libraries, CLI tools, automation and anything that announces itself as a bot.
 const TOOL_AGENT =
   /curl|wget|httpie|python|aiohttp|httpx|urllib|requests|scrapy|go-http-client|okhttp|java\/|apache-httpclient|libwww|lwp|node-fetch|undici|axios|got\/|deno|bun\/|postman|insomnia|powershell|headless|phantomjs|selenium|puppeteer|playwright|\bbot\b|bot\/|spider|crawl|slurp|scrape|fetch\//i;
+
+/**
+ * Whether a user agent is not a browser: anything without a `Mozilla/5.0 ` prefix, or an HTTP
+ * library, CLI tool, automation driver or self-declared bot.
+ * @pure true
+ */
+export function isToolAgent(agent: string): boolean {
+  return !/^Mozilla\/5\.0 /.test(agent) || TOOL_AGENT.test(agent);
+}
 
 // `hoa.localhost` and its siblings are how a language other than English is reached locally
 // (resolveTarget reads the first label), and every browser resolves *.localhost to loopback.

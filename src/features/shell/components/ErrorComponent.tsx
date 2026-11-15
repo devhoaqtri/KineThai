@@ -27,6 +27,7 @@ import {
 } from "@/lib/error-report";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 import { isStaleChunkError, reloadOnceForStaleChunk } from "@/lib/stale-chunk";
+import { clientSignalHeaders } from "@/lib/client-signals";
 
 type Screen = { title: string; body: string };
 type SendPhase = "closed" | "review" | "sending" | "sent" | "failed";
@@ -146,7 +147,7 @@ export function ErrorComponent({ error, reset }: ErrorComponentProps) {
     try {
       const response = await fetch("/api/public/error-report", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", ...clientSignalHeaders() },
         body: JSON.stringify(report),
       });
       setPhase(response.ok ? "sent" : "failed");
