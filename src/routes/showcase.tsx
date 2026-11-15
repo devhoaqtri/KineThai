@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
 import { STYLE_IDS } from "@/features/vocabulary/lib/schema";
 import { SHOWCASE_CONTRACT } from "@/features/vocabulary/lib/showcase-contract";
+import { BADGE_ROTATION } from "@/features/vocabulary/lib/badge-variants";
 
 /**
  * A whole promo clip for one word: opening badge, the word in the app's chrome, end card.
@@ -43,6 +44,8 @@ const searchSchema = () =>
      * read sits on a 4:5 canvas across its middle, inside the lab's fading black bands.
      */
     frame: z.enum(["9x16", "4x5"]).optional(),
+    /** The 4:5 frame's opening question wears one of the feed badge's looks (badge-variants). */
+    look: z.enum(BADGE_ROTATION as unknown as [string, ...string[]]).optional(),
   });
 
 export const Route = createFileRoute("/showcase")({

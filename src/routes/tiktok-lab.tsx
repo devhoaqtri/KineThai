@@ -1,5 +1,6 @@
 import { createFileRoute, lazyRouteComponent, notFound } from "@tanstack/react-router";
 import { z } from "zod";
+import { BADGE_ROTATION } from "@/features/vocabulary/lib/badge-variants";
 
 /**
  * The TikTok upload layout, worked out live before it is recorded: a 9:16 phone frame with
@@ -21,6 +22,8 @@ const searchSchema = () =>
      */
     fadeFrom: z.number().min(0).max(100).optional(),
     fadeTo: z.number().min(0).max(160).optional(),
+    /** The opening question's look, one of the feed badge's (badge-variants). */
+    look: z.enum(BADGE_ROTATION as unknown as [string, ...string[]]).optional(),
     /** Show the band and canvas edges as guide lines. */
     guides: z.boolean().optional(),
   });

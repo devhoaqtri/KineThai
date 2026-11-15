@@ -27,6 +27,8 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { VocabularyCard } from "./VocabularyCard";
 import { ShowcaseChrome } from "./ShowcaseChrome";
+import { DemoBadge } from "./DemoBadge";
+import { DEMO_BADGE_VARIANT, type BadgeVariant } from "../lib/badge-variants";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { siteAddress } from "../lib/target-language";
 import { WORD_HOOK } from "../lib/first-visit";
@@ -42,6 +44,9 @@ import { useServedWord, type WordLookup } from "../hooks/useServedWord";
 import "../vocabulary.css";
 import "../vocabulary-export.css";
 import type { FeedEntry, Presentation } from "../types";
+
+/** The 4:5 frame's clue margins inside its band (its chrome is already outside it). */
+const FRAME_4X5_CLUE_INSETS = { top: 8, bottom: 8 } as const;
 
 /** How long to wait for a paint before declaring readiness anyway. */
 const READY_BACKSTOP_MS = 400;
@@ -94,6 +99,8 @@ export function ShowcasePage() {
     () => pickShowcaseVariants(search.seed, search.intro, search.outro),
     [search.seed, search.intro, search.outro],
   );
+
+  const look = (search.look ?? DEMO_BADGE_VARIANT) as BadgeVariant;
 
   const go = (next: ShowcasePhase) => {
     setLocalPhase(next);
@@ -209,14 +216,26 @@ export function ShowcasePage() {
             matching={0}
             canAdvance
             onAdvance={() => setLocalPhase("outro")}
+            // The 4:5 frame's clue band already ends short of the title row and the progress,
+            // so its clues may fill it rather than keep the feed's chrome margins.
+            clueInsets={search.frame === "4x5" ? FRAME_4X5_CLUE_INSETS : undefined}
           />
-          {phase === "intro" && (
+          {phase === "intro" && search.frame !== "4x5" && (
             <ShowcaseIntro text={search.badge ?? WORD_HOOK} variant={variants.intro} />
           )}
-          {/* The 4:5 frame keeps its opening question on screen: it fills the frame as the
-              intro's badge would, then docks in the top-left corner for the whole word. */}
+          {/* The 4:5 frame opens on the feed badge's own scene (veil, backdrop, aura, ring)
+              in the chosen look, its card replaced by the question below, which pops in
+              there, then docks in the top-left corner and stays for the whole word. */}
+          {phase === "intro" && search.frame === "4x5" && (
+            <DemoBadge
+              text={search.badge ?? WORD_HOOK}
+              durationMs={cssDuration("--intro-dur", 1980)}
+              variant={look}
+              contained
+            />
+          )}
           {search.frame === "4x5" && phase !== "loading" && phase !== "ready" && (
-            <ShowcaseHook text={search.badge ?? WORD_HOOK} />
+            <ShowcaseHook text={search.badge ?? WORD_HOOK} look={look} />
           )}
           {(phase === "outro" || phase === "done") && <ShowcaseOutro variant={variants.outro} />}
         </div>
@@ -242,13 +261,16 @@ function ShowcaseIntro({ text, variant }: { text: string; variant: ShowcaseIntro
 }
 
 /**
- * The opening question that stays (4:5 frame only). Markup only: vocabulary-export.css
- * pops it in full size, then shrinks it into the top-left corner, where it stays.
+ * The opening question that stays (4:5 frame only), in one of the feed badge's looks.
+ * Markup only: vocabulary-export.css pops it in full size, then shrinks it into the
+ * top-left corner, where it stays.
  */
-function ShowcaseHook({ text }: { text: string }) {
+function ShowcaseHook({ text, look }: { text: string; look: BadgeVariant }) {
   return (
-    <div className="vocab-showcase-hook" aria-hidden="true">
-      <div className="vocab-showcase-hook-card">{text}</div>
+    <div className="vocab-showcase-hook" data-look={look} aria-hidden="true">
+      <div className="vocab-showcase-hook-card">
+        <span className="vocab-showcase-hook-text">{text}</span>
+      </div>
     </div>
   );
 }

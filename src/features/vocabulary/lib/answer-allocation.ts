@@ -41,6 +41,7 @@ export function allocateAnswer({
   panelFixed,
   panelContent,
   wordBottom,
+  head = ANSWER_HEAD_PX,
 }: {
   /** The lowest the panel may reach: its top plus its max-height. */
   capBottom: number;
@@ -52,12 +53,18 @@ export function allocateAnswer({
   panelContent: number;
   /** The bottom of the word's box as fitted. */
   wordBottom: number;
+  /**
+   * The highest the word may start, px from the card's top. Defaults to ANSWER_HEAD_PX, the
+   * toolbar's share; a surface whose top chrome sits lower (the TikTok lab's 4:5 frame, its
+   * title row under a black band) passes its own.
+   */
+  head?: number;
 }): AnswerAllocation | null {
   const need = panelFixed + panelContent;
   const fits = panelTop + need <= capBottom + 0.5 && wordBottom + ANSWER_SEAM_PX <= panelTop + 0.5;
   if (fits) return null;
 
-  const room = capBottom - ANSWER_HEAD_PX - ANSWER_SEAM_PX;
+  const room = capBottom - head - ANSWER_SEAM_PX;
   const wordMin = Math.max(MIN_WORD_PX, room * MIN_WORD_SHARE);
   let panelScale = 1;
   if (room - need < wordMin && panelContent > 0) {
@@ -68,6 +75,6 @@ export function allocateAnswer({
   }
   const panel = panelFixed + panelContent * panelScale;
   // Never squeeze the word to nothing: past this the panel's own scroller is the last resort.
-  const wordFoot = Math.max(ANSWER_HEAD_PX + MIN_WORD_PX * 0.5, capBottom - panel - ANSWER_SEAM_PX);
+  const wordFoot = Math.max(head + MIN_WORD_PX * 0.5, capBottom - panel - ANSWER_SEAM_PX);
   return { wordFoot: wordBottom > wordFoot + 0.5 ? wordFoot : null, panelScale };
 }

@@ -19,6 +19,7 @@
 
 import { useState, type CSSProperties } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import { BADGE_INFO, BADGE_ROTATION, DEMO_BADGE_VARIANT } from "../lib/badge-variants";
 import "../vocabulary-export.css";
 
 /** The frame in CSS px; the recording is 2.5× this. */
@@ -42,7 +43,8 @@ export function TikTokLabPage() {
   const set = (patch: Partial<typeof search>) =>
     void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
 
-  const params = new URLSearchParams({ frame: "4x5", autostart: "true" });
+  const look = search.look ?? DEMO_BADGE_VARIANT;
+  const params = new URLSearchParams({ frame: "4x5", autostart: "true", look });
   if (search.code) params.set("code", search.code);
   else params.set("seed", String(search.seed ?? 0));
   const src = `/showcase?${params}`;
@@ -94,6 +96,22 @@ export function TikTokLabPage() {
             Random
           </button>
         </form>
+        <label className="tiktok-lab-row">
+          Badge look
+          <select
+            value={look}
+            onChange={(event) => {
+              set({ look: event.target.value as typeof search.look });
+              setTake((n) => n + 1);
+            }}
+          >
+            {BADGE_ROTATION.map((variant) => (
+              <option key={variant} value={variant}>
+                {BADGE_INFO[variant].name}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className="tiktok-lab-row">
           Black starts lifting at {fadeFrom}% of the band
           <input

@@ -234,6 +234,7 @@ export function VocabularyCard({
   exportLayout,
   revealButtonLabel,
   onToggleAutoplay,
+  clueInsets,
 }: {
   entry: FeedEntry;
   presentation: Presentation;
@@ -278,6 +279,13 @@ export function VocabularyCard({
   revealButtonLabel?: string;
   /** Toggle autoplay from the center tap zone; threads up to the page-level presentation state. */
   onToggleAutoplay?: () => void;
+  /**
+   * The clue band's own margins, replacing the fit solver's 72px / 132px, which leave room
+   * for the feed's chrome inside the band. Only a surface whose band already stops short of
+   * every piece of chrome passes it (the TikTok lab's 4:5 frame, via /showcase), so its
+   * clues grow to fill the band. Never passed by the feed.
+   */
+  clueInsets?: { top: number; bottom: number };
 }) {
   const { theme, style } = choosePresentation(entry.occurrenceId, presentation, entry.position);
   const locale = useContext(DeckLocaleContext);
@@ -713,8 +721,9 @@ export function VocabularyCard({
       budgetLineEm: VOCAB_TEXT_BUDGET_LINE_EM,
       // Each site keeps its own threshold for loosening a cramped page (lib/line-relax).
       relaxBelow: relaxBelowFor(locale),
+      safeInsets: clueInsets,
     }),
-    [uniformTextSize, textBudgetHeight, locale],
+    [uniformTextSize, textBudgetHeight, locale, clueInsets],
   );
   // Every role comes from one validated palette. `--vocab-button-ink` is the
   // palette's on-accent color, which the audit already proved clears 4.5:1 against
@@ -1156,6 +1165,7 @@ export function VocabularyCard({
           emphasisPool={cardEmphasisPool(style.emphasis, theme.tone)}
           accentColor={cardEmphasisColor(theme)}
           textBudget={textBudget}
+          clueInsets={clueInsets}
           revealY={revealY}
           timeScale={paceFactor}
           expandGrammar={expandGrammar}

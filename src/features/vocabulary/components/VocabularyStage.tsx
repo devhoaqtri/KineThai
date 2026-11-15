@@ -290,6 +290,7 @@ export function VocabularyStage({
   revealY,
   timeScale = 1,
   textBudget,
+  clueInsets,
   expandGrammar = false,
   onGrammarHold,
 }: {
@@ -332,6 +333,8 @@ export function VocabularyStage({
    * With them, a Vietnamese clue is broken into lines from the real width of its words.
    */
   textBudget?: React.ComponentProps<typeof WordSequenceText>["measuredLayout"];
+  /** The clue band's own margins for the fit solver; see VocabularyCard `clueInsets`. */
+  clueInsets?: { top: number; bottom: number };
   /** The reader's Settings choice to open the answer's grammar section on every word. */
   expandGrammar?: boolean;
   /** The reader opened (true) or closed (false) the answer's grammar section by hand. */
@@ -425,6 +428,12 @@ export function VocabularyStage({
       );
       const ink = fontPx * (underlined ? ANSWER_UNDERLINE_FOOT_EM : ANSWER_INK_FOOT_EM);
       const bottom = band.offsetTop + box.offsetTop + box.offsetHeight / 2 + ink;
+      // The highest the word may start. The TikTok lab's 4:5 frame puts its title row under
+      // a black band, far below the toolbar's usual share, so there the word starts no
+      // higher than its own band, which already begins under that row (vocabulary-export.css).
+      const head = card.closest('[data-frame="4x5"]')
+        ? Math.max(ANSWER_HEAD_PX, band.offsetTop)
+        : ANSWER_HEAD_PX;
       const midline = cardHeight / 2;
       // Under the word's foot, wherever that is: never the midline over a tall word.
       const top = bottom + PANEL_SEAM_PX;
@@ -460,6 +469,7 @@ export function VocabularyStage({
           // A word already given a box is taken as filling it, so the share is sized
           // again from the room and never handed back to a word it already shrank.
           wordBottom: given?.wordFoot != null ? Infinity : bottom,
+          head,
         });
         const settled = next ?? (given ? { wordFoot: null, panelScale: 1 } : null);
         const rounded = settled && {
@@ -480,10 +490,10 @@ export function VocabularyStage({
               wordFoot === null
                 ? null
                 : {
-                    top: ANSWER_HEAD_PX - bandTop,
+                    top: head - bandTop,
                     // The box ends above the foot by the ink it draws under itself.
                     bottom: bandTop + bandHeight - (wordFoot - ink),
-                    y: (((ANSWER_HEAD_PX + wordFoot - ink) / 2 - bandTop) / bandHeight) * 100,
+                    y: (((head + wordFoot - ink) / 2 - bandTop) / bandHeight) * 100,
                   },
           });
         }
@@ -634,9 +644,11 @@ export function VocabularyStage({
                 // into lines.
                 measuredLayout={stage.reveal ? undefined : textBudget}
                 fitInsets={
-                  stage.reveal && answerFit?.word
-                    ? { top: answerFit.word.top, bottom: answerFit.word.bottom }
-                    : undefined
+                  stage.reveal
+                    ? answerFit?.word
+                      ? { top: answerFit.word.top, bottom: answerFit.word.bottom }
+                      : undefined
+                    : clueInsets
                 }
               />
             </motion.div>

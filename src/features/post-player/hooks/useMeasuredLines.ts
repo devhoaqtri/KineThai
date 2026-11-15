@@ -74,6 +74,13 @@ export type MeasuredLayoutBudget = {
    * `maxSize` (the feed keeps one per site). Omitted or 0: never loosened.
    */
   relaxBelow?: number;
+  /**
+   * The band's own margins, replacing getTextSafeInsets' 72px / 132px. Those leave room for
+   * the feed's chrome inside the band; a band that already stops short of every piece of
+   * chrome (the TikTok lab's 4:5 frame) passes smaller ones so its text can fill it.
+   * Omitted everywhere else, so the feed is unchanged.
+   */
+  safeInsets?: { top: number; bottom: number };
 };
 
 type Solution = {
@@ -167,6 +174,12 @@ export function useMeasuredLines({
   const budgetHeight = budget?.budgetHeight ?? 0;
   const budgetLineEm = budget?.budgetLineEm ?? 1;
   const relaxBelow = budget?.relaxBelow ?? 0;
+  const insetTop = budget?.safeInsets?.top;
+  const insetBottom = budget?.safeInsets?.bottom;
+  const insetsFor = (bandHeight: number) =>
+    insetTop !== undefined && insetBottom !== undefined
+      ? { top: insetTop, bottom: insetBottom }
+      : getTextSafeInsets(bandHeight);
 
   useIsomorphicLayoutEffect(() => {
     if (!active) return;
@@ -228,7 +241,7 @@ export function useMeasuredLines({
     // Layout height, like every other length here: a scaled preview (the export studio)
     // must not shrink the band the font is being solved for.
     const bandHeight = band.offsetHeight || band.getBoundingClientRect().height;
-    const insets = getTextSafeInsets(bandHeight);
+    const insets = insetsFor(bandHeight);
     const items: MeasuredSegment[] = segments.map((segment) => ({
       segment,
       ...sizes.sizes.get(segment.key)!,
@@ -294,6 +307,8 @@ export function useMeasuredLines({
     budgetHeight,
     budgetLineEm,
     relaxBelow,
+    insetTop,
+    insetBottom,
     maxLineSyllables,
     lineSpacingScale,
     wrapperRef,
@@ -317,7 +332,7 @@ export function useMeasuredLines({
     // box of the drawn block (scrollHeight ignores the entrance's transforms).
     const band = wrapper.parentElement?.parentElement;
     const bandHeight = band ? band.offsetHeight || band.getBoundingClientRect().height : 0;
-    const insets = getTextSafeInsets(bandHeight);
+    const insets = insetsFor(bandHeight);
     const roomHeight = Math.max(160, bandHeight - insets.top - insets.bottom);
     const drawnHeight = text.scrollHeight;
     const factor = Math.min(
@@ -346,7 +361,8 @@ export function useMeasuredLines({
       };
       text.dispatchEvent(new CustomEvent(PAGE_FONT_EVENT, { bubbles: true, detail }));
     }
-  }, [solution, signature, wrapperRef, textRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- insetsFor reads only these two
+  }, [solution, signature, wrapperRef, textRef, insetTop, insetBottom]);
 
   if (!active || !solution || solution.signature !== signature) return null;
   return solution;

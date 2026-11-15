@@ -2111,18 +2111,42 @@ body:has(.vocab-intro) .vocab-resume {
   --vocab-chrome-side: 16px;
   --vocab-safe-top: calc(var(--showcase-band) + 14px);
   --vocab-rec-top: calc(var(--showcase-band) + 34px);
-  --vocab-chrome-inset: calc(var(--showcase-band) + 18px);
-  --vocab-chrome-bar: 36px;
-  --vocab-chrome-gap: 22px;
+  /* One row up there, not the recorded bar's two (its filter line is hidden in this frame):
+     the title and the docked question, both 34px tall. The text band starts under it. */
+  --vocab-rec-top-h: 34px;
+  /* No action row in this frame, so the progress row drops to the foot of the canvas: the
+     row and its gap take no room, and only the inset is left under the progress. */
+  --vocab-chrome-inset: calc(var(--showcase-band) + 16px);
+  --vocab-chrome-bar: 0px;
+  --vocab-chrome-gap: 0px;
+  /* Restated from vocabulary.css, where they are derived once at the root from the default
+     sizes: here they must follow the band and this frame's own sizes, or the text band
+     ran on below the progress row and its text sat low on the canvas. */
+  --vocab-chrome-progress-bottom: calc(
+    var(--vocab-chrome-inset) + var(--vocab-chrome-bar) + var(--vocab-chrome-gap)
+  );
+  --vocab-chrome-top: calc(
+    var(--vocab-chrome-progress-bottom) + var(--vocab-chrome-progress, 3px)
+  );
   /* Where the opening question docks, and how small it gets there: on the title's row, at
      about the title's height. */
   --hook-dock-x: var(--vocab-chrome-side, 0px);
   --hook-dock-y: var(--vocab-rec-top);
   --hook-dock-scale: 0.36;
 }
+/* The text band keeps the same margin from the canvas's foot as from its head (title row,
+   its height and gap), so a clue sits in the middle of the canvas rather than leaning on
+   the progress row, which is now near the foot. Specific enough to beat the recorded
+   band's own top/bottom rule. */
+.vocab-recording .vocab-showcase-stage[data-frame="4x5"] .vocab-card .vocab-stage-band,
+.vocab-recording .vocab-showcase-stage[data-frame="4x5"] .vocab-card .vocab-stage-band[data-reveal] {
+  bottom: calc(var(--vocab-rec-top) + var(--vocab-rec-top-h) + var(--vocab-rec-top-gap));
+}
 /* Only the page progress and the app's title stay: no transport icons, gear, filter line,
-   page label or action row. The top-left corner belongs to the docked question. */
-.vocab-showcase-stage[data-frame="4x5"]
+   page label or action row. The top-left corner belongs to the docked question. Prefixed
+   with .vocab-showcase so it outranks the scenery's own `display: grid` on its icons. */
+.vocab-showcase
+  .vocab-showcase-stage[data-frame="4x5"]
   :is(
     .vocab-player-controls,
     .vocab-corner-button,
@@ -2132,9 +2156,10 @@ body:has(.vocab-intro) .vocab-resume {
   ) {
   display: none;
 }
-/* The intro keeps its veil, ring and confetti; its badge is the hook below instead. */
-.vocab-showcase-stage[data-frame="4x5"] .vocab-intro-badge {
-  visibility: hidden;
+/* With the gear and the controls gone the title is the row's only item, and auto-placement
+   would put it in the first column, under the docked question. It keeps the right corner. */
+.vocab-showcase .vocab-showcase-stage[data-frame="4x5"] .vocab-toolbar-left {
+  grid-column: 3;
 }
 /* The opening question: in with the intro, full size and centred over the frame, then where
    the intro's badge would pop away (1250ms) it shrinks into the top-left corner and stays.
@@ -2165,14 +2190,22 @@ body:has(.vocab-intro) .vocab-resume {
     scale: var(--hook-dock-scale);
   }
 }
+/* The feed badge's own scene plays behind it; only its card is this one, so it can stay. */
+.vocab-showcase-stage[data-frame="4x5"] .vocab-demo-badge-card {
+  visibility: hidden;
+}
+/* The card: the feed badge's shape (DemoBadge, vocabulary.css .vocab-demo-badge-card) at the
+   frame's own size, in the chosen look. Static paint: the motion is the pop-in and the dock. */
 .vocab-showcase-hook-card {
-  padding: 24px 40px;
-  border-radius: 30px;
+  position: relative;
+  padding: 0.55em 0.95em;
+  border-radius: 0.7em;
   font-size: 42px;
   font-weight: 800;
   line-height: 1.12;
   letter-spacing: -0.02em;
   white-space: nowrap;
+  overflow: hidden;
   color: #10121a;
   background: linear-gradient(180deg, #ffffff, #f2f4fb);
   box-shadow:
@@ -2180,6 +2213,87 @@ body:has(.vocab-intro) .vocab-resume {
     0 3px 0 #ffffff inset,
     0 0 0 1px #ffffff40;
   animation: vocab-intro-badge-in 620ms var(--intro-ease) 200ms backwards;
+}
+.vocab-showcase-hook-text {
+  position: relative;
+  z-index: 1;
+}
+/* One light sweeping across the face just after it lands, as on the feed's badge. */
+.vocab-showcase-hook-card::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  width: 45%;
+  left: -60%;
+  background: linear-gradient(100deg, #0000, #ffffffe0, #0000);
+  transform: skewX(-18deg);
+  opacity: 0;
+  animation: vocab-demo-shine 1600ms ease-in-out both;
+}
+/* AURORA: an indigo-to-pink card, white letters. */
+.vocab-showcase-hook[data-look="aurora"] .vocab-showcase-hook-card {
+  color: #ffffff;
+  background: linear-gradient(135deg, #312e81 0%, #6d28d9 46%, #db2777 100%);
+  box-shadow:
+    0 26px 70px #6d28d98c,
+    0 0 0 1px #ffffff30 inset,
+    0 2px 0 #ffffff45 inset;
+}
+.vocab-showcase-hook[data-look="aurora"] .vocab-showcase-hook-text {
+  text-shadow: 0 2px 14px #0007;
+}
+/* GLASS: frosted face with a gradient rim. */
+.vocab-showcase-hook[data-look="glass"] .vocab-showcase-hook-card {
+  color: #ffffff;
+  background: linear-gradient(135deg, #ffffff40, #ffffff0f);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(16px) saturate(170%);
+  box-shadow:
+    0 30px 80px #00000088,
+    0 1px 0 #ffffffb0 inset,
+    0 -1px 0 #ffffff26 inset;
+}
+.vocab-showcase-hook[data-look="glass"] .vocab-showcase-hook-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #fda4af, #fcd34d 50%, #67e8f9);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+.vocab-showcase-hook[data-look="glass"] .vocab-showcase-hook-text {
+  text-shadow: 0 1px 12px #0006;
+}
+/* SUNRISE: a warm cream card with orange-to-rose letters. */
+.vocab-showcase-hook[data-look="sunrise"] .vocab-showcase-hook-card {
+  background: linear-gradient(160deg, #fffbeb, #ffe4cc 58%, #fecdd3);
+  box-shadow:
+    0 26px 70px #f9731670,
+    0 2px 0 #ffffff inset,
+    0 0 0 1px #ffffff80 inset;
+}
+.vocab-showcase-hook[data-look="sunrise"] .vocab-showcase-hook-text {
+  color: transparent;
+  background: linear-gradient(90deg, #ea580c, #e11d48);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+/* LÁ MINT: the brand's own green, glossy. */
+.vocab-showcase-hook[data-look="mint"] .vocab-showcase-hook-card {
+  color: #052e1f;
+  background: linear-gradient(160deg, #d1fae5 0%, #6ee7b7 45%, #10b981 100%);
+  box-shadow:
+    0 26px 70px #10b98170,
+    0 2px 0 #ecfdf5 inset,
+    0 -2px 0 #04785740 inset;
 }
 /* A clip cannot be tapped, so the share tab is dead weight in the panel's corner. */
 .vocab-showcase .vocab-share-dock {
@@ -2286,6 +2400,7 @@ body:has(.vocab-intro) .vocab-resume {
 .tiktok-lab-row input[type="range"] {
   width: 100%;
 }
+.tiktok-lab-panel select,
 .tiktok-lab-panel input:not([type]) {
   width: 110px;
   padding: 6px 8px;
