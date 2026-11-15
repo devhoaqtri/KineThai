@@ -2109,8 +2109,12 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-showcase-stage[data-frame="4x5"] {
   --showcase-band: max(0px, calc((100dvh - 125vw) / 2));
   --vocab-chrome-side: 16px;
-  --vocab-safe-top: calc(var(--showcase-band) + 14px);
-  --vocab-rec-top: calc(var(--showcase-band) + 34px);
+  /* Shifted upwards from the 4:5 canvas centre: top chrome sits 40px higher (into the
+     fading upper band where TikTok has less UI) and the bottom progress sits 20px higher
+     (above TikTok's taller caption/audio overlay). The text band derives from both, so
+     the content viewport expands by the 20px difference. */
+  --vocab-safe-top: calc(var(--showcase-band) - 26px);
+  --vocab-rec-top: calc(var(--showcase-band) - 6px);
   /* One row up there, not the recorded bar's two (its filter line is hidden in this frame):
      the docked question (the taller of the two) with the title centred beside it. The text
      band starts under it. The question's height is its card's (font 42px × 1.12 line +
@@ -2118,7 +2122,7 @@ body:has(.vocab-intro) .vocab-resume {
   --vocab-rec-top-h: calc((42px * 1.12 + 2 * 0.55 * 42px) * var(--hook-dock-scale));
   /* No action row in this frame, so the progress row drops to the foot of the canvas: the
      row and its gap take no room, and only the inset is left under the progress. */
-  --vocab-chrome-inset: calc(var(--showcase-band) + 16px);
+  --vocab-chrome-inset: calc(var(--showcase-band) + 36px);
   --vocab-chrome-bar: 0px;
   --vocab-chrome-gap: 0px;
   /* Restated from vocabulary.css, where they are derived once at the root from the default
@@ -2219,7 +2223,14 @@ body:has(.vocab-intro) .vocab-resume {
     0 30px 80px #00000070,
     0 3px 0 #ffffff inset,
     0 0 0 1px #ffffff40;
-  animation: vocab-intro-badge-in 620ms var(--intro-ease) 200ms backwards;
+  animation:
+    vocab-intro-badge-in 620ms var(--intro-ease) 200ms backwards,
+    vocab-showcase-hook-tilt 640ms cubic-bezier(0.65, 0, 0.35, 1) 1250ms forwards;
+}
+@keyframes vocab-showcase-hook-tilt {
+  to {
+    rotate: -5deg;
+  }
 }
 .vocab-showcase-hook-text {
   position: relative;

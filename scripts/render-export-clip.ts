@@ -434,7 +434,7 @@ async function main() {
   cdp.on("Page.screencastFrame", (params) => {
     const sessionId = params.sessionId as number;
     const data = params.data as string;
-    const file = join(frames, `f${String(captured.length).padStart(5, "0")}.jpg`);
+    const file = join(frames, `f${String(captured.length).padStart(5, "0")}.png`);
     writeFileSync(file, Buffer.from(data, "base64"));
     captured.push({ file, atMs: Date.now() - startedAt });
     // Chrome stops sending until each frame is acknowledged.
@@ -442,8 +442,7 @@ async function main() {
   });
 
   await cdp.send("Page.startScreencast", {
-    format: "jpeg",
-    quality: 92,
+    format: "png",
     everyNthFrame: 1,
     maxWidth: width,
     maxHeight: height,
@@ -657,17 +656,17 @@ async function main() {
       "anullsrc=channel_layout=stereo:sample_rate=48000",
       "-shortest",
       "-vf",
-      // in_range=full is what the frames really are - they arrive as JPEG, which is full
-      // range - and out_range=tv is what an H.264 file is expected to hold. Without the
-      // conversion the levels stay 0\u2013255 and the file gets tagged yuvj420p; players that
-      // read it as 16\u2013235 anyway crush the blacks and blow out the white text.
-      `fps=${fps},scale=${width}:${height}:flags=lanczos:in_range=full:out_range=tv,format=yuv420p`,
+      // Frames arrive as lossless sRGB PNGs (full-range RGB24). Convert directly to BT.709
+      // TV-range YUV420p so the color matrix matches the bt709 stream tags below (the old
+      // JPEG path handed ffmpeg BT.601 YUV and tagged it BT.709 without converting, which
+      // shifted and washed out saturated colors).
+      `fps=${fps},scale=${width}:${height}:flags=lanczos:out_color_matrix=bt709:out_range=tv,format=yuv420p`,
       "-c:v",
       "libx264",
       "-preset",
       "medium",
       "-crf",
-      "20",
+      "17",
       // Spelled out rather than left to be guessed at the other end.
       "-pix_fmt",
       "yuv420p",
