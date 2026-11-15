@@ -608,7 +608,13 @@ async function prefillPostScreen(file: string) {
       failed = lastDumpFailed ? failed + 1 : 0;
       if (failed >= 3) break;
       if (!lastDumpFailed && !ui.some((n) => n.text === "Drafts" || n.text === "Edit cover" || n.id.endsWith(":id/hb2"))) break;
-      if (Date.now() > deadline) throw new Error("the Post screen stayed open after tapping Drafts; nothing was saved");
+      // Not a failure on its own: on 2026-11-15 the home feed kept matching these markers
+      // after a save that had worked, the retry saved the clip a second time, and a
+      // duplicate draft was left behind. The draft count main() reads next decides.
+      if (Date.now() > deadline) {
+        console.log("  ! the Post screen still reads as open; the draft count decides");
+        break;
+      }
     }
   }
 }
