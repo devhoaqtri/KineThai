@@ -18,6 +18,7 @@ import { Route as BadgeLabRouteImport } from './routes/badge-lab'
 import { Route as BurstLabRouteImport } from './routes/burst-lab'
 import { Route as ShowcaseRouteImport } from './routes/showcase'
 import { Route as StoreRouteImport } from './routes/store'
+import { Route as TiktokLabRouteImport } from './routes/tiktok-lab'
 import { Route as AuthenticatedAboutRouteImport } from './routes/_authenticated/about'
 import { Route as AuthenticatedCommunityRouteImport } from './routes/_authenticated/community'
 import { Route as AuthenticatedCreateRouteImport } from './routes/_authenticated/create'
@@ -102,6 +103,11 @@ const ShowcaseRoute = ShowcaseRouteImport.update({
 const StoreRoute = StoreRouteImport.update({
   id: '/store',
   path: '/store',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokLabRoute = TiktokLabRouteImport.update({
+  id: '/tiktok-lab',
+  path: '/tiktok-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAboutRoute = AuthenticatedAboutRouteImport.update({
@@ -322,6 +328,7 @@ export interface FileRoutesByFullPath {
   '/burst-lab': typeof BurstLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
+  '/tiktok-lab': typeof TiktokLabRoute
   '/about': typeof AuthenticatedAboutRoute
   '/community': typeof AuthenticatedCommunityRoute
   '/create': typeof AuthenticatedCreateRoute
@@ -372,6 +379,7 @@ export interface FileRoutesByTo {
   '/burst-lab': typeof BurstLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
+  '/tiktok-lab': typeof TiktokLabRoute
   '/about': typeof AuthenticatedAboutRoute
   '/community': typeof AuthenticatedCommunityRoute
   '/create': typeof AuthenticatedCreateRoute
@@ -425,6 +433,7 @@ export interface FileRoutesById {
   '/burst-lab': typeof BurstLabRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
+  '/tiktok-lab': typeof TiktokLabRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
   '/_authenticated/community': typeof AuthenticatedCommunityRoute
   '/_authenticated/create': typeof AuthenticatedCreateRoute
@@ -478,6 +487,7 @@ export interface FileRouteTypes {
     | '/burst-lab'
     | '/showcase'
     | '/store'
+    | '/tiktok-lab'
     | '/about'
     | '/community'
     | '/create'
@@ -528,6 +538,7 @@ export interface FileRouteTypes {
     | '/burst-lab'
     | '/showcase'
     | '/store'
+    | '/tiktok-lab'
     | '/about'
     | '/community'
     | '/create'
@@ -580,6 +591,7 @@ export interface FileRouteTypes {
     | '/burst-lab'
     | '/showcase'
     | '/store'
+    | '/tiktok-lab'
     | '/_authenticated/about'
     | '/_authenticated/community'
     | '/_authenticated/create'
@@ -633,6 +645,7 @@ export interface RootRouteChildren {
   BurstLabRoute: typeof BurstLabRoute
   ShowcaseRoute: typeof ShowcaseRoute
   StoreRoute: typeof StoreRoute
+  TiktokLabRoute: typeof TiktokLabRoute
   CarouselCodeRoute: typeof CarouselCodeRoute
   ExportCodeRoute: typeof ExportCodeRoute
   FeedAboutRoute: typeof FeedAboutRoute
@@ -714,6 +727,13 @@ declare module '@tanstack/react-router' {
       path: '/store'
       fullPath: '/store'
       preLoaderRoute: typeof StoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok-lab': {
+      id: '/tiktok-lab'
+      path: '/tiktok-lab'
+      fullPath: '/tiktok-lab'
+      preLoaderRoute: typeof TiktokLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/about': {
@@ -1085,6 +1105,7 @@ const rootRouteChildren: RootRouteChildren = {
   BurstLabRoute: BurstLabRoute,
   ShowcaseRoute: ShowcaseRoute,
   StoreRoute: StoreRoute,
+  TiktokLabRoute: TiktokLabRoute,
   CarouselCodeRoute: CarouselCodeRoute,
   ExportCodeRoute: ExportCodeRoute,
   FeedAboutRoute: FeedAboutRoute,

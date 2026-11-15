@@ -188,7 +188,11 @@ export function ShowcasePage() {
   return (
     <DeckLocaleContext.Provider value={locale}>
       <main className="vocab-showcase vocab-recording">
-        <div {...{ [SHOWCASE_CONTRACT.stageAttribute]: "" }} className="vocab-showcase-stage">
+        <div
+          {...{ [SHOWCASE_CONTRACT.stageAttribute]: "" }}
+          className="vocab-showcase-stage"
+          data-frame={search.frame ?? "9x16"}
+        >
           {/* The chrome a reader taps is drawn here as scenery instead: a clip cannot be
               tapped, and reusing the live toolbar would drag its dropdowns, sheets and
               focus handling into a surface that has no one to serve them. */}

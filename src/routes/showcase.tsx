@@ -37,6 +37,12 @@ const searchSchema = () =>
     outro: z.enum(SHOWCASE_CONTRACT.outroVariants).optional(),
     /** Run without waiting for the start event. For eyeballing it in a browser. */
     autostart: z.boolean().optional(),
+    /**
+     * The frame's shape. 9x16 (the default) is the whole phone screen a clip is posted as;
+     * 4x5 is the canvas the TikTok lab (/tiktok-lab) lays inside black bands, so it fills
+     * whatever 4:5 viewport it is given and needs no room for TikTok's own buttons.
+     */
+    frame: z.enum(["9x16", "4x5"]).optional(),
   });
 
 export const Route = createFileRoute("/showcase")({
