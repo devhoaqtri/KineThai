@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  MAX_HASHTAGS,
   captionFor,
   dateOfDay,
   dayOfDate,
@@ -10,6 +11,7 @@ import {
   levelForDay,
   parseDaySpec,
   planDays,
+  postsToDraft,
   summarize,
   todayInVietnam,
   type Calendar,
@@ -136,6 +138,7 @@ describe("captionFor", () => {
     expect(caption).not.toContain("Ngày");
     expect(caption).toContain("#a2");
     expect(caption).toContain("anh.chayla.app");
+    expect(caption.match(/#\w+/g)?.length).toBeLessThanOrEqual(MAX_HASHTAGS);
   });
 });
 
@@ -186,13 +189,67 @@ describe("summarize", () => {
     expect(s.overdue.map((d) => d.day)).toEqual([3]);
     expect(s.streak).toBe(0);
     expect(summarize(calendar, "2026-11-17").streak).toBe(2);
-    expect(s.counts).toEqual({ planned: 1, rendered: 1, scheduled: 3, posted: 2, missed: 0 });
+    expect(s.counts).toEqual({ planned: 1, rendered: 1, drafted: 0, scheduled: 3, posted: 2, missed: 0 });
   });
 
   it("measures the runway from day 1 before the start", () => {
     const s = summarize({ ...calendar, days: calendar.days.map((d) => ({ ...d, status: "scheduled" as const })) }, "2026-11-10");
     expect(s.todayDay).toBeLessThan(1);
     expect(s.scheduledThrough?.day).toBe(7);
+  });
+});
+
+describe("postsToDraft", () => {
+  const day = (n: number, date: string, time: string, status: CalendarDay["status"]): CalendarDay => ({
+    day: n,
+    date,
+    time,
+    wordId: `vi-w${n}`,
+    word: `w${n}`,
+    code: "ABC",
+    level: "A1",
+    topic: "t",
+    status,
+    caption: "",
+    clip: status === "planned" ? null : "~/c.mp4",
+    durationSec: null,
+    renderedAt: null,
+    scheduledAt: null,
+    postedAt: null,
+    url: null,
+    note: null,
+  });
+  const calendar: Calendar = {
+    version: 1,
+    locale: "en",
+    startDate: "2026-11-14",
+    postTime: "19:00",
+    order: "rising",
+    seed: 1,
+    clipDir: "~/clips",
+    excluded: [],
+    days: [
+      day(1, "2026-11-14", "19:00", "rendered"), // yesterday: overdue, not due
+      day(2, "2026-11-15", "11:30", "rendered"), // passed this morning: still drafted
+      day(3, "2026-11-15", "19:00", "drafted"), // already done
+      day(4, "2026-11-15", "21:30", "planned"), // due, no clip
+      day(5, "2026-11-16", "06:00", "rendered"), // inside the window
+      day(6, "2026-11-16", "11:30", "rendered"), // beyond it
+    ],
+  };
+  // 07:00 on 15 Nov in Vietnam.
+  const now = Date.parse("2026-11-15T07:00:00+07:00");
+
+  it("drafts today's and the window's rendered posts, and names the ones with no clip", () => {
+    const { ready, unrendered } = postsToDraft(calendar, now, 24);
+    expect(ready.map((d) => d.day)).toEqual([2, 5]);
+    expect(unrendered.map((d) => d.day)).toEqual([4]);
+  });
+
+  it("reads the date in Vietnam, not on the machine's clock", () => {
+    // 23:30 UTC on the 14th is already 06:30 on the 15th in Vietnam, so post 1 (the 14th) is past.
+    const { ready } = postsToDraft(calendar, Date.parse("2026-11-14T23:30:00Z"), 6);
+    expect(ready.map((d) => d.day)).toEqual([2]);
   });
 });
 

@@ -52,6 +52,7 @@
     "tiktok:plan": "npx tsx scripts/tiktok.ts plan",
     "tiktok:render": "npx tsx scripts/tiktok.ts render",
     "tiktok:status": "npx tsx scripts/tiktok.ts status",
+    "tiktok:auto": "npx tsx scripts/tiktok-auto.ts",
     "check:chrome-side": "npx tsx scripts/check-chrome-side.ts",
     "check:fit-floor": "npx tsx scripts/check-fit-floor.ts",
     "check:showcase": "npx tsx scripts/check-showcase.ts",

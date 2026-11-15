@@ -3,8 +3,9 @@
  *
  * The calendar is a file (scripts/data/tiktok-calendar.json), like the decks and the review
  * ledgers, so its history is in git. Each day names its word up front, so the whole year can
- * be read and changed before a clip exists. A day moves planned → rendered → scheduled →
- * posted (or missed); `scripts/tiktok.ts` is the command that moves it.
+ * be read and changed before a clip exists. A day moves planned → rendered → drafted (saved
+ * as a TikTok draft in the emulator) or scheduled (uploaded to TikTok Studio) → posted (or
+ * missed); `scripts/tiktok.ts` is the command that moves it.
  *
  * Dates are calendar dates in Vietnam (UTC+7, no daylight saving), the audience's day. A
  * post's date and time are never decided on their own: they come from the schedule (the
@@ -20,8 +21,11 @@
  * Exports: CALENDAR_DAYS, LEVEL_ORDERS, LevelOrder, DayStatus, CalendarDay, Calendar, Burst,
  *   PostSchedule, CandidateWord, parseDaySpec, parseBurst, dateOfDay, todayInVietnam,
  *   dayOfDate, weekdayOf, burstPosts, slotOfPost, firstPostOnDate, levelForDay, eligibleWords,
- *   planDays, captionFor, summarize
+ *   planDays, captionFor, summarize, postTimeMs, postsToDraft
  */
+
+/** How many hashtags TikTok keeps in a caption; it silently drops the rest. */
+export const MAX_HASHTAGS = 5;
 
 /** A year of days. */
 export const CALENDAR_DAYS = 365;
@@ -35,7 +39,7 @@ export const CALENDAR_DAYS = 365;
 export const LEVEL_ORDERS = ["rising", "weekly", "easiest"] as const;
 export type LevelOrder = (typeof LEVEL_ORDERS)[number];
 
-export type DayStatus = "planned" | "rendered" | "scheduled" | "posted" | "missed";
+export type DayStatus = "planned" | "rendered" | "drafted" | "scheduled" | "posted" | "missed";
 
 export type CalendarDay = {
   /** The post's number: the N-th word to go out (the N-th day when there is no burst). */
@@ -56,6 +60,8 @@ export type CalendarDay = {
   durationSec: number | null;
   renderedAt: string | null;
   scheduledAt: string | null;
+  /** When it was saved as a TikTok draft in the emulator; absent on days from before drafts. */
+  draftedAt?: string | null;
   postedAt: string | null;
   /** The post's TikTok link, once it is live. */
   url: string | null;
@@ -356,6 +362,7 @@ export function planDays(input: {
  * The post's caption. It never names the word or its meaning: the clip is a guess, and a
  * caption is on screen while it plays (the same rule as a share link's message). It counts
  * words, not days ("Từ số 12/365"): with several posts a day, a day count would repeat.
+ * It carries at most MAX_HASHTAGS tags, since TikTok drops any beyond that.
  * @param input.day - the post's number
  * @param input.total - posts in the year
  * @param input.level - the word's level
@@ -377,7 +384,8 @@ export function captionFor(input: {
     "Bình luận đáp án của bạn nhé 👇",
     `Học thêm mỗi ngày tại ${input.address}`,
     "",
-    `#hoctienganh #tuvungtienganh #tienganhmoingay #learnenglish #englishvocabulary #${input.level.toLowerCase()}`,
+    // TikTok keeps the first five hashtags of a caption and drops the rest on paste.
+    `#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #${input.level.toLowerCase()}`,
   ].join("\n");
 }
 
@@ -407,6 +415,7 @@ export function summarize(calendar: Calendar, today: string): CalendarSummary {
   const counts: Record<DayStatus, number> = {
     planned: 0,
     rendered: 0,
+    drafted: 0,
     scheduled: 0,
     posted: 0,
     missed: 0,
@@ -437,4 +446,41 @@ export function summarize(calendar: Calendar, today: string): CalendarSummary {
     streak += 1;
   }
   return { today, todayDay, counts, scheduledThrough, renderedThrough, overdue, streak };
+}
+
+/**
+ * When a post goes out, as an instant.
+ * @param day - a day carrying its date and time (Vietnam, UTC+7 with no daylight saving)
+ * @param fallbackTime - the calendar's daily time, for a day stored without its own
+ * @returns Milliseconds since the epoch
+ * @pure true
+ */
+export function postTimeMs(day: Pick<CalendarDay, "date" | "time">, fallbackTime: string): number {
+  return Date.parse(`${day.date}T${day.time ?? fallbackTime}:00+07:00`);
+}
+
+/**
+ * The posts an unattended run should save as drafts now: every one dated today (Vietnam)
+ * or later that goes out within `hours`. A post whose time has already passed today is
+ * still drafted, since a late post beats none; days before today are overdue, not due.
+ * @param calendar - the calendar
+ * @param nowMs - the current instant
+ * @param hours - how far ahead to look
+ * @returns `ready` (rendered, to draft) and `unrendered` (due but with no clip yet), by post
+ * @pure true
+ */
+export function postsToDraft(
+  calendar: Calendar,
+  nowMs: number,
+  hours: number,
+): { ready: CalendarDay[]; unrendered: CalendarDay[] } {
+  const today = todayInVietnam(nowMs);
+  const until = nowMs + hours * 3_600_000;
+  const due = calendar.days
+    .filter((d) => d.date >= today && postTimeMs(d, calendar.postTime) <= until)
+    .sort((a, b) => a.day - b.day);
+  return {
+    ready: due.filter((d) => d.status === "rendered"),
+    unrendered: due.filter((d) => d.status === "planned"),
+  };
 }

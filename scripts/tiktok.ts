@@ -9,7 +9,10 @@
  *   mark      record what happened: a day scheduled in TikTok Studio, posted, or missed
  *   swap      give a day a different word
  *   caption   print a day's caption and copy it (the emulator shares the Mac's clipboard)
- *   handoff   open a day's clip in TikTok's editor in the emulator (post-to-tiktok.ts)
+ *   handoff   save a day's clip as a TikTok draft in the emulator (post-to-tiktok.ts), with
+ *             its calendar caption, and mark it drafted
+ *   draft-due hand off every rendered post due from today until --hours from now (what the
+ *             unattended job runs, scripts/tiktok-auto.ts); fails if any is not drafted
  *
  * Usage:
  *   npm run tiktok -- plan [--start 2026-11-15] [--time 19:00] [--order rising|weekly|easiest]
@@ -25,7 +28,8 @@
  *   npm run tiktok -- mark 4 missed --note "server down"
  *   npm run tiktok -- swap 12 [--word vi-holiday]
  *   npm run tiktok -- caption 3
- *   npm run tiktok -- handoff 3
+ *   npm run tiktok -- handoff 3 [--no-draft] [--no-location]
+ *   npm run tiktok -- draft-due [--hours 24]
  *
  * Rendering needs the dev server (`npm run dev`, port 5195), because the showcase route
  * exists only there, and records in real time: about a minute a day.
@@ -50,6 +54,7 @@ import {
   levelForDay,
   parseDaySpec,
   planDays,
+  postsToDraft,
   summarize,
   todayInVietnam,
   type Calendar,
@@ -386,7 +391,7 @@ function status() {
         : `Today is ${today}: post ${s.todayDay} of ${total} is today's first.`,
   );
   console.log(
-    `  posted ${s.counts.posted} · scheduled ${s.counts.scheduled} · rendered ${s.counts.rendered} · planned ${s.counts.planned} · missed ${s.counts.missed}`,
+    `  posted ${s.counts.posted} · scheduled ${s.counts.scheduled} · drafted ${s.counts.drafted} · rendered ${s.counts.rendered} · planned ${s.counts.planned} · missed ${s.counts.missed}`,
   );
   console.log(`  streak: ${s.streak} post(s) out in a row`);
   console.log(`  scheduled through ${dayLabel(s.scheduledThrough)}: ${daysAhead(s.scheduledThrough)} day(s) in hand`);
@@ -416,7 +421,7 @@ function status() {
 
 function mark() {
   const [spec, next] = positional;
-  const statuses: DayStatus[] = ["planned", "rendered", "scheduled", "posted", "missed"];
+  const statuses: DayStatus[] = ["planned", "rendered", "drafted", "scheduled", "posted", "missed"];
   if (!spec || !next || !statuses.includes(next as DayStatus)) {
     throw new Error(`usage: mark <days> <${statuses.join("|")}> [--url <link>] [--note <text>]`);
   }
@@ -432,6 +437,7 @@ function mark() {
     }
     day.status = next as DayStatus;
     if (next === "scheduled") day.scheduledAt = now();
+    if (next === "drafted") day.draftedAt = now();
     if (next === "posted") day.postedAt = now();
     if (url) day.url = url;
     if (flag("note")) day.note = flag("note")!;
@@ -490,17 +496,74 @@ function copyCaption(day: CalendarDay) {
   console.log(`${day.caption}\n\n(copied to the clipboard)`);
 }
 
+/**
+ * Save one day's clip as a TikTok draft in the emulator, with the calendar's caption, and
+ * mark it drafted. The poster exits non-zero unless the draft really was saved.
+ * @param pass - the flags handed on to post-to-tiktok.ts
+ * @returns whether the draft was saved
+ */
+function draftDay(day: CalendarDay, pass: string[]): boolean {
+  if (!day.clip) throw new Error(`day ${day.day} has no clip yet: npm run tiktok -- render --day ${day.day}`);
+  console.log(`\n── post ${day.day} (${day.date} ${day.time ?? ""}) · ${day.level} · “${day.word}” ${day.code}`);
+  const attempt = () =>
+    spawnSync(
+      "npx",
+      [
+        "tsx",
+        join(ROOT, "scripts/post-to-tiktok.ts"),
+        expandHome(day.clip!),
+        "--boot",
+        "--code",
+        day.code,
+        "--caption",
+        day.caption,
+        ...pass,
+      ],
+      { stdio: "inherit", cwd: ROOT },
+    ).status === 0;
+  // One retry: the poster starts TikTok from scratch each time, so a popup or a slow first
+  // start that sank the first attempt is usually gone on the second.
+  if (!attempt()) {
+    console.log(`  post ${day.day} failed; trying once more`);
+    if (!attempt()) return false;
+  }
+  if (pass.includes("--no-draft")) return true;
+  // Read again: the calendar may have moved on while TikTok was being driven.
+  const calendar = loadCalendar();
+  const saved = calendar.days.find((d) => d.day === day.day)!;
+  saved.status = "drafted";
+  saved.draftedAt = now();
+  saveCalendar(calendar);
+  return true;
+}
+
 function handoff() {
   const day = dayWithClip();
-  if (!day.clip) throw new Error(`day ${day.day} has no clip yet: npm run tiktok -- render --day ${day.day}`);
-  const run = spawnSync("npx", ["tsx", join(ROOT, "scripts/post-to-tiktok.ts"), expandHome(day.clip), "--boot"], {
-    stdio: "inherit",
-    cwd: ROOT,
-  });
-  if (run.status !== 0) process.exit(run.status ?? 1);
-  console.log("");
-  copyCaption(day);
-  console.log(`After posting: npm run tiktok -- mark ${day.day} posted --url <link>`);
+  const pass = ["no-draft", "no-location", "no-cover"].filter((f) => rest.includes(`--${f}`)).map((f) => `--${f}`);
+  if (!draftDay(day, pass)) process.exit(1);
+  console.log(
+    pass.includes("--no-draft")
+      ? `\nAfter posting: npm run tiktok -- mark ${day.day} posted --url <link>`
+      : `\n✓ post ${day.day} drafted. Post it from TikTok's Drafts in the emulator, then: npm run tiktok -- mark ${day.day} posted --url <link>`,
+  );
+}
+
+/** Draft every post due within --hours (24 by default); exit non-zero if any is left undone. */
+function draftDue() {
+  const hours = Number(flag("hours") ?? 24);
+  if (!(hours > 0)) throw new Error("--hours is a positive number");
+  const { ready, unrendered } = postsToDraft(loadCalendar(), Date.now(), hours);
+  const failed: number[] = [];
+  for (const day of ready) if (!draftDay(day, [])) failed.push(day.day);
+  const drafted = ready.filter((d) => !failed.includes(d.day)).map((d) => d.day);
+  console.log(
+    `\n${drafted.length ? `✓ drafted post(s) ${drafted.join(", ")}` : "Nothing drafted"} (due within ${hours}h)`,
+  );
+  const problems = [
+    ...failed.map((n) => `post ${n} was not drafted`),
+    ...unrendered.map((d) => `post ${d.day} (${d.date} ${d.time ?? ""}) is due but has no clip: npm run tiktok -- render --day ${d.day}`),
+  ];
+  if (problems.length) throw new Error(problems.join("\n  "));
 }
 
 async function main() {
@@ -519,8 +582,10 @@ async function main() {
       return copyCaption(dayWithClip());
     case "handoff":
       return handoff();
+    case "draft-due":
+      return draftDue();
     default:
-      throw new Error("commands: plan, render, status, mark, swap, caption, handoff (see the top of scripts/tiktok.ts)");
+      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due (see the top of scripts/tiktok.ts)");
   }
 }
 
