@@ -2517,11 +2517,12 @@ body:has(.vocab-intro) .vocab-resume {
 }
 
 /* The 4:5 frame's closing flight (ShowcaseEmojiFlight): the word's reactions rising up the
-   canvas and fading, over the end card. Each glyph's numbers come inline (--x, --s, --d,
-   --t, --dx, --r, --rise); the rise stays inside the canvas, between the bands. */
+   canvas and fading, inside the end card, over its veil and under its address bar (no
+   z-index: the bar comes later in the card and is positioned, so it paints on top). Each
+   glyph's numbers come inline (--x, --s, --d, --t, --dx, --r, --rise); the rise stays
+   inside the canvas, between the bands. */
 .vocab-showcase-emojis {
   position: absolute;
-  z-index: 215;
   left: 0;
   right: 0;
   top: var(--showcase-band, 0px);

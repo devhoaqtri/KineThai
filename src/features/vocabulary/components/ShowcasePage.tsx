@@ -238,10 +238,12 @@ export function ShowcasePage() {
           {search.frame === "4x5" && phase !== "loading" && phase !== "ready" && (
             <ShowcaseHook text={search.badge ?? WORD_HOOK} look={look} />
           )}
-          {(phase === "outro" || phase === "done") && <ShowcaseOutro variant={variants.outro} />}
-          {/* The 4:5 frame closes on the word's reactions rising off the canvas. */}
-          {search.frame === "4x5" && (phase === "outro" || phase === "done") && (
-            <ShowcaseEmojiFlight wordId={word.id} />
+          {(phase === "outro" || phase === "done") && (
+            <ShowcaseOutro variant={variants.outro}>
+              {/* The 4:5 frame closes on the word's reactions rising off the canvas, over the
+                  veil and behind the address bar. */}
+              {search.frame === "4x5" && <ShowcaseEmojiFlight wordId={word.id} />}
+            </ShowcaseOutro>
           )}
         </div>
       </main>
@@ -343,11 +345,19 @@ function ShowcaseEmojiFlight({ wordId }: { wordId: string }) {
 }
 
 /** The end card. Markup only; the timeline is in vocabulary.css. */
-function ShowcaseOutro({ variant }: { variant: ShowcaseOutroVariant }) {
+function ShowcaseOutro({
+  variant,
+  children,
+}: {
+  variant: ShowcaseOutroVariant;
+  /** Drawn between the veil and the address bar, so the bar stays on top of it. */
+  children?: React.ReactNode;
+}) {
   const address = siteAddress(useContext(DeckLocaleContext));
   return (
     <div className="vocab-outro" data-outro={variant}>
       <div className="vocab-outro-veil" />
+      {children}
       <div className="vocab-outro-bar">
         <span className="vocab-outro-lock" />
         <span className="vocab-outro-url">{address}</span>
