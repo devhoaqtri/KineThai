@@ -13,6 +13,14 @@
  *             its calendar caption, and mark it drafted
  *   draft-due hand off every rendered post due from today until --hours from now (what the
  *             unattended job runs, scripts/tiktok-auto.ts); fails if any is not drafted
+ *   exported  the words that have already gone out anywhere (scripts/data/exported-words.json),
+ *             and any calendar day that would post one of them again; `exported add` records
+ *             an export no tool saw (a post made by hand)
+ *
+ * No word goes out twice. exported-words.json lists every word ever exported; every command
+ * first brings it up to date from what is on disk (carousel folders and TikTok lab clips
+ * under exports/, and every calendar post with a clip), only ever adding. `plan` and `swap`
+ * never pick a listed word, and `render` refuses a day whose word went out elsewhere.
  *
  * Usage:
  *   npm run tiktok -- plan [--start 2026-11-15] [--time 19:00] [--order rising|weekly|easiest]
@@ -30,12 +38,13 @@
  *   npm run tiktok -- caption 3
  *   npm run tiktok -- handoff 3 [--no-draft] [--no-location]
  *   npm run tiktok -- draft-due [--hours 24]
+ *   npm run tiktok -- exported [add <code> --where tiktok --ref <link or note> [--at 2026-10-20]]
  *
  * Rendering needs the dev server (`npm run dev`, port 5195), because the showcase route
  * exists only there, and records in real time: about a minute a day.
  */
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -62,6 +71,10 @@ import {
   type CandidateWord,
   type DayStatus,
   type LevelOrder,
+  type ExportedWords,
+  calendarExportRef,
+  exportConflicts,
+  recordExport,
 } from "./lib/tiktok-calendar";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -69,6 +82,8 @@ const CALENDAR_FILE = join(ROOT, "scripts/data/tiktok-calendar.json");
 const DECK_DIR = join(ROOT, "src/features/vocabulary/data/packs");
 const REPORTS_FILE = join(ROOT, "src/features/vocabulary/data/word-reports.json");
 const CLUE_LEDGER_FILE = join(ROOT, "scripts/data/clue-review-ledger.json");
+const EXPORTED_FILE = join(ROOT, "scripts/data/exported-words.json");
+const EXPORTS_DIR = join(ROOT, "exports");
 const DEFAULT_CLIP_DIR = "~/KineMedia-tiktok/clips";
 /** Vietnam's lunch and evening peaks, for a burst given without its own times. */
 const DEFAULT_BURST_TIMES = "11:30,19:00,21:30";
@@ -160,10 +175,75 @@ function caption(calendar: Calendar, day: number, level: string): string {
   });
 }
 
+function loadExported(): ExportedWords {
+  return existsSync(EXPORTED_FILE) ? readJson<ExportedWords>(EXPORTED_FILE) : { version: 1, words: {} };
+}
+
+function saveExported(list: ExportedWords) {
+  const words = Object.fromEntries(Object.entries(list.words).sort(([a], [b]) => a.localeCompare(b)));
+  writeFileSync(EXPORTED_FILE, `${JSON.stringify({ version: 1, words }, null, 2)}\n`);
+}
+
+/** The day a file or folder was made, for an export found on disk. */
+const madeOn = (path: string) => statSync(path).mtime.toISOString().slice(0, 10);
+
+/**
+ * The exported-words list brought up to date with what is on disk: carousel folders
+ * (exports/carousel/<brand>-<code>-<format>), TikTok lab clips (exports/tiktok/<code>-…mp4)
+ * and every calendar post that has a clip. Only adds, and saves when anything was added.
+ */
+function syncExported(calendar: Calendar): ExportedWords {
+  const list = loadExported();
+  const byCode = new Map(loadDeck().filter((w) => w.shareCode).map((w) => [w.shareCode!.toUpperCase(), w]));
+  let added = 0;
+  const add = (code: string, where: string, ref: string, at: string) => {
+    const word = byCode.get(code);
+    if (!word) {
+      console.warn(`  ! ${ref}: no word in the English deck has code ${code}; add it by hand if it went out`);
+      return;
+    }
+    if (recordExport(list, { id: word.id, word: word.word, code, level: word.level }, { where, ref, at })) added += 1;
+  };
+  const carousel = join(EXPORTS_DIR, "carousel");
+  if (existsSync(carousel)) {
+    for (const dir of readdirSync(carousel)) {
+      const code = /-([0-9A-Z]{3})-[^-]+$/.exec(dir)?.[1];
+      if (code) add(code, "carousel", `exports/carousel/${dir}`, madeOn(join(carousel, dir)));
+    }
+  }
+  const lab = join(EXPORTS_DIR, "tiktok");
+  if (existsSync(lab)) {
+    for (const file of readdirSync(lab).filter((f) => f.endsWith(".mp4"))) {
+      const code = /^([0-9A-Z]{3})-/.exec(file)?.[1];
+      if (code) add(code, "tiktok-lab", `exports/tiktok/${file}`, madeOn(join(lab, file)));
+    }
+  }
+  for (const day of calendar.days) {
+    if (!day.clip || day.status === "planned" || day.status === "missed") continue;
+    const record = { where: "calendar", ref: calendarExportRef(day.day), at: (day.renderedAt ?? now()).slice(0, 10) };
+    if (recordExport(list, { id: day.wordId, word: day.word, code: day.code, level: day.level }, record)) added += 1;
+  }
+  if (added) {
+    saveExported(list);
+    console.log(`  (${added} export(s) added to scripts/data/exported-words.json)`);
+  }
+  return list;
+}
+
+/** One line per clash, for the commands that refuse or warn. */
+function describeConflicts(calendar: Calendar, list: ExportedWords): string[] {
+  return exportConflicts(calendar, list).map(
+    ({ day, clashes }) =>
+      `post ${day.day} (${day.date}, ${day.status}) is “${day.word}” ${day.code}, already out: ` +
+      clashes.map((c) => `${c.where} ${c.ref} (${c.at})`).join("; "),
+  );
+}
+
 /** Fill `dayNumbers` with words, keeping every other day's; `total` is the year's length. */
 function fill(calendar: Calendar, words: CandidateWord[], dayNumbers: number[], total: number) {
   const byId = new Map(words.map((w) => [w.id, w]));
-  const excluded = new Set(calendar.excluded);
+  // Never a word that has already gone out anywhere, nor one taken off the calendar.
+  const excluded = new Set([...calendar.excluded, ...Object.keys(syncExported(calendar).words)]);
   const refill = new Set(dayNumbers);
   const taken = new Map<number, CandidateWord>();
   for (const day of calendar.days) {
@@ -319,6 +399,11 @@ async function render() {
     console.log("Nothing to render: every day from today on already has a clip.");
     return;
   }
+  // A word that has gone out elsewhere is never rendered again: swap the day first.
+  const clashes = describeConflicts({ ...calendar, days: chosen }, syncExported(calendar));
+  if (clashes.length) {
+    throw new Error(`${clashes.join("\n  ")}\n  give each a new word first: npm run tiktok -- swap <post>`);
+  }
   const dir = expandHome(calendar.clipDir);
   mkdirSync(dir, { recursive: true });
   console.log(`Rendering ${chosen.length} day(s) into ${dir} (about a minute each)`);
@@ -414,6 +499,9 @@ function status() {
   if (s.todayDay <= total) {
     if (daysAhead(s.scheduledThrough) < 3) warnings.push("fewer than 3 days are scheduled: upload the next clips in TikTok Studio");
     if (daysAhead(s.renderedThrough) < 14) warnings.push("fewer than 14 days have clips: npm run tiktok -- render");
+  }
+  for (const clash of describeConflicts(calendar, syncExported(calendar))) {
+    warnings.push(`${clash}: npm run tiktok -- swap ${/^post (\d+)/.exec(clash)![1]}`);
   }
   if (warnings.length) {
     console.log("\nNeeds attention:");
@@ -576,6 +664,35 @@ function draftDue() {
   if (problems.length) throw new Error(problems.join("\n  "));
 }
 
+/** List what has gone out, or record an export no tool saw (`exported add <code> …`). */
+function exported() {
+  const calendar = loadCalendar();
+  const list = syncExported(calendar);
+  if (positional[0] === "add") {
+    const code = positional[1]?.toUpperCase();
+    const where = flag("where");
+    const ref = flag("ref");
+    if (!code || !where || !ref) throw new Error("usage: exported add <code> --where <tiktok|carousel|…> --ref <link or note> [--at YYYY-MM-DD]");
+    const word = loadDeck().find((w) => w.shareCode?.toUpperCase() === code);
+    if (!word) throw new Error(`no word in the English deck has code ${code}`);
+    const at = flag("at") ?? now().slice(0, 10);
+    const changed = recordExport(list, { id: word.id, word: word.word, code, level: word.level }, { where, ref, at, ...(flag("note") ? { note: flag("note")! } : {}) });
+    if (changed) saveExported(list);
+    console.log(changed ? `✓ “${word.word}” ${code} recorded as exported (${where}, ${ref})` : `“${word.word}” already has that export`);
+    return;
+  }
+  const entries = Object.entries(list.words);
+  const byWhere = new Map<string, number>();
+  for (const [, entry] of entries) for (const e of entry.exports) byWhere.set(e.where, (byWhere.get(e.where) ?? 0) + 1);
+  console.log(`${entries.length} word(s) exported · ${[...byWhere].map(([w, n]) => `${w} ${n}`).join(" · ")}`);
+  for (const [id, entry] of entries.sort(([, a], [, b]) => a.word.localeCompare(b.word))) {
+    const where = [...new Set(entry.exports.map((e) => e.where))].join(", ");
+    console.log(`  ${entry.word.padEnd(16)} ${entry.code}  ${entry.level.padEnd(3)} ${where.padEnd(22)} ${id}`);
+  }
+  const clashes = describeConflicts(calendar, list);
+  console.log(clashes.length ? `\nWould go out twice:\n  ${clashes.join("\n  ")}` : "\nNo calendar day repeats an exported word.");
+}
+
 async function main() {
   switch (command) {
     case "plan":
@@ -594,8 +711,10 @@ async function main() {
       return handoff();
     case "draft-due":
       return draftDue();
+    case "exported":
+      return exported();
     default:
-      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due (see the top of scripts/tiktok.ts)");
+      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported (see the top of scripts/tiktok.ts)");
   }
 }
 

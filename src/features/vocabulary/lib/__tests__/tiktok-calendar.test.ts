@@ -12,6 +12,9 @@ import {
   parseDaySpec,
   planDays,
   postsToDraft,
+  exportConflicts,
+  recordExport,
+  type ExportedWords,
   summarize,
   todayInVietnam,
   type Calendar,
@@ -293,5 +296,45 @@ describe("the opening burst", () => {
     const plain = { startDate: "2026-11-15", postTime: "19:00" };
     expect(slotOfPost(plain, 17)).toEqual({ date: dateOfDay("2026-11-15", 17), time: "19:00" });
     expect(firstPostOnDate(plain, "2026-12-01")).toBe(dayOfDate("2026-11-15", "2026-12-01"));
+  });
+});
+
+describe("exported words", () => {
+  const day = (n: number, wordId: string): CalendarDay => ({
+    day: n,
+    date: dateOfDay("2026-11-15", n),
+    wordId,
+    word: wordId.slice(3),
+    code: "ABC",
+    level: "A1",
+    topic: "t",
+    status: "planned",
+    caption: "",
+    clip: null,
+    durationSec: null,
+    renderedAt: null,
+    scheduledAt: null,
+    postedAt: null,
+    url: null,
+    note: null,
+  });
+  const w = (id: string) => ({ id, word: id.slice(3), code: "ABC", level: "A1" });
+
+  it("records an export once, and never the same one twice", () => {
+    const list: ExportedWords = { version: 1, words: {} };
+    expect(recordExport(list, w("vi-kit"), { where: "carousel", ref: "exports/carousel/x-JPV-4x5", at: "2026-10-31" })).toBe(true);
+    expect(recordExport(list, w("vi-kit"), { where: "carousel", ref: "exports/carousel/x-JPV-4x5", at: "2026-11-01" })).toBe(false);
+    expect(recordExport(list, w("vi-kit"), { where: "tiktok", ref: "a post", at: "2026-11-02" })).toBe(true);
+    expect(list.words["vi-kit"]!.exports).toHaveLength(2);
+  });
+
+  it("flags a day whose word went out elsewhere, but not the day's own calendar clip", () => {
+    const list: ExportedWords = { version: 1, words: {} };
+    recordExport(list, w("vi-good"), { where: "calendar", ref: "post 1", at: "2026-11-15" });
+    recordExport(list, w("vi-kit"), { where: "carousel", ref: "folder", at: "2026-10-31" });
+    const clashes = exportConflicts({ days: [day(1, "vi-good"), day(2, "vi-kit"), day(3, "vi-mess")] }, list);
+    expect(clashes.map((c) => c.day.day)).toEqual([2]);
+    // The same calendar clip on another post is a repeat too.
+    expect(exportConflicts({ days: [day(9, "vi-good")] }, list).map((c) => c.day.day)).toEqual([9]);
   });
 });

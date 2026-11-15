@@ -21,7 +21,8 @@
  * Exports: CALENDAR_DAYS, LEVEL_ORDERS, LevelOrder, DayStatus, CalendarDay, Calendar, Burst,
  *   PostSchedule, CandidateWord, parseDaySpec, parseBurst, dateOfDay, todayInVietnam,
  *   dayOfDate, weekdayOf, burstPosts, slotOfPost, firstPostOnDate, levelForDay, eligibleWords,
- *   planDays, captionFor, summarize, postTimeMs, postsToDraft
+ *   planDays, captionFor, summarize, postTimeMs, postsToDraft, ExportedWords, ExportRecord,
+ *   recordExport, calendarExportRef, exportConflicts
  */
 
 /** How many hashtags TikTok keeps in a caption; it silently drops the rest. */
@@ -483,4 +484,62 @@ export function postsToDraft(
     ready: due.filter((d) => d.status === "rendered"),
     unrendered: due.filter((d) => d.status === "planned"),
   };
+}
+
+/**
+ * Where a word has gone out. `where` names the tool or channel ("calendar", "carousel",
+ * "tiktok-lab", "tiktok"); `ref` says which one (a calendar post, an export folder, a
+ * clip file, a TikTok post) so the same export is never recorded twice.
+ */
+export type ExportRecord = { where: string; ref: string; at: string; note?: string };
+
+/**
+ * Every word ever exported, by word id (scripts/data/exported-words.json): the guard
+ * against posting a word twice. Records are only ever added, never dropped, so a word
+ * whose clip or folder has since been deleted stays taken.
+ */
+export type ExportedWords = {
+  version: 1;
+  words: Record<string, { word: string; code: string; level: string; exports: ExportRecord[] }>;
+};
+
+/** The ref a calendar post records its export under. @pure true */
+export function calendarExportRef(day: number): string {
+  return `post ${day}`;
+}
+
+/**
+ * Add one export, unless that exact one (same where and ref) is already there.
+ * @returns Whether the list changed
+ */
+export function recordExport(
+  list: ExportedWords,
+  word: { id: string; word: string; code: string; level: string },
+  record: ExportRecord,
+): boolean {
+  const entry = (list.words[word.id] ??= { word: word.word, code: word.code, level: word.level, exports: [] });
+  if (entry.exports.some((e) => e.where === record.where && e.ref === record.ref)) return false;
+  entry.exports.push(record);
+  return true;
+}
+
+/**
+ * Calendar days whose word has already gone out somewhere other than that very day: the
+ * duplicates waiting to happen. A day's own calendar export does not count against it.
+ * @returns Each such day with the exports that clash
+ * @pure true
+ */
+export function exportConflicts(
+  calendar: Pick<Calendar, "days">,
+  list: ExportedWords,
+): { day: CalendarDay; clashes: ExportRecord[] }[] {
+  const out: { day: CalendarDay; clashes: ExportRecord[] }[] = [];
+  for (const day of calendar.days) {
+    const own = calendarExportRef(day.day);
+    const clashes = (list.words[day.wordId]?.exports ?? []).filter(
+      (e) => !(e.where === "calendar" && e.ref === own),
+    );
+    if (clashes.length) out.push({ day, clashes });
+  }
+  return out.sort((a, b) => a.day.day - b.day.day);
 }
