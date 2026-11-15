@@ -46,6 +46,12 @@ const searchSchema = () =>
     frame: z.enum(["9x16", "4x5"]).optional(),
     /** The 4:5 frame's opening question wears one of the feed badge's looks (badge-variants). */
     look: z.enum(BADGE_ROTATION as unknown as [string, ...string[]]).optional(),
+    /**
+     * The 4:5 frame's black bands: each fades from solid at the screen's edge, lifting at
+     * `fadeFrom`% of the band's height and clear at `fadeTo`% (past 100 into the canvas).
+     */
+    fadeFrom: z.number().min(0).max(100).optional(),
+    fadeTo: z.number().min(0).max(160).optional(),
   });
 
 export const Route = createFileRoute("/showcase")({

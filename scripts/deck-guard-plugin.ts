@@ -30,7 +30,7 @@ const EXPORT_MODULE = new RegExp(
       "vocabulary/components/(ExportStudio|ExportGuides|ExportFramePage|ShowcasePage|ShowcaseChrome|TikTokLabPage|CarouselFramePage|CarouselChrome|CarouselStudio|GrammarSlide)\\.tsx",
       "vocabulary/lib/(export-recorder|export-presets|export-contract|showcase-contract|carousel|carousel-contract|carousel-copy|carousel-formats|slide-settle)\\.ts",
       "vocabulary/vocabulary-export\\.css",
-      "vocabulary/api/carousel-render\\.server\\.ts",
+      "vocabulary/api/(carousel-render|tiktok-clip-render)\\.server\\.ts",
       "post-player/hooks/usePostExport\\.ts",
       "post-player/lib/export-video\\.ts",
     ].join("|") +

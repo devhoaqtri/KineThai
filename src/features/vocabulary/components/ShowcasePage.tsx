@@ -23,7 +23,7 @@
  * Depends on: VocabularyCard, showcase-contract, useServedWord, vocabulary.css
  */
 
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { VocabularyCard } from "./VocabularyCard";
 import { ShowcaseChrome } from "./ShowcaseChrome";
@@ -118,6 +118,8 @@ export function ShowcasePage() {
       return;
     }
     document.body.dataset.showcaseWord = word.word;
+    // The share code too, so the TikTok lab can export whichever word a random take landed on.
+    if (word.shareCode) document.body.dataset.showcaseCode = word.shareCode;
     document.body.dataset.showcaseIntro = variants.intro;
     document.body.dataset.showcaseOutro = variants.outro;
     // Two frames: one for the card to mount, one for it to have painted. The timeout is
@@ -239,6 +241,9 @@ export function ShowcasePage() {
           {search.frame === "4x5" && phase !== "loading" && phase !== "ready" && (
             <ShowcaseHook text={search.badge ?? WORD_HOOK} look={look} />
           )}
+          {search.frame === "4x5" && (
+            <ShowcaseBands fadeFrom={search.fadeFrom} fadeTo={search.fadeTo} />
+          )}
           {(phase === "outro" || phase === "done") && (
             <ShowcaseOutro variant={variants.outro}>
               {/* The 4:5 frame closes on the word's reactions rising off the canvas, over the
@@ -279,6 +284,32 @@ function ShowcaseHook({ text, look }: { text: string; look: BadgeVariant }) {
       <div className="vocab-showcase-hook-card">
         <span className="vocab-showcase-hook-text">{text}</span>
       </div>
+    </div>
+  );
+}
+
+/** Where a band's black starts lifting and where it is gone, % of the band, by default. */
+const BAND_FADE_FROM = 35;
+const BAND_FADE_TO = 100;
+
+/**
+ * The 4:5 frame's black bands, over everything: TikTok draws its buttons and caption there,
+ * so each band is solid at the screen's edge and fades to clear toward the canvas, lifting
+ * at `fadeFrom`% of its height and gone at `fadeTo`%. Part of the page, so a recording
+ * carries exactly what the TikTok lab shows. The lab changes the two numbers on a running
+ * page by restating the custom properties on this element.
+ */
+function ShowcaseBands({ fadeFrom, fadeTo }: { fadeFrom?: number; fadeTo?: number }) {
+  const from = fadeFrom ?? BAND_FADE_FROM;
+  const to = Math.max(from, fadeTo ?? BAND_FADE_TO);
+  return (
+    <div
+      className="vocab-showcase-bands"
+      aria-hidden="true"
+      style={{ "--band-fade-from": from / 100, "--band-fade-to": to / 100 } as CSSProperties}
+    >
+      <div className="vocab-showcase-band" data-edge="top" />
+      <div className="vocab-showcase-band" data-edge="bottom" />
     </div>
   );
 }

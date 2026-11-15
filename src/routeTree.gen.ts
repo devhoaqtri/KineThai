@@ -53,6 +53,7 @@ import { Route as AuthenticatedPPostIdRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedUUsernameRouteImport } from './routes/_authenticated/u.$username'
 import { Route as ApiDevCarouselRouteImport } from './routes/api/dev/carousel'
 import { Route as ApiDevFeedLogRouteImport } from './routes/api/dev/feed-log'
+import { Route as ApiDevTiktokClipRouteImport } from './routes/api/dev/tiktok-clip'
 import { Route as ApiPublicEngagementRouteImport } from './routes/api/public/engagement'
 import { Route as ApiPublicErrorReportRouteImport } from './routes/api/public/error-report'
 import { Route as ApiPublicTelemetryRouteImport } from './routes/api/public/telemetry'
@@ -282,6 +283,11 @@ const ApiDevFeedLogRoute = ApiDevFeedLogRouteImport.update({
   path: '/api/dev/feed-log',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDevTiktokClipRoute = ApiDevTiktokClipRouteImport.update({
+  id: '/api/dev/tiktok-clip',
+  path: '/api/dev/tiktok-clip',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicEngagementRoute = ApiPublicEngagementRouteImport.update({
   id: '/api/public/engagement',
   path: '/api/public/engagement',
@@ -363,6 +369,7 @@ export interface FileRoutesByFullPath {
   '/u/$username': typeof AuthenticatedUUsernameRoute
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
+  '/api/dev/tiktok-clip': typeof ApiDevTiktokClipRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/error-report': typeof ApiPublicErrorReportRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
@@ -414,6 +421,7 @@ export interface FileRoutesByTo {
   '/u/$username': typeof AuthenticatedUUsernameRoute
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
+  '/api/dev/tiktok-clip': typeof ApiDevTiktokClipRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/error-report': typeof ApiPublicErrorReportRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
@@ -468,6 +476,7 @@ export interface FileRoutesById {
   '/_authenticated/u/$username': typeof AuthenticatedUUsernameRoute
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
+  '/api/dev/tiktok-clip': typeof ApiDevTiktokClipRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/error-report': typeof ApiPublicErrorReportRoute
   '/api/public/telemetry': typeof ApiPublicTelemetryRoute
@@ -522,6 +531,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
+    | '/api/dev/tiktok-clip'
     | '/api/public/engagement'
     | '/api/public/error-report'
     | '/api/public/telemetry'
@@ -573,6 +583,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
+    | '/api/dev/tiktok-clip'
     | '/api/public/engagement'
     | '/api/public/error-report'
     | '/api/public/telemetry'
@@ -626,6 +637,7 @@ export interface FileRouteTypes {
     | '/_authenticated/u/$username'
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
+    | '/api/dev/tiktok-clip'
     | '/api/public/engagement'
     | '/api/public/error-report'
     | '/api/public/telemetry'
@@ -655,6 +667,7 @@ export interface RootRouteChildren {
   FeedIndexRoute: typeof FeedIndexRoute
   ApiDevCarouselRoute: typeof ApiDevCarouselRoute
   ApiDevFeedLogRoute: typeof ApiDevFeedLogRoute
+  ApiDevTiktokClipRoute: typeof ApiDevTiktokClipRoute
   ApiPublicEngagementRoute: typeof ApiPublicEngagementRoute
   ApiPublicErrorReportRoute: typeof ApiPublicErrorReportRoute
   ApiPublicTelemetryRoute: typeof ApiPublicTelemetryRoute
@@ -974,6 +987,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDevFeedLogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/dev/tiktok-clip': {
+      id: '/api/dev/tiktok-clip'
+      path: '/api/dev/tiktok-clip'
+      fullPath: '/api/dev/tiktok-clip'
+      preLoaderRoute: typeof ApiDevTiktokClipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/engagement': {
       id: '/api/public/engagement'
       path: '/api/public/engagement'
@@ -1115,6 +1135,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedIndexRoute: FeedIndexRoute,
   ApiDevCarouselRoute: ApiDevCarouselRoute,
   ApiDevFeedLogRoute: ApiDevFeedLogRoute,
+  ApiDevTiktokClipRoute: ApiDevTiktokClipRoute,
   ApiPublicEngagementRoute: ApiPublicEngagementRoute,
   ApiPublicErrorReportRoute: ApiPublicErrorReportRoute,
   ApiPublicTelemetryRoute: ApiPublicTelemetryRoute,

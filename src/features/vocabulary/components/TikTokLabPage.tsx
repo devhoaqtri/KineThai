@@ -17,7 +17,7 @@
  * Depends on: /showcase (frame=4x5), vocabulary-export.css
  */
 
-import { useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { BADGE_INFO, BADGE_ROTATION, DEMO_BADGE_VARIANT } from "../lib/badge-variants";
 import "../vocabulary-export.css";
@@ -44,10 +44,25 @@ export function TikTokLabPage() {
     void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
 
   const look = search.look ?? DEMO_BADGE_VARIANT;
-  const params = new URLSearchParams({ frame: "4x5", autostart: "true", look });
-  if (search.code) params.set("code", search.code);
-  else params.set("seed", String(search.seed ?? 0));
-  const src = `/showcase?${params}`;
+  // The clip's address carries the fades it starts with (a recording reads them from it),
+  // but it is fixed for a take: a slider must not restart the clip, so moving one restates
+  // them on the running page instead (below).
+  const src = useMemo(() => {
+    const params = new URLSearchParams({ frame: "4x5", autostart: "true", look });
+    if (search.code) params.set("code", search.code);
+    else params.set("seed", String(search.seed ?? 0));
+    params.set("fadeFrom", String(fadeFrom));
+    params.set("fadeTo", String(fadeTo));
+    return `/showcase?${params}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fades follow live, not per take
+  }, [take, look, search.code, search.seed]);
+  const frame = useRef<HTMLIFrameElement>(null);
+  useEffect(() => {
+    const bands =
+      frame.current?.contentDocument?.querySelector<HTMLElement>(".vocab-showcase-bands");
+    bands?.style.setProperty("--band-fade-from", String(fadeFrom / 100));
+    bands?.style.setProperty("--band-fade-to", String(fadeTo / 100));
+  }, [fadeFrom, fadeTo]);
 
   const frameStyle = {
     "--lab-frame-w": `${FRAME.width}px`,
@@ -145,11 +160,19 @@ export function TikTokLabPage() {
         <button type="button" className="tiktok-lab-replay" onClick={() => setTake((n) => n + 1)}>
           Replay
         </button>
+        <ExportButton
+          codeOf={() =>
+            search.code ?? frame.current?.contentDocument?.body.dataset.showcaseCode ?? ""
+          }
+          look={look}
+          fadeFrom={fadeFrom}
+          fadeTo={fadeTo}
+        />
       </aside>
 
       <div className="tiktok-lab-stage">
         <div className="tiktok-lab-frame" style={frameStyle} data-guides={guides || undefined}>
-          <iframe key={`${src}#${take}`} src={src} title="Clip in the TikTok frame" />
+          <iframe ref={frame} key={`${src}#${take}`} src={src} title="Clip in the TikTok frame" />
           <div className="tiktok-lab-band" data-edge="top" aria-hidden="true" />
           <div className="tiktok-lab-band" data-edge="bottom" aria-hidden="true" />
           <div className="tiktok-lab-canvas-edge" data-edge="top" aria-hidden="true" />
@@ -157,5 +180,87 @@ export function TikTokLabPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+type ExportState =
+  | { status: "idle" }
+  | { status: "recording" | "done" | "failed"; out: string; log: string[] }
+  | { status: "error"; message: string };
+
+/**
+ * Record the lab's current clip (its word, look and band fades) to an MP4 on this machine
+ * (/api/dev/tiktok-clip, scripts/render-export-clip.ts --frame 4x5). It records in real
+ * time, about a minute a word, so the button starts it and then asks how it is going.
+ */
+function ExportButton({
+  codeOf,
+  look,
+  fadeFrom,
+  fadeTo,
+}: {
+  codeOf: () => string;
+  look: string;
+  fadeFrom: number;
+  fadeTo: number;
+}) {
+  const [state, setState] = useState<ExportState>({ status: "idle" });
+  const out = state.status === "recording" ? state.out : null;
+  useEffect(() => {
+    if (!out) return;
+    const timer = setInterval(async () => {
+      const answer = await fetch(`/api/dev/tiktok-clip?out=${encodeURIComponent(out)}`);
+      const job = (await answer.json()) as {
+        status: "recording" | "done" | "failed";
+        log: string[];
+      };
+      if (job.status !== "recording") setState({ status: job.status, out, log: job.log });
+    }, 2000);
+    return () => clearInterval(timer);
+  }, [out]);
+
+  const start = async () => {
+    const code = codeOf();
+    if (!code) {
+      setState({ status: "error", message: "No word yet: wait for the clip to load." });
+      return;
+    }
+    setState({ status: "recording", out: "", log: [] });
+    const answer = await fetch("/api/dev/tiktok-clip", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ code, look, fadeFrom, fadeTo }),
+    });
+    const job = (await answer.json()) as { status?: "recording"; out?: string; error?: string };
+    if (!answer.ok || !job.out) {
+      setState({ status: "error", message: job.error ?? `HTTP ${answer.status}` });
+      return;
+    }
+    setState({ status: "recording", out: job.out, log: [] });
+  };
+
+  return (
+    <div className="tiktok-lab-export">
+      <button type="button" onClick={start} disabled={state.status === "recording"}>
+        {state.status === "recording" ? "Recording… (about a minute)" : "Export MP4"}
+      </button>
+      {state.status === "done" && (
+        <p className="tiktok-lab-note">
+          Saved {state.out.split("/").pop()}{" "}
+          <button
+            type="button"
+            onClick={() => void fetch(`/api/dev/tiktok-clip?open=${encodeURIComponent(state.out)}`)}
+          >
+            Show in Finder
+          </button>
+        </p>
+      )}
+      {state.status === "failed" && (
+        <p className="tiktok-lab-note">
+          Recording failed: {state.log.at(-1) ?? "see the dev server log"}
+        </p>
+      )}
+      {state.status === "error" && <p className="tiktok-lab-note">{state.message}</p>}
+    </div>
   );
 }

@@ -43,6 +43,12 @@
  *   showcase mode:
  *     --intro-style <pop|drop|stamp|slide|flip>  pin the opening (default: picked per take)
  *     --outro-style <light|dark|glass|rise>      pin the end card (default: picked per take)
+ *     --frame <9x16|4x5>    the layout (default: 9x16). 4x5 is the TikTok lab's upload: the
+ *                           clip on a 4:5 canvas between fading black bands, recorded at the
+ *                           lab's own 432×768 CSS viewport (×2.5 = 1080×1920)
+ *     --look <aurora|glass|mint|sunrise>  4x5: the opening question's look (default: aurora)
+ *     --fade-from <%>  --fade-to <%>      4x5: where each band's black lifts and is gone,
+ *                                         % of the band (defaults: 35, 100)
  *   feed mode:
  *     --css <w>x<h>         CSS viewport, phone-sized (default: 405x720)
  *     --side <px>           left/right inset clear of a platform's crop (default: 25)
@@ -65,6 +71,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 
 import { getExportPreset } from "../src/features/vocabulary/lib/export-presets";
 import { SHOWCASE_CONTRACT } from "../src/features/vocabulary/lib/showcase-contract";
+import { BADGE_ROTATION } from "../src/features/vocabulary/lib/badge-variants";
 import { addressLocale, siteAddress } from "../src/features/vocabulary/lib/target-language";
 import { difficultyChoiceKey } from "../src/features/vocabulary/lib/difficulty-choice";
 import { DIFFICULTY_ALL } from "../src/features/vocabulary/lib/difficulty";
@@ -116,7 +123,17 @@ const maxSeconds = Number(flag("max", "120"));
 // A phone-shaped CSS viewport scaled up to the output size, so the app lays itself out the
 // way it does on a phone — the layout a viewer recognises — rather than the desktop one it
 // would choose at a literal 1080px wide.
-const [cssWidth, cssHeight] = flag("css", "405x720").split("x").map(Number);
+// Showcase mode's layout. 4x5 is recorded at the TikTok lab's own frame, so the file is
+// what the lab shows.
+const showcaseFrame = flag("frame", "9x16");
+if (showcaseFrame !== "9x16" && showcaseFrame !== "4x5") {
+  console.error(`--frame must be "9x16" or "4x5" (got "${showcaseFrame}")`);
+  process.exit(1);
+}
+const framed = mode === "showcase" && showcaseFrame === "4x5";
+const [cssWidth, cssHeight] = flag("css", framed ? "432x768" : "405x720")
+  .split("x")
+  .map(Number);
 // How far in from the top and bottom edges the app's own bars are pushed, in CSS pixels.
 // Defaults are roughly TikTok's overlay zones at a 405×720 viewport (~8% and ~15%); pass
 // 0,0 to record the app exactly as it sits on a phone.
@@ -161,13 +178,17 @@ function styleFlag<T extends string>(name: string, allowed: readonly T[]): T | u
 }
 const introStyle = styleFlag("intro-style", SHOWCASE_CONTRACT.introVariants);
 const outroStyle = styleFlag("outro-style", SHOWCASE_CONTRACT.outroVariants);
+// Showcase mode, 4x5 layout: the opening question's look and the band fades.
+const showcaseLook = styleFlag("look", BADGE_ROTATION);
+const fadeFrom = flag("fade-from", "");
+const fadeTo = flag("fade-to", "");
 // The safe area comes from the EXPORT preset rather than from numbers invented here, so
 // the frame the feed is recorded into and the frame Export Studio draws agree by
 // construction. The margins are fractions of the frame, so they carry to any capture size.
 const safeOf = getExportPreset(flag("preset", "tiktok-clear")).safe;
 const safeTopPx = Math.round(safeOf.top * cssHeight);
 const safeRightPx = Math.round(safeOf.right * cssWidth);
-const scale = Number(flag("scale", String(1080 / 405)));
+const scale = Number(flag("scale", String(1080 / cssWidth)));
 const out = resolve(
   flag("out", mode === "feed" ? "./feed-clip.mp4" : `./export-${code ?? "clip"}.mp4`),
 );
@@ -227,6 +248,12 @@ async function main() {
     if (introStyle) query.set("intro", introStyle);
     if (outroStyle) query.set("outro", outroStyle);
     if (dialect) query.set("dialect", dialect);
+    if (framed) {
+      query.set("frame", "4x5");
+      if (showcaseLook) query.set("look", showcaseLook);
+      if (fadeFrom) query.set("fadeFrom", fadeFrom);
+      if (fadeTo) query.set("fadeTo", fadeTo);
+    }
     url = `${base}/showcase${query.size ? `?${query}` : ""}`;
     await cdp.send("Emulation.setDeviceMetricsOverride", {
       width: cssWidth,

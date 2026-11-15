@@ -16,6 +16,9 @@
  *                          [--seed 1] [--clip-dir ~/KineMedia-tiktok/clips] [--days 365]
  *                          [--burst 7x3 [--burst-times 11:30,19:00,21:30] | --burst none]
  *   npm run tiktok -- render [--days 14] [--day 3,5-7] [--base http://localhost:5195]
+ *                            [--frame 4x5|9x16] [--look aurora|glass|mint|sunrise]
+ *     (4x5, the default, is the TikTok lab's upload layout: the clip on a 4:5 canvas
+ *     between fading black bands; 9x16 is the older whole-screen clip)
  *   npm run tiktok -- status
  *   npm run tiktok -- mark 1-10 scheduled
  *   npm run tiktok -- mark 3 posted --url https://www.tiktok.com/@.../video/...
@@ -284,6 +287,10 @@ function probe(file: string): { width: number; height: number; duration: number 
 async function render() {
   const calendar = loadCalendar();
   const base = flag("base") ?? "http://localhost:5195";
+  // The TikTok lab's upload layout unless asked otherwise (scripts/render-export-clip.ts).
+  const frame = flag("frame") ?? "4x5";
+  if (frame !== "4x5" && frame !== "9x16") throw new Error('--frame is "4x5" or "9x16"');
+  const look = flag("look");
   try {
     const answer = await fetch(`${base}/showcase`);
     if (!answer.ok) throw new Error(`HTTP ${answer.status}`);
@@ -315,7 +322,20 @@ async function render() {
     console.log(`\n── day ${day.day} (${day.date}) · ${day.level} · “${day.word}” ${day.code}`);
     const run = spawnSync(
       "npx",
-      ["tsx", join(ROOT, "scripts/render-export-clip.ts"), day.code, "--mode", "showcase", "--base", base, "--out", out],
+      [
+        "tsx",
+        join(ROOT, "scripts/render-export-clip.ts"),
+        day.code,
+        "--mode",
+        "showcase",
+        "--frame",
+        frame,
+        ...(look ? ["--look", look] : []),
+        "--base",
+        base,
+        "--out",
+        out,
+      ],
       { stdio: "inherit", cwd: ROOT },
     );
     const info = run.status === 0 ? probe(out) : null;

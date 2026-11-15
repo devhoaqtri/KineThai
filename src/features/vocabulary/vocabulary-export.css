@@ -2112,8 +2112,10 @@ body:has(.vocab-intro) .vocab-resume {
   --vocab-safe-top: calc(var(--showcase-band) + 14px);
   --vocab-rec-top: calc(var(--showcase-band) + 34px);
   /* One row up there, not the recorded bar's two (its filter line is hidden in this frame):
-     the title and the docked question, both 34px tall. The text band starts under it. */
-  --vocab-rec-top-h: 34px;
+     the docked question (the taller of the two) with the title centred beside it. The text
+     band starts under it. The question's height is its card's (font 42px × 1.12 line +
+     2 × 0.55em padding) at the dock scale. */
+  --vocab-rec-top-h: calc((42px * 1.12 + 2 * 0.55 * 42px) * var(--hook-dock-scale));
   /* No action row in this frame, so the progress row drops to the foot of the canvas: the
      row and its gap take no room, and only the inset is left under the progress. */
   --vocab-chrome-inset: calc(var(--showcase-band) + 16px);
@@ -2132,7 +2134,7 @@ body:has(.vocab-intro) .vocab-resume {
      about the title's height. */
   --hook-dock-x: var(--vocab-chrome-side, 0px);
   --hook-dock-y: var(--vocab-rec-top);
-  --hook-dock-scale: 0.36;
+  --hook-dock-scale: 0.47;
 }
 /* The text band runs from the same gap under the title row to the same gap above the
    progress row, and a clue is centred in it (VocabularyStage), so the space the eye sees
@@ -2157,9 +2159,14 @@ body:has(.vocab-intro) .vocab-resume {
   display: none;
 }
 /* With the gear and the controls gone the title is the row's only item, and auto-placement
-   would put it in the first column, under the docked question. It keeps the right corner. */
+   would put it in the first column, under the docked question. It keeps the right corner,
+   mirrored on the question: its text ends as far from the right edge as the question's
+   text starts from the left (the card's margin plus its 0.95em side padding at the dock
+   scale), and it is centred on the question's height. */
 .vocab-showcase .vocab-showcase-stage[data-frame="4x5"] .vocab-toolbar-left {
   grid-column: 3;
+  margin-right: calc(0.95 * 42px * var(--hook-dock-scale));
+  margin-top: calc((var(--vocab-rec-top-h) - 26px) / 2);
 }
 /* The opening question: in with the intro, full size and centred over the frame, then where
    the intro's badge would pop away (1250ms) it shrinks into the top-left corner and stays.
@@ -2425,6 +2432,22 @@ body:has(.vocab-intro) .vocab-resume {
 .tiktok-lab-replay {
   align-self: flex-start;
 }
+.tiktok-lab-export {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #ffffff14;
+}
+.tiktok-lab-export > button {
+  align-self: flex-start;
+  background: #1d4ed8;
+  border-color: #3b82f6;
+}
+.tiktok-lab-export > button:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
 .tiktok-lab-stage {
   display: grid;
   place-items: center;
@@ -2456,8 +2479,8 @@ body:has(.vocab-intro) .vocab-resume {
   height: 100%;
   border: 0;
 }
-/* Each band: a black-to-clear gradient over the clip's backdrop, solid at the screen's edge,
-   lifting from --lab-fade-from and gone at --lab-fade-to (both measured from that edge). */
+/* Each band's guides only: the black itself is drawn by the clip page (ShowcaseBands), so
+   the recording carries it. These boxes are there for the dashed fade lines. */
 .tiktok-lab-band {
   position: absolute;
   left: 0;
@@ -2467,15 +2490,9 @@ body:has(.vocab-intro) .vocab-resume {
 }
 .tiktok-lab-band[data-edge="top"] {
   top: 0;
-  background: linear-gradient(
-    to bottom,
-    #000 var(--lab-fade-from),
-    #0000 var(--lab-fade-to)
-  );
 }
 .tiktok-lab-band[data-edge="bottom"] {
   bottom: 0;
-  background: linear-gradient(to top, #000 var(--lab-fade-from), #0000 var(--lab-fade-to));
 }
 /* Zero-height markers at the canvas's edges, drawn only as guides. */
 .tiktok-lab-canvas-edge {
@@ -2521,4 +2538,36 @@ body:has(.vocab-intro) .vocab-resume {
    lift it over the bar, so here it has none: the bar comes later and paints on top. */
 .vocab-outro .vocab-emoji-burst {
   z-index: auto;
+}
+
+/* The 4:5 frame's black bands (ShowcaseBands), over everything in the frame: solid at the
+   screen's edge, lifting at --band-fade-from of the band's height and clear at
+   --band-fade-to (both shares of the band; past 1 the fade reaches into the canvas). */
+.vocab-showcase-bands {
+  position: absolute;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+}
+.vocab-showcase-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: calc(var(--showcase-band, 0px) * max(1, var(--band-fade-to, 1)));
+}
+.vocab-showcase-band[data-edge="top"] {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    #000 calc(var(--showcase-band, 0px) * var(--band-fade-from, 0.35)),
+    #0000 calc(var(--showcase-band, 0px) * var(--band-fade-to, 1))
+  );
+}
+.vocab-showcase-band[data-edge="bottom"] {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    #000 calc(var(--showcase-band, 0px) * var(--band-fade-from, 0.35)),
+    #0000 calc(var(--showcase-band, 0px) * var(--band-fade-to, 1))
+  );
 }
