@@ -14,8 +14,13 @@ const searchSchema = () =>
     /** A word by share code; otherwise /showcase picks one from `seed`. */
     code: z.string().max(16).optional(),
     seed: z.number().int().nonnegative().optional(),
-    /** How far the black fades into the canvas, as a share of the canvas's height (%). */
-    fade: z.number().min(0).max(40).optional(),
+    /**
+     * Each band's fade, as a share of the band's height from the screen's edge (%): the black
+     * starts lifting at `fadeFrom` and is gone at `fadeTo`. Past 100 the fade reaches into
+     * the canvas.
+     */
+    fadeFrom: z.number().min(0).max(100).optional(),
+    fadeTo: z.number().min(0).max(160).optional(),
     /** Show the band and canvas edges as guide lines. */
     guides: z.boolean().optional(),
   });

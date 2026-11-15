@@ -2101,18 +2101,21 @@ body:has(.vocab-intro) .vocab-resume {
   overflow: hidden;
   isolation: isolate;
 }
-/* The TikTok lab's canvas (/tiktok-lab): a 4:5 frame the lab lays between black bands, so
-   TikTok's own buttons never reach it and the chrome only keeps the app's ordinary margins.
-   Its first values; the lab is where they get tuned. */
+/* The TikTok lab's frame (/tiktok-lab): the whole 9:16 screen carries the backdrop, so the
+   lab's black bands can fade into colour rather than cut to it, but everything that is read
+   (title, question, text, progress) stays on the 4:5 canvas across the middle. The band
+   above and below that canvas is worked out from the viewport: (height - 1.25 × width) / 2,
+   114px in the lab's 432×768. Its first values; the lab is where they get tuned. */
 .vocab-showcase-stage[data-frame="4x5"] {
-  --showcase-ratio: calc(5 / 4);
+  --showcase-band: max(0px, calc((100dvh - 125vw) / 2));
   --vocab-chrome-side: 16px;
-  --vocab-safe-top: 14px;
-  --vocab-chrome-inset: 18px;
+  --vocab-safe-top: calc(var(--showcase-band) + 14px);
+  --vocab-rec-top: calc(var(--showcase-band) + 34px);
+  --vocab-chrome-inset: calc(var(--showcase-band) + 18px);
   --vocab-chrome-bar: 36px;
   --vocab-chrome-gap: 22px;
-  /* Where the opening question docks, and how small it gets there: on the title's row (the
-     recorded bar's top, which clears the lab's top fade), at about the title's height. */
+  /* Where the opening question docks, and how small it gets there: on the title's row, at
+     about the title's height. */
   --hook-dock-x: var(--vocab-chrome-side, 0px);
   --hook-dock-y: var(--vocab-rec-top);
   --hook-dock-scale: 0.36;
@@ -2330,60 +2333,70 @@ body:has(.vocab-intro) .vocab-resume {
     0 24px 60px #0009;
   scale: min(1, calc((100dvh - 32px) / var(--lab-frame-h)));
 }
-.tiktok-lab-canvas {
+.tiktok-lab-frame > iframe {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--lab-band);
-  height: var(--lab-canvas-h);
-  overflow: hidden;
-}
-.tiktok-lab-canvas iframe {
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
 }
-/* The canvas fades in from the black: solid black at its edge, clear --lab-fade into it. */
-.tiktok-lab-fade {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: var(--lab-fade);
-  pointer-events: none;
-}
-.tiktok-lab-fade[data-edge="top"] {
-  top: 0;
-  background: linear-gradient(to bottom, #000, #0000);
-}
-.tiktok-lab-fade[data-edge="bottom"] {
-  bottom: 0;
-  background: linear-gradient(to top, #000, #0000);
-}
+/* Each band: a black-to-clear gradient over the clip's backdrop, solid at the screen's edge,
+   lifting from --lab-fade-from and gone at --lab-fade-to (both measured from that edge). */
 .tiktok-lab-band {
   position: absolute;
   left: 0;
   right: 0;
-  height: var(--lab-band);
-  background: #000;
+  height: var(--lab-fade-box);
   pointer-events: none;
 }
 .tiktok-lab-band[data-edge="top"] {
   top: 0;
+  background: linear-gradient(
+    to bottom,
+    #000 var(--lab-fade-from),
+    #0000 var(--lab-fade-to)
+  );
 }
 .tiktok-lab-band[data-edge="bottom"] {
   bottom: 0;
+  background: linear-gradient(to top, #000 var(--lab-fade-from), #0000 var(--lab-fade-to));
 }
-/* Guides: where each band ends and the canvas begins, and where the fade finishes. */
-.tiktok-lab-frame[data-guides] .tiktok-lab-band[data-edge="top"] {
-  box-shadow: inset 0 -1px 0 #ff4d6d;
+/* Zero-height markers at the canvas's edges, drawn only as guides. */
+.tiktok-lab-canvas-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  pointer-events: none;
 }
-.tiktok-lab-frame[data-guides] .tiktok-lab-band[data-edge="bottom"] {
-  box-shadow: inset 0 1px 0 #ff4d6d;
+.tiktok-lab-canvas-edge[data-edge="top"] {
+  top: var(--lab-band);
 }
-.tiktok-lab-frame[data-guides] .tiktok-lab-fade[data-edge="top"] {
-  box-shadow: inset 0 -1px 0 #4dd0ff99;
+.tiktok-lab-canvas-edge[data-edge="bottom"] {
+  bottom: var(--lab-band);
 }
-.tiktok-lab-frame[data-guides] .tiktok-lab-fade[data-edge="bottom"] {
-  box-shadow: inset 0 1px 0 #4dd0ff99;
+/* Guides: the canvas's edges (red), and where each fade starts and ends (blue). */
+.tiktok-lab-frame[data-guides] .tiktok-lab-canvas-edge {
+  border-top: 1px solid #ff4d6d;
+}
+.tiktok-lab-frame[data-guides] .tiktok-lab-band::before,
+.tiktok-lab-frame[data-guides] .tiktok-lab-band::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed #4dd0ffaa;
+}
+.tiktok-lab-frame[data-guides] .tiktok-lab-band[data-edge="top"]::before {
+  top: var(--lab-fade-from);
+}
+.tiktok-lab-frame[data-guides] .tiktok-lab-band[data-edge="top"]::after {
+  top: var(--lab-fade-to);
+}
+.tiktok-lab-frame[data-guides] .tiktok-lab-band[data-edge="bottom"]::before {
+  bottom: var(--lab-fade-from);
+}
+.tiktok-lab-frame[data-guides] .tiktok-lab-band[data-edge="bottom"]::after {
+  bottom: var(--lab-fade-to);
 }

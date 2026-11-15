@@ -38,9 +38,9 @@ const searchSchema = () =>
     /** Run without waiting for the start event. For eyeballing it in a browser. */
     autostart: z.boolean().optional(),
     /**
-     * The frame's shape. 9x16 (the default) is the whole phone screen a clip is posted as;
-     * 4x5 is the canvas the TikTok lab (/tiktok-lab) lays inside black bands, so it fills
-     * whatever 4:5 viewport it is given and needs no room for TikTok's own buttons.
+     * The frame's layout. 9x16 (the default) is a clip laid out for the whole phone screen;
+     * 4x5 is the TikTok lab's (/tiktok-lab): the backdrop fills the 9:16 screen, and what is
+     * read sits on a 4:5 canvas across its middle, inside the lab's fading black bands.
      */
     frame: z.enum(["9x16", "4x5"]).optional(),
   });
