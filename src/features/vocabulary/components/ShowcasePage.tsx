@@ -23,13 +23,14 @@
  * Depends on: VocabularyCard, showcase-contract, useServedWord, vocabulary.css
  */
 
-import { useContext, useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { VocabularyCard } from "./VocabularyCard";
 import { ShowcaseChrome } from "./ShowcaseChrome";
 import { DemoBadge } from "./DemoBadge";
+import { EmojiBurst } from "./EmojiBurst";
 import { DEMO_BADGE_VARIANT, type BadgeVariant } from "../lib/badge-variants";
-import { mockEmojiTotals } from "../lib/emoji";
+import { EMOJI_PALETTE, mockEmojiTotals, type EmojiTotals } from "../lib/emoji";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { siteAddress } from "../lib/target-language";
 import { WORD_HOOK } from "../lib/first-visit";
@@ -282,65 +283,52 @@ function ShowcaseHook({ text, look }: { text: string; look: BadgeVariant }) {
   );
 }
 
-/** How many emojis rise at the end, per word: 30 to 50, fixed for the word. */
-const FLIGHT_MIN = 30;
-const FLIGHT_SPREAD = 21;
-
-/** A small seeded generator, so a word's flight is the same on every take. */
-function seeded(text: string): () => number {
-  let a = 2166136261;
-  for (const char of text) a = Math.imul(a ^ char.codePointAt(0)!, 16777619);
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4_294_967_296;
-  };
-}
+/** How many emojis fly at the end, per word: 15 to 20, fixed for the word. */
+const FLIGHT_MIN = 15;
+const FLIGHT_SPREAD = 6;
 
 /**
- * The 4:5 frame's closing flight: 30-50 of the word's reaction emojis rising up the canvas
- * and fading, mixed in proportion to its mocked reaction counts (lib/emoji), each with its
- * own size, start, drift and tilt. A mock of a live crowd, the same on every take. Markup
- * only: the rise is vocab-showcase-emoji-rise in vocabulary-export.css.
+ * The 4:5 frame's closing reactions: the feed's own emoji smoke (EmojiBurst), 15-20 of the
+ * word's reaction emojis billowing out of one point at the bottom middle of the canvas and
+ * spreading to both sides as they rise and fade, at the feed's sizes and opacity. The mix
+ * is the word's mocked reactions softened (square root, plus a floor), so all six emojis
+ * fly and the word's favourite still leads, rather than one emoji taking most of the 15-20.
  */
 function ShowcaseEmojiFlight({ wordId }: { wordId: string }) {
-  const glyphs = useMemo(() => {
-    const random = seeded(`flight:${wordId}`);
-    const { ranked, total } = mockEmojiTotals(wordId);
-    const count = FLIGHT_MIN + Math.floor(random() * FLIGHT_SPREAD);
-    const pick = () => {
-      let draw = random() * total;
-      for (const item of ranked) {
-        draw -= item.count;
-        if (draw <= 0) return item.emoji;
-      }
-      return ranked[0]?.emoji ?? "🔥";
+  const totals = useMemo<EmojiTotals>(() => {
+    const crowd = mockEmojiTotals(wordId).counts;
+    const ranked = EMOJI_PALETTE.map((emoji) => ({
+      emoji,
+      count: Math.round(Math.sqrt(crowd[emoji] ?? 0)) + 3,
+    })).sort((a, b) => b.count - a.count);
+    return {
+      counts: Object.fromEntries(ranked.map((item) => [item.emoji, item.count])),
+      total: ranked.reduce((sum, item) => sum + item.count, 0),
+      ranked,
     };
-    return Array.from({ length: count }, (_, index) => ({
-      key: index,
-      emoji: pick(),
-      style: {
-        "--x": `${4 + random() * 88}%`,
-        "--s": `${22 + Math.round(random() * 22)}px`,
-        "--d": `${Math.round(random() * 1800)}ms`,
-        "--t": `${2000 + Math.round(random() * 600)}ms`,
-        "--dx": `${Math.round((random() - 0.5) * 70)}px`,
-        "--r": `${Math.round((random() - 0.5) * 50)}deg`,
-        // How far up the canvas it rises, as a share of the canvas's height.
-        "--rise": (0.62 + random() * 0.3).toFixed(2),
-      } as CSSProperties,
-    }));
   }, [wordId]);
+  const limit = useMemo(() => {
+    let hash = 0;
+    for (const char of wordId) hash = (hash * 31 + char.codePointAt(0)!) >>> 0;
+    return FLIGHT_MIN + (hash % FLIGHT_SPREAD);
+  }, [wordId]);
+  const width = typeof window === "undefined" ? 432 : window.innerWidth;
+  const height = typeof window === "undefined" ? 768 : window.innerHeight;
+  // The 4:5 canvas's foot: the band under it is (height - 1.25 × width) / 2.
+  const band = Math.max(0, (height - width * 1.25) / 2);
   return (
-    <div className="vocab-showcase-emojis" aria-hidden="true">
-      {glyphs.map((glyph) => (
-        <span key={glyph.key} className="vocab-showcase-emoji" style={glyph.style}>
-          {glyph.emoji}
-        </span>
-      ))}
-    </div>
+    <EmojiBurst
+      wordId={wordId}
+      totals={totals}
+      width={width}
+      height={height}
+      origins={{}}
+      originX={width / 2}
+      originY={height - band - 28}
+      spanSeconds={cssDuration("--outro-dur", 4600) / 1000}
+      reducedMotion={false}
+      limit={limit}
+    />
   );
 }
 

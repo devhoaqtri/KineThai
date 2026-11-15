@@ -42,6 +42,7 @@ export function EmojiBurst({
   originY,
   spanSeconds,
   reducedMotion,
+  limit,
 }: {
   wordId: string;
   /** Mocked aggregate; drives glyph composition and stays stable for the word. */
@@ -56,14 +57,16 @@ export function EmojiBurst({
   /** Reveal page plus spelling coda, in seconds — the layer fades out across it. */
   spanSeconds: number;
   reducedMotion: boolean;
+  /** How many glyphs fly; omitted, the span decides (the feed). */
+  limit?: number;
 }) {
   const span = clampBurstSpan(spanSeconds);
   // Deliberately keyed on the mocked aggregate, not on the merged counts: a reader
   // tapping an emoji updates its badge without restarting a twelve-second
   // animation from the beginning.
   const glyphs = useMemo(
-    () => burstGlyphs(totals, wordId, { spanSeconds: span }),
-    [totals, wordId, span],
+    () => burstGlyphs(totals, wordId, { spanSeconds: span, limit }),
+    [totals, wordId, span, limit],
   );
 
   if (!glyphs.length) return null;

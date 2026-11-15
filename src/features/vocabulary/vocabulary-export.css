@@ -2516,48 +2516,9 @@ body:has(.vocab-intro) .vocab-resume {
   bottom: var(--lab-fade-to);
 }
 
-/* The 4:5 frame's closing flight (ShowcaseEmojiFlight): the word's reactions rising up the
-   canvas and fading, inside the end card, over its veil and under its address bar (no
-   z-index: the bar comes later in the card and is positioned, so it paints on top). Each
-   glyph's numbers come inline (--x, --s, --d, --t, --dx, --r, --rise); the rise stays
-   inside the canvas, between the bands. */
-.vocab-showcase-emojis {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--showcase-band, 0px);
-  bottom: var(--showcase-band, 0px);
-  pointer-events: none;
-}
-.vocab-showcase-emoji {
-  position: absolute;
-  left: var(--x);
-  bottom: 4%;
-  font-size: var(--s);
-  line-height: 1;
-  opacity: 0;
-  filter: drop-shadow(0 4px 10px #0006);
-  animation: vocab-showcase-emoji-rise var(--t) cubic-bezier(0.22, 0.61, 0.36, 1) var(--d) both;
-}
-@keyframes vocab-showcase-emoji-rise {
-  0% {
-    opacity: 0;
-    translate: 0 0;
-    scale: 0.5;
-    rotate: 0deg;
-  }
-  14% {
-    opacity: 1;
-    scale: 1.08;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    /* A share of the canvas's height, which is 1.25 × the frame's width. */
-    translate: var(--dx) calc(-1 * var(--rise) * 125vw);
-    scale: 1;
-    rotate: var(--r);
-  }
+/* The 4:5 frame's closing reactions (ShowcaseEmojiFlight, the feed's EmojiBurst) are drawn
+   inside the end card, between its veil and its address bar. The burst's own z-index would
+   lift it over the bar, so here it has none: the bar comes later and paints on top. */
+.vocab-outro .vocab-emoji-burst {
+  z-index: auto;
 }
