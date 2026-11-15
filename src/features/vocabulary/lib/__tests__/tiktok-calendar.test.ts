@@ -14,6 +14,8 @@ import {
   postsToDraft,
   exportConflicts,
   recordExport,
+  postsToPublish,
+  captionForPlatform,
   type ExportedWords,
   summarize,
   todayInVietnam,
@@ -336,5 +338,78 @@ describe("exported words", () => {
     expect(clashes.map((c) => c.day.day)).toEqual([2]);
     // The same calendar clip on another post is a repeat too.
     expect(exportConflicts({ days: [day(9, "vi-good")] }, list).map((c) => c.day.day)).toEqual([9]);
+  });
+});
+
+describe("publishing on Facebook and Instagram", () => {
+  const post = (n: number, time: string, extra: Partial<CalendarDay> = {}): CalendarDay => ({
+    day: n,
+    date: "2026-11-15",
+    time,
+    wordId: `vi-w${n}`,
+    word: `w${n}`,
+    code: "ABC",
+    level: "A1",
+    topic: "t",
+    status: "drafted",
+    caption: "shared",
+    clip: "~/c.mp4",
+    durationSec: 50,
+    renderedAt: null,
+    scheduledAt: null,
+    postedAt: null,
+    url: null,
+    note: null,
+    ...extra,
+  });
+  const calendar = (days: CalendarDay[]): Calendar => ({
+    version: 1,
+    locale: "en",
+    startDate: "2026-11-15",
+    postTime: "19:00",
+    order: "rising",
+    seed: 1,
+    clipDir: "~/clips",
+    excluded: [],
+    days,
+  });
+  const at = (hhmm: string) => Date.parse(`2026-11-15T${hhmm}:00+07:00`);
+
+  it("publishes a post once its time has come, not before and not hours late", () => {
+    const cal = calendar([post(1, "11:30"), post(2, "19:00"), post(3, "21:30")]);
+    expect(postsToPublish(cal, at("19:05"), "instagram").map((d) => d.day)).toEqual([2]);
+    expect(postsToPublish(cal, at("18:59"), "instagram").map((d) => d.day)).toEqual([]);
+    // 11:30 is more than six hours gone by 19:05.
+    expect(postsToPublish(cal, at("17:00"), "facebook").map((d) => d.day)).toEqual([1]);
+  });
+
+  it("leaves posted, skipped and unrendered posts alone, and retries a failure a few times", () => {
+    const cal = calendar([
+      post(1, "19:00", { platforms: { facebook: { status: "posted" } } }),
+      post(2, "19:00", { platforms: { facebook: { status: "skipped" } } }),
+      post(3, "19:00", { status: "planned", clip: null }),
+      post(4, "19:00", { platforms: { facebook: { status: "failed", attempts: 1 } } }),
+      post(5, "19:00", { platforms: { facebook: { status: "failed", attempts: 3 } } }),
+      post(6, "19:00", { platforms: { facebook: { status: "publishing", at: "2026-11-15T11:00:00Z", attempts: 1 } } }),
+      post(7, "19:00", { platforms: { facebook: { status: "publishing", at: "2026-11-15T12:00:00Z", attempts: 1 } } }),
+    ]);
+    // 19:10 Vietnam is 12:10 UTC: post 6 has been "publishing" for over an hour, post 7 for ten minutes.
+    expect(postsToPublish(cal, at("19:10"), "facebook").map((d) => d.day)).toEqual([4, 6]);
+    // Each platform keeps its own track.
+    expect(postsToPublish(cal, at("19:10"), "instagram").map((d) => d.day)).toEqual([1, 2, 4, 5, 6, 7]);
+  });
+
+  it("posts a platform's own caption when it has one", () => {
+    const day = post(1, "19:00", { platforms: { instagram: { status: "pending", caption: "for instagram" } } });
+    expect(captionForPlatform(day, "instagram")).toBe("for instagram");
+    expect(captionForPlatform(day, "facebook")).toBe("shared");
+  });
+
+  it("does not call the same post on another platform a repeat", () => {
+    const list: ExportedWords = { version: 1, words: {} };
+    const word = { id: "vi-w1", word: "w1", code: "ABC", level: "A1" };
+    recordExport(list, word, { where: "calendar", ref: "post 1", at: "2026-11-15" });
+    recordExport(list, word, { where: "instagram", ref: "post 1", at: "2026-11-15" });
+    expect(exportConflicts({ days: [post(1, "19:00")] }, list)).toEqual([]);
   });
 });

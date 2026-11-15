@@ -1,0 +1,312 @@
+/**
+ * /posting: the post calendar, managed. Every post from a week back to three weeks ahead,
+ * by day: its clip to watch, its caption to edit, and where it stands on each platform —
+ * TikTok (drafted in the emulator, marked posted with its link here) and Facebook and
+ * Instagram (published through Meta's API, now or by the scheduled job at the post's time).
+ *
+ * The page only reads and asks: posting.server.ts owns the calendar file and starts the
+ * same publish command the scheduled job runs, so a post looks the same whichever started
+ * it. While anything is publishing the page refreshes itself every few seconds.
+ *
+ * Development only (routes/posting.tsx); the build fails if this reaches a bundle.
+ */
+import { useCallback, useEffect, useMemo, useState } from "react";
+import "../vocabulary-export.css";
+
+type Platform = "facebook" | "instagram";
+const PLATFORMS: { id: Platform; label: string }[] = [
+  { id: "facebook", label: "Facebook" },
+  { id: "instagram", label: "Instagram" },
+];
+
+type Track = {
+  status: "pending" | "publishing" | "posted" | "failed" | "skipped";
+  caption?: string | null;
+  url?: string | null;
+  at?: string | null;
+  error?: string | null;
+  attempts?: number;
+};
+
+type Post = {
+  day: number;
+  date: string;
+  time: string;
+  word: string;
+  code: string;
+  level: string;
+  status: string;
+  url: string | null;
+  caption: string;
+  hasClip: boolean;
+  durationSec: number | null;
+  platforms: Partial<Record<Platform, Track>>;
+};
+
+type Listing = { today: string; connection: Record<Platform, string | null>; posts: Post[] };
+
+const API = "/api/dev/posting";
+
+async function act(body: object): Promise<string | null> {
+  const response = await fetch(API, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (response.ok) return null;
+  const json = (await response.json().catch(() => ({}))) as { error?: string };
+  return json.error ?? `HTTP ${response.status}`;
+}
+
+const WEEKDAY = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+const dayLabel = (date: string, today: string) =>
+  date === today ? `Today · ${WEEKDAY.format(new Date(`${date}T00:00:00Z`))}` : WEEKDAY.format(new Date(`${date}T00:00:00Z`));
+
+/** One platform's line on a post: its state, its link, and what can be done now. */
+function PlatformRow({
+  post,
+  platform,
+  label,
+  blocked,
+  onDone,
+}: {
+  post: Post;
+  platform: Platform;
+  label: string;
+  blocked: string | null;
+  onDone: (error: string | null) => void;
+}) {
+  const track: Track = post.platforms[platform] ?? { status: "pending" };
+  const [busy, setBusy] = useState(false);
+  const run = async (body: object) => {
+    setBusy(true);
+    onDone(await act(body));
+    setBusy(false);
+  };
+  const live = track.status === "posted";
+  return (
+    <div className="posting-track" data-status={track.status}>
+      <span className="posting-track-name">{label}</span>
+      <span className="posting-chip" data-status={track.status}>
+        {track.status === "failed" && track.attempts ? `failed ×${track.attempts}` : track.status}
+      </span>
+      {live && track.url && (
+        <a className="posting-link" href={track.url} target="_blank" rel="noreferrer">
+          open
+        </a>
+      )}
+      <span className="posting-track-actions">
+        {!live && track.status !== "publishing" && (
+          <button
+            type="button"
+            disabled={busy || !post.hasClip || !!blocked || track.status === "skipped"}
+            title={blocked ?? (!post.hasClip ? "No clip yet" : "Publish this post now")}
+            onClick={() => run({ action: "publish", day: post.day, platform })}
+          >
+            {track.status === "failed" ? "Retry" : "Publish now"}
+          </button>
+        )}
+        {!live && track.status !== "publishing" && (
+          <button
+            type="button"
+            className="posting-quiet"
+            disabled={busy}
+            onClick={() => run({ action: "skip", day: post.day, platform, skip: track.status !== "skipped" })}
+          >
+            {track.status === "skipped" ? "Unskip" : "Skip"}
+          </button>
+        )}
+      </span>
+      {track.error && track.status === "failed" && <p className="posting-error">{track.error}</p>}
+    </div>
+  );
+}
+
+/** The TikTok line: drafted by the job, posted by hand in the emulator, its link noted here. */
+function TikTokRow({ post, onDone }: { post: Post; onDone: (error: string | null) => void }) {
+  const [link, setLink] = useState("");
+  const posted = post.status === "posted";
+  return (
+    <div className="posting-track" data-status={posted ? "posted" : post.status}>
+      <span className="posting-track-name">TikTok</span>
+      <span className="posting-chip" data-status={posted ? "posted" : post.status === "drafted" ? "pending" : post.status}>
+        {post.status}
+      </span>
+      {posted && post.url && (
+        <a className="posting-link" href={post.url} target="_blank" rel="noreferrer">
+          open
+        </a>
+      )}
+      {!posted && post.status === "drafted" && (
+        <form
+          className="posting-track-actions"
+          onSubmit={async (event) => {
+            event.preventDefault();
+            onDone(await act({ action: "tiktok-posted", day: post.day, url: link.trim() }));
+          }}
+        >
+          <input
+            type="url"
+            placeholder="Paste the TikTok link once posted"
+            value={link}
+            onChange={(event) => setLink(event.target.value)}
+            required
+          />
+          <button type="submit">Mark posted</button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+/** A post: clip, word, caption (shared, or per platform) and its three tracks. */
+function PostCard({ post, connection, onChanged }: { post: Post; connection: Listing["connection"]; onChanged: (error: string | null) => void }) {
+  const [captionFor, setCaptionFor] = useState<"all" | Platform>("all");
+  const shown = captionFor === "all" ? post.caption : post.platforms[captionFor]?.caption || post.caption;
+  const [draft, setDraft] = useState(shown);
+  useEffect(() => setDraft(shown), [shown]);
+  const dirty = draft !== shown;
+  return (
+    <article className="posting-card">
+      <div className="posting-clip">
+        {post.hasClip ? (
+          <video src={`${API}?clip=${post.day}`} controls preload="metadata" playsInline />
+        ) : (
+          <span className="posting-noclip">No clip yet{post.status === "planned" ? " — the 03:00 job renders it" : ""}</span>
+        )}
+      </div>
+      <div className="posting-body">
+        <header className="posting-head">
+          <span className="posting-time">{post.time}</span>
+          <strong>{post.word}</strong>
+          <span className="posting-meta">
+            #{post.day} · {post.level} · {post.code}
+            {post.durationSec ? ` · ${post.durationSec}s` : ""}
+          </span>
+        </header>
+        <div className="posting-caption">
+          <div className="posting-caption-tabs" role="tablist" aria-label="Caption for">
+            {(["all", "facebook", "instagram"] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                aria-selected={captionFor === tab}
+                onClick={() => setCaptionFor(tab)}
+              >
+                {tab === "all" ? "Caption" : tab === "facebook" ? "Facebook only" : "Instagram only"}
+                {tab !== "all" && post.platforms[tab]?.caption ? " •" : ""}
+              </button>
+            ))}
+          </div>
+          <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={5} />
+          {dirty && (
+            <div className="posting-caption-actions">
+              <button
+                type="button"
+                onClick={async () =>
+                  onChanged(
+                    await act({
+                      action: "caption",
+                      day: post.day,
+                      ...(captionFor === "all" ? {} : { platform: captionFor }),
+                      caption: draft,
+                    }),
+                  )
+                }
+              >
+                Save caption
+              </button>
+              <button type="button" className="posting-quiet" onClick={() => setDraft(shown)}>
+                Discard
+              </button>
+            </div>
+          )}
+        </div>
+        <TikTokRow post={post} onDone={onChanged} />
+        {PLATFORMS.map((p) => (
+          <PlatformRow key={p.id} post={post} platform={p.id} label={p.label} blocked={connection[p.id]} onDone={onChanged} />
+        ))}
+      </div>
+    </article>
+  );
+}
+
+export function PostingPage() {
+  const [listing, setListing] = useState<Listing | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const load = useCallback(async () => {
+    try {
+      const response = await fetch(API);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      setListing((await response.json()) as Listing);
+    } catch (cause) {
+      setError(`Could not load the calendar: ${(cause as Error).message}`);
+    }
+  }, []);
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const publishing = listing?.posts.some((p) => Object.values(p.platforms).some((t) => t?.status === "publishing"));
+  // Refresh while something is in flight, and once a minute otherwise (the job runs too).
+  useEffect(() => {
+    const id = window.setInterval(() => void load(), publishing ? 4000 : 60_000);
+    return () => window.clearInterval(id);
+  }, [load, publishing]);
+
+  const byDate = useMemo(() => {
+    const groups = new Map<string, Post[]>();
+    for (const post of listing?.posts ?? []) groups.set(post.date, [...(groups.get(post.date) ?? []), post]);
+    return [...groups];
+  }, [listing]);
+
+  const onChanged = useCallback(
+    (problem: string | null) => {
+      setError(problem);
+      void load();
+    },
+    [load],
+  );
+
+  return (
+    <main className="posting">
+      <header className="posting-top">
+        <h1>Posting</h1>
+        {listing && (
+          <ul className="posting-connections">
+            <li data-ok="true">TikTok · drafts in the emulator</li>
+            {PLATFORMS.map((p) => (
+              <li key={p.id} data-ok={!listing.connection[p.id]} title={listing.connection[p.id] ?? "Connected"}>
+                {p.label} · {listing.connection[p.id] ? "not connected" : "connected"}
+              </li>
+            ))}
+          </ul>
+        )}
+        <button type="button" className="posting-quiet" onClick={() => void load()}>
+          Refresh
+        </button>
+      </header>
+      {listing && Object.values(listing.connection).some(Boolean) && (
+        <p className="posting-note">
+          Facebook and Instagram post themselves at each post's time once connected:{" "}
+          <code>npm run tiktok -- meta-setup</code> (steps in docs/meta-publishing.md).
+        </p>
+      )}
+      {error && (
+        <p className="posting-error" role="alert">
+          {error}
+        </p>
+      )}
+      {!listing && !error && <p className="posting-note">Loading…</p>}
+      {byDate.map(([date, posts]) => (
+        <section key={date} className="posting-day" data-past={listing && date < listing.today ? "" : undefined}>
+          <h2>{listing && dayLabel(date, listing.today)}</h2>
+          {posts.map((post) => (
+            <PostCard key={post.day} post={post} connection={listing!.connection} onChanged={onChanged} />
+          ))}
+        </section>
+      ))}
+    </main>
+  );
+}

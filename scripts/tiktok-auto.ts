@@ -5,6 +5,9 @@
  *              for the recording when none answers and stopping it afterwards
  *   draft      render any post due within --hours (default 24) that has no clip yet, then
  *              save every due post as a TikTok draft in the emulator (tiktok.ts draft-due)
+ *   publish    post on Facebook and Instagram every post whose time has come (tiktok.ts
+ *              publish-due); launchd runs it every 10 minutes, and it does nothing, writing
+ *              no log and showing no notification, while Meta is not connected or nothing is due
  *   install    write and load the two launchd jobs (--render-at 03:00, --draft-at 07:00)
  *   uninstall  unload and remove them
  *   status     whether the jobs are loaded, and the end of the latest run's log
@@ -34,7 +37,8 @@ import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
-import { postsToDraft, todayInVietnam, type Calendar } from "./lib/tiktok-calendar";
+import { loadMetaConfig, metaReady } from "./lib/meta-publish";
+import { META_PLATFORMS, postsToDraft, postsToPublish, todayInVietnam, type Calendar } from "./lib/tiktok-calendar";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const LOG_DIR = join(ROOT, "logs", "tiktok-auto");
@@ -43,9 +47,16 @@ const CALENDAR_FILE = join(ROOT, "scripts/data/tiktok-calendar.json");
 const DEV_PORT = 5195;
 const BASE = `http://localhost:${DEV_PORT}`;
 const AGENTS = join(homedir(), "Library", "LaunchAgents");
-const LABELS = { render: "com.kinemedia.tiktok-render", draft: "com.kinemedia.tiktok-draft" } as const;
+const LABELS = {
+  render: "com.kinemedia.tiktok-render",
+  draft: "com.kinemedia.tiktok-draft",
+  publish: "com.kinemedia.tiktok-publish",
+} as const;
+type Job = keyof typeof LABELS;
 
 const [command, ...rest] = process.argv.slice(2);
+/** When this run began, to tell what it posted from what was posted before. */
+const runStarted = new Date().toISOString();
 function flag(name: string): string | undefined {
   const at = rest.indexOf(`--${name}`);
   return at !== -1 ? rest[at + 1] : undefined;
@@ -203,10 +214,40 @@ async function draftJob() {
   );
 }
 
+/** Whether any connected platform has a post due now: the publish job's quiet check. */
+function publishDue(): boolean {
+  const config = loadMetaConfig(ROOT);
+  const calendar = loadCalendar();
+  return META_PLATFORMS.some((p) => !metaReady(config, p) && postsToPublish(calendar, Date.now(), p).length > 0);
+}
+
+async function publishJob() {
+  const code = await tiktok(["publish-due"]);
+  const posted = loadCalendar().days.flatMap((d) =>
+    META_PLATFORMS.filter((p) => d.platforms?.[p]?.status === "posted" && (d.platforms[p]!.at ?? "") > runStarted)
+      .map((p) => `#${d.day} ${p}`),
+  );
+  if (code !== 0) throw new Error(`publishing failed${posted.length ? ` (posted ${posted.join(", ")})` : ""}; see /posting`);
+  if (posted.length) notify("Posted on Facebook / Instagram", posted.join(", "));
+}
+
 /** The plist for one job, with the paths this machine has now. */
-function plist(label: string, job: "render" | "draft", at: string, args: string[]): string {
-  const [hour, minute] = at.split(":").map(Number);
-  if (!(hour! >= 0 && hour! < 24 && minute! >= 0 && minute! < 60)) throw new Error(`"${at}" is not HH:MM`);
+function plist(label: string, job: Job, when: { at: string } | { every: number }, args: string[]): string {
+  let schedule: string;
+  if ("at" in when) {
+    const [hour, minute] = when.at.split(":").map(Number);
+    if (!(hour! >= 0 && hour! < 24 && minute! >= 0 && minute! < 60)) throw new Error(`"${when.at}" is not HH:MM`);
+    schedule = `<key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>${hour}</integer>
+    <key>Minute</key>
+    <integer>${minute}</integer>
+  </dict>`;
+  } else {
+    schedule = `<key>StartInterval</key>
+  <integer>${when.every}</integer>`;
+  }
   const tsx = join(ROOT, "node_modules", ".bin", "tsx");
   if (!existsSync(tsx)) throw new Error(`no tsx at ${tsx}; run npm install`);
   // launchd starts jobs with a bare PATH; node, npx, adb and ffmpeg live outside it.
@@ -232,13 +273,7 @@ ${strings([tsx, join(ROOT, "scripts", "tiktok-auto.ts"), job, ...args])}
     <key>HOME</key>
     <string>${xml(homedir())}</string>
   </dict>
-  <key>StartCalendarInterval</key>
-  <dict>
-    <key>Hour</key>
-    <integer>${hour}</integer>
-    <key>Minute</key>
-    <integer>${minute}</integer>
-  </dict>
+  ${schedule}
   <!-- Unset, launchd throttles a job's CPU and I/O. The recording runs in real time, so a
        throttled render dropped to about 13 distinct frames a second against the usual 22-24. -->
   <key>ProcessType</key>
@@ -259,18 +294,20 @@ const uid = process.getuid!();
 
 function install() {
   mkdirSync(AGENTS, { recursive: true });
-  const jobs = [
-    { job: "render" as const, at: flag("render-at") ?? "03:00", args: ["--days", flag("render-days") ?? "6"] },
-    { job: "draft" as const, at: flag("draft-at") ?? "07:00", args: ["--hours", flag("hours") ?? "24"] },
+  const jobs: { job: Job; when: { at: string } | { every: number }; args: string[] }[] = [
+    { job: "render", when: { at: flag("render-at") ?? "03:00" }, args: ["--days", flag("render-days") ?? "6"] },
+    { job: "draft", when: { at: flag("draft-at") ?? "07:00" }, args: ["--hours", flag("hours") ?? "24"] },
+    // Instagram's API cannot schedule, so posts go out from here at their time.
+    { job: "publish", when: { every: 600 }, args: [] },
   ];
-  for (const { job, at, args } of jobs) {
+  for (const { job, when, args } of jobs) {
     const label = LABELS[job];
     const file = join(AGENTS, `${label}.plist`);
     spawnSync("launchctl", ["bootout", `gui/${uid}/${label}`]); // a no-op when not loaded
-    writeFileSync(file, plist(label, job, at, args));
+    writeFileSync(file, plist(label, job, when, args));
     const loaded = spawnSync("launchctl", ["bootstrap", `gui/${uid}`, file], { encoding: "utf8" });
     if (loaded.status !== 0) throw new Error(`launchctl bootstrap ${label} failed: ${loaded.stderr.trim()}`);
-    console.log(`✓ ${label}: daily at ${at} (${file})`);
+    console.log(`✓ ${label}: ${"at" in when ? `daily at ${when.at}` : `every ${when.every / 60} minutes`} (${file})`);
   }
   console.log(
     "\nThe Mac must be awake: launchd runs a missed time on wake but cannot wake it.\n" +
@@ -298,7 +335,7 @@ function status() {
     console.log(`${label}: loaded · state ${field("state")} · runs ${field("runs")} · last exit ${field("last exit code")}`);
   }
   const today = todayInVietnam(Date.now());
-  for (const job of ["render", "draft"]) {
+  for (const job of ["render", "draft", "publish"]) {
     const file = join(LOG_DIR, `${today}-${job}.log`);
     if (!existsSync(file)) continue;
     console.log(`\n── ${file} (last lines)`);
@@ -310,9 +347,11 @@ async function main() {
   if (command === "install") return install();
   if (command === "uninstall") return uninstall();
   if (command === "status") return status();
-  if (command !== "render" && command !== "draft") {
-    throw new Error("commands: render, draft, install, uninstall, status (see the top of scripts/tiktok-auto.ts)");
+  if (command !== "render" && command !== "draft" && command !== "publish") {
+    throw new Error("commands: render, draft, publish, install, uninstall, status (see the top of scripts/tiktok-auto.ts)");
   }
+  // Every ten minutes, mostly with nothing to do: no log, no lock, no notification then.
+  if (command === "publish" && !publishDue()) return;
   mkdirSync(LOG_DIR, { recursive: true });
   log = createWriteStream(join(LOG_DIR, `${todayInVietnam(Date.now())}-${command}.log`), { flags: "a" });
   say(`── TikTok ${command} run (pid ${process.pid})`);
@@ -320,7 +359,7 @@ async function main() {
   spawn("caffeinate", ["-i", "-w", String(process.pid)], { stdio: "ignore", detached: true }).unref();
   try {
     await takeLock();
-    await (command === "render" ? renderJob() : draftJob());
+    await (command === "render" ? renderJob() : command === "draft" ? draftJob() : publishJob());
     say(`✓ ${command} run finished`);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

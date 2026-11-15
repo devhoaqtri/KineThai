@@ -13,6 +13,12 @@
  *             its calendar caption, and mark it drafted
  *   draft-due hand off every rendered post due from today until --hours from now (what the
  *             unattended job runs, scripts/tiktok-auto.ts); fails if any is not drafted
+ *   publish   post a day's clip as a Reel on the Facebook Page and/or Instagram now
+ *             (scripts/lib/meta-publish.ts); what the /posting page's buttons run
+ *   publish-due  publish every post whose slot has come on Facebook and Instagram (the
+ *             scheduled job, scripts/tiktok-auto.ts publish); quiet when nothing is due
+ *   meta-setup  turn META_USER_TOKEN (Graph API Explorer) into the Page's lasting token and
+ *             the linked Instagram account, written to .env.local
  *   exported  the words that have already gone out anywhere (scripts/data/exported-words.json),
  *             and any calendar day that would post one of them again; `exported add` records
  *             an export no tool saw (a post made by hand)
@@ -38,6 +44,9 @@
  *   npm run tiktok -- caption 3
  *   npm run tiktok -- handoff 3 [--no-draft] [--no-location]
  *   npm run tiktok -- draft-due [--hours 24]
+ *   npm run tiktok -- publish 5 [--platform facebook|instagram|all] [--dry-run]
+ *   npm run tiktok -- publish-due [--dry-run]
+ *   npm run tiktok -- meta-setup [--page <id or name>]
  *   npm run tiktok -- exported [add <code> --where tiktok --ref <link or note> [--at 2026-10-20]]
  *
  * Rendering needs the dev server (`npm run dev`, port 5195), because the showcase route
@@ -49,6 +58,7 @@ import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
+import { exchangeForPageToken, loadMetaConfig, metaReady, publishReel, writeEnvLocal } from "./lib/meta-publish";
 import { siteAddress } from "../src/features/vocabulary/lib/target-language";
 import {
   CALENDAR_DAYS,
@@ -72,6 +82,11 @@ import {
   type DayStatus,
   type LevelOrder,
   type ExportedWords,
+  type MetaPlatform,
+  type PlatformPost,
+  META_PLATFORMS,
+  captionForPlatform,
+  postsToPublish,
   calendarExportRef,
   exportConflicts,
   recordExport,
@@ -664,6 +679,126 @@ function draftDue() {
   if (problems.length) throw new Error(problems.join("\n  "));
 }
 
+/** Where Instagram's cover should sit: the clip's letter hint, as the TikTok cover does. */
+function coverMsOf(day: CalendarDay): number | null {
+  const clip = day.clip ? expandHome(day.clip) : null;
+  if (!clip || !day.durationSec || !existsSync(`${clip}.meta.json`)) return null;
+  const fraction = readJson<{ hintFraction?: number | null }>(`${clip}.meta.json`).hintFraction;
+  return typeof fraction === "number" ? fraction * day.durationSec * 1000 : null;
+}
+
+/** Change one platform's track of one day, read fresh so other writers are not undone. */
+function updateTrack(dayNumber: number, platform: MetaPlatform, change: (track: PlatformPost) => void) {
+  const calendar = loadCalendar();
+  const day = calendar.days.find((d) => d.day === dayNumber)!;
+  day.platforms ??= {};
+  const track = (day.platforms[platform] ??= { status: "pending" });
+  change(track);
+  saveCalendar(calendar);
+}
+
+/**
+ * Publish one day on one platform and record the outcome on the calendar (and, once it is
+ * live, on the exported-words list). A dry run touches neither.
+ * @returns Whether it went out
+ */
+async function publishDay(dayNumber: number, platform: MetaPlatform, dryRun: boolean): Promise<boolean> {
+  const day = loadCalendar().days.find((d) => d.day === dayNumber);
+  if (!day) throw new Error(`there is no post ${dayNumber}`);
+  if (!day.clip) throw new Error(`post ${dayNumber} has no clip yet: npm run tiktok -- render --day ${dayNumber}`);
+  const config = { ...loadMetaConfig(ROOT), ...(dryRun ? { dryRun: true } : {}) };
+  console.log(`\n── ${platform} · post ${day.day} (${day.date} ${day.time ?? ""}) · “${day.word}”${config.dryRun ? " · dry run" : ""}`);
+  if (!config.dryRun) {
+    updateTrack(day.day, platform, (t) => {
+      t.status = "publishing";
+      t.at = now();
+      t.error = null;
+      t.attempts = (t.attempts ?? 0) + 1;
+    });
+  }
+  try {
+    const result = await publishReel({
+      config,
+      platform,
+      file: expandHome(day.clip),
+      caption: captionForPlatform(day, platform),
+      coverMs: coverMsOf(day),
+      log: (line) => console.log(line),
+    });
+    if (config.dryRun) {
+      console.log("✓ dry run: every step would be sent");
+      return true;
+    }
+    updateTrack(day.day, platform, (t) => Object.assign(t, { status: "posted", id: result.id, url: result.url, at: now(), error: null }));
+    const list = loadExported();
+    recordExport(list, { id: day.wordId, word: day.word, code: day.code, level: day.level }, {
+      where: platform,
+      ref: calendarExportRef(day.day),
+      at: now().slice(0, 10),
+    });
+    saveExported(list);
+    console.log(`✓ posted on ${platform}${result.url ? `: ${result.url}` : ""}`);
+    return true;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!config.dryRun) updateTrack(day.day, platform, (t) => Object.assign(t, { status: "failed", error: message, at: now() }));
+    console.error(`✗ ${platform}: ${message}`);
+    return false;
+  }
+}
+
+/** The platforms a --platform flag names (both when it says all or nothing). */
+function platformsFlag(): MetaPlatform[] {
+  const wanted = flag("platform") ?? "all";
+  if (wanted === "all") return [...META_PLATFORMS];
+  const list = wanted.split(",") as MetaPlatform[];
+  for (const p of list) if (!META_PLATFORMS.includes(p)) throw new Error(`--platform is facebook, instagram or all`);
+  return list;
+}
+
+async function publish() {
+  const [spec] = positional;
+  if (!spec) throw new Error("usage: publish <post> [--platform facebook|instagram|all] [--dry-run]");
+  let failed = 0;
+  for (const platform of platformsFlag()) if (!(await publishDay(Number(spec), platform, rest.includes("--dry-run")))) failed += 1;
+  if (failed) process.exitCode = 1;
+}
+
+/** Everything due now on each platform that is set up; silent when nothing is. */
+async function publishDue() {
+  const dryRun = rest.includes("--dry-run");
+  const config = loadMetaConfig(ROOT);
+  let failed = 0;
+  let sent = 0;
+  for (const platform of META_PLATFORMS) {
+    if (!dryRun && metaReady(config, platform)) continue; // not connected yet
+    for (const day of postsToPublish(loadCalendar(), Date.now(), platform)) {
+      if (await publishDay(day.day, platform, dryRun)) sent += 1;
+      else failed += 1;
+    }
+  }
+  if (sent || failed) console.log(`\npublished ${sent}, failed ${failed}`);
+  if (failed) process.exitCode = 1;
+}
+
+/** Exchange META_USER_TOKEN for the Page token and Instagram id, into .env.local. */
+async function metaSetup() {
+  const result = await exchangeForPageToken(loadMetaConfig(ROOT), flag("page") ?? null);
+  writeEnvLocal(ROOT, {
+    META_PAGE_ID: result.pageId,
+    META_PAGE_TOKEN: result.pageToken,
+    META_IG_USER_ID: result.igUserId,
+    // Short-lived and spent: the Page token is what lasts.
+    META_USER_TOKEN: null,
+  });
+  console.log(`✓ Facebook Page “${result.pageName}” (${result.pageId}) connected; its token is in .env.local`);
+  console.log(
+    result.igUserId
+      ? `✓ Instagram account ${result.igUserId} (linked to that Page) connected`
+      : "! that Page has no linked Instagram professional account: link one in Meta Business Suite and rerun meta-setup",
+  );
+}
+
 /** List what has gone out, or record an export no tool saw (`exported add <code> …`). */
 function exported() {
   const calendar = loadCalendar();
@@ -713,8 +848,14 @@ async function main() {
       return draftDue();
     case "exported":
       return exported();
+    case "publish":
+      return publish();
+    case "publish-due":
+      return publishDue();
+    case "meta-setup":
+      return metaSetup();
     default:
-      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported (see the top of scripts/tiktok.ts)");
+      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, meta-setup (see the top of scripts/tiktok.ts)");
   }
 }
 

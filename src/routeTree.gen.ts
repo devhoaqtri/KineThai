@@ -16,6 +16,7 @@ import { Route as AdminAccessDeniedRouteImport } from './routes/admin-access-den
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BadgeLabRouteImport } from './routes/badge-lab'
 import { Route as BurstLabRouteImport } from './routes/burst-lab'
+import { Route as PostingRouteImport } from './routes/posting'
 import { Route as ShowcaseRouteImport } from './routes/showcase'
 import { Route as StoreRouteImport } from './routes/store'
 import { Route as TiktokLabRouteImport } from './routes/tiktok-lab'
@@ -53,6 +54,7 @@ import { Route as AuthenticatedPPostIdRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedUUsernameRouteImport } from './routes/_authenticated/u.$username'
 import { Route as ApiDevCarouselRouteImport } from './routes/api/dev/carousel'
 import { Route as ApiDevFeedLogRouteImport } from './routes/api/dev/feed-log'
+import { Route as ApiDevPostingRouteImport } from './routes/api/dev/posting'
 import { Route as ApiDevTiktokClipRouteImport } from './routes/api/dev/tiktok-clip'
 import { Route as ApiPublicEngagementRouteImport } from './routes/api/public/engagement'
 import { Route as ApiPublicErrorReportRouteImport } from './routes/api/public/error-report'
@@ -94,6 +96,11 @@ const BadgeLabRoute = BadgeLabRouteImport.update({
 const BurstLabRoute = BurstLabRouteImport.update({
   id: '/burst-lab',
   path: '/burst-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostingRoute = PostingRouteImport.update({
+  id: '/posting',
+  path: '/posting',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShowcaseRoute = ShowcaseRouteImport.update({
@@ -283,6 +290,11 @@ const ApiDevFeedLogRoute = ApiDevFeedLogRouteImport.update({
   path: '/api/dev/feed-log',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDevPostingRoute = ApiDevPostingRouteImport.update({
+  id: '/api/dev/posting',
+  path: '/api/dev/posting',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiDevTiktokClipRoute = ApiDevTiktokClipRouteImport.update({
   id: '/api/dev/tiktok-clip',
   path: '/api/dev/tiktok-clip',
@@ -332,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
+  '/posting': typeof PostingRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/tiktok-lab': typeof TiktokLabRoute
@@ -369,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/u/$username': typeof AuthenticatedUUsernameRoute
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
+  '/api/dev/posting': typeof ApiDevPostingRoute
   '/api/dev/tiktok-clip': typeof ApiDevTiktokClipRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/error-report': typeof ApiPublicErrorReportRoute
@@ -384,6 +398,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
+  '/posting': typeof PostingRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/tiktok-lab': typeof TiktokLabRoute
@@ -421,6 +436,7 @@ export interface FileRoutesByTo {
   '/u/$username': typeof AuthenticatedUUsernameRoute
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
+  '/api/dev/posting': typeof ApiDevPostingRoute
   '/api/dev/tiktok-clip': typeof ApiDevTiktokClipRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/error-report': typeof ApiPublicErrorReportRoute
@@ -439,6 +455,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
+  '/posting': typeof PostingRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/tiktok-lab': typeof TiktokLabRoute
@@ -476,6 +493,7 @@ export interface FileRoutesById {
   '/_authenticated/u/$username': typeof AuthenticatedUUsernameRoute
   '/api/dev/carousel': typeof ApiDevCarouselRoute
   '/api/dev/feed-log': typeof ApiDevFeedLogRoute
+  '/api/dev/posting': typeof ApiDevPostingRoute
   '/api/dev/tiktok-clip': typeof ApiDevTiktokClipRoute
   '/api/public/engagement': typeof ApiPublicEngagementRoute
   '/api/public/error-report': typeof ApiPublicErrorReportRoute
@@ -494,6 +512,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/badge-lab'
     | '/burst-lab'
+    | '/posting'
     | '/showcase'
     | '/store'
     | '/tiktok-lab'
@@ -531,6 +550,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
+    | '/api/dev/posting'
     | '/api/dev/tiktok-clip'
     | '/api/public/engagement'
     | '/api/public/error-report'
@@ -546,6 +566,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/badge-lab'
     | '/burst-lab'
+    | '/posting'
     | '/showcase'
     | '/store'
     | '/tiktok-lab'
@@ -583,6 +604,7 @@ export interface FileRouteTypes {
     | '/u/$username'
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
+    | '/api/dev/posting'
     | '/api/dev/tiktok-clip'
     | '/api/public/engagement'
     | '/api/public/error-report'
@@ -600,6 +622,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/badge-lab'
     | '/burst-lab'
+    | '/posting'
     | '/showcase'
     | '/store'
     | '/tiktok-lab'
@@ -637,6 +660,7 @@ export interface FileRouteTypes {
     | '/_authenticated/u/$username'
     | '/api/dev/carousel'
     | '/api/dev/feed-log'
+    | '/api/dev/posting'
     | '/api/dev/tiktok-clip'
     | '/api/public/engagement'
     | '/api/public/error-report'
@@ -655,6 +679,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BadgeLabRoute: typeof BadgeLabRoute
   BurstLabRoute: typeof BurstLabRoute
+  PostingRoute: typeof PostingRoute
   ShowcaseRoute: typeof ShowcaseRoute
   StoreRoute: typeof StoreRoute
   TiktokLabRoute: typeof TiktokLabRoute
@@ -667,6 +692,7 @@ export interface RootRouteChildren {
   FeedIndexRoute: typeof FeedIndexRoute
   ApiDevCarouselRoute: typeof ApiDevCarouselRoute
   ApiDevFeedLogRoute: typeof ApiDevFeedLogRoute
+  ApiDevPostingRoute: typeof ApiDevPostingRoute
   ApiDevTiktokClipRoute: typeof ApiDevTiktokClipRoute
   ApiPublicEngagementRoute: typeof ApiPublicEngagementRoute
   ApiPublicErrorReportRoute: typeof ApiPublicErrorReportRoute
@@ -726,6 +752,13 @@ declare module '@tanstack/react-router' {
       path: '/burst-lab'
       fullPath: '/burst-lab'
       preLoaderRoute: typeof BurstLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posting': {
+      id: '/posting'
+      path: '/posting'
+      fullPath: '/posting'
+      preLoaderRoute: typeof PostingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/showcase': {
@@ -987,6 +1020,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDevFeedLogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/dev/posting': {
+      id: '/api/dev/posting'
+      path: '/api/dev/posting'
+      fullPath: '/api/dev/posting'
+      preLoaderRoute: typeof ApiDevPostingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/dev/tiktok-clip': {
       id: '/api/dev/tiktok-clip'
       path: '/api/dev/tiktok-clip'
@@ -1123,6 +1163,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BadgeLabRoute: BadgeLabRoute,
   BurstLabRoute: BurstLabRoute,
+  PostingRoute: PostingRoute,
   ShowcaseRoute: ShowcaseRoute,
   StoreRoute: StoreRoute,
   TiktokLabRoute: TiktokLabRoute,
@@ -1135,6 +1176,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedIndexRoute: FeedIndexRoute,
   ApiDevCarouselRoute: ApiDevCarouselRoute,
   ApiDevFeedLogRoute: ApiDevFeedLogRoute,
+  ApiDevPostingRoute: ApiDevPostingRoute,
   ApiDevTiktokClipRoute: ApiDevTiktokClipRoute,
   ApiPublicEngagementRoute: ApiPublicEngagementRoute,
   ApiPublicErrorReportRoute: ApiPublicErrorReportRoute,

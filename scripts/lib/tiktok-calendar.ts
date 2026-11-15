@@ -22,7 +22,8 @@
  *   PostSchedule, CandidateWord, parseDaySpec, parseBurst, dateOfDay, todayInVietnam,
  *   dayOfDate, weekdayOf, burstPosts, slotOfPost, firstPostOnDate, levelForDay, eligibleWords,
  *   planDays, captionFor, summarize, postTimeMs, postsToDraft, ExportedWords, ExportRecord,
- *   recordExport, calendarExportRef, exportConflicts
+ *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
+ *   PlatformPost, postsToPublish, captionForPlatform
  */
 
 /** How many hashtags TikTok keeps in a caption; it silently drops the rest. */
@@ -66,6 +67,11 @@ export type CalendarDay = {
   postedAt: string | null;
   /** The post's TikTok link, once it is live. */
   url: string | null;
+  /**
+   * The same clip on the other platforms (scripts/lib/meta-publish.ts), each on its own
+   * track: TikTok's own state stays in `status` above.
+   */
+  platforms?: Partial<Record<MetaPlatform, PlatformPost>>;
   note: string | null;
 };
 
@@ -536,10 +542,71 @@ export function exportConflicts(
   const out: { day: CalendarDay; clashes: ExportRecord[] }[] = [];
   for (const day of calendar.days) {
     const own = calendarExportRef(day.day);
-    const clashes = (list.words[day.wordId]?.exports ?? []).filter(
-      (e) => !(e.where === "calendar" && e.ref === own),
-    );
+    // The post's own exports (its clip, and the same clip on Facebook or Instagram) all
+    // carry its ref; only an export under another ref is a repeat.
+    const clashes = (list.words[day.wordId]?.exports ?? []).filter((e) => e.ref !== own);
     if (clashes.length) out.push({ day, clashes });
   }
   return out.sort((a, b) => a.day.day - b.day.day);
+}
+
+/** The platforms published through Meta's API, besides TikTok's own track. */
+export const META_PLATFORMS = ["facebook", "instagram"] as const;
+export type MetaPlatform = (typeof META_PLATFORMS)[number];
+
+/**
+ * One post on one platform. `pending` (or absent) waits for its slot; `publishing` is a
+ * run in flight; `failed` is retried by the scheduled job until `attempts` reaches
+ * MAX_PUBLISH_ATTEMPTS; `skipped` is the admin saying no.
+ */
+export type PlatformPost = {
+  status: "pending" | "publishing" | "posted" | "failed" | "skipped";
+  /** This platform's own caption, when it differs from the calendar's. */
+  caption?: string | null;
+  id?: string | null;
+  url?: string | null;
+  at?: string | null;
+  error?: string | null;
+  attempts?: number;
+};
+
+/** Tries the scheduled job makes at a failing post before leaving it to the admin. */
+export const MAX_PUBLISH_ATTEMPTS = 3;
+
+/** The caption a platform posts: its own when set, else the calendar's. @pure true */
+export function captionForPlatform(day: CalendarDay, platform: MetaPlatform): string {
+  return day.platforms?.[platform]?.caption?.trim() || day.caption;
+}
+
+/**
+ * The posts a platform should get now: rendered (or further along on TikTok), their slot
+ * reached, at most `graceHours` late, and not posted, skipped, in flight or out of tries.
+ * A post far past its slot is left alone: going out hours late in the middle of the night
+ * is worse than the admin deciding.
+ * @param calendar - the calendar
+ * @param nowMs - the current instant
+ * @param platform - which platform's track
+ * @param graceHours - how late a post may still go out on its own
+ * @returns The due posts, by post number
+ * @pure true
+ */
+export function postsToPublish(
+  calendar: Calendar,
+  nowMs: number,
+  platform: MetaPlatform,
+  graceHours = 6,
+): CalendarDay[] {
+  return calendar.days
+    .filter((day) => {
+      if (!day.clip || day.status === "planned" || day.status === "missed") return false;
+      const track = day.platforms?.[platform];
+      // A run that died mid-publish leaves `publishing` behind; after half an hour it is
+      // treated as a failure and tried again.
+      const stale = track?.status === "publishing" && nowMs - Date.parse(track.at ?? "") > 30 * 60_000;
+      const retry = (track?.status === "failed" || stale) && (track?.attempts ?? 0) < MAX_PUBLISH_ATTEMPTS;
+      if (track && track.status !== "pending" && !retry) return false;
+      const slot = postTimeMs(day, calendar.postTime);
+      return slot <= nowMs && nowMs - slot <= graceHours * 3_600_000;
+    })
+    .sort((a, b) => a.day - b.day);
 }
