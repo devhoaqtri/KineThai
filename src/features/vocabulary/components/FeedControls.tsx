@@ -831,7 +831,10 @@ function DifficultyDropdown({
               {summary.emoji}
             </span>
             {summary.label}
-            {summary.band ? ` · ${summary.band}` : ""}
+            {/* Its own span so the tightest portrait screens can drop it (vocabulary.css). */}
+            {summary.band ? (
+              <span className="vocab-difficulty-current-band"> · {summary.band}</span>
+            ) : null}
           </span>
           <ChevronDown size={12} data-open={open || undefined} aria-hidden="true" />
         </small>

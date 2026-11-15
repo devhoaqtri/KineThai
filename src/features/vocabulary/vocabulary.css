@@ -6942,6 +6942,15 @@
     background: color-mix(in srgb, var(--chrome-ink) 38%, transparent);
   }
 }
+/* Narrower still (the original Fold's 280px cover): docking frees nothing, since the group
+   already all but touched the gear, so the play button starts at the toolbar's width less
+   163px while the longest label with its band ("văn chương · B2–C2") ends at 171px. The
+   band goes, leaving the track's name: the levels are a tap away in the picker. */
+@media (max-width: 340px) and (orientation: portrait) {
+  .vocab-difficulty-current-band {
+    display: none;
+  }
+}
 @media (max-height: 620px) {
   .vocab-stage-label {
     display: none;
