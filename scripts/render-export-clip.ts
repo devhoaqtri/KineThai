@@ -40,6 +40,10 @@
  *     --out <path>          output file
  *     --fps <n>             output frame rate (default: 30)
  *     --max <seconds>       give up if the word never finishes (default: 120)
+ *     --keep-frames <dir>   copy the captured PNG frames there for colour checks
+ *     --gamma <n>  --vibrance <n>  --saturation <n>  --contrast <n>
+ *                           the colour grade (defaults: 1.12, 0.3, 1.08, 1); 1, 0, 1, 1
+ *                           encodes the browser's pixels untouched
  *   showcase mode:
  *     --intro-style <pop|drop|stamp|slide|flip>  pin the opening (default: picked per take)
  *     --outro-style <light|dark|glass|rise>      pin the end card (default: picked per take)
@@ -64,7 +68,7 @@
  *     --dialect <default|douyin>  the palette pool (default: the page's own)
  */
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
@@ -182,8 +186,22 @@ const outroStyle = styleFlag("outro-style", SHOWCASE_CONTRACT.outroVariants);
 const showcaseLook = styleFlag("look", BADGE_ROTATION);
 const fadeFrom = flag("fade-from", "");
 const fadeTo = flag("fade-to", "");
-const saturation = Number(flag("saturation", "1.2"));
-const contrast = Number(flag("contrast", "1.04"));
+// The clip's colour grade, tuned against what an Apple player shows (QuickTime, iPhone,
+// and the TikTok / Instagram / Facebook apps after their re-encode, which tag BT.709).
+// AVFoundation decodes a BT.709 clip with a ~1.96 gamma, not the ~2.2 the page was drawn
+// for, so a straight encode comes back with lifted midtones and ~8% less saturation: the
+// pale look next to the live feed. A 1.12 gamma on the frames cancels that lift (Apple's
+// decode of a frame then lands within ~1.5 levels of the browser's pixels), vibrance
+// lifts the pastel backdrops most and leaves already-strong accents near alone, and a
+// little saturation on top gives the punch the feed has on a phone. Measured with an
+// AVFoundation frame grab against --keep-frames PNGs; see the commit for the numbers.
+const gamma = Number(flag("gamma", "1.12"));
+const vibrance = Number(flag("vibrance", "0.3"));
+const saturation = Number(flag("saturation", "1.08"));
+const contrast = Number(flag("contrast", "1"));
+// Keep the captured PNGs (the browser's own pixels) in this folder instead of deleting
+// them, so a clip's colour can be compared against what the page actually drew.
+const keepFrames = flag("keep-frames", "");
 // The safe area comes from the EXPORT preset rather than from numbers invented here, so
 // the frame the feed is recorded into and the frame Export Studio draws agree by
 // construction. The margins are fractions of the frame, so they carry to any capture size.
@@ -670,10 +688,20 @@ async function main() {
       "anullsrc=channel_layout=stereo:sample_rate=48000",
       "-shortest",
       "-vf",
-      // Frames arrive as lossless sRGB PNGs (full-range RGB24). Boost saturation/contrast
-      // slightly so YUV420p chroma subsampling + platform re-encoding keep the feed's punch,
-      // then convert directly to BT.709 TV-range YUV420p matching the bt709 stream tags.
-      `fps=${fps},eq=saturation=${saturation}:contrast=${contrast},scale=${width}:${height}:flags=lanczos:out_color_matrix=bt709:out_range=tv,format=yuv420p`,
+      // Frames arrive as lossless sRGB PNGs (full-range RGB24). Grade them in RGB (the
+      // gamma and vibrance above), convert to BT.709 TV-range YUV420p, and stamp the frames
+      // themselves BT.709 with setparams. The -color_* options below are not enough on
+      // their own: ffmpeg 8+ takes the stream's tags from the frames, and an untagged PNG
+      // left the primaries and transfer "unknown" in every clip shipped before this.
+      [
+        `fps=${fps}`,
+        `lutrgb=r=gammaval(${gamma}):g=gammaval(${gamma}):b=gammaval(${gamma})`,
+        `vibrance=intensity=${vibrance}`,
+        `eq=saturation=${saturation}:contrast=${contrast}`,
+        `scale=${width}:${height}:flags=lanczos:out_color_matrix=bt709:out_range=tv`,
+        "format=yuv420p",
+        "setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=bt709",
+      ].join(","),
       "-c:v",
       "libx264",
       "-preset",
@@ -730,6 +758,10 @@ main()
   })
   .finally(async () => {
     await chrome?.close();
+    if (keepFrames) {
+      cpSync(frames, resolve(keepFrames), { recursive: true });
+      console.log(`  frames kept in ${resolve(keepFrames)}`);
+    }
     try {
       rmSync(frames, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 });
     } catch {
