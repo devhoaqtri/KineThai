@@ -1385,6 +1385,10 @@ export function FeedControls({
     };
     sync();
     const observer = new ResizeObserver(sync);
+    // The toolbar itself too: crossing a width tier (the super-narrow one docks the group
+    // against the gear) moves the controls without resizing them, which left the ticker
+    // bound to where they used to be.
+    observer.observe(host);
     observer.observe(corner);
     if (controls) observer.observe(controls);
     if (tagline) observer.observe(tagline);

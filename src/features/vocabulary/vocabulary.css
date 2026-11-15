@@ -6916,6 +6916,32 @@
     height: 40px;
   }
 }
+/* Super-narrow portrait (Galaxy Fold cover screens, 280–344px): centred between the title
+   and the gear, the transport group sat right where the difficulty sub-text ends, and a
+   long label ("văn chương · B2–C2") ran under the sound button. Here the group docks
+   against the gear instead and reads as one cluster with it: the group's own rhythm
+   (gap · hairline · gap) carries on to the gear, so the hairline the group draws after
+   its last button is the fourth separator of a four-button row. Docked, the optical
+   nudge that evened the two centred gaps has nothing to even. The now-playing ticker
+   needs no change of its own: its right edge is the greater of the controls' span and
+   the gear's width plus 12px (FeedControls measures both), so a docked group still
+   leaves the gear clear while the song's name crawls in from the right. */
+@media (max-width: 350px) and (orientation: portrait) {
+  .vocab-toolbar-row .vocab-player-controls {
+    justify-self: end;
+    translate: none;
+    /* The row gap between the group and the gear, pulled in to the group's own 4px. */
+    margin-right: calc(4px - var(--vocab-row-gap));
+  }
+  .vocab-toolbar-row .vocab-player-controls::after {
+    content: "";
+    flex-shrink: 0;
+    width: 1px;
+    height: 18px;
+    border-radius: 1px;
+    background: color-mix(in srgb, var(--chrome-ink) 38%, transparent);
+  }
+}
 @media (max-height: 620px) {
   .vocab-stage-label {
     display: none;
