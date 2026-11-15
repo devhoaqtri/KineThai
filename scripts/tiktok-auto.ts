@@ -239,6 +239,10 @@ ${strings([tsx, join(ROOT, "scripts", "tiktok-auto.ts"), job, ...args])}
     <key>Minute</key>
     <integer>${minute}</integer>
   </dict>
+  <!-- Unset, launchd throttles a job's CPU and I/O. The recording runs in real time, so a
+       throttled render dropped to about 13 distinct frames a second against the usual 22-24. -->
+  <key>ProcessType</key>
+  <string>Interactive</string>
   <!-- The emulator a draft run boots must outlive the job: you post from it afterwards. -->
   <key>AbandonProcessGroup</key>
   <true/>

@@ -325,29 +325,39 @@ async function render() {
   for (const day of chosen) {
     const out = join(dir, `day-${pad(day.day)}-${day.date}-${slug(day.word)}.mp4`);
     console.log(`\n── day ${day.day} (${day.date}) · ${day.level} · “${day.word}” ${day.code}`);
-    const run = spawnSync(
-      "npx",
-      [
-        "tsx",
-        join(ROOT, "scripts/render-export-clip.ts"),
-        day.code,
-        "--mode",
-        "showcase",
-        "--frame",
-        frame,
-        ...(look ? ["--look", look] : []),
-        "--base",
-        base,
-        "--out",
-        out,
-      ],
-      { stdio: "inherit", cwd: ROOT },
-    );
-    const info = run.status === 0 ? probe(out) : null;
+    const attempt = () => {
+      const run = spawnSync(
+        "npx",
+        [
+          "tsx",
+          join(ROOT, "scripts/render-export-clip.ts"),
+          day.code,
+          "--mode",
+          "showcase",
+          "--frame",
+          frame,
+          ...(look ? ["--look", look] : []),
+          "--base",
+          base,
+          "--out",
+          out,
+        ],
+        { stdio: "inherit", cwd: ROOT },
+      );
+      return run.status === 0 ? probe(out) : null;
+    };
     // What a post needs: a vertical full-HD clip, long enough to be the whole word and no
     // longer than the renderer's own two-minute ceiling.
-    const fine = info && info.width === 1080 && info.height === 1920 && info.duration >= 15 && info.duration <= 120;
-    if (!fine) {
+    const usable = (info: ReturnType<typeof probe>) =>
+      !!info && info.width === 1080 && info.height === 1920 && info.duration >= 15 && info.duration <= 120;
+    let info = attempt();
+    // One retry: headless Chrome now and then stops answering mid-take (a screencast ack
+    // that never comes), and a fresh browser records the same word cleanly.
+    if (!usable(info)) {
+      console.log(`  day ${day.day} did not render; trying once more`);
+      info = attempt();
+    }
+    if (!info || !usable(info)) {
       saveCalendar(calendar);
       throw new Error(
         `day ${day.day} did not render a usable clip` +
