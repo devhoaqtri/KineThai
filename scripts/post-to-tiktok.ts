@@ -305,6 +305,13 @@ async function waitForNode(
     const ui = dumpUi();
     const found = ui.find(predicate);
     if (found) return found;
+    // Android's own permission prompts (TikTok asks for contacts after a fresh start) take
+    // the screen until answered: always the privacy-keeping answer.
+    const deny = ui.find((n) => /:id\/permission_deny(_and_dont_ask_again)?_button$/.test(n.id));
+    if (deny) {
+      console.log("  declining an Android permission prompt");
+      tapNode(deny);
+    }
     if (ui.some((n) => /isn.t responding/i.test(n.text))) {
       const wait = ui.find((n) => n.text === "Wait");
       if (wait) {
@@ -659,6 +666,19 @@ async function main() {
   // A screen asleep or locked swallows taps, and a dump of it holds nothing to find.
   shell("input keyevent KEYCODE_WAKEUP");
   shell("wm dismiss-keyguard");
+
+  // TikTok's video cache filled the 7.7 GB /data to 99% once ("Almost out of phone
+  // storage"). App caches are Android's to drop, so they go before every run; drafts live
+  // in TikTok's own files and survive it. Too little left even then fails here, plainly,
+  // rather than halfway through saving a draft.
+  shell("pm trim-caches 999G");
+  const freeKb = Number(shell("df -k /data").split("\n").pop()?.trim().split(/\s+/)[3] ?? 0);
+  console.log(`  /data has ${(freeKb / 1_048_576).toFixed(1)} GB free`);
+  if (freeKb < 500 * 1024) {
+    throw new Error(
+      `the emulator has only ${Math.round(freeKb / 1024)} MB free on /data: post or delete drafts in TikTok first`,
+    );
+  }
 
   const tiktok = findTikTok();
   if (!tiktok) {
