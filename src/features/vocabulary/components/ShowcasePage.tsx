@@ -23,12 +23,13 @@
  * Depends on: VocabularyCard, showcase-contract, useServedWord, vocabulary.css
  */
 
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useLoaderData, useSearch } from "@tanstack/react-router";
 import { VocabularyCard } from "./VocabularyCard";
 import { ShowcaseChrome } from "./ShowcaseChrome";
 import { DemoBadge } from "./DemoBadge";
 import { DEMO_BADGE_VARIANT, type BadgeVariant } from "../lib/badge-variants";
+import { mockEmojiTotals } from "../lib/emoji";
 import { DeckLocaleContext } from "../lib/deck-locale";
 import { siteAddress } from "../lib/target-language";
 import { WORD_HOOK } from "../lib/first-visit";
@@ -238,6 +239,10 @@ export function ShowcasePage() {
             <ShowcaseHook text={search.badge ?? WORD_HOOK} look={look} />
           )}
           {(phase === "outro" || phase === "done") && <ShowcaseOutro variant={variants.outro} />}
+          {/* The 4:5 frame closes on the word's reactions rising off the canvas. */}
+          {search.frame === "4x5" && (phase === "outro" || phase === "done") && (
+            <ShowcaseEmojiFlight wordId={word.id} />
+          )}
         </div>
       </main>
     </DeckLocaleContext.Provider>
@@ -271,6 +276,68 @@ function ShowcaseHook({ text, look }: { text: string; look: BadgeVariant }) {
       <div className="vocab-showcase-hook-card">
         <span className="vocab-showcase-hook-text">{text}</span>
       </div>
+    </div>
+  );
+}
+
+/** How many emojis rise at the end, per word: 30 to 50, fixed for the word. */
+const FLIGHT_MIN = 30;
+const FLIGHT_SPREAD = 21;
+
+/** A small seeded generator, so a word's flight is the same on every take. */
+function seeded(text: string): () => number {
+  let a = 2166136261;
+  for (const char of text) a = Math.imul(a ^ char.codePointAt(0)!, 16777619);
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4_294_967_296;
+  };
+}
+
+/**
+ * The 4:5 frame's closing flight: 30-50 of the word's reaction emojis rising up the canvas
+ * and fading, mixed in proportion to its mocked reaction counts (lib/emoji), each with its
+ * own size, start, drift and tilt. A mock of a live crowd, the same on every take. Markup
+ * only: the rise is vocab-showcase-emoji-rise in vocabulary-export.css.
+ */
+function ShowcaseEmojiFlight({ wordId }: { wordId: string }) {
+  const glyphs = useMemo(() => {
+    const random = seeded(`flight:${wordId}`);
+    const { ranked, total } = mockEmojiTotals(wordId);
+    const count = FLIGHT_MIN + Math.floor(random() * FLIGHT_SPREAD);
+    const pick = () => {
+      let draw = random() * total;
+      for (const item of ranked) {
+        draw -= item.count;
+        if (draw <= 0) return item.emoji;
+      }
+      return ranked[0]?.emoji ?? "🔥";
+    };
+    return Array.from({ length: count }, (_, index) => ({
+      key: index,
+      emoji: pick(),
+      style: {
+        "--x": `${4 + random() * 88}%`,
+        "--s": `${22 + Math.round(random() * 22)}px`,
+        "--d": `${Math.round(random() * 1800)}ms`,
+        "--t": `${2000 + Math.round(random() * 600)}ms`,
+        "--dx": `${Math.round((random() - 0.5) * 70)}px`,
+        "--r": `${Math.round((random() - 0.5) * 50)}deg`,
+        // How far up the canvas it rises, as a share of the canvas's height.
+        "--rise": (0.62 + random() * 0.3).toFixed(2),
+      } as CSSProperties,
+    }));
+  }, [wordId]);
+  return (
+    <div className="vocab-showcase-emojis" aria-hidden="true">
+      {glyphs.map((glyph) => (
+        <span key={glyph.key} className="vocab-showcase-emoji" style={glyph.style}>
+          {glyph.emoji}
+        </span>
+      ))}
     </div>
   );
 }

@@ -620,7 +620,10 @@ export function VocabularyStage({
               <StageText
                 spec={{
                   ...spec,
-                  y: stage.reveal ? (answerFit?.word?.y ?? revealY) : 46,
+                  // A clue sits a little above the middle of the feed's band, which carries
+                  // chrome at its foot; a band with its own margins (clueInsets, the TikTok
+                  // lab's 4:5 frame) clears every piece of chrome, so its clue is centred.
+                  y: stage.reveal ? (answerFit?.word?.y ?? revealY) : clueInsets ? 50 : 46,
                   loop: stage.reveal && !still ? spec.loop : "none",
                 }}
                 playKey={playKey}
