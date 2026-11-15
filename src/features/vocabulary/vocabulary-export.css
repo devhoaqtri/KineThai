@@ -2113,7 +2113,7 @@ body:has(.vocab-intro) .vocab-resume {
   --vocab-chrome-gap: 22px;
   /* Where the opening question docks, and how small it gets there: on the title's row (the
      recorded bar's top, which clears the lab's top fade), at about the title's height. */
-  --hook-dock-x: var(--vocab-chrome-side);
+  --hook-dock-x: var(--vocab-chrome-side, 0px);
   --hook-dock-y: var(--vocab-rec-top);
   --hook-dock-scale: 0.36;
 }
