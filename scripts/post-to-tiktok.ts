@@ -40,6 +40,14 @@
  *     --cover-at <0..1>  filmstrip fraction for Edit cover (default: .meta.json or 0.42)
  *     --no-cover         skip picking a cover frame
  *     --no-draft         stop on the Post screen instead of saving to Drafts
+ *     --sound <query>    search TikTok's sounds for this instead of the upbeat rotation
+ *     --no-sound         leave the clip without a song
+ *
+ * The song: in the editor, before Next, the clip gets an upbeat track from TikTok's own
+ * library (lib/tiktok-sounds: a rotating list of upbeat searches, no track repeated within
+ * the last 20 drafts, ledger in scripts/data/tiktok-sounds.json). The clip's own silent
+ * track goes to 0 and the song to 80%. Like the cover and location, a song that cannot be
+ * added is a warning and the draft still stands.
  */
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, openSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
@@ -47,6 +55,7 @@ import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { setEmulatorClipboard } from "./lib/emulator-clipboard";
+import { isRecentSound, loadSoundLedger, nextSoundPick, recordSoundUse } from "./lib/tiktok-sounds";
 
 const TIKTOK_PACKAGES = [
   "com.zhiliaoapp.musically", // TikTok, most regions
@@ -71,6 +80,8 @@ const explicitCode = flag("code", "");
 const explicitCaption = flag("caption", "");
 const locationQuery = flag("location", DEFAULT_LOCATION);
 const coverAtFlag = flag("cover-at", "");
+const soundQuery = flag("sound", "");
+const SOUND_LEDGER = resolve(dirname(new URL(import.meta.url).pathname), "data", "tiktok-sounds.json");
 
 /** adb, with the serial pinned when one was asked for. */
 function adb(args: string[], opts: { quiet?: boolean } = {}) {
@@ -454,6 +465,139 @@ let shareAgain: () => void = () => {};
 /** What went wrong without spoiling the draft: printed at the end, never a failure. */
 const warnings: string[] = [];
 
+/** The song put on this clip, recorded in the ledger once the run has succeeded. */
+let pickedSound: { title: string; query: string; row: number } | null = null;
+
+/** The editor's top bar: "Add sound" until a song is on the clip, then the song's title. */
+const isSoundBar = (n: UiNode) => n.id.endsWith(":id/tv_top_text");
+
+/**
+ * Back out of the sound search and sheet to the editor, whatever state a failed song step
+ * left. Back from the search page returns to the sheet; a tap above the sheet closes it.
+ */
+async function backToEditor() {
+  for (let i = 0; i < 4; i += 1) {
+    const ui = await readScreen().catch(() => [] as UiNode[]);
+    if (ui.some((n) => n.text === "Next") && ui.some(isSoundBar)) return;
+    if (ui.some((n) => n.id.endsWith(":id/touch_outside"))) tapPoint(540, 500);
+    else adb(["shell", "input", "keyevent", "4"]);
+    await sleep(1500);
+  }
+}
+
+/**
+ * The result rows of TikTok's sound search, top to bottom, as their "use" check buttons.
+ * Titles are drawn rather than exposed, so a row is known only by where its button sits:
+ * a box hugging the right edge, about 157×84 on this AVD, below the search bar and above
+ * the current-sound bar.
+ */
+function soundResultButtons(ui: UiNode[]): UiNode[] {
+  const currentBar = ui.find((n) => n.id.endsWith(":id/tv_music_select_name"))?.bounds[1] ?? 2170;
+  const seen = new Set<number>();
+  return ui
+    .filter((n) => {
+      const [x1, y1, x2, y2] = n.bounds;
+      return x1 > 840 && x2 > 1000 && x2 - x1 > 120 && x2 - x1 < 200 && y2 - y1 > 60 && y2 - y1 < 110
+        && y1 > 380 && y2 < currentBar && !n.text && !n.desc;
+    })
+    .filter((n) => (seen.has(n.cy) ? false : (seen.add(n.cy), true)))
+    .sort((a, b) => a.cy - b.cy);
+}
+
+/**
+ * Search TikTok's sounds and use one result row. Leaves the sound sheet open with the
+ * pick at its top.
+ * @returns the picked track's title
+ */
+async function useSearchResult(query: string, row: number): Promise<string> {
+  const search = await waitForNode((n) => n.desc === "Search" && n.clickable, 10_000);
+  if (!search) throw new Error("the sound sheet has no Search button");
+  tapNode(search);
+  const field = await waitForNode((n) => n.id.endsWith(":id/hxw") || (n.text === "Search" && n.clickable && n.cx < 700), 10_000);
+  if (!field) throw new Error("the sound search field did not open");
+  tapNode(field);
+  // `input text` takes ASCII only and reads %s as a space; the queries are plain English.
+  adb(["shell", "input", "text", query.replace(/[^\x20-\x7e]/g, "").replace(/ /g, "%s")]);
+  await sleep(600);
+  const go = await waitForNode((n) => n.id.endsWith(":id/tv_search_action") || (n.text === "Search" && n.cx > 850), 5_000);
+  if (go) tapNode(go);
+  else adb(["shell", "input", "keyevent", "66"]); // Enter
+  let rows: UiNode[] = [];
+  const deadline = Date.now() + 15_000;
+  while (Date.now() < deadline) {
+    await sleep(1000);
+    rows = soundResultButtons(await readScreen());
+    if (rows.length >= 3) break;
+  }
+  if (!rows.length) throw new Error(`the search “${query}” showed no tracks`);
+  tapNode(rows[row % rows.length]!);
+  // Using a track closes the search and puts it at the top of the sheet, playing.
+  const picked = await waitForNode((n) => n.id.endsWith(":id/title") && !!n.text, 12_000);
+  if (!picked) throw new Error("the sound sheet did not come back after the pick");
+  return picked.text;
+}
+
+/**
+ * Put an upbeat song on the clip in TikTok's editor: search the rotation's query, use a
+ * result row, skip a track used on a recent draft, set the clip's silent track to 0 and
+ * the song to 80%, close the sheet, and check the editor's top bar names the song.
+ * @returns what was picked, for the ledger
+ * @throws when any part fails; the caller turns it into a warning
+ */
+async function addUpbeatSound(): Promise<{ title: string; query: string; row: number }> {
+  const ledger = loadSoundLedger(SOUND_LEDGER);
+  const { query, row: firstRow } = nextSoundPick(ledger, soundQuery);
+  const bar = await waitForNode(isSoundBar, 10_000);
+  if (!bar) throw new Error("the editor has no Add sound bar");
+  console.log(`→ choosing a song (search “${query}”)`);
+  tapNode(bar);
+  // Opening the sheet puts TikTok's own first suggestion on the clip; the pick replaces it.
+  if (!(await waitForNode((n) => n.desc === "Search" && n.clickable, 12_000))) {
+    throw new Error("the sound sheet did not open");
+  }
+  let row = firstRow;
+  let title = await useSearchResult(query, row);
+  for (let tries = 1; isRecentSound(ledger, title) && !soundQuery && tries < 4; tries += 1) {
+    console.log(`  “${title}” went on a recent draft; trying the next track`);
+    row += 1;
+    title = await useSearchResult(query, row);
+  }
+
+  // Volume: the sliders are not in the UI tree, so they are dragged by where their labels
+  // sit. Starting the drag mid-bar is fine: the bar jumps to the touch, then follows it.
+  const volume = await waitForNode((n) => n.id.endsWith(":id/volume_click_view"), 5_000);
+  if (volume) {
+    tapNode(volume);
+    const original = await waitForNode((n) => n.id.endsWith(":id/tv_people"), 5_000);
+    const song = (await readScreen()).find((n) => n.id.endsWith(":id/tv_people2"));
+    if (original && song) {
+      const swipe = (y: number, to: number) =>
+        adb(["shell", "input", "swipe", "540", String(y), String(to), String(y), "400"]);
+      swipe(original.bounds[3] + 87, 30); // the clip's own track: silent anyway, so 0
+      await sleep(400);
+      swipe(song.bounds[3] + 81, 842); // the song: 80% of the bar (57..1038)
+      await sleep(400);
+    } else {
+      warnings.push("the volume panel had no sliders; the song plays at TikTok's default level");
+    }
+    const done = await waitForNode((n) => n.text === "Done", 5_000);
+    if (done) tapNode(done);
+    await sleep(800);
+  } else {
+    warnings.push("no Volume button; the song plays at TikTok's default level");
+  }
+
+  // Close the sheet with a tap above it; the editor's bar then names the song.
+  tapPoint(540, 500);
+  const named = await waitForNode((n) => isSoundBar(n) && n.text === title, 10_000);
+  if (!named) {
+    await backToEditor();
+    const now = (await readScreen()).find(isSoundBar)?.text ?? "nothing";
+    throw new Error(`the editor names “${now}”, not the picked “${title}”`);
+  }
+  return { title, query, row };
+}
+
 async function prefillPostScreen(file: string) {
   const meta = readClipMeta(file);
   const shareCode = inferShareCode(file, meta);
@@ -472,6 +616,18 @@ async function prefillPostScreen(file: string) {
     nextBtn = await waitForNode((n) => n.text === "Next", 45_000);
   }
   if (!nextBtn) throw new Error("TikTok's editor never showed its Next button");
+
+  // 0. Song (in the editor, before Next)
+  if (!has("no-sound")) {
+    try {
+      pickedSound = await addUpbeatSound();
+      console.log(`  song: “${pickedSound.title}” (search “${pickedSound.query}”, row ${pickedSound.row + 1})`);
+    } catch (error) {
+      warnings.push(`no song was added: ${error instanceof Error ? error.message : String(error)}`);
+      await backToEditor();
+    }
+    nextBtn = (await waitForNode((n) => n.text === "Next", 10_000)) ?? nextBtn;
+  }
   tapNode(nextBtn);
 
   const postReady = await waitForNode(
@@ -778,11 +934,19 @@ async function main() {
     console.log(`  ${draftsAfter} draft(s) in TikTok now`);
   }
 
+  if (pickedSound) {
+    recordSoundUse(SOUND_LEDGER, {
+      ...pickedSound,
+      at: new Date().toISOString(),
+      clip: basename(file),
+      drafted: !has("no-draft"),
+    });
+  }
   for (const warning of warnings) console.warn(`! ${warning}`);
   console.log(
     has("no-draft")
-      ? "\n✓ TikTok Post screen is prefilled (cover, location, description). Review and tap Post."
-      : "\n✓ Draft saved in TikTok with cover, location, and description prefilled. Open Drafts and tap Post.",
+      ? `\n✓ TikTok Post screen is prefilled (${pickedSound ? "song, " : ""}cover, location, description). Review and tap Post.`
+      : `\n✓ Draft saved in TikTok with ${pickedSound ? "a song, " : ""}cover, location, and description prefilled. Open Drafts and tap Post.`,
   );
 }
 

@@ -652,7 +652,7 @@ function draftDay(day: CalendarDay, pass: string[]): boolean {
 
 function handoff() {
   const day = dayWithClip();
-  const pass = ["no-draft", "no-location", "no-cover"].filter((f) => rest.includes(`--${f}`)).map((f) => `--${f}`);
+  const pass = ["no-draft", "no-location", "no-cover", "no-sound"].filter((f) => rest.includes(`--${f}`)).map((f) => `--${f}`);
   if (!draftDay(day, pass)) process.exit(1);
   console.log(
     pass.includes("--no-draft")
