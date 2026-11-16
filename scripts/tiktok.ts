@@ -281,7 +281,7 @@ function fill(calendar: Calendar, words: CandidateWord[], dayNumbers: number[], 
 function plan() {
   const fresh = !existsSync(CALENDAR_FILE);
   const tomorrow = dateOfDay(todayInVietnam(Date.now()), 2);
-  const order = (flag("order") ?? (fresh ? "rising" : undefined)) as LevelOrder | undefined;
+  const order = (flag("order") ?? (fresh ? "mixed" : undefined)) as LevelOrder | undefined;
   if (order && !LEVEL_ORDERS.includes(order)) throw new Error(`--order is one of ${LEVEL_ORDERS.join(", ")}`);
   const calendar: Calendar = fresh
     ? {

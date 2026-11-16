@@ -76,6 +76,14 @@ describe("levelForDay", () => {
     expect(levelForDay("weekly", 3, "2026-11-16")).toBe("B1"); // Monday, odd day
     expect(levelForDay("weekly", 4, "2026-11-17")).toBe("B2");
   });
+  it("mixes B1, B2 and C1 in every run of three, never twice in a row, when mixed", () => {
+    const levels = Array.from({ length: 365 }, (_, i) => levelForDay("mixed", i + 1, "2026-11-15"));
+    for (let i = 0; i + 3 <= 363; i += 3) expect(new Set(levels.slice(i, i + 3)).size).toBe(3);
+    for (let i = 1; i < levels.length; i += 1) expect(levels[i]).not.toBe(levels[i - 1]);
+    // Not one fixed rotation: the year uses several different runs.
+    const runs = new Set(Array.from({ length: 30 }, (_, b) => levels.slice(b * 3, b * 3 + 3).join()));
+    expect(runs.size).toBeGreaterThan(3);
+  });
   it("never draws below B1 in any order", () => {
     const easy = new Set(["A1", "A2"]);
     for (const order of LEVEL_ORDERS) {

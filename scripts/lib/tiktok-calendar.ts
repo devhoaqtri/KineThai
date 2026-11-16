@@ -40,11 +40,44 @@ export const MIN_POST_LEVEL = "B1";
 
 /**
  * How the year walks through the levels, never below MIN_POST_LEVEL:
+ *   mixed    B1, B2 and C1 shuffled in every run of three posts, never the same level twice
+ *            in a row: the default, so neighbouring clips look and read different
  *   rising   a third each of B1, B2, C1: a year that climbs with the viewer
  *   weekly   B1 and B2 on weekdays, C1 at the weekend
  *   easiest  B1 every day
  */
-export const LEVEL_ORDERS = ["rising", "weekly", "easiest"] as const;
+export const LEVEL_ORDERS = ["mixed", "rising", "weekly", "easiest"] as const;
+
+/** The levels a post may draw from, easiest first. */
+const POST_LEVELS = ["B1", "B2", "C1"] as const;
+
+/** Every order of the three post levels, for the mixed walk. */
+const MIXED_RUNS = [
+  ["B1", "B2", "C1"],
+  ["B1", "C1", "B2"],
+  ["B2", "B1", "C1"],
+  ["B2", "C1", "B1"],
+  ["C1", "B1", "B2"],
+  ["C1", "B2", "B1"],
+] as const;
+
+/**
+ * The mixed walk's run of three for a block: a fixed shuffle per block (a hash of its
+ * number, so re-planning one day never reshuffles another), stepped on until it does not
+ * open with the level the previous run closed on.
+ * @pure true
+ */
+function mixedRun(block: number): readonly string[] {
+  let h = Math.imul(block + 1, 0x9e3779b1) >>> 0;
+  h = Math.imul(h ^ (h >>> 15), 0x85ebca6b) >>> 0;
+  const start = ((h ^ (h >>> 13)) >>> 0) % MIXED_RUNS.length;
+  const before = block > 0 ? mixedRun(block - 1)[2] : undefined;
+  for (let i = 0; i < MIXED_RUNS.length; i += 1) {
+    const run = MIXED_RUNS[(start + i) % MIXED_RUNS.length]!;
+    if (run[0] !== before) return run;
+  }
+  return MIXED_RUNS[start]!;
+}
 export type LevelOrder = (typeof LEVEL_ORDERS)[number];
 
 export type DayStatus = "planned" | "rendered" | "drafted" | "scheduled" | "posted" | "missed";
@@ -265,6 +298,7 @@ export function weekdayOf(date: string): number {
  */
 export function levelForDay(order: LevelOrder, day: number, date: string, total = CALENDAR_DAYS): string {
   if (order === "easiest") return MIN_POST_LEVEL;
+  if (order === "mixed") return mixedRun(Math.floor((day - 1) / POST_LEVELS.length))[(day - 1) % POST_LEVELS.length]!;
   if (order === "weekly") {
     const weekday = weekdayOf(date);
     const weekend = weekday === 0 || weekday === 6;
