@@ -42,7 +42,7 @@
  *     --max <seconds>       give up if the word never finishes (default: 120)
  *     --keep-frames <dir>   copy the captured PNG frames there for colour checks
  *     --gamma <n>  --vibrance <n>  --saturation <n>  --contrast <n>
- *                           the colour grade (defaults: 1.12, 0.3, 1.08, 1); 1, 0, 1, 1
+ *                           the colour grade (defaults: 1.12, 0.3, 1, 1); 1, 0, 1, 1
  *                           encodes the browser's pixels untouched
  *   showcase mode:
  *     --intro-style <pop|drop|stamp|slide|flip>  pin the opening (default: picked per take)
@@ -192,12 +192,15 @@ const fadeTo = flag("fade-to", "");
 // for, so a straight encode comes back with lifted midtones and ~8% less saturation: the
 // pale look next to the live feed. A 1.12 gamma on the frames cancels that lift (Apple's
 // decode of a frame then lands within ~1.5 levels of the browser's pixels), vibrance
-// lifts the pastel backdrops most and leaves already-strong accents near alone, and a
-// little saturation on top gives the punch the feed has on a phone. Measured with an
-// AVFoundation frame grab against --keep-frames PNGs; see the commit for the numbers.
+// lifts the pastel backdrops most and leaves already-strong accents near alone: about
+// +20-25% saturation over the page on a pastel card, a few % on a deep one. Measured with
+// an AVFoundation frame grab against --keep-frames PNGs; see the commits for the numbers.
+// --saturation and --contrast run ffmpeg's eq, which goes through YUV before the BT.709
+// conversion and hits harder than its number suggests: 1.08 took a pastel card to +80%
+// (too much); 1.03-1.04 is the range to try for a little more.
 const gamma = Number(flag("gamma", "1.12"));
 const vibrance = Number(flag("vibrance", "0.3"));
-const saturation = Number(flag("saturation", "1.08"));
+const saturation = Number(flag("saturation", "1"));
 const contrast = Number(flag("contrast", "1"));
 // Keep the captured PNGs (the browser's own pixels) in this folder instead of deleting
 // them, so a clip's colour can be compared against what the page actually drew.
@@ -697,7 +700,8 @@ async function main() {
         `fps=${fps}`,
         `lutrgb=r=gammaval(${gamma}):g=gammaval(${gamma}):b=gammaval(${gamma})`,
         `vibrance=intensity=${vibrance}`,
-        `eq=saturation=${saturation}:contrast=${contrast}`,
+        // Left out at 1/1, so the default grade never takes eq's YUV round trip.
+        ...(saturation !== 1 || contrast !== 1 ? [`eq=saturation=${saturation}:contrast=${contrast}`] : []),
         `scale=${width}:${height}:flags=lanczos:out_color_matrix=bt709:out_range=tv`,
         "format=yuv420p",
         "setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=bt709",
