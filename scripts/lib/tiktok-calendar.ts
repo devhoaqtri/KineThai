@@ -21,7 +21,7 @@
  * Exports: CALENDAR_DAYS, LEVEL_ORDERS, LevelOrder, DayStatus, CalendarDay, Calendar, Burst,
  *   PostSchedule, CandidateWord, parseDaySpec, parseBurst, dateOfDay, todayInVietnam,
  *   dayOfDate, weekdayOf, burstPosts, slotOfPost, firstPostOnDate, levelForDay, eligibleWords,
- *   planDays, captionFor, summarize, postTimeMs, postsToDraft, ExportedWords, ExportRecord,
+ *   planDays, captionFor, summarize, postTimeMs, postsToDraft, isPostLevel, MIN_POST_LEVEL, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
  *   PlatformPost, postsToPublish, captionForPlatform
  */
@@ -37,6 +37,22 @@ export const CALENDAR_DAYS = 365;
  * channel (the user's call, 2026-11-16), so every order starts at B1.
  */
 export const MIN_POST_LEVEL = "B1";
+
+const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
+
+/**
+ * Whether a word of this level may go out at all: MIN_POST_LEVEL or harder. Planning only
+ * picks such words, but a post planned before the floor existed (bottle, A1, went out on
+ * Facebook on 2026-11-16) is still on the calendar, so drafting and publishing check again.
+ * An unknown level is refused, not let through.
+ * @param level - the word's deck level, e.g. "B2"
+ * @returns true when it is at least MIN_POST_LEVEL
+ * @pure true
+ */
+export function isPostLevel(level: string): boolean {
+  const at = CEFR_LEVELS.indexOf(level);
+  return at !== -1 && at >= CEFR_LEVELS.indexOf(MIN_POST_LEVEL);
+}
 
 /**
  * How the year walks through the levels, never below MIN_POST_LEVEL:
@@ -524,6 +540,7 @@ export function postsToDraft(
   const today = todayInVietnam(nowMs);
   const until = nowMs + hours * 3_600_000;
   const due = calendar.days
+    .filter((d) => isPostLevel(d.level))
     .filter((d) => d.date >= today && postTimeMs(d, calendar.postTime) <= until)
     .sort((a, b) => a.day - b.day);
   return {
@@ -639,6 +656,7 @@ export function postsToPublish(
   return calendar.days
     .filter((day) => {
       if (!day.clip || day.status === "planned" || day.status === "missed") return false;
+      if (!isPostLevel(day.level)) return false;
       const track = day.platforms?.[platform];
       // A run that died mid-publish leaves `publishing` behind; after half an hour it is
       // treated as a failure and tried again.

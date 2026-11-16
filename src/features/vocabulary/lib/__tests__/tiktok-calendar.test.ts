@@ -16,6 +16,7 @@ import {
   exportConflicts,
   recordExport,
   postsToPublish,
+  isPostLevel,
   captionForPlatform,
   type ExportedWords,
   summarize,
@@ -229,7 +230,7 @@ describe("postsToDraft", () => {
     wordId: `vi-w${n}`,
     word: `w${n}`,
     code: "ABC",
-    level: "A1",
+    level: "B1",
     topic: "t",
     status,
     caption: "",
@@ -266,6 +267,13 @@ describe("postsToDraft", () => {
     const { ready, unrendered } = postsToDraft(calendar, now, 24);
     expect(ready.map((d) => d.day)).toEqual([2, 5]);
     expect(unrendered.map((d) => d.day)).toEqual([4]);
+  });
+
+  it("never drafts a word below B1, even one planned before the floor", () => {
+    const easy = { ...calendar, days: calendar.days.map((d) => (d.day === 5 ? { ...d, level: "A1" } : d)) };
+    expect(postsToDraft(easy, now, 24).ready.map((d) => d.day)).toEqual([2]);
+    const unrendered = { ...calendar, days: calendar.days.map((d) => (d.day === 4 ? { ...d, level: "A2" } : d)) };
+    expect(postsToDraft(unrendered, now, 24).unrendered).toEqual([]);
   });
 
   it("reads the date in Vietnam, not on the machine's clock", () => {
@@ -366,7 +374,7 @@ describe("publishing on Facebook and Instagram", () => {
     wordId: `vi-w${n}`,
     word: `w${n}`,
     code: "ABC",
-    level: "A1",
+    level: "B1",
     topic: "t",
     status: "drafted",
     caption: "shared",
@@ -391,6 +399,11 @@ describe("publishing on Facebook and Instagram", () => {
     days,
   });
   const at = (hhmm: string) => Date.parse(`2026-11-15T${hhmm}:00+07:00`);
+
+  it("never publishes a word below B1 (bottle, A1, went out on 2026-11-16)", () => {
+    const cal = calendar([post(1, "19:00", { level: "A1" }), post(2, "19:00", { level: "A2" }), post(3, "19:00", { level: "C1" })]);
+    expect(postsToPublish(cal, at("19:05"), "facebook").map((d) => d.day)).toEqual([3]);
+  });
 
   it("publishes a post once its time has come, not before and not hours late", () => {
     const cal = calendar([post(1, "11:30"), post(2, "19:00"), post(3, "21:30")]);
@@ -428,5 +441,13 @@ describe("publishing on Facebook and Instagram", () => {
     recordExport(list, word, { where: "calendar", ref: "post 1", at: "2026-11-15" });
     recordExport(list, word, { where: "instagram", ref: "post 1", at: "2026-11-15" });
     expect(exportConflicts({ days: [post(1, "19:00")] }, list)).toEqual([]);
+  });
+});
+
+describe("isPostLevel", () => {
+  it("lets B1 and harder through, and nothing easier or unknown", () => {
+    expect(["A1", "A2"].map(isPostLevel)).toEqual([false, false]);
+    expect(["B1", "B2", "C1", "C2"].map(isPostLevel)).toEqual([true, true, true, true]);
+    expect(isPostLevel("")).toBe(false);
   });
 });

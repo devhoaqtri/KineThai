@@ -87,6 +87,8 @@ import {
   META_PLATFORMS,
   captionForPlatform,
   postsToPublish,
+  isPostLevel,
+  MIN_POST_LEVEL,
   calendarExportRef,
   exportConflicts,
   recordExport,
@@ -616,6 +618,19 @@ function copyCaption(day: CalendarDay) {
 }
 
 /**
+ * Stop a post whose word is easier than MIN_POST_LEVEL from going anywhere: the user's rule
+ * is B1 and up on every platform, whatever the calendar still holds from before the floor.
+ * @throws naming the day, its word and level, and the fix
+ */
+function refuseBelowFloor(day: CalendarDay) {
+  if (isPostLevel(day.level)) return;
+  throw new Error(
+    `post ${day.day} is “${day.word}” (${day.level}), below ${MIN_POST_LEVEL}: nothing under ${MIN_POST_LEVEL} goes out. ` +
+      `Give it a new word first: npm run tiktok -- swap ${day.day}`,
+  );
+}
+
+/**
  * Save one day's clip as a TikTok draft in the emulator, with the calendar's caption, and
  * mark it drafted. The poster exits non-zero unless the draft really was saved.
  * @param pass - the flags handed on to post-to-tiktok.ts
@@ -623,6 +638,7 @@ function copyCaption(day: CalendarDay) {
  */
 function draftDay(day: CalendarDay, pass: string[]): boolean {
   if (!day.clip) throw new Error(`day ${day.day} has no clip yet: npm run tiktok -- render --day ${day.day}`);
+  refuseBelowFloor(day);
   console.log(`\n── post ${day.day} (${day.date} ${day.time ?? ""}) · ${day.level} · “${day.word}” ${day.code}`);
   const attempt = () =>
     spawnSync(
@@ -714,6 +730,7 @@ async function publishDay(dayNumber: number, platform: MetaPlatform, dryRun: boo
   const day = loadCalendar().days.find((d) => d.day === dayNumber);
   if (!day) throw new Error(`there is no post ${dayNumber}`);
   if (!day.clip) throw new Error(`post ${dayNumber} has no clip yet: npm run tiktok -- render --day ${dayNumber}`);
+  refuseBelowFloor(day);
   const config = { ...loadMetaConfig(ROOT), ...(dryRun ? { dryRun: true } : {}) };
   console.log(`\n── ${platform} · post ${day.day} (${day.date} ${day.time ?? ""}) · “${day.word}”${config.dryRun ? " · dry run" : ""}`);
   if (!config.dryRun) {
