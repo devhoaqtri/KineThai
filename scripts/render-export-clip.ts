@@ -148,10 +148,6 @@ const [insetTop, insetBottom] = flag("inset", "56,64").split(",").map(Number);
 // offset added to four different per-element bases, which is why "make the inset smaller"
 // kept cutting whichever element was shallowest.
 //
-// The TOP GRADIENT is exempt and always reaches the edges: it is drawn against the bar and
-// pulled back out by exactly this value, so it spans the frame at any margin. A gradient
-// that stops short is not a soft top edge, it is a box.
-//
 // 25 is a judgement call, not a derived number. What a platform actually crops has never
 // been measured on a real phone here - see docs/export-recording-layout-handoff.md.
 const insetSide = Number(flag("side", "25"));

@@ -73,14 +73,11 @@
   left: var(--vocab-chrome-side, 0px);
   right: var(--vocab-chrome-side, 0px);
 }
-/* The scrim is positioned against the BAR, so reaching an edge means coming back by exactly
-   how far the bar sits from it: the negated margin, never a constant. It read
-   `-18px - margin` while the bar sat at `16 + margin + 20`, and those cannot cancel at any
-   margin - at 25 the gradient stopped 18px short of both edges and read as a dark box
-   floating in the middle of the frame rather than as a top edge. Vertically the same rule
-   already applied, which is why the top looked right while the sides did not. */
+/* No scrim behind the recorded top bar. On the web it keeps the white chrome legible over
+   whatever card scrolls under it; a clip's card is known and the platform draws its own
+   chrome, so in a recording the scrim only read as a dark band under the title. */
 .vocab-recording .vocab-toolbar::before {
-  inset: calc(-1 * var(--vocab-rec-top, 61px) - 2px) calc(-1 * var(--vocab-chrome-side, 0px)) -26px;
+  display: none;
 }
 /* Recorded top bar: the title moves to the RIGHT corner.
    The row is `auto 1fr auto` and its three children are auto-placed in source order, so
@@ -2088,8 +2085,8 @@ body:has(.vocab-intro) .vocab-resume {
 
      --vocab-safe-top is the tiktok-clear preset's 8.5% of a 1080x1920 frame, resolved at
      the 405x720 viewport every recording uses. It is a length and not a percentage because
-     the toolbar's scrim negates it to find the top edge, and a percentage there would
-     resolve against the toolbar's own height instead of the frame's. */
+     the toolbar's offset is measured from it, and a percentage there would resolve
+     against the toolbar's own height instead of the frame's. */
   --vocab-chrome-side: 25px;
   --vocab-safe-top: 61px;
   --vocab-chrome-inset: 69px;
