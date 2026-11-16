@@ -41,6 +41,8 @@
  *     --fps <n>             output frame rate (default: 30)
  *     --max <seconds>       give up if the word never finishes (default: 120)
  *     --keep-frames <dir>   copy the captured PNG frames there for colour checks
+ *     --time-scale <0..1>   how fast the page's clock runs during the take (default: 0.25);
+ *                           1 records in real time, as before 2026-11-16
  *     --gamma <n>  --vibrance <n>  --saturation <n>  --contrast <n>
  *                           the colour grade (defaults: 1.12, 0.3, 1, 1); 1, 0, 1, 1
  *                           encodes the browser's pixels untouched
@@ -124,6 +126,40 @@ const address = siteAddress(target);
 const dialect = flag("dialect", "");
 const fps = Number(flag("fps", "30"));
 const maxSeconds = Number(flag("max", "120"));
+// Frame-exact motion. Chrome's screencast hands back what the compositor drew, as fast as
+// PNGs at 1080×1920 can be encoded and acknowledged: 23-28 a second here, so a 30 fps file
+// repeated every fourth to sixth frame at irregular moments and the motion stuttered. The
+// page's clock is therefore slowed by this factor for the take (JS time, timers and
+// animation frames inside the page; CSS and Web Animations through DevTools' timeline
+// rate), the capture sees ~100 frames per second of PAGE time, and each 1/fps slot of the
+// output takes the captured frame nearest its exact time (within ~5 ms at 0.25). Pausing
+// and stepping the clock instead was rejected: a paused animation never fires its end
+// events, and the scenes advance on them. A take lasts 1/timeScale times longer.
+const timeScale = Number(flag("time-scale", "0.25"));
+if (!(timeScale > 0 && timeScale <= 1)) {
+  console.error(`--time-scale must be in (0, 1] (got "${flag("time-scale", "")}")`);
+  process.exit(1);
+}
+/** Real milliseconds to wait for `ms` of the page's (slowed) time to pass. */
+const pageMs = (ms: number) => ms / timeScale;
+/** Runs first in every document of the take: the page's JS clock, slowed by timeScale. */
+const SLOW_CLOCK = `(() => {
+  const S = ${timeScale};
+  if (S === 1) return;
+  const perfNow = performance.now.bind(performance);
+  const dateNow = Date.now.bind(Date);
+  const p0 = perfNow();
+  const d0 = dateNow();
+  const slowed = (t) => p0 + (t - p0) * S;
+  performance.now = () => slowed(perfNow());
+  Date.now = () => d0 + (dateNow() - d0) * S;
+  const st = window.setTimeout.bind(window);
+  const si = window.setInterval.bind(window);
+  window.setTimeout = (fn, ms, ...rest) => st(fn, (Number(ms) || 0) / S, ...rest);
+  window.setInterval = (fn, ms, ...rest) => si(fn, (Number(ms) || 0) / S, ...rest);
+  const raf = window.requestAnimationFrame.bind(window);
+  window.requestAnimationFrame = (cb) => raf((t) => cb(slowed(t)));
+})();`;
 // A phone-shaped CSS viewport scaled up to the output size, so the app lays itself out the
 // way it does on a phone — the layout a viewer recognises — rather than the desktop one it
 // would choose at a literal 1080px wide.
@@ -247,6 +283,14 @@ async function main() {
     "--autoplay-policy=no-user-gesture-required",
   ]);
   const { cdp } = chrome;
+  // The slowed clock goes in before any page script runs, and CSS / Web Animations follow
+  // the document timeline's rate, which DevTools sets (again once the page has loaded).
+  await cdp.send("Page.addScriptToEvaluateOnNewDocument", { source: SLOW_CLOCK });
+  const slowAnimations = async () => {
+    await cdp.send("Animation.enable");
+    await cdp.send("Animation.setPlaybackRate", { playbackRate: timeScale });
+  };
+  await slowAnimations();
 
   // ── Set the stage, per mode ───────────────────────────────────────────────────────────
   let width: number;
@@ -447,8 +491,9 @@ async function main() {
     describe = async () => word;
   }
 
+  await slowAnimations();
   // Let whatever just mounted settle before the first frame is kept.
-  await sleep(400);
+  await sleep(pageMs(400));
 
   const captured: { file: string; atMs: number }[] = [];
   const startedAt = Date.now();
@@ -523,7 +568,7 @@ async function main() {
     // hidden, because the page indicator and the stage label are NOT inside the stage: do
     // this after they have slid in and a viewer watches the label flick to a later page and
     // back, which is exactly the flash this ordering removes.
-    await sleep(1700);
+    await sleep(pageMs(1700));
     const card = await cdp.evaluate<{ y: number } | null>(`(() => {
       const mid = innerHeight / 2;
       const c = [...document.querySelectorAll('.vocab-card')].find(el => {
@@ -535,9 +580,9 @@ async function main() {
     if (card) {
       // Past 65% of the width is the forward zone, under 35% the back one.
       await tap(cdp, cssWidth * 0.86, card.y);
-      await sleep(140);
+      await sleep(pageMs(140));
       await tap(cdp, cssWidth * 0.14, card.y);
-      await sleep(80);
+      await sleep(pageMs(80));
       // A tap resumes playback on its way through, so the fresh entrance has just started.
       // Freeze it immediately: the second half of the beat is letting the page finish
       // assembling, and the clue is supposed to arrive after that, not under it.
@@ -547,7 +592,7 @@ async function main() {
     }
 
     // The assembly plays out; the clue is held at the first frame of its entrance.
-    await sleep(Math.max(0, introMs - 1920));
+    await sleep(pageMs(Math.max(0, introMs - 1920)));
     // Scene first, then play: the stage is dark while the intro is in the document, so
     // starting playback before removing it would run the first words where nobody can see
     // them - the whole fault this beat exists to fix.
@@ -557,7 +602,7 @@ async function main() {
     );
   }
 
-  const deadline = Date.now() + maxSeconds * 1000;
+  const deadline = Date.now() + pageMs(maxSeconds * 1000);
   let hintFirstAtMs: number | null = null;
   let hintLastAtMs: number | null = null;
   for (;;) {
@@ -621,7 +666,7 @@ async function main() {
     }
     console.log(`  + outro (${declared}ms)`);
     // A beat past the end, so the last held frame is the empty page and not a cut.
-    await sleep(declared + 250);
+    await sleep(pageMs(declared + 250));
   }
 
   const subject = await describe();
@@ -652,22 +697,37 @@ async function main() {
     }
     console.log(`  frames captured at ${grabbedWidth}x${grabbedHeight} (native)`);
   }
-  const seconds = captured[captured.length - 1]!.atMs / 1000;
+  // Page time of each captured frame: how long the (slowed) clip had been playing.
+  const pageAt = captured.map((frame) => (frame.atMs - captured[0]!.atMs) * timeScale);
+  const seconds = pageAt[pageAt.length - 1]! / 1000;
+  const captureRate = captured.length / seconds;
   console.log(
-    `  ${captured.length} frames over ${seconds.toFixed(1)}s (${(captured.length / seconds).toFixed(1)}/s)`,
+    `  ${captured.length} frames over ${seconds.toFixed(1)}s of page time (${captureRate.toFixed(1)}/s` +
+      (timeScale < 1 ? `, page clock ×${timeScale}` : "") + ")",
   );
+  if (captureRate < fps * 1.5) {
+    console.warn(
+      `! only ${captureRate.toFixed(1)} captured frames per second of page time for ${fps} fps; ` +
+        "some output frames will repeat. Lower --time-scale.",
+    );
+  }
 
-  // Each frame shows until the next one arrives. Without this the clip would play at a
-  // made-up constant rate and drift away from the animation it is showing.
-  const list = captured
-    .map((frame, index) => {
-      const next = captured[index + 1]?.atMs ?? frame.atMs + 1000 / fps;
-      return `file '${frame.file}'\nduration ${((next - frame.atMs) / 1000).toFixed(4)}`;
-    })
-    .join("\n");
+  // One frame per output slot: the captured frame nearest the slot's exact time. Every slot
+  // then shows its own moment, evenly spaced, rather than whatever arrived last.
+  const slots = Math.floor((seconds * fps) + 1e-6) + 1;
+  const chosen: string[] = [];
+  let at = 0;
+  for (let k = 0; k < slots; k += 1) {
+    const want = (k * 1000) / fps;
+    while (at + 1 < pageAt.length && Math.abs(pageAt[at + 1]! - want) <= Math.abs(pageAt[at]! - want)) at += 1;
+    chosen.push(captured[at]!.file);
+  }
+  const distinct = chosen.filter((file, k) => k === 0 || file !== chosen[k - 1]).length;
+  console.log(`  ${slots} output frames at ${fps} fps, ${distinct} distinct (${((distinct / slots) * 100).toFixed(1)}%)`);
+  const list = chosen.map((file) => `file '${file}'\nduration ${(1 / fps).toFixed(6)}`).join("\n");
   const listFile = join(frames, "frames.txt");
   // The concat demuxer ignores the last entry's duration unless the file is repeated.
-  writeFileSync(listFile, `${list}\nfile '${captured[captured.length - 1]!.file}'\n`);
+  writeFileSync(listFile, `${list}\nfile '${chosen[chosen.length - 1]!}'\n`);
 
   console.log("→ encoding");
   const ffmpeg = spawnSync(

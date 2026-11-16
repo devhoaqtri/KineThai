@@ -3,7 +3,8 @@
  * button.
  *
  * The lab shows the upload live; scripts/render-export-clip.ts (showcase mode, --frame 4x5)
- * records the same page in real time, about a minute a word, into exports/tiktok. That is
+ * records the same page on a slowed clock for frame-exact motion, about four minutes a
+ * word, into exports/tiktok. That is
  * too long to hold a request open, so a POST starts the recording in the background and a
  * GET asks how it is going. The route that calls this answers 404 in a production build,
  * and the build fails if this module reaches one.
