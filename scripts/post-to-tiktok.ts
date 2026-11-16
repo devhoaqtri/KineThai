@@ -495,6 +495,12 @@ async function pasteCaption(text: string) {
   // A caption ending in a hashtag leaves TikTok mid-tag: its suggestion list stays open and
   // the Back that hides the keyboard drops the tag. A trailing space closes it.
   await setEmulatorClipboard(consolePort(), /\s$/.test(text) ? text : `${text} `);
+  // TikTok can pre-fill the field: with some songs it put its own hashtag first
+  // ("#Fortima", 2026-11-16), and at 5 hashtags it then cut the caption's last one. The
+  // field is emptied (select all, delete) so it holds the caption and nothing else.
+  adb(["shell", "input", "keycombination", "113", "29"]); // CTRL+A
+  adb(["shell", "input", "keyevent", "67"]); // DEL
+  await sleep(400);
   adb(["shell", "input", "keyevent", "279"]); // KEYCODE_PASTE
   // The description field echoes what it holds; its opening is enough to prove the paste,
   // and TikTok may turn the hashtags into chips that read differently.
@@ -757,6 +763,10 @@ async function addUpbeatSound(): Promise<PickedSound> {
       break;
     }
     console.log(`  “${track.title}” (${track.artist}) is already on a draft; next candidate`);
+    // Picks made on top of a used track did not take (2026-11-16: four in a row still read
+    // “Upbeat Funk”), so it comes off the clip before the next one is tried.
+    await takeSoundOff();
+    await openSoundSheet();
   }
   if (!chosen) {
     const first = candidates[0]!;
@@ -774,11 +784,7 @@ async function addUpbeatSound(): Promise<PickedSound> {
   await backToEditor();
   const now = (await readScreen()).find(isSoundBar)?.text ?? "nothing";
   console.log(`  the editor kept “${now}”, not “${chosen.title}”; removing it and picking again`);
-  const remove = (await readScreen()).find((n) => n.desc === "Close" && n.id.endsWith(":id/e2t"));
-  if (remove) {
-    tapNode(remove);
-    await waitForNode((n) => isSoundBar(n) && n.text === "Add sound", 8_000);
-  }
+  await takeSoundOff();
   await openSoundSheet();
   const again = await useSearchResult(chosen.query, chosen.row);
   if (again.title !== chosen.title) {
@@ -789,6 +795,20 @@ async function addUpbeatSound(): Promise<PickedSound> {
   await backToEditor();
   const after = (await readScreen()).find(isSoundBar)?.text ?? "nothing";
   throw new Error(`the editor names “${after}”, not the picked “${chosen.title}”`);
+}
+
+/**
+ * Close the sound sheet and take the song off the clip with the editor bar's ×, so the
+ * bar reads "Add sound" again.
+ */
+async function takeSoundOff(): Promise<void> {
+  if ((await readScreen()).some((n) => n.id.endsWith(":id/touch_outside"))) tapPoint(540, 500);
+  await backToEditor();
+  const remove = await waitForNode((n) => n.desc === "Close" && n.id.endsWith(":id/e2t"), 5_000);
+  if (remove) {
+    tapNode(remove);
+    await waitForNode((n) => isSoundBar(n) && n.text === "Add sound", 8_000);
+  }
 }
 
 /**
@@ -970,8 +990,25 @@ async function prefillPostScreen(file: string) {
       adb(["shell", "input", "keyevent", "4"]); // the keyboard covers Drafts
       await sleep(700);
     }
+    // The caption's tail can go missing as the keyboard closes (2026-11-16: "#b1"). Words
+    // the field no longer holds are typed back at its end, once; the pre-save checklist
+    // then decides.
     const field = (await readScreen()).find((n) => n.id.endsWith(":id/hb2"));
-    if (field) reportDroppedWords(caption, field.text, "after the keyboard closed");
+    const held = new Set(folded(field?.text ?? "").split(" "));
+    const lost = folded(caption).split(" ").filter((w) => w && !held.has(w));
+    if (field && lost.length) {
+      console.log(`  the description lost ${lost.join(" ")}; adding it back`);
+      tapNode(field);
+      await sleep(600);
+      adb(["shell", "input", "keyevent", "123"]); // MOVE_END
+      await setEmulatorClipboard(consolePort(), ` ${lost.join(" ")} `);
+      adb(["shell", "input", "keyevent", "279"]); // KEYCODE_PASTE
+      await sleep(1000);
+      for (let i = 0; i < 2 && keyboardShown(); i += 1) {
+        adb(["shell", "input", "keyevent", "4"]);
+        await sleep(700);
+      }
+    }
   }
 
   // 4. Every requirement, read off the Post screen, before anything is saved
