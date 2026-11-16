@@ -70,6 +70,8 @@ const TIKTOK_PACKAGES = [
 /** Scanned by MediaProvider, so a file landing here gets indexed without a manual scan. */
 const DEVICE_DIR = "/sdcard/Movies";
 const DEFAULT_LOCATION = "Quán chay Lá";
+/** How far the cover is pulled back from the hint page's middle, as a share of the strip. */
+const COVER_REWIND = 0.03;
 /** Days a pushed clip stays in /sdcard/Movies, so the draft made from it can still read it. */
 const CLIP_KEEP_DAYS = 7;
 const DEFAULT_HASHTAGS = "#tienganh #hoctienganh #tuvungtienganh #englishvocabulary #anhchayla ";
@@ -578,7 +580,10 @@ async function setCover(coverAt: number): Promise<boolean> {
       const [bx1, by1, bx2, by2] = n.bounds;
       return !n.id && !n.text && by1 === strip.bounds[1] && by2 === strip.bounds[3] && bx2 - bx1 > 80 && bx2 - bx1 < 160;
     });
-  const targetLeft = Math.round(x1 + (x2 - x1) * coverAt);
+  // TikTok's strip runs a little ahead of the clip's own clock: aimed at the hint page's
+  // middle, the cover showed the next page's first words fading in (2026-11-16, "They
+  // went" behind "Bắt đầu bằng E"). So the aim is pulled back COVER_REWIND of the strip.
+  const targetLeft = Math.round(x1 + (x2 - x1) * Math.max(0, coverAt - COVER_REWIND));
   let landed = false;
   for (let drag = 1; drag <= 3 && !landed; drag += 1) {
     const box = await selector();
@@ -588,7 +593,7 @@ async function setCover(coverAt: number): Promise<boolean> {
     adb(["shell", "input", "swipe", String(box.cx), String(strip.cy), String(aim + 8), String(strip.cy), "800"]);
     await sleep(1200);
     const after = await selector();
-    landed = !!after && Math.abs(after.bounds[0] - targetLeft) <= 20;
+    landed = !!after && Math.abs(after.bounds[0] - targetLeft) <= 12;
     if (!landed) console.log(`  the cover selector stopped at ${after?.bounds[0] ?? "?"}px, not ${targetLeft}px; dragging again`);
   }
   if (!landed) console.warn("  ! the cover selector did not reach its frame");
