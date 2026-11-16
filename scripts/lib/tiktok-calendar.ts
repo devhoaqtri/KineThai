@@ -21,7 +21,8 @@
  * Exports: CALENDAR_DAYS, LEVEL_ORDERS, LevelOrder, DayStatus, CalendarDay, Calendar, Burst,
  *   PostSchedule, CandidateWord, parseDaySpec, parseBurst, dateOfDay, todayInVietnam,
  *   dayOfDate, weekdayOf, burstPosts, slotOfPost, firstPostOnDate, levelForDay, eligibleWords,
- *   planDays, captionFor, summarize, postTimeMs, postsToDraft, isPostLevel, MIN_POST_LEVEL, ExportedWords, ExportRecord,
+ *   planDays, captionFor, summarize, postTimeMs, postsToDraft, isPostLevel, MIN_POST_LEVEL,
+ *   carouselSlides, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
  *   PlatformPost, postsToPublish, captionForPlatform
  */
@@ -39,6 +40,17 @@ export const CALENDAR_DAYS = 365;
 export const MIN_POST_LEVEL = "B1";
 
 const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
+
+/**
+ * The slide images of a carousel folder, in order: the numbered JPEGs (01.jpg, 02.jpg, …),
+ * nothing else that sits beside them (alt.txt, caption.txt).
+ * @param names - the folder's file names
+ * @returns the slide names, first slide first
+ * @pure true
+ */
+export function carouselSlides(names: string[]): string[] {
+  return names.filter((n) => /^\d+\.jpe?g$/i.test(n)).sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+}
 
 /**
  * Whether a word of this level may go out at all: MIN_POST_LEVEL or harder. Planning only
@@ -114,6 +126,11 @@ export type CalendarDay = {
   caption: string;
   /** The rendered clip, once there is one. */
   clip: string | null;
+  /**
+   * The folder of the word's finished pages (01.jpg, 02.jpg, …), what Instagram posts as a
+   * carousel; absent until rendered, and on days from before carousels.
+   */
+  carousel?: string | null;
   durationSec: number | null;
   renderedAt: string | null;
   scheduledAt: string | null;

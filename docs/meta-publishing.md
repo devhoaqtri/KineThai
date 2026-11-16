@@ -1,6 +1,7 @@
 # Publishing to Facebook and Instagram
 
-Each calendar post goes out as a **Reel on the Facebook Page** and a **Reel on Instagram** at its
+Each calendar post goes out as a **Reel on the Facebook Page** and a **carousel of the word's
+finished pages on Instagram** (never the video there; the user's rule since 2026-11-16) at its
 time, through Meta's official Graph API, from this Mac. TikTok stays on its own track (drafts in
 the emulator). Manage everything at **http://localhost:5195/posting** under `npm run dev`.
 
@@ -18,8 +19,12 @@ the emulator). Manage everything at **http://localhost:5195/posting** under `npm
 
 1. **Instagram professional account.** In the Instagram app: Settings → Account type and tools →
    switch to a **Creator** or **Business** account.
-2. **Link it to the Facebook Page.** Meta Business Suite → Settings → Accounts → Instagram accounts →
-   Connect. (The Page is what Facebook Reels post to; a personal profile cannot.)
+2. **Link it to the Facebook Page.** Use the channel's own account (anh.chayla), never a personal
+   one. Instagram's website has no Page option, so do it in Meta Business Suite: Settings →
+   Accounts → **Instagram profiles → Add** (sign in to the account in the pop-up), then
+   Accounts → **Pages → Anh.ChayLá → Connected assets**. A Page holds one Instagram account:
+   disconnect the old one there first, or *Connect assets → Instagram account* stays greyed out.
+   (The Page is what Facebook Reels post to; a personal profile cannot.)
 3. **Create a Meta app.** https://developers.facebook.com/apps → Create app → use case
    *"Manage everything on your Page"* (or type **Business**). Add **Facebook Login for Business** and
    **Instagram Graph API** (Instagram API with Facebook Login) if asked. The app can stay in
@@ -61,7 +66,12 @@ the emulator). Manage everything at **http://localhost:5195/posting** under `npm
 ## Notes
 
 - Captions: each post uses the calendar caption; the page can give Facebook or Instagram its own.
-- Instagram's cover frame is the clip's letter hint, the same frame the TikTok draft uses.
+- Instagram carousel: `render` also writes each word's 7 finished pages (4:5 JPEGs, closing page
+  naming @anh.chayla) to `<clipDir>/carousels/`, noted as `carousel` on the day;
+  `npm run tiktok -- carousel --day N` renders them for a day that has none. Instagram only fetches
+  carousel images from a public URL, so each page is uploaded to the Page as an **unpublished**
+  photo (invisible there), its URL handed to Instagram, and the photo deleted once the carousel is
+  up. An Instagram post with no pages is refused with that command, never sent as a video.
 - Facebook Reels must be 3–90 s; our clips are about 52 s.
 - `META_GRAPH_VERSION` (default `v23.0`) pins the Graph API version; `META_DRY_RUN=1` makes every
   publish a dry run.

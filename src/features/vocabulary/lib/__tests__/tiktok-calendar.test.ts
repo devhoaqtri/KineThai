@@ -17,6 +17,7 @@ import {
   recordExport,
   postsToPublish,
   isPostLevel,
+  carouselSlides,
   captionForPlatform,
   type ExportedWords,
   summarize,
@@ -449,5 +450,16 @@ describe("isPostLevel", () => {
     expect(["A1", "A2"].map(isPostLevel)).toEqual([false, false]);
     expect(["B1", "B2", "C1", "C2"].map(isPostLevel)).toEqual([true, true, true, true]);
     expect(isPostLevel("")).toBe(false);
+  });
+});
+
+describe("carouselSlides", () => {
+  it("takes the numbered JPEGs in page order and nothing beside them", () => {
+    expect(carouselSlides(["10.jpg", "alt.txt", "02.jpg", "01.jpg", "caption.txt", "cover.png", "03.jpeg"])).toEqual([
+      "01.jpg",
+      "02.jpg",
+      "03.jpeg",
+      "10.jpg",
+    ]);
   });
 });

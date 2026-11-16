@@ -1,13 +1,18 @@
 /**
- * Publish a clip as a Reel on the Facebook Page and on Instagram, through Meta's Graph API.
+ * Publish a post on the Facebook Page (a Reel of the clip) and on Instagram (a carousel of
+ * the word's finished pages, the user's rule since 2026-11-16), through Meta's Graph API.
  *
- * Both platforms take the MP4 from this machine by resumable upload to rupload.facebook.com,
- * so a clip never has to be hosted anywhere public first:
- *
- *   Facebook  POST /{page}/video_reels (start) → upload the bytes → POST …(finish, PUBLISHED)
- *             → poll /{video} until it is ready → its permalink
- *   Instagram POST /{ig-user}/media (REELS, resumable) → upload the bytes → poll the container
- *             until FINISHED → POST /{ig-user}/media_publish → its permalink
+ *   Facebook  POST /{page}/video_reels (start) → upload the MP4 by resumable upload to
+ *             rupload.facebook.com → POST …(finish, PUBLISHED) → poll /{video} until it is
+ *             ready → its permalink
+ *   Instagram each page: POST /{page}/photos (published=false), so Meta hosts it at a public
+ *             address without it showing on the Page → POST /{ig-user}/media
+ *             (image_url, is_carousel_item) → POST /{ig-user}/media (CAROUSEL, children,
+ *             caption) → poll until FINISHED → POST /{ig-user}/media_publish → its permalink,
+ *             then the hosted photos are deleted. Instagram fetches carousel images by URL
+ *             only (no upload for images), so they have to be somewhere public first; the
+ *             Page's unpublished photos keep that inside Meta with no other host or key.
+ *             publishInstagramReel stays for a video, which the calendar no longer sends.
  *
  * One Meta app in development mode covers both, since it only posts to accounts its admin
  * manages; no App Review. The Page token (from `npm run tiktok -- meta-setup`) never
@@ -17,12 +22,12 @@
  * META_DRY_RUN=1 (or `dryRun`) runs every step but the network: what would be sent is logged,
  * ids come back as `dry-…`, and nothing on either platform changes.
  *
- * Exports: MetaConfig, loadMetaConfig, metaReady, publishReel, exchangeForPageToken,
- *   writeEnvLocal, ReelResult
- * Depends on: Node's fetch; the clip on disk
+ * Exports: MetaConfig, loadMetaConfig, metaReady, publishReel, publishCarousel,
+ *   largestImage, MAX_CAROUSEL_ITEMS, exchangeForPageToken, writeEnvLocal, ReelResult
+ * Depends on: Node's fetch, FormData and Blob; the clip and the page images on disk
  */
 import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import type { MetaPlatform } from "./tiktok-calendar";
 
 const GRAPH = "https://graph.facebook.com";
@@ -183,7 +188,7 @@ async function publishFacebook(config: MetaConfig, file: string, caption: string
   return { id: videoId, url };
 }
 
-async function publishInstagram(
+async function publishInstagramReel(
   config: MetaConfig,
   file: string,
   caption: string,
@@ -246,7 +251,143 @@ export async function publishReel(input: {
   if (!existsSync(input.file)) throw new Error(`no clip at ${input.file}`);
   return input.platform === "facebook"
     ? publishFacebook(input.config, input.file, input.caption, log)
-    : publishInstagram(input.config, input.file, input.caption, input.coverMs ?? null, log);
+    : publishInstagramReel(input.config, input.file, input.caption, input.coverMs ?? null, log);
+}
+
+/** Instagram's limit on the items in one carousel. */
+export const MAX_CAROUSEL_ITEMS = 20;
+
+/**
+ * The biggest rendition Meta made of a hosted photo: the one an Instagram carousel should use.
+ * @param images - a photo's `images` field
+ * @returns its URL, or null when there is none yet
+ * @pure true
+ */
+export function largestImage(images: { width: number; height: number; source: string }[] | undefined): string | null {
+  if (!images?.length) return null;
+  return [...images].sort((a, b) => b.width * b.height - a.width * a.height)[0]!.source;
+}
+
+/**
+ * Host one page image as an unpublished photo on the Page and return its public address.
+ * Meta makes the renditions a moment after the upload, so the address is asked for until it
+ * is there.
+ */
+async function hostImage(config: MetaConfig, file: string, log: Log): Promise<{ photoId: string; url: string }> {
+  if (config.dryRun) {
+    log(`  [dry run] POST ${config.pageId}/photos source,published=false (${(statSync(file).size / 1024).toFixed(0)} KB)`);
+    return { photoId: "dry-photo", url: "https://example.invalid/dry.jpg" };
+  }
+  const form = new FormData();
+  form.set("source", new Blob([readFileSync(file)], { type: "image/jpeg" }), basename(file));
+  form.set("published", "false");
+  form.set("access_token", config.pageToken!);
+  const response = await fetch(`${GRAPH}/${config.version}/${config.pageId}/photos`, {
+    method: "POST",
+    body: form,
+    signal: AbortSignal.timeout(120_000),
+  });
+  const json = (await response.json().catch(() => ({}))) as { id?: string; error?: { message?: string } };
+  if (!response.ok || !json.id) throw new Error(`Meta photo upload: ${json.error?.message ?? `HTTP ${response.status}`}`);
+  const photoId = json.id;
+  const hosted = await poll(
+    () => graph<{ images?: { width: number; height: number; source: string }[] }>(
+      config, "GET", photoId, { fields: "images", access_token: config.pageToken! }, log,
+    ),
+    (r) => largestImage(r.images) !== null,
+    60_000,
+  );
+  return { photoId, url: largestImage(hosted.images)! };
+}
+
+/** Wait for an Instagram container to be ready to use. */
+async function containerReady(config: MetaConfig, containerId: string, what: string, log: Log) {
+  if (config.dryRun) return;
+  await poll(
+    () => graph<{ status_code?: string; status?: string }>(
+      config, "GET", containerId, { fields: "status_code,status", access_token: config.pageToken! }, log,
+    ),
+    (r) =>
+      r.status_code === "ERROR" || r.status_code === "EXPIRED"
+        ? new Error(`Instagram could not process the ${what}: ${r.status ?? r.status_code}`)
+        : r.status_code === "FINISHED",
+    5 * 60_000,
+  );
+}
+
+/**
+ * Publish the word's finished pages as one Instagram carousel, in the order given.
+ * @param input.images - JPEG files, 2 to MAX_CAROUSEL_ITEMS, first slide first
+ * @throws with Meta's own message when a step is refused; the hosted photos are deleted
+ *   whatever happens
+ */
+export async function publishCarousel(input: {
+  config: MetaConfig;
+  images: string[];
+  caption: string;
+  log?: Log;
+}): Promise<ReelResult> {
+  const { config, images, caption } = input;
+  const log = input.log ?? ((line: string) => console.log(line));
+  const missing = metaReady(config, "instagram");
+  if (missing && !config.dryRun) throw new Error(missing);
+  if (images.length < 2 || images.length > MAX_CAROUSEL_ITEMS) {
+    throw new Error(`an Instagram carousel takes 2 to ${MAX_CAROUSEL_ITEMS} images, not ${images.length}`);
+  }
+  for (const file of images) {
+    if (!existsSync(file)) throw new Error(`no page image at ${file}`);
+    if (!/\.jpe?g$/i.test(file)) throw new Error(`Instagram takes only JPEG: ${basename(file)}`);
+  }
+  const user = config.igUserId!;
+  const token = config.pageToken!;
+  const hosted: string[] = [];
+  try {
+    const children: string[] = [];
+    for (const [index, file] of images.entries()) {
+      const { photoId, url } = await hostImage(config, file, log);
+      hosted.push(photoId);
+      const item = await graph<{ id?: string }>(config, "POST", `${user}/media`, {
+        image_url: url,
+        is_carousel_item: "true",
+        access_token: token,
+      }, log);
+      const itemId = config.dryRun ? `dry-item-${index + 1}` : item.id;
+      if (!itemId) throw new Error(`Instagram did not return a container for page ${index + 1}`);
+      await containerReady(config, itemId, `page ${index + 1}`, log);
+      children.push(itemId);
+    }
+    const carousel = await graph<{ id?: string }>(config, "POST", `${user}/media`, {
+      media_type: "CAROUSEL",
+      children: children.join(","),
+      caption,
+      access_token: token,
+    }, log);
+    const carouselId = config.dryRun ? "dry-carousel" : carousel.id;
+    if (!carouselId) throw new Error("Instagram did not return the carousel container");
+    await containerReady(config, carouselId, "carousel", log);
+    const published = await graph<{ id?: string }>(
+      config, "POST", `${user}/media_publish`, { creation_id: carouselId, access_token: token }, log,
+    );
+    const mediaId = config.dryRun ? "dry-instagram-media" : published.id;
+    if (!mediaId) throw new Error("Instagram did not return the published media id");
+    if (config.dryRun) return { id: mediaId, url: null };
+    const link = await graph<{ permalink?: string }>(
+      config, "GET", mediaId, { fields: "permalink", access_token: token }, log,
+    ).catch(() => ({}) as { permalink?: string });
+    return { id: mediaId, url: link.permalink ?? null };
+  } finally {
+    // Instagram has its own copy once a container exists; the Page's hidden photos were only
+    // the way there. A failed delete leaves an unpublished photo nobody sees, so it only warns.
+    if (!config.dryRun) {
+      for (const photoId of hosted) {
+        await graph(config, "POST", photoId, { method: "delete", access_token: token }, () => {}).catch((error) =>
+          log(`  ! could not delete the hosted page photo ${photoId}: ${(error as Error).message}`),
+        );
+      }
+    } else if (hosted.length) {
+      log(`  [dry run] delete ${hosted.length} hosted page photo(s)`);
+    }
+  }
 }
 
 /**

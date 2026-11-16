@@ -4,7 +4,9 @@
  * post's number; its date and time come from the schedule (lib/tiktok-calendar slotOfPost).
  *
  *   plan      choose a word for every day of the year (keeps days already under way)
- *   render    make the clips for the next days, with their captions beside them
+ *   render    make the clips for the next days, with their captions beside them, and each
+ *             word's finished pages (the Instagram carousel) in <clipDir>/carousels
+ *   carousel  render the finished pages again for --day N (days rendered before carousels)
  *   status    what is posted, scheduled and rendered, and how many days are left in hand
  *   mark      record what happened: a day scheduled in TikTok Studio, posted, or missed
  *   swap      give a day a different word
@@ -13,7 +15,8 @@
  *             its calendar caption, and mark it drafted
  *   draft-due hand off every rendered post due from today until --hours from now (what the
  *             unattended job runs, scripts/tiktok-auto.ts); fails if any is not drafted
- *   publish   post a day's clip as a Reel on the Facebook Page and/or Instagram now
+ *   publish   post a day now: a Reel of the clip on the Facebook Page, a carousel of the
+ *             finished pages on Instagram
  *             (scripts/lib/meta-publish.ts); what the /posting page's buttons run
  *   publish-due  publish every post whose slot has come on Facebook and Instagram (the
  *             scheduled job, scripts/tiktok-auto.ts publish); quiet when nothing is due
@@ -58,7 +61,8 @@ import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
-import { exchangeForPageToken, loadMetaConfig, metaReady, publishReel, writeEnvLocal } from "./lib/meta-publish";
+import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, writeEnvLocal } from "./lib/meta-publish";
+import { renderCarousel } from "./render-carousel";
 import { siteAddress } from "../src/features/vocabulary/lib/target-language";
 import {
   CALENDAR_DAYS,
@@ -89,6 +93,7 @@ import {
   postsToPublish,
   isPostLevel,
   MIN_POST_LEVEL,
+  carouselSlides,
   calendarExportRef,
   exportConflicts,
   recordExport,
@@ -483,8 +488,69 @@ async function render() {
     });
     saveCalendar(calendar);
     console.log(`✓ day ${day.day}: ${info.duration.toFixed(1)}s, caption beside it`);
+    // Instagram's post. A failure here does not cost the clip: the day stays rendered for
+    // TikTok and Facebook, and Instagram refuses it until the pages exist.
+    try {
+      await renderDayCarousel(day, base, dir);
+      saveCalendar(calendar);
+    } catch (error) {
+      console.log(`  ! no carousel for day ${day.day} (${(error as Error).message}); Instagram waits for: npm run tiktok -- carousel --day ${day.day}`);
+    }
   }
   console.log(`\n✓ ${chosen.length} clip(s) ready. Upload them in TikTok Studio, then: npm run tiktok -- mark <days> scheduled`);
+}
+
+/** The account the carousel's closing page names: the channel's own Instagram. */
+const INSTAGRAM_HANDLE = "@anh.chayla";
+
+/** A path under the home folder written as ~/…, the way the calendar keeps them. */
+function tilde(path: string): string {
+  return path.startsWith(homedir()) ? `~${path.slice(homedir().length)}` : path;
+}
+
+/**
+ * Render a day's finished pages (the Instagram carousel) beside its clip and note the folder
+ * on the day. Needs the dev server, like the clip.
+ */
+async function renderDayCarousel(day: CalendarDay, base: string, dir: string) {
+  const result = await renderCarousel({
+    code: day.code,
+    base,
+    format: "4x5",
+    handle: INSTAGRAM_HANDLE,
+    out: join(dir, "carousels"),
+  });
+  if (result.warning) console.log(`  ! carousel: ${result.warning}`);
+  day.carousel = tilde(result.folder);
+  console.log(`✓ day ${day.day}: ${result.slides.length} pages for Instagram in ${day.carousel}`);
+}
+
+/** Render the finished pages for days that have none (or again): `carousel --day 6-7`. */
+async function carousel() {
+  const spec = flag("day");
+  if (!spec) throw new Error("usage: carousel --day <days> [--base <url>]");
+  const base = flag("base") ?? "http://localhost:5195";
+  const answer = await fetch(`${base}/carousel/x`).catch(() => null);
+  if (!answer) throw new Error(`the dev server does not answer at ${base}; start it with \`npm run dev\``);
+  const calendar = loadCalendar();
+  const dir = expandHome(calendar.clipDir);
+  for (const n of parseDaySpec(spec)) {
+    const day = calendar.days.find((d) => d.day === n);
+    if (!day) throw new Error(`there is no day ${n}`);
+    refuseBelowFloor(day);
+    await renderDayCarousel(day, base, dir);
+    saveCalendar(calendar);
+  }
+}
+
+/** A day's carousel slides as files, first page first; throws with the fix when there are none. */
+function carouselImages(day: CalendarDay): string[] {
+  const folder = day.carousel ? expandHome(day.carousel) : null;
+  const names = folder && existsSync(folder) ? carouselSlides(readdirSync(folder)) : [];
+  if (!folder || names.length === 0) {
+    throw new Error(`post ${day.day} has no finished pages for Instagram: npm run tiktok -- carousel --day ${day.day}`);
+  }
+  return names.map((name) => join(folder, name));
 }
 
 function status() {
@@ -729,8 +795,10 @@ function updateTrack(dayNumber: number, platform: MetaPlatform, change: (track: 
 async function publishDay(dayNumber: number, platform: MetaPlatform, dryRun: boolean): Promise<boolean> {
   const day = loadCalendar().days.find((d) => d.day === dayNumber);
   if (!day) throw new Error(`there is no post ${dayNumber}`);
-  if (!day.clip) throw new Error(`post ${dayNumber} has no clip yet: npm run tiktok -- render --day ${dayNumber}`);
   refuseBelowFloor(day);
+  // Instagram posts the finished pages as a carousel, never the video; Facebook posts the Reel.
+  const images = platform === "instagram" ? carouselImages(day) : null;
+  if (!images && !day.clip) throw new Error(`post ${dayNumber} has no clip yet: npm run tiktok -- render --day ${dayNumber}`);
   const config = { ...loadMetaConfig(ROOT), ...(dryRun ? { dryRun: true } : {}) };
   console.log(`\n── ${platform} · post ${day.day} (${day.date} ${day.time ?? ""}) · “${day.word}”${config.dryRun ? " · dry run" : ""}`);
   if (!config.dryRun) {
@@ -742,14 +810,17 @@ async function publishDay(dayNumber: number, platform: MetaPlatform, dryRun: boo
     });
   }
   try {
-    const result = await publishReel({
-      config,
-      platform,
-      file: expandHome(day.clip),
-      caption: captionForPlatform(day, platform),
-      coverMs: coverMsOf(day),
-      log: (line) => console.log(line),
-    });
+    const log = (line: string) => console.log(line);
+    const result = images
+      ? await publishCarousel({ config, images, caption: captionForPlatform(day, platform), log })
+      : await publishReel({
+          config,
+          platform,
+          file: expandHome(day.clip!),
+          caption: captionForPlatform(day, platform),
+          coverMs: coverMsOf(day),
+          log,
+        });
     if (config.dryRun) {
       console.log("✓ dry run: every step would be sent");
       return true;
@@ -873,6 +944,8 @@ async function main() {
       return draftDue();
     case "exported":
       return exported();
+    case "carousel":
+      return carousel();
     case "publish":
       return publish();
     case "publish-due":
