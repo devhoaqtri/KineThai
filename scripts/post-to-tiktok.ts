@@ -70,6 +70,8 @@ const TIKTOK_PACKAGES = [
 /** Scanned by MediaProvider, so a file landing here gets indexed without a manual scan. */
 const DEVICE_DIR = "/sdcard/Movies";
 const DEFAULT_LOCATION = "Quán chay Lá";
+/** Days a pushed clip stays in /sdcard/Movies, so the draft made from it can still read it. */
+const CLIP_KEEP_DAYS = 7;
 const DEFAULT_HASHTAGS = "#tienganh #hoctienganh #tuvungtienganh #englishvocabulary #anhchayla ";
 
 const argv = process.argv.slice(2);
@@ -232,8 +234,11 @@ async function waitForForeground(pkg: string): Promise<boolean> {
     if (foregroundPackage() === pkg) {
       held += 1;
       if (held >= 6) return true;
-    } else if (held > 0) {
-      return false;
+    } else {
+      // A flicker while TikTok hands the share from one screen to the next is not a
+      // failure (2026-11-16: the editor opened while this had already given up); only a
+      // TikTok that never holds the front for 3 s is.
+      held = 0;
     }
     await sleep(500);
   }
@@ -741,20 +746,9 @@ async function useSearchResult(query: string, row: number): Promise<{ title: str
 async function addUpbeatSound(): Promise<PickedSound> {
   const ledger = loadSoundLedger(SOUND_LEDGER);
   const candidates = soundCandidates(ledger, soundQuery);
-  const bar = await waitForNode(isSoundBar, 10_000);
-  if (!bar) throw new Error("the editor has no Add sound bar");
+  if (!(await waitForNode(isSoundBar, 10_000))) throw new Error("the editor has no Add sound bar");
   console.log(`→ choosing a song (${ledger.used.filter((u) => u.drafted).length} already used)`);
-  // Opening the sheet puts TikTok's own first suggestion on the clip; the pick replaces it.
-  // A tap can land before the editor is ready for it (a real draft on 2026-11-16 got no
-  // song this way), so the bar is tapped again while the editor is still what shows.
-  let open = false;
-  for (let attempt = 1; attempt <= 3 && !open; attempt += 1) {
-    const current = (await waitForNode(isSoundBar, 5_000)) ?? bar;
-    tapNode(current);
-    open = !!(await waitForNode(isSoundSheet, 8_000));
-    if (!open && attempt < 3) console.log("  the sound sheet did not open; tapping the bar again");
-  }
-  if (!open) throw new Error("the sound sheet did not open after 3 taps on the bar");
+  await openSoundSheet();
   let chosen: PickedSound | null = null;
   for (const { query, row } of candidates) {
     const track = await useSearchResult(query, row);
@@ -772,8 +766,54 @@ async function addUpbeatSound(): Promise<PickedSound> {
       `no fresh upbeat track in ${candidates.length} tries; “${chosen.title}” (${chosen.artist}) is used again`,
     );
   }
-  const title = chosen.title;
+  if (await finishSoundSheet(chosen.title)) return chosen;
 
+  // The sheet named the pick but the editor kept an earlier song (seen 2026-11-16: the bar
+  // still said “Upbeat Funk”, a used track tried and skipped on the way). Take the song off
+  // with the bar's ×, then pick the same track again into a clip with none.
+  await backToEditor();
+  const now = (await readScreen()).find(isSoundBar)?.text ?? "nothing";
+  console.log(`  the editor kept “${now}”, not “${chosen.title}”; removing it and picking again`);
+  const remove = (await readScreen()).find((n) => n.desc === "Close" && n.id.endsWith(":id/e2t"));
+  if (remove) {
+    tapNode(remove);
+    await waitForNode((n) => isSoundBar(n) && n.text === "Add sound", 8_000);
+  }
+  await openSoundSheet();
+  const again = await useSearchResult(chosen.query, chosen.row);
+  if (again.title !== chosen.title) {
+    await backToEditor();
+    throw new Error(`picking again gave “${again.title}”, not “${chosen.title}”`);
+  }
+  if (await finishSoundSheet(chosen.title)) return chosen;
+  await backToEditor();
+  const after = (await readScreen()).find(isSoundBar)?.text ?? "nothing";
+  throw new Error(`the editor names “${after}”, not the picked “${chosen.title}”`);
+}
+
+/**
+ * Open the sound sheet from the editor's bar. Opening it puts TikTok's own first
+ * suggestion on the clip; a pick replaces it. A tap can land before the editor is ready
+ * for it (a real draft on 2026-11-16 got no song this way), so the bar is tapped again
+ * while the sheet is not up.
+ * @throws after 3 taps that did not open it
+ */
+async function openSoundSheet(): Promise<void> {
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    const bar = await waitForNode(isSoundBar, 5_000);
+    if (bar) tapNode(bar);
+    if (await waitForNode(isSoundSheet, 8_000)) return;
+    if (attempt < 3) console.log("  the sound sheet did not open; tapping the bar again");
+  }
+  throw new Error("the sound sheet did not open after 3 taps on the bar");
+}
+
+/**
+ * Set the volumes (the clip's silent track to 0, the song to 80%), close the sheet, and
+ * report whether the editor's bar names the picked song.
+ * @param title - the track the sheet shows as picked
+ */
+async function finishSoundSheet(title: string): Promise<boolean> {
   // Volume: the sliders are not in the UI tree, so they are dragged by where their labels
   // sit. Starting the drag mid-bar is fine: the bar jumps to the touch, then follows it.
   const volume = await waitForNode((n) => n.id.endsWith(":id/volume_click_view"), 5_000);
@@ -797,16 +837,9 @@ async function addUpbeatSound(): Promise<PickedSound> {
   } else {
     warnings.push("no Volume button; the song plays at TikTok's default level");
   }
-
   // Close the sheet with a tap above it; the editor's bar then names the song.
   tapPoint(540, 500);
-  const named = await waitForNode((n) => isSoundBar(n) && n.text === title, 10_000);
-  if (!named) {
-    await backToEditor();
-    const now = (await readScreen()).find(isSoundBar)?.text ?? "nothing";
-    throw new Error(`the editor names “${now}”, not the picked “${title}”`);
-  }
-  return chosen;
+  return !!(await waitForNode((n) => isSoundBar(n) && n.text === title, 10_000));
 }
 
 async function prefillPostScreen(file: string) {
@@ -979,10 +1012,12 @@ async function prefillPostScreen(file: string) {
  */
 async function readDraftCount(pkg: string): Promise<number> {
   let opened = false;
-  for (let attempt = 0; attempt < 3 && !opened; attempt += 1) {
+  for (let attempt = 0; attempt < 4 && !opened; attempt += 1) {
     const tab = await waitForNode((n) => n.desc === "Profile", 8_000, { pauseFeed: true });
     if (tab) tapNode(tab);
-    else if (lastDumpFailed) tapPoint(PROFILE_TAB.x, PROFILE_TAB.y); // the feed is playing
+    // The feed is playing, or a screen such as Friends' "Follow back" card held the first
+    // tap (2026-11-16): the tab's own position.
+    else if (lastDumpFailed || attempt > 0) tapPoint(PROFILE_TAB.x, PROFILE_TAB.y);
     else shell(`monkey -p ${pkg} -c android.intent.category.LAUNCHER 1`); // TikTok is not up
     opened = !!(await waitForNode((n) => n.desc === "Profile menu", 12_000));
   }
@@ -1027,11 +1062,16 @@ async function main() {
   shell("wm dismiss-keyguard");
 
   // TikTok's video cache filled the 7.7 GB /data to 99% once ("Almost out of phone
-  // storage"). App caches are Android's to drop, so they go before every run; drafts live
-  // in TikTok's own files and survive it. Too little left even then fails here, plainly,
-  // rather than halfway through saving a draft.
-  shell("pm trim-caches 999G");
-  const freeKb = Number(shell("df -k /data").split("\n").pop()?.trim().split(/\s+/)[3] ?? 0);
+  // storage"). App caches are Android's to drop, but only when space is short: a draft
+  // survived a trim when tested (2026-11-16), yet drafts went missing that day and the trim
+  // empties TikTok's external cache, so it is not run on every draft any more. Too little
+  // left even then fails here, plainly, rather than halfway through saving a draft.
+  const dataFreeKb = () => Number(shell("df -k /data").split("\n").pop()?.trim().split(/\s+/)[3] ?? 0);
+  if (dataFreeKb() < 1_048_576) {
+    console.log("  /data is under 1 GB free; trimming app caches");
+    shell("pm trim-caches 999G");
+  }
+  const freeKb = dataFreeKb();
   console.log(`  /data has ${(freeKb / 1_048_576).toFixed(1)} GB free`);
   if (freeKb < 500 * 1024) {
     throw new Error(
@@ -1112,13 +1152,20 @@ async function main() {
   }
 
   if (!has("keep")) {
-    // The device copy is TikTok's to read until it has imported the clip, so this only
-    // removes the previous run's file, never the one just handed over.
+    // A draft can still read the clip it was made from: on 2026-11-16 drafts went missing
+    // after later runs deleted their clips (each run used to clear every earlier one). So
+    // a clip stays on the device for CLIP_KEEP_DAYS, longer than any draft waits to post,
+    // judged by the time stamp its name starts with.
+    const cutoff = Date.now() - CLIP_KEEP_DAYS * 86_400_000;
     const stale = shell(`ls ${DEVICE_DIR}`)
       .split("\n")
-      .filter((f) => f.endsWith(".mp4") && f !== name);
+      .filter((f) => f.endsWith(".mp4") && f !== name)
+      .filter((f) => {
+        const m = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})-/.exec(f);
+        return !!m && Date.UTC(+m[1]!, +m[2]! - 1, +m[3]!, +m[4]!, +m[5]!, +m[6]!) < cutoff;
+      });
     for (const old of stale) shell(`rm ${DEVICE_DIR}/${old}`);
-    if (stale.length) console.log(`  cleared ${stale.length} earlier clip(s)`);
+    if (stale.length) console.log(`  cleared ${stale.length} clip(s) older than ${CLIP_KEEP_DAYS} days`);
   }
 
   await prefillPostScreen(file);
