@@ -2148,15 +2148,14 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-recording .vocab-showcase-stage[data-frame="4x5"] .vocab-card .vocab-stage-band[data-reveal] {
   bottom: calc(var(--vocab-chrome-top) + var(--vocab-rec-top-gap));
 }
-/* Only the page progress and the app's title stay: no transport icons, gear, filter line,
-   page label or action row. The top-left corner belongs to the docked question. Prefixed
+/* Only the page progress, the app's title and the difficulty line under it stay: no
+   transport icons, gear, page label or action row. The top-left corner belongs to the docked question. Prefixed
    with .vocab-showcase so it outranks the scenery's own `display: grid` on its icons. */
 .vocab-showcase
   .vocab-showcase-stage[data-frame="4x5"]
   :is(
     .vocab-player-controls,
     .vocab-corner-button,
-    .vocab-showcase-filter,
     .vocab-stage-label,
     .vocab-action-bar
   ) {
@@ -2348,15 +2347,19 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-showcase-brand span {
   color: var(--vocab-accent, #7bdcb5);
 }
+/* The app's title sub-line ("🍃 đọc hiểu · B1", .vocab-brand small) without its arrow:
+   same size, weight, tracking and softened ink, hanging right under the title. */
 .vocab-showcase-filter {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 2px;
+  gap: 5px;
+  /* Tucked up against the title: the title's own line box already leaves air under it. */
+  margin-top: -2px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--chrome-ink, #fff);
-  opacity: 0.92;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  color: color-mix(in srgb, var(--chrome-ink, #fff) 72%, transparent);
   white-space: nowrap;
 }
 /* The scenery icons are spans, not buttons, so they need the shape the real ones get from
