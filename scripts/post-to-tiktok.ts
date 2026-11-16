@@ -22,10 +22,13 @@
  * Unattended runs (scripts/tiktok-auto.ts) lean on two more rules: every step the draft
  * needs either happens or the script exits non-zero, and the caption goes in over the
  * emulator's gRPC clipboard (lib/emulator-clipboard), which needs no window focus, no
- * Accessibility grant and keeps every Vietnamese diacritic. Only the cover frame and the
- * location are allowed to fail softly: they are printed as warnings and the draft still
- * stands. TikTok is force-stopped first, so a screen left open by an earlier run or by hand
- * cannot steer the taps.
+ * Accessibility grant and keeps every Vietnamese diacritic. Nothing incomplete is saved:
+ * right before Drafts, verifyBeforeSave reads the Post screen against a checklist (song on
+ * the clip, cover changed from TikTok's first-frame default, location named, the whole
+ * caption, audience everyone, Drafts reachable) and stops the run, unsaved, on any miss;
+ * tiktok.ts then tries the whole draft once more. A --no-<step> flag drops that step from
+ * the checklist. TikTok is force-stopped first, so a screen left open by an earlier run or
+ * by hand cannot steer the taps.
  *
  * Usage:
  *   npx tsx scripts/post-to-tiktok.ts <clip.mp4>
@@ -49,8 +52,8 @@
  * library (lib/tiktok-sounds: a rotating list of upbeat searches; a track already on any
  * earlier draft, by title and artist, is skipped for the next candidate, and only when every
  * candidate is taken is one repeated, with a warning; ledger in scripts/data/tiktok-sounds.json). The clip's own silent
- * track goes to 0 and the song to 80%. Like the cover and location, a song that cannot be
- * added is a warning and the draft still stands.
+ * track goes to 0 and the song to 80%. A song that cannot be added fails the pre-save
+ * checklist, so the draft is not saved without one.
  */
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, openSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
@@ -377,6 +380,39 @@ function keyboardShown(): boolean {
   return /mInputShown=true/.test(shell("dumpsys input_method"));
 }
 
+/**
+ * A 24×24 grey thumbnail of one screen region, for telling whether what it shows changed.
+ * uiautomator cannot see images (a cover is only pixels), so the screen is grabbed and
+ * ffmpeg shrinks the region.
+ * @param region - [x1, y1, x2, y2] in screen pixels
+ * @returns 576 brightness bytes, or null when the grab failed
+ */
+function regionSignature([x1, y1, x2, y2]: [number, number, number, number]): Buffer | null {
+  const png = spawnSync("adb", [...(serial ? ["-s", serial] : []), "exec-out", "screencap", "-p"], {
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  if (png.status !== 0 || !png.stdout?.length) return null;
+  const w = Math.max(2, x2 - x1);
+  const h = Math.max(2, y2 - y1);
+  const out = spawnSync(
+    "ffmpeg",
+    ["-v", "error", "-f", "png_pipe", "-i", "pipe:0", "-vf", `crop=${w}:${h}:${x1}:${y1},scale=24:24,format=gray`, "-f", "rawvideo", "-"],
+    { input: png.stdout, maxBuffer: 1024 * 1024 },
+  );
+  return out.status === 0 && out.stdout.length === 576 ? out.stdout : null;
+}
+
+/** Mean brightness difference of two signatures (0–255); Infinity when either is missing. */
+function signatureDiff(a: Buffer | null, b: Buffer | null): number {
+  if (!a || !b) return Infinity;
+  let sum = 0;
+  for (let i = 0; i < a.length; i += 1) sum += Math.abs(a[i]! - b[i]!);
+  return sum / a.length;
+}
+
+/** Above this, a region is taken to show a different picture (same picture: ~0–2). */
+const PICTURE_CHANGED = 6;
+
 function tapNode(node: UiNode) {
   tapPoint(node.cx, node.cy);
 }
@@ -475,6 +511,119 @@ let shareAgain: () => void = () => {};
 
 /** What went wrong without spoiling the draft: printed at the end, never a failure. */
 const warnings: string[] = [];
+
+/** What each step proved, read by verifyBeforeSave. */
+const checks = { cover: false };
+
+/**
+ * Pick the cover frame in TikTok's cover editor and prove it took: the Post screen's
+ * preview must show a different picture after Save than before (TikTok's default cover is
+ * the clip's first frame, the plain opening). The strip's thumbnails load after the strip
+ * itself, and a drag on a strip still loading moved nothing while Save went through, so
+ * the drag waits for them, is slow, and is checked on the editor's big preview too.
+ * @param coverAt - where on the strip, 0..1
+ * @returns whether the Post screen now shows the chosen cover
+ */
+async function setCover(coverAt: number): Promise<boolean> {
+  const editCover = (await readScreen()).find((n) => n.text === "Edit cover");
+  if (!editCover) {
+    console.warn("  ! no Edit cover button");
+    return false;
+  }
+  // The preview card sits above its Edit cover button.
+  const [ex1, ey1, ex2] = editCover.bounds;
+  const postPreview: [number, number, number, number] = [ex1, Math.max(0, ey1 - 290), ex2, ey1 - 10];
+  const before = regionSignature(postPreview);
+  console.log(`→ setting cover frame (${Math.round(coverAt * 100)}%)`);
+  tapNode(editCover);
+  const strip = await waitForNode((n) => n.id.endsWith(":id/e3b"), 20_000);
+  const save = await waitForNode((n) => n.text === "Save", 5_000);
+  if (!strip || !save) {
+    console.warn("  ! the cover editor had no filmstrip or Save button");
+    if (!(await readScreen()).some((n) => n.text === "Edit cover" || n.id.endsWith(":id/hb2"))) {
+      const cancel = (await readScreen()).find((n) => n.text === "Cancel");
+      if (cancel) tapNode(cancel);
+      else adb(["shell", "input", "keyevent", "4"]);
+    }
+    await waitForNode((n) => n.text === "Edit cover" || n.id.endsWith(":id/hb2"), 10_000);
+    return false;
+  }
+  // Thumbnails: the strip's own frames, there once the clip is decoded.
+  const deadline = Date.now() + 10_000;
+  while (Date.now() < deadline) {
+    const frames = (await readScreen()).filter((n) => n.id.endsWith(":id/mn8"));
+    if (frames.length >= 5) break;
+    await sleep(500);
+  }
+  await sleep(800);
+  // The selector is the one strip-high box with no id; its LEFT edge is where the cover
+  // sits in the clip, linearly over the strip's width (measured 2026-11-16: left at 150,
+  // 250, 350, 450 px showed 10%, 22%, 34%, 45% of a 46 s clip). A drag puts that edge
+  // about where the finger stops, but only when it starts on the box: a touch elsewhere on
+  // the strip jumps the box there, which once sent a retry back to the plain first frame.
+  const [x1, , x2] = strip.bounds;
+  const selector = async () =>
+    (await readScreen()).find((n) => {
+      const [bx1, by1, bx2, by2] = n.bounds;
+      return !n.id && !n.text && by1 === strip.bounds[1] && by2 === strip.bounds[3] && bx2 - bx1 > 80 && bx2 - bx1 < 160;
+    });
+  const targetLeft = Math.round(x1 + (x2 - x1) * coverAt);
+  let landed = false;
+  for (let drag = 1; drag <= 3 && !landed; drag += 1) {
+    const box = await selector();
+    if (!box) break;
+    const aim = targetLeft + (drag > 1 ? Math.round((targetLeft - box.bounds[0]) / 2) : 0);
+    // The box's left edge stops a few px short of where the finger lifts (measured 4 px).
+    adb(["shell", "input", "swipe", String(box.cx), String(strip.cy), String(aim + 8), String(strip.cy), "800"]);
+    await sleep(1200);
+    const after = await selector();
+    landed = !!after && Math.abs(after.bounds[0] - targetLeft) <= 20;
+    if (!landed) console.log(`  the cover selector stopped at ${after?.bounds[0] ?? "?"}px, not ${targetLeft}px; dragging again`);
+  }
+  if (!landed) console.warn("  ! the cover selector did not reach its frame");
+  tapNode(save);
+  if (!(await waitForNode((n) => n.text === "Edit cover" || n.id.endsWith(":id/hb2"), 15_000))) {
+    throw new Error("the Post screen did not come back after the cover editor");
+  }
+  await sleep(1500); // the preview card redraws after the screen is back
+  const changed = signatureDiff(before, regionSignature(postPreview));
+  return changed > PICTURE_CHANGED;
+}
+
+/**
+ * The checklist a draft must pass before it is saved, read off the Post screen where it
+ * can be: the song (proved on the editor's bar before Next), the cover (the preview
+ * changed), the location (its row names the place), the description (every word of the
+ * caption), the audience (everyone), and a Drafts button no keyboard covers. Anything the
+ * run was told to skip (--no-sound, --no-cover, --no-location, --no-caption) is not asked.
+ * @throws listing every unmet requirement, so nothing incomplete is saved
+ */
+async function verifyBeforeSave(caption: string): Promise<void> {
+  const ui = await readScreen();
+  const field = ui.find((n) => n.id.endsWith(":id/hb2"));
+  const held = new Set(folded(field?.text ?? "").split(" "));
+  const missingWords = folded(caption).split(" ").filter((w) => w && !held.has(w));
+  const wantLocation = !has("no-location") && locationQuery.toLowerCase() !== "none";
+  const placeRow = ui.find((n) => n.id.endsWith(":id/zrf") && n.text.toLowerCase().includes(locationQuery.toLowerCase()));
+  const rows: [string, boolean | null, string][] = [
+    ["song", has("no-sound") ? null : !!pickedSound, pickedSound ? `“${pickedSound.title}” by ${pickedSound.artist || "?"}` : "none on the clip"],
+    ["cover", has("no-cover") ? null : checks.cover, checks.cover ? "the chosen frame" : "still TikTok's default (first frame)"],
+    ["location", wantLocation ? !!placeRow : null, placeRow?.text ?? `“${locationQuery}” not selected`],
+    ["description", has("no-caption") ? null : !!field && missingWords.length === 0,
+      missingWords.length ? `missing ${missingWords.join(" ")}` : "the whole caption"],
+    ["audience", ui.some((n) => n.text === "Everyone can view this post"), "everyone"],
+    ["drafts button", has("no-draft") ? null : !keyboardShown() && ui.some((n) => n.text === "Drafts"), "reachable"],
+  ];
+  console.log("→ checking the post before saving");
+  for (const [name, ok, detail] of rows) {
+    if (ok === null) continue;
+    console.log(`  ${ok ? "✓" : "✗"} ${name}: ${detail}`);
+  }
+  const unmet = rows.filter(([, ok]) => ok === false).map(([name, , detail]) => `${name} (${detail})`);
+  if (unmet.length) {
+    throw new Error(`not saved, the post is incomplete: ${unmet.join("; ")}`);
+  }
+}
 
 /** The song put on this clip, recorded in the ledger once the run has succeeded. */
 let pickedSound: PickedSound | null = null;
@@ -691,7 +840,6 @@ async function prefillPostScreen(file: string) {
       console.warn(`  ! ${why}`);
       const snapshot = saveFailureSnapshot();
       if (snapshot) console.warn(`    screen at the time: ${snapshot}.png (UI tree beside it)`);
-      warnings.push(why);
       await backToEditor();
     }
     nextBtn = (await waitForNode((n) => n.text === "Next", 10_000)) ?? nextBtn;
@@ -706,38 +854,9 @@ async function prefillPostScreen(file: string) {
 
   // 1. Cover ("screenshot")
   if (!has("no-cover")) {
-    const editCover = (await readScreen()).find((n) => n.text === "Edit cover");
-    if (editCover) {
-      console.log(`→ setting cover frame (${Math.round(coverAt * 100)}%)`);
-      tapNode(editCover);
-      const filmstrip = await waitForNode((n) => n.id.endsWith(":id/e3b"), 20_000);
-      const saveBtn = filmstrip ? (await readScreen()).find((n) => n.text === "Save") : undefined;
-      if (filmstrip && saveBtn) {
-        const [x1, , x2] = filmstrip.bounds;
-        const targetX = Math.round(x1 + (x2 - x1) * coverAt);
-        adb([
-          "shell",
-          "input",
-          "swipe",
-          String(x1 + 24),
-          String(filmstrip.cy),
-          String(targetX),
-          String(filmstrip.cy),
-          "300",
-        ]);
-        await sleep(700);
-        tapNode(saveBtn);
-      } else {
-        warnings.push("the cover editor had no filmstrip or Save button; TikTok picks the cover");
-        // Back only from the cover editor itself: on the Post screen it leaves the flow.
-        if (!(await readScreen()).some((n) => n.text === "Edit cover" || n.id.endsWith(":id/hb2"))) {
-          adb(["shell", "input", "keyevent", "4"]);
-        }
-      }
-      const back = await waitForNode((n) => n.text === "Edit cover" || n.id.endsWith(":id/hb2"), 15_000);
-      if (!back) throw new Error("the Post screen did not come back after the cover editor");
-    } else {
-      warnings.push("no Edit cover button; TikTok picks the cover");
+    for (let attempt = 1; attempt <= 2 && !checks.cover; attempt += 1) {
+      checks.cover = await setCover(coverAt);
+      if (!checks.cover && attempt < 2) console.log("  the cover did not change; setting it again");
     }
   }
 
@@ -790,7 +909,7 @@ async function prefillPostScreen(file: string) {
       }
     }
     if (!located) {
-      warnings.push(`location "${locationQuery}" was not found; the post has none`);
+      console.warn(`  ! location "${locationQuery}" was not found`);
       // A picker left open would hide the description and Drafts.
       if (!(await readScreen()).some((n) => n.text === "Edit cover" || n.id.endsWith(":id/hb2"))) {
         adb(["shell", "input", "keyevent", "4"]);
@@ -822,7 +941,10 @@ async function prefillPostScreen(file: string) {
     if (field) reportDroppedWords(caption, field.text, "after the keyboard closed");
   }
 
-  // 4. Save to Drafts
+  // 4. Every requirement, read off the Post screen, before anything is saved
+  await verifyBeforeSave(caption);
+
+  // 5. Save to Drafts
   if (!has("no-draft")) {
     const draftsBtn = await waitForNode((n) => n.text === "Drafts", 8_000);
     if (!draftsBtn) throw new Error("the Post screen has no Drafts button; nothing was saved");
