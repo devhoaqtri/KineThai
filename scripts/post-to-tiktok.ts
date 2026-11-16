@@ -733,9 +733,14 @@ async function useSearchResult(query: string, row: number): Promise<{ title: str
   // artist on the line under it ("FASSounds · 429.3K posts").
   const picked = await waitForNode((n) => n.id.endsWith(":id/title") && !!n.text, 12_000);
   if (!picked) throw new Error("the sound sheet did not come back after the pick");
-  const author = (await readScreen())
-    .filter((n) => n.id.endsWith(":id/tv_author") && n.cy > picked.cy)
-    .sort((a, b) => a.cy - b.cy)[0];
+  // The artist line can lag the title by a moment; an empty read is asked again.
+  let author: UiNode | undefined;
+  for (let i = 0; i < 4 && !author?.text; i += 1) {
+    if (i) await sleep(600);
+    author = (await readScreen())
+      .filter((n) => n.id.endsWith(":id/tv_author") && n.cy > picked.cy)
+      .sort((a, b) => a.cy - b.cy)[0];
+  }
   const artist = (author?.text ?? "").split("·")[0]!.replace(/[\u200e\u200f]/g, "").trim();
   return { title: picked.text.trim(), artist };
 }

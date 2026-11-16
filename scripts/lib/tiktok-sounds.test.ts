@@ -53,6 +53,12 @@ describe("isUsedSound", () => {
     expect(isUsedSound({ used }, "upbeat funk ", "fassounds")).toBe(true);
   });
 
+  it("matches on the title alone when the artist was not read", () => {
+    const ledger = { used: [use("Upbeat Funk", "FASSounds", "upbeat")] };
+    expect(isUsedSound(ledger, "Upbeat Funk", "")).toBe(true);
+    expect(isUsedSound(ledger, "Funk it up", "")).toBe(false);
+  });
+
   it("keeps the same title by another artist and ignores --no-draft runs", () => {
     const ledger = { used: [use("Upbeat Funk", "FASSounds", "upbeat"), use("Other", "A", "upbeat", false)] };
     expect(isUsedSound(ledger, "Upbeat Funk", "Someone Else")).toBe(false);

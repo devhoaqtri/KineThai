@@ -92,7 +92,16 @@ const key = (title: string, artist: string) =>
  */
 export function isUsedSound(ledger: SoundLedger, title: string, artist: string): boolean {
   const wanted = key(title, artist);
-  return ledger.used.some((u) => u.drafted && key(u.title, u.artist ?? "") === wanted);
+  // An artist the sheet did not show (read back empty) cannot tell two tracks apart, so
+  // the title alone decides; a used “Upbeat Funk” once went on a second draft this way.
+  const titleOnly = title.normalize("NFC").trim().toLowerCase();
+  return ledger.used.some(
+    (u) =>
+      u.drafted &&
+      (artist.trim()
+        ? key(u.title, u.artist ?? "") === wanted
+        : u.title.normalize("NFC").trim().toLowerCase() === titleOnly),
+  );
 }
 
 /**
