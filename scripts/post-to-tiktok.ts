@@ -485,6 +485,10 @@ interface PickedSound {
 
 /** The editor's top bar: "Add sound" until a song is on the clip, then the song's title. */
 const isSoundBar = (n: UiNode) => n.id.endsWith(":id/tv_top_text");
+/** The sound sheet's Search button, by its label or its id. */
+const isSoundSearch = (n: UiNode) => (n.desc === "Search" && n.clickable) || n.id.endsWith(":id/c6r");
+/** Any sign the sound sheet is up: its Search button, its tap-outside area or its tabs. */
+const isSoundSheet = (n: UiNode) => isSoundSearch(n) || n.id.endsWith(":id/touch_outside") || n.text === "For You";
 
 /**
  * Back out of the sound search and sheet to the editor, whatever state a failed song step
@@ -537,7 +541,7 @@ function soundResultButtons(ui: UiNode[]): UiNode[] {
  * @returns the picked track's title and artist, as the sheet names them
  */
 async function useSearchResult(query: string, row: number): Promise<{ title: string; artist: string }> {
-  const search = await waitForNode((n) => n.desc === "Search" && n.clickable, 10_000);
+  const search = await waitForNode(isSoundSearch, 10_000);
   if (!search) throw new Error("the sound sheet has no Search button");
   tapNode(search);
   const field = await waitForNode((n) => n.id.endsWith(":id/hxw") || (n.text === "Search" && n.clickable && n.cx < 700), 10_000);
@@ -586,11 +590,17 @@ async function addUpbeatSound(): Promise<PickedSound> {
   const bar = await waitForNode(isSoundBar, 10_000);
   if (!bar) throw new Error("the editor has no Add sound bar");
   console.log(`→ choosing a song (${ledger.used.filter((u) => u.drafted).length} already used)`);
-  tapNode(bar);
   // Opening the sheet puts TikTok's own first suggestion on the clip; the pick replaces it.
-  if (!(await waitForNode((n) => n.desc === "Search" && n.clickable, 12_000))) {
-    throw new Error("the sound sheet did not open");
+  // A tap can land before the editor is ready for it (a real draft on 2026-11-16 got no
+  // song this way), so the bar is tapped again while the editor is still what shows.
+  let open = false;
+  for (let attempt = 1; attempt <= 3 && !open; attempt += 1) {
+    const current = (await waitForNode(isSoundBar, 5_000)) ?? bar;
+    tapNode(current);
+    open = !!(await waitForNode(isSoundSheet, 8_000));
+    if (!open && attempt < 3) console.log("  the sound sheet did not open; tapping the bar again");
   }
+  if (!open) throw new Error("the sound sheet did not open after 3 taps on the bar");
   let chosen: PickedSound | null = null;
   for (const { query, row } of candidates) {
     const track = await useSearchResult(query, row);
@@ -674,6 +684,8 @@ async function prefillPostScreen(file: string) {
       const why = `no song was added: ${error instanceof Error ? error.message : String(error)}`;
       // Said now as well as at the end, so a run that fails later still shows why.
       console.warn(`  ! ${why}`);
+      const snapshot = saveFailureSnapshot();
+      if (snapshot) console.warn(`    screen at the time: ${snapshot}.png (UI tree beside it)`);
       warnings.push(why);
       await backToEditor();
     }
