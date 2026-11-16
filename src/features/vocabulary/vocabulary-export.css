@@ -2344,6 +2344,16 @@ body:has(.vocab-intro) .vocab-resume {
 .vocab-showcase-brand span {
   color: var(--vocab-accent, #7bdcb5);
 }
+/* The title and its sub-line are white over whatever card plays, pale ones included, and
+   there is no scrim behind them in a clip. Each glyph casts its own shadow instead: a tight
+   contact edge that keeps the strokes sharp, a short soft one that lifts them, and a wide
+   faint one that settles them into the card. It follows the letters, so no band shows. */
+.vocab-showcase :is(.vocab-showcase-brand, .vocab-showcase-filter) {
+  text-shadow:
+    0 1px 1px rgb(14 10 28 / 0.34),
+    0 1px 4px rgb(14 10 28 / 0.26),
+    0 3px 14px rgb(14 10 28 / 0.2);
+}
 /* The app's title sub-line ("🍃 đọc hiểu · B1", .vocab-brand small) without its arrow:
    same size, weight, tracking and softened ink, hanging right under the title. */
 .vocab-showcase-filter {
@@ -2356,7 +2366,9 @@ body:has(.vocab-intro) .vocab-resume {
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.15;
-  color: color-mix(in srgb, var(--chrome-ink, #fff) 72%, transparent);
+  /* Softened by mixing toward a cool grey rather than toward transparent: see-through ink
+     would let the glyph's own shadow show through it and turn it muddy. */
+  color: color-mix(in srgb, var(--chrome-ink, #fff) 84%, #8f88a8);
   white-space: nowrap;
 }
 /* The scenery icons are spans, not buttons, so they need the shape the real ones get from
@@ -2490,7 +2502,7 @@ body:has(.vocab-intro) .vocab-resume {
   height: 100%;
   border: 0;
 }
-/* Each band's guides only: the black itself is drawn by the clip page (ShowcaseBands), so
+/* Each band's guides only: the fade itself is the clip page's mask (ShowcasePage), so
    the recording carries it. These boxes are there for the dashed fade lines. */
 .tiktok-lab-band {
   position: absolute;
@@ -2551,36 +2563,45 @@ body:has(.vocab-intro) .vocab-resume {
   z-index: auto;
 }
 
-/* The 4:5 frame's black bands (ShowcaseBands), over everything in the frame: solid at the
-   screen's edge, lifting at --band-fade-from of the band's height and clear at
-   --band-fade-to (both shares of the band; past 1 the fade reaches into the canvas). */
-.vocab-showcase-bands {
-  position: absolute;
-  inset: 0;
-  z-index: 300;
-  pointer-events: none;
-}
-.vocab-showcase-band {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: calc(var(--showcase-band, 0px) * max(1, var(--band-fade-to, 1)));
-}
-.vocab-showcase-band[data-edge="top"] {
-  top: 0;
-  background: linear-gradient(
+/* The 4:5 frame's fade into its black bands, as a mask rather than a black gradient laid
+   over the clip. The stage itself is masked: everything on it fades to transparent toward
+   the top and bottom edges and the page's own black shows through, solid at the edge,
+   lifting at --band-fade-from of the band's height and gone at --band-fade-to (shares of
+   the band; past 1 the fade reaches into the canvas). ShowcasePage sets the two on the
+   stage, and the TikTok lab restates them live.
+
+   One mask on the stage, not one per layer: a mask makes its element a backdrop root, so a
+   masked badge or end card would blur nothing behind its veil, and the badge's aurora
+   reaches past the frame, where a per-layer mask's stops would not line up. Inside the
+   stage every veil and glass card still blurs what lies under it. The title row reaches
+   only 6px into the fade, where the eased mask is already opaque, so it stays crisp; the
+   title carries its own per-glyph shadow rather than relying on a dark band. */
+.vocab-showcase-stage[data-frame="4x5"] {
+  --showcase-fade-from: calc(var(--showcase-band, 0px) * var(--band-fade-from, 0.35));
+  --showcase-fade-to: calc(var(--showcase-band, 0px) * var(--band-fade-to, 1));
+  --showcase-fade-span: calc(var(--showcase-fade-to) - var(--showcase-fade-from));
+  /* Eased, not a straight ramp: a linear fade into black reads as a bright ridge where it
+     meets the card (the eye's Mach band). These stops follow smoothstep, so the alpha
+     leaves and lands flat at both ends and the edge disappears. */
+  --showcase-fade-mask: linear-gradient(
     to bottom,
-    #000 calc(var(--showcase-band, 0px) * var(--band-fade-from, 0.35)),
-    #0000 calc(var(--showcase-band, 0px) * var(--band-fade-to, 1))
+    transparent var(--showcase-fade-from),
+    rgb(0 0 0 / 0.104) calc(var(--showcase-fade-from) + var(--showcase-fade-span) * 0.2),
+    rgb(0 0 0 / 0.352) calc(var(--showcase-fade-from) + var(--showcase-fade-span) * 0.4),
+    rgb(0 0 0 / 0.648) calc(var(--showcase-fade-from) + var(--showcase-fade-span) * 0.6),
+    rgb(0 0 0 / 0.896) calc(var(--showcase-fade-from) + var(--showcase-fade-span) * 0.8),
+    #000 var(--showcase-fade-to),
+    #000 calc(100% - var(--showcase-fade-to)),
+    rgb(0 0 0 / 0.896) calc(100% - (var(--showcase-fade-from) + var(--showcase-fade-span) * 0.8)),
+    rgb(0 0 0 / 0.648) calc(100% - (var(--showcase-fade-from) + var(--showcase-fade-span) * 0.6)),
+    rgb(0 0 0 / 0.352) calc(100% - (var(--showcase-fade-from) + var(--showcase-fade-span) * 0.4)),
+    rgb(0 0 0 / 0.104) calc(100% - (var(--showcase-fade-from) + var(--showcase-fade-span) * 0.2)),
+    transparent calc(100% - var(--showcase-fade-from))
   );
 }
-.vocab-showcase-band[data-edge="bottom"] {
-  bottom: 0;
-  background: linear-gradient(
-    to top,
-    #000 calc(var(--showcase-band, 0px) * var(--band-fade-from, 0.35)),
-    #0000 calc(var(--showcase-band, 0px) * var(--band-fade-to, 1))
-  );
+.vocab-showcase-stage[data-frame="4x5"] {
+  -webkit-mask-image: var(--showcase-fade-mask);
+  mask-image: var(--showcase-fade-mask);
 }
 
 /* ── /posting: the post calendar, managed (PostingPage, dev only) ─────────────────────── */

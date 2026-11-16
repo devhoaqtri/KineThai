@@ -58,10 +58,12 @@ export function TikTokLabPage() {
   }, [take, look, search.code, search.seed]);
   const frame = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
-    const bands =
-      frame.current?.contentDocument?.querySelector<HTMLElement>(".vocab-showcase-bands");
-    bands?.style.setProperty("--band-fade-from", String(fadeFrom / 100));
-    bands?.style.setProperty("--band-fade-to", String(fadeTo / 100));
+    // The fade is a mask the stage's scenery reads from these two properties (ShowcasePage).
+    const stage = frame.current?.contentDocument?.querySelector<HTMLElement>(
+      '.vocab-showcase-stage[data-frame="4x5"]',
+    );
+    stage?.style.setProperty("--band-fade-from", String(fadeFrom / 100));
+    stage?.style.setProperty("--band-fade-to", String(fadeTo / 100));
   }, [fadeFrom, fadeTo]);
 
   const frameStyle = {

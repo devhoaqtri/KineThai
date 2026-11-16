@@ -203,6 +203,7 @@ export function ShowcasePage() {
           {...{ [SHOWCASE_CONTRACT.stageAttribute]: "" }}
           className="vocab-showcase-stage"
           data-frame={search.frame ?? "9x16"}
+          style={search.frame === "4x5" ? bandFadeStyle(search.fadeFrom, search.fadeTo) : undefined}
         >
           {/* The chrome a reader taps is drawn here as scenery instead: a clip cannot be
               tapped, and reusing the live toolbar would drag its dropdowns, sheets and
@@ -244,9 +245,6 @@ export function ShowcasePage() {
           )}
           {search.frame === "4x5" && phase !== "loading" && phase !== "ready" && (
             <ShowcaseHook text={search.badge ?? WORD_HOOK} look={look} />
-          )}
-          {search.frame === "4x5" && (
-            <ShowcaseBands fadeFrom={search.fadeFrom} fadeTo={search.fadeTo} />
           )}
           {(phase === "outro" || phase === "done") && (
             <ShowcaseOutro variant={variants.outro}>
@@ -297,25 +295,21 @@ const BAND_FADE_FROM = 35;
 const BAND_FADE_TO = 100;
 
 /**
- * The 4:5 frame's black bands, over everything: TikTok draws its buttons and caption there,
- * so each band is solid at the screen's edge and fades to clear toward the canvas, lifting
- * at `fadeFrom`% of its height and gone at `fadeTo`%. Part of the page, so a recording
- * carries exactly what the TikTok lab shows. The lab changes the two numbers on a running
- * page by restating the custom properties on this element.
+ * The 4:5 frame's fade, as the two custom properties its mask reads (vocabulary-export.css,
+ * --showcase-fade-mask). The bands are not drawn over the clip: the stage is masked, so the
+ * whole clip fades to transparent toward the screen's edge and the page's black shows
+ * through, solid at the edge, lifting at `fadeFrom`% of the band and gone at `fadeTo`%.
+ * TikTok draws its buttons and caption there. The title carries its own per-glyph shadow
+ * instead of a dark band. The lab retunes a running page by restating these two properties
+ * on the stage.
+ * @param fadeFrom - % of the band where the black starts lifting
+ * @param fadeTo - % of the band where it is gone (past 100 the fade reaches into the canvas)
+ * @returns the stage's style
  */
-function ShowcaseBands({ fadeFrom, fadeTo }: { fadeFrom?: number; fadeTo?: number }) {
+function bandFadeStyle(fadeFrom?: number, fadeTo?: number): CSSProperties {
   const from = fadeFrom ?? BAND_FADE_FROM;
   const to = Math.max(from, fadeTo ?? BAND_FADE_TO);
-  return (
-    <div
-      className="vocab-showcase-bands"
-      aria-hidden="true"
-      style={{ "--band-fade-from": from / 100, "--band-fade-to": to / 100 } as CSSProperties}
-    >
-      <div className="vocab-showcase-band" data-edge="top" />
-      <div className="vocab-showcase-band" data-edge="bottom" />
-    </div>
-  );
+  return { "--band-fade-from": from / 100, "--band-fade-to": to / 100 } as CSSProperties;
 }
 
 /** How many emojis fly at the end, per word: 15 to 20, fixed for the word. */
