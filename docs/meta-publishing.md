@@ -31,10 +31,15 @@ the emulator). Manage everything at **http://localhost:5195/posting** under `npm
    META_APP_SECRET=…
    ```
 
-5. **Get a user token.** https://developers.facebook.com/tools/explorer → pick your app → *Get User
-   Access Token* with these permissions:
-   `pages_show_list`, `pages_read_engagement`, `pages_manage_posts`, `publish_video`,
-   `business_management`, `instagram_basic`, `instagram_content_publish`.
+5. **Give the app its permissions, then get a user token.** The Explorer only offers what the
+   app has: first, in the app dashboard → **Use cases** → *Manage everything on your Page* →
+   **Customize**, add `pages_manage_posts` and `pages_read_engagement` (plus `instagram_basic` and
+   `instagram_content_publish` for Instagram). Then https://developers.facebook.com/tools/explorer
+   → pick your app → **User or Page: User Token** (not a Page) → add these permissions:
+   `pages_show_list`, `pages_read_engagement`, `pages_manage_posts`, `business_management`,
+   `instagram_basic`, `instagram_content_publish` → *Generate Access Token*, and pick the Page in
+   the dialog. Facebook Reels need only the first three (Meta's Reels publishing guide);
+   `publish_video` is not required and new apps do not offer it.
    Paste it into `.env.local` as `META_USER_TOKEN=…` (it is short-lived; the next step spends it).
 6. **Connect:**
 
