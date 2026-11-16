@@ -372,6 +372,11 @@ function tapPoint(x: number, y: number) {
   adb(["shell", "input", "tap", String(Math.round(x)), String(Math.round(y))]);
 }
 
+/** Whether the on-screen keyboard is up, as the input method service reports it. */
+function keyboardShown(): boolean {
+  return /mInputShown=true/.test(shell("dumpsys input_method"));
+}
+
 function tapNode(node: UiNode) {
   tapPoint(node.cx, node.cy);
 }
@@ -802,6 +807,13 @@ async function prefillPostScreen(file: string) {
     tapNode(descBox);
     await sleep(700);
     await pasteCaption(caption);
+    // The keyboard covers Drafts. Asked of Android, not read off the screen: an emoji
+    // keyboard (Gboard keeps the last mode) hides the button while uiautomator still lists
+    // it, so the tap meant for Drafts once landed on an emoji and nothing was saved.
+    for (let i = 0; i < 2 && keyboardShown(); i += 1) {
+      adb(["shell", "input", "keyevent", "4"]);
+      await sleep(700);
+    }
     if (!(await readScreen()).some((n) => n.text === "Drafts")) {
       adb(["shell", "input", "keyevent", "4"]); // the keyboard covers Drafts
       await sleep(700);
