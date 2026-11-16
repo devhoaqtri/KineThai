@@ -1108,21 +1108,17 @@ async function main() {
   shell("input keyevent KEYCODE_WAKEUP");
   shell("wm dismiss-keyguard");
 
-  // TikTok's video cache filled the 7.7 GB /data to 99% once ("Almost out of phone
-  // storage"). App caches are Android's to drop, but only when space is short: a draft
-  // survived a trim when tested (2026-11-16), yet drafts went missing that day and the trim
-  // empties TikTok's external cache, so it is not run on every draft any more. Too little
-  // left even then fails here, plainly, rather than halfway through saving a draft.
+  // No cache trim here any more. TikTok keeps a draft's downloaded song in its cache, and
+  // a draft whose song is gone is dropped: on 2026-11-16 every draft with a song vanished
+  // after runs that trimmed (`pm trim-caches`), while one without a song survived a trim.
+  // When /data runs short, the run stops instead, plainly, before saving anything; freeing
+  // space (TikTok's own "Free up space", posting drafts) is a person's call.
   const dataFreeKb = () => Number(shell("df -k /data").split("\n").pop()?.trim().split(/\s+/)[3] ?? 0);
-  if (dataFreeKb() < 1_048_576) {
-    console.log("  /data is under 1 GB free; trimming app caches");
-    shell("pm trim-caches 999G");
-  }
   const freeKb = dataFreeKb();
   console.log(`  /data has ${(freeKb / 1_048_576).toFixed(1)} GB free`);
   if (freeKb < 500 * 1024) {
     throw new Error(
-      `the emulator has only ${Math.round(freeKb / 1024)} MB free on /data: post or delete drafts in TikTok first`,
+      `the emulator has only ${Math.round(freeKb / 1024)} MB free on /data: free space in TikTok (Settings › Free up space › Cache) or post drafts first`,
     );
   }
 
