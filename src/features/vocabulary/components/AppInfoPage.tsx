@@ -11,7 +11,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { siteTitle, type TargetLocale } from "../lib/target-language";
+import { languageName, siteTitle, type TargetLocale } from "../lib/target-language";
 import "../vocabulary.css";
 
 /** The highlighted words of a line; the line's tone, else its section's, picks the colour. */
@@ -20,8 +20,28 @@ function Hl({ children }: { children: ReactNode }) {
 }
 
 type Tone = "citrus" | "mint" | "cyber" | "magenta";
-/** A line may carry its own tone, so lines gathered from different topics keep their colour. */
-type Line = { emoji: string; tone?: Tone; text: ReactNode };
+/**
+ * A line may carry its own tone, so lines gathered from different topics keep their colour,
+ * and a row of language chips under its sentence.
+ */
+type Line = { emoji: string; tone?: Tone; text: ReactNode; chips?: readonly TargetLocale[] };
+
+/** The flag a language chip leads with. */
+const LANGUAGE_FLAGS: Record<TargetLocale, string> = {
+  en: "🇬🇧",
+  fr: "🇫🇷",
+  de: "🇩🇪",
+  es: "🇪🇸",
+  ko: "🇰🇷",
+  zh: "🇨🇳",
+  ja: "🇯🇵",
+};
+
+/**
+ * Every deck already prepared besides English, hidden ones (Korean) included: the call for
+ * help names the languages it is for.
+ */
+const PREPARED_LANGUAGES: readonly TargetLocale[] = ["fr", "de", "es", "ko", "zh", "ja"];
 type Section = {
   id: string;
   emoji: string;
@@ -113,12 +133,13 @@ const SECTIONS: Section[] = [
             Với các ngôn ngữ <Hl>ngoài tiếng Anh</Hl>, chúng mình rất cần thêm người am hiểu.
           </>
         ),
+        chips: PREPARED_LANGUAGES,
       },
       {
         emoji: "🤝",
         text: (
           <>
-            Mọi <Hl>hợp tác chuyên môn</Hl> đều được chào đón nồng nhiệt.
+            Mọi <Hl>đề xuất công tác</Hl> đều được chào đón nồng nhiệt.
           </>
         ),
       },
@@ -181,7 +202,19 @@ export function AppInfoContent({ locale = "en" }: { locale?: TargetLocale }) {
                 <span className="vocab-info-emoji" aria-hidden="true">
                   {line.emoji}
                 </span>
-                <span>{line.text}</span>
+                <span>
+                  {line.text}
+                  {line.chips && (
+                    <span className="vocab-info-chips">
+                      {line.chips.map((locale) => (
+                        <span key={locale} className="vocab-info-chip">
+                          <span aria-hidden="true">{LANGUAGE_FLAGS[locale]}</span>
+                          Tiếng {languageName(locale)}
+                        </span>
+                      ))}
+                    </span>
+                  )}
+                </span>
               </li>
             ))}
           </ul>

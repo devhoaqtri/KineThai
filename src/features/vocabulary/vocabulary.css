@@ -10357,6 +10357,27 @@ button.vocab-info-row[aria-expanded="true"] {
      the very phrase the colour is there to point at. */
   white-space: nowrap;
 }
+/* Language chips under a line's sentence: the languages a call for help names. */
+.vocab-info-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.vocab-info-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--info-tone) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--info-tone) 40%, transparent);
+  color: var(--shell-text);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
 .vocab-info-thanks {
   margin: 4px 0 0;
   color: var(--shell-text-mute);
