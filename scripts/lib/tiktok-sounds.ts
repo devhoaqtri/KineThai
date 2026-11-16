@@ -1,12 +1,16 @@
 /**
- * The upbeat-song choice for TikTok drafts: which search to run and which tracks are too
- * recent to use again. Pure, so the rotation is testable; scripts/post-to-tiktok.ts does
- * the tapping and keeps the ledger at scripts/data/tiktok-sounds.json.
+ * The upbeat-song choice for TikTok drafts: which searches and result rows to try, and
+ * which tracks are already taken. Pure, so the order is testable; scripts/post-to-tiktok.ts
+ * does the tapping and keeps the ledger at scripts/data/tiktok-sounds.json.
  *
- * TikTok's sound search shows a list of tracks whose titles are drawn, not exposed to
- * uiautomator, so a track's name is only known once it is picked (the sheet and the
- * editor's top bar name it). The rotation therefore moves through queries and result rows,
- * and a pick that turns out to be recent is put back and the next row tried.
+ * No track is used twice: every song that went on a draft is in the ledger (title and
+ * artist, with the post's day, share code and date), and a pick that matches one is put
+ * back for the next candidate. A repeat happens only when every candidate is taken, and the
+ * poster says so.
+ *
+ * TikTok's sound search draws its result titles rather than exposing them to uiautomator,
+ * so a track's name is only known once it is picked (the sheet then names it and its
+ * artist). The candidates are therefore positions: a search and a result row.
  *
  * Depends on: node:fs
  */
@@ -24,21 +28,30 @@ export const UPBEAT_QUERIES = [
   "positive vibes",
 ] as const;
 
-/** How many of the latest drafted songs a new draft must not repeat. */
-export const RECENT_WINDOW = 20;
+/** Result rows a search shows on screen at once (no scrolling) on the TikTokPoster AVD. */
+export const ROWS_PER_QUERY = 5;
+
+/** Picks to try before giving up on a fresh track; each costs a search, about 6 s. */
+export const MAX_PICKS = 12;
 
 export interface SoundUse {
   /** The track's title as TikTok names it. */
   title: string;
+  /** Its artist, as the sound sheet names it. */
+  artist: string;
   /** The search that found it. */
   query: string;
   /** Which result row it was (0 = top). */
   row: number;
+  /** The calendar day it went on, when the poster was told (tiktok.ts passes it). */
+  day: number | null;
+  /** The word's share code. */
+  code: string | null;
   /** ISO time of the run. */
   at: string;
   /** The clip it went on (file name). */
   clip: string;
-  /** False for a --no-draft run, which does not count towards the rotation or repeats. */
+  /** False for a --no-draft run, which takes no track and moves no rotation. */
   drafted: boolean;
 }
 
@@ -67,28 +80,39 @@ export function recordSoundUse(file: string, use: SoundUse): void {
   writeFileSync(file, `${JSON.stringify(ledger, null, 2)}\n`);
 }
 
+const key = (title: string, artist: string) =>
+  `${title.normalize("NFC").trim().toLowerCase()}\u0000${artist.normalize("NFC").trim().toLowerCase()}`;
+
 /**
- * The search and starting row for the next draft: queries rotate one per draft, and each
- * query's starting row moves down one every time that query comes round again.
+ * Whether a track already went on a draft (title and artist, case-blind; --no-draft runs
+ * do not count).
  * @param ledger - songs used so far
- * @param forced - a query given with --sound, used as is
+ * @param title - the picked track's title
+ * @param artist - its artist
  */
-export function nextSoundPick(ledger: SoundLedger, forced?: string): { query: string; row: number } {
-  const drafted = ledger.used.filter((u) => u.drafted);
-  const query = forced?.trim() || UPBEAT_QUERIES[drafted.length % UPBEAT_QUERIES.length]!;
-  const row = drafted.filter((u) => u.query === query).length;
-  return { query, row };
+export function isUsedSound(ledger: SoundLedger, title: string, artist: string): boolean {
+  const wanted = key(title, artist);
+  return ledger.used.some((u) => u.drafted && key(u.title, u.artist ?? "") === wanted);
 }
 
 /**
- * Whether a track went on one of the last RECENT_WINDOW drafts.
+ * The positions to try, in order, at most MAX_PICKS. The first search rotates one step per
+ * draft so neighbouring posts lean on different searches, and each search starts below the
+ * rows it has already given, then walks its remaining rows before the next search.
  * @param ledger - songs used so far
- * @param title - the picked track's title
+ * @param forced - a query given with --sound: only that search is walked
  */
-export function isRecentSound(ledger: SoundLedger, title: string): boolean {
-  const key = title.trim().toLowerCase();
-  return ledger.used
-    .filter((u) => u.drafted)
-    .slice(-RECENT_WINDOW)
-    .some((u) => u.title.trim().toLowerCase() === key);
+export function soundCandidates(ledger: SoundLedger, forced?: string): { query: string; row: number }[] {
+  const drafted = ledger.used.filter((u) => u.drafted);
+  const queries = forced?.trim()
+    ? [forced.trim()]
+    : UPBEAT_QUERIES.map((_, i) => UPBEAT_QUERIES[(drafted.length + i) % UPBEAT_QUERIES.length]!);
+  const out: { query: string; row: number }[] = [];
+  for (const query of queries) {
+    const start = drafted.filter((u) => u.query === query).length;
+    for (let i = 0; i < ROWS_PER_QUERY && out.length < MAX_PICKS; i += 1) {
+      out.push({ query, row: (start + i) % ROWS_PER_QUERY });
+    }
+  }
+  return out;
 }

@@ -634,6 +634,8 @@ function draftDay(day: CalendarDay, pass: string[]): boolean {
         "--boot",
         "--code",
         day.code,
+        "--day",
+        String(day.day),
         "--caption",
         day.caption,
         ...pass,

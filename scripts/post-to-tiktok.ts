@@ -42,10 +42,13 @@
  *     --no-draft         stop on the Post screen instead of saving to Drafts
  *     --sound <query>    search TikTok's sounds for this instead of the upbeat rotation
  *     --no-sound         leave the clip without a song
+ *     --day <n>          the calendar day, recorded with the song (tiktok.ts passes it)
+ *     --sound-ledger <path>  ledger of used songs (default: scripts/data/tiktok-sounds.json)
  *
  * The song: in the editor, before Next, the clip gets an upbeat track from TikTok's own
- * library (lib/tiktok-sounds: a rotating list of upbeat searches, no track repeated within
- * the last 20 drafts, ledger in scripts/data/tiktok-sounds.json). The clip's own silent
+ * library (lib/tiktok-sounds: a rotating list of upbeat searches; a track already on any
+ * earlier draft, by title and artist, is skipped for the next candidate, and only when every
+ * candidate is taken is one repeated, with a warning; ledger in scripts/data/tiktok-sounds.json). The clip's own silent
  * track goes to 0 and the song to 80%. Like the cover and location, a song that cannot be
  * added is a warning and the draft still stands.
  */
@@ -55,7 +58,7 @@ import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { setEmulatorClipboard } from "./lib/emulator-clipboard";
-import { isRecentSound, loadSoundLedger, nextSoundPick, recordSoundUse } from "./lib/tiktok-sounds";
+import { isUsedSound, loadSoundLedger, recordSoundUse, soundCandidates } from "./lib/tiktok-sounds";
 
 const TIKTOK_PACKAGES = [
   "com.zhiliaoapp.musically", // TikTok, most regions
@@ -81,7 +84,10 @@ const explicitCaption = flag("caption", "");
 const locationQuery = flag("location", DEFAULT_LOCATION);
 const coverAtFlag = flag("cover-at", "");
 const soundQuery = flag("sound", "");
-const SOUND_LEDGER = resolve(dirname(new URL(import.meta.url).pathname), "data", "tiktok-sounds.json");
+const dayFlag = flag("day", "");
+const SOUND_LEDGER = resolve(
+  flag("sound-ledger", "") || join(dirname(new URL(import.meta.url).pathname), "data", "tiktok-sounds.json"),
+);
 
 /** adb, with the serial pinned when one was asked for. */
 function adb(args: string[], opts: { quiet?: boolean } = {}) {
@@ -466,7 +472,16 @@ let shareAgain: () => void = () => {};
 const warnings: string[] = [];
 
 /** The song put on this clip, recorded in the ledger once the run has succeeded. */
-let pickedSound: { title: string; query: string; row: number } | null = null;
+let pickedSound: PickedSound | null = null;
+/** The share code of the clip being posted, for the song ledger. */
+let postCode: string | null = null;
+
+interface PickedSound {
+  title: string;
+  artist: string;
+  query: string;
+  row: number;
+}
 
 /** The editor's top bar: "Add sound" until a song is on the clip, then the song's title. */
 const isSoundBar = (n: UiNode) => n.id.endsWith(":id/tv_top_text");
@@ -476,11 +491,23 @@ const isSoundBar = (n: UiNode) => n.id.endsWith(":id/tv_top_text");
  * left. Back from the search page returns to the sheet; a tap above the sheet closes it.
  */
 async function backToEditor() {
-  for (let i = 0; i < 4; i += 1) {
-    const ui = await readScreen().catch(() => [] as UiNode[]);
+  // Back is pressed ONLY on the search page. Anywhere else (or on a screen that cannot be
+  // read: a playing preview makes dumps fail) it walks out of the editor, which leaves
+  // TikTok asking "Continue editing this post? Save draft / Edit" and the run with no post.
+  for (let i = 0; i < 6; i += 1) {
+    let ui: UiNode[];
+    try {
+      ui = await readScreen();
+    } catch {
+      await sleep(1500);
+      continue;
+    }
     if (ui.some((n) => n.text === "Next") && ui.some(isSoundBar)) return;
-    if (ui.some((n) => n.id.endsWith(":id/touch_outside"))) tapPoint(540, 500);
-    else adb(["shell", "input", "keyevent", "4"]);
+    const done = ui.find((n) => n.text === "Done");
+    if (ui.some((n) => n.id.endsWith(":id/volume_layout")) && done) tapNode(done);
+    else if (ui.some((n) => n.id.endsWith(":id/hxw") || n.id.endsWith(":id/tv_search_action"))) {
+      adb(["shell", "input", "keyevent", "4"]);
+    } else if (ui.some((n) => n.id.endsWith(":id/touch_outside"))) tapPoint(540, 500);
     await sleep(1500);
   }
 }
@@ -507,15 +534,17 @@ function soundResultButtons(ui: UiNode[]): UiNode[] {
 /**
  * Search TikTok's sounds and use one result row. Leaves the sound sheet open with the
  * pick at its top.
- * @returns the picked track's title
+ * @returns the picked track's title and artist, as the sheet names them
  */
-async function useSearchResult(query: string, row: number): Promise<string> {
+async function useSearchResult(query: string, row: number): Promise<{ title: string; artist: string }> {
   const search = await waitForNode((n) => n.desc === "Search" && n.clickable, 10_000);
   if (!search) throw new Error("the sound sheet has no Search button");
   tapNode(search);
   const field = await waitForNode((n) => n.id.endsWith(":id/hxw") || (n.text === "Search" && n.clickable && n.cx < 700), 10_000);
   if (!field) throw new Error("the sound search field did not open");
   tapNode(field);
+  // The field keeps the previous search when it reopens, so it is emptied first.
+  adb(["shell", "input", "keyevent", "123", ...Array.from({ length: 40 }, () => "67")]); // MOVE_END, DEL×40
   // `input text` takes ASCII only and reads %s as a space; the queries are plain English.
   adb(["shell", "input", "text", query.replace(/[^\x20-\x7e]/g, "").replace(/ /g, "%s")]);
   await sleep(600);
@@ -531,37 +560,55 @@ async function useSearchResult(query: string, row: number): Promise<string> {
   }
   if (!rows.length) throw new Error(`the search “${query}” showed no tracks`);
   tapNode(rows[row % rows.length]!);
-  // Using a track closes the search and puts it at the top of the sheet, playing.
+  // Using a track closes the search and puts it at the top of the sheet, playing, with its
+  // artist on the line under it ("FASSounds · 429.3K posts").
   const picked = await waitForNode((n) => n.id.endsWith(":id/title") && !!n.text, 12_000);
   if (!picked) throw new Error("the sound sheet did not come back after the pick");
-  return picked.text;
+  const author = (await readScreen())
+    .filter((n) => n.id.endsWith(":id/tv_author") && n.cy > picked.cy)
+    .sort((a, b) => a.cy - b.cy)[0];
+  const artist = (author?.text ?? "").split("·")[0]!.replace(/[\u200e\u200f]/g, "").trim();
+  return { title: picked.text.trim(), artist };
 }
 
 /**
- * Put an upbeat song on the clip in TikTok's editor: search the rotation's query, use a
- * result row, skip a track used on a recent draft, set the clip's silent track to 0 and
- * the song to 80%, close the sheet, and check the editor's top bar names the song.
+ * Put an upbeat song on the clip in TikTok's editor: walk the candidate searches and rows
+ * (lib/tiktok-sounds), using each and reading back what it is, until one has never gone on
+ * a draft; set the clip's silent track to 0 and the song to 80%; close the sheet; and check
+ * the editor's top bar names the song. When every candidate is taken, the first is used
+ * again and a warning says so.
  * @returns what was picked, for the ledger
  * @throws when any part fails; the caller turns it into a warning
  */
-async function addUpbeatSound(): Promise<{ title: string; query: string; row: number }> {
+async function addUpbeatSound(): Promise<PickedSound> {
   const ledger = loadSoundLedger(SOUND_LEDGER);
-  const { query, row: firstRow } = nextSoundPick(ledger, soundQuery);
+  const candidates = soundCandidates(ledger, soundQuery);
   const bar = await waitForNode(isSoundBar, 10_000);
   if (!bar) throw new Error("the editor has no Add sound bar");
-  console.log(`→ choosing a song (search “${query}”)`);
+  console.log(`→ choosing a song (${ledger.used.filter((u) => u.drafted).length} already used)`);
   tapNode(bar);
   // Opening the sheet puts TikTok's own first suggestion on the clip; the pick replaces it.
   if (!(await waitForNode((n) => n.desc === "Search" && n.clickable, 12_000))) {
     throw new Error("the sound sheet did not open");
   }
-  let row = firstRow;
-  let title = await useSearchResult(query, row);
-  for (let tries = 1; isRecentSound(ledger, title) && !soundQuery && tries < 4; tries += 1) {
-    console.log(`  “${title}” went on a recent draft; trying the next track`);
-    row += 1;
-    title = await useSearchResult(query, row);
+  let chosen: PickedSound | null = null;
+  for (const { query, row } of candidates) {
+    const track = await useSearchResult(query, row);
+    if (!isUsedSound(ledger, track.title, track.artist)) {
+      chosen = { ...track, query, row };
+      break;
+    }
+    console.log(`  “${track.title}” (${track.artist}) is already on a draft; next candidate`);
   }
+  if (!chosen) {
+    const first = candidates[0]!;
+    const track = await useSearchResult(first.query, first.row);
+    chosen = { ...track, ...first };
+    warnings.push(
+      `no fresh upbeat track in ${candidates.length} tries; “${chosen.title}” (${chosen.artist}) is used again`,
+    );
+  }
+  const title = chosen.title;
 
   // Volume: the sliders are not in the UI tree, so they are dragged by where their labels
   // sit. Starting the drag mid-bar is fine: the bar jumps to the touch, then follows it.
@@ -595,7 +642,7 @@ async function addUpbeatSound(): Promise<{ title: string; query: string; row: nu
     const now = (await readScreen()).find(isSoundBar)?.text ?? "nothing";
     throw new Error(`the editor names “${now}”, not the picked “${title}”`);
   }
-  return { title, query, row };
+  return chosen;
 }
 
 async function prefillPostScreen(file: string) {
@@ -605,6 +652,7 @@ async function prefillPostScreen(file: string) {
     ? Math.min(0.95, Math.max(0.05, Number(coverAtFlag) || 0.42))
     : (meta.hintFraction ?? 0.42);
   const caption = explicitCaption || buildAutoCaption(shareCode);
+  postCode = shareCode;
 
   console.log("→ advancing past TikTok editor");
   let nextBtn = await waitForNode((n) => n.text === "Next", 45_000);
@@ -621,9 +669,12 @@ async function prefillPostScreen(file: string) {
   if (!has("no-sound")) {
     try {
       pickedSound = await addUpbeatSound();
-      console.log(`  song: “${pickedSound.title}” (search “${pickedSound.query}”, row ${pickedSound.row + 1})`);
+      console.log(`  song: “${pickedSound.title}” by ${pickedSound.artist || "?"} (search “${pickedSound.query}”, row ${pickedSound.row + 1})`);
     } catch (error) {
-      warnings.push(`no song was added: ${error instanceof Error ? error.message : String(error)}`);
+      const why = `no song was added: ${error instanceof Error ? error.message : String(error)}`;
+      // Said now as well as at the end, so a run that fails later still shows why.
+      console.warn(`  ! ${why}`);
+      warnings.push(why);
       await backToEditor();
     }
     nextBtn = (await waitForNode((n) => n.text === "Next", 10_000)) ?? nextBtn;
@@ -937,6 +988,8 @@ async function main() {
   if (pickedSound) {
     recordSoundUse(SOUND_LEDGER, {
       ...pickedSound,
+      day: dayFlag ? Number(dayFlag) : null,
+      code: postCode,
       at: new Date().toISOString(),
       clip: basename(file),
       drafted: !has("no-draft"),
