@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  LEVEL_ORDERS,
   MAX_HASHTAGS,
   captionFor,
   dateOfDay,
@@ -63,17 +64,25 @@ describe("dates", () => {
 });
 
 describe("levelForDay", () => {
-  it("climbs a quarter at a time when rising", () => {
-    expect(levelForDay("rising", 1, "2026-11-15")).toBe("A1");
-    expect(levelForDay("rising", 92, "2026-11-15")).toBe("A1");
-    expect(levelForDay("rising", 93, "2026-11-15")).toBe("A2");
-    expect(levelForDay("rising", 365, "2026-11-15")).toBe("B2");
+  it("climbs a third at a time from B1 when rising", () => {
+    expect(levelForDay("rising", 1, "2026-11-15")).toBe("B1");
+    expect(levelForDay("rising", 122, "2026-11-15")).toBe("B1");
+    expect(levelForDay("rising", 123, "2026-11-15")).toBe("B2");
+    expect(levelForDay("rising", 365, "2026-11-15")).toBe("C1");
   });
-  it("keeps B1 and B2 for the weekend when weekly", () => {
-    expect(levelForDay("weekly", 1, "2026-11-14")).toBe("B1"); // Saturday
-    expect(levelForDay("weekly", 2, "2026-11-15")).toBe("B2"); // Sunday
-    expect(levelForDay("weekly", 3, "2026-11-16")).toBe("A1"); // Monday, odd day
-    expect(levelForDay("weekly", 4, "2026-11-17")).toBe("A2");
+  it("keeps C1 for the weekend when weekly", () => {
+    expect(levelForDay("weekly", 1, "2026-11-14")).toBe("C1"); // Saturday
+    expect(levelForDay("weekly", 2, "2026-11-15")).toBe("C1"); // Sunday
+    expect(levelForDay("weekly", 3, "2026-11-16")).toBe("B1"); // Monday, odd day
+    expect(levelForDay("weekly", 4, "2026-11-17")).toBe("B2");
+  });
+  it("never draws below B1 in any order", () => {
+    const easy = new Set(["A1", "A2"]);
+    for (const order of LEVEL_ORDERS) {
+      for (let day = 1; day <= 365; day += 1) {
+        expect(easy.has(levelForDay(order, day, dateOfDay("2026-11-15", day)))).toBe(false);
+      }
+    }
   });
 });
 

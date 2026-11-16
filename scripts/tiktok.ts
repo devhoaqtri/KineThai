@@ -310,10 +310,16 @@ function plan() {
   dateOfDay(calendar.startDate, 1); // throws on a malformed --start
   const total = Number(flag("days") ?? Math.max(CALENDAR_DAYS, calendar.days.length));
   const have = new Set(calendar.days.map((d) => d.day));
-  // New days, and, when the level order changed, every day not yet rendered: its level moved.
-  const toFill = Array.from({ length: total }, (_, i) => i + 1).filter(
-    (day) => !have.has(day) || (orderChanged && calendar.days.find((d) => d.day === day)?.status === "planned"),
-  );
+  // New days, and every day not yet drafted whose level no longer fits the order (the order
+  // changed, or its levels did: every order starts at MIN_POST_LEVEL since 2026-11-16). A
+  // rendered day goes back to planned with its new word; its old clip is left on disk.
+  const levelNow = (day: number) => levelForDay(calendar.order, day, slotOf(calendar, day).date, total);
+  const toFill = Array.from({ length: total }, (_, i) => i + 1).filter((day) => {
+    const kept = calendar.days.find((d) => d.day === day);
+    if (!kept) return true;
+    const open = kept.status === "planned" || kept.status === "rendered";
+    return open && (orderChanged || kept.level !== levelNow(day));
+  });
   fill(calendar, loadEligible(), toFill, total);
   // Nothing scheduled or posted is touched: its caption is already in TikTok.
   for (const day of calendar.days) {

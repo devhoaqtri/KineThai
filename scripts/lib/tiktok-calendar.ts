@@ -33,10 +33,16 @@ export const MAX_HASHTAGS = 5;
 export const CALENDAR_DAYS = 365;
 
 /**
- * How the year walks through the levels:
- *   rising   a quarter each of A1, A2, B1, B2: a year that climbs with the viewer
- *   weekly   A1 and A2 on weekdays, B1 and B2 at the weekend
- *   easiest  A1 every day
+ * The easiest level a post may draw from. A1 and A2 words read as too basic for the
+ * channel (the user's call, 2026-11-16), so every order starts at B1.
+ */
+export const MIN_POST_LEVEL = "B1";
+
+/**
+ * How the year walks through the levels, never below MIN_POST_LEVEL:
+ *   rising   a third each of B1, B2, C1: a year that climbs with the viewer
+ *   weekly   B1 and B2 on weekdays, C1 at the weekend
+ *   easiest  B1 every day
  */
 export const LEVEL_ORDERS = ["rising", "weekly", "easiest"] as const;
 export type LevelOrder = (typeof LEVEL_ORDERS)[number];
@@ -258,15 +264,15 @@ export function weekdayOf(date: string): number {
  * @pure true
  */
 export function levelForDay(order: LevelOrder, day: number, date: string, total = CALENDAR_DAYS): string {
-  if (order === "easiest") return "A1";
+  if (order === "easiest") return MIN_POST_LEVEL;
   if (order === "weekly") {
     const weekday = weekdayOf(date);
     const weekend = weekday === 0 || weekday === 6;
-    // Alternate inside each band, so neither level waits a whole week.
-    return weekend ? (weekday === 6 ? "B1" : "B2") : day % 2 === 1 ? "A1" : "A2";
+    // Alternate the weekdays, so neither level waits a whole week.
+    return weekend ? "C1" : day % 2 === 1 ? "B1" : "B2";
   }
-  const quarter = Math.min(3, Math.floor(((day - 1) * 4) / total));
-  return ["A1", "A2", "B1", "B2"][quarter]!;
+  const third = Math.min(2, Math.floor(((day - 1) * 3) / total));
+  return ["B1", "B2", "C1"][third]!;
 }
 
 /**
