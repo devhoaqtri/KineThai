@@ -266,7 +266,9 @@ async function main() {
     width = Math.round(cssWidth * scale);
     height = Math.round(cssHeight * scale);
     const query = new URLSearchParams();
-    if (code) query.set("code", code);
+    // JSON-quoted, as the router writes a string search value: a bare `957` (or `1E3`)
+    // would be read back as a number, and the route would refuse it.
+    if (code) query.set("code", JSON.stringify(code));
     if (introText !== DEFAULT_BADGE) query.set("badge", introText);
     if (introStyle) query.set("intro", introStyle);
     if (outroStyle) query.set("outro", outroStyle);

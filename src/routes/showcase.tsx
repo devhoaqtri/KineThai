@@ -23,7 +23,8 @@ import { BADGE_ROTATION } from "@/features/vocabulary/lib/badge-variants";
 const searchSchema = () =>
   z.object({
     /** A specific word by share code; otherwise one is picked from the deck. */
-    code: z.string().max(16).optional(),
+    // An all-digit code (957) arrives as a number when the address was typed by hand.
+    code: z.coerce.string().max(16).optional(),
     /** Pick the same word again — an index into the deck, so a job is reproducible. */
     seed: z.number().int().nonnegative().optional(),
     /** Pin the palette and narration style, as /export/$code does. */

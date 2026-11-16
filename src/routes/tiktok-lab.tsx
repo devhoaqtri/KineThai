@@ -13,7 +13,8 @@ import { BADGE_ROTATION } from "@/features/vocabulary/lib/badge-variants";
 const searchSchema = () =>
   z.object({
     /** A word by share code; otherwise /showcase picks one from `seed`. */
-    code: z.string().max(16).optional(),
+    // An all-digit code (957) arrives as a number when the address was typed by hand.
+    code: z.coerce.string().max(16).optional(),
     seed: z.number().int().nonnegative().optional(),
     /**
      * Each band's fade, as a share of the band's height from the screen's edge (%): the black
