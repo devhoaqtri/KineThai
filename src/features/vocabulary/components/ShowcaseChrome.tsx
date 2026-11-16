@@ -18,19 +18,9 @@
 import { useContext } from "react";
 import { Pause, Settings, Shuffle, VolumeX } from "lucide-react";
 import { DeckLocaleContext } from "../lib/deck-locale";
-import { formatLevelBand, tracksFor } from "../lib/difficulty";
+import { wordDifficultyLine } from "../lib/difficulty";
 import { siteBrand } from "../lib/target-language";
 import type { VocabularyLevel } from "../lib/schema";
-
-/** A small stable string hash (FNV-1a), for picking per word without randomness. */
-function hashOf(text: string): number {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < text.length; i += 1) {
-    h ^= text.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return h >>> 0;
-}
 
 /**
  * @param hidden - true while the intro's badge is up, so the bar can slide in afterwards
@@ -49,16 +39,10 @@ export function ShowcaseChrome({
 }) {
   const locale = useContext(DeckLocaleContext);
   const brand = siteBrand(locale);
-  const tracks = tracksFor(locale);
-  // Any track a reader of this word could be on: every track whose band holds its level.
-  // Clips in a row would all read the same label if one track stood for each level, so the
-  // word's id picks among them; the same word always gets the same one.
-  const holding = level ? tracks.filter((t) => t.levels.includes(level)) : [];
-  const track = holding.length ? holding[hashOf(wordId ?? level ?? "") % holding.length] : undefined;
-  const filter = track ? { emoji: track.emoji, label: track.label } : { emoji: "🤯", label: "tất cả" };
   // The app's title line reads "🍃 đọc hiểu · B1–B2" with a dropdown arrow; a clip shows the
   // word's own level in that slot, and no arrow, since nothing here can be opened.
-  const band = level ? formatLevelBand([level]) : "";
+  const { emoji, label, band } = wordDifficultyLine(locale, level, wordId);
+  const filter = { emoji, label };
   return (
     <header className="vocab-toolbar" data-showcase-chrome="" data-hidden={hidden || undefined}>
       <div className="vocab-toolbar-row">

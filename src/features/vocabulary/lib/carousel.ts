@@ -18,7 +18,7 @@
 import type { GrammarRow } from "./grammar";
 import type { LearningStage } from "./stages";
 import { CAROUSEL_HASHTAGS, CAROUSEL_HOOK, CAROUSEL_SAVE_PROMPT } from "./carousel-copy";
-import { siteAddress, type TargetLocale } from "./target-language";
+import { siteAddress, withScheme, type TargetLocale } from "./target-language";
 import { stripWordJoiners } from "./word-joiner";
 
 /** Text lines one grammar slide holds at its largest size. */
@@ -179,7 +179,7 @@ export function buildCarouselCaption(options: {
   return [
     `${CAROUSEL_HOOK} ${stripWordJoiners(firstClue)}`,
     CAROUSEL_SAVE_PROMPT,
-    [handle, address].filter(Boolean).join(" · "),
+    [handle, withScheme(address)].filter(Boolean).join(" · "),
     CAROUSEL_HASHTAGS[locale],
   ].join("\n\n");
 }

@@ -1,16 +1,22 @@
 /**
- * What a carousel adds to a card: the hook on slide 1, the app's progress bars on every
- * slide, and the handle and address on the closing spelling page.
+ * What a carousel adds to a card: the word's difficulty line under the app's title on
+ * every slide, the hook on slide 1, the app's progress bars on every slide, and the handle
+ * and the address, as a field to type into a browser, on the closing spelling page.
  *
  * Drawn over the card rather than inside it, so a reader's card never carries any of this.
  * The layout is in vocabulary-export.css.
  *
  * Exports: CarouselChrome
- * Depends on: lucide-react, ../lib/carousel, ../lib/carousel-copy, ../lib/presets (type)
+ * Depends on: lucide-react, ../lib/carousel, ../lib/carousel-copy, ../lib/difficulty,
+ *   ../lib/target-language, ../lib/presets (type)
  */
 
-import type { CSSProperties } from "react";
-import { ArrowRight } from "lucide-react";
+import { useContext, type CSSProperties } from "react";
+import { ArrowRight, Globe } from "lucide-react";
+import { DeckLocaleContext } from "../lib/deck-locale";
+import { wordDifficultyLine } from "../lib/difficulty";
+import { withScheme } from "../lib/target-language";
+import type { VocabularyLevel } from "../lib/schema";
 import type { CarouselSlide } from "../lib/carousel";
 import { CAROUSEL_HOOK, CAROUSEL_SWIPE_CUE } from "../lib/carousel-copy";
 import type { SafeInsets } from "../lib/export-presets";
@@ -26,6 +32,8 @@ import type { VocabularyTheme } from "../lib/presets";
  *   every slide, so they hold still through a swipe even where slide 1 has wider margins
  * @param props.handle - the account shown on the closing slide, if any
  * @param props.address - the site address shown on the closing slide
+ * @param props.level - the word's level, for the difficulty line under the title
+ * @param props.wordId - the word, which picks among the tracks that hold its level
  */
 export function CarouselChrome({
   slide,
@@ -36,6 +44,8 @@ export function CarouselChrome({
   edge,
   handle,
   address,
+  level,
+  wordId,
 }: {
   slide: CarouselSlide;
   index: number;
@@ -45,7 +55,12 @@ export function CarouselChrome({
   edge: number;
   handle?: string;
   address: string;
+  level?: VocabularyLevel;
+  wordId?: string;
 }) {
+  const locale = useContext(DeckLocaleContext);
+  // The same line the feed's title carries and the clip's header copies ("🌿 du lịch · B1").
+  const difficulty = wordDifficultyLine(locale, level, wordId);
   const vars = {
     "--vocab-ink": theme.ink,
     "--vocab-accent": theme.accent,
@@ -59,6 +74,12 @@ export function CarouselChrome({
   const hook = slide.kind === "clue" && slide.hook;
   return (
     <div className="carousel-chrome" style={vars} aria-hidden="true">
+      {slide.kind !== "grammar" && level && (
+        <p className="carousel-level">
+          <span>{difficulty.emoji}</span> {difficulty.label}
+          <span className="carousel-level-band">· {difficulty.band}</span>
+        </p>
+      )}
       {hook && <p className="carousel-hook">{CAROUSEL_HOOK}</p>}
       {hook && (
         <p className="carousel-swipe">
@@ -69,7 +90,11 @@ export function CarouselChrome({
       {slide.kind === "closing" && (
         <div className="carousel-closing">
           {handle && <p className="carousel-handle">{handle}</p>}
-          <p className="carousel-address">{address}</p>
+          {/* A browser's address field, so it reads as something to type, not a word. */}
+          <p className="carousel-address">
+            <Globe size={17} strokeWidth={2.25} />
+            <span>{withScheme(address)}</span>
+          </p>
         </div>
       )}
       <p className="carousel-count">

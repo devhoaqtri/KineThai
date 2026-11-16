@@ -51,7 +51,8 @@ import {
   settleSlide,
 } from "../lib/slide-settle";
 import { buildStages } from "../lib/stages";
-import { siteAddress } from "../lib/target-language";
+import { siteAddress, withScheme } from "../lib/target-language";
+import { wordDifficultyLine } from "../lib/difficulty";
 import { useServedWord } from "../hooks/useServedWord";
 import "../vocabulary.css";
 import "../vocabulary-export.css";
@@ -59,8 +60,12 @@ import type { FeedEntry, Presentation } from "../types";
 
 /** Stated rather than read off the page, so a slide can never paint a label unloaded. */
 const FIXED_TEXT = ["Đánh vần lại lần nữa", "Viết lại từng nét", "0123456789/@._"];
-/** Room the hook takes under the brand tag on slide 1, in layout pixels. */
-const HOOK_BAND_PX = 44;
+/** The address field's face on the closing page; vocabulary-export.css names it first. */
+const URL_FIELD_FONT = "JetBrains Mono";
+/** Room the difficulty line takes under the brand tag on every clue slide, in layout pixels. */
+const LEVEL_BAND_PX = 18;
+/** Room the hook takes under the brand tag and that line on slide 1, in layout pixels. */
+const HOOK_BAND_PX = 44 + LEVEL_BAND_PX;
 
 function report(phase: SlidePhase, problem?: string) {
   document.body.dataset.slidePhase = phase;
@@ -79,7 +84,7 @@ function stillFor(
     page: slide.page,
     slide: index,
     maxTextSize,
-    headBand: slide.kind === "clue" && slide.hook ? HOOK_BAND_PX : 0,
+    headBand: slide.kind === "clue" ? (slide.hook ? HOOK_BAND_PX : LEVEL_BAND_PX) : 0,
     backdropOnly: slide.kind === "grammar",
     answerBandBottom: format.reveal.bandBottom,
     revealY: format.reveal.wordY,
@@ -197,9 +202,11 @@ export function CarouselFramePage() {
       CAROUSEL_HOOK,
       CAROUSEL_SWIPE_CUE,
       CAROUSEL_GRAMMAR_TITLE,
-      address,
+      withScheme(address),
       handle ?? "",
       "anh.hoa.hàn.nhật.pháp.đức.tbn.chayLá",
+      // The difficulty line under the title, in the word's own wording.
+      Object.values(wordDifficultyLine(locale, word.level, word.id)).join(" · "),
       // The rows, not word.grammar: their labels come from the app's own tables.
       JSON.stringify(grammarParts),
     ];
@@ -217,7 +224,11 @@ export function CarouselFramePage() {
       ...(cjkFont ? [loadFontStylesheet(cjkFont)] : []),
     ])
       .then(() =>
-        loadSlideFonts(getSlideFontRequests(look.theme.font, texts, cjkFont, pronunciation)),
+        loadSlideFonts([
+          ...getSlideFontRequests(look.theme.font, texts, cjkFont, pronunciation),
+          // The closing page's address field: named, so it never falls back to a system mono.
+          { family: URL_FIELD_FONT, weight: 600, text: withScheme(address) },
+        ]),
       )
       .then(
         () => {
@@ -355,6 +366,8 @@ export function CarouselFramePage() {
                 edge={format.safe.left}
                 handle={handle}
                 address={address}
+                level={word?.level}
+                wordId={word?.id}
               />
             </>
           )}

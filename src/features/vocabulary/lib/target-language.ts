@@ -98,6 +98,17 @@ export function siteAddress(locale: TargetLocale): string {
 }
 
 /**
+ * An address as something a reader types into a browser: with its https:// prefix, so it
+ * reads as a link and not as a word. One that already carries a scheme is kept as it is.
+ * @param address - e.g. "anh.chayla.app"
+ * @returns e.g. "https://anh.chayla.app"
+ * @pure true
+ */
+export function withScheme(address: string): string {
+  return /^https?:\/\//i.test(address) ? address : `https://${address}`;
+}
+
+/**
  * The Vietnamese name of the language a deck teaches, without the "tiếng" prefix — so
  * the copy sites around it can decide whether to say "tiếng Hàn", "môn tiếng Hàn", "bằng
  * tiếng Hàn", etc. The English entry is "Anh" (never " tiếng Anh"), matching the "tiếng "

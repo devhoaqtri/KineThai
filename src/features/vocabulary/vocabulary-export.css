@@ -301,9 +301,26 @@
   font-family: "Inter", sans-serif;
   color: var(--vocab-ink);
 }
+/* The word's difficulty line under the brand tag, as the feed's title carries it: the
+   tag's own left edge, a little smaller and softer than the tag. */
+.carousel-level {
+  position: absolute;
+  top: calc(var(--safe-top) + 27px);
+  left: calc(var(--safe-left) + 4%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  white-space: nowrap;
+  opacity: 0.8;
+}
 .carousel-hook {
   position: absolute;
-  top: calc(var(--safe-top) + 40px);
+  top: calc(var(--safe-top) + 58px);
   left: calc(var(--safe-left) + 4%);
   margin: 0;
   padding: 7px 14px 8px;
@@ -348,7 +365,9 @@
 }
 .carousel-closing {
   position: absolute;
-  bottom: calc(var(--safe-bottom) + 56px);
+  /* 40px, not the 56px a plain address line had: the address field is about 16px taller,
+     so the block's top edge stays where it was and never meets the spelled word. */
+  bottom: calc(var(--safe-bottom) + 40px);
   left: var(--safe-left);
   right: var(--safe-right);
   display: flex;
@@ -365,10 +384,29 @@
   font-weight: 800;
   letter-spacing: -0.015em;
 }
+/* The address as a browser's address field: a globe, the full https:// URL, a soft pill
+   with an inner edge, so a reader knows it is something to type. Made from the card's own
+   ink so it sits on any palette. */
 .carousel-address {
-  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 7px 15px 7px 11px;
+  border-radius: 999px;
+  border: 1.5px solid color-mix(in srgb, var(--vocab-ink) 28%, transparent);
+  background: color-mix(in srgb, var(--vocab-ink) 9%, transparent);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--vocab-ink) 12%, transparent);
+  /* Loaded by the slide (URL_FIELD_FONT), so no machine paints it in its own mono. */
+  font-family: "JetBrains Mono", monospace;
+  font-size: 15px;
   font-weight: 600;
-  opacity: 0.86;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.carousel-address > svg {
+  flex: none;
+  opacity: 0.75;
 }
 .carousel-grammar {
   position: absolute;

@@ -16,8 +16,7 @@ import {
   isTrackAvailable,
   trackCeiling,
   tracksFor,
-  type DifficultyTrack,
-} from "../difficulty";
+  type DifficultyTrack, wordDifficultyLine } from "../difficulty";
 import type { VocabularyLevel } from "../schema";
 
 const cefr = (id: string): DifficultyTrack => CEFR_TRACKS.find((t) => t.id === id)!;
@@ -263,5 +262,18 @@ describe("LEVEL_SAMPLE_PRIORITY", () => {
   it("lists at most four samples per level", () => {
     for (const words of Object.values(LEVEL_SAMPLE_PRIORITY))
       expect(words!.length).toBeLessThanOrEqual(4);
+  });
+});
+
+describe("wordDifficultyLine", () => {
+  it("names a track that holds the word's level, with the level itself", () => {
+    const line = wordDifficultyLine("en", "B1", "vi-expedition");
+    expect(line.band).toBe("B1");
+    const track = tracksFor("en").find((t) => t.label === line.label);
+    expect(track?.levels).toContain("B1");
+    expect(line.emoji).toBe(track?.emoji);
+  });
+  it("gives the same word the same line every time", () => {
+    expect(wordDifficultyLine("en", "B2", "vi-retain")).toEqual(wordDifficultyLine("en", "B2", "vi-retain"));
   });
 });

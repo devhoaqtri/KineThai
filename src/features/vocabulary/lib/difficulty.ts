@@ -558,3 +558,41 @@ export function countTrackWords(
   if (!levels) return 0;
   return levels.reduce((sum, level) => sum + (levelCounts[level] ?? 0), 0);
 }
+
+/** A small stable string hash (FNV-1a), for picking per word without randomness. */
+function hashOf(text: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i += 1) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
+
+/**
+ * The difficulty line a recording or a carousel shows under the app's title for one word,
+ * like the feed's "🍃 đọc hiểu · B1–B2" but with the word's own level: any track a reader
+ * of this word could be on (every track whose band holds its level), the word's id picking
+ * among them so neighbouring posts do not all read the same; the same word always gets the
+ * same one.
+ * @param locale - the deck's locale
+ * @param level - the word's level
+ * @param wordId - the word, which picks among the tracks
+ * @returns the track's emoji and label, and the level as the app writes it ("B1")
+ * @pure true
+ */
+export function wordDifficultyLine(
+  locale: TargetLocale,
+  level: VocabularyLevel | undefined,
+  wordId: string | undefined,
+): { emoji: string; label: string; band: string } {
+  const holding = level ? tracksFor(locale).filter((t) => t.levels.includes(level)) : [];
+  const track = holding.length
+    ? holding[hashOf(wordId ?? level ?? "") % holding.length]
+    : undefined;
+  return {
+    emoji: track?.emoji ?? "🤯",
+    label: track?.label ?? "tất cả",
+    band: level ? formatLevelBand([level]) : "",
+  };
+}

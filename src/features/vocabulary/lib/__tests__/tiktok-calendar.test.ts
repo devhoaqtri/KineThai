@@ -156,12 +156,12 @@ describe("captionFor", () => {
       total: 365,
       level: "A2",
       hook: "Từ gì mà ...",
-      address: "anh.chayla.app",
+      address: "https://anh.chayla.app",
     });
     expect(caption).toContain("Từ số 12/365");
     expect(caption).not.toContain("Ngày");
     expect(caption).toContain("#a2");
-    expect(caption).toContain("anh.chayla.app");
+    expect(caption).toContain("Học thêm mỗi ngày tại https://anh.chayla.app");
     expect(caption.match(/#\w+/g)?.length).toBeLessThanOrEqual(MAX_HASHTAGS);
   });
 });

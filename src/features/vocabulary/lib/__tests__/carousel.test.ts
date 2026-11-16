@@ -128,8 +128,8 @@ describe("buildCarouselCaption", () => {
     expect(caption).not.toContain(" ");
     expect(caption).not.toContain("_");
   });
-  it("names the account, the address and the language's hashtags", () => {
-    expect(caption).toContain("@chayla · hoa.chayla.app");
+  it("names the account, the full https:// address and the language's hashtags", () => {
+    expect(caption).toContain("@chayla · https://hoa.chayla.app");
     expect(caption).toContain(CAROUSEL_HASHTAGS.zh);
   });
   it("leaves the separator out without a handle", () => {

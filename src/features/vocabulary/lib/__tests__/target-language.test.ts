@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { languageName, resolveTarget, siteAddress, siteBrand, siteTitle } from "../target-language";
+import { languageName, resolveTarget, siteAddress, siteBrand, siteTitle, withScheme } from "../target-language";
 import { readVocabularyPage } from "../../api/catalog.server";
 
 describe("resolveTarget", () => {
@@ -119,5 +119,13 @@ describe("hidden languages", () => {
     const target = await import("../target-language");
     expect(target.isLocaleShown("ko")).toBe(true);
     expect(target.resolveTarget("han.localhost:5195")).toBe("ko");
+  });
+});
+
+describe("withScheme", () => {
+  it("gives a bare address its https:// prefix and keeps one that has a scheme", () => {
+    expect(withScheme("anh.chayla.app")).toBe("https://anh.chayla.app");
+    expect(withScheme("https://anh.chayla.app")).toBe("https://anh.chayla.app");
+    expect(withScheme("http://localhost:5195")).toBe("http://localhost:5195");
   });
 });

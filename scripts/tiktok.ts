@@ -63,7 +63,7 @@ import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
 import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, writeEnvLocal } from "./lib/meta-publish";
 import { renderCarousel } from "./render-carousel";
-import { siteAddress } from "../src/features/vocabulary/lib/target-language";
+import { siteAddress, withScheme } from "../src/features/vocabulary/lib/target-language";
 import {
   CALENDAR_DAYS,
   LEVEL_ORDERS,
@@ -193,7 +193,8 @@ function caption(calendar: Calendar, day: number, level: string): string {
     total: Math.max(CALENDAR_DAYS, calendar.days.length),
     level,
     hook: WORD_HOOK,
-    address: siteAddress(calendar.locale),
+    // The full https:// address, so a reader sees a link to type, not a word.
+    address: withScheme(siteAddress(calendar.locale)),
   });
 }
 
