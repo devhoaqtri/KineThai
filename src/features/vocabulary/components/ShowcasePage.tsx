@@ -210,6 +210,7 @@ export function ShowcasePage() {
           <ShowcaseChrome
             hidden={phase === "loading" || phase === "ready" || phase === "intro"}
             level={word.level}
+            wordId={word.id}
           />
           <VocabularyCard
             entry={entry}
