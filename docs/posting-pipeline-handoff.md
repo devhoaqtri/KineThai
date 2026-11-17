@@ -17,7 +17,7 @@ rendered clip of the reader's word card (the clip itself is silent) and goes out
 | TikTok | the clip | saved as a **draft** in the "TikTokPoster" Android emulator; the owner taps Post by hand |
 | Facebook Page "Anh.ChayLá" | the clip as a **Reel**, with a song from Meta's Sound Collection mixed in | Meta Graph API, at the post's time |
 | Instagram "anh.chayla" | a **carousel** of the word's finished pages (still images), never the video | Meta Graph API, at the post's time |
-| YouTube | the clip as a **Short**, with a song from YouTube's Audio Library mixed in | YouTube Data API v3, at the post's time; private until Google audits the project ([youtube-publishing.md](youtube-publishing.md)) |
+| YouTube channel "Anh.ChayLá" (@anh.chayla) | the clip as a **Short**, with a song from YouTube's Audio Library mixed in | YouTube Data API v3, at the post's time ([youtube-publishing.md](youtube-publishing.md)) |
 
 Schedule: the first 7 days (2026-11-15 → 11-21) have 3 posts a day at 11:30, 19:00, 21:30 Vietnam
 time; after that one a day at 19:00. The Mac runs on UTC+7, so launchd's local time is Vietnam time.
@@ -95,7 +95,8 @@ with "With song / As rendered", captions, TikTok link, Facebook/Instagram Publis
 - Only **B1 and harder** words go out anywhere (`MIN_POST_LEVEL`, `isPostLevel`).
 - Instagram posts a **carousel**, never the video. Facebook posts the Reel.
 - Instagram is the channel account **anh.chayla**, never the owner's personal @phdong12. Facebook is
-  the Anh.ChayLá Page (1850058198626898), never the restaurant Page.
+  the Anh.ChayLá Page (1850058198626898), never the restaurant Page. YouTube is the **Anh.ChayLá**
+  channel (UC8Sy1JlzVMRH7IjLJTi3lBA), never the owner's personal "Do Phuong Dong".
 - **No word goes out twice**: `scripts/data/exported-words.json` records every export; `plan`/`swap`
   skip listed words.
 - Captions never name the word ("Từ số N/365").
@@ -140,9 +141,10 @@ with "With song / As rendered", captions, TikTok link, Facebook/Instagram Publis
 - Business Suite lists **two Facebook entries** per post for posts 6 and 7 (one Reel with a
   duration, one without, marked "can't be promoted"). Not yet investigated: possibly the
   Instagram carousel's temporary Page photos, which should be deleted after posting.
-- YouTube Shorts code is in (2026-11-17, `scripts/lib/youtube-publish.ts`); connecting it needs the
-  owner's Google Cloud OAuth client and `youtube-setup` (docs/youtube-publishing.md), and uploads stay
-  private until Google's audit. YouTube songs come from its own Audio Library (Meta's tracks are
-  licensed for Meta's apps only), in `~/KineMedia-tiktok/sounds-youtube/`.
+- YouTube is connected (2026-11-17) to the Anh.ChayLá channel; the first Short (post 7) went out
+  public. The Google app is still in **Testing**, so its token expires after 7 days (rerun
+  `youtube-setup` by about 2026-11-24, picking Anh.ChayLá) until a privacy policy page exists on
+  anh.chayla.app and the app is published. YouTube has no songs yet: download from YouTube Studio's
+  Audio Library into `~/KineMedia-tiktok/sounds-youtube/` (never Meta's tracks: Meta-only licence).
 - Sound Collection tracks are low bitrate (~48 kbps AAC); fine on phones, but look for a higher
   quality download option if the owner asks.

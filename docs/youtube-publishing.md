@@ -11,14 +11,18 @@ calendar, the publish job at each post time, and the YouTube row on `/posting`.
 - **Description**: the calendar caption (or the post's "YouTube only" caption). Category Education,
   language Vietnamese, not made for kids.
 
-## Private until Google audits the project
+## Channel, and the private lock
 
-Uploads from an API project Google has not audited are **locked to private**. The publish still
-succeeds; the calendar records `privacy: "private"` and `/posting` shows a "private" chip. To make
-uploads public, file Google's **YouTube API Services – Audit and Quota Extension** form for the
-project (it asks what the app does and how it uses the data; answer: uploads the owner's own videos to
-the owner's own channel, nothing else). Until then, a Short can be shown by hand from YouTube Studio
-if Studio allows it for that video.
+Shorts go to the **Anh.ChayLá** channel (@anh.chayla, UC8Sy1JlzVMRH7IjLJTi3lBA), a Brand Account managed
+by the owner's Google account, **never** the owner's personal channel "Do Phuong Dong". At the sign-in,
+pick Anh.ChayLá when Google asks which account or channel; `youtube-setup` prints the channel it
+reached, so check it before any upload.
+
+Google's documentation says uploads from an API project it has not audited are locked to private. The
+first upload (post 7, 2026-11-17) came back **public** and processed, so the lock has not applied so far.
+If it ever does, the publish still succeeds, the calendar records `privacy: "private"`, `/posting`
+shows a "private" chip, and the fix is Google's **YouTube API Services – Audit and Quota Extension** form
+(it needs the privacy policy page below).
 
 Quota: an upload costs 1,600 of the default 10,000 units a day, so about 6 uploads a day.
 
@@ -26,11 +30,14 @@ Quota: an upload costs 1,600 of the default 10,000 units a day, so about 6 uploa
 
 1. **Google Cloud project**: https://console.cloud.google.com → new project (e.g. `anh-chayla-posting`).
 2. **Enable the API**: APIs & Services → Library → *YouTube Data API v3* → Enable.
-3. **OAuth consent screen** (Google Auth Platform): user type *External*, app name, support email.
-   Add the scopes `youtube.upload` and `youtube.readonly`. Then **Publish app** (move it to
-   *In production*). Left in *Testing*, Google expires the refresh token after 7 days and the job
-   stops. An unverified app in production still works for its owner: at sign-in, choose
-   *Advanced → Go to … (unsafe)*.
+3. **OAuth consent screen** (Google Auth Platform): user type *External*, app name, support email,
+   contact email; the owner ticks Google's User Data Policy. Done 2026-11-17 for project
+   `anh-chayla-posting` (app "Anh ChayLa Poster", client "KineMedia posting Mac").
+   **It is still in *Testing*** with the owner as its only test user, because *Publish app* needs a
+   home page and a **privacy policy link** on the Branding page, and anh.chayla.app has no privacy page
+   yet. In Testing, Google expires the refresh token **after 7 days**: rerun `youtube-setup` (and pick
+   Anh.ChayLá) when uploads start failing with `invalid_grant`. Adding a privacy page and publishing the
+   app ends that; an unverified app in production still works for its owner.
 4. **OAuth client**: Credentials → Create credentials → OAuth client ID → *Desktop app*. Put its id and
    secret in `.env.local` (git ignores it):
    ```
