@@ -10299,6 +10299,53 @@ button.vocab-info-row[aria-expanded="true"] {
   border: 1px solid var(--shell-line);
   border-top: 3px solid color-mix(in srgb, var(--info-tone) 70%, transparent);
 }
+/* The privacy policy (PrivacyPage): plain prose in the info page's cards. */
+.vocab-privacy .vocab-info-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.vocab-privacy-section {
+  --info-tone: var(--mint);
+  padding-bottom: 14px;
+  color: var(--shell-text);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.vocab-privacy-section h2 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 800;
+}
+.vocab-privacy-section p,
+.vocab-privacy-section ul {
+  margin: 0 0 8px;
+}
+.vocab-privacy-section ul {
+  padding-left: 18px;
+  list-style: disc;
+}
+.vocab-privacy-section li + li {
+  margin-top: 6px;
+}
+.vocab-privacy-section a {
+  color: var(--mint);
+  text-underline-offset: 2px;
+}
+.vocab-privacy-divider {
+  width: 100%;
+  margin: 10px 0 0;
+  border: 0;
+  border-top: 1px solid var(--shell-line);
+}
+.vocab-privacy-lang {
+  margin: 4px 0 0;
+}
+.vocab-privacy [lang="en"] {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 /* The quick-info lines: straight on the page under the app name, no card around them. */
 .vocab-info-section[data-plain] {
   padding: 0 2px;

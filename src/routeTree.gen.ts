@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BadgeLabRouteImport } from './routes/badge-lab'
 import { Route as BurstLabRouteImport } from './routes/burst-lab'
 import { Route as PostingRouteImport } from './routes/posting'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ShowcaseRouteImport } from './routes/showcase'
 import { Route as StoreRouteImport } from './routes/store'
 import { Route as TiktokLabRouteImport } from './routes/tiktok-lab'
@@ -101,6 +102,11 @@ const BurstLabRoute = BurstLabRouteImport.update({
 const PostingRoute = PostingRouteImport.update({
   id: '/posting',
   path: '/posting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShowcaseRoute = ShowcaseRouteImport.update({
@@ -345,6 +351,7 @@ export interface FileRoutesByFullPath {
   '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
   '/posting': typeof PostingRoute
+  '/privacy': typeof PrivacyRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/tiktok-lab': typeof TiktokLabRoute
@@ -399,6 +406,7 @@ export interface FileRoutesByTo {
   '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
   '/posting': typeof PostingRoute
+  '/privacy': typeof PrivacyRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/tiktok-lab': typeof TiktokLabRoute
@@ -456,6 +464,7 @@ export interface FileRoutesById {
   '/badge-lab': typeof BadgeLabRoute
   '/burst-lab': typeof BurstLabRoute
   '/posting': typeof PostingRoute
+  '/privacy': typeof PrivacyRoute
   '/showcase': typeof ShowcaseRoute
   '/store': typeof StoreRoute
   '/tiktok-lab': typeof TiktokLabRoute
@@ -513,6 +522,7 @@ export interface FileRouteTypes {
     | '/badge-lab'
     | '/burst-lab'
     | '/posting'
+    | '/privacy'
     | '/showcase'
     | '/store'
     | '/tiktok-lab'
@@ -567,6 +577,7 @@ export interface FileRouteTypes {
     | '/badge-lab'
     | '/burst-lab'
     | '/posting'
+    | '/privacy'
     | '/showcase'
     | '/store'
     | '/tiktok-lab'
@@ -623,6 +634,7 @@ export interface FileRouteTypes {
     | '/badge-lab'
     | '/burst-lab'
     | '/posting'
+    | '/privacy'
     | '/showcase'
     | '/store'
     | '/tiktok-lab'
@@ -680,6 +692,7 @@ export interface RootRouteChildren {
   BadgeLabRoute: typeof BadgeLabRoute
   BurstLabRoute: typeof BurstLabRoute
   PostingRoute: typeof PostingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ShowcaseRoute: typeof ShowcaseRoute
   StoreRoute: typeof StoreRoute
   TiktokLabRoute: typeof TiktokLabRoute
@@ -759,6 +772,13 @@ declare module '@tanstack/react-router' {
       path: '/posting'
       fullPath: '/posting'
       preLoaderRoute: typeof PostingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/showcase': {
@@ -1164,6 +1184,7 @@ const rootRouteChildren: RootRouteChildren = {
   BadgeLabRoute: BadgeLabRoute,
   BurstLabRoute: BurstLabRoute,
   PostingRoute: PostingRoute,
+  PrivacyRoute: PrivacyRoute,
   ShowcaseRoute: ShowcaseRoute,
   StoreRoute: StoreRoute,
   TiktokLabRoute: TiktokLabRoute,
