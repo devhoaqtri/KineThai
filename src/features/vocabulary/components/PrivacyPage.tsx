@@ -9,7 +9,7 @@
  * telemetry is a random session id with page health and errors (visitor-telemetry.server.ts),
  * hearts and bookmarks are totals only (engagement.server.ts). Change this page when they change.
  *
- * Exports: PrivacyPage, PRIVACY_UPDATED
+ * Exports: PrivacyPage
  * Depends on: router Link, lucide icons, target-language (brand), vocabulary.css
  */
 import type { ReactNode } from "react";
@@ -19,7 +19,7 @@ import { siteTitle, type TargetLocale } from "../lib/target-language";
 import "../vocabulary.css";
 
 /** When the policy last changed, as shown on the page. */
-export const PRIVACY_UPDATED = { vi: "17/11/2026", en: "17 November 2026" };
+const PRIVACY_UPDATED = { vi: "17/11/2026", en: "17 November 2026" };
 
 /** The channel's Facebook Page: the public way to reach the owner. */
 const CONTACT_URL = "https://www.facebook.com/1850058198626898";
