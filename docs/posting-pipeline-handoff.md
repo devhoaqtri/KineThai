@@ -142,9 +142,9 @@ with "With song / As rendered", captions, TikTok link, Facebook/Instagram Publis
   duration, one without, marked "can't be promoted"). Not yet investigated: possibly the
   Instagram carousel's temporary Page photos, which should be deleted after posting.
 - YouTube is connected (2026-11-17) to the Anh.ChayLá channel; the first Short (post 7) went out
-  public. The Google app is still in **Testing**, so its token expires after 7 days (rerun
-  `youtube-setup` by about 2026-11-24, picking Anh.ChayLá) until a privacy policy page exists on
-  anh.chayla.app and the app is published. YouTube has no songs yet: download from YouTube Studio's
-  Audio Library into `~/KineMedia-tiktok/sounds-youtube/` (never Meta's tracks: Meta-only licence).
+  public. The Google app is In production (privacy page at anh.chayla.app/privacy), so the token lasts;
+  if uploads ever fail with `invalid_grant`, rerun `youtube-setup` and pick Anh.ChayLá. YouTube has no
+  songs yet: download from YouTube Studio's Audio Library into `~/KineMedia-tiktok/sounds-youtube/`
+  (never Meta's tracks: Meta-only licence).
 - Sound Collection tracks are low bitrate (~48 kbps AAC); fine on phones, but look for a higher
   quality download option if the owner asks.

@@ -1088,7 +1088,7 @@ async function publishDue() {
 async function youtubeSetupCommand() {
   const { channel, channelId } = await youtubeSetup(ROOT);
   console.log(`✓ YouTube channel “${channel}” (${channelId}) connected; its token is in .env.local`);
-  console.log("  Until Google audits this API project, its uploads stay private (docs/youtube-publishing.md).");
+  console.log("  Check that is the Anh.ChayLá channel before any upload (docs/youtube-publishing.md).");
 }
 
 /** Exchange META_USER_TOKEN for the Page token and Instagram id, into .env.local. */

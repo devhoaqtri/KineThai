@@ -33,11 +33,11 @@ Quota: an upload costs 1,600 of the default 10,000 units a day, so about 6 uploa
 3. **OAuth consent screen** (Google Auth Platform): user type *External*, app name, support email,
    contact email; the owner ticks Google's User Data Policy. Done 2026-11-17 for project
    `anh-chayla-posting` (app "Anh ChayLa Poster", client "KineMedia posting Mac").
-   **It is still in *Testing*** with the owner as its only test user, because *Publish app* needs a
-   home page and a **privacy policy link** on the Branding page, and anh.chayla.app has no privacy page
-   yet. In Testing, Google expires the refresh token **after 7 days**: rerun `youtube-setup` (and pick
-   Anh.ChayLá) when uploads start failing with `invalid_grant`. Adding a privacy page and publishing the
-   app ends that; an unverified app in production still works for its owner.
+   On 2026-11-17 the Branding page got the home page `https://anh.chayla.app`, the privacy policy
+   `https://anh.chayla.app/privacy` (src/routes/privacy.tsx) and the domain `chayla.app`, and the app
+   was moved to **In production**, so its refresh token no longer expires after 7 days. It is not
+   verified, so the sign-in shows Google's "unverified app" warning (continue past it); that is fine
+   for the owner's own use, up to 100 users ever.
 4. **OAuth client**: Credentials → Create credentials → OAuth client ID → *Desktop app*. Put its id and
    secret in `.env.local` (git ignores it):
    ```
