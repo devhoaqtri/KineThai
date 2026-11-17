@@ -455,6 +455,8 @@ async function render() {
           base,
           "--out",
           out,
+          // A take cut off by the time limit is a failure, never a clip (it may stop before the answer).
+          "--require-finish",
         ],
         { stdio: "inherit", cwd: ROOT },
       );

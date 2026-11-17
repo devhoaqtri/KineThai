@@ -126,6 +126,10 @@ const address = siteAddress(target);
 const dialect = flag("dialect", "");
 const fps = Number(flag("fps", "30"));
 const maxSeconds = Number(flag("max", "120"));
+// A take that runs out of time is the word cut off part-way (2026-11-17: "ceiling" stopped on
+// its fourth clue, before the answer, and went into the calendar as a finished clip). Callers
+// that publish (tiktok.ts render) pass this, last, so such a take fails instead of encoding.
+const requireFinish = argv.includes("--require-finish");
 // Frame-exact motion. Chrome's screencast hands back what the compositor drew, as fast as
 // PNGs at 1080×1920 can be encoded and acknowledged: 23-28 a second here, so a 30 fps file
 // repeated every fourth to sixth frame at irregular moments and the motion stuttered. The
@@ -618,6 +622,11 @@ async function main() {
       }
     }
     if (Date.now() > deadline) {
+      if (requireFinish) {
+        // Stop the frames first: an ack left in flight when Chrome closes rejects 20s later.
+        await cdp.send("Page.stopScreencast").catch(() => {});
+        throw new Error(`the word never finished within ${maxSeconds}s; the take is cut short`);
+      }
       console.warn(`! never finished within ${maxSeconds}s; using what was captured`);
       break;
     }
