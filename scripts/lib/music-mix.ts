@@ -11,6 +11,8 @@
  * -14 LUFS (where Facebook and Instagram play Reels). It is written to a temporary file and
  * renamed, so a half-written mix is never published.
  *
+ * Sound Collection hands its tracks out as audio-only .mp4 files, so .mp4 counts as a song.
+ *
  * Exports: SOUNDS_DIR, SONG_EXTENSIONS, listSongs, songTitle, mediaDuration, mixArgs, mixSong
  * Depends on: ffmpeg and ffprobe on the PATH
  */
@@ -21,7 +23,7 @@ import { extname, join } from "node:path";
 
 /** Where downloaded Sound Collection tracks go, unless the calendar names another folder. */
 export const SOUNDS_DIR = "~/KineMedia-tiktok/sounds";
-export const SONG_EXTENSIONS = [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".flac"];
+export const SONG_EXTENSIONS = [".mp3", ".mp4", ".m4a", ".aac", ".wav", ".ogg", ".flac"];
 /** Seconds of fade at the song's start and end. */
 const FADE_IN = 0.3;
 const FADE_OUT = 2.5;
