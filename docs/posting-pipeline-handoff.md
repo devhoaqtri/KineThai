@@ -19,19 +19,23 @@ rendered clip of the reader's word card (the clip itself is silent) and goes out
 | Instagram "anh.chayla" | a **carousel** of the word's finished pages (still images), never the video | Meta Graph API, at the post's time |
 | YouTube channel "Anh.ChayLá" (@anh.chayla) | the clip as a **Short**, with a song from YouTube's Audio Library mixed in | YouTube Data API v3, at the post's time ([youtube-publishing.md](youtube-publishing.md)) |
 
-Schedule: the first 7 days (2026-11-15 → 11-21) have 3 posts a day at 11:30, 19:00, 21:30 Vietnam
-time; after that one a day at 19:00. The Mac runs on UTC+7, so launchd's local time is Vietnam time.
+Schedule: the first 7 days (2026-11-15 → 11-21) have 3 posts a day. Since 2026-11-18 they go out at
+13:30, 20:30 and **02:30 the night after** (`npm run tiktok -- times --burst-times 13:30,20:30,02:30`;
+a time earlier than the one before it rolls to the next date, `midnightIndex`). Posts 1–9 keep the
+11:30/19:00/21:30 they went out at: a schedule change never re-dates a post that has gone out
+(`settled`). After the burst, one a day at 19:00 (Vietnam). The Mac runs on UTC+7, so launchd's
+local time is Vietnam time.
 
 ## A day, unattended
 
 | When (Mac time) | launchd job | What it does |
 |---|---|---|
 | 03:00 | `com.kinemedia.tiktok-render` | renders clips + carousels for the next 6 planned posts (starts its own dev server on :5195) |
-| 07:00 | `com.kinemedia.tiktok-draft` | renders anything due without a clip, **proposes a song** for each Facebook post due within 24 h (`music-due`), then saves every due post as a TikTok draft |
-| each post time (11:30, 19:00, 21:30) | `com.kinemedia.tiktok-publish` | publishes what is due on Facebook and Instagram (`publish-due`); a post whose song is not accepted waits |
+| 13:30 | `com.kinemedia.tiktok-draft` | renders anything due without a clip, **proposes a song** for each Facebook post due within 24 h (`music-due`), saves every due post as a TikTok draft (booting the emulator itself if it is off), then publishes whatever is due (a clip it just rendered missed its own publish run) |
+| each post time (02:30, 13:30, 20:30; 19:00 after the burst) | `com.kinemedia.tiktok-publish` | takes no lock, so it never waits behind the draft run; publishes what is due on Facebook and Instagram (`publish-due`); a post whose song is not accepted waits |
 
 Every run logs to `logs/tiktok-auto/<date>-<job>.log` and shows a macOS notification. launchd runs
-a missed time when the Mac wakes but **cannot wake a sleeping Mac**. The 03:00/07:00 renders have
+a missed time when the Mac wakes but **cannot wake a sleeping Mac**. The 03:00 render (and the old 07:00 draft run) have
 failed overnight with the lid closed; check `pmset -g log` first when a night run fails.
 
 What the owner does by hand: tap Post on each TikTok draft in the emulator (then paste its link on
@@ -80,7 +84,8 @@ npm run tiktok -- music 10                    # propose (and mix) a song for pos
 npm run tiktok -- music 10 --song "Groovy Hat - erloom.m4a" --start 12
 npm run tiktok -- music 10 --song none        # no music
 npm run tiktok -- music accept 10
-npm run tiktok -- music-due --hours 24        # what the 07:00 job runs
+npm run tiktok -- music-due --hours 24        # what the 13:30 job runs
+npm run tiktok -- times --burst-times 13:30,20:30,02:30   # move post times, then reinstall the jobs
 npm run tiktok -- publish 10 --platform facebook --dry-run
 npm run tiktok -- publish-due --dry-run
 npx tsx scripts/tiktok-auto.ts install        # rewrite + reload the launchd jobs

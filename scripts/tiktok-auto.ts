@@ -11,7 +11,7 @@
  *              publish-due); launchd runs it at the calendar's post times (publishTimes),
  *              and it does nothing, writing no log and showing no notification, while Meta
  *              is not connected or nothing is due
- *   install    write and load the three launchd jobs (--render-at 03:00, --draft-at 07:00,
+ *   install    write and load the three launchd jobs (--render-at 03:00, --draft-at 13:30,
  *              publish at the post times); run it again when the calendar's times change
  *              (`status` says when they no longer match)
  *   uninstall  unload and remove them
@@ -30,8 +30,8 @@
  *   Rendering at night: the recording is a live page under Vite, and any source edit
  *   reloads it mid-take and ruins the clip, so it runs when nobody is editing.
  *
- *   One lock for both jobs: a render and a draft run would fight over the dev server
- *   and the emulator, so the second waits for the first.
+ *   One lock for the render and draft jobs: they would fight over the dev server and the
+ *   emulator, so the second waits for the first. Publishing takes no lock: it uses neither.
  *
  * Times are this Mac's local time, which launchd uses; the calendar's times are Vietnam's.
  * They agree while the Mac is set to UTC+7.
@@ -228,8 +228,19 @@ async function draftJob() {
   const before = new Set(loadCalendar().days.filter((d) => d.status === "drafted").map((d) => d.day));
   const code = await tiktok(["draft-due", "--hours", hours]);
   const drafted = loadCalendar().days.filter((d) => d.status === "drafted" && !before.has(d.day));
+  // A clip rendered just now missed the publish run at its own time (it had nothing to send):
+  // send what is due before reporting.
+  let publishProblem: string | null = null;
+  if (publishDue()) {
+    try {
+      await publishJob();
+    } catch (error) {
+      publishProblem = error instanceof Error ? error.message : String(error);
+    }
+  }
   if (code !== 0) throw new Error(`not every due post was drafted${drafted.length ? ` (drafted ${drafted.map((d) => d.day).join(", ")})` : ""}`);
   if (musicCode !== 0) throw new Error("a song could not be mixed into a due post; see the log");
+  if (publishProblem) throw new Error(publishProblem);
   notify(
     "TikTok drafts ready",
     drafted.length
@@ -331,7 +342,8 @@ function install() {
   mkdirSync(AGENTS, { recursive: true });
   const jobs: { job: Job; times: string[]; args: string[] }[] = [
     { job: "render", times: [flag("render-at") ?? "03:00"], args: ["--days", flag("render-days") ?? "6"] },
-    { job: "draft", times: [flag("draft-at") ?? "07:00"], args: ["--hours", flag("hours") ?? "24"] },
+    // 13:30, when the owner is at the Mac (2026-11-18): night runs found it asleep, lid shut.
+    { job: "draft", times: [flag("draft-at") ?? "13:30"], args: ["--hours", flag("hours") ?? "24"] },
     // Instagram's API cannot schedule, so posts go out from here at their time. A failure is
     // retried at the next slot within publish-due's 6-hour grace, or by hand from /posting.
     { job: "publish", times: publishTimes(loadCalendar(), todayInVietnam(Date.now())), args: [] },
@@ -412,7 +424,9 @@ async function main() {
   // Keep the Mac from idling to sleep halfway through a recording or a draft.
   spawn("caffeinate", ["-i", "-w", String(process.pid)], { stdio: "ignore", detached: true }).unref();
   try {
-    await takeLock();
+    // Publishing needs neither the dev server nor the emulator, so it never waits behind a
+    // render or draft run that holds them (the draft job and a post share 13:30).
+    if (command !== "publish") await takeLock();
     await (command === "render" ? renderJob() : command === "draft" ? draftJob() : publishJob());
     say(`✓ ${command} run finished`);
   } catch (error) {

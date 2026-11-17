@@ -57,7 +57,7 @@ Meta's Sound Collection is licensed for Meta's apps only, so YouTube has its own
 - YouTube Studio → **Audio library** → filter *No attribution required* (attribution tracks need a
   credit line in the description) → download MP3s into `~/KineMedia-tiktok/sounds-youtube/`
   (or the calendar's `youtubeSoundsDir`), named `Title - Artist.mp3`.
-- From then on the 07:00 job proposes a song for each YouTube post too, and the post waits for
+- From then on the 13:30 job proposes a song for each YouTube post too, and the post waits for
   **Accept** on `/posting` (the ♪ YouTube row), exactly like Facebook. With no songs, Shorts go out silent.
 - By hand: `npm run tiktok -- music 10 --platform youtube [--song <file|none>] [--start 12]`, then
   `npm run tiktok -- music accept 10 --platform youtube`.

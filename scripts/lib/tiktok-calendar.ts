@@ -20,7 +20,7 @@
  *
  * Exports: CALENDAR_DAYS, LEVEL_ORDERS, LevelOrder, DayStatus, CalendarDay, Calendar, Burst,
  *   PostSchedule, CandidateWord, parseDaySpec, parseBurst, dateOfDay, todayInVietnam,
- *   dayOfDate, weekdayOf, burstPosts, slotOfPost, firstPostOnDate, levelForDay, eligibleWords,
+ *   dayOfDate, weekdayOf, burstPosts, midnightIndex, slotOfPost, firstPostOnDate, levelForDay, eligibleWords,
  *   planDays, captionFor, summarize, postTimeMs, postsToDraft, isPostLevel, MIN_POST_LEVEL,
  *   carouselSlides, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
@@ -255,7 +255,29 @@ export function dayOfDate(startDate: string, date: string): number {
 }
 
 /**
- * Read a burst as typed: "7x3" (7 days, 3 a day) and its times "11:30,19:00,21:30".
+ * Where a burst day's times cross midnight: the index of the first time that falls on the
+ * next date ("13:30,20:30,02:30" → 2, the 02:30 is the night after), or `times.length` when
+ * the day stays on one date. Valid only for times that rise, wrap at most once, and end
+ * before the day's first time comes round again.
+ * @returns The index, or null when the times cannot be one posting day in that order
+ * @pure true
+ */
+export function midnightIndex(times: readonly string[]): number | null {
+  let wrap = times.length;
+  for (let i = 1; i < times.length; i += 1) {
+    if (times[i]! > times[i - 1]!) continue;
+    if (times[i] === times[i - 1] || wrap !== times.length) return null;
+    wrap = i;
+  }
+  if (wrap < times.length && times[times.length - 1]! >= times[0]!) return null;
+  return wrap;
+}
+
+/**
+ * Read a burst as typed: "7x3" (7 days, 3 a day) and its times "11:30,19:00,21:30". Times
+ * keep the order they are typed in when that order is one posting day running past midnight
+ * ("13:30,20:30,02:30": the 02:30 is the night after, midnightIndex); otherwise they are
+ * sorted, as before.
  * @param spec - DAYSxPERDAY, or "none" / "0" for no burst
  * @param times - comma-separated HH:MM, one per post of a day
  * @returns The burst, or null for none
@@ -274,7 +296,8 @@ export function parseBurst(spec: string, times: string): Burst | null {
     if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) throw new Error(`"${time}" is not a time (HH:MM)`);
   }
   if (list.length !== perDay) throw new Error(`a ${perDay}-a-day burst needs ${perDay} times, got ${list.length}`);
-  return { days, perDay, times: [...list].sort() };
+  const wrap = midnightIndex(list);
+  return { days, perDay, times: wrap !== null && wrap < list.length ? list : [...list].sort() };
 }
 
 /** @returns How many posts the opening burst holds (0 without one). @pure true */
@@ -294,9 +317,12 @@ export function slotOfPost(schedule: PostSchedule, post: number): { date: string
   const opening = burstPosts(schedule);
   if (burst && post <= opening) {
     const index = post - 1;
+    const slot = index % burst.perDay;
+    // A time after the day's midnight crossing goes out on the next date.
+    const nextMorning = slot >= (midnightIndex(burst.times) ?? burst.perDay) ? 1 : 0;
     return {
-      date: dateOfDay(schedule.startDate, Math.floor(index / burst.perDay) + 1),
-      time: burst.times[index % burst.perDay] ?? schedule.postTime,
+      date: dateOfDay(schedule.startDate, Math.floor(index / burst.perDay) + 1 + nextMorning),
+      time: burst.times[slot] ?? schedule.postTime,
     };
   }
   return {
@@ -316,6 +342,10 @@ export function firstPostOnDate(schedule: PostSchedule, date: string): number {
   const day = dayOfDate(schedule.startDate, date);
   const burst = schedule.burst;
   if (day < 1) return day;
+  // A burst day that runs past midnight puts its late posts on the next date, so that date's
+  // first post is the previous burst day's first one after midnight.
+  const wrap = burst ? (midnightIndex(burst.times) ?? burst.perDay) : 0;
+  if (burst && wrap < burst.perDay && day >= 2 && day <= burst.days + 1) return (day - 2) * burst.perDay + wrap + 1;
   if (burst && day <= burst.days) return (day - 1) * burst.perDay + 1;
   return burstPosts(schedule) + (day - (burst?.days ?? 0));
 }

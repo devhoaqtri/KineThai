@@ -28,6 +28,8 @@
  *             song holds the post on that platform
  *   music-due  propose a song for every post due within --hours (default 24) that has none,
  *             on each connected music platform whose sounds folder has any (the morning job)
+ *   times     move the post times (`--burst-times 13:30,20:30,02:30`, `--time 19:00`); a time
+ *             earlier than the one before it is the night after; posts already out keep theirs
  *   youtube-setup  sign in to Google once (in your browser) and keep YouTube's refresh token
  *             in .env.local; needs YT_CLIENT_ID and YT_CLIENT_SECRET there first
  *   meta-setup  turn META_USER_TOKEN (Graph API Explorer) into the Page's lasting token and
@@ -153,8 +155,17 @@ function loadCalendar(): Calendar {
   return readJson<Calendar>(CALENDAR_FILE);
 }
 
+/**
+ * Whether a post has gone out, or been handed to a platform, anywhere: its date and time are
+ * then history, and a schedule change must not rewrite them.
+ */
+function settled(day: CalendarDay): boolean {
+  if (day.status === "posted" || day.status === "missed" || day.status === "scheduled") return true;
+  return Object.values(day.platforms ?? {}).some((t) => t?.status === "posted" || t?.status === "publishing");
+}
+
 function saveCalendar(calendar: Calendar) {
-  for (const day of calendar.days) Object.assign(day, slotOf(calendar, day.day));
+  for (const day of calendar.days) if (!settled(day)) Object.assign(day, slotOf(calendar, day.day));
   calendar.days.sort((a, b) => a.day - b.day);
   writeFileSync(CALENDAR_FILE, `${JSON.stringify(calendar, null, 2)}\n`);
 }
@@ -392,6 +403,11 @@ function refileClips(calendar: Calendar): number {
       renameSync(from, to);
       const text = from.replace(/\.mp4$/, ".txt");
       if (existsSync(text)) renameSync(text, to.replace(/\.mp4$/, ".txt"));
+      // The clip's song mixes and its cover hint travel with it.
+      for (const p of MUSIC_PLATFORMS) {
+        if (existsSync(mixedClipPath(from, p))) renameSync(mixedClipPath(from, p), mixedClipPath(to, p));
+      }
+      if (existsSync(`${from}.meta.json`)) renameSync(`${from}.meta.json`, `${to}.meta.json`);
       day.clip = to.startsWith(homedir()) ? `~${to.slice(homedir().length)}` : to;
       moved += 1;
     }
@@ -1091,6 +1107,40 @@ async function youtubeSetupCommand() {
   console.log("  Check that is the Anh.ChayLá channel before any upload (docs/youtube-publishing.md).");
 }
 
+/**
+ * Move the post times: `times --burst-times 13:30,20:30,02:30 [--time 19:00]`. Posts that have
+ * already gone out keep their recorded times; every other post is re-dated, its rendered clip
+ * renamed to match. The publish job reads the times when it is installed, so this ends by
+ * saying to reinstall it.
+ */
+function times() {
+  const calendar = loadCalendar();
+  const burstTimes = flag("burst-times");
+  const daily = flag("time");
+  if (!burstTimes && !daily) throw new Error("usage: times [--burst-times HH:MM,HH:MM,…] [--time HH:MM]");
+  if (daily) {
+    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(daily)) throw new Error(`"${daily}" is not a time (HH:MM)`);
+    calendar.postTime = daily;
+  }
+  if (burstTimes) {
+    if (!calendar.burst) throw new Error("this calendar has no opening burst; set one with plan --burst");
+    const { days, perDay } = calendar.burst;
+    calendar.burst = parseBurst(`${days}x${perDay}`, burstTimes);
+  }
+  const moved = refileClips(calendar);
+  saveCalendar(calendar);
+  const fresh = loadCalendar();
+  const today = todayInVietnam(Date.now());
+  console.log(
+    `✓ posting ${fresh.burst ? `${fresh.burst.times.join(", ")} during the burst, then ` : ""}${fresh.postTime} a day (Vietnam)`,
+  );
+  if (moved) console.log(`  ${moved} rendered clip(s) renamed to their new date`);
+  for (const day of fresh.days.filter((d) => d.date >= today && !settled(d)).slice(0, 6)) {
+    console.log(`  ${String(day.day).padStart(3)}  ${day.date} ${day.time ?? fresh.postTime}  ${day.status.padEnd(9)} ${day.word}`);
+  }
+  console.log("\nReinstall the jobs so publishing follows: npx tsx scripts/tiktok-auto.ts install");
+}
+
 /** Exchange META_USER_TOKEN for the Page token and Instagram id, into .env.local. */
 async function metaSetup() {
   const result = await exchangeForPageToken(loadMetaConfig(ROOT), flag("page") ?? null);
@@ -1172,8 +1222,10 @@ async function main() {
       return musicDue();
     case "youtube-setup":
       return youtubeSetupCommand();
+    case "times":
+      return times();
     default:
-      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, music, music-due, meta-setup, youtube-setup (see the top of scripts/tiktok.ts)");
+      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, music, music-due, meta-setup, youtube-setup, times (see the top of scripts/tiktok.ts)");
   }
 }
 

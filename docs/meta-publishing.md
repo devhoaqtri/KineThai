@@ -26,7 +26,7 @@ carousels and TikTok adds its sound in the app, so only Facebook carries one.
 
 - Download tracks from Meta's Sound Collection (Meta Business Suite, signed in as the Page) into
   `~/KineMedia-tiktok/sounds/` (or the calendar's `soundsDir`). The file name is the title shown.
-- The 07:00 job runs `npm run tiktok -- music-due`: each Facebook post due within 24 hours gets the
+- The 13:30 job runs `npm run tiktok -- music-due`: each Facebook post due within 24 hours gets the
   least recently used song, mixed in, as a **proposal**. A proposed song holds the post: it does not go
   out until accepted.
 - On `/posting`, the post's **♪ Song** line picks another track, sets where in it to start, **Mix**es it

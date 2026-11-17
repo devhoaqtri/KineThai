@@ -7,6 +7,7 @@ import {
   dayOfDate,
   firstPostOnDate,
   parseBurst,
+  midnightIndex,
   slotOfPost,
   eligibleWords,
   levelForDay,
@@ -323,6 +324,27 @@ describe("the opening burst", () => {
     for (let post = 1; post <= 40; post += 1) {
       const { date } = slotOfPost(schedule, post);
       expect(firstPostOnDate(schedule, date)).toBeLessThanOrEqual(post);
+    }
+  });
+
+  it("keeps a day that runs past midnight in its typed order, the late post on the next date", () => {
+    const late = { ...schedule, burst: parseBurst("7x3", "13:30,20:30,02:30")! };
+    expect(late.burst.times).toEqual(["13:30", "20:30", "02:30"]);
+    expect(midnightIndex(["13:30", "20:30", "02:30"])).toBe(2);
+    expect(midnightIndex(["11:30", "19:00", "21:30"])).toBe(3);
+    expect(midnightIndex(["13:30", "02:30", "20:30"])).toBeNull();
+    expect(slotOfPost(late, 10)).toEqual({ date: "2026-11-18", time: "13:30" });
+    expect(slotOfPost(late, 11)).toEqual({ date: "2026-11-18", time: "20:30" });
+    expect(slotOfPost(late, 12)).toEqual({ date: "2026-11-19", time: "02:30" });
+    expect(slotOfPost(late, 21)).toEqual({ date: "2026-11-22", time: "02:30" });
+    expect(slotOfPost(late, 22)).toEqual({ date: "2026-11-22", time: "19:00" });
+    expect(firstPostOnDate(late, "2026-11-15")).toBe(1);
+    expect(firstPostOnDate(late, "2026-11-19")).toBe(12);
+    expect(firstPostOnDate(late, "2026-11-22")).toBe(21);
+    expect(firstPostOnDate(late, "2026-11-23")).toBe(23);
+    for (let post = 1; post <= 40; post += 1) {
+      const { date } = slotOfPost(late, post);
+      expect(firstPostOnDate(late, date)).toBeLessThanOrEqual(post);
     }
   });
 
