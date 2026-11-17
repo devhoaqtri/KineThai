@@ -6,9 +6,12 @@
  *   draft      render any post due within --hours (default 24) that has no clip yet, then
  *              save every due post as a TikTok draft in the emulator (tiktok.ts draft-due)
  *   publish    post on Facebook and Instagram every post whose time has come (tiktok.ts
- *              publish-due); launchd runs it every 10 minutes, and it does nothing, writing
- *              no log and showing no notification, while Meta is not connected or nothing is due
- *   install    write and load the two launchd jobs (--render-at 03:00, --draft-at 07:00)
+ *              publish-due); launchd runs it at the calendar's post times (publishTimes),
+ *              and it does nothing, writing no log and showing no notification, while Meta
+ *              is not connected or nothing is due
+ *   install    write and load the three launchd jobs (--render-at 03:00, --draft-at 07:00,
+ *              publish at the post times); run it again when the calendar's times change
+ *              (`status` says when they no longer match)
  *   uninstall  unload and remove them
  *   status     whether the jobs are loaded, and the end of the latest run's log
  *
@@ -38,7 +41,7 @@ import { dirname, join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { loadMetaConfig, metaReady } from "./lib/meta-publish";
-import { META_PLATFORMS, postsToDraft, postsToPublish, todayInVietnam, type Calendar } from "./lib/tiktok-calendar";
+import { META_PLATFORMS, postsToDraft, postsToPublish, publishTimes, todayInVietnam, type Calendar } from "./lib/tiktok-calendar";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const LOG_DIR = join(ROOT, "logs", "tiktok-auto");
@@ -231,23 +234,22 @@ async function publishJob() {
   if (posted.length) notify("Posted on Facebook / Instagram", posted.join(", "));
 }
 
-/** The plist for one job, with the paths this machine has now. */
-function plist(label: string, job: Job, when: { at: string } | { every: number }, args: string[]): string {
-  let schedule: string;
-  if ("at" in when) {
-    const [hour, minute] = when.at.split(":").map(Number);
-    if (!(hour! >= 0 && hour! < 24 && minute! >= 0 && minute! < 60)) throw new Error(`"${when.at}" is not HH:MM`);
-    schedule = `<key>StartCalendarInterval</key>
-  <dict>
-    <key>Hour</key>
-    <integer>${hour}</integer>
-    <key>Minute</key>
-    <integer>${minute}</integer>
-  </dict>`;
-  } else {
-    schedule = `<key>StartInterval</key>
-  <integer>${when.every}</integer>`;
-  }
+/** The plist for one job, run daily at each of `times` (HH:MM), with the paths this machine has now. */
+function plist(label: string, job: Job, times: string[], args: string[]): string {
+  const slots = times.map((at) => {
+    const [hour, minute] = at.split(":").map(Number);
+    if (!(hour! >= 0 && hour! < 24 && minute! >= 0 && minute! < 60)) throw new Error(`"${at}" is not HH:MM`);
+    return `    <dict>
+      <key>Hour</key>
+      <integer>${hour}</integer>
+      <key>Minute</key>
+      <integer>${minute}</integer>
+    </dict>`;
+  });
+  const schedule = `<key>StartCalendarInterval</key>
+  <array>
+${slots.join("\n")}
+  </array>`;
   const tsx = join(ROOT, "node_modules", ".bin", "tsx");
   if (!existsSync(tsx)) throw new Error(`no tsx at ${tsx}; run npm install`);
   // launchd starts jobs with a bare PATH; node, npx, adb and ffmpeg live outside it.
@@ -294,20 +296,21 @@ const uid = process.getuid!();
 
 function install() {
   mkdirSync(AGENTS, { recursive: true });
-  const jobs: { job: Job; when: { at: string } | { every: number }; args: string[] }[] = [
-    { job: "render", when: { at: flag("render-at") ?? "03:00" }, args: ["--days", flag("render-days") ?? "6"] },
-    { job: "draft", when: { at: flag("draft-at") ?? "07:00" }, args: ["--hours", flag("hours") ?? "24"] },
-    // Instagram's API cannot schedule, so posts go out from here at their time.
-    { job: "publish", when: { every: 600 }, args: [] },
+  const jobs: { job: Job; times: string[]; args: string[] }[] = [
+    { job: "render", times: [flag("render-at") ?? "03:00"], args: ["--days", flag("render-days") ?? "6"] },
+    { job: "draft", times: [flag("draft-at") ?? "07:00"], args: ["--hours", flag("hours") ?? "24"] },
+    // Instagram's API cannot schedule, so posts go out from here at their time. A failure is
+    // retried at the next slot within publish-due's 6-hour grace, or by hand from /posting.
+    { job: "publish", times: publishTimes(loadCalendar(), todayInVietnam(Date.now())), args: [] },
   ];
-  for (const { job, when, args } of jobs) {
+  for (const { job, times, args } of jobs) {
     const label = LABELS[job];
     const file = join(AGENTS, `${label}.plist`);
     spawnSync("launchctl", ["bootout", `gui/${uid}/${label}`]); // a no-op when not loaded
-    writeFileSync(file, plist(label, job, when, args));
+    writeFileSync(file, plist(label, job, times, args));
     const loaded = spawnSync("launchctl", ["bootstrap", `gui/${uid}`, file], { encoding: "utf8" });
     if (loaded.status !== 0) throw new Error(`launchctl bootstrap ${label} failed: ${loaded.stderr.trim()}`);
-    console.log(`✓ ${label}: ${"at" in when ? `daily at ${when.at}` : `every ${when.every / 60} minutes`} (${file})`);
+    console.log(`✓ ${label}: daily at ${times.join(", ")} (${file})`);
   }
   console.log(
     "\nThe Mac must be awake: launchd runs a missed time on wake but cannot wake it.\n" +
@@ -324,6 +327,14 @@ function uninstall() {
   }
 }
 
+/** The HH:MM times a plist's StartCalendarInterval runs at. */
+function installedTimes(xml: string): string[] {
+  const pad = (n: string) => n.padStart(2, "0");
+  return [...xml.matchAll(/<key>Hour<\/key>\s*<integer>(\d+)<\/integer>\s*<key>Minute<\/key>\s*<integer>(\d+)<\/integer>/g)]
+    .map((m) => `${pad(m[1]!)}:${pad(m[2]!)}`)
+    .sort();
+}
+
 function status() {
   for (const label of Object.values(LABELS)) {
     const printed = spawnSync("launchctl", ["print", `gui/${uid}/${label}`], { encoding: "utf8" });
@@ -333,6 +344,16 @@ function status() {
     }
     const field = (name: string) => new RegExp(`^\\s*${name} = (.*)$`, "m").exec(printed.stdout)?.[1] ?? "?";
     console.log(`${label}: loaded · state ${field("state")} · runs ${field("runs")} · last exit ${field("last exit code")}`);
+  }
+  // The publish job carries the calendar's times from when it was installed.
+  const installed = existsSync(join(AGENTS, `${LABELS.publish}.plist`))
+    ? installedTimes(readFileSync(join(AGENTS, `${LABELS.publish}.plist`), "utf8"))
+    : null;
+  const wanted = publishTimes(loadCalendar(), todayInVietnam(Date.now()));
+  if (installed) {
+    const missing = wanted.filter((t) => !installed.includes(t));
+    console.log(`publish runs at ${installed.join(", ") || "no fixed time"}; the calendar posts at ${wanted.join(", ")}`);
+    if (missing.length) console.log(`! nothing publishes at ${missing.join(", ")}: npx tsx scripts/tiktok-auto.ts install`);
   }
   const today = todayInVietnam(Date.now());
   for (const job of ["render", "draft", "publish"]) {
@@ -350,7 +371,7 @@ async function main() {
   if (command !== "render" && command !== "draft" && command !== "publish") {
     throw new Error("commands: render, draft, publish, install, uninstall, status (see the top of scripts/tiktok-auto.ts)");
   }
-  // Every ten minutes, mostly with nothing to do: no log, no lock, no notification then.
+  // At a slot with nothing due (or Meta not connected): no log, no lock, no notification.
   if (command === "publish" && !publishDue()) return;
   mkdirSync(LOG_DIR, { recursive: true });
   log = createWriteStream(join(LOG_DIR, `${todayInVietnam(Date.now())}-${command}.log`), { flags: "a" });

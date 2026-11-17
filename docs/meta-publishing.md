@@ -8,8 +8,10 @@ the emulator). Manage everything at **http://localhost:5195/posting** under `npm
 ## What runs
 
 - `npm run tiktok -- publish-due`: publishes every post whose time has come (up to 6 hours late) on each
-  connected platform. launchd runs it every 10 minutes (`com.kinemedia.tiktok-publish`, installed by
-  `npx tsx scripts/tiktok-auto.ts install`). It writes no log and shows no notification when nothing is due.
+  connected platform. launchd runs it at the calendar's post times (`com.kinemedia.tiktok-publish`,
+  installed by `npx tsx scripts/tiktok-auto.ts install`, which reads the times from the calendar: run it
+  again when they change, and once the opening burst is over; `tiktok-auto.ts status` says when they
+  no longer match). A Mac asleep at a slot publishes when it wakes. It writes no log and shows no notification when nothing is due.
 - `npm run tiktok -- publish <post> [--platform facebook|instagram|all] [--dry-run]`: one post, now.
   The page's **Publish now** and **Retry** buttons run this.
 - A failure is retried by the job up to 3 times, then waits on the page with Meta's own message.

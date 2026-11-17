@@ -16,6 +16,7 @@ import {
   exportConflicts,
   recordExport,
   postsToPublish,
+  publishTimes,
   isPostLevel,
   carouselSlides,
   captionForPlatform,
@@ -428,6 +429,20 @@ describe("publishing on Facebook and Instagram", () => {
     expect(postsToPublish(cal, at("19:10"), "facebook").map((d) => d.day)).toEqual([4, 6]);
     // Each platform keeps its own track.
     expect(postsToPublish(cal, at("19:10"), "instagram").map((d) => d.day)).toEqual([1, 2, 4, 5, 6, 7]);
+  });
+
+  it("runs the publish job at each slot still to come, and the daily time when none is", () => {
+    const later = (n: number, date: string, time: string) => post(n, time, { date });
+    const cal = calendar([
+      later(1, "2026-11-15", "11:30"),
+      later(2, "2026-11-16", "21:30"),
+      later(3, "2026-11-16", "11:30"),
+      later(4, "2026-11-17", "19:00"),
+      later(5, "2026-11-18", "19:00"),
+    ]);
+    expect(publishTimes(cal, "2026-11-16")).toEqual(["11:30", "19:00", "21:30"]);
+    expect(publishTimes(cal, "2026-11-17")).toEqual(["19:00"]);
+    expect(publishTimes(cal, "2026-12-01")).toEqual(["19:00"]);
   });
 
   it("posts a platform's own caption when it has one", () => {

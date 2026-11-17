@@ -540,6 +540,22 @@ export function postTimeMs(day: Pick<CalendarDay, "date" | "time">, fallbackTime
 }
 
 /**
+ * The times of day the publish job runs at: every slot a post dated today or later goes out
+ * at. Days already gone are left out, so the burst's extra slots drop off once it is over
+ * and the job is reinstalled. Never empty: a calendar with nothing left still runs at its
+ * daily time.
+ * @param calendar - the calendar
+ * @param today - today's date in Vietnam, YYYY-MM-DD
+ * @returns HH:MM times, earliest first, each once
+ * @pure true
+ */
+export function publishTimes(calendar: Pick<Calendar, "days" | "postTime">, today: string): string[] {
+  const times = new Set(calendar.days.filter((d) => d.date >= today).map((d) => d.time ?? calendar.postTime));
+  if (!times.size) times.add(calendar.postTime);
+  return [...times].sort();
+}
+
+/**
  * The posts an unattended run should save as drafts now: every one dated today (Vietnam)
  * or later that goes out within `hours`. A post whose time has already passed today is
  * still drafted, since a late post beats none; days before today are overdue, not due.
