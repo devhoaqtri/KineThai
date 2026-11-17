@@ -17,6 +17,24 @@ the emulator). Manage everything at **http://localhost:5195/posting** under `npm
 - A failure is retried by the job up to 3 times, then waits on the page with Meta's own message.
 - What went out is recorded in `scripts/data/exported-words.json`, so the word is never planned again.
 
+## Songs on Facebook Reels
+
+The clips render silent, and Meta's Reels API takes no music of its own, so a song is mixed into a
+copy of the clip before upload (`scripts/lib/music-mix.ts`: video copied untouched, the song looped to
+the clip's length, faded, levelled to -14 LUFS, written to `<clip>.facebook.mp4`). Instagram posts
+carousels and TikTok adds its sound in the app, so only Facebook carries one.
+
+- Download tracks from Meta's Sound Collection (Meta Business Suite, signed in as the Page) into
+  `~/KineMedia-tiktok/sounds/` (or the calendar's `soundsDir`). The file name is the title shown.
+- The 07:00 job runs `npm run tiktok -- music-due`: each Facebook post due within 24 hours gets the
+  least recently used song, mixed in, as a **proposal**. A proposed song holds the post: it does not go
+  out until accepted.
+- On `/posting`, the post's **♪ Song** line picks another track, sets where in it to start, **Mix**es it
+  again, plays it ("With song" under the player) and **Accept**s it. "No music" is a choice too. Accepting
+  after the post's time has passed publishes it at once (within the 6-hour grace).
+- By hand: `npm run tiktok -- music 8 [--song <file|none>] [--start 12]`, then `music accept 8`.
+- With an empty sounds folder nothing is proposed and posts go out silent, as before.
+
 ## One-time setup (about 15 minutes, all by you, in a browser)
 
 1. **Instagram professional account.** In the Instagram app: Settings → Account type and tools →

@@ -20,6 +20,12 @@
  *             (scripts/lib/meta-publish.ts); what the /posting page's buttons run
  *   publish-due  publish every post whose slot has come on Facebook and Instagram (the
  *             scheduled job, scripts/tiktok-auto.ts publish); quiet when nothing is due
+ *   music     the song under a post's Facebook Reel (scripts/lib/music-mix.ts): `music 8`
+ *             proposes one from the sounds folder and mixes it in, `--song <file|none>` and
+ *             `--start <s>` choose, `music accept 8` lets the post go out with it (and
+ *             publishes at once when its slot has passed); a proposed song holds the post
+ *   music-due  propose a song for every Facebook post due within --hours (default 24) that
+ *             has none, when the sounds folder has any (the morning job runs it)
  *   meta-setup  turn META_USER_TOKEN (Graph API Explorer) into the Page's lasting token and
  *             the linked Instagram account, written to .env.local
  *   exported  the words that have already gone out anywhere (scripts/data/exported-words.json),
@@ -62,6 +68,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
 import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, writeEnvLocal } from "./lib/meta-publish";
+import { SOUNDS_DIR, listSongs, mixSong, songTitle } from "./lib/music-mix";
 import { renderCarousel } from "./render-carousel";
 import { siteAddress, withScheme } from "../src/features/vocabulary/lib/target-language";
 import {
@@ -91,6 +98,11 @@ import {
   META_PLATFORMS,
   captionForPlatform,
   postsToPublish,
+  postsAwaitingMusic,
+  musicHolds,
+  mixedClipPath,
+  pickSong,
+  postTimeMs,
   isPostLevel,
   MIN_POST_LEVEL,
   carouselSlides,
@@ -802,6 +814,10 @@ async function publishDay(dayNumber: number, platform: MetaPlatform, dryRun: boo
   // Instagram posts the finished pages as a carousel, never the video; Facebook posts the Reel.
   const images = platform === "instagram" ? carouselImages(day) : null;
   if (!images && !day.clip) throw new Error(`post ${dayNumber} has no clip yet: npm run tiktok -- render --day ${dayNumber}`);
+  if (musicHolds(day, platform)) {
+    throw new Error(`post ${dayNumber}'s song is not accepted yet: accept it on /posting or run npm run tiktok -- music accept ${dayNumber}`);
+  }
+  const video = images ? null : videoFor(day, platform);
   const config = { ...loadMetaConfig(ROOT), ...(dryRun ? { dryRun: true } : {}) };
   console.log(`\n── ${platform} · post ${day.day} (${day.date} ${day.time ?? ""}) · “${day.word}”${config.dryRun ? " · dry run" : ""}`);
   if (!config.dryRun) {
@@ -819,7 +835,7 @@ async function publishDay(dayNumber: number, platform: MetaPlatform, dryRun: boo
       : await publishReel({
           config,
           platform,
-          file: expandHome(day.clip!),
+          file: video!,
           caption: captionForPlatform(day, platform),
           coverMs: coverMsOf(day),
           log,
@@ -846,6 +862,143 @@ async function publishDay(dayNumber: number, platform: MetaPlatform, dryRun: boo
   }
 }
 
+/**
+ * The video a platform uploads: the clip as rendered, or its mix with the accepted song,
+ * mixed again when the file is gone (a clip renamed when the schedule moved).
+ */
+function videoFor(day: CalendarDay, platform: MetaPlatform): string {
+  const clip = expandHome(day.clip!);
+  const music = day.platforms?.[platform]?.music;
+  if (!music?.song) return clip;
+  const out = mixedClipPath(clip, platform);
+  if (!existsSync(out)) {
+    console.log(`  mixing “${songTitle(music.song)}” into the clip again (no mix on disk)`);
+    mixSong({ clip, song: music.song, startSec: music.startSec, out, soundsDir: soundsDirOf(loadCalendar()) });
+  }
+  return out;
+}
+
+const soundsDirOf = (calendar: Calendar) => calendar.soundsDir ?? SOUNDS_DIR;
+/** Songs carry Facebook only: Instagram posts carousels, TikTok adds its own sound in the app. */
+const MUSIC_PLATFORM: MetaPlatform = "facebook";
+
+/** Every song earlier posts carry on a platform, for pickSong. */
+function songsUsed(calendar: Calendar, platform: MetaPlatform): { song: string; day: number }[] {
+  return calendar.days.flatMap((d) => {
+    const song = d.platforms?.[platform]?.music?.song;
+    return song ? [{ song, day: d.day }] : [];
+  });
+}
+
+/**
+ * Give a post a song (or none) and mix it in, as a proposal the admin then accepts.
+ * @param song - a file in the sounds folder, null for no music, or undefined to pick one
+ * @returns The song set
+ */
+function proposeSong(dayNumber: number, song: string | null | undefined, startSec: number): string | null {
+  const calendar = loadCalendar();
+  const day = calendar.days.find((d) => d.day === dayNumber);
+  if (!day) throw new Error(`there is no post ${dayNumber}`);
+  if (!day.clip) throw new Error(`post ${dayNumber} has no clip yet`);
+  const track = day.platforms?.[MUSIC_PLATFORM];
+  if (track?.status === "posted" || track?.status === "publishing") throw new Error(`post ${dayNumber} is ${track.status} on ${MUSIC_PLATFORM}`);
+  const songs = listSongs(soundsDirOf(calendar));
+  const chosen = song === undefined ? pickSong(songs, songsUsed(calendar, MUSIC_PLATFORM), dayNumber) : song;
+  if (song === undefined && !chosen) throw new Error(`no songs in ${soundsDirOf(calendar)}: download tracks from Meta's Sound Collection there`);
+  if (chosen && !songs.includes(chosen)) throw new Error(`no song “${chosen}” in ${soundsDirOf(calendar)}`);
+  if (chosen) {
+    const out = mixedClipPath(expandHome(day.clip), MUSIC_PLATFORM);
+    mixSong({ clip: expandHome(day.clip), song: chosen, startSec, out, soundsDir: soundsDirOf(calendar) });
+  }
+  updateTrack(dayNumber, MUSIC_PLATFORM, (t) => {
+    t.music = { song: chosen, startSec: chosen ? startSec : 0, status: "proposed", at: now() };
+  });
+  return chosen;
+}
+
+/** Let a post go out with its song; publish it now when its slot has already passed. */
+async function acceptSong(dayNumber: number) {
+  const day = loadCalendar().days.find((d) => d.day === dayNumber);
+  if (!day) throw new Error(`there is no post ${dayNumber}`);
+  const music = day.platforms?.[MUSIC_PLATFORM]?.music;
+  if (!music) throw new Error(`post ${dayNumber} has no song to accept: npm run tiktok -- music ${dayNumber}`);
+  updateTrack(dayNumber, MUSIC_PLATFORM, (t) => {
+    t.music = { ...music, status: "accepted", at: now() };
+  });
+  console.log(`✓ post ${dayNumber} goes out on ${MUSIC_PLATFORM} with ${music.song ? `“${songTitle(music.song)}”` : "no music"}`);
+  const calendar = loadCalendar();
+  const late = postsToPublish(calendar, Date.now(), MUSIC_PLATFORM).some((d) => d.day === dayNumber);
+  if (late && !metaReady(loadMetaConfig(ROOT), MUSIC_PLATFORM)) {
+    console.log("  its time has passed: publishing now");
+    if (!(await publishDay(dayNumber, MUSIC_PLATFORM, false))) process.exitCode = 1;
+  }
+}
+
+/** `music <post> [--song <file|none>] [--start <s>]` and `music accept <post>`. */
+async function music() {
+  if (positional[0] === "accept") {
+    const n = Number(positional[1]);
+    if (!Number.isInteger(n)) throw new Error("usage: music accept <post>");
+    return acceptSong(n);
+  }
+  const n = Number(positional[0]);
+  if (!Number.isInteger(n)) {
+    const calendar = loadCalendar();
+    const songs = listSongs(soundsDirOf(calendar));
+    console.log(`${songs.length} song(s) in ${soundsDirOf(calendar)}`);
+    for (const song of songs) console.log(`  ${song}`);
+    console.log("\nusage: music <post> [--song <file|none>] [--start <s>] · music accept <post>");
+    return;
+  }
+  const songFlag = flag("song");
+  const start = Number(flag("start") ?? 0);
+  if (!(start >= 0)) throw new Error("--start is seconds into the song");
+  const chosen = proposeSong(n, songFlag === undefined ? undefined : songFlag === "none" ? null : songFlag, start);
+  const day = loadCalendar().days.find((d) => d.day === n)!;
+  console.log(
+    chosen
+      ? `✓ post ${n} “${day.word}”: “${songTitle(chosen)}” from ${start}s, mixed into ${mixedClipPath(day.clip!, MUSIC_PLATFORM)}`
+      : `✓ post ${n} “${day.word}”: no music`,
+  );
+  console.log(`  it waits for: npm run tiktok -- music accept ${n} (or Accept on /posting)`);
+}
+
+/** Propose a song for every Facebook post due within --hours that has none. */
+function musicDue() {
+  const hours = Number(flag("hours") ?? 24);
+  if (!(hours > 0)) throw new Error("--hours is a positive number");
+  const calendar = loadCalendar();
+  if (!listSongs(soundsDirOf(calendar)).length) {
+    console.log(`No songs in ${soundsDirOf(calendar)}; Facebook posts go out silent.`);
+    return;
+  }
+  const nowMs = Date.now();
+  const due = calendar.days.filter((d) => {
+    const slot = postTimeMs(d, calendar.postTime);
+    const track = d.platforms?.[MUSIC_PLATFORM];
+    return (
+      d.clip &&
+      isPostLevel(d.level) &&
+      slot > nowMs - 3_600_000 &&
+      slot <= nowMs + hours * 3_600_000 &&
+      !track?.music &&
+      (!track || track.status === "pending")
+    );
+  });
+  const problems: string[] = [];
+  for (const day of due) {
+    try {
+      const song = proposeSong(day.day, undefined, 0);
+      console.log(`✓ post ${day.day} “${day.word}” (${day.date} ${day.time ?? ""}): “${songTitle(song!)}”`);
+    } catch (error) {
+      problems.push(`post ${day.day}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  if (!due.length) console.log(`Every Facebook post due within ${hours}h already has its song.`);
+  else console.log(`\nAccept them on /posting, or: npm run tiktok -- music accept <post>`);
+  if (problems.length) throw new Error(problems.join("\n  "));
+}
+
 /** The platforms a --platform flag names (both when it says all or nothing). */
 function platformsFlag(): MetaPlatform[] {
   const wanted = flag("platform") ?? "all";
@@ -869,14 +1022,19 @@ async function publishDue() {
   const config = loadMetaConfig(ROOT);
   let failed = 0;
   let sent = 0;
+  let waiting = 0;
   for (const platform of META_PLATFORMS) {
     if (!dryRun && metaReady(config, platform)) continue; // not connected yet
     for (const day of postsToPublish(loadCalendar(), Date.now(), platform)) {
       if (await publishDay(day.day, platform, dryRun)) sent += 1;
       else failed += 1;
     }
+    for (const day of postsAwaitingMusic(loadCalendar(), Date.now(), platform)) {
+      console.log(`… ${platform} · post ${day.day} “${day.word}” waits for its song to be accepted on /posting`);
+      waiting += 1;
+    }
   }
-  if (sent || failed) console.log(`\npublished ${sent}, failed ${failed}`);
+  if (sent || failed || waiting) console.log(`\npublished ${sent}, failed ${failed}, waiting on a song ${waiting}`);
   if (failed) process.exitCode = 1;
 }
 
@@ -955,8 +1113,12 @@ async function main() {
       return publishDue();
     case "meta-setup":
       return metaSetup();
+    case "music":
+      return music();
+    case "music-due":
+      return musicDue();
     default:
-      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, meta-setup (see the top of scripts/tiktok.ts)");
+      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, music, music-due, meta-setup (see the top of scripts/tiktok.ts)");
   }
 }
 

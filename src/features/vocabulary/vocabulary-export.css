@@ -2867,6 +2867,64 @@ body:has(.vocab-intro) .vocab-resume {
   color: var(--posting-warn);
   font-size: 12px;
 }
+.posting-clip-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 6px;
+}
+.posting .posting-clip-tabs button {
+  padding: 4px 8px;
+  border-color: transparent;
+  background: none;
+  color: var(--posting-dim);
+  font-size: 12px;
+}
+.posting .posting-clip-tabs button[aria-selected="true"] {
+  background: var(--posting-line);
+  color: var(--posting-ink);
+}
+/* A Facebook post's song: picked, mixed, then accepted (scripts/lib/music-mix.ts). */
+.posting-song {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--posting-line);
+}
+.posting-song select,
+.posting-song input {
+  min-width: 0;
+  max-width: 100%;
+  padding: 5px 8px;
+  border: 1px solid var(--posting-line);
+  border-radius: 8px;
+  background: var(--posting-bg);
+  color: var(--posting-ink);
+  font: inherit;
+  font-size: 13px;
+}
+.posting-song select {
+  flex: 1 1 180px;
+}
+.posting-song-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--posting-dim);
+  font-size: 12px;
+}
+.posting-song-start input {
+  width: 4.5em;
+}
+.posting-song-empty {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--posting-line);
+  color: var(--posting-dim);
+  font-size: 12px;
+}
 @media (max-width: 560px) {
   .posting-card {
     grid-template-columns: minmax(0, 1fr);

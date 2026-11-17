@@ -16,6 +16,9 @@ import {
   exportConflicts,
   recordExport,
   postsToPublish,
+  postsAwaitingMusic,
+  mixedClipPath,
+  pickSong,
   publishTimes,
   isPostLevel,
   carouselSlides,
@@ -443,6 +446,36 @@ describe("publishing on Facebook and Instagram", () => {
     expect(publishTimes(cal, "2026-11-16")).toEqual(["11:30", "19:00", "21:30"]);
     expect(publishTimes(cal, "2026-11-17")).toEqual(["19:00"]);
     expect(publishTimes(cal, "2026-12-01")).toEqual(["19:00"]);
+  });
+
+  it("holds a post with a proposed song until it is accepted, on that platform only", () => {
+    const song = (status: "proposed" | "accepted", name: string | null = "Upbeat.mp3") => ({
+      platforms: { facebook: { status: "pending" as const, music: { song: name, startSec: 0, status, at: "x" } } },
+    });
+    const cal = calendar([
+      post(1, "19:00", song("proposed")),
+      post(2, "19:00", song("accepted")),
+      post(3, "19:00", song("accepted", null)),
+      post(4, "19:00"),
+    ]);
+    expect(postsToPublish(cal, at("19:00"), "facebook").map((d) => d.day)).toEqual([2, 3, 4]);
+    expect(postsAwaitingMusic(cal, at("19:00"), "facebook").map((d) => d.day)).toEqual([1]);
+    expect(postsAwaitingMusic(cal, at("18:59"), "facebook")).toEqual([]);
+    expect(postsToPublish(cal, at("19:00"), "instagram").map((d) => d.day)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("writes the mix beside the clip, named for the platform", () => {
+    expect(mixedClipPath("/c/day-008-ceiling.mp4", "facebook")).toBe("/c/day-008-ceiling.facebook.mp4");
+  });
+
+  it("proposes an unused song first, then the one used longest ago, and varies ties by post", () => {
+    const songs = ["a.mp3", "b.mp3", "c.mp3"];
+    expect(pickSong([], [], 1)).toBeNull();
+    expect(pickSong(songs, [{ song: "a.mp3", day: 1 }, { song: "b.mp3", day: 2 }], 3)).toBe("c.mp3");
+    expect(pickSong(songs, [{ song: "a.mp3", day: 4 }, { song: "b.mp3", day: 2 }, { song: "c.mp3", day: 3 }], 5)).toBe("b.mp3");
+    expect(pickSong(songs, [], 8)).not.toBe(pickSong(songs, [], 9));
+    // A post's own song does not count against it when it is picked again.
+    expect(pickSong(["a.mp3", "b.mp3"], [{ song: "a.mp3", day: 7 }, { song: "b.mp3", day: 6 }], 7)).toBe("a.mp3");
   });
 
   it("posts a platform's own caption when it has one", () => {

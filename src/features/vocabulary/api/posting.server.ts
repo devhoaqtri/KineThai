@@ -3,22 +3,28 @@
  * edited in place (scripts/data/tiktok-calendar.json), clips streamed for preview, and
  * publishing handed to the same command the scheduled job runs
  * (`npx tsx scripts/tiktok.ts publish <post> --platform …`), in the background, since a
- * Reel takes a minute or two to upload and process. The route that calls this answers 404
+ * Reel takes a minute or two to upload and process. A Facebook post's song (scripts/lib/
+ * music-mix.ts) is mixed through `tiktok.ts music`, waited on, since it takes seconds; accepting
+ * it publishes at once a post whose time has passed. The route that calls this answers 404
  * in a production build, and the build fails if this module reaches one.
  *
  * Exports: postingResponse
- * Depends on: zod, scripts/lib/tiktok-calendar, scripts/lib/meta-publish, the machine's `npx`
+ * Depends on: zod, scripts/lib/tiktok-calendar, scripts/lib/meta-publish, scripts/lib/music-mix,
+ * the machine's `npx`
  */
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { createReadStream, existsSync, mkdirSync, openSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { Readable } from "node:stream";
 import { z } from "zod";
 import { loadMetaConfig, metaReady } from "../../../../scripts/lib/meta-publish";
+import { SOUNDS_DIR, listSongs } from "../../../../scripts/lib/music-mix";
 import {
   META_PLATFORMS,
   dateOfDay,
+  mixedClipPath,
+  postsToPublish,
   todayInVietnam,
   type Calendar,
   type CalendarDay,
@@ -45,6 +51,14 @@ const actionSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("skip"), day: z.number().int().positive(), platform: platformSchema, skip: z.boolean() }),
   z.object({ action: z.literal("publish"), day: z.number().int().positive(), platform: platformSchema }),
   z.object({ action: z.literal("tiktok-posted"), day: z.number().int().positive(), url: z.string().url().max(500) }),
+  z.object({
+    action: z.literal("song"),
+    day: z.number().int().positive(),
+    /** A file in the sounds folder, or null for no music. */
+    song: z.string().min(1).max(300).nullable(),
+    startSec: z.number().min(0).max(3600),
+  }),
+  z.object({ action: z.literal("song-accept"), day: z.number().int().positive() }),
 ]);
 
 /** What the page lists: from a week back to three weeks ahead, by post. */
@@ -54,8 +68,11 @@ function listing() {
   const from = dateOfDay(today, -6);
   const to = dateOfDay(today, 22);
   const config = loadMetaConfig(ROOT);
+  const soundsDir = calendar.soundsDir ?? SOUNDS_DIR;
   return {
     today,
+    soundsDir,
+    songs: listSongs(soundsDir),
     connection: Object.fromEntries(META_PLATFORMS.map((p) => [p, metaReady(config, p)])),
     posts: calendar.days
       .filter((d) => d.date >= from && d.date <= to)
@@ -70,15 +87,17 @@ function listing() {
         url: d.url,
         caption: d.caption,
         hasClip: !!d.clip && existsSync(expandHome(d.clip)),
+        hasMix: !!d.clip && existsSync(mixedClipPath(expandHome(d.clip), "facebook")),
         durationSec: d.durationSec,
         platforms: d.platforms ?? {},
       })),
   };
 }
 
-/** The clip itself, with byte ranges so the page's player can seek. */
-function clipResponse(request: Request, day: CalendarDay | undefined): Response {
-  const file = day?.clip ? expandHome(day.clip) : null;
+/** The clip itself (or its mix with a song), with byte ranges so the page's player can seek. */
+function clipResponse(request: Request, day: CalendarDay | undefined, mix: boolean): Response {
+  const clip = day?.clip ? expandHome(day.clip) : null;
+  const file = clip && mix ? mixedClipPath(clip, "facebook") : clip;
   if (!file || !existsSync(file)) return new Response("No clip", { status: 404 });
   const size = statSync(file).size;
   const range = /bytes=(\d*)-(\d*)/.exec(request.headers.get("range") ?? "");
@@ -115,7 +134,10 @@ export async function postingResponse(request: Request): Promise<Response> {
   const url = new URL(request.url);
   if (request.method === "GET") {
     const clip = url.searchParams.get("clip");
-    if (clip) return clipResponse(request, loadCalendar().days.find((d) => d.day === Number(clip)));
+    if (clip) {
+      const mix = url.searchParams.get("mix") === "facebook";
+      return clipResponse(request, loadCalendar().days.find((d) => d.day === Number(clip)), mix);
+    }
     return Response.json(listing());
   }
   // A page on another site can reach localhost; only the posting page may change anything.
@@ -136,8 +158,43 @@ export async function postingResponse(request: Request): Promise<Response> {
     if (day.platforms?.[action.platform]?.status === "posted") {
       return Response.json({ error: "Already posted there." }, { status: 409 });
     }
+    if (day.platforms?.[action.platform]?.music?.status === "proposed") {
+      return Response.json({ error: "Accept the song first (or choose no music)." }, { status: 409 });
+    }
     startPublish(day.day, action.platform);
     return Response.json({ ok: true });
+  }
+  if (action.action === "song") {
+    // The CLI owns the mix and the proposal, so the page and the morning job agree.
+    const run = spawnSync(
+      "npx",
+      [
+        "tsx",
+        join(ROOT, "scripts/tiktok.ts"),
+        "music",
+        String(day.day),
+        "--song",
+        action.song ?? "none",
+        "--start",
+        String(action.startSec),
+      ],
+      { cwd: ROOT, encoding: "utf8", timeout: 120_000 },
+    );
+    if (run.status !== 0) {
+      const reason = /✗ (.*)/.exec(run.stderr)?.[1] ?? (run.stderr.trim() || "the mix did not finish");
+      return Response.json({ error: reason }, { status: 409 });
+    }
+    return Response.json({ ok: true });
+  }
+  if (action.action === "song-accept") {
+    const track = day.platforms?.facebook;
+    if (!track?.music) return Response.json({ error: "This post has no song to accept." }, { status: 409 });
+    track.music = { ...track.music, status: "accepted", at: new Date().toISOString() };
+    saveCalendar(calendar);
+    // Its time has passed while it waited: out it goes now, as the job would have sent it.
+    const late = postsToPublish(calendar, Date.now(), "facebook").some((d) => d.day === day.day);
+    if (late && !metaReady(loadMetaConfig(ROOT), "facebook")) startPublish(day.day, "facebook");
+    return Response.json({ ok: true, publishing: late });
   }
   if (action.action === "caption") {
     if (action.platform) {

@@ -160,6 +160,8 @@ export type Calendar = {
   seed: number;
   /** Where clips are written; outside the repo, a year is several gigabytes. */
   clipDir: string;
+  /** Where the Sound Collection tracks for Facebook's songs are; absent: music-mix SOUNDS_DIR. */
+  soundsDir?: string;
   /** Word ids swapped out of a day, so planning never brings them back. */
   excluded: string[];
   days: CalendarDay[];
@@ -658,7 +660,59 @@ export type PlatformPost = {
   at?: string | null;
   error?: string | null;
   attempts?: number;
+  /**
+   * The song laid under this platform's video (Facebook only so far). A `proposed` song
+   * holds the post until the admin accepts it on /posting; absent, the clip goes out as
+   * rendered, silent.
+   */
+  music?: PostMusic | null;
 };
+
+/**
+ * A song for one post's video: a track from Meta's Sound Collection, downloaded into the
+ * calendar's sounds folder and mixed in by scripts/lib/music-mix.ts. `song: null` accepted
+ * is the admin choosing no music for this post.
+ */
+export type PostMusic = {
+  /** The track's file name in the sounds folder, or null for none. */
+  song: string | null;
+  /** Where in the track the clip's audio starts, in seconds. */
+  startSec: number;
+  status: "proposed" | "accepted";
+  at: string;
+};
+
+/** Whether a post waits on its song: proposed and not yet accepted. @pure true */
+export function musicHolds(day: Pick<CalendarDay, "platforms">, platform: MetaPlatform): boolean {
+  return day.platforms?.[platform]?.music?.status === "proposed";
+}
+
+/**
+ * Where a post's video with its song is written: beside the clip, named for the platform.
+ * @pure true
+ */
+export function mixedClipPath(clip: string, platform: MetaPlatform): string {
+  return clip.replace(/(\.mp4)?$/i, `.${platform}.mp4`);
+}
+
+/**
+ * The song to propose for a post: one never used on that platform if any, else the one
+ * used longest ago; ties are broken by the post's number, so neighbouring posts differ.
+ * @param songs - the track file names on offer
+ * @param used - the songs earlier posts carry, with their post numbers
+ * @param day - the post's number
+ * @returns A file name, or null when there are no songs
+ * @pure true
+ */
+export function pickSong(songs: string[], used: { song: string; day: number }[], day: number): string | null {
+  if (!songs.length) return null;
+  const last = new Map<string, number>();
+  for (const u of used) if (u.day !== day) last.set(u.song, Math.max(last.get(u.song) ?? -Infinity, u.day));
+  const rank = (song: string) => last.get(song) ?? -Infinity;
+  const best = Math.min(...songs.map(rank));
+  const ties = [...songs].sort().filter((song) => rank(song) === best);
+  return ties[day % ties.length]!;
+}
 
 /** Tries the scheduled job makes at a failing post before leaving it to the admin. */
 export const MAX_PUBLISH_ATTEMPTS = 3;
@@ -670,7 +724,8 @@ export function captionForPlatform(day: CalendarDay, platform: MetaPlatform): st
 
 /**
  * The posts a platform should get now: rendered (or further along on TikTok), their slot
- * reached, at most `graceHours` late, and not posted, skipped, in flight or out of tries.
+ * reached, at most `graceHours` late, and not posted, skipped, in flight, out of tries or
+ * waiting on its song (musicHolds).
  * A post far past its slot is left alone: going out hours late in the middle of the night
  * is worse than the admin deciding.
  * @param calendar - the calendar
@@ -690,12 +745,28 @@ export function postsToPublish(
     .filter((day) => {
       if (!day.clip || day.status === "planned" || day.status === "missed") return false;
       if (!isPostLevel(day.level)) return false;
+      if (musicHolds(day, platform)) return false;
       const track = day.platforms?.[platform];
       // A run that died mid-publish leaves `publishing` behind; after half an hour it is
       // treated as a failure and tried again.
       const stale = track?.status === "publishing" && nowMs - Date.parse(track.at ?? "") > 30 * 60_000;
       const retry = (track?.status === "failed" || stale) && (track?.attempts ?? 0) < MAX_PUBLISH_ATTEMPTS;
       if (track && track.status !== "pending" && !retry) return false;
+      const slot = postTimeMs(day, calendar.postTime);
+      return slot <= nowMs && nowMs - slot <= graceHours * 3_600_000;
+    })
+    .sort((a, b) => a.day - b.day);
+}
+
+/**
+ * The posts whose slot has come on a platform but which wait on their song (musicHolds):
+ * what the publish job reports instead of publishing.
+ * @pure true
+ */
+export function postsAwaitingMusic(calendar: Calendar, nowMs: number, platform: MetaPlatform, graceHours = 6): CalendarDay[] {
+  return calendar.days
+    .filter((day) => {
+      if (!day.clip || !musicHolds(day, platform) || !isPostLevel(day.level)) return false;
       const slot = postTimeMs(day, calendar.postTime);
       return slot <= nowMs && nowMs - slot <= graceHours * 3_600_000;
     })

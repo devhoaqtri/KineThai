@@ -8,6 +8,10 @@
  * same publish command the scheduled job runs, so a post looks the same whichever started
  * it. While anything is publishing the page refreshes itself every few seconds.
  *
+ * A Facebook post can carry a song from the sounds folder (Meta's Sound Collection, laid in
+ * by scripts/lib/music-mix.ts): pick one, play the clip with it, and Accept. A proposed song
+ * holds the post until it is accepted; accepting after the post's time publishes it at once.
+ *
  * Development only (routes/posting.tsx); the build fails if this reaches a bundle.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -26,6 +30,7 @@ type Track = {
   at?: string | null;
   error?: string | null;
   attempts?: number;
+  music?: { song: string | null; startSec: number; status: "proposed" | "accepted" } | null;
 };
 
 type Post = {
@@ -39,11 +44,20 @@ type Post = {
   url: string | null;
   caption: string;
   hasClip: boolean;
+  hasMix: boolean;
   durationSec: number | null;
   platforms: Partial<Record<Platform, Track>>;
 };
 
-type Listing = { today: string; connection: Record<Platform, string | null>; posts: Post[] };
+type Listing = {
+  today: string;
+  connection: Record<Platform, string | null>;
+  soundsDir: string;
+  songs: string[];
+  posts: Post[];
+};
+
+const songTitle = (file: string) => file.replace(/\.[^.]+$/, "");
 
 const API = "/api/dev/posting";
 
@@ -99,8 +113,15 @@ function PlatformRow({
         {!live && track.status !== "publishing" && (
           <button
             type="button"
-            disabled={busy || !post.hasClip || !!blocked || track.status === "skipped"}
-            title={blocked ?? (!post.hasClip ? "No clip yet" : "Publish this post now")}
+            disabled={busy || !post.hasClip || !!blocked || track.status === "skipped" || track.music?.status === "proposed"}
+            title={
+              blocked ??
+              (!post.hasClip
+                ? "No clip yet"
+                : track.music?.status === "proposed"
+                  ? "Accept the song first"
+                  : "Publish this post now")
+            }
             onClick={() => run({ action: "publish", day: post.day, platform })}
           >
             {track.status === "failed" ? "Retry" : "Publish now"}
@@ -118,6 +139,109 @@ function PlatformRow({
         )}
       </span>
       {track.error && track.status === "failed" && <p className="posting-error">{track.error}</p>}
+    </div>
+  );
+}
+
+/**
+ * The song under a post's Facebook Reel: which track and from where, mixed on Mix, then
+ * Accept. Read-only once the post is live.
+ */
+function SongRow({
+  post,
+  songs,
+  soundsDir,
+  onDone,
+}: {
+  post: Post;
+  songs: string[];
+  soundsDir: string;
+  onDone: (error: string | null) => void;
+}) {
+  const track: Track = post.platforms.facebook ?? { status: "pending" };
+  const music = track.music ?? null;
+  const current = music ? (music.song ?? "none") : "";
+  const [choice, setChoice] = useState(current);
+  const [start, setStart] = useState(String(music?.startSec ?? 0));
+  const [busy, setBusy] = useState<"mix" | "accept" | null>(null);
+  useEffect(() => setChoice(current), [current]);
+  useEffect(() => setStart(String(music?.startSec ?? 0)), [music?.startSec]);
+  const locked = track.status === "posted" || track.status === "publishing";
+  if (locked && !music) return null;
+  if (!songs.length && !music) {
+    return (
+      <p className="posting-song-empty">
+        ♪ No songs yet: download tracks from Meta's Sound Collection into <code>{soundsDir}</code> and Facebook
+        posts get one to accept.
+      </p>
+    );
+  }
+  const changed = choice !== current || (choice !== "none" && Number(start) !== (music?.startSec ?? 0));
+  const run = async (kind: "mix" | "accept", body: object) => {
+    setBusy(kind);
+    onDone(await act(body));
+    setBusy(null);
+  };
+  return (
+    <div className="posting-song" data-status={music?.status ?? "none"}>
+      <span className="posting-track-name">♪ Song</span>
+      {locked ? (
+        <span>{music?.song ? `${songTitle(music.song)} · from ${music.startSec}s` : "no music"}</span>
+      ) : (
+        <>
+          <select value={choice} onChange={(event) => setChoice(event.target.value)} aria-label="Song for Facebook">
+            {!music && <option value="">Choose a song…</option>}
+            {songs.map((song) => (
+              <option key={song} value={song}>
+                {songTitle(song)}
+              </option>
+            ))}
+            <option value="none">No music</option>
+          </select>
+          {choice !== "none" && choice !== "" && (
+            <label className="posting-song-start">
+              from
+              <input
+                type="number"
+                min={0}
+                step={1}
+                value={start}
+                onChange={(event) => setStart(event.target.value)}
+                aria-label="Start the song this many seconds in"
+              />
+              s
+            </label>
+          )}
+          <span className="posting-track-actions">
+            {(changed || !music) && (
+              <button
+                type="button"
+                disabled={!!busy || choice === "" || !post.hasClip || !(Number(start) >= 0)}
+                onClick={() =>
+                  run("mix", {
+                    action: "song",
+                    day: post.day,
+                    song: choice === "none" ? null : choice,
+                    startSec: Number(start) || 0,
+                  })
+                }
+              >
+                {busy === "mix" ? "Mixing…" : choice === "none" ? "Set" : "Mix"}
+              </button>
+            )}
+            {music?.status === "proposed" && !changed && (
+              <button type="button" disabled={!!busy} onClick={() => run("accept", { action: "song-accept", day: post.day })}>
+                Accept
+              </button>
+            )}
+          </span>
+        </>
+      )}
+      {music && (
+        <span className="posting-chip" data-status={music.status === "accepted" ? "posted" : "pending"}>
+          {music.status === "accepted" ? "accepted" : "waiting for you"}
+        </span>
+      )}
     </div>
   );
 }
@@ -160,8 +284,22 @@ function TikTokRow({ post, onDone }: { post: Post; onDone: (error: string | null
 }
 
 /** A post: clip, word, caption (shared, or per platform) and its three tracks. */
-function PostCard({ post, connection, onChanged }: { post: Post; connection: Listing["connection"]; onChanged: (error: string | null) => void }) {
+function PostCard({
+  post,
+  listing,
+  onChanged,
+}: {
+  post: Post;
+  listing: Listing;
+  onChanged: (error: string | null) => void;
+}) {
+  const { connection } = listing;
   const [captionFor, setCaptionFor] = useState<"all" | Platform>("all");
+  const song = post.platforms.facebook?.music?.song ?? null;
+  const withSong = !!song && post.hasMix;
+  // The music track's own time, so a remix reloads the player.
+  const musicAt = post.platforms.facebook?.music ? `${song}:${post.platforms.facebook.music.startSec}` : "";
+  const [hearSong, setHearSong] = useState(true);
   const shown = captionFor === "all" ? post.caption : post.platforms[captionFor]?.caption || post.caption;
   const [draft, setDraft] = useState(shown);
   useEffect(() => setDraft(shown), [shown]);
@@ -170,7 +308,25 @@ function PostCard({ post, connection, onChanged }: { post: Post; connection: Lis
     <article className="posting-card">
       <div className="posting-clip">
         {post.hasClip ? (
-          <video src={`${API}?clip=${post.day}`} controls preload="metadata" playsInline />
+          <>
+            <video
+              key={withSong && hearSong ? `mix:${musicAt}` : "clip"}
+              src={`${API}?clip=${post.day}${withSong && hearSong ? `&mix=facebook&v=${encodeURIComponent(musicAt)}` : ""}`}
+              controls
+              preload="metadata"
+              playsInline
+            />
+            {withSong && (
+              <div className="posting-clip-tabs" role="tablist" aria-label="Play">
+                <button type="button" role="tab" aria-selected={hearSong} onClick={() => setHearSong(true)}>
+                  With song
+                </button>
+                <button type="button" role="tab" aria-selected={!hearSong} onClick={() => setHearSong(false)}>
+                  As rendered
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <span className="posting-noclip">No clip yet{post.status === "planned" ? " — the 03:00 job renders it" : ""}</span>
         )}
@@ -227,6 +383,11 @@ function PostCard({ post, connection, onChanged }: { post: Post; connection: Lis
         {PLATFORMS.map((p) => (
           <PlatformRow key={p.id} post={post} platform={p.id} label={p.label} blocked={connection[p.id]} onDone={onChanged} />
         ))}
+        {/* A song is chosen ahead of the post; past and unrendered posts only show one they carry. */}
+        {(post.platforms.facebook?.music ||
+          (post.hasClip && post.date >= listing.today && post.platforms.facebook?.status !== "skipped")) && (
+          <SongRow post={post} songs={listing.songs} soundsDir={listing.soundsDir} onDone={onChanged} />
+        )}
       </div>
     </article>
   );
@@ -303,7 +464,7 @@ export function PostingPage() {
         <section key={date} className="posting-day" data-past={listing && date < listing.today ? "" : undefined}>
           <h2>{listing && dayLabel(date, listing.today)}</h2>
           {posts.map((post) => (
-            <PostCard key={post.day} post={post} connection={listing!.connection} onChanged={onChanged} />
+            <PostCard key={post.day} post={post} listing={listing!} onChanged={onChanged} />
           ))}
         </section>
       ))}
