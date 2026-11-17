@@ -4,10 +4,10 @@
  *   render     render the next --days planned posts (default 6), starting the dev server
  *              for the recording when none answers and stopping it afterwards
  *   draft      render any post due within --hours (default 24) that has no clip yet, propose
- *              a song for each due Facebook post when the sounds folder has any (tiktok.ts
- *              music-due; it then waits for Accept on /posting), then save every due post as
+ *              a song for each due Facebook and YouTube post when that platform's sounds folder
+ *              has any (tiktok.ts music-due; it then waits for Accept on /posting), then save every due post as
  *              a TikTok draft in the emulator (tiktok.ts draft-due)
- *   publish    post on Facebook and Instagram every post whose time has come (tiktok.ts
+ *   publish    post on Facebook, Instagram and YouTube every post whose time has come (tiktok.ts
  *              publish-due); launchd runs it at the calendar's post times (publishTimes),
  *              and it does nothing, writing no log and showing no notification, while Meta
  *              is not connected or nothing is due
@@ -43,14 +43,17 @@ import { dirname, join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { loadMetaConfig, metaReady } from "./lib/meta-publish";
+import { loadYouTubeConfig, youtubeReady } from "./lib/youtube-publish";
 import {
-  META_PLATFORMS,
+  MUSIC_PLATFORMS,
+  PUBLISH_PLATFORMS,
   postsAwaitingMusic,
   postsToDraft,
   postsToPublish,
   publishTimes,
   todayInVietnam,
   type Calendar,
+  type PublishPlatform,
 } from "./lib/tiktok-calendar";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -216,15 +219,17 @@ async function draftJob() {
     });
   }
   // Songs for Facebook first: they wait on the admin, so the sooner they are proposed the better.
-  const songsBefore = new Set(loadCalendar().days.filter((d) => d.platforms?.facebook?.music).map((d) => d.day));
+  const withSongs = (calendar: Calendar) =>
+    calendar.days.flatMap((d) => MUSIC_PLATFORMS.filter((p) => d.platforms?.[p]?.music).map((p) => `#${d.day} ${p}`));
+  const songsBefore = new Set(withSongs(loadCalendar()));
   const musicCode = await tiktok(["music-due", "--hours", hours]);
-  const songs = loadCalendar().days.filter((d) => d.platforms?.facebook?.music && !songsBefore.has(d.day));
-  if (songs.length) notify("Songs to accept", `${songs.map((d) => `#${d.day}`).join(", ")}: listen and accept on /posting before their time.`);
+  const songs = withSongs(loadCalendar()).filter((s) => !songsBefore.has(s));
+  if (songs.length) notify("Songs to accept", `${songs.join(", ")}: listen and accept on /posting before their time.`);
   const before = new Set(loadCalendar().days.filter((d) => d.status === "drafted").map((d) => d.day));
   const code = await tiktok(["draft-due", "--hours", hours]);
   const drafted = loadCalendar().days.filter((d) => d.status === "drafted" && !before.has(d.day));
   if (code !== 0) throw new Error(`not every due post was drafted${drafted.length ? ` (drafted ${drafted.map((d) => d.day).join(", ")})` : ""}`);
-  if (musicCode !== 0) throw new Error("a song could not be mixed into a due Facebook post; see the log");
+  if (musicCode !== 0) throw new Error("a song could not be mixed into a due post; see the log");
   notify(
     "TikTok drafts ready",
     drafted.length
@@ -233,13 +238,17 @@ async function draftJob() {
   );
 }
 
+/** Whether a platform is connected: Meta's Page token, or YouTube's refresh token. */
+function connected(platform: PublishPlatform): boolean {
+  return platform === "youtube" ? !youtubeReady(loadYouTubeConfig(ROOT)) : !metaReady(loadMetaConfig(ROOT), platform);
+}
+
 /** Whether any connected platform has a post due now: the publish job's quiet check. */
 function publishDue(): boolean {
-  const config = loadMetaConfig(ROOT);
   const calendar = loadCalendar();
-  return META_PLATFORMS.some(
+  return PUBLISH_PLATFORMS.some(
     (p) =>
-      !metaReady(config, p) &&
+      connected(p) &&
       (postsToPublish(calendar, Date.now(), p).length > 0 || postsAwaitingMusic(calendar, Date.now(), p).length > 0),
   );
 }
@@ -247,13 +256,13 @@ function publishDue(): boolean {
 async function publishJob() {
   const code = await tiktok(["publish-due"]);
   const posted = loadCalendar().days.flatMap((d) =>
-    META_PLATFORMS.filter((p) => d.platforms?.[p]?.status === "posted" && (d.platforms[p]!.at ?? "") > runStarted)
+    PUBLISH_PLATFORMS.filter((p) => d.platforms?.[p]?.status === "posted" && (d.platforms[p]!.at ?? "") > runStarted)
       .map((p) => `#${d.day} ${p}`),
   );
   if (code !== 0) throw new Error(`publishing failed${posted.length ? ` (posted ${posted.join(", ")})` : ""}; see /posting`);
-  if (posted.length) notify("Posted on Facebook / Instagram", posted.join(", "));
+  if (posted.length) notify("Posted", posted.join(", "));
   const calendar = loadCalendar();
-  const waiting = META_PLATFORMS.flatMap((p) => postsAwaitingMusic(calendar, Date.now(), p).map((d) => `#${d.day} ${p}`));
+  const waiting = PUBLISH_PLATFORMS.flatMap((p) => postsAwaitingMusic(calendar, Date.now(), p).map((d) => `#${d.day} ${p}`));
   // Accepting publishes a post whose time has passed at once, so nothing else need wait.
   if (waiting.length) notify("Waiting for its song", `${waiting.join(", ")}: accept the song on /posting and it goes out.`);
 }

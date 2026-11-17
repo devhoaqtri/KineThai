@@ -45,7 +45,7 @@ export type MetaConfig = {
 };
 
 /** KEY=VALUE lines of an env file (quotes stripped), or nothing when it is missing. */
-function readEnvFile(file: string): Record<string, string> {
+export function readEnvFile(file: string): Record<string, string> {
   if (!existsSync(file)) return {};
   const out: Record<string, string> = {};
   for (const line of readFileSync(file, "utf8").split("\n")) {

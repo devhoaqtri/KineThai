@@ -19,16 +19,20 @@ import { join, resolve } from "node:path";
 import { Readable } from "node:stream";
 import { z } from "zod";
 import { loadMetaConfig, metaReady } from "../../../../scripts/lib/meta-publish";
-import { SOUNDS_DIR, listSongs } from "../../../../scripts/lib/music-mix";
+import { SOUNDS_DIRS, listSongs } from "../../../../scripts/lib/music-mix";
 import {
-  META_PLATFORMS,
+  MUSIC_PLATFORMS,
+  PUBLISH_PLATFORMS,
   dateOfDay,
   mixedClipPath,
   postsToPublish,
+  soundsDirFor,
   todayInVietnam,
   type Calendar,
   type CalendarDay,
+  type PublishPlatform,
 } from "../../../../scripts/lib/tiktok-calendar";
+import { loadYouTubeConfig, youtubeReady } from "../../../../scripts/lib/youtube-publish";
 
 const ROOT = resolve(".");
 const CALENDAR_FILE = join(ROOT, "scripts/data/tiktok-calendar.json");
@@ -39,7 +43,12 @@ const loadCalendar = () => JSON.parse(readFileSync(CALENDAR_FILE, "utf8")) as Ca
 const saveCalendar = (calendar: Calendar) =>
   writeFileSync(CALENDAR_FILE, `${JSON.stringify(calendar, null, 2)}\n`);
 
-const platformSchema = z.enum(META_PLATFORMS);
+const platformSchema = z.enum(PUBLISH_PLATFORMS);
+const musicPlatformSchema = z.enum(MUSIC_PLATFORMS);
+
+/** What a platform still lacks before it can publish, or null when it is connected. */
+const platformReady = (platform: PublishPlatform) =>
+  platform === "youtube" ? youtubeReady(loadYouTubeConfig(ROOT)) : metaReady(loadMetaConfig(ROOT), platform);
 const actionSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("caption"),
@@ -54,11 +63,12 @@ const actionSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("song"),
     day: z.number().int().positive(),
+    platform: musicPlatformSchema,
     /** A file in the sounds folder, or null for no music. */
     song: z.string().min(1).max(300).nullable(),
     startSec: z.number().min(0).max(3600),
   }),
-  z.object({ action: z.literal("song-accept"), day: z.number().int().positive() }),
+  z.object({ action: z.literal("song-accept"), day: z.number().int().positive(), platform: musicPlatformSchema }),
 ]);
 
 /** What the page lists: from a week back to three weeks ahead, by post. */
@@ -67,13 +77,16 @@ function listing() {
   const today = todayInVietnam(Date.now());
   const from = dateOfDay(today, -6);
   const to = dateOfDay(today, 22);
-  const config = loadMetaConfig(ROOT);
-  const soundsDir = calendar.soundsDir ?? SOUNDS_DIR;
+  const libraries = Object.fromEntries(
+    MUSIC_PLATFORMS.map((p) => {
+      const dir = soundsDirFor(calendar, p, SOUNDS_DIRS);
+      return [p, { dir, songs: listSongs(dir) }];
+    }),
+  );
   return {
     today,
-    soundsDir,
-    songs: listSongs(soundsDir),
-    connection: Object.fromEntries(META_PLATFORMS.map((p) => [p, metaReady(config, p)])),
+    libraries,
+    connection: Object.fromEntries(PUBLISH_PLATFORMS.map((p) => [p, platformReady(p)])),
     posts: calendar.days
       .filter((d) => d.date >= from && d.date <= to)
       .map((d) => ({
@@ -87,7 +100,9 @@ function listing() {
         url: d.url,
         caption: d.caption,
         hasClip: !!d.clip && existsSync(expandHome(d.clip)),
-        hasMix: !!d.clip && existsSync(mixedClipPath(expandHome(d.clip), "facebook")),
+        mixes: Object.fromEntries(
+          MUSIC_PLATFORMS.map((p) => [p, !!d.clip && existsSync(mixedClipPath(expandHome(d.clip), p))]),
+        ),
         durationSec: d.durationSec,
         platforms: d.platforms ?? {},
       })),
@@ -95,9 +110,9 @@ function listing() {
 }
 
 /** The clip itself (or its mix with a song), with byte ranges so the page's player can seek. */
-function clipResponse(request: Request, day: CalendarDay | undefined, mix: boolean): Response {
+function clipResponse(request: Request, day: CalendarDay | undefined, mix: PublishPlatform | null): Response {
   const clip = day?.clip ? expandHome(day.clip) : null;
-  const file = clip && mix ? mixedClipPath(clip, "facebook") : clip;
+  const file = clip && mix ? mixedClipPath(clip, mix) : clip;
   if (!file || !existsSync(file)) return new Response("No clip", { status: 404 });
   const size = statSync(file).size;
   const range = /bytes=(\d*)-(\d*)/.exec(request.headers.get("range") ?? "");
@@ -135,8 +150,8 @@ export async function postingResponse(request: Request): Promise<Response> {
   if (request.method === "GET") {
     const clip = url.searchParams.get("clip");
     if (clip) {
-      const mix = url.searchParams.get("mix") === "facebook";
-      return clipResponse(request, loadCalendar().days.find((d) => d.day === Number(clip)), mix);
+      const mix = musicPlatformSchema.safeParse(url.searchParams.get("mix"));
+      return clipResponse(request, loadCalendar().days.find((d) => d.day === Number(clip)), mix.success ? mix.data : null);
     }
     return Response.json(listing());
   }
@@ -152,7 +167,7 @@ export async function postingResponse(request: Request): Promise<Response> {
   if (!day) return Response.json({ error: `There is no post ${action.day}.` }, { status: 404 });
 
   if (action.action === "publish") {
-    const missing = metaReady(loadMetaConfig(ROOT), action.platform);
+    const missing = platformReady(action.platform);
     if (missing) return Response.json({ error: missing }, { status: 409 });
     if (!day.clip) return Response.json({ error: "This post has no clip yet." }, { status: 409 });
     if (day.platforms?.[action.platform]?.status === "posted") {
@@ -173,6 +188,8 @@ export async function postingResponse(request: Request): Promise<Response> {
         join(ROOT, "scripts/tiktok.ts"),
         "music",
         String(day.day),
+        "--platform",
+        action.platform,
         "--song",
         action.song ?? "none",
         "--start",
@@ -187,13 +204,13 @@ export async function postingResponse(request: Request): Promise<Response> {
     return Response.json({ ok: true });
   }
   if (action.action === "song-accept") {
-    const track = day.platforms?.facebook;
+    const track = day.platforms?.[action.platform];
     if (!track?.music) return Response.json({ error: "This post has no song to accept." }, { status: 409 });
     track.music = { ...track.music, status: "accepted", at: new Date().toISOString() };
     saveCalendar(calendar);
     // Its time has passed while it waited: out it goes now, as the job would have sent it.
-    const late = postsToPublish(calendar, Date.now(), "facebook").some((d) => d.day === day.day);
-    if (late && !metaReady(loadMetaConfig(ROOT), "facebook")) startPublish(day.day, "facebook");
+    const late = postsToPublish(calendar, Date.now(), action.platform).some((d) => d.day === day.day);
+    if (late && !platformReady(action.platform)) startPublish(day.day, action.platform);
     return Response.json({ ok: true, publishing: late });
   }
   if (action.action === "caption") {

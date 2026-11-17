@@ -24,6 +24,7 @@
  *   planDays, captionFor, summarize, postTimeMs, postsToDraft, isPostLevel, MIN_POST_LEVEL,
  *   carouselSlides, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
+ *   PUBLISH_PLATFORMS, PublishPlatform, MUSIC_PLATFORMS, MusicPlatform, youtubeTitle,
  *   PlatformPost, postsToPublish, captionForPlatform
  */
 
@@ -140,10 +141,10 @@ export type CalendarDay = {
   /** The post's TikTok link, once it is live. */
   url: string | null;
   /**
-   * The same clip on the other platforms (scripts/lib/meta-publish.ts), each on its own
-   * track: TikTok's own state stays in `status` above.
+   * The same clip on the other platforms (scripts/lib/meta-publish.ts, youtube-publish.ts),
+   * each on its own track: TikTok's own state stays in `status` above.
    */
-  platforms?: Partial<Record<MetaPlatform, PlatformPost>>;
+  platforms?: Partial<Record<PublishPlatform, PlatformPost>>;
   note: string | null;
 };
 
@@ -160,8 +161,10 @@ export type Calendar = {
   seed: number;
   /** Where clips are written; outside the repo, a year is several gigabytes. */
   clipDir: string;
-  /** Where the Sound Collection tracks for Facebook's songs are; absent: music-mix SOUNDS_DIR. */
+  /** Where the Sound Collection tracks for Facebook's songs are; absent: music-mix SOUNDS_DIRS. */
   soundsDir?: string;
+  /** Where YouTube Audio Library tracks for YouTube's songs are; absent: music-mix SOUNDS_DIRS. */
+  youtubeSoundsDir?: string;
   /** Word ids swapped out of a day, so planning never brings them back. */
   excluded: string[];
   days: CalendarDay[];
@@ -646,6 +649,44 @@ export function exportConflicts(
 export const META_PLATFORMS = ["facebook", "instagram"] as const;
 export type MetaPlatform = (typeof META_PLATFORMS)[number];
 
+/** Every platform published from this Mac at the post's time (TikTok is drafted instead). */
+export const PUBLISH_PLATFORMS = [...META_PLATFORMS, "youtube"] as const;
+export type PublishPlatform = (typeof PUBLISH_PLATFORMS)[number];
+
+/**
+ * The platforms whose video carries a song. Each has its own library, because the licences
+ * differ: Meta's Sound Collection is for Meta's apps only, so YouTube takes tracks from
+ * YouTube's own Audio Library. Instagram posts carousels; TikTok picks its sound in the app.
+ */
+export const MUSIC_PLATFORMS = ["facebook", "youtube"] as const satisfies readonly PublishPlatform[];
+export type MusicPlatform = (typeof MUSIC_PLATFORMS)[number];
+
+/**
+ * The folder a platform's songs come from: the calendar's own choice, else `defaults`
+ * (music-mix SOUNDS_DIRS).
+ * @pure true
+ */
+export function soundsDirFor(
+  calendar: Pick<Calendar, "soundsDir" | "youtubeSoundsDir">,
+  platform: MusicPlatform,
+  defaults: Record<MusicPlatform, string>,
+): string {
+  return (platform === "facebook" ? calendar.soundsDir : calendar.youtubeSoundsDir) ?? defaults[platform];
+}
+
+/** YouTube's longest title. */
+const YOUTUBE_TITLE_MAX = 100;
+
+/**
+ * A Short's title: the hook and the post's number, never the word, with #shorts. YouTube
+ * refuses `<` and `>` in titles.
+ * @pure true
+ */
+export function youtubeTitle(day: Pick<CalendarDay, "day" | "level">, hook: string): string {
+  const title = `${hook.trim()} 🤔 Từ số ${day.day}/365 · ${day.level} #shorts`.replace(/[<>]/g, "");
+  return [...title].slice(0, YOUTUBE_TITLE_MAX).join("");
+}
+
 /**
  * One post on one platform. `pending` (or absent) waits for its slot; `publishing` is a
  * run in flight; `failed` is retried by the scheduled job until `attempts` reaches
@@ -660,8 +701,10 @@ export type PlatformPost = {
   at?: string | null;
   error?: string | null;
   attempts?: number;
+  /** What the platform set the post to, when it is not plainly public (YouTube: `private` until audited). */
+  privacy?: string | null;
   /**
-   * The song laid under this platform's video (Facebook only so far). A `proposed` song
+   * The song laid under this platform's video (MUSIC_PLATFORMS). A `proposed` song
    * holds the post until the admin accepts it on /posting; absent, the clip goes out as
    * rendered, silent.
    */
@@ -669,8 +712,9 @@ export type PlatformPost = {
 };
 
 /**
- * A song for one post's video: a track from Meta's Sound Collection, downloaded into the
- * calendar's sounds folder and mixed in by scripts/lib/music-mix.ts. `song: null` accepted
+ * A song for one post's video: a track from the platform's own library (Meta's Sound
+ * Collection, YouTube's Audio Library), downloaded into that platform's sounds folder and
+ * mixed in by scripts/lib/music-mix.ts. `song: null` accepted
  * is the admin choosing no music for this post.
  */
 export type PostMusic = {
@@ -683,7 +727,7 @@ export type PostMusic = {
 };
 
 /** Whether a post waits on its song: proposed and not yet accepted. @pure true */
-export function musicHolds(day: Pick<CalendarDay, "platforms">, platform: MetaPlatform): boolean {
+export function musicHolds(day: Pick<CalendarDay, "platforms">, platform: PublishPlatform): boolean {
   return day.platforms?.[platform]?.music?.status === "proposed";
 }
 
@@ -691,7 +735,7 @@ export function musicHolds(day: Pick<CalendarDay, "platforms">, platform: MetaPl
  * Where a post's video with its song is written: beside the clip, named for the platform.
  * @pure true
  */
-export function mixedClipPath(clip: string, platform: MetaPlatform): string {
+export function mixedClipPath(clip: string, platform: PublishPlatform): string {
   return clip.replace(/(\.mp4)?$/i, `.${platform}.mp4`);
 }
 
@@ -718,7 +762,7 @@ export function pickSong(songs: string[], used: { song: string; day: number }[],
 export const MAX_PUBLISH_ATTEMPTS = 3;
 
 /** The caption a platform posts: its own when set, else the calendar's. @pure true */
-export function captionForPlatform(day: CalendarDay, platform: MetaPlatform): string {
+export function captionForPlatform(day: CalendarDay, platform: PublishPlatform): string {
   return day.platforms?.[platform]?.caption?.trim() || day.caption;
 }
 
@@ -738,7 +782,7 @@ export function captionForPlatform(day: CalendarDay, platform: MetaPlatform): st
 export function postsToPublish(
   calendar: Calendar,
   nowMs: number,
-  platform: MetaPlatform,
+  platform: PublishPlatform,
   graceHours = 6,
 ): CalendarDay[] {
   return calendar.days
@@ -763,7 +807,7 @@ export function postsToPublish(
  * what the publish job reports instead of publishing.
  * @pure true
  */
-export function postsAwaitingMusic(calendar: Calendar, nowMs: number, platform: MetaPlatform, graceHours = 6): CalendarDay[] {
+export function postsAwaitingMusic(calendar: Calendar, nowMs: number, platform: PublishPlatform, graceHours = 6): CalendarDay[] {
   return calendar.days
     .filter((day) => {
       if (!day.clip || !musicHolds(day, platform) || !isPostLevel(day.level)) return false;

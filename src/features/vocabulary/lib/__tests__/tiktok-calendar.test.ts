@@ -20,6 +20,8 @@ import {
   mixedClipPath,
   pickSong,
   publishTimes,
+  soundsDirFor,
+  youtubeTitle,
   isPostLevel,
   carouselSlides,
   captionForPlatform,
@@ -464,8 +466,31 @@ describe("publishing on Facebook and Instagram", () => {
     expect(postsToPublish(cal, at("19:00"), "instagram").map((d) => d.day)).toEqual([1, 2, 3, 4]);
   });
 
+  it("titles a Short with the hook and the post's number, never the word, within 100 characters", () => {
+    const title = youtubeTitle({ day: 8, level: "B1" }, "Từ gì mà ...");
+    expect(title).toBe("Từ gì mà ... 🤔 Từ số 8/365 · B1 #shorts");
+    expect([...youtubeTitle({ day: 8, level: "B1" }, "x".repeat(200))].length).toBe(100);
+    expect(youtubeTitle({ day: 1, level: "C1" }, "<a> hook")).not.toMatch(/[<>]/);
+  });
+
+  it("gives Facebook and YouTube their own song folders", () => {
+    const defaults = { facebook: "~/fb", youtube: "~/yt" };
+    expect(soundsDirFor({}, "facebook", defaults)).toBe("~/fb");
+    expect(soundsDirFor({}, "youtube", defaults)).toBe("~/yt");
+    expect(soundsDirFor({ soundsDir: "/a", youtubeSoundsDir: "/b" }, "youtube", defaults)).toBe("/b");
+  });
+
+  it("holds a YouTube post on its own proposed song, not Facebook's", () => {
+    const cal = calendar([
+      post(1, "19:00", { platforms: { youtube: { status: "pending", music: { song: "a.mp3", startSec: 0, status: "proposed", at: "x" } } } }),
+    ]);
+    expect(postsToPublish(cal, at("19:00"), "youtube")).toEqual([]);
+    expect(postsToPublish(cal, at("19:00"), "facebook").map((d) => d.day)).toEqual([1]);
+  });
+
   it("writes the mix beside the clip, named for the platform", () => {
     expect(mixedClipPath("/c/day-008-ceiling.mp4", "facebook")).toBe("/c/day-008-ceiling.facebook.mp4");
+    expect(mixedClipPath("/c/day-008-ceiling.mp4", "youtube")).toBe("/c/day-008-ceiling.youtube.mp4");
   });
 
   it("proposes an unused song first, then the one used longest ago, and varies ties by post", () => {

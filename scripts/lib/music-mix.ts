@@ -1,10 +1,11 @@
 /**
  * Songs under a post's video. The rendered clips carry a silent audio track, so a Facebook
- * Reel goes out mute unless a song is laid in before upload: Meta's Reels API takes no music
- * of its own (Instagram's Audio API does, but Instagram posts carousels here). The songs are
- * tracks the admin downloads from Meta's Sound Collection into the sounds folder
- * (SOUNDS_DIR); this module lists them and mixes one into a copy of the clip, leaving the
- * clip itself as rendered.
+ * Reel or a YouTube Short goes out mute unless a song is laid in before upload: neither API
+ * takes music of its own (Instagram's Audio API does, but Instagram posts carousels here).
+ * Each platform has its own library (SOUNDS_DIRS), because the licences differ: Meta's Sound
+ * Collection tracks are for Meta's apps only, YouTube's Audio Library tracks for YouTube.
+ * This module lists a library and mixes one track into a copy of the clip, leaving the clip
+ * itself as rendered.
  *
  * The mix copies the video stream untouched and replaces the audio with the song from
  * `startSec`, looped if it is shorter than the clip, faded in and out, and levelled to
@@ -13,7 +14,7 @@
  *
  * Sound Collection hands its tracks out as audio-only .mp4 files, so .mp4 counts as a song.
  *
- * Exports: SOUNDS_DIR, SONG_EXTENSIONS, listSongs, songTitle, mediaDuration, mixArgs, mixSong
+ * Exports: SOUNDS_DIR, SOUNDS_DIRS, SONG_EXTENSIONS, listSongs, songTitle, mediaDuration, mixArgs, mixSong
  * Depends on: ffmpeg and ffprobe on the PATH
  */
 import { spawnSync } from "node:child_process";
@@ -21,8 +22,15 @@ import { existsSync, readdirSync, renameSync, rmSync } from "node:fs";
 import { homedir } from "node:os";
 import { extname, join } from "node:path";
 
-/** Where downloaded Sound Collection tracks go, unless the calendar names another folder. */
-export const SOUNDS_DIR = "~/KineMedia-tiktok/sounds";
+/** Each platform's library, unless the calendar names another folder (soundsDirFor). */
+export const SOUNDS_DIRS = {
+  /** Meta's Sound Collection. */
+  facebook: "~/KineMedia-tiktok/sounds",
+  /** YouTube Studio's Audio Library. */
+  youtube: "~/KineMedia-tiktok/sounds-youtube",
+} as const;
+/** Facebook's library, the default for a call that names none. */
+export const SOUNDS_DIR = SOUNDS_DIRS.facebook;
 export const SONG_EXTENSIONS = [".mp3", ".mp4", ".m4a", ".aac", ".wav", ".ogg", ".flac"];
 /** Seconds of fade at the song's start and end. */
 const FADE_IN = 0.3;

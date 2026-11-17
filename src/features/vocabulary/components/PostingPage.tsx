@@ -8,8 +8,9 @@
  * same publish command the scheduled job runs, so a post looks the same whichever started
  * it. While anything is publishing the page refreshes itself every few seconds.
  *
- * A Facebook post can carry a song from the sounds folder (Meta's Sound Collection, laid in
- * by scripts/lib/music-mix.ts): pick one, play the clip with it, and Accept. A proposed song
+ * A Facebook Reel or a YouTube Short can carry a song from that platform's own library (Meta's
+ * Sound Collection, YouTube's Audio Library, laid in by scripts/lib/music-mix.ts): pick one,
+ * play the clip with it, and Accept. A proposed song
  * holds the post until it is accepted; accepting after the post's time publishes it at once.
  *
  * Development only (routes/posting.tsx); the build fails if this reaches a bundle.
@@ -17,9 +18,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "../vocabulary-export.css";
 
-type Platform = "facebook" | "instagram";
+type Platform = "facebook" | "instagram" | "youtube";
+type MusicPlatform = "facebook" | "youtube";
 const PLATFORMS: { id: Platform; label: string }[] = [
   { id: "facebook", label: "Facebook" },
+  { id: "youtube", label: "YouTube" },
   { id: "instagram", label: "Instagram" },
 ];
 
@@ -30,6 +33,7 @@ type Track = {
   at?: string | null;
   error?: string | null;
   attempts?: number;
+  privacy?: string | null;
   music?: { song: string | null; startSec: number; status: "proposed" | "accepted" } | null;
 };
 
@@ -44,7 +48,7 @@ type Post = {
   url: string | null;
   caption: string;
   hasClip: boolean;
-  hasMix: boolean;
+  mixes: Record<MusicPlatform, boolean>;
   durationSec: number | null;
   platforms: Partial<Record<Platform, Track>>;
 };
@@ -52,8 +56,7 @@ type Post = {
 type Listing = {
   today: string;
   connection: Record<Platform, string | null>;
-  soundsDir: string;
-  songs: string[];
+  libraries: Record<MusicPlatform, { dir: string; songs: string[] }>;
   posts: Post[];
 };
 
@@ -104,6 +107,11 @@ function PlatformRow({
       <span className="posting-chip" data-status={track.status}>
         {track.status === "failed" && track.attempts ? `failed ×${track.attempts}` : track.status}
       </span>
+      {live && track.privacy && track.privacy !== "public" && (
+        <span className="posting-chip" data-status="failed" title="An unaudited YouTube API project's uploads stay private">
+          {track.privacy}
+        </span>
+      )}
       {live && track.url && (
         <a className="posting-link" href={track.url} target="_blank" rel="noreferrer">
           open
@@ -143,22 +151,26 @@ function PlatformRow({
   );
 }
 
+const MUSIC: { id: MusicPlatform; label: string; library: string }[] = [
+  { id: "facebook", label: "Facebook", library: "Meta's Sound Collection" },
+  { id: "youtube", label: "YouTube", library: "YouTube Studio's Audio Library" },
+];
+
 /**
- * The song under a post's Facebook Reel: which track and from where, mixed on Mix, then
- * Accept. Read-only once the post is live.
+ * The song under one platform's video: which track and from where, mixed on Mix, then
+ * Accept. Read-only once the post is live there.
  */
 function SongRow({
   post,
-  songs,
-  soundsDir,
+  platform,
   onDone,
 }: {
   post: Post;
-  songs: string[];
-  soundsDir: string;
+  platform: { id: MusicPlatform; label: string; library: string; dir: string; songs: string[] };
   onDone: (error: string | null) => void;
 }) {
-  const track: Track = post.platforms.facebook ?? { status: "pending" };
+  const { songs, dir: soundsDir } = platform;
+  const track: Track = post.platforms[platform.id] ?? { status: "pending" };
   const music = track.music ?? null;
   const current = music ? (music.song ?? "none") : "";
   const [choice, setChoice] = useState(current);
@@ -171,8 +183,8 @@ function SongRow({
   if (!songs.length && !music) {
     return (
       <p className="posting-song-empty">
-        ♪ No songs yet: download tracks from Meta's Sound Collection into <code>{soundsDir}</code> and Facebook
-        posts get one to accept.
+        ♪ {platform.label}: no songs yet. Download tracks from {platform.library} into <code>{soundsDir}</code> and
+        {platform.label} posts get one to accept.
       </p>
     );
   }
@@ -184,12 +196,12 @@ function SongRow({
   };
   return (
     <div className="posting-song" data-status={music?.status ?? "none"}>
-      <span className="posting-track-name">♪ Song</span>
+      <span className="posting-track-name">♪ {platform.label}</span>
       {locked ? (
         <span>{music?.song ? `${songTitle(music.song)} · from ${music.startSec}s` : "no music"}</span>
       ) : (
         <>
-          <select value={choice} onChange={(event) => setChoice(event.target.value)} aria-label="Song for Facebook">
+          <select value={choice} onChange={(event) => setChoice(event.target.value)} aria-label={`Song for ${platform.label}`}>
             {!music && <option value="">Choose a song…</option>}
             {songs.map((song) => (
               <option key={song} value={song}>
@@ -221,6 +233,7 @@ function SongRow({
                   run("mix", {
                     action: "song",
                     day: post.day,
+                    platform: platform.id,
                     song: choice === "none" ? null : choice,
                     startSec: Number(start) || 0,
                   })
@@ -230,7 +243,8 @@ function SongRow({
               </button>
             )}
             {music?.status === "proposed" && !changed && (
-              <button type="button" disabled={!!busy} onClick={() => run("accept", { action: "song-accept", day: post.day })}>
+              <button type="button" disabled={!!busy} onClick={() => run("accept", { action: "song-accept", day: post.day, platform: platform.id })}
+              >
                 Accept
               </button>
             )}
@@ -295,11 +309,13 @@ function PostCard({
 }) {
   const { connection } = listing;
   const [captionFor, setCaptionFor] = useState<"all" | Platform>("all");
-  const song = post.platforms.facebook?.music?.song ?? null;
-  const withSong = !!song && post.hasMix;
-  // The music track's own time, so a remix reloads the player.
-  const musicAt = post.platforms.facebook?.music ? `${song}:${post.platforms.facebook.music.startSec}` : "";
-  const [hearSong, setHearSong] = useState(true);
+  // The platforms whose mix can be played: a song set and its file on disk.
+  const mixed = MUSIC.filter((m) => post.platforms[m.id]?.music?.song && post.mixes[m.id]);
+  const [hear, setHear] = useState<MusicPlatform | "clip" | null>(null);
+  const playing = hear === "clip" ? null : (mixed.find((m) => m.id === hear) ?? mixed[0] ?? null);
+  // The song and its start, so a remix reloads the player.
+  const playingMusic = playing ? post.platforms[playing.id]?.music : null;
+  const musicAt = playingMusic ? `${playingMusic.song}:${playingMusic.startSec}` : "";
   const shown = captionFor === "all" ? post.caption : post.platforms[captionFor]?.caption || post.caption;
   const [draft, setDraft] = useState(shown);
   useEffect(() => setDraft(shown), [shown]);
@@ -310,18 +326,26 @@ function PostCard({
         {post.hasClip ? (
           <>
             <video
-              key={withSong && hearSong ? `mix:${musicAt}` : "clip"}
-              src={`${API}?clip=${post.day}${withSong && hearSong ? `&mix=facebook&v=${encodeURIComponent(musicAt)}` : ""}`}
+              key={playing ? `${playing.id}:${musicAt}` : "clip"}
+              src={`${API}?clip=${post.day}${playing ? `&mix=${playing.id}&v=${encodeURIComponent(musicAt)}` : ""}`}
               controls
               preload="metadata"
               playsInline
             />
-            {withSong && (
+            {mixed.length > 0 && (
               <div className="posting-clip-tabs" role="tablist" aria-label="Play">
-                <button type="button" role="tab" aria-selected={hearSong} onClick={() => setHearSong(true)}>
-                  With song
-                </button>
-                <button type="button" role="tab" aria-selected={!hearSong} onClick={() => setHearSong(false)}>
+                {mixed.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={playing?.id === m.id}
+                    onClick={() => setHear(m.id)}
+                  >
+                    {mixed.length > 1 ? `${m.label} song` : "With song"}
+                  </button>
+                ))}
+                <button type="button" role="tab" aria-selected={!playing} onClick={() => setHear("clip")}>
                   As rendered
                 </button>
               </div>
@@ -342,7 +366,7 @@ function PostCard({
         </header>
         <div className="posting-caption">
           <div className="posting-caption-tabs" role="tablist" aria-label="Caption for">
-            {(["all", "facebook", "instagram"] as const).map((tab) => (
+            {(["all", "facebook", "instagram", "youtube"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
@@ -350,7 +374,7 @@ function PostCard({
                 aria-selected={captionFor === tab}
                 onClick={() => setCaptionFor(tab)}
               >
-                {tab === "all" ? "Caption" : tab === "facebook" ? "Facebook only" : "Instagram only"}
+                {tab === "all" ? "Caption" : `${PLATFORMS.find((p) => p.id === tab)!.label} only`}
                 {tab !== "all" && post.platforms[tab]?.caption ? " •" : ""}
               </button>
             ))}
@@ -383,10 +407,17 @@ function PostCard({
         {PLATFORMS.map((p) => (
           <PlatformRow key={p.id} post={post} platform={p.id} label={p.label} blocked={connection[p.id]} onDone={onChanged} />
         ))}
-        {/* A song is chosen ahead of the post; past and unrendered posts only show one they carry. */}
-        {(post.platforms.facebook?.music ||
-          (post.hasClip && post.date >= listing.today && post.platforms.facebook?.status !== "skipped")) && (
-          <SongRow post={post} songs={listing.songs} soundsDir={listing.soundsDir} onDone={onChanged} />
+        {/* A song is chosen ahead of the post on a connected platform; past and unrendered
+            posts only show one they carry. */}
+        {MUSIC.map(
+          (m) =>
+            (post.platforms[m.id]?.music ||
+              (post.hasClip &&
+                post.date >= listing.today &&
+                !connection[m.id] &&
+                post.platforms[m.id]?.status !== "skipped")) && (
+              <SongRow key={m.id} post={post} platform={{ ...m, ...listing.libraries[m.id] }} onDone={onChanged} />
+            ),
         )}
       </div>
     </article>
@@ -450,8 +481,9 @@ export function PostingPage() {
       </header>
       {listing && Object.values(listing.connection).some(Boolean) && (
         <p className="posting-note">
-          Facebook and Instagram post themselves at each post's time once connected:{" "}
-          <code>npm run tiktok -- meta-setup</code> (steps in docs/meta-publishing.md).
+          Facebook, Instagram and YouTube post themselves at each post's time once connected:{" "}
+          <code>npm run tiktok -- meta-setup</code> (docs/meta-publishing.md) and{" "}
+          <code>npm run tiktok -- youtube-setup</code> (docs/youtube-publishing.md).
         </p>
       )}
       {error && (
