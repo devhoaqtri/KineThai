@@ -207,6 +207,7 @@ export async function youtubeSetup(
   const challenge = base64url(createHash("sha256").update(verifier).digest());
 
   const code = await new Promise<{ code: string; redirect: string }>((resolve, reject) => {
+    let redirect = "";
     const server = createServer((request, response) => {
       const url = new URL(request.url ?? "/", "http://127.0.0.1");
       if (url.pathname !== "/") {
@@ -233,10 +234,11 @@ export async function youtubeSetup(
         );
         return;
       }
-      finish(200, "YouTube connected. You can close this tab and go back to the terminal.", () =>
+      finish(200, "Signed in. You can close this tab; the terminal finishes the setup.", () =>
         resolve({
           code: got,
-          redirect: `http://127.0.0.1:${(server.address() as AddressInfo).port}`,
+          // Read when the server started: a closed server has no address.
+          redirect,
         }),
       );
     });
@@ -245,7 +247,7 @@ export async function youtubeSetup(
       reject(new Error("no sign-in within 10 minutes"));
     }, 600_000);
     server.listen(0, "127.0.0.1", () => {
-      const redirect = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+      redirect = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
       const consent = new URL(AUTH_URL);
       consent.search = new URLSearchParams({
         client_id: config.clientId!,
