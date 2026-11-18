@@ -233,6 +233,7 @@ export function VocabularyCard({
   canAdvance,
   onAdvance,
   onWordEnding,
+  onWordEndingCancelled,
   onWordFinished,
   onViewed,
   exportLayout,
@@ -261,6 +262,11 @@ export function VocabularyCard({
    * turned by hand and there is no telling. Lets the music bow out with the word.
    */
   onWordEnding?: (remainingMs: number) => void;
+  /**
+   * Called when this card, still on screen, leaves its final page without ending (a step
+   * back, or a loop going round), after `onWordEnding` was called for it.
+   */
+  onWordEndingCancelled?: () => void;
   /**
    * This word was finished, and should count towards the reader's daily streak. Carries
    * `word.id` and never `occurrenceId`: the same word can be admitted twice in one stream,
@@ -520,10 +526,33 @@ export function VocabularyCard({
     if (wordExit.follow(`${playback.replay}:${playback.page}`)) setLeaving(false);
   }, [wordExit, playback.page, playback.replay]);
   const autoAdvancing = playback.playing && canAdvance && !looping;
+  // Whether the music was told this word is ending, so leaving the coda can call it off.
+  const endingAnnounced = useRef(false);
   useEffect(() => {
-    if (!active || !isSpelling) return;
-    onWordEnding?.(autoAdvancing ? spellingDuration : 0);
-  }, [active, isSpelling, autoAdvancing, spellingDuration, onWordEnding]);
+    if (!current) {
+      endingAnnounced.current = false;
+      return;
+    }
+    if (isSpelling) {
+      if (!active) return;
+      endingAnnounced.current = true;
+      onWordEnding?.(autoAdvancing ? spellingDuration : 0);
+      return;
+    }
+    // The coda was left with the word still on screen: the reader stepped back, or a
+    // looping word went round. Its ending is not coming, so neither is the music's bow.
+    if (!endingAnnounced.current) return;
+    endingAnnounced.current = false;
+    onWordEndingCancelled?.();
+  }, [
+    current,
+    active,
+    isSpelling,
+    autoAdvancing,
+    spellingDuration,
+    onWordEnding,
+    onWordEndingCancelled,
+  ]);
   // The reveal page and the spelling coda both belong to the answer, so the emoji
   // burst stays mounted across the flip instead of remounting and restarting.
   const isRevealed = playback.page >= revealPage;

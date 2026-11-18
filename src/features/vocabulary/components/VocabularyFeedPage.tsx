@@ -481,6 +481,7 @@ export function VocabularyFeedPage({
                 onRecordView={handleRecordView}
                 onWordShown={music.wordStarted}
                 onWordEnding={music.wordEnding}
+                onWordEndingCancelled={music.wordEndingCancelled}
                 // A demo word is not the reader's yet: it counts towards no streak or goal.
                 onWordFinished={demo ? undefined : handleWordFinished}
                 onClearHistory={viewHistory.clear}

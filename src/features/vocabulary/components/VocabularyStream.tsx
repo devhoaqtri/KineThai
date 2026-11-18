@@ -71,6 +71,7 @@ export function VocabularyStream({
   onRecordView,
   onWordShown,
   onWordEnding,
+  onWordEndingCancelled,
   onWordFinished,
   exportOpen = false,
   onCloseExport,
@@ -99,6 +100,8 @@ export function VocabularyStream({
   onWordShown?: () => void;
   /** The on-screen word reached its final page; ms left before the stream moves on. */
   onWordEnding?: (remainingMs: number) => void;
+  /** The on-screen word left its final page without ending (a step back, a loop). */
+  onWordEndingCancelled?: () => void;
   /** A word was finished; the feed records it against the reader's daily streak. */
   onWordFinished?: (wordId: string) => void;
   /** Show the video-export studio for the on-screen word (the caller gates this to admins). */
@@ -532,6 +535,7 @@ export function VocabularyStream({
                   canAdvance={activeIndex < rows.length - 1}
                   onAdvance={demo ? demo.onDone : () => advanceFrom(entry.occurrenceId)}
                   onWordEnding={onWordEnding}
+                  onWordEndingCancelled={onWordEndingCancelled}
                   onWordFinished={onWordFinished}
                   onViewed={() => recordViewed(entry)}
                   revealButtonLabel={revealButtonLabel}
