@@ -48,6 +48,7 @@ import { siteBrand } from "../lib/target-language";
 import { hasReportedWord } from "../lib/reported-words";
 import { sceneSkipLimiter } from "../lib/skip-limiter";
 import { createTapGesture, type TapSource } from "../lib/tap-gesture";
+import { cardTapAction, createWordExit, tapZoneAt } from "../lib/word-exit";
 import { getSpellingDurationMs, pickSpellingVariant } from "../lib/spelling";
 import {
   getStrokeSpellingDurationMs,
@@ -421,7 +422,7 @@ export function VocabularyCard({
   // strip is always what is showing. Nothing else may move the feed on: see the rule in
   // AGENTS.md (a scene is skipped only by a tap).
   const [leaving, setLeaving] = useState(false);
-  const leaveTimer = useRef<number | undefined>(undefined);
+  const [wordExit] = useState(() => createWordExit(STRIP_EXIT_MS));
   /**
    * Count this word towards the streak.
    *
@@ -448,30 +449,27 @@ export function VocabularyCard({
     [exportLayout, reducedMotion, onWordFinished, entry.word.id],
   );
   const advanceWithExit = useCallback(() => {
-    if (leaveTimer.current !== undefined) return;
+    if (wordExit.pending()) return;
     if (reducedMotion || !canAdvance || exportLayout) {
       onAdvance();
       return;
     }
     setLeaving(true);
-    leaveTimer.current = window.setTimeout(() => {
-      leaveTimer.current = undefined;
+    wordExit.begin(() => {
       onAdvance();
       setLeaving(false);
-    }, STRIP_EXIT_MS);
-  }, [reducedMotion, canAdvance, exportLayout, onAdvance]);
-  useEffect(() => () => window.clearTimeout(leaveTimer.current), []);
+    });
+  }, [wordExit, reducedMotion, canAdvance, exportLayout, onAdvance]);
+  useEffect(() => () => void wordExit.cancel(), [wordExit]);
   // An overlay (or the word leaving the screen) that interrupts the exit drops the exit
   // strip, and nothing more. It must not move the feed on when the overlay closes: that
   // would be a state effect skipping a scene with no tap. The word stays where it is; the
   // playback clock restarts its last page on resume and ends the word itself, or the reader
   // taps on.
   useEffect(() => {
-    if (active || leaveTimer.current === undefined) return;
-    window.clearTimeout(leaveTimer.current);
-    leaveTimer.current = undefined;
-    setLeaving(false);
-  }, [active]);
+    if (active) return;
+    if (wordExit.cancel()) setLeaving(false);
+  }, [active, wordExit]);
   // The page's text is on stage from the first moment this card PLAYS and stays there
   // until the reader leaves the word. It used to be tied straight to `active`, so anything
   // that paused the feed (the options sheet, the saved drawer) unmounted the text and its
@@ -512,6 +510,12 @@ export function VocabularyCard({
     setNav({ page: playback.page, direction: playback.page > nav.page ? 1 : -1 });
   }
   const isSpelling = playback.page > revealPage;
+  // A rewind (tap or swipe back) while the strip is leaving takes the word back: the page
+  // change drops the exit, so the stream does not move on underneath the page the reader
+  // went back to. That page plays out on its own clock (lib/word-exit).
+  useEffect(() => {
+    if (wordExit.follow(`${playback.replay}:${playback.page}`)) setLeaving(false);
+  }, [wordExit, playback.page, playback.replay]);
   const autoAdvancing = playback.playing && canAdvance && !looping;
   useEffect(() => {
     if (!active || !isSpelling) return;
@@ -837,8 +841,12 @@ export function VocabularyCard({
       if (ay > 44 && ay > ax) return;
       // Tap
       if (dt < 600 && ax < 16 && ay < 16) {
-        // During the spelling coda a tap means "I have it" — skip to the next word.
-        if (isSpelling) {
+        const rect = cardRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        const action = cardTapAction(tapZoneAt(clientX - rect.left, rect.width), isSpelling);
+        // During the spelling coda a tap means "I have it" — skip to the next word — except in
+        // the rewind zone, which steps back to the answer as it does on every page.
+        if (action === "end-word") {
           if (canSkip()) {
             resume();
             markWordFinished(false);
@@ -846,30 +854,18 @@ export function VocabularyCard({
           }
           return;
         }
-        const rect = cardRef.current?.getBoundingClientRect();
-        if (!rect) return;
-        const relX = clientX - rect.left;
-        const leftZone = rect.width * 0.35;
-        const rightZone = rect.width * 0.65;
-        // Determine which zone was tapped and show visual feedback.
-        let zone: "left" | "right";
-        if (relX < leftZone) {
-          zone = "left";
-          resume();
-          playback.previous();
-        } else if (relX > rightZone) {
-          zone = "right";
-          resume();
-          playback.next();
-        } else {
+        if (action === "toggle-pause") {
           // The center answers with the pause pop and the resting play button, not a wash.
           if (presentation.autoplay) setPausePop((count) => count + 1);
           onToggleAutoplay?.();
           return;
         }
+        resume();
+        if (action === "previous") playback.previous();
+        else playback.next();
         // Flash the zone highlight for 350ms.
         clearTimeout(tapZoneTimer.current);
-        setTapZone(zone);
+        setTapZone(action === "previous" ? "left" : "right");
         tapZoneTimer.current = window.setTimeout(() => setTapZone(null), 350);
       }
     },
