@@ -18,6 +18,7 @@ import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { Readable } from "node:stream";
 import { z } from "zod";
+import { updateJsonFile } from "../../../../scripts/lib/locked-file";
 import { loadMetaConfig, metaReady } from "../../../../scripts/lib/meta-publish";
 import { SOUNDS_DIRS, listSongs } from "../../../../scripts/lib/music-mix";
 import {
@@ -40,8 +41,22 @@ const LOG_DIR = join(ROOT, "logs/tiktok-auto");
 
 const expandHome = (path: string) => (path.startsWith("~/") ? join(homedir(), path.slice(2)) : path);
 const loadCalendar = () => JSON.parse(readFileSync(CALENDAR_FILE, "utf8")) as Calendar;
-const saveCalendar = (calendar: Calendar) =>
-  writeFileSync(CALENDAR_FILE, `${JSON.stringify(calendar, null, 2)}\n`);
+/**
+ * Change one post on the calendar as it is now, under the lock the posting jobs take too
+ * (scripts/lib/locked-file.ts), so a page edit and a job's record never undo each other.
+ * Nothing is saved when `change` returns false.
+ */
+const updatePost = <R>(dayNumber: number, change: (day: CalendarDay) => R): R =>
+  updateJsonFile(
+    CALENDAR_FILE,
+    loadCalendar,
+    (calendar: Calendar) => `${JSON.stringify(calendar, null, 2)}\n`,
+    (calendar) => {
+      const day = calendar.days.find((d) => d.day === dayNumber);
+      if (!day) throw new Error(`There is no post ${dayNumber}.`);
+      return change(day);
+    },
+  );
 
 const platformSchema = z.enum(PUBLISH_PLATFORMS);
 const musicPlatformSchema = z.enum(MUSIC_PLATFORMS);
@@ -204,36 +219,45 @@ export async function postingResponse(request: Request): Promise<Response> {
     return Response.json({ ok: true });
   }
   if (action.action === "song-accept") {
-    const track = day.platforms?.[action.platform];
-    if (!track?.music) return Response.json({ error: "This post has no song to accept." }, { status: 409 });
-    track.music = { ...track.music, status: "accepted", at: new Date().toISOString() };
-    saveCalendar(calendar);
+    const accepted = updatePost(day.day, (fresh) => {
+      const track = fresh.platforms?.[action.platform];
+      if (!track?.music) return false;
+      track.music = { ...track.music, status: "accepted", at: new Date().toISOString() };
+      return true;
+    });
+    if (!accepted) return Response.json({ error: "This post has no song to accept." }, { status: 409 });
     // Its time has passed while it waited: out it goes now, as the job would have sent it.
-    const late = postsToPublish(calendar, Date.now(), action.platform).some((d) => d.day === day.day);
+    const late = postsToPublish(loadCalendar(), Date.now(), action.platform).some((d) => d.day === day.day);
     if (late && !platformReady(action.platform)) startPublish(day.day, action.platform);
     return Response.json({ ok: true, publishing: late });
   }
-  if (action.action === "caption") {
-    if (action.platform) {
+  let refusal: string | null = null;
+  updatePost(day.day, (day) => {
+    if (action.action === "caption") {
+      if (action.platform) {
+        day.platforms ??= {};
+        const track = (day.platforms[action.platform] ??= { status: "pending" });
+        track.caption = action.caption.trim() && action.caption.trim() !== day.caption.trim() ? action.caption : null;
+      } else {
+        day.caption = action.caption;
+      }
+    } else if (action.action === "skip") {
+      const status = day.platforms?.[action.platform]?.status;
+      if (status === "posted" || status === "publishing") {
+        refusal = `It is ${status} there.`;
+        return false;
+      }
       day.platforms ??= {};
       const track = (day.platforms[action.platform] ??= { status: "pending" });
-      track.caption = action.caption.trim() && action.caption.trim() !== day.caption.trim() ? action.caption : null;
-    } else {
-      day.caption = action.caption;
+      track.status = action.skip ? "skipped" : "pending";
+      if (!action.skip) track.attempts = 0;
+    } else if (action.action === "tiktok-posted") {
+      day.status = "posted";
+      day.postedAt = new Date().toISOString();
+      day.url = action.url;
     }
-  } else if (action.action === "skip") {
-    day.platforms ??= {};
-    const track = (day.platforms[action.platform] ??= { status: "pending" });
-    if (track.status === "posted" || track.status === "publishing") {
-      return Response.json({ error: `It is ${track.status} there.` }, { status: 409 });
-    }
-    track.status = action.skip ? "skipped" : "pending";
-    if (!action.skip) track.attempts = 0;
-  } else if (action.action === "tiktok-posted") {
-    day.status = "posted";
-    day.postedAt = new Date().toISOString();
-    day.url = action.url;
-  }
-  saveCalendar(calendar);
+    return true;
+  });
+  if (refusal) return Response.json({ error: refusal }, { status: 409 });
   return Response.json({ ok: true });
 }

@@ -73,6 +73,7 @@ import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
+import { updateJsonFile } from "./lib/locked-file";
 import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, writeEnvLocal } from "./lib/meta-publish";
 import { SOUNDS_DIRS, listSongs, mixSong, songTitle } from "./lib/music-mix";
 import { loadYouTubeConfig, publishShort, youtubeReady, youtubeSetup } from "./lib/youtube-publish";
@@ -164,10 +165,28 @@ function settled(day: CalendarDay): boolean {
   return Object.values(day.platforms ?? {}).some((t) => t?.status === "posted" || t?.status === "publishing");
 }
 
-function saveCalendar(calendar: Calendar) {
+/** The calendar's file text, every post not yet out re-dated from the schedule. */
+function calendarText(calendar: Calendar): string {
   for (const day of calendar.days) if (!settled(day)) Object.assign(day, slotOf(calendar, day.day));
   calendar.days.sort((a, b) => a.day - b.day);
-  writeFileSync(CALENDAR_FILE, `${JSON.stringify(calendar, null, 2)}\n`);
+  return `${JSON.stringify(calendar, null, 2)}\n`;
+}
+
+/**
+ * Change the calendar as it is on disk now, under its lock (scripts/lib/locked-file.ts), and
+ * save it unless `change` returns false. Never save a calendar read earlier: the jobs overlap,
+ * and a copy read before a render once wiped a publish run's results (post 10 went out twice).
+ * @param read - the calendar to start from (plan passes a blank one when there is no file)
+ */
+function updateCalendar<R>(change: (calendar: Calendar) => R, read: () => Calendar = loadCalendar): R {
+  return updateJsonFile(CALENDAR_FILE, read, calendarText, change);
+}
+
+/** One post of a calendar, which must exist. */
+function postOf(calendar: Calendar, dayNumber: number): CalendarDay {
+  const day = calendar.days.find((d) => d.day === dayNumber);
+  if (!day) throw new Error(`there is no post ${dayNumber}`);
+  return day;
 }
 
 /** The English deck, every level. */
@@ -235,9 +254,14 @@ function loadExported(): ExportedWords {
   return existsSync(EXPORTED_FILE) ? readJson<ExportedWords>(EXPORTED_FILE) : { version: 1, words: {} };
 }
 
-function saveExported(list: ExportedWords) {
+function exportedText(list: ExportedWords): string {
   const words = Object.fromEntries(Object.entries(list.words).sort(([a], [b]) => a.localeCompare(b)));
-  writeFileSync(EXPORTED_FILE, `${JSON.stringify({ version: 1, words }, null, 2)}\n`);
+  return `${JSON.stringify({ version: 1, words }, null, 2)}\n`;
+}
+
+/** Change the exported-words list as it is on disk now, under its lock; saved unless `change` returns false. */
+function updateExported<R>(change: (list: ExportedWords) => R): R {
+  return updateJsonFile(EXPORTED_FILE, loadExported, exportedText, change);
 }
 
 /** The day a file or folder was made, for an export found on disk. */
@@ -249,41 +273,42 @@ const madeOn = (path: string) => statSync(path).mtime.toISOString().slice(0, 10)
  * and every calendar post that has a clip. Only adds, and saves when anything was added.
  */
 function syncExported(calendar: Calendar): ExportedWords {
-  const list = loadExported();
   const byCode = new Map(loadDeck().filter((w) => w.shareCode).map((w) => [w.shareCode!.toUpperCase(), w]));
   let added = 0;
-  const add = (code: string, where: string, ref: string, at: string) => {
-    const word = byCode.get(code);
-    if (!word) {
-      console.warn(`  ! ${ref}: no word in the English deck has code ${code}; add it by hand if it went out`);
-      return;
+  let synced: ExportedWords | null = null;
+  updateExported((list) => {
+    synced = list;
+    const add = (code: string, where: string, ref: string, at: string) => {
+      const word = byCode.get(code);
+      if (!word) {
+        console.warn(`  ! ${ref}: no word in the English deck has code ${code}; add it by hand if it went out`);
+        return;
+      }
+      if (recordExport(list, { id: word.id, word: word.word, code, level: word.level }, { where, ref, at })) added += 1;
+    };
+    const carousel = join(EXPORTS_DIR, "carousel");
+    if (existsSync(carousel)) {
+      for (const dir of readdirSync(carousel)) {
+        const code = /-([0-9A-Z]{3})-[^-]+$/.exec(dir)?.[1];
+        if (code) add(code, "carousel", `exports/carousel/${dir}`, madeOn(join(carousel, dir)));
+      }
     }
-    if (recordExport(list, { id: word.id, word: word.word, code, level: word.level }, { where, ref, at })) added += 1;
-  };
-  const carousel = join(EXPORTS_DIR, "carousel");
-  if (existsSync(carousel)) {
-    for (const dir of readdirSync(carousel)) {
-      const code = /-([0-9A-Z]{3})-[^-]+$/.exec(dir)?.[1];
-      if (code) add(code, "carousel", `exports/carousel/${dir}`, madeOn(join(carousel, dir)));
+    const lab = join(EXPORTS_DIR, "tiktok");
+    if (existsSync(lab)) {
+      for (const file of readdirSync(lab).filter((f) => f.endsWith(".mp4"))) {
+        const code = /^([0-9A-Z]{3})-/.exec(file)?.[1];
+        if (code) add(code, "tiktok-lab", `exports/tiktok/${file}`, madeOn(join(lab, file)));
+      }
     }
-  }
-  const lab = join(EXPORTS_DIR, "tiktok");
-  if (existsSync(lab)) {
-    for (const file of readdirSync(lab).filter((f) => f.endsWith(".mp4"))) {
-      const code = /^([0-9A-Z]{3})-/.exec(file)?.[1];
-      if (code) add(code, "tiktok-lab", `exports/tiktok/${file}`, madeOn(join(lab, file)));
+    for (const day of calendar.days) {
+      if (!day.clip || day.status === "planned" || day.status === "missed") continue;
+      const record = { where: "calendar", ref: calendarExportRef(day.day), at: (day.renderedAt ?? now()).slice(0, 10) };
+      if (recordExport(list, { id: day.wordId, word: day.word, code: day.code, level: day.level }, record)) added += 1;
     }
-  }
-  for (const day of calendar.days) {
-    if (!day.clip || day.status === "planned" || day.status === "missed") continue;
-    const record = { where: "calendar", ref: calendarExportRef(day.day), at: (day.renderedAt ?? now()).slice(0, 10) };
-    if (recordExport(list, { id: day.wordId, word: day.word, code: day.code, level: day.level }, record)) added += 1;
-  }
-  if (added) {
-    saveExported(list);
-    console.log(`  (${added} export(s) added to scripts/data/exported-words.json)`);
-  }
-  return list;
+    return added > 0;
+  });
+  if (added) console.log(`  (${added} export(s) added to scripts/data/exported-words.json)`);
+  return synced!;
 }
 
 /** One line per clash, for the commands that refuse or warn. */
@@ -324,50 +349,50 @@ function plan() {
   const tomorrow = dateOfDay(todayInVietnam(Date.now()), 2);
   const order = (flag("order") ?? (fresh ? "mixed" : undefined)) as LevelOrder | undefined;
   if (order && !LEVEL_ORDERS.includes(order)) throw new Error(`--order is one of ${LEVEL_ORDERS.join(", ")}`);
-  const calendar: Calendar = fresh
-    ? {
-        version: 1,
-        locale: "en",
-        startDate: flag("start") ?? tomorrow,
-        postTime: flag("time") ?? "19:00",
-        order: order!,
-        seed: Number(flag("seed") ?? 1),
-        clipDir: flag("clip-dir") ?? DEFAULT_CLIP_DIR,
-        excluded: [],
-        days: [],
-      }
-    : loadCalendar();
-  const orderChanged = !fresh && order !== undefined && order !== calendar.order;
-  if (!fresh) {
-    if (flag("start")) calendar.startDate = flag("start")!;
-    if (flag("time")) calendar.postTime = flag("time")!;
-    if (order) calendar.order = order;
-    if (flag("seed")) calendar.seed = Number(flag("seed"));
-    if (flag("clip-dir")) calendar.clipDir = flag("clip-dir")!;
-  }
-  if (flag("burst")) {
-    calendar.burst = parseBurst(flag("burst")!, flag("burst-times") ?? DEFAULT_BURST_TIMES);
-  }
-  dateOfDay(calendar.startDate, 1); // throws on a malformed --start
-  const total = Number(flag("days") ?? Math.max(CALENDAR_DAYS, calendar.days.length));
-  const have = new Set(calendar.days.map((d) => d.day));
-  // New days, and every day not yet drafted whose level no longer fits the order (the order
-  // changed, or its levels did: every order starts at MIN_POST_LEVEL since 2026-11-16). A
-  // rendered day goes back to planned with its new word; its old clip is left on disk.
-  const levelNow = (day: number) => levelForDay(calendar.order, day, slotOf(calendar, day).date, total);
-  const toFill = Array.from({ length: total }, (_, i) => i + 1).filter((day) => {
-    const kept = calendar.days.find((d) => d.day === day);
-    if (!kept) return true;
-    const open = kept.status === "planned" || kept.status === "rendered";
-    return open && (orderChanged || kept.level !== levelNow(day));
+  const blank = (): Calendar => ({
+    version: 1,
+    locale: "en",
+    startDate: flag("start") ?? tomorrow,
+    postTime: flag("time") ?? "19:00",
+    order: order!,
+    seed: Number(flag("seed") ?? 1),
+    clipDir: flag("clip-dir") ?? DEFAULT_CLIP_DIR,
+    excluded: [],
+    days: [],
   });
-  fill(calendar, loadEligible(), toFill, total);
-  // Nothing scheduled or posted is touched: its caption is already in TikTok.
-  for (const day of calendar.days) {
-    if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.day, day.level);
-  }
-  const moved = refileClips(calendar);
-  saveCalendar(calendar);
+  const { calendar, toFill, moved } = updateCalendar((calendar) => {
+    const orderChanged = !fresh && order !== undefined && order !== calendar.order;
+    if (!fresh) {
+      if (flag("start")) calendar.startDate = flag("start")!;
+      if (flag("time")) calendar.postTime = flag("time")!;
+      if (order) calendar.order = order;
+      if (flag("seed")) calendar.seed = Number(flag("seed"));
+      if (flag("clip-dir")) calendar.clipDir = flag("clip-dir")!;
+    }
+    if (flag("burst")) {
+      calendar.burst = parseBurst(flag("burst")!, flag("burst-times") ?? DEFAULT_BURST_TIMES);
+    }
+    dateOfDay(calendar.startDate, 1); // throws on a malformed --start
+    const total = Number(flag("days") ?? Math.max(CALENDAR_DAYS, calendar.days.length));
+    const have = new Set(calendar.days.map((d) => d.day));
+    // New days, and every day not yet drafted whose level no longer fits the order (the order
+    // changed, or its levels did: every order starts at MIN_POST_LEVEL since 2026-11-16). A
+    // rendered day goes back to planned with its new word; its old clip is left on disk.
+    const levelNow = (day: number) => levelForDay(calendar.order, day, slotOf(calendar, day).date, total);
+    const toFill = Array.from({ length: total }, (_, i) => i + 1).filter((day) => {
+      const kept = calendar.days.find((d) => d.day === day);
+      if (!kept) return true;
+      const open = kept.status === "planned" || kept.status === "rendered";
+      return open && (orderChanged || kept.level !== levelNow(day));
+    });
+    fill(calendar, loadEligible(), toFill, total);
+    // Nothing scheduled or posted is touched: its caption is already in TikTok.
+    for (const day of calendar.days) {
+      if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.day, day.level);
+    }
+    const moved = refileClips(calendar);
+    return { calendar, toFill, moved };
+  }, fresh ? blank : loadCalendar);
 
   const levels = new Map<string, number>();
   for (const day of calendar.days) levels.set(day.level, (levels.get(day.level) ?? 0) + 1);
@@ -512,7 +537,6 @@ async function render() {
       info = attempt();
     }
     if (!info || !usable(info)) {
-      saveCalendar(calendar);
       throw new Error(
         `day ${day.day} did not render a usable clip` +
           (info ? ` (${info.width}×${info.height}, ${info.duration.toFixed(1)}s)` : "") +
@@ -521,19 +545,27 @@ async function render() {
     }
     day.caption = caption(calendar, day.day, day.level);
     writeFileSync(out.replace(/\.mp4$/, ".txt"), `${day.caption}\n`);
-    Object.assign(day, {
+    const rendered = {
+      caption: day.caption,
       status: "rendered" as DayStatus,
       clip: out.startsWith(homedir()) ? `~${out.slice(homedir().length)}` : out,
       durationSec: Math.round(info.duration * 10) / 10,
       renderedAt: now(),
+    };
+    Object.assign(day, rendered);
+    // Only this post's fields, onto the calendar as it is now: the take ran for minutes, and a
+    // publish run may have recorded other posts meanwhile.
+    updateCalendar((fresh) => {
+      Object.assign(postOf(fresh, day.day), rendered);
     });
-    saveCalendar(calendar);
     console.log(`✓ day ${day.day}: ${info.duration.toFixed(1)}s, caption beside it`);
     // Instagram's post. A failure here does not cost the clip: the day stays rendered for
     // TikTok and Facebook, and Instagram refuses it until the pages exist.
     try {
       await renderDayCarousel(day, base, dir);
-      saveCalendar(calendar);
+      updateCalendar((fresh) => {
+        postOf(fresh, day.day).carousel = day.carousel;
+      });
     } catch (error) {
       console.log(`  ! no carousel for day ${day.day} (${(error as Error).message}); Instagram waits for: npm run tiktok -- carousel --day ${day.day}`);
     }
@@ -580,7 +612,9 @@ async function carousel() {
     if (!day) throw new Error(`there is no day ${n}`);
     refuseBelowFloor(day);
     await renderDayCarousel(day, base, dir);
-    saveCalendar(calendar);
+    updateCalendar((fresh) => {
+      postOf(fresh, n).carousel = day.carousel;
+    });
   }
 }
 
@@ -653,56 +687,59 @@ function mark() {
   if (!spec || !next || !statuses.includes(next as DayStatus)) {
     throw new Error(`usage: mark <days> <${statuses.join("|")}> [--url <link>] [--note <text>]`);
   }
-  const calendar = loadCalendar();
-  const numbers = parseDaySpec(spec);
-  const url = flag("url");
-  if (url && numbers.length !== 1) throw new Error("--url belongs to one day");
-  for (const n of numbers) {
-    const day = calendar.days.find((d) => d.day === n);
-    if (!day) throw new Error(`there is no day ${n}`);
-    if ((next === "scheduled" || next === "posted") && !day.clip) {
-      console.log(`  ! day ${n} has no clip in the calendar; marking it ${next} anyway`);
+  updateCalendar((calendar) => {
+    const numbers = parseDaySpec(spec);
+    const url = flag("url");
+    if (url && numbers.length !== 1) throw new Error("--url belongs to one day");
+    for (const n of numbers) {
+      const day = calendar.days.find((d) => d.day === n);
+      if (!day) throw new Error(`there is no day ${n}`);
+      if ((next === "scheduled" || next === "posted") && !day.clip) {
+        console.log(`  ! day ${n} has no clip in the calendar; marking it ${next} anyway`);
+      }
+      day.status = next as DayStatus;
+      if (next === "scheduled") day.scheduledAt = now();
+      if (next === "drafted") day.draftedAt = now();
+      if (next === "posted") day.postedAt = now();
+      if (url) day.url = url;
+      if (flag("note")) day.note = flag("note")!;
     }
-    day.status = next as DayStatus;
-    if (next === "scheduled") day.scheduledAt = now();
-    if (next === "drafted") day.draftedAt = now();
-    if (next === "posted") day.postedAt = now();
-    if (url) day.url = url;
-    if (flag("note")) day.note = flag("note")!;
-  }
-  saveCalendar(calendar);
+  });
   console.log(`✓ day(s) ${spec} marked ${next}`);
 }
 
 function swap() {
   const [spec] = positional;
   if (!spec) throw new Error("usage: swap <days> [--word <word id or word>]");
-  const calendar = loadCalendar();
   const numbers = parseDaySpec(spec);
   const words = loadEligible();
-  const wanted = flag("word");
-  if (wanted && numbers.length !== 1) throw new Error("--word belongs to one day");
-  for (const n of numbers) {
-    const day = calendar.days.find((d) => d.day === n);
-    if (!day) throw new Error(`there is no day ${n}`);
-    if (day.status !== "planned" && day.status !== "rendered") {
-      throw new Error(`day ${n} is ${day.status}; only a planned or rendered day can change its word`);
+  let before = new Map<number, string>();
+  const calendar = updateCalendar((calendar) => {
+
+    const wanted = flag("word");
+    if (wanted && numbers.length !== 1) throw new Error("--word belongs to one day");
+    for (const n of numbers) {
+      const day = calendar.days.find((d) => d.day === n);
+      if (!day) throw new Error(`there is no day ${n}`);
+      if (day.status !== "planned" && day.status !== "rendered") {
+        throw new Error(`day ${n} is ${day.status}; only a planned or rendered day can change its word`);
+      }
     }
-  }
-  const before = new Map(numbers.map((n) => [n, calendar.days.find((d) => d.day === n)!.word]));
-  for (const n of numbers) calendar.excluded.push(calendar.days.find((d) => d.day === n)!.wordId);
-  if (wanted) {
-    const word = words.find((w) => w.id === wanted || w.word.toLowerCase() === wanted.toLowerCase());
-    if (!word) throw new Error(`“${wanted}” is not an eligible word in the English deck`);
-    if (calendar.days.some((d) => d.wordId === word.id && d.day !== numbers[0])) {
-      throw new Error(`“${word.word}” already has day ${calendar.days.find((d) => d.wordId === word.id)!.day}`);
+    before = new Map(numbers.map((n) => [n, calendar.days.find((d) => d.day === n)!.word]));
+    for (const n of numbers) calendar.excluded.push(calendar.days.find((d) => d.day === n)!.wordId);
+    if (wanted) {
+      const word = words.find((w) => w.id === wanted || w.word.toLowerCase() === wanted.toLowerCase());
+      if (!word) throw new Error(`“${wanted}” is not an eligible word in the English deck`);
+      if (calendar.days.some((d) => d.wordId === word.id && d.day !== numbers[0])) {
+        throw new Error(`“${word.word}” already has day ${calendar.days.find((d) => d.wordId === word.id)!.day}`);
+      }
+      calendar.days = calendar.days.filter((d) => d.day !== numbers[0]);
+      calendar.days.push(newDay(calendar, numbers[0]!, word));
+    } else {
+      fill(calendar, words, numbers, Math.max(CALENDAR_DAYS, calendar.days.length));
     }
-    calendar.days = calendar.days.filter((d) => d.day !== numbers[0]);
-    calendar.days.push(newDay(calendar, numbers[0]!, word));
-  } else {
-    fill(calendar, words, numbers, Math.max(CALENDAR_DAYS, calendar.days.length));
-  }
-  saveCalendar(calendar);
+    return calendar;
+  });
   for (const n of numbers) {
     const day = calendar.days.find((d) => d.day === n)!;
     console.log(`✓ day ${n}: “${before.get(n)}” → “${day.word}” (${day.level}, ${day.code}); render it again`);
@@ -772,12 +809,12 @@ function draftDay(day: CalendarDay, pass: string[]): boolean {
     if (!attempt()) return false;
   }
   if (pass.includes("--no-draft")) return true;
-  // Read again: the calendar may have moved on while TikTok was being driven.
-  const calendar = loadCalendar();
-  const saved = calendar.days.find((d) => d.day === day.day)!;
-  saved.status = "drafted";
-  saved.draftedAt = now();
-  saveCalendar(calendar);
+  // Onto the calendar as it is now: it may have moved on while TikTok was being driven.
+  updateCalendar((calendar) => {
+    const saved = postOf(calendar, day.day);
+    saved.status = "drafted";
+    saved.draftedAt = now();
+  });
   return true;
 }
 
@@ -818,14 +855,41 @@ function coverMsOf(day: CalendarDay): number | null {
   return typeof fraction === "number" ? fraction * day.durationSec * 1000 : null;
 }
 
-/** Change one platform's track of one day, read fresh so other writers are not undone. */
-function updateTrack(dayNumber: number, platform: PublishPlatform, change: (track: PlatformPost) => void) {
-  const calendar = loadCalendar();
-  const day = calendar.days.find((d) => d.day === dayNumber)!;
-  day.platforms ??= {};
-  const track = (day.platforms[platform] ??= { status: "pending" });
-  change(track);
-  saveCalendar(calendar);
+/**
+ * Change one platform's track of one day on the calendar as it is now, so other writers are
+ * not undone. Nothing is saved when `change` returns false.
+ * @returns What `change` returned
+ */
+function updateTrack<R>(dayNumber: number, platform: PublishPlatform, change: (track: PlatformPost) => R): R {
+  return updateCalendar((calendar) => {
+    const day = postOf(calendar, dayNumber);
+    day.platforms ??= {};
+    const track = (day.platforms[platform] ??= { status: "pending" });
+    return change(track);
+  });
+}
+
+/** A post being sent this long is taken to have died mid-upload, as postsToPublish takes it. */
+const PUBLISHING_STALE_MS = 30 * 60_000;
+
+/**
+ * Take a post for one platform: mark it publishing, unless it is already out there or another
+ * run is sending it right now. Checked and marked under the calendar's lock, so of two runs
+ * that both found it due, only one uploads it.
+ * @returns null when this run may send it, or why it may not
+ */
+function claimTrack(dayNumber: number, platform: PublishPlatform): string | null {
+  return updateTrack(dayNumber, platform, (t) => {
+    if (t.status === "posted") return `already posted on ${platform}${t.url ? ` (${t.url})` : ""}`;
+    if (t.status === "publishing" && Date.now() - Date.parse(t.at ?? "") < PUBLISHING_STALE_MS) {
+      return `another run is sending it to ${platform} (since ${t.at})`;
+    }
+    t.status = "publishing";
+    t.at = now();
+    t.error = null;
+    t.attempts = (t.attempts ?? 0) + 1;
+    return null;
+  });
 }
 
 /** What a platform still lacks before it can publish, or null when it is connected. */
@@ -856,12 +920,11 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
   const isDry = platform === "youtube" ? youtube.dryRun : meta.dryRun;
   console.log(`\n── ${platform} · post ${day.day} (${day.date} ${day.time ?? ""}) · “${day.word}”${isDry ? " · dry run" : ""}`);
   if (!isDry) {
-    updateTrack(day.day, platform, (t) => {
-      t.status = "publishing";
-      t.at = now();
-      t.error = null;
-      t.attempts = (t.attempts ?? 0) + 1;
-    });
+    const taken = claimTrack(day.day, platform);
+    if (taken) {
+      console.log(`  skipped: ${taken}`);
+      return true;
+    }
   }
   try {
     const log = (line: string) => console.log(line);
@@ -886,13 +949,13 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
         ...(result.privacy ? { privacy: result.privacy } : {}),
       }),
     );
-    const list = loadExported();
-    recordExport(list, { id: day.wordId, word: day.word, code: day.code, level: day.level }, {
-      where: platform,
-      ref: calendarExportRef(day.day),
-      at: now().slice(0, 10),
-    });
-    saveExported(list);
+    updateExported((list) =>
+      recordExport(list, { id: day.wordId, word: day.word, code: day.code, level: day.level }, {
+        where: platform,
+        ref: calendarExportRef(day.day),
+        at: now().slice(0, 10),
+      }),
+    );
     console.log(`✓ posted on ${platform}${result.url ? `: ${result.url}` : ""}${result.privacy && result.privacy !== "public" ? ` (${result.privacy})` : ""}`);
     return true;
   } catch (error) {
@@ -1114,21 +1177,21 @@ async function youtubeSetupCommand() {
  * saying to reinstall it.
  */
 function times() {
-  const calendar = loadCalendar();
-  const burstTimes = flag("burst-times");
-  const daily = flag("time");
-  if (!burstTimes && !daily) throw new Error("usage: times [--burst-times HH:MM,HH:MM,…] [--time HH:MM]");
-  if (daily) {
-    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(daily)) throw new Error(`"${daily}" is not a time (HH:MM)`);
-    calendar.postTime = daily;
-  }
-  if (burstTimes) {
-    if (!calendar.burst) throw new Error("this calendar has no opening burst; set one with plan --burst");
-    const { days, perDay } = calendar.burst;
-    calendar.burst = parseBurst(`${days}x${perDay}`, burstTimes);
-  }
-  const moved = refileClips(calendar);
-  saveCalendar(calendar);
+  const moved = updateCalendar((calendar) => {
+    const burstTimes = flag("burst-times");
+    const daily = flag("time");
+    if (!burstTimes && !daily) throw new Error("usage: times [--burst-times HH:MM,HH:MM,…] [--time HH:MM]");
+    if (daily) {
+      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(daily)) throw new Error(`"${daily}" is not a time (HH:MM)`);
+      calendar.postTime = daily;
+    }
+    if (burstTimes) {
+      if (!calendar.burst) throw new Error("this calendar has no opening burst; set one with plan --burst");
+      const { days, perDay } = calendar.burst;
+      calendar.burst = parseBurst(`${days}x${perDay}`, burstTimes);
+    }
+    return refileClips(calendar);
+  });
   const fresh = loadCalendar();
   const today = todayInVietnam(Date.now());
   console.log(
@@ -1171,8 +1234,9 @@ function exported() {
     const word = loadDeck().find((w) => w.shareCode?.toUpperCase() === code);
     if (!word) throw new Error(`no word in the English deck has code ${code}`);
     const at = flag("at") ?? now().slice(0, 10);
-    const changed = recordExport(list, { id: word.id, word: word.word, code, level: word.level }, { where, ref, at, ...(flag("note") ? { note: flag("note")! } : {}) });
-    if (changed) saveExported(list);
+    const changed = updateExported((fresh) =>
+      recordExport(fresh, { id: word.id, word: word.word, code, level: word.level }, { where, ref, at, ...(flag("note") ? { note: flag("note")! } : {}) }),
+    );
     console.log(changed ? `✓ “${word.word}” ${code} recorded as exported (${where}, ${ref})` : `“${word.word}” already has that export`);
     return;
   }
