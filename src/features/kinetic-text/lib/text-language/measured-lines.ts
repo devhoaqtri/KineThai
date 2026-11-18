@@ -48,6 +48,19 @@ export type MeasuredSegment = {
   segment: WordSegment;
   widthEm: number;
   heightEm: number;
+  /**
+   * Where the segment's box sits around its baseline, em: the box's own top and bottom
+   * edges, measured as drawn. With these and the ink below, the rows are spaced on their
+   * baselines (see spacingFor). Without them the rows are stacked as boxes, as before.
+   */
+  boxAboveEm?: number;
+  boxBelowEm?: number;
+  /**
+   * How far the segment's ink rises above and falls below its baseline, em: accents,
+   * dots under vowels and enlarged highlighted glyphs included.
+   */
+  inkAboveEm?: number;
+  inkBelowEm?: number;
 };
 
 /** The box the lines have to stay inside, and the sizes the page may be set in. */
@@ -69,7 +82,10 @@ export type MeasuredLineBounds = {
   floorFontPx: number;
   /** Gap between two segments on a line, em. */
   gapEm: number;
-  /** Extra space above every line but the first, em. */
+  /**
+   * Least clear space between two rows' boxes, em. With ink measured, the baseline pitch
+   * is raised until no row's ink reaches the next row's, and every row takes that pitch.
+   */
   lineGapEm: number;
 };
 
@@ -79,6 +95,13 @@ export type MeasuredFontBound = "max" | "width" | "height" | "budget" | "floor";
 export type MeasuredLines = {
   lines: WordLine[];
   fontPx: number;
+  /**
+   * The margin above each line, em, as laid out: index 0 is the first line (always 0), and
+   * each later line is set this far below the one before it.
+   */
+  rowMarginsEm: number[];
+  /** The baseline-to-baseline pitch every row is spaced at, em (0 when rows are boxes). */
+  pitchEm: number;
   /** What set `fontPx`. */
   bound: MeasuredFontBound;
   /** The size the page gets with the phrase rule and line budget held. */
@@ -94,6 +117,12 @@ export type MeasuredLines = {
   widestUnbreakable: boolean;
 };
 
+/**
+ * Clear space kept between the ink of one row and the ink of the next, em, when the rows
+ * are spaced from their measured ink: the same minimum the plain layout gives between
+ * boxes, so ink and boxes never sit closer than the page already allows.
+ */
+export const INK_CLEARANCE_EM = 0.06;
 /** Loosening has to buy at least this much size to be worth its stranded word or split phrase. */
 const MIN_RELAX_GAIN = 1.05;
 /** A lone scrap of a word, when the rules are loosened: a mild cost instead of a third. */
@@ -352,6 +381,8 @@ function solveArrangement(
   fontPx: number;
   bound: MeasuredFontBound;
   widestUnbreakable: boolean;
+  rowMarginsEm: number[];
+  pitchEm: number;
 } | null {
   const count = segments.length;
   if (count === 0 || count > MAX_MEASURED_SEGMENTS) return null;
@@ -359,6 +390,14 @@ function solveArrangement(
   if (segments.some((item) => !(item.widthEm > 0))) return null;
 
   const floorPx = Math.min(bounds.maxFontPx, bounds.floorFontPx);
+  // Rows are spaced from their ink only when every segment has been measured for it.
+  const inked = segments.every(
+    (item) =>
+      item.boxAboveEm !== undefined &&
+      item.boxBelowEm !== undefined &&
+      item.inkAboveEm !== undefined &&
+      item.inkBelowEm !== undefined,
+  );
   const maxSyllables = options.maxLineSyllables ?? Number.POSITIVE_INFINITY;
   const syllableCounts = segments.map(({ segment }) => countSegmentSyllables(segment));
   // Widths of the lines that hold one lone word, refilled for every arrangement.
@@ -383,6 +422,8 @@ function solveArrangement(
     lines: number;
     edgeSplit: boolean;
     bound: MeasuredFontBound;
+    rowMarginsEm: number[];
+    pitchEm: number;
   };
   let best: Candidate | null = null;
   /** The best arrangement ignoring the floor, for a page that cannot satisfy it. */
@@ -397,20 +438,27 @@ function solveArrangement(
   for (let mask = 0; mask < arrangements; mask += 1) {
     let lineIndex = 0;
     let lineWidth = 0;
-    let lineHeight = 0;
     let lineSegments = 0;
     let widest = 0;
     let widthSum = 0;
-    let blockHeight = 0;
     let phrasing = 1;
     let edgeSplit = false;
     let lineSyllables = 0;
     let overSyllableCap = false;
+    // Per row: the box above and below its baseline, and the ink above and below it.
+    const rows: RowMetrics = { asc: [], desc: [], inkAbove: [], inkBelow: [] };
+    let lineAsc = 0;
+    let lineDesc = 0;
+    let lineInkAbove = 0;
+    let lineInkBelow = 0;
     loneWidths.length = 0;
     for (let index = 0; index < count; index += 1) {
       const item = segments[index]!;
       lineWidth += (lineSegments > 0 ? bounds.gapEm : 0) + item.widthEm;
-      lineHeight = Math.max(lineHeight, item.heightEm);
+      lineAsc = Math.max(lineAsc, item.boxAboveEm ?? item.heightEm);
+      lineDesc = Math.max(lineDesc, item.boxBelowEm ?? 0);
+      lineInkAbove = Math.max(lineInkAbove, item.inkAboveEm ?? 0);
+      lineInkBelow = Math.max(lineInkBelow, item.inkBelowEm ?? 0);
       lineSegments += 1;
       lineSyllables += syllableCounts[index]!;
       const last = index === count - 1;
@@ -420,7 +468,14 @@ function solveArrangement(
       const reach = lineWidth + getVietnameseLineIndentEm(lineIndex);
       widest = Math.max(widest, reach);
       widthSum += reach;
-      blockHeight += lineHeight + (lineIndex > 0 ? bounds.lineGapEm : 0);
+      rows.asc.push(lineAsc);
+      rows.desc.push(lineDesc);
+      rows.inkAbove.push(lineInkAbove);
+      rows.inkBelow.push(lineInkBelow);
+      lineAsc = 0;
+      lineDesc = 0;
+      lineInkAbove = 0;
+      lineInkBelow = 0;
       // A segment of several words is a whole phrase on its line, not a stranded word.
       if (lineSegments === 1 && item.segment.words.length === 1) loneWidths.push(lineWidth);
       if (!last) {
@@ -432,7 +487,6 @@ function solveArrangement(
       }
       lineIndex += 1;
       lineWidth = 0;
-      lineHeight = 0;
       lineSegments = 0;
       lineSyllables = 0;
     }
@@ -440,6 +494,7 @@ function solveArrangement(
     // segment, which cannot be split and so stands on its own line.
     if (overSyllableCap) continue;
     const lines = lineIndex;
+    const spacing = spacingFor(rows, bounds.lineGapEm, inked);
     let penalty = phrasing;
     // A page that is one word on one line is not a stranded word; it is the page.
     if (lines > 1)
@@ -448,7 +503,8 @@ function solveArrangement(
 
     // Verified bounds: no line wider than its room, the block no taller than the band.
     const widthFont = bounds.lineWidthPx / widest;
-    const hardHeightFont = bounds.hardHeightPx > 0 ? bounds.hardHeightPx / blockHeight : Infinity;
+    const hardHeightFont =
+      bounds.hardHeightPx > 0 ? bounds.hardHeightPx / spacing.blockHeight : Infinity;
     const budgetFont = bounds.budgetHeightPx / (lines * bounds.budgetLineEm);
     const budgetOrFloor = Math.max(budgetFont, floorPx);
     const fontPx = Math.min(bounds.maxFontPx, widthFont, hardHeightFont, budgetOrFloor);
@@ -464,7 +520,16 @@ function solveArrangement(
               : "floor";
     const ragged = 1 - widthSum / lines / widest;
     const score = fontPx * penalty * (1 - RAGGED_WEIGHT * ragged);
-    const candidate = { mask, fontPx, score, lines, edgeSplit, bound };
+    const candidate = {
+      mask,
+      fontPx,
+      score,
+      lines,
+      edgeSplit,
+      bound,
+      rowMarginsEm: spacing.marginsEm,
+      pitchEm: spacing.pitchEm,
+    };
     // Kept whatever the floor says, so a page that cannot reach the floor still has a
     // layout to fall back to rather than none at all.
     if (
@@ -533,5 +598,68 @@ function solveArrangement(
       lineReach = 0;
     }
   });
-  return { lines, fontPx: chosen.fontPx, bound: chosen.bound, widestUnbreakable };
+  return {
+    lines,
+    fontPx: chosen.fontPx,
+    bound: chosen.bound,
+    widestUnbreakable,
+    rowMarginsEm: chosen.rowMarginsEm,
+    pitchEm: chosen.pitchEm,
+  };
+}
+
+/** Each row's box and ink, em, as the arrangement stacks them. */
+type RowMetrics = { asc: number[]; desc: number[]; inkAbove: number[]; inkBelow: number[] };
+
+/**
+ * The spacing of one arrangement: the margin above each row and the block's height.
+ *
+ * Rows are spaced on their baselines, all at one pitch. The pitch is the largest that any
+ * pair of neighbours needs: their boxes clear each other by the plain minimum, and their
+ * ink (accents, dots under vowels, an enlarged highlighted glyph) clears each other by
+ * INK_CLEARANCE_EM. So a highlighted row opens the pitch for the whole page, and every
+ * plain row sits at the same pitch as the highlighted one — the rows read evenly. Each
+ * margin is what that pitch leaves once the row's own box is taken off: a row whose box
+ * sits lower around its baseline gets a smaller margin, so the baselines still come out
+ * level.
+ *
+ * The height is the ink (or the boxes, if taller) from the top of the first row to the bottom
+ * of the last, in em, so the font that fits it is the same at any size and one solve lands on
+ * it. Without ink the rows are stacked as boxes, each pair with the plain minimum between, as
+ * before.
+ * @pure true
+ */
+function spacingFor(
+  rows: RowMetrics,
+  minGapEm: number,
+  inked: boolean,
+): { marginsEm: number[]; pitchEm: number; blockHeight: number } {
+  const lines = rows.asc.length;
+  if (!inked) {
+    let blockHeight = 0;
+    for (let row = 0; row < lines; row += 1) {
+      blockHeight += rows.asc[row]! + rows.desc[row]! + (row > 0 ? minGapEm : 0);
+    }
+    return {
+      marginsEm: rows.asc.map((_, row) => (row > 0 ? minGapEm : 0)),
+      pitchEm: 0,
+      blockHeight,
+    };
+  }
+  let pitchEm = 0;
+  for (let row = 1; row < lines; row += 1) {
+    pitchEm = Math.max(
+      pitchEm,
+      rows.desc[row - 1]! + rows.asc[row]! + minGapEm,
+      rows.inkBelow[row - 1]! + rows.inkAbove[row]! + INK_CLEARANCE_EM,
+    );
+  }
+  const marginsEm = rows.asc.map((asc, row) =>
+    row === 0 ? 0 : pitchEm - rows.desc[row - 1]! - asc,
+  );
+  // The block is as tall as its ink or its boxes, whichever reaches further: the page's
+  // own drawn-height check measures the boxes, so the solve must never be laxer than that.
+  const inkHeight = rows.inkAbove[0]! + rows.inkBelow[lines - 1]! + (lines - 1) * pitchEm;
+  const boxHeight = rows.asc[0]! + rows.desc[lines - 1]! + (lines - 1) * pitchEm;
+  return { marginsEm, pitchEm, blockHeight: Math.max(inkHeight, boxHeight) };
 }

@@ -87,10 +87,22 @@ type Solution = {
   signature: string;
   lines: WordLine[];
   fontSize: number;
+  /** The margin above each line, em (see measured-lines): index 0 is the first line. */
+  rowMarginsEm: number[];
   /** Diagnostics for the development announcement. */
   report: Omit<PageFontDetail, "text" | "fontPx" | "lines">;
   /** Set once the drawn result has been checked against the box. */
   checked: boolean;
+};
+
+/** A segment as drawn: its box and its ink, in em of the page font. */
+type SegmentSize = {
+  widthEm: number;
+  heightEm: number;
+  boxAboveEm: number;
+  boxBelowEm: number;
+  inkAboveEm: number;
+  inkBelowEm: number;
 };
 
 /**
@@ -106,6 +118,57 @@ function measureBox(node: HTMLElement): { width: number; height: number } {
   return scaled
     ? { width: node.offsetWidth, height: node.offsetHeight }
     : { width: rect.width, height: rect.height };
+}
+
+/** Shared canvas for reading glyph ink; created on first use, in the browser only. */
+let inkCanvas: CanvasRenderingContext2D | null | undefined;
+
+/**
+ * How far a segment's drawn ink rises above and falls below its baseline, in em of the
+ * page font. Read from the text as drawn — each piece at its own size, so an enlarged
+ * highlighted glyph counts at its enlarged size — with the canvas's ink bounds, which
+ * include accents and the dots under vowels that a box does not.
+ */
+function measureInk(node: HTMLElement, fontPx: number): { above: number; below: number } {
+  inkCanvas ??= node.ownerDocument.createElement("canvas").getContext("2d");
+  const context = inkCanvas;
+  let above = 0;
+  let below = 0;
+  if (!context) return { above, below };
+  const walker = node.ownerDocument.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+  for (let text = walker.nextNode(); text; text = walker.nextNode()) {
+    const content = text.textContent ?? "";
+    if (!content.trim() || !text.parentElement) continue;
+    const style = getComputedStyle(text.parentElement);
+    const size = Number.parseFloat(style.fontSize);
+    if (!(size > 0)) continue;
+    context.font = `${style.fontStyle} ${style.fontWeight} ${size}px ${style.fontFamily}`;
+    const ink = context.measureText(content);
+    above = Math.max(above, ink.actualBoundingBoxAscent / fontPx);
+    below = Math.max(below, ink.actualBoundingBoxDescent / fontPx);
+  }
+  return { above, below };
+}
+
+/**
+ * Where a segment's box sits around its baseline, in em of the page font: the distance from
+ * its top edge down to the baseline, and from the baseline down to its bottom edge. The
+ * baseline is read from an empty marker laid on it for the moment, then taken out again.
+ */
+function measureBaseline(node: HTMLElement, fontPx: number): { above: number; below: number } {
+  const rect = node.getBoundingClientRect();
+  // A segment under an entrance scale is measured in its layout size, like its box.
+  const scale = node.offsetHeight > 0 ? rect.height / node.offsetHeight : 1;
+  if (!(scale > 0)) return { above: 0, below: 0 };
+  const marker = node.ownerDocument.createElement("span");
+  marker.style.cssText = "display:inline-block;width:0;height:0";
+  node.appendChild(marker);
+  const baseline = marker.getBoundingClientRect().bottom;
+  marker.remove();
+  return {
+    above: Math.max(0, (baseline - rect.top) / scale / fontPx),
+    below: Math.max(0, (rect.bottom - baseline) / scale / fontPx),
+  };
 }
 
 /** Font sizes are held to a tenth of a pixel so two passes over the same page agree. */
@@ -159,7 +222,7 @@ export function useMeasuredLines({
   lineSpacingScale: number;
   wrapperRef: RefObject<HTMLDivElement | null>;
   textRef: RefObject<HTMLDivElement | null>;
-}): { lines: WordLine[]; fontSize: number } | null {
+}): { lines: WordLine[]; fontSize: number; rowMarginsEm: number[] } | null {
   const [solution, setSolution] = useState<Solution | null>(null);
   // Bumped when the box changes size or a typeface finishes loading.
   const [boxRevision, setBoxRevision] = useState(0);
@@ -167,7 +230,7 @@ export function useMeasuredLines({
   const measured = useRef<{
     signature: string;
     fontRevision: number;
-    sizes: Map<string, { widthEm: number; heightEm: number }>;
+    sizes: Map<string, SegmentSize>;
   } | null>(null);
   const active = enabled && !!budget;
   const maxSize = budget?.maxSize ?? 0;
@@ -224,12 +287,21 @@ export function useMeasuredLines({
     if (!sizes || sizes.signature !== signature || sizes.fontRevision !== fontRevision) {
       const fontPx = Number.parseFloat(getComputedStyle(text).fontSize);
       if (!(fontPx > 0)) return;
-      const next = new Map<string, { widthEm: number; heightEm: number }>();
+      const next = new Map<string, SegmentSize>();
       for (const node of text.querySelectorAll<HTMLElement>("[data-kinetic-segment]")) {
         const key = node.dataset.kineticSegment;
         if (!key || !(node.offsetWidth > 0)) continue;
         const drawn = measureBox(node);
-        next.set(key, { widthEm: drawn.width / fontPx, heightEm: drawn.height / fontPx });
+        const baseline = measureBaseline(node, fontPx);
+        const ink = measureInk(node, fontPx);
+        next.set(key, {
+          widthEm: drawn.width / fontPx,
+          heightEm: drawn.height / fontPx,
+          boxAboveEm: baseline.above,
+          boxBelowEm: baseline.below,
+          inkAboveEm: ink.above,
+          inkBelowEm: ink.below,
+        });
       }
       // Every segment has to be on the page to be weighed; otherwise wait for the pass
       // that draws them all.
@@ -272,6 +344,7 @@ export function useMeasuredLines({
         current &&
         current.signature === signature &&
         current.lines.map((line) => line.segments.length).join(",") === breaks &&
+        current.rowMarginsEm.join(",") === solved.rowMarginsEm.join(",") &&
         // A size already stepped down by the check below stands until the page changes.
         (current.fontSize === fontSize || (current.checked && current.fontSize < fontSize))
       ) {
@@ -281,6 +354,7 @@ export function useMeasuredLines({
         signature,
         lines: solved.lines,
         fontSize,
+        rowMarginsEm: solved.rowMarginsEm,
         checked: false,
         report: {
           maxFontPx: maxSize,
@@ -365,5 +439,9 @@ export function useMeasuredLines({
   }, [solution, signature, wrapperRef, textRef, insetTop, insetBottom]);
 
   if (!active || !solution || solution.signature !== signature) return null;
-  return solution;
+  return {
+    lines: solution.lines,
+    fontSize: solution.fontSize,
+    rowMarginsEm: solution.rowMarginsEm,
+  };
 }

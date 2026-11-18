@@ -438,6 +438,7 @@ export function WordSequenceText({
           <WordSequenceLines
             isVietnamese={isPackedLines}
             lineSpacingScale={lineSpacingScale}
+            rowMarginsEm={measuredLines?.rowMarginsEm}
             vietnameseLines={measuredLines?.lines ?? packedLayout.lines}
             words={words}
             emphasized={emphasized}

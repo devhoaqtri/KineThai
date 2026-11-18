@@ -32,6 +32,11 @@ export type WordSequenceLinesProps = {
   isVietnamese: boolean;
   /** Multiplier on the inter-line advance, forwarded from WordSequenceText. */
   lineSpacingScale?: number;
+  /**
+   * The margin above each line, em, as a measured layout solved it (see useMeasuredLines).
+   * Omitted: the plain spacing for `lineSpacingScale`.
+   */
+  rowMarginsEm?: readonly number[];
   vietnameseLines: VietnameseLines;
   words: string[];
   emphasized: Set<number>;
@@ -105,6 +110,7 @@ function getEmphasisGroups(
 export function WordSequenceLines({
   isVietnamese,
   lineSpacingScale = 1,
+  rowMarginsEm,
   vietnameseLines,
   words,
   emphasized,
@@ -323,7 +329,8 @@ export function WordSequenceLines({
             boxSizing: "border-box",
             columnGap: "0.24em",
             rowGap: `${0.08 * lineSpacingScale}em`,
-            marginTop: lineIndex === 0 ? 0 : `${0.06 * lineSpacingScale}em`,
+            marginTop:
+              lineIndex === 0 ? 0 : `${rowMarginsEm?.[lineIndex] ?? 0.06 * lineSpacingScale}em`,
             minWidth: 0,
             paddingLeft: `${line.indentEm}em`,
             paddingRight: "2%",
