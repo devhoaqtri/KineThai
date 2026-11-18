@@ -69,6 +69,9 @@ import type {
   VisualDialect,
 } from "../types";
 import { usePresence } from "@/hooks/use-presence";
+import { useStorageAccess } from "@/hooks/use-storage-access";
+import { requestStorageDialog } from "@/lib/storage-access";
+import { isStorageFeatureOff } from "../lib/storage-features";
 
 const PACE_OPTIONS: { id: ReadingPace; label: string }[] = [
   { id: "slow", label: "Chậm" },
@@ -663,6 +666,16 @@ function DifficultyDropdown({
   // Sized from the bundled catalog counts rather than the topic-filtered ones above, so a
   // chip — and the badge it leads to — means the same thing whatever topic is on. It fills
   // towards the next target, 100 words apart, and starts over towards the one after.
+  // Imported packs live only on this device: with storage refused, adding one is greyed.
+  const importOff = isStorageFeatureOff("import", useStorageAccess().state);
+  const openLibrary = (event: React.MouseEvent) => {
+    if (importOff) {
+      event.preventDefault();
+      requestStorageDialog("import");
+      return;
+    }
+    close(false);
+  };
   const progressOf = (id: string) => {
     if (!levelProgress) return null;
     const levels =
@@ -1039,7 +1052,9 @@ function DifficultyDropdown({
               <Link
                 to="/feed/library"
                 className="vocab-difficulty-library"
-                onClick={() => close(false)}
+                data-storage-off={importOff || undefined}
+                aria-disabled={importOff || undefined}
+                onClick={openLibrary}
               >
                 <Library size={16} aria-hidden="true" />
                 Thêm từ mới
@@ -1051,7 +1066,9 @@ function DifficultyDropdown({
                   className="vocab-difficulty-switch-add"
                   aria-label="Thêm gói từ JSON"
                   title="Thêm gói từ JSON"
-                  onClick={() => close(false)}
+                  data-storage-off={importOff || undefined}
+                  aria-disabled={importOff || undefined}
+                  onClick={openLibrary}
                 >
                   <Plus size={17} aria-hidden="true" />
                 </Link>
@@ -1264,6 +1281,10 @@ export function FeedControls({
     );
     return cell ? zoomCell(cell) : null;
   };
+  // The memory cells review history kept on this device; with storage refused there is
+  // none, so they are greyed and a tap says why.
+  const storage = useStorageAccess();
+  const memoryOff = isStorageFeatureOff("memory", storage.state);
   const openRecall = (cell: MemoryCell) => {
     const now = Date.now();
     recallReturn.current = memoryCells.current[cell] ?? null;
@@ -1692,7 +1713,11 @@ export function FeedControls({
                 </small>
               </label>
             )}
-            <div className="vocab-memory" aria-label="Bộ nhớ lượt xem trên thiết bị">
+            <div
+              className="vocab-memory"
+              aria-label="Bộ nhớ lượt xem trên thiết bị"
+              data-storage-off={memoryOff || undefined}
+            >
               <span className="vocab-group-label">Bộ nhớ trên thiết bị</span>
               {/* Distinct words seen, per window: yesterday, today in the middle carrying the
                 accent, then the week. The number leads, the window names it, and a window
@@ -1716,8 +1741,13 @@ export function FeedControls({
                       data-today={cell === "today" || undefined}
                       data-empty={count === 0 || undefined}
                       aria-haspopup="dialog"
-                      aria-label={`${label}: ${count} từ. Mở để ôn lại`}
-                      onClick={() => openRecall(cell)}
+                      aria-label={
+                        memoryOff
+                          ? `${label}: trình duyệt đang chặn lưu dữ liệu`
+                          : `${label}: ${count} từ. Mở để ôn lại`
+                      }
+                      aria-disabled={memoryOff || undefined}
+                      onClick={() => (memoryOff ? requestStorageDialog("memory") : openRecall(cell))}
                     >
                       <span className="vocab-memory-label">{label}</span>
                       <span className="vocab-memory-count">{count}</span>
@@ -1739,8 +1769,21 @@ export function FeedControls({
                 })}
               </div>
               <p className="vocab-options-summary">
-                Lịch sử đọc chỉ lưu trên thiết bị này. Xoá đi là mất mọi tiến độ.
+                {memoryOff
+                  ? "Trình duyệt đang chặn lưu dữ liệu, nên lịch sử đọc không được giữ lại."
+                  : "Lịch sử đọc chỉ lưu trên thiết bị này. Xoá đi là mất mọi tiến độ."}
               </p>
+              {/* Firefox can write the data yet refuse to keep it for good; nothing is greyed
+                  for that, but the reader is told the browser may clear it, and how not to. */}
+              {storage.state === "ok" && storage.persistDenied && (
+                <button
+                  type="button"
+                  className="vocab-memory-keep"
+                  onClick={() => requestStorageDialog("keep")}
+                >
+                  Trình duyệt có thể tự xoá dữ liệu này. Xem cách giữ lại
+                </button>
+              )}
             </div>
             <nav aria-label="Điều hướng trang" className="vocab-site-links">
               {/* Community is not open to readers yet; only the button is hidden, the

@@ -27,6 +27,7 @@ import { getActiveVocabWording } from "@/features/admin/api/wording.functions";
 import { FeedControls } from "./FeedControls";
 import { VocabularyStream, type StreamDemo } from "./VocabularyStream";
 import { SavedDrawer } from "./SavedDrawer";
+import { StorageAccessDialog } from "./StorageAccessDialog";
 import { StreakCelebration } from "./StreakCelebration";
 import { wordBadgeBlurb, wordBadgeTitle, wordTier } from "../lib/word-badges";
 import { DifficultyOnboarding } from "./DifficultyOnboarding";
@@ -411,6 +412,8 @@ export function VocabularyFeedPage({
               </div>
             )}
             <SavedDrawer open={savedOpen} onOpenChange={setSavedOpen} />
+            {/* Why a greyed-out on-device control is off, opened by tapping one. */}
+            <StorageAccessDialog />
             {/* Beside the drawer rather than inside the card: the word is finished at the moment
           the stream starts scrolling to the next one, so a card-level badge would ride out
           of frame half-played. Keyed on the milestone so each one replays from its start.

@@ -257,7 +257,8 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     detect:
       "localStorage.setItem/removeItem of a probe key throws (SecurityError or QuotaExceededError at size 0).",
     coverage: "covered",
-    existing: "lib/storage-probe + shell ReaderNotices",
+    existing:
+      "lib/storage-probe + shell ReaderNotices; lib/storage-access greys the on-device controls (heart, bookmark, saved tab, memory cells, pack import) and StorageAccessDialog explains each and re-checks",
     action: "Keep reading working in memory; tell the reader progress will not be kept.",
     readerHintVi:
       "Trình duyệt đang chặn lưu dữ liệu (chế độ ẩn danh?). Tiến độ học sẽ không được lưu.",
@@ -318,7 +319,8 @@ export const LOAD_FAILURE_CASES: readonly LoadFailureCase[] = [
     frequency: "rare",
     detect: "QuotaExceededError on setItem after earlier writes worked.",
     coverage: "covered",
-    existing: "lib/storage-probe + shell ReaderNotices",
+    existing:
+      "lib/storage-probe + shell ReaderNotices; lib/storage-access greys the controls that write (heart, bookmark, pack import)",
     action: "Say what cannot be saved; offer to remove imported packs.",
     readerHintVi: "Bộ nhớ của trang đã đầy. Xóa bớt bộ từ đã nhập để lưu tiếp.",
     offerReport: false,

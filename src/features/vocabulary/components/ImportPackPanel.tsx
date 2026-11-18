@@ -18,6 +18,9 @@ import {
   type CustomPack,
 } from "../lib/custom-pack";
 import { useCustomPacks } from "../hooks/useCustomPacks";
+import { useStorageAccess } from "@/hooks/use-storage-access";
+import { requestStorageDialog } from "@/lib/storage-access";
+import { isStorageFeatureOff } from "../lib/storage-features";
 import { PACK_KIT_MD, downloadPackKit } from "../lib/sample-pack";
 import { FullscreenSheet } from "./FullscreenSheet";
 import { ImportedPackList } from "./ImportedPackList";
@@ -41,8 +44,15 @@ export function ImportPackPanel() {
   const [fresh, setFresh] = useState<string | null>(null);
   const [kitOpen, setKitOpen] = useState(false);
   const library = useCustomPacks();
+  // A pack is kept only on this device; with storage refused, importing one is greyed and
+  // every way in (upload, link, paste, sample) answers with the reason instead.
+  const importOff = isStorageFeatureOff("import", useStorageAccess().state);
 
   const run = async (task: () => Promise<CustomPack>) => {
+    if (importOff) {
+      requestStorageDialog("import");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -119,7 +129,8 @@ export function ImportPackPanel() {
             className="vocab-import-row"
             onSubmit={(e) => {
               e.preventDefault();
-              if (url.trim()) fromUrl(url);
+              if (importOff) requestStorageDialog("import");
+              else if (url.trim()) fromUrl(url);
               else fileRef.current?.click();
             }}
           >
@@ -133,7 +144,13 @@ export function ImportPackPanel() {
               onPaste={onPaste}
               aria-label="Liên kết trực tiếp tới tệp JSON"
             />
-            <button type="submit" className="vocab-import-btn" disabled={busy}>
+            <button
+              type="submit"
+              className="vocab-import-btn"
+              disabled={busy}
+              data-storage-off={importOff || undefined}
+              aria-disabled={importOff || undefined}
+            >
               {busy ? (
                 "Đang tải…"
               ) : url.trim() ? (
@@ -157,6 +174,8 @@ export function ImportPackPanel() {
                 type="button"
                 className="vocab-import-sample"
                 disabled={busy}
+                data-storage-off={importOff || undefined}
+                aria-disabled={importOff || undefined}
                 onClick={() =>
                   fromUrl(new URL(`/sample-packs/${sample.file}`, window.location.origin).href)
                 }

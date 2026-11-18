@@ -74,6 +74,9 @@ import { useLearningPlayback } from "../hooks/useLearningPlayback";
 import { usePageAttention } from "../hooks/usePageAttention";
 import { pageAttention } from "../lib/page-attention";
 import { usePresence } from "@/hooks/use-presence";
+import { useStorageAccess } from "@/hooks/use-storage-access";
+import { requestStorageDialog } from "@/lib/storage-access";
+import { isStorageFeatureOff } from "../lib/storage-features";
 import type { FeedEntry, Presentation, ReadingPace } from "../types";
 import { EmojiBurst } from "./EmojiBurst";
 import { HangulAssembly } from "./HangulAssembly";
@@ -935,6 +938,9 @@ export function VocabularyCard({
   // strip each render their own heart/bookmark, and the strip mounting at the reveal
   // must not replay a pop that was earned on the other row.
   const [pops, setPops] = useState({ heart: 0, bookmark: 0, onStrip: false });
+  // Heart and bookmark only ever write on this device. With the browser refusing that,
+  // they stay in place greyed out, and a tap explains why (StorageAccessDialog).
+  const saveOff = isStorageFeatureOff("save", useStorageAccess().state);
   const toggleReaction = useCallback(
     (kind: ReactionKind) => {
       // Reactions are always live — no pre-reveal lock. flipReaction bumps the tap
@@ -1357,7 +1363,11 @@ export function VocabularyCard({
                         type="button"
                         className="vocab-emoji-strip-btn vocab-reaction-heart"
                         data-on={reactions.heart || undefined}
-                        onClick={() => toggleReaction("heart")}
+                        data-storage-off={saveOff || undefined}
+                        aria-disabled={saveOff || undefined}
+                        onClick={() =>
+                          saveOff ? requestStorageDialog("save") : toggleReaction("heart")
+                        }
                         aria-label={
                           reactions.heart ? "Bỏ yêu thích cho từ này" : "Yêu thích từ này"
                         }
@@ -1380,7 +1390,11 @@ export function VocabularyCard({
                         type="button"
                         className="vocab-emoji-strip-btn vocab-reaction-bookmark"
                         data-on={reactions.bookmark || undefined}
-                        onClick={() => toggleReaction("bookmark")}
+                        data-storage-off={saveOff || undefined}
+                        aria-disabled={saveOff || undefined}
+                        onClick={() =>
+                          saveOff ? requestStorageDialog("save") : toggleReaction("bookmark")
+                        }
                         aria-label={reactions.bookmark ? "Bỏ lưu từ này" : "Lưu từ này"}
                       >
                         <span
@@ -1419,7 +1433,11 @@ export function VocabularyCard({
                         type="button"
                         className="vocab-reaction-button vocab-reaction-heart"
                         data-on={reactions.heart || undefined}
-                        onClick={() => toggleReaction("heart")}
+                        data-storage-off={saveOff || undefined}
+                        aria-disabled={saveOff || undefined}
+                        onClick={() =>
+                          saveOff ? requestStorageDialog("save") : toggleReaction("heart")
+                        }
                         aria-label={
                           reactions.heart ? "Bỏ yêu thích cho từ này" : "Yêu thích từ này"
                         }
@@ -1441,7 +1459,11 @@ export function VocabularyCard({
                         type="button"
                         className="vocab-reaction-button vocab-reaction-bookmark"
                         data-on={reactions.bookmark || undefined}
-                        onClick={() => toggleReaction("bookmark")}
+                        data-storage-off={saveOff || undefined}
+                        aria-disabled={saveOff || undefined}
+                        onClick={() =>
+                          saveOff ? requestStorageDialog("save") : toggleReaction("bookmark")
+                        }
                         aria-label={reactions.bookmark ? "Bỏ lưu từ này" : "Lưu từ này"}
                       >
                         <span

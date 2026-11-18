@@ -16,6 +16,7 @@ import { LIBRARY_PACKS_AVAILABLE } from "@/lib/feature-flags";
 import { LIBRARY_GROUPS } from "../lib/library";
 import { formatLevelBand } from "../lib/difficulty";
 import { ImportPackPanel } from "./ImportPackPanel";
+import { StorageAccessDialog } from "./StorageAccessDialog";
 import "../vocabulary.css";
 
 /** Show the pack upload, and the curated shelves when they are on. @returns Public library page. */
@@ -41,6 +42,7 @@ export function VocabLibraryPage() {
 
       <div className="vocab-library-body">
         <ImportPackPanel />
+        <StorageAccessDialog />
         {(LIBRARY_PACKS_AVAILABLE ? LIBRARY_GROUPS : []).map((group) => (
           <section
             className="vocab-library-group"

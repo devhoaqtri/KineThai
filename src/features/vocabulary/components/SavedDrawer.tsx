@@ -31,6 +31,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Bookmark, Heart } from "lucide-react";
 import { usePresence } from "@/hooks/use-presence";
 import { useSavedCount } from "../hooks/useSavedCount";
+import { useStorageAccess } from "@/hooks/use-storage-access";
+import { requestStorageDialog } from "@/lib/storage-access";
+import { isStorageFeatureOff } from "../lib/storage-features";
 import { BookmarksPage } from "./BookmarksPage";
 
 /** Matches the panel's exit duration in vocabulary.css and this module's retract timer. */
@@ -71,6 +74,9 @@ type SavedDrawerProps = {
  */
 export function SavedDrawer({ open, onOpenChange }: SavedDrawerProps): React.ReactElement {
   const savedCount = useSavedCount();
+  // Everything the drawer holds lives on this device. With the browser refusing storage
+  // the tab stays, greyed; it neither opens nor pulls out, and a tap says why.
+  const storageOff = isStorageFeatureOff("saved", useStorageAccess().state);
   const presence = usePresence(open, SAVED_DRAWER_EXIT_MS);
   const start = useRef<{ x: number; y: number; id: number } | null>(null);
   const dragging = useRef(false);
@@ -151,6 +157,7 @@ export function SavedDrawer({ open, onOpenChange }: SavedDrawerProps): React.Rea
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (storageOff) return;
     detach.current?.();
     start.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
     dragging.current = false;
@@ -312,7 +319,9 @@ export function SavedDrawer({ open, onOpenChange }: SavedDrawerProps): React.Rea
           aria-label={label}
           title={label}
           aria-expanded={open}
-          onClick={() => onOpenChange(true)}
+          data-storage-off={storageOff || undefined}
+          aria-disabled={storageOff || undefined}
+          onClick={() => (storageOff ? requestStorageDialog("saved") : onOpenChange(true))}
         >
           <span
             className="vocab-saved-handle-glass"

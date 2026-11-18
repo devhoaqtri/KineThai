@@ -9,11 +9,12 @@
  * or export pages.
  *
  * Exports: ReaderNotices
- * Depends on: ./ShellNotice, @/lib/storage-probe
+ * Depends on: ./ShellNotice, @/lib/storage-probe (type), @/hooks/use-storage-access
  */
 
 import { useEffect, useState } from "react";
-import { probeLocalStorage, type StorageState } from "@/lib/storage-probe";
+import type { StorageState } from "@/lib/storage-probe";
+import { useStorageAccess } from "@/hooks/use-storage-access";
 import { ShellNotice } from "./ShellNotice";
 
 /** How long "back online" stays up. */
@@ -55,7 +56,7 @@ function useConnection(): Connection {
 const STORAGE_COPY: Record<Exclude<StorageState, "ok">, { title: string; body: string }> = {
   blocked: {
     title: "Trình duyệt đang chặn lưu dữ liệu",
-    body: "Tiến độ học, từ đã lưu và cài đặt của bạn sẽ mất khi đóng trang. Hãy tắt chế độ ẩn danh, hoặc cho phép trang lưu dữ liệu (cookie và dữ liệu trang web) trong cài đặt trình duyệt.",
+    body: "Tiến độ học, từ đã lưu và cài đặt của bạn sẽ mất khi đóng trang, và các nút cần lưu trên máy được làm mờ. Hãy tắt chế độ ẩn danh, hoặc cho phép trang lưu dữ liệu (cookie và dữ liệu trang web) trong cài đặt trình duyệt.",
   },
   full: {
     title: "Bộ nhớ của trang đã đầy",
@@ -66,14 +67,14 @@ const STORAGE_COPY: Record<Exclude<StorageState, "ok">, { title: string; body: s
 /** @returns The active notices, or null when there is nothing to say. */
 export function ReaderNotices() {
   const connection = useConnection();
-  const [storage, setStorage] = useState<StorageState>("ok");
+  // The shared answer, so a "Thử lại" that works in the storage dialog clears this too.
+  const storage = useStorageAccess().state;
   const [storageDismissed, setStorageDismissed] = useState(false);
   const [offlineDismissed, setOfflineDismissed] = useState(false);
   const [excluded, setExcluded] = useState(true);
 
   useEffect(() => {
     setExcluded(excludedPath());
-    setStorage(probeLocalStorage());
   }, []);
   // A new loss of connection is news again, even if the last one was dismissed.
   useEffect(() => {

@@ -10978,3 +10978,167 @@ button.vocab-info-row[aria-expanded="true"] {
     animation: none;
   }
 }
+
+/* ── On-device storage off (lib/storage-access, StorageAccessDialog) ─────────────────
+   When the browser will not let the site keep data, the controls that need it stay in
+   place, greyed, and a tap opens the dialog that says why instead of failing silently.
+   They are not `disabled`: a disabled button takes no tap, and the tap is the way to the
+   reason. The saved-words tab fades its own layers (its glass needs an unfaded parent to
+   blur), so it lowers its strength instead of its opacity. */
+.vocabulary-shell [data-storage-off]:not(.vocab-saved-handle) {
+  opacity: 0.42;
+  filter: grayscale(1);
+}
+.vocabulary-shell .vocab-saved-handle[data-storage-off] {
+  --handle-strength: 0.22;
+  filter: grayscale(1);
+}
+.vocab-memory[data-storage-off] .vocab-memory-stats button {
+  opacity: 0.42;
+  filter: grayscale(1);
+}
+.vocab-memory-keep {
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--shell-text-soft);
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.vocab-storage-layer {
+  position: fixed;
+  inset: 0;
+  /* Over the settings panel (70) and every drawer: it is answering a tap made in them. */
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+}
+.vocab-storage-scrim {
+  position: absolute;
+  inset: 0;
+  background: #05030ca6;
+  animation: vocab-report-fade var(--dur-quick) var(--ease-out) both;
+}
+.vocab-storage-panel {
+  position: relative;
+  width: min(400px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px;
+  border: 1px solid var(--shell-line-strong);
+  border-radius: 22px;
+  background: var(--shell-surface);
+  color: var(--shell-text);
+  box-shadow: 0 20px 60px #000a;
+  font-family: "Inter", sans-serif;
+  animation: vocab-report-in var(--dur-move) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.vocab-storage-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.vocab-storage-head h2 {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+.vocab-storage-icon {
+  flex-shrink: 0;
+  color: var(--citrus, #fcd34d);
+}
+.vocab-storage-close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  margin: -6px -6px -6px 0;
+  border-radius: 50%;
+  color: var(--shell-text-soft);
+}
+.vocab-storage-close:hover {
+  background: var(--shell-hover);
+  color: var(--shell-text);
+}
+.vocab-storage-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--shell-text-soft);
+}
+.vocab-storage-note svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--mint);
+}
+.vocab-storage-note:first-of-type {
+  color: var(--shell-text);
+}
+.vocab-storage-steps-title {
+  margin-top: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--shell-text-mute);
+}
+.vocab-storage-steps {
+  display: grid;
+  gap: 6px;
+  margin-top: 6px;
+  padding-left: 20px;
+  list-style: decimal;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--shell-text);
+}
+.vocab-storage-error {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #fca5a5;
+}
+.vocab-storage-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+.vocab-storage-later,
+.vocab-storage-retry {
+  min-height: 46px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  transition: transform var(--dur-move) var(--ease-spring);
+}
+.vocab-storage-later {
+  border: 1px solid var(--shell-line-strong);
+  color: var(--shell-text);
+}
+.vocab-storage-retry {
+  background: var(--mint);
+  color: var(--shell-on-text);
+}
+.vocab-storage-retry:disabled {
+  opacity: 0.6;
+}
+.vocab-storage-later:active,
+.vocab-storage-retry:not(:disabled):active {
+  transform: scale(0.96);
+  transition-duration: var(--dur-press);
+}
