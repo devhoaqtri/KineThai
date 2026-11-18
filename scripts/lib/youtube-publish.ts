@@ -21,7 +21,8 @@
  * and YT_REFRESH_TOKEN) live in .env.local, which git ignores, and are never printed.
  * YT_DRY_RUN=1 (or `dryRun`) runs every step but the network.
  *
- * Exports: YouTubeConfig, loadYouTubeConfig, youtubeReady, publishShort, ShortResult, youtubeSetup
+ * Exports: YouTubeConfig, loadYouTubeConfig, youtubeReady, publishShort, ShortResult, youtubeSetup,
+ *   recentShorts
  * Depends on: Node's fetch, http and crypto; meta-publish's env helpers
  */
 import { spawn } from "node:child_process";
@@ -183,6 +184,38 @@ export async function publishShort(input: {
     );
   }
   return { id: video.id, url: `https://youtube.com/shorts/${video.id}`, privacy };
+}
+
+/**
+ * The channel's latest uploads, newest first, as id, address and title plus description, so a
+ * post can be looked for before it is sent (postNumberIn reads which one each is). Uses the
+ * youtube.readonly scope the token was granted. Empty on a dry run.
+ * @throws when YouTube cannot be asked: the caller sends nothing rather than risk a second copy
+ */
+export async function recentShorts(config: YouTubeConfig): Promise<{ id: string; url: string; text: string }[]> {
+  if (config.dryRun) return [];
+  const token = await accessToken(config);
+  const headers = { Authorization: `Bearer ${token}` };
+  const channel = await fetch("https://www.googleapis.com/youtube/v3/channels?part=contentDetails&mine=true", {
+    headers,
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!channel.ok) throw await googleError(channel, "channel lookup");
+  const uploads = ((await channel.json()) as { items?: { contentDetails?: { relatedPlaylists?: { uploads?: string } } }[] })
+    .items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+  if (!uploads) throw new Error("YouTube channel lookup: the channel has no uploads list");
+  const list = await fetch(
+    `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${encodeURIComponent(uploads)}`,
+    { headers, signal: AbortSignal.timeout(30_000) },
+  );
+  if (!list.ok) throw await googleError(list, "uploads lookup");
+  const items = ((await list.json()) as {
+    items?: { snippet?: { title?: string; description?: string; resourceId?: { videoId?: string } } }[];
+  }).items ?? [];
+  return items.flatMap((item) => {
+    const id = item.snippet?.resourceId?.videoId;
+    return id ? [{ id, url: `https://youtube.com/shorts/${id}`, text: `${item.snippet?.title ?? ""}\n${item.snippet?.description ?? ""}` }] : [];
+  });
 }
 
 const base64url = (bytes: Buffer) => bytes.toString("base64url");

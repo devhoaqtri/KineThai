@@ -23,7 +23,8 @@
  * ids come back as `dry-…`, and nothing on either platform changes.
  *
  * Exports: MetaConfig, loadMetaConfig, metaReady, publishReel, publishCarousel,
- *   largestImage, MAX_CAROUSEL_ITEMS, exchangeForPageToken, writeEnvLocal, ReelResult
+ *   largestImage, MAX_CAROUSEL_ITEMS, exchangeForPageToken, writeEnvLocal, ReelResult,
+ *   LiveUpload, recentUploads
  * Depends on: Node's fetch, FormData and Blob; the clip and the page images on disk
  */
 import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
@@ -141,15 +142,29 @@ async function upload(config: MetaConfig, uploadUrl: string, file: string, log: 
   }
 }
 
-/** Ask until `done` says so, every few seconds, for up to `limitMs`. */
+/**
+ * Ask until `done` says so, every few seconds, for up to `limitMs`. A question that fails (a
+ * timeout, a dropped connection) is asked again: by then the post has been sent, and one slow
+ * answer once had a live Reel recorded as failed and sent a second time.
+ */
 async function poll<T>(ask: () => Promise<T>, done: (value: T) => boolean | Error, limitMs: number): Promise<T> {
   const deadline = Date.now() + limitMs;
   for (;;) {
-    const value = await ask();
-    const verdict = done(value);
-    if (verdict instanceof Error) throw verdict;
-    if (verdict) return value;
-    if (Date.now() > deadline) throw new Error("Meta did not finish processing the clip in time");
+    let value: T | undefined;
+    let failure: unknown = null;
+    try {
+      value = await ask();
+    } catch (error) {
+      failure = error;
+    }
+    if (!failure) {
+      const verdict = done(value as T);
+      if (verdict instanceof Error) throw verdict;
+      if (verdict) return value as T;
+    }
+    if (Date.now() > deadline) {
+      throw failure instanceof Error ? failure : new Error("Meta did not finish processing the clip in time");
+    }
     await new Promise((resolve) => setTimeout(resolve, 5000));
   }
 }
@@ -237,6 +252,33 @@ async function publishInstagramReel(
  * @param input.coverMs - Instagram's cover frame, in ms into the clip (Facebook picks its own)
  * @throws with Meta's own message when a step is refused or processing fails
  */
+/** A post already on a platform: its id, address and the text it went out with. */
+export type LiveUpload = { id: string; url: string | null; text: string };
+
+/**
+ * The Page's latest Reels (Facebook) or the account's latest posts (Instagram), newest first,
+ * so a post can be looked for before it is sent (postNumberIn reads which one each is). Empty
+ * on a dry run.
+ * @throws when Meta cannot be asked: the caller sends nothing rather than risk a second copy
+ */
+export async function recentUploads(config: MetaConfig, platform: MetaPlatform, log: Log = () => {}): Promise<LiveUpload[]> {
+  const token = config.pageToken!;
+  if (platform === "facebook") {
+    const page = await graph<{ data?: { id: string; description?: string; permalink_url?: string }[] }>(
+      config, "GET", `${config.pageId}/video_reels`, { fields: "id,description,permalink_url", limit: "50", access_token: token }, log,
+    );
+    return (page.data ?? []).map((r) => ({
+      id: r.id,
+      url: r.permalink_url ? new URL(r.permalink_url, "https://www.facebook.com").href : null,
+      text: r.description ?? "",
+    }));
+  }
+  const media = await graph<{ data?: { id: string; caption?: string; permalink?: string }[] }>(
+    config, "GET", `${config.igUserId}/media`, { fields: "id,caption,permalink", limit: "50", access_token: token }, log,
+  );
+  return (media.data ?? []).map((m) => ({ id: m.id, url: m.permalink ?? null, text: m.caption ?? "" }));
+}
+
 export async function publishReel(input: {
   config: MetaConfig;
   platform: MetaPlatform;

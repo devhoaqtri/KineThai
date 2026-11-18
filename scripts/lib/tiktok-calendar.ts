@@ -25,7 +25,7 @@
  *   carouselSlides, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
  *   PUBLISH_PLATFORMS, PublishPlatform, MUSIC_PLATFORMS, MusicPlatform, youtubeTitle,
- *   PlatformPost, postsToPublish, captionForPlatform
+ *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn
  */
 
 /** How many hashtags TikTok keeps in a caption; it silently drops the rest. */
@@ -733,6 +733,8 @@ export type PlatformPost = {
   attempts?: number;
   /** What the platform set the post to, when it is not plainly public (YouTube: `private` until audited). */
   privacy?: string | null;
+  /** How the record came to be, when not by this run's own upload ("found already live; not sent again"). */
+  note?: string | null;
   /**
    * The song laid under this platform's video (MUSIC_PLATFORMS). A `proposed` song
    * holds the post until the admin accepts it on /posting; absent, the clip goes out as
@@ -786,6 +788,17 @@ export function pickSong(songs: string[], used: { song: string; day: number }[],
   const best = Math.min(...songs.map(rank));
   const ties = [...songs].sort().filter((song) => rank(song) === best);
   return ties[day % ties.length]!;
+}
+
+/**
+ * The post a caption, description or title belongs to, from its "Từ số N/365", or null.
+ * Every platform's text carries it (captionFor, youtubeTitle), so the check before an upload
+ * reads it to find a post that is already live. Accents may come back decomposed.
+ * @pure true
+ */
+export function postNumberIn(text: string | null | undefined): number | null {
+  const match = /Từ số (\d+)\/\d+/.exec((text ?? "").normalize("NFC"));
+  return match ? Number(match[1]) : null;
 }
 
 /** Tries the scheduled job makes at a failing post before leaving it to the admin. */

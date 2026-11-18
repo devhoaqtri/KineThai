@@ -74,9 +74,9 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
 import { updateJsonFile } from "./lib/locked-file";
-import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, writeEnvLocal } from "./lib/meta-publish";
+import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, recentUploads, writeEnvLocal } from "./lib/meta-publish";
 import { SOUNDS_DIRS, listSongs, mixSong, songTitle } from "./lib/music-mix";
-import { loadYouTubeConfig, publishShort, youtubeReady, youtubeSetup } from "./lib/youtube-publish";
+import { loadYouTubeConfig, publishShort, recentShorts, youtubeReady, youtubeSetup } from "./lib/youtube-publish";
 import { renderCarousel } from "./render-carousel";
 import { siteAddress, withScheme } from "../src/features/vocabulary/lib/target-language";
 import {
@@ -111,6 +111,7 @@ import {
   META_PLATFORMS,
   captionForPlatform,
   postsToPublish,
+  postNumberIn,
   postsAwaitingMusic,
   musicHolds,
   mixedClipPath,
@@ -898,6 +899,44 @@ function platformReady(platform: PublishPlatform): string | null {
 }
 
 /**
+ * The upload of a post a platform already has, read from the "Từ số N/365" in its text
+ * (postNumberIn), or undefined. Asked before every upload: on 2026-11-18 post 10 went out
+ * twice on Facebook and YouTube because a run could not tell it was already live.
+ * @throws when the platform cannot be asked
+ */
+async function findLive(dayNumber: number, platform: PublishPlatform): Promise<{ id: string; url: string | null } | undefined> {
+  const uploads =
+    platform === "youtube" ? await recentShorts(loadYouTubeConfig(ROOT)) : await recentUploads(loadMetaConfig(ROOT), platform);
+  return uploads.find((u) => postNumberIn(u.text) === dayNumber);
+}
+
+/** Record a post as live on a platform, on the calendar and on the exported-words list. */
+function recordPosted(
+  day: CalendarDay,
+  platform: PublishPlatform,
+  result: { id: string; url: string | null; privacy?: string; note?: string },
+) {
+  updateTrack(day.day, platform, (t) =>
+    Object.assign(t, {
+      status: "posted",
+      id: result.id,
+      url: result.url,
+      at: now(),
+      error: null,
+      ...(result.privacy ? { privacy: result.privacy } : {}),
+      ...(result.note ? { note: result.note } : {}),
+    }),
+  );
+  updateExported((list) =>
+    recordExport(list, { id: day.wordId, word: day.word, code: day.code, level: day.level }, {
+      where: platform,
+      ref: calendarExportRef(day.day),
+      at: now().slice(0, 10),
+    }),
+  );
+}
+
+/**
  * Publish one day on one platform and record the outcome on the calendar (and, once it is
  * live, on the exported-words list). A dry run touches neither.
  * @returns Whether it went out
@@ -928,6 +967,14 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
   }
   try {
     const log = (line: string) => console.log(line);
+    // Already live there, from a run that died after sending or a record that was lost? Then
+    // it is recorded, never sent again. A lookup that fails sends nothing (caught below).
+    const live = isDry ? undefined : await findLive(day.day, platform);
+    if (live) {
+      recordPosted(day, platform, { id: live.id, url: live.url, note: "found already live; not sent again" });
+      console.log(`✓ already on ${platform}, not sent again${live.url ? `: ${live.url}` : ""}`);
+      return true;
+    }
     const caption = captionForPlatform(day, platform);
     const result: { id: string; url: string | null; privacy?: string } =
       platform === "youtube"
@@ -939,23 +986,7 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
       console.log("✓ dry run: every step would be sent");
       return true;
     }
-    updateTrack(day.day, platform, (t) =>
-      Object.assign(t, {
-        status: "posted",
-        id: result.id,
-        url: result.url,
-        at: now(),
-        error: null,
-        ...(result.privacy ? { privacy: result.privacy } : {}),
-      }),
-    );
-    updateExported((list) =>
-      recordExport(list, { id: day.wordId, word: day.word, code: day.code, level: day.level }, {
-        where: platform,
-        ref: calendarExportRef(day.day),
-        at: now().slice(0, 10),
-      }),
-    );
+    recordPosted(day, platform, result);
     console.log(`✓ posted on ${platform}${result.url ? `: ${result.url}` : ""}${result.privacy && result.privacy !== "public" ? ` (${result.privacy})` : ""}`);
     return true;
   } catch (error) {

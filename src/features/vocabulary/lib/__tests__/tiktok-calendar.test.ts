@@ -7,6 +7,7 @@ import {
   dayOfDate,
   firstPostOnDate,
   parseBurst,
+  postNumberIn,
   midnightIndex,
   slotOfPost,
   eligibleWords,
@@ -556,5 +557,26 @@ describe("carouselSlides", () => {
       "03.jpeg",
       "10.jpg",
     ]);
+  });
+});
+
+describe("postNumberIn", () => {
+  it("reads the post from a caption, a Short's title or a description", () => {
+    expect(postNumberIn("Từ gì mà ... 🤔 Đoán trước!\nTừ số 10/365 · trình độ B1")).toBe(10);
+    expect(postNumberIn("Từ gì mà ... 🤔 Từ số 7/365 · B2 #shorts")).toBe(7);
+  });
+
+  it("never takes post 1 for post 10", () => {
+    expect(postNumberIn("Từ số 10/365")).not.toBe(1);
+    expect(postNumberIn("Từ số 1/365")).toBe(1);
+  });
+
+  it("reads accents that came back decomposed", () => {
+    expect(postNumberIn("Từ số 12/365".normalize("NFD"))).toBe(12);
+  });
+
+  it("is null for text that names no post", () => {
+    expect(postNumberIn("Học thêm mỗi ngày")).toBeNull();
+    expect(postNumberIn(undefined)).toBeNull();
   });
 });
