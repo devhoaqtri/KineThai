@@ -504,13 +504,36 @@
       "carousel": "~/KineMedia-tiktok/clips/carousels/anh-chayla-P0S-4x5",
       "platforms": {
         "facebook": {
-          "status": "pending",
+          "status": "posted",
           "music": {
             "song": "Paper Planets - Sequels.m4a",
             "startSec": 0,
             "status": "accepted",
             "at": "2026-11-19T05:58:34.198Z"
-          }
+          },
+          "at": "2026-11-19T06:46:42.646Z",
+          "error": null,
+          "attempts": 1,
+          "id": "2198497931025373",
+          "url": "https://www.facebook.com/reel/2198497931025373/"
+        },
+        "instagram": {
+          "status": "posted",
+          "at": "2026-11-19T07:09:50.099Z",
+          "error": null,
+          "attempts": 2,
+          "id": "18122283047286207",
+          "url": "https://www.instagram.com/p/Df6gnhuiatx/",
+          "note": "live although the upload answered: Meta POST 17841441424999220/media_publish: Application request limit reached"
+        },
+        "youtube": {
+          "status": "posted",
+          "at": "2026-11-19T06:55:27.569Z",
+          "error": null,
+          "attempts": 1,
+          "id": "e9kALSmSCk4",
+          "url": "https://youtube.com/shorts/e9kALSmSCk4",
+          "privacy": "public"
         }
       },
       "draftedAt": "2026-11-18T06:45:35.293Z"
@@ -588,15 +611,28 @@
       "code": "RPC",
       "level": "C1",
       "topic": "thinking",
-      "status": "planned",
+      "status": "drafted",
       "caption": "Từ gì mà ... 🤔 Đoán trước khi đáp án hiện ra!\nTừ số 16/365 · trình độ C1\nBình luận đáp án của bạn nhé 👇\nHọc thêm mỗi ngày tại https://anh.chayla.app\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #c1",
-      "clip": null,
-      "durationSec": null,
-      "renderedAt": null,
+      "clip": "~/KineMedia-tiktok/clips/day-016-2026-11-20-contrary.mp4",
+      "durationSec": 53.5,
+      "renderedAt": "2026-11-19T06:58:30.330Z",
       "scheduledAt": null,
       "postedAt": null,
       "url": null,
-      "note": null
+      "note": null,
+      "carousel": "~/KineMedia-tiktok/clips/carousels/anh-chayla-RPC-4x5",
+      "platforms": {
+        "facebook": {
+          "status": "pending",
+          "music": {
+            "song": "Coffee Cart - Fellow Travelers.m4a",
+            "startSec": 0,
+            "status": "accepted",
+            "at": "2026-11-19T06:58:45.938Z"
+          }
+        }
+      },
+      "draftedAt": "2026-11-19T07:07:48.134Z"
     },
     {
       "day": 17,
