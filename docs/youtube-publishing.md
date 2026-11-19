@@ -56,18 +56,18 @@ YouTube's API cannot attach Audio Library music to an upload, so the song is mix
 file first. Meta's Sound Collection is licensed for Meta's apps only, so YouTube never reuses
 the Facebook folder.
 
-- **Default (since 2026-11-19): Openverse, nothing downloaded.** With
-  `~/KineMedia-tiktok/sounds-youtube/` empty, the 13:30 job picks a CC BY track for each due
+- **Default (since 2026-11-19): Openverse, nothing downloaded** (Facebook too). The 13:30 job picks a CC BY track for each due
   YouTube post from Openverse (scripts/lib/open-music.ts: no key, at most 20 results a
   search), ffmpeg reads it straight from its address into the mix, and only the mixed clip
   is written. The track's credit (Openverse's attribution sentence plus its Jamendo page) is
   stored on the post and appended to the YouTube description, as CC BY requires. Never twice
   the same track; long enough to cover the clip without looping. Accepted at once.
-- **Own library instead:** put MP3s from YouTube Studio → **Audio library** (*No attribution
-  required*) into that folder and the job picks from them, as for Facebook.
-- By hand: `npm run tiktok -- music 10 --platform youtube` picks again (from the folder, or
-  Openverse when it is empty); `--song none` for silence; `--start 12` mixes the post's own
-  song from another second.
+- **A folder song by hand:** MP3s from YouTube Studio → **Audio library** (*No attribution
+  required*) in `~/KineMedia-tiktok/sounds-youtube/` can be chosen on `/posting` or with `--song`;
+  the job never picks from the folder.
+- By hand: `npm run tiktok -- music 10 --platform youtube` picks again from Openverse;
+  `--song <file|none>` takes a folder file or silence; `--start 12` mixes the post's own song
+  from another second.
 
 ## Commands
 

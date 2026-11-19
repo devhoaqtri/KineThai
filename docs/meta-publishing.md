@@ -24,16 +24,16 @@ copy of the clip before upload (`scripts/lib/music-mix.ts`: video copied untouch
 the clip's length, faded, levelled to -14 LUFS, written to `<clip>.facebook.mp4`). Instagram posts
 carousels and TikTok adds its sound in the app, so only Facebook carries one.
 
-- Download tracks from Meta's Sound Collection (Meta Business Suite, signed in as the Page) into
-  `~/KineMedia-tiktok/sounds/` (or the calendar's `soundsDir`). The file name is the title shown.
-- The 13:30 job runs `npm run tiktok -- music-due`: each Facebook post due within 24 hours gets the
-  least recently used song, mixed in, as a **proposal**. A proposed song holds the post: it does not go
-  out until accepted.
-- On `/posting`, the post's **♪ Song** line picks another track, sets where in it to start, **Mix**es it
-  again, plays it ("With song" under the player) and **Accept**s it. "No music" is a choice too. Accepting
-  after the post's time has passed publishes it at once (within the 6-hour grace).
-- By hand: `npm run tiktok -- music 8 [--song <file|none>] [--start 12]`, then `music accept 8`.
-- With an empty sounds folder nothing is proposed and posts go out silent, as before.
+- **Since 2026-11-19 the song comes from Openverse, nothing downloaded** (the same as YouTube,
+  docs/youtube-publishing.md): the 13:30 job (`music-due`) picks a CC BY track for each Facebook post
+  due within 24 hours (`scripts/lib/open-music.ts`), ffmpeg reads it straight from its address into
+  the mix, and the track's credit is appended to the Reel's description, as CC BY requires. Never
+  the same track twice on a platform; accepted at once, so a song never holds a post.
+- On `/posting`, the post's **♪ Song** line can still swap in a Sound Collection track from
+  `~/KineMedia-tiktok/sounds/` (chosen by hand only), set where to start, or choose "No music".
+- By hand: `npm run tiktok -- music 8` picks again from Openverse; `--song <file|none>` takes a
+  folder file or silence; `--start 12` mixes the post's own song from another second.
+- If Openverse cannot be reached, the post goes out silent at its time and the job reports it.
 
 ## One-time setup (about 15 minutes, all by you, in a browser)
 

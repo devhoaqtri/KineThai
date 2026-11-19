@@ -22,13 +22,13 @@
  *             scheduled job, scripts/tiktok-auto.ts publish); quiet when nothing is due
  *   music     the song under a post's Facebook Reel or YouTube Short (scripts/lib/music-mix.ts,
  *             `--platform facebook|youtube`, Facebook by default; each has its own library):
- *             `music 8` picks one from that sounds folder and mixes it in, accepted at once,
- *             `--song <file|none>` and `--start <s>` choose; `music accept 8` accepts a song
+ *             `music 8` picks one from Openverse (CC BY, credited, streamed: nothing is
+ *             downloaded) and mixes it in, accepted at once; `--song <file|none>` takes a
+ *             sounds-folder file (or silence) by hand and `--start <s>` the second to start at; `music accept 8` accepts a song
  *             left `proposed` by an older run (and publishes at once when its slot has passed)
  *   music-due  pick a song for every post due within --hours (default 24) that has none,
- *             on each connected music platform whose sounds folder has any (the morning job);
- *             YouTube with an empty folder gets an Openverse CC BY track, streamed into the mix
- *             and credited in the description (scripts/lib/open-music.ts)
+ *             on each connected music platform (the morning job), from Openverse
+ *             (scripts/lib/open-music.ts), credited in the post's text
  *   times     move the post times (`--burst-times 13:30,20:30,02:30`, `--time 19:00`); a time
  *             earlier than the one before it is the night after; posts already out keep theirs
  *   youtube-setup  sign in to Google once (in your browser) and keep YouTube's refresh token
@@ -118,7 +118,6 @@ import {
   postsAwaitingMusic,
   musicHolds,
   mixedClipPath,
-  pickSong,
   postTimeMs,
   isPostLevel,
   MIN_POST_LEVEL,
@@ -1018,8 +1017,8 @@ const isMusicPlatform = (platform: PublishPlatform): platform is MusicPlatform =
 const soundsDirOf = (calendar: Calendar, platform: MusicPlatform) => soundsDirFor(calendar, platform, SOUNDS_DIRS);
 /** Where each library's tracks come from, for the messages that send the admin there. */
 const LIBRARY_NAME: Record<MusicPlatform, string> = {
-  facebook: "Meta's Sound Collection",
-  youtube: "YouTube Studio's Audio Library (or, with the folder empty, Openverse)",
+  facebook: "Meta's Sound Collection, chosen by hand only",
+  youtube: "YouTube Studio's Audio Library, chosen by hand only",
 };
 
 /** A song's name to show: an Openverse track's title, else the file name without extension. */
@@ -1050,7 +1049,7 @@ function videoFor(day: CalendarDay, platform: PublishPlatform): string {
   return out;
 }
 
-/** Every song earlier posts carry on a platform, for pickSong. */
+/** Every song earlier posts carry on a platform, so none is picked twice. */
 function songsUsed(calendar: Calendar, platform: MusicPlatform): { song: string; day: number }[] {
   return calendar.days.flatMap((d) => {
     const song = d.platforms?.[platform]?.music?.song;
@@ -1062,10 +1061,10 @@ function songsUsed(calendar: Calendar, platform: MusicPlatform): { song: string;
  * Give a post a song (or none) on one platform and mix it in. The song is accepted at once:
  * the admin asked on 2026-11-19 never to be asked to decide, so a song never holds a post.
  * /posting can still swap it before the post goes out.
- * @param song - a file in that platform's sounds folder, null for no music, or undefined to pick one
+ * @param song - a file in that platform's sounds folder, the post's own Openverse song, or null for none
  * @returns The song set
  */
-function proposeSong(dayNumber: number, platform: MusicPlatform, song: string | null | undefined, startSec: number): string | null {
+function proposeSong(dayNumber: number, platform: MusicPlatform, song: string | null, startSec: number): string | null {
   const calendar = loadCalendar();
   const day = calendar.days.find((d) => d.day === dayNumber);
   if (!day) throw new Error(`there is no post ${dayNumber}`);
@@ -1084,8 +1083,7 @@ function proposeSong(dayNumber: number, platform: MusicPlatform, song: string | 
     });
     return song;
   }
-  const chosen = song === undefined ? pickSong(songs, songsUsed(calendar, platform), dayNumber) : song;
-  if (song === undefined && !chosen) throw new Error(`no songs in ${dir}: download tracks from ${LIBRARY_NAME[platform]} there`);
+  const chosen = song;
   if (chosen && !songs.includes(chosen)) throw new Error(`no song “${chosen}” in ${dir}`);
   if (chosen) {
     const out = mixedClipPath(expandHome(day.clip), platform);
@@ -1098,9 +1096,9 @@ function proposeSong(dayNumber: number, platform: MusicPlatform, song: string | 
 }
 
 /**
- * Give a post's YouTube Short a song from Openverse (scripts/lib/open-music.ts) when the
- * YouTube sounds folder is empty: the track is read straight from its address into the mix,
- * never stored, and its CC BY credit is kept for the description. Accepted at once.
+ * Give a post's Facebook Reel or YouTube Short a song from Openverse (scripts/lib/open-music.ts):
+ * the track is read straight from its address into the mix, never stored, and its CC BY
+ * credit is kept for the post's text on that platform. Accepted at once.
  * @returns The song's name
  * @throws When Openverse cannot be reached or has no track that fits
  */
@@ -1183,10 +1181,9 @@ async function music() {
   const songFlag = flag("song");
   const start = Number(flag("start") ?? 0);
   if (!(start >= 0)) throw new Error("--start is seconds into the song");
-  const fromOpenverse = songFlag === undefined && platform === "youtube" && !listSongs(soundsDirOf(loadCalendar(), platform)).length;
-  const chosen = fromOpenverse
-    ? await proposeOpenSong(n, platform)
-    : proposeSong(n, platform, songFlag === undefined ? undefined : songFlag === "none" ? null : songFlag, start);
+  // A song picked for the admin always comes from Openverse; --song names a folder file by hand.
+  const chosen =
+    songFlag === undefined ? await proposeOpenSong(n, platform) : proposeSong(n, platform, songFlag === "none" ? null : songFlag, start);
   const day = loadCalendar().days.find((d) => d.day === n)!;
   const music = day.platforms?.[platform]?.music;
   console.log(
@@ -1198,7 +1195,8 @@ async function music() {
 
 /**
  * Pick a song for every post due within --hours that has none, on each connected music
- * platform: from its sounds folder, or for YouTube with an empty folder from Openverse.
+ * platform, from Openverse (CC BY, credited, streamed into the mix: nothing is downloaded,
+ * as the admin asked on 2026-11-19). Sounds-folder songs are only ever chosen by hand.
  */
 async function musicDue() {
   const hours = Number(flag("hours") ?? 24);
@@ -1207,11 +1205,6 @@ async function musicDue() {
   for (const platform of MUSIC_PLATFORMS) {
     const calendar = loadCalendar();
     if (platformReady(platform)) continue; // not connected: nothing to hold
-    const fromOpenverse = !listSongs(soundsDirOf(calendar, platform)).length;
-    if (fromOpenverse && platform !== "youtube") {
-      console.log(`${platform}: no songs in ${soundsDirOf(calendar, platform)}; posts go out silent.`);
-      continue;
-    }
     const nowMs = Date.now();
     const due = calendar.days.filter((d) => {
       const slot = postTimeMs(d, calendar.postTime);
@@ -1227,8 +1220,8 @@ async function musicDue() {
     });
     for (const day of due) {
       try {
-        const song = fromOpenverse ? await proposeOpenSong(day.day, platform) : songTitle(proposeSong(day.day, platform, undefined, 0)!);
-        console.log(`✓ ${platform} · post ${day.day} “${day.word}” (${day.date} ${day.time ?? ""}): “${song}”${fromOpenverse ? " (Openverse, credited)" : ""}`);
+        const song = await proposeOpenSong(day.day, platform);
+        console.log(`✓ ${platform} · post ${day.day} “${day.word}” (${day.date} ${day.time ?? ""}): “${song}” (Openverse, credited)`);
       } catch (error) {
         problems.push(`${platform} post ${day.day}: ${error instanceof Error ? error.message : String(error)}`);
       }

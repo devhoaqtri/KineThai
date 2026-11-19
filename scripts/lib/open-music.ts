@@ -1,16 +1,16 @@
 /**
- * Songs for YouTube Shorts picked from Openverse (api.openverse.org) when a post needs one,
- * so no library has to be downloaded first. The track is never stored: ffmpeg reads it
- * straight from its address while mixing (music-mix.ts mixSong `source`), and only the mixed
- * clip is written.
+ * Songs for Facebook Reels and YouTube Shorts, picked from Openverse (api.openverse.org) when a
+ * post needs one, so no library has to be downloaded (the admin's wish, 2026-11-19). The track
+ * is never stored: ffmpeg reads it straight from its address while mixing (music-mix.ts
+ * mixSong `source`), and only the mixed clip is written.
  *
- * Why Openverse: YouTube's API cannot attach Audio Library music to an upload, and Audio
- * Library tracks have no public address; Meta's Sound Collection is licensed for Meta's apps
- * only. Openverse indexes openly licensed audio (mostly Jamendo), needs no key, and says each
- * track's licence. Only CC BY and CC0 are asked for: both allow setting the music to a video
- * on any platform; CC BY needs the credit line (creditLine), which captionForPlatform appends
- * to the YouTube description. Openverse has had no CC0 music, so in practice every pick is
- * CC BY and is credited.
+ * Why Openverse: neither API attaches music to an upload, YouTube's Audio Library tracks have
+ * no public address, and Meta's Sound Collection is licensed for Meta's apps only. Openverse
+ * indexes openly licensed audio (mostly Jamendo), needs no key, and says each track's licence.
+ * Only CC BY and CC0 are asked for: both allow setting the music to a video on any platform;
+ * CC BY needs the credit line (creditLine), which captionForPlatform appends to the post's
+ * text on each platform. Openverse has had no CC0 music, so in practice every pick is CC BY
+ * and is credited.
  *
  * Exports: OpenTrack, OPEN_MUSIC_QUERIES, OPEN_SONG_PREFIX, isOpenSong, openSongId,
  *   searchOpenTracks, pickOpenTrack, creditLine

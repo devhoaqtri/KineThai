@@ -10,7 +10,9 @@
  *
  * A Facebook Reel or a YouTube Short can carry a song from that platform's own library (Meta's
  * Sound Collection, YouTube's Audio Library, laid in by scripts/lib/music-mix.ts): pick one,
- * play the clip with it. A picked song is accepted at once (the admin is never asked to
+ * play the clip with it. The morning job picks each song from Openverse (CC BY, credited in the
+ * post's text, streamed into the mix so nothing is downloaded); a sounds-folder song can still
+ * be chosen here by hand. A picked song is accepted at once (the admin is never asked to
  * decide); a `proposed` one left by an older run still holds the post until accepted, and
  * accepting after the post's time publishes it at once.
  *
@@ -170,7 +172,7 @@ function SongRow({
   platform: { id: MusicPlatform; label: string; library: string; dir: string; songs: string[] };
   onDone: (error: string | null) => void;
 }) {
-  const { songs, dir: soundsDir } = platform;
+  const { songs } = platform;
   const track: Track = post.platforms[platform.id] ?? { status: "pending" };
   const music = track.music ?? null;
   const current = music ? (music.song ?? "none") : "";
@@ -181,17 +183,11 @@ function SongRow({
   useEffect(() => setStart(String(music?.startSec ?? 0)), [music?.startSec]);
   const locked = track.status === "posted" || track.status === "publishing";
   if (locked && !music) return null;
-  if (!songs.length && !music) {
+  if (!music) {
+    // Songs are picked by the morning job from Openverse; a folder song can still be set by hand.
     return (
       <p className="posting-song-empty">
-        {platform.id === "youtube" ? (
-          <>♪ {platform.label}: a CC BY song from Openverse is picked and credited when the post is due.</>
-        ) : (
-          <>
-            ♪ {platform.label}: no songs yet. Download tracks from {platform.library} into <code>{soundsDir}</code> and
-            {platform.label} posts get one.
-          </>
-        )}
+        ♪ {platform.label}: a CC BY song from Openverse is picked and credited when the post is due.
       </p>
     );
   }
