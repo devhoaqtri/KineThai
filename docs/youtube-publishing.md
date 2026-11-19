@@ -6,7 +6,7 @@ Instagram ([meta-publishing.md](meta-publishing.md)): the post's `platforms.yout
 calendar, the publish job at each post time, and the YouTube row on `/posting`.
 
 - **Video**: the rendered clip (9:16, under a minute, so YouTube files it as a Short), with a song from
-  YouTube's own Audio Library mixed in when one is accepted.
+  an Openverse CC BY track (credited) or YouTube's own Audio Library mixed in.
 - **Title**: `Từ gì mà ... 🤔 Từ số N/365 · B1 #shorts` (`youtubeTitle`; never the word).
 - **Description**: the calendar caption (or the post's "YouTube only" caption). Category Education,
   language Vietnamese, not made for kids.
@@ -52,15 +52,22 @@ Optional: `YT_PRIVACY=unlisted|private` asks for less than public; `YT_DRY_RUN=1
 
 ## Songs
 
-Meta's Sound Collection is licensed for Meta's apps only, so YouTube has its own library:
+YouTube's API cannot attach Audio Library music to an upload, so the song is mixed into the
+file first. Meta's Sound Collection is licensed for Meta's apps only, so YouTube never reuses
+the Facebook folder.
 
-- YouTube Studio → **Audio library** → filter *No attribution required* (attribution tracks need a
-  credit line in the description) → download MP3s into `~/KineMedia-tiktok/sounds-youtube/`
-  (or the calendar's `youtubeSoundsDir`), named `Title - Artist.mp3`.
-- From then on the 13:30 job proposes a song for each YouTube post too, and the post waits for
-  **Accept** on `/posting` (the ♪ YouTube row), exactly like Facebook. With no songs, Shorts go out silent.
-- By hand: `npm run tiktok -- music 10 --platform youtube [--song <file|none>] [--start 12]`, then
-  `npm run tiktok -- music accept 10 --platform youtube`.
+- **Default (since 2026-11-19): Openverse, nothing downloaded.** With
+  `~/KineMedia-tiktok/sounds-youtube/` empty, the 13:30 job picks a CC BY track for each due
+  YouTube post from Openverse (scripts/lib/open-music.ts: no key, at most 20 results a
+  search), ffmpeg reads it straight from its address into the mix, and only the mixed clip
+  is written. The track's credit (Openverse's attribution sentence plus its Jamendo page) is
+  stored on the post and appended to the YouTube description, as CC BY requires. Never twice
+  the same track; long enough to cover the clip without looping. Accepted at once.
+- **Own library instead:** put MP3s from YouTube Studio → **Audio library** (*No attribution
+  required*) into that folder and the job picks from them, as for Facebook.
+- By hand: `npm run tiktok -- music 10 --platform youtube` picks again (from the folder, or
+  Openverse when it is empty); `--song none` for silence; `--start 12` mixes the post's own
+  song from another second.
 
 ## Commands
 

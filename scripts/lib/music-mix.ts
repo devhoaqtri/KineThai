@@ -83,8 +83,11 @@ export function mixArgs(input: {
   startSec: number;
   durationSec: number;
   out: string;
+  /** Loop the song to cover the clip; off for a streamed song, which cannot be looped. */
+  loop?: boolean;
 }): string[] {
   const { clip, song, startSec, durationSec, out } = input;
+  const loop = input.loop ?? true;
   const fadeOutAt = Math.max(0, durationSec - FADE_OUT).toFixed(2);
   return [
     "-y",
@@ -93,8 +96,7 @@ export function mixArgs(input: {
     "-i",
     clip,
     // Loop the song from its start, so a short track still covers the clip.
-    "-stream_loop",
-    "-1",
+    ...(loop ? ["-stream_loop", "-1"] : []),
     "-ss",
     String(Math.max(0, startSec)),
     "-i",
@@ -124,9 +126,11 @@ export function mixArgs(input: {
 }
 
 /**
- * Mix a song from the sounds folder into a copy of a clip.
+ * Mix a song into a copy of a clip: a file from the sounds folder, or a track read straight
+ * from its address (`source`, an Openverse track: nothing is stored but the mix).
  * @param input.clip - the rendered clip (absolute path)
- * @param input.song - the track's file name in `soundsDir`
+ * @param input.song - the track's file name in `soundsDir`, or its calendar name with `source`
+ * @param input.source - the song's address, read by ffmpeg instead of a sounds-folder file
  * @param input.out - where the mixed video goes (absolute path); replaced when there
  * @throws When the clip or the song is missing or ffmpeg fails
  */
@@ -136,21 +140,23 @@ export function mixSong(input: {
   startSec: number;
   out: string;
   soundsDir?: string;
+  source?: string;
 }): void {
-  const song = join(expandHome(input.soundsDir ?? SOUNDS_DIR), input.song);
+  const streamed = !!input.source;
+  const song = input.source ?? join(expandHome(input.soundsDir ?? SOUNDS_DIR), input.song);
   if (!existsSync(input.clip)) throw new Error(`no clip at ${input.clip}`);
-  if (!existsSync(song))
+  if (!streamed && !existsSync(song))
     throw new Error(`no song “${input.song}” in ${input.soundsDir ?? SOUNDS_DIR}`);
   const durationSec = mediaDuration(input.clip);
   if (!durationSec) throw new Error(`ffprobe cannot read ${input.clip}`);
-  const songLength = mediaDuration(song);
+  const songLength = streamed ? null : mediaDuration(song);
   if (songLength && input.startSec >= songLength) {
     throw new Error(`“${input.song}” is ${Math.floor(songLength)}s long; start before that`);
   }
   const partial = `${input.out}.partial`;
   const run = spawnSync(
     "ffmpeg",
-    mixArgs({ clip: input.clip, song, startSec: input.startSec, durationSec, out: partial }),
+    mixArgs({ clip: input.clip, song, startSec: input.startSec, durationSec, out: partial, loop: !streamed }),
     {
       encoding: "utf8",
     },

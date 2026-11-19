@@ -532,6 +532,22 @@ describe("publishing on Facebook and Instagram", () => {
     expect(captionForPlatform(day, "facebook")).toBe("shared");
   });
 
+  it("credits a CC BY song under that platform's text only", () => {
+    const music = {
+      song: "openverse:x1",
+      startSec: 0,
+      status: "accepted" as const,
+      at: "2026-11-19T00:00:00Z",
+      credit: "🎵 “Song” by Someone is licensed under CC BY 4.0.",
+    };
+    const day = post(1, "19:00", { platforms: { youtube: { status: "pending", music } } });
+    expect(captionForPlatform(day, "youtube")).toBe("shared\n\n🎵 “Song” by Someone is licensed under CC BY 4.0.");
+    expect(captionForPlatform(day, "facebook")).toBe("shared");
+    // No song, no credit, even if one was left behind.
+    const silent = post(2, "19:00", { platforms: { youtube: { status: "pending", music: { ...music, song: null } } } });
+    expect(captionForPlatform(silent, "youtube")).toBe("shared");
+  });
+
   it("does not call the same post on another platform a repeat", () => {
     const list: ExportedWords = { version: 1, words: {} };
     const word = { id: "vi-w1", word: "w1", code: "ABC", level: "A1" };

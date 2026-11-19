@@ -26,7 +26,9 @@
  *             `--song <file|none>` and `--start <s>` choose; `music accept 8` accepts a song
  *             left `proposed` by an older run (and publishes at once when its slot has passed)
  *   music-due  pick a song for every post due within --hours (default 24) that has none,
- *             on each connected music platform whose sounds folder has any (the morning job)
+ *             on each connected music platform whose sounds folder has any (the morning job);
+ *             YouTube with an empty folder gets an Openverse CC BY track, streamed into the mix
+ *             and credited in the description (scripts/lib/open-music.ts)
  *   times     move the post times (`--burst-times 13:30,20:30,02:30`, `--time 19:00`); a time
  *             earlier than the one before it is the night after; posts already out keep theirs
  *   youtube-setup  sign in to Google once (in your browser) and keep YouTube's refresh token
@@ -75,7 +77,8 @@ import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
 import { updateJsonFile } from "./lib/locked-file";
 import { findLiveAfterError } from "./lib/live-after-error";
 import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, recentUploads, writeEnvLocal } from "./lib/meta-publish";
-import { SOUNDS_DIRS, listSongs, mixSong, songTitle } from "./lib/music-mix";
+import { SOUNDS_DIRS, listSongs, mediaDuration, mixSong, songTitle } from "./lib/music-mix";
+import { OPEN_MUSIC_QUERIES, creditLine, isOpenSong, openSongId, pickOpenTrack, searchOpenTracks } from "./lib/open-music";
 import { loadYouTubeConfig, publishShort, recentShorts, youtubeReady, youtubeSetup } from "./lib/youtube-publish";
 import { renderCarousel } from "./render-carousel";
 import { siteAddress, withScheme } from "../src/features/vocabulary/lib/target-language";
@@ -1016,8 +1019,12 @@ const soundsDirOf = (calendar: Calendar, platform: MusicPlatform) => soundsDirFo
 /** Where each library's tracks come from, for the messages that send the admin there. */
 const LIBRARY_NAME: Record<MusicPlatform, string> = {
   facebook: "Meta's Sound Collection",
-  youtube: "YouTube Studio's Audio Library",
+  youtube: "YouTube Studio's Audio Library (or, with the folder empty, Openverse)",
 };
+
+/** A song's name to show: an Openverse track's title, else the file name without extension. */
+const songName = (music: { song: string | null; title?: string | null }) =>
+  music.title || (music.song ? songTitle(music.song) : "no music");
 
 /**
  * The video a platform uploads: the clip as rendered, or its mix with the accepted song,
@@ -1029,8 +1036,16 @@ function videoFor(day: CalendarDay, platform: PublishPlatform): string {
   if (!music?.song || !isMusicPlatform(platform)) return clip;
   const out = mixedClipPath(clip, platform);
   if (!existsSync(out)) {
-    console.log(`  mixing “${songTitle(music.song)}” into the clip again (no mix on disk)`);
-    mixSong({ clip, song: music.song, startSec: music.startSec, out, soundsDir: soundsDirOf(loadCalendar(), platform) });
+    console.log(`  mixing “${songName(music)}” into the clip again (no mix on disk)`);
+    if (isOpenSong(music.song) && !music.audioUrl) throw new Error(`post ${day.day}'s ${platform} song has no audio address`);
+    mixSong({
+      clip,
+      song: music.song,
+      startSec: music.startSec,
+      out,
+      soundsDir: soundsDirOf(loadCalendar(), platform),
+      source: isOpenSong(music.song) ? music.audioUrl! : undefined,
+    });
   }
   return out;
 }
@@ -1059,6 +1074,16 @@ function proposeSong(dayNumber: number, platform: MusicPlatform, song: string | 
   if (track?.status === "posted" || track?.status === "publishing") throw new Error(`post ${dayNumber} is ${track.status} on ${platform}`);
   const dir = soundsDirOf(calendar, platform);
   const songs = listSongs(dir);
+  // The post's own Openverse song, mixed again (from another second): its address is on file.
+  if (isOpenSong(song)) {
+    const current = track?.music;
+    if (current?.song !== song || !current.audioUrl) throw new Error(`post ${dayNumber} has no ${song} on ${platform}`);
+    mixSong({ clip: expandHome(day.clip), song, startSec, out: mixedClipPath(expandHome(day.clip), platform), source: current.audioUrl });
+    updateTrack(dayNumber, platform, (t) => {
+      t.music = { ...current, startSec, status: "accepted", at: now() };
+    });
+    return song;
+  }
   const chosen = song === undefined ? pickSong(songs, songsUsed(calendar, platform), dayNumber) : song;
   if (song === undefined && !chosen) throw new Error(`no songs in ${dir}: download tracks from ${LIBRARY_NAME[platform]} there`);
   if (chosen && !songs.includes(chosen)) throw new Error(`no song “${chosen}” in ${dir}`);
@@ -1072,6 +1097,46 @@ function proposeSong(dayNumber: number, platform: MusicPlatform, song: string | 
   return chosen;
 }
 
+/**
+ * Give a post's YouTube Short a song from Openverse (scripts/lib/open-music.ts) when the
+ * YouTube sounds folder is empty: the track is read straight from its address into the mix,
+ * never stored, and its CC BY credit is kept for the description. Accepted at once.
+ * @returns The song's name
+ * @throws When Openverse cannot be reached or has no track that fits
+ */
+async function proposeOpenSong(dayNumber: number, platform: MusicPlatform): Promise<string> {
+  const calendar = loadCalendar();
+  const day = calendar.days.find((d) => d.day === dayNumber);
+  if (!day) throw new Error(`there is no post ${dayNumber}`);
+  if (!day.clip) throw new Error(`post ${dayNumber} has no clip yet`);
+  const track = day.platforms?.[platform];
+  if (track?.status === "posted" || track?.status === "publishing") throw new Error(`post ${dayNumber} is ${track.status} on ${platform}`);
+  const clip = expandHome(day.clip);
+  const clipSec = mediaDuration(clip);
+  if (!clipSec) throw new Error(`ffprobe cannot read ${clip}`);
+  const usedIds = new Set(songsUsed(calendar, platform).map((u) => u.song));
+  for (let i = 0; i < OPEN_MUSIC_QUERIES.length; i += 1) {
+    const query = OPEN_MUSIC_QUERIES[(dayNumber + i) % OPEN_MUSIC_QUERIES.length]!;
+    const picked = pickOpenTrack(await searchOpenTracks(query), { clipSec, usedIds, dayNumber });
+    if (!picked) continue;
+    mixSong({ clip, song: openSongId(picked), startSec: 0, out: mixedClipPath(clip, platform), source: picked.audioUrl });
+    const title = picked.creator ? `${picked.title} – ${picked.creator}` : picked.title;
+    updateTrack(dayNumber, platform, (t) => {
+      t.music = {
+        song: openSongId(picked),
+        startSec: 0,
+        status: "accepted",
+        at: now(),
+        title,
+        audioUrl: picked.audioUrl,
+        credit: creditLine(picked),
+      };
+    });
+    return title;
+  }
+  throw new Error(`Openverse has no unused track long enough for post ${dayNumber}`);
+}
+
 /** Let a post go out with its song; publish it now when its slot has already passed. */
 async function acceptSong(dayNumber: number, platform: MusicPlatform) {
   const day = loadCalendar().days.find((d) => d.day === dayNumber);
@@ -1081,7 +1146,7 @@ async function acceptSong(dayNumber: number, platform: MusicPlatform) {
   updateTrack(dayNumber, platform, (t) => {
     t.music = { ...music, status: "accepted", at: now() };
   });
-  console.log(`✓ post ${dayNumber} goes out on ${platform} with ${music.song ? `“${songTitle(music.song)}”` : "no music"}`);
+  console.log(`✓ post ${dayNumber} goes out on ${platform} with ${music.song ? `“${songName(music)}”` : "no music"}`);
   const late = postsToPublish(loadCalendar(), Date.now(), platform).some((d) => d.day === dayNumber);
   if (late && !platformReady(platform)) {
     console.log("  its time has passed: publishing now");
@@ -1118,28 +1183,32 @@ async function music() {
   const songFlag = flag("song");
   const start = Number(flag("start") ?? 0);
   if (!(start >= 0)) throw new Error("--start is seconds into the song");
-  const chosen = proposeSong(n, platform, songFlag === undefined ? undefined : songFlag === "none" ? null : songFlag, start);
+  const fromOpenverse = songFlag === undefined && platform === "youtube" && !listSongs(soundsDirOf(loadCalendar(), platform)).length;
+  const chosen = fromOpenverse
+    ? await proposeOpenSong(n, platform)
+    : proposeSong(n, platform, songFlag === undefined ? undefined : songFlag === "none" ? null : songFlag, start);
   const day = loadCalendar().days.find((d) => d.day === n)!;
+  const music = day.platforms?.[platform]?.music;
   console.log(
-    chosen
-      ? `✓ ${platform} · post ${n} “${day.word}”: “${songTitle(chosen)}” from ${start}s, mixed into ${mixedClipPath(day.clip!, platform)}`
+    chosen && music
+      ? `✓ ${platform} · post ${n} “${day.word}”: “${songName(music)}” from ${music.startSec}s, mixed into ${mixedClipPath(day.clip!, platform)}`
       : `✓ ${platform} · post ${n} “${day.word}”: no music`,
   );
-  console.log(`  it waits for: npm run tiktok -- music accept ${n} --platform ${platform} (or Accept on /posting)`);
 }
 
 /**
- * Propose a song for every post due within --hours that has none, on each music platform
- * that is connected and has songs.
+ * Pick a song for every post due within --hours that has none, on each connected music
+ * platform: from its sounds folder, or for YouTube with an empty folder from Openverse.
  */
-function musicDue() {
+async function musicDue() {
   const hours = Number(flag("hours") ?? 24);
   if (!(hours > 0)) throw new Error("--hours is a positive number");
   const problems: string[] = [];
   for (const platform of MUSIC_PLATFORMS) {
     const calendar = loadCalendar();
     if (platformReady(platform)) continue; // not connected: nothing to hold
-    if (!listSongs(soundsDirOf(calendar, platform)).length) {
+    const fromOpenverse = !listSongs(soundsDirOf(calendar, platform)).length;
+    if (fromOpenverse && platform !== "youtube") {
       console.log(`${platform}: no songs in ${soundsDirOf(calendar, platform)}; posts go out silent.`);
       continue;
     }
@@ -1158,8 +1227,8 @@ function musicDue() {
     });
     for (const day of due) {
       try {
-        const song = proposeSong(day.day, platform, undefined, 0);
-        console.log(`✓ ${platform} · post ${day.day} “${day.word}” (${day.date} ${day.time ?? ""}): “${songTitle(song!)}”`);
+        const song = fromOpenverse ? await proposeOpenSong(day.day, platform) : songTitle(proposeSong(day.day, platform, undefined, 0)!);
+        console.log(`✓ ${platform} · post ${day.day} “${day.word}” (${day.date} ${day.time ?? ""}): “${song}”${fromOpenverse ? " (Openverse, credited)" : ""}`);
       } catch (error) {
         problems.push(`${platform} post ${day.day}: ${error instanceof Error ? error.message : String(error)}`);
       }

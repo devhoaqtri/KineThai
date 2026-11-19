@@ -35,7 +35,7 @@ type Track = {
   error?: string | null;
   attempts?: number;
   privacy?: string | null;
-  music?: { song: string | null; startSec: number; status: "proposed" | "accepted" } | null;
+  music?: { song: string | null; startSec: number; status: "proposed" | "accepted"; title?: string | null } | null;
 };
 
 type Post = {
@@ -184,8 +184,14 @@ function SongRow({
   if (!songs.length && !music) {
     return (
       <p className="posting-song-empty">
-        ♪ {platform.label}: no songs yet. Download tracks from {platform.library} into <code>{soundsDir}</code> and
-        {platform.label} posts get one to accept.
+        {platform.id === "youtube" ? (
+          <>♪ {platform.label}: a CC BY song from Openverse is picked and credited when the post is due.</>
+        ) : (
+          <>
+            ♪ {platform.label}: no songs yet. Download tracks from {platform.library} into <code>{soundsDir}</code> and
+            {platform.label} posts get one.
+          </>
+        )}
       </p>
     );
   }
@@ -199,11 +205,13 @@ function SongRow({
     <div className="posting-song" data-status={music?.status ?? "none"}>
       <span className="posting-track-name">♪ {platform.label}</span>
       {locked ? (
-        <span>{music?.song ? `${songTitle(music.song)} · from ${music.startSec}s` : "no music"}</span>
+        <span>{music?.song ? `${music.title || songTitle(music.song)} · from ${music.startSec}s` : "no music"}</span>
       ) : (
         <>
           <select value={choice} onChange={(event) => setChoice(event.target.value)} aria-label={`Song for ${platform.label}`}>
             {!music && <option value="">Choose a song…</option>}
+            {/* A song picked from outside the folder (Openverse) is still the current choice. */}
+            {music?.song && !songs.includes(music.song) && <option value={music.song}>{music.title || songTitle(music.song)}</option>}
             {songs.map((song) => (
               <option key={song} value={song}>
                 {songTitle(song)}

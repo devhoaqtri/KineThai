@@ -756,6 +756,12 @@ export type PostMusic = {
   startSec: number;
   status: "proposed" | "accepted";
   at: string;
+  /** An Openverse song's (scripts/lib/open-music.ts): its name to show. */
+  title?: string | null;
+  /** An Openverse song's audio address, which ffmpeg reads while mixing; nothing is stored. */
+  audioUrl?: string | null;
+  /** The credit a CC BY song needs, appended to the platform's text (captionForPlatform). */
+  credit?: string | null;
 };
 
 /** Whether a post waits on its song: proposed and not yet accepted. @pure true */
@@ -806,7 +812,11 @@ export const MAX_PUBLISH_ATTEMPTS = 3;
 
 /** The caption a platform posts: its own when set, else the calendar's. @pure true */
 export function captionForPlatform(day: CalendarDay, platform: PublishPlatform): string {
-  return day.platforms?.[platform]?.caption?.trim() || day.caption;
+  const caption = day.platforms?.[platform]?.caption?.trim() || day.caption;
+  const music = day.platforms?.[platform]?.music;
+  // A CC BY song's licence asks for its credit wherever the video goes.
+  const credit = music?.song && music.credit ? music.credit.trim() : "";
+  return credit ? `${caption}\n\n${credit}` : caption;
 }
 
 /**
