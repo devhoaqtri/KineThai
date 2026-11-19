@@ -22,11 +22,10 @@
  *             scheduled job, scripts/tiktok-auto.ts publish); quiet when nothing is due
  *   music     the song under a post's Facebook Reel or YouTube Short (scripts/lib/music-mix.ts,
  *             `--platform facebook|youtube`, Facebook by default; each has its own library):
- *             `music 8` proposes one from that sounds folder and mixes it in,
- *             `--song <file|none>` and `--start <s>` choose, `music accept 8` lets the post
- *             go out with it (and publishes at once when its slot has passed); a proposed
- *             song holds the post on that platform
- *   music-due  propose a song for every post due within --hours (default 24) that has none,
+ *             `music 8` picks one from that sounds folder and mixes it in, accepted at once,
+ *             `--song <file|none>` and `--start <s>` choose; `music accept 8` accepts a song
+ *             left `proposed` by an older run (and publishes at once when its slot has passed)
+ *   music-due  pick a song for every post due within --hours (default 24) that has none,
  *             on each connected music platform whose sounds folder has any (the morning job)
  *   times     move the post times (`--burst-times 13:30,20:30,02:30`, `--time 19:00`); a time
  *             earlier than the one before it is the night after; posts already out keep theirs
@@ -1045,8 +1044,9 @@ function songsUsed(calendar: Calendar, platform: MusicPlatform): { song: string;
 }
 
 /**
- * Give a post a song (or none) on one platform and mix it in, as a proposal the admin then
- * accepts.
+ * Give a post a song (or none) on one platform and mix it in. The song is accepted at once:
+ * the admin asked on 2026-11-19 never to be asked to decide, so a song never holds a post.
+ * /posting can still swap it before the post goes out.
  * @param song - a file in that platform's sounds folder, null for no music, or undefined to pick one
  * @returns The song set
  */
@@ -1067,7 +1067,7 @@ function proposeSong(dayNumber: number, platform: MusicPlatform, song: string | 
     mixSong({ clip: expandHome(day.clip), song: chosen, startSec, out, soundsDir: dir });
   }
   updateTrack(dayNumber, platform, (t) => {
-    t.music = { song: chosen, startSec: chosen ? startSec : 0, status: "proposed", at: now() };
+    t.music = { song: chosen, startSec: chosen ? startSec : 0, status: "accepted", at: now() };
   });
   return chosen;
 }
@@ -1165,7 +1165,7 @@ function musicDue() {
       }
     }
     if (!due.length) console.log(`${platform}: every post due within ${hours}h already has its song.`);
-    else console.log(`  accept them on /posting, or: npm run tiktok -- music accept <post> --platform ${platform}`);
+    else console.log(`  accepted; /posting can swap one before its post goes out`);
   }
   if (problems.length) throw new Error(problems.join("\n  "));
 }

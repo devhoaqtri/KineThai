@@ -736,9 +736,9 @@ export type PlatformPost = {
   /** How the record came to be, when not by this run's own upload ("found already live; not sent again"). */
   note?: string | null;
   /**
-   * The song laid under this platform's video (MUSIC_PLATFORMS). A `proposed` song
-   * holds the post until the admin accepts it on /posting; absent, the clip goes out as
-   * rendered, silent.
+   * The song laid under this platform's video (MUSIC_PLATFORMS). Songs are accepted when
+   * picked (tiktok.ts proposeSong); a `proposed` one, left by runs before 2026-11-19, holds
+   * the post until accepted. Absent, the clip goes out as rendered, silent.
    */
   music?: PostMusic | null;
 };

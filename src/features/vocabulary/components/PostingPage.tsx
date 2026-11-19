@@ -10,8 +10,9 @@
  *
  * A Facebook Reel or a YouTube Short can carry a song from that platform's own library (Meta's
  * Sound Collection, YouTube's Audio Library, laid in by scripts/lib/music-mix.ts): pick one,
- * play the clip with it, and Accept. A proposed song
- * holds the post until it is accepted; accepting after the post's time publishes it at once.
+ * play the clip with it. A picked song is accepted at once (the admin is never asked to
+ * decide); a `proposed` one left by an older run still holds the post until accepted, and
+ * accepting after the post's time publishes it at once.
  *
  * Development only (routes/posting.tsx); the build fails if this reaches a bundle.
  */

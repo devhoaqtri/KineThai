@@ -5,7 +5,7 @@
  *              for the recording when none answers and stopping it afterwards
  *   draft      render any post due within --hours (default 24) that has no clip yet, propose
  *              a song for each due Facebook and YouTube post when that platform's sounds folder
- *              has any (tiktok.ts music-due; it then waits for Accept on /posting), then save every due post as
+ *              has any (tiktok.ts music-due; accepted at once), then save every due post as
  *              a TikTok draft in the emulator (tiktok.ts draft-due)
  *   publish    post on Facebook, Instagram and YouTube every post whose time has come (tiktok.ts
  *              publish-due); launchd runs it at the calendar's post times (publishTimes),
@@ -218,13 +218,13 @@ async function draftJob() {
       if ((await tiktok(["render", "--day", list])) !== 0) throw new Error(`rendering post(s) ${list} failed`);
     });
   }
-  // Songs for Facebook first: they wait on the admin, so the sooner they are proposed the better.
+  // Songs first, so each post's mix exists well before its time.
   const withSongs = (calendar: Calendar) =>
     calendar.days.flatMap((d) => MUSIC_PLATFORMS.filter((p) => d.platforms?.[p]?.music).map((p) => `#${d.day} ${p}`));
   const songsBefore = new Set(withSongs(loadCalendar()));
   const musicCode = await tiktok(["music-due", "--hours", hours]);
   const songs = withSongs(loadCalendar()).filter((s) => !songsBefore.has(s));
-  if (songs.length) notify("Songs to accept", `${songs.join(", ")}: listen and accept on /posting before their time.`);
+  if (songs.length) notify("Songs picked", `${songs.join(", ")}: accepted; swap one on /posting if you like.`);
   const before = new Set(loadCalendar().days.filter((d) => d.status === "drafted").map((d) => d.day));
   const code = await tiktok(["draft-due", "--hours", hours]);
   const drafted = loadCalendar().days.filter((d) => d.status === "drafted" && !before.has(d.day));
