@@ -108,6 +108,13 @@ export function SpellingAnimation({
   // Array.from keeps surrogate pairs and combining marks together, so an
   // accented letter never animates as two separate glyphs.
   const letters = useMemo(() => Array.from(word), [word]);
+  // Every other letter, counted over letters only (a space starts no new beat), is marked
+  // for a still slide to set in the accent: the colours alternate letter by letter, which
+  // reads as spelling rather than as the word.
+  const alternate = useMemo(() => {
+    let count = 0;
+    return letters.map((letter) => (/\s/.test(letter) ? false : count++ % 2 === 1));
+  }, [letters]);
   const motions = useMemo(
     () => letters.map((_, index) => variantMotion(variant, index)),
     [letters, variant],
@@ -196,6 +203,7 @@ export function SpellingAnimation({
               variants={child}
               transition={reducedMotion ? { duration: 0 } : motions[index]!.transition}
               data-glow={variant === "flip" && !reducedMotion ? "" : undefined}
+              data-alt={alternate[index] ? "" : undefined}
             >
               {letter}
             </motion.span>

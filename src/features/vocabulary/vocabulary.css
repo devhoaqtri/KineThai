@@ -6257,6 +6257,12 @@
   margin: 0;
   will-change: auto;
 }
+/* The carousel's spelling page alternates ink and the card's accent letter by letter
+   (SpellingAnimation marks every other letter `data-alt`), so the page reads as the word
+   being spelled out. The accent is the one the slide's brand mark already wears. */
+.vocab-card[data-still] .vocab-spelling-char[data-alt] {
+  color: var(--vocab-accent);
+}
 /* Korean coda (HangulAssembly). A letter and the syllable it becomes share one box:
    one em, weight 800, the card's own ink. Nothing is scaled, and the only colour
    besides the ink is a short accent flash as a letter lands and as the block resolves. */
