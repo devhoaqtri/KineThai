@@ -394,22 +394,27 @@
       "carousel": "~/KineMedia-tiktok/clips/carousels/anh-chayla-XN3-4x5",
       "platforms": {
         "facebook": {
-          "status": "failed",
+          "status": "posted",
           "music": {
             "song": "Groovy Hat - erloom.m4a",
             "startSec": 0,
             "status": "accepted",
             "at": "2026-11-17T18:32:25.082Z"
           },
-          "at": "2026-11-18T13:55:04.004Z",
-          "error": "The operation was aborted due to timeout",
-          "attempts": 1
+          "at": "2026-11-19T04:34:49.164Z",
+          "error": null,
+          "attempts": 2,
+          "id": "1690341165961852",
+          "url": "https://www.facebook.com/reel/1690341165961852/"
         },
         "instagram": {
-          "status": "failed",
-          "at": "2026-11-18T13:57:43.609Z",
-          "error": "The operation was aborted due to timeout",
-          "attempts": 1
+          "status": "posted",
+          "at": "2026-11-19T04:37:03.908Z",
+          "error": null,
+          "attempts": 3,
+          "id": "18081200435589957",
+          "url": "https://www.instagram.com/p/Df6PIELEqbL/",
+          "note": "found already live; not sent again"
         },
         "youtube": {
           "status": "posted",
@@ -444,13 +449,36 @@
       "carousel": "~/KineMedia-tiktok/clips/carousels/anh-chayla-A7D-4x5",
       "platforms": {
         "facebook": {
-          "status": "pending",
+          "status": "posted",
           "music": {
             "song": "Enchanting (Instrumental) - Viridian.m4a",
             "startSec": 0,
             "status": "accepted",
             "at": "2026-11-17T18:32:25.470Z"
-          }
+          },
+          "at": "2026-11-19T04:37:39.624Z",
+          "error": null,
+          "attempts": 2,
+          "id": "1917089196336582",
+          "url": "https://www.facebook.com/reel/1917089196336582/"
+        },
+        "instagram": {
+          "status": "posted",
+          "at": "2026-11-19T04:39:33.484Z",
+          "error": null,
+          "attempts": 3,
+          "id": "17967402969220593",
+          "url": "https://www.instagram.com/p/Df6Pa35kqiu/",
+          "note": "found already live; not sent again"
+        },
+        "youtube": {
+          "status": "posted",
+          "at": "2026-11-19T04:37:06.313Z",
+          "error": null,
+          "attempts": 2,
+          "id": "13WvGh2eDX4",
+          "url": "https://youtube.com/shorts/13WvGh2eDX4",
+          "note": "found already live; not sent again"
         }
       },
       "draftedAt": "2026-11-18T06:42:24.773Z"
