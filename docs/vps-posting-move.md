@@ -1,6 +1,6 @@
 # Moving the posting pipeline to a VPS
 
-Status: plan, nothing built yet (2026-11-19).
+Status: plan, nothing built yet (2026-11-19). TikTok goes by route B (TikTok Studio), chosen 2026-11-19.
 
 ## Why
 
@@ -19,26 +19,37 @@ always online removes that whole class of failure.
 | Facebook / Instagram / YouTube publishing | **VPS** | Plain API calls on fixed times |
 | Calendar + exported-words (the only writer) | **VPS** | The file lock (scripts/lib/locked-file) works within one machine only |
 | `/posting` admin page | **VPS**, Tailscale only | It writes the calendar, so it runs where the calendar lives |
-| TikTok drafts in the emulator | **Mac** (route A) or nobody (route B) | See below |
+| TikTok | **TikTok Studio on the web, by you, once a week** | Route B, below; the emulator retires |
 
 **TikTok stays off the VPS.** The emulator needs hardware virtualization that most VPSes
 lack; the AVD is an arm64 image (an x86 server needs a fresh image and fresh Google and
 TikTok sign-ins); and a new device on a datacenter IP that also looks like an emulator is
 what TikTok tends to flag. You tap Post by hand anyway.
 
-- **Route A (default): emulator stays on the Mac.** The 13:30 draft job runs on the Mac,
-  pulls the due clips from the VPS and tells the VPS which posts it drafted.
-- **Route B: no emulator.** Once a week, upload the VPS's clips in TikTok Studio on the web
-  with scheduled times (the calendar's `scheduled` status already exists). No machine has to
-  be awake. Check first whether what moved us off Studio (cover, location, …) still applies.
+**Route B (chosen): TikTok Studio, no emulator.** Once a week you upload the VPS's next
+clips in TikTok Studio on the web, each with its scheduled time, and TikTok posts them on
+time by itself. No machine has to be awake, and nothing automates TikTok (no audit needed,
+no emulator fingerprint). The calendar already has the `scheduled` status and
+`mark <days> scheduled`; the clip filenames carry the date (`day-014-2026-11-19-reaction.mp4`).
+
+What Studio gives up against the emulator, to check on the first batch:
+- **Scheduling horizon**: Studio schedules only a limited window ahead (about 10 days at
+  the time of writing; check), so the batch is weekly, not monthly.
+- **Cover and location**: post-to-tiktok set both in the app; in Studio you pick the cover
+  frame by hand, and location may not be offered on the web.
+- **Hashtags**: keep at most 5 (MAX_HASHTAGS); the caption from `/posting` already does.
+- Posts 13–15, drafted in the emulator on 2026-11-19, are posted from there as before; the
+  first Studio batch starts after them.
+
+Rejected, route A (emulator on the Mac, fed by the VPS): it keeps a daily 13:30 job that
+needs the Mac awake and you at it, which is the dependency this move removes.
 
 ## Decisions for you
 
 1. **Provider.** Any of Hetzner, DigitalOcean, Vultr. Singapore region. 4 vCPU (dedicated
    or "CPU-optimized" if the render is slow on shared), 8 GB RAM, 80 GB disk, Ubuntu 24.04.
    Roughly US$15–40/month depending on shared vs dedicated vCPU.
-2. **TikTok route A or B.**
-3. **Bot identity for git.** The VPS commits calendar records to `main`; a deploy key with
+2. **Bot identity for git.** The VPS commits calendar records to `main`; a deploy key with
    write access on the repo, commits authored as e.g. `kinemedia-bot`.
 
 ## Phase 0 — accounts (you)
@@ -50,6 +61,8 @@ what TikTok tends to flag. You tap Post by hand anyway.
 - **Reset the Meta app secret** before copying credentials anywhere (it was shared in chat
   on 2026-11-16).
 - On your phone, an SSH app (Termius or Blink) pointed at `kine` over Tailscale.
+- Check TikTok Studio on the web (tiktok.com/tiktokstudio) with the channel account: upload,
+  schedule, how far ahead it lets you pick a date, and whether location is offered.
 
 ## Phase 1 — server base (I can script this; you run it with sudo)
 
@@ -71,15 +84,17 @@ what TikTok tends to flag. You tap Post by hand anyway.
 3. **systemd timers** — `tiktok-auto install` writes user units on Linux instead of launchd
    plists: `OnCalendar=*-*-* 13:30:00 Asia/Ho_Chi_Minh`, `Persistent=true` (a missed run
    catches up). `status` reads `systemctl --user` and `journalctl`. Drop the `pmset` hints there.
-4. **Split the jobs by role** (`POSTING_ROLE=server|tiktok` in `.env.local`):
-   - server: `render` (03:00), `prepare` (12:00: render anything due within 24 h without a
-     clip, propose songs — today's draft job minus the emulator), `publish` (post times).
-   - Mac (route A): `draft` only.
-5. **Remote draft on the Mac (route A)** — the Mac's draft job asks the VPS over SSH which
-   posts are due (`tiktok.ts draft-plan --hours 24 --json`: day, clip path, caption, cover,
-   location), `rsync`s those clips and carousels into the same `~/KineMedia-tiktok` paths,
-   runs post-to-tiktok, then `ssh kine tiktok.ts mark N drafted`. The Mac never writes its own
-   calendar copy again.
+4. **Server jobs without the emulator** — `render` (03:00) keeps **14 days** of clips
+   rendered ahead (today 6), so a weekly Studio batch always has its clips; `prepare`
+   (12:00: render anything due within 24 h without a clip, propose songs — today's draft job
+   minus draft-due); `publish` (post times). The `draft` job and its emulator steps stay in
+   the code but are not installed on the server.
+5. **A TikTok batch view on `/posting`** — the next unscheduled posts with a rendered clip,
+   each with: **Download** (the clip with `Content-Disposition: attachment`, named by date),
+   **Copy caption** (the calendar caption, hashtags already capped at 5), the slot to pick in
+   Studio (date and time, Vietnam), and **Scheduled ✓** (runs `mark N scheduled`). Works from
+   the Mac's browser over Tailscale. `status` keeps warning when fewer than 3 days are
+   scheduled; that warning also goes to ntfy once a day.
 6. **Git under the lock** — every server job starts with `git pull --rebase` while holding
    the run lock (a pull that changes `src/` mid-take reloads Vite and blanks the clip), and
    ends by committing `scripts/data/tiktok-calendar.json` + `exported-words.json` if they
@@ -104,8 +119,11 @@ what TikTok tends to flag. You tap Post by hand anyway.
 2. `publish-due --dry-run` on the VPS at one post time: every step listed, nothing sent.
 3. Cutover, in this order, so nothing publishes twice:
    1. Mac: `npx tsx scripts/tiktok-auto.ts uninstall`; commit and push the calendar.
-   2. VPS: `git pull`, `tiktok-auto install` (server role).
-   3. Mac (route A): `tiktok-auto install` (tiktok role: only the draft job).
+   2. VPS: `git pull`, `tiktok-auto install`.
+   3. First Studio batch from `/posting` on the VPS, starting after the posts already in
+      the emulator; `mark … scheduled` as each goes in.
+   4. When the emulator's last draft is posted, shut it down (`adb emu kill`). Keep the AVD
+      for a month in case Studio falls short, then delete it.
 4. Watch the first night's runs in ntfy; the duplicate guard (look before sending, and look
    again after an errored upload) still protects each post.
 
@@ -117,7 +135,7 @@ what TikTok tends to flag. You tap Post by hand anyway.
 | Status and last logs | `ssh kine` → `npx tsx scripts/tiktok-auto.ts status` |
 | A long manual run | `ssh kine`, `tmux new -A -s posting`, run it, detach; reattach later |
 | Know when something fails | ntfy on the phone |
-| Post on TikTok (route A) | Mac at 13:30, emulator, Drafts |
+| Schedule TikTok | Once a week, `/posting` → TikTok batch → download, copy caption, schedule in Studio, tap Scheduled |
 
 ## Risks
 
@@ -126,3 +144,6 @@ what TikTok tends to flag. You tap Post by hand anyway.
   smaller text, not an error. The side-by-side check catches it.
 - **Two writers**: if the Mac ever runs `tiktok.ts mark/publish` locally after cutover, the
   calendars diverge. After cutover those run over `ssh kine` or on `/posting`.
+- **A missed weekly batch**: TikTok then simply has no post that day. The daily
+  "fewer than 3 days scheduled" ntfy warning is the reminder; Facebook, Instagram and
+  YouTube keep going regardless.
