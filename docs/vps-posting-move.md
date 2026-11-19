@@ -35,8 +35,9 @@ no emulator fingerprint). The calendar already has the `scheduled` status and
 What Studio gives up against the emulator, to check on the first batch:
 - **Scheduling horizon**: Studio schedules only a limited window ahead (about 10 days at
   the time of writing; check), so the batch is weekly, not monthly.
-- **Cover and location**: post-to-tiktok set both in the app; in Studio you pick the cover
-  frame by hand, and location may not be offered on the web.
+- **Cover and location**: post-to-tiktok set both in the app; in Studio the cover is set to
+  the time `/posting` shows (the calendar's own `coverMs`), and location is set only if the web
+  offers it.
 - **Hashtags**: keep at most 5 (MAX_HASHTAGS); the caption from `/posting` already does.
 - Posts 13–15, drafted in the emulator on 2026-11-19, are posted from there as before; the
   first Studio batch starts after them.
@@ -44,13 +45,16 @@ What Studio gives up against the emulator, to check on the first batch:
 Rejected, route A (emulator on the Mac, fed by the VPS): it keeps a daily 13:30 job that
 needs the Mac awake and you at it, which is the dependency this move removes.
 
-## Decisions for you
+## Decided (the admin is not asked to choose; 2026-11-19)
 
-1. **Provider.** Any of Hetzner, DigitalOcean, Vultr. Singapore region. 4 vCPU (dedicated
-   or "CPU-optimized" if the render is slow on shared), 8 GB RAM, 80 GB disk, Ubuntu 24.04.
-   Roughly US$15–40/month depending on shared vs dedicated vCPU.
-2. **Bot identity for git.** The VPS commits calendar records to `main`; a deploy key with
-   write access on the repo, commits authored as e.g. `kinemedia-bot`.
+1. **Provider: Hetzner Cloud, Singapore, CPX31** (4 shared vCPU, 8 GB RAM, Ubuntu 24.04).
+   If Singapore or that plan is not offered, the nearest 4 vCPU / 8 GB plan in Singapore at
+   DigitalOcean. Moved to a dedicated-CPU plan only if the Phase 4 trial render is too slow.
+2. **Git identity:** commits authored `kinemedia-bot`, pushed with a deploy key (write access)
+   on the repo, to `main`.
+3. **Songs are accepted when picked** (since 2026-11-19): a song never holds a post.
+4. **TikTok cover:** the frame the calendar already chose (`coverMs`), shown on `/posting`
+   as a time to set in Studio's cover picker, so there is nothing to choose.
 
 ## Phase 0 — accounts (you)
 
@@ -92,7 +96,7 @@ needs the Mac awake and you at it, which is the dependency this move removes.
 5. **A TikTok batch view on `/posting`** — the next unscheduled posts with a rendered clip,
    each with: **Download** (the clip with `Content-Disposition: attachment`, named by date),
    **Copy caption** (the calendar caption, hashtags already capped at 5), the slot to pick in
-   Studio (date and time, Vietnam), and **Scheduled ✓** (runs `mark N scheduled`). Works from
+   Studio (date and time, Vietnam), the cover time (`coverMs`), and **Scheduled ✓** (runs `mark N scheduled`). Works from
    the Mac's browser over Tailscale. `status` keeps warning when fewer than 3 days are
    scheduled; that warning also goes to ntfy once a day.
 6. **Git under the lock** — every server job starts with `git pull --rebase` while holding
