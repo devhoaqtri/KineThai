@@ -74,6 +74,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
 import { updateJsonFile } from "./lib/locked-file";
+import { findLiveAfterError } from "./lib/live-after-error";
 import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, recentUploads, writeEnvLocal } from "./lib/meta-publish";
 import { SOUNDS_DIRS, listSongs, mixSong, songTitle } from "./lib/music-mix";
 import { loadYouTubeConfig, publishShort, recentShorts, youtubeReady, youtubeSetup } from "./lib/youtube-publish";
@@ -965,6 +966,7 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
       return true;
     }
   }
+  let sent = false;
   try {
     const log = (line: string) => console.log(line);
     // Already live there, from a run that died after sending or a record that was lost? Then
@@ -976,6 +978,7 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
       return true;
     }
     const caption = captionForPlatform(day, platform);
+    sent = !isDry;
     const result: { id: string; url: string | null; privacy?: string } =
       platform === "youtube"
         ? await publishShort({ config: youtube, file: video!, title: youtubeTitle(day, WORD_HOOK), description: caption, log })
@@ -991,6 +994,17 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
     return true;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+    // An upload that errored may still have gone live (Instagram's "Application request
+    // limit reached", a timeout after YouTube took the file): ask again before calling it failed.
+    if (sent) {
+      console.log(`  ${platform} answered “${message}”; checking whether it went live anyway`);
+      const live = await findLiveAfterError(() => findLive(day.day, platform));
+      if (live) {
+        recordPosted(day, platform, { id: live.id, url: live.url, note: `live although the upload answered: ${message}` });
+        console.log(`✓ posted on ${platform} (the upload errored, but it is live)${live.url ? `: ${live.url}` : ""}`);
+        return true;
+      }
+    }
     if (!isDry) updateTrack(day.day, platform, (t) => Object.assign(t, { status: "failed", error: message, at: now() }));
     console.error(`✗ ${platform}: ${message}`);
     return false;
