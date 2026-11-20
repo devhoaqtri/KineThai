@@ -507,8 +507,10 @@ async function main() {
     const file = join(frames, `f${String(captured.length).padStart(5, "0")}.png`);
     writeFileSync(file, Buffer.from(data, "base64"));
     captured.push({ file, atMs: Date.now() - startedAt });
-    // Chrome stops sending until each frame is acknowledged.
-    void cdp.send("Page.screencastFrameAck", { sessionId });
+    // Chrome stops sending until each frame is acknowledged. A late answer is not a failure:
+    // the next frame (or the end-of-word deadline) says whether the take went on, whereas an
+    // unhandled rejection here killed the whole run and left its Chrome behind.
+    cdp.send("Page.screencastFrameAck", { sessionId }).catch(() => {});
   });
 
   await cdp.send("Page.startScreencast", {
