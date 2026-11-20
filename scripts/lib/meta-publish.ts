@@ -315,7 +315,7 @@ export function largestImage(images: { width: number; height: number; source: st
  * Meta makes the renditions a moment after the upload, so the address is asked for until it
  * is there.
  */
-async function hostImage(config: MetaConfig, file: string, log: Log): Promise<{ photoId: string; url: string }> {
+export async function hostImage(config: MetaConfig, file: string, log: Log): Promise<{ photoId: string; url: string }> {
   if (config.dryRun) {
     log(`  [dry run] POST ${config.pageId}/photos source,published=false (${(statSync(file).size / 1024).toFixed(0)} KB)`);
     return { photoId: "dry-photo", url: "https://example.invalid/dry.jpg" };
@@ -340,6 +340,14 @@ async function hostImage(config: MetaConfig, file: string, log: Log): Promise<{ 
     60_000,
   );
   return { photoId, url: largestImage(hosted.images)! };
+}
+
+/** Delete a temporary unpublished photo from the Page (best-effort, warns on error). */
+export async function deleteHostedImage(config: MetaConfig, photoId: string, log: Log = () => {}): Promise<void> {
+  if (config.dryRun) return;
+  await graph(config, "POST", photoId, { method: "delete", access_token: config.pageToken! }, () => {}).catch(
+    (error) => log(`  ! could not delete the hosted page photo ${photoId}: ${(error as Error).message}`),
+  );
 }
 
 /** Wait for an Instagram container to be ready to use. */

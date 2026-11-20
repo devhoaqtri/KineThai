@@ -680,7 +680,7 @@ export const META_PLATFORMS = ["facebook", "instagram"] as const;
 export type MetaPlatform = (typeof META_PLATFORMS)[number];
 
 /** Every platform published from this Mac at the post's time (TikTok is drafted instead). */
-export const PUBLISH_PLATFORMS = [...META_PLATFORMS, "youtube"] as const;
+export const PUBLISH_PLATFORMS = [...META_PLATFORMS, "youtube", "threads"] as const;
 export type PublishPlatform = (typeof PUBLISH_PLATFORMS)[number];
 
 /**

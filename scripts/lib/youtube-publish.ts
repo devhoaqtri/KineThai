@@ -25,7 +25,7 @@
  *   recentShorts
  * Depends on: Node's fetch, http and crypto; meta-publish's env helpers
  */
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { createHash, randomBytes } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { createServer } from "node:http";
@@ -37,10 +37,12 @@ const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
 const API = "https://www.googleapis.com/youtube/v3";
 const UPLOAD = "https://www.googleapis.com/upload/youtube/v3/videos";
+const THUMB_UPLOAD = "https://www.googleapis.com/upload/youtube/v3/thumbnails/set";
 /** Upload, and read the channel's name so setup can say which channel it reached. */
 const SCOPES = [
   "https://www.googleapis.com/auth/youtube.upload",
   "https://www.googleapis.com/auth/youtube.readonly",
+  "https://www.googleapis.com/auth/youtube.force-ssl",
 ];
 /** YouTube's category for Education. */
 const EDUCATION = "27";
@@ -113,10 +115,67 @@ async function accessToken(config: YouTubeConfig): Promise<string> {
 
 export type ShortResult = { id: string; url: string; privacy: string };
 
+function extractFrameJpeg(file: string, coverMs: number): Buffer {
+  const sec = Math.max(0, coverMs / 1000).toFixed(3);
+  const run = spawnSync(
+    "ffmpeg",
+    ["-y", "-ss", sec, "-i", file, "-frames:v", "1", "-q:v", "2", "-f", "image2pipe", "-vcodec", "mjpeg", "pipe:1"],
+    { maxBuffer: 10 * 1024 * 1024 },
+  );
+  if (run.status !== 0 || !run.stdout?.length) {
+    throw new Error(`ffmpeg could not extract cover frame at ${sec}s from ${file}`);
+  }
+  return run.stdout;
+}
+
+/**
+ * Set a video's custom thumbnail from a frame at `coverMs` ms into `file`.
+ */
+export async function setShortThumbnail(input: {
+  config: YouTubeConfig;
+  videoId: string;
+  file: string;
+  coverMs: number;
+  log?: Log;
+}): Promise<void> {
+  const log = input.log ?? ((line: string) => console.log(line));
+  if (!existsSync(input.file)) throw new Error(`no clip at ${input.file}`);
+  const jpeg = extractFrameJpeg(input.file, input.coverMs);
+  if (input.config.dryRun) {
+    log(`  [dry run] POST ${THUMB_UPLOAD}?videoId=${input.videoId} (${(jpeg.length / 1024).toFixed(0)} KB JPEG @ ${(input.coverMs / 1000).toFixed(2)}s)`);
+    return;
+  }
+  const token = await accessToken(input.config);
+  const res = await fetch(
+    `${THUMB_UPLOAD}?videoId=${encodeURIComponent(input.videoId)}&uploadType=media`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "image/jpeg",
+        "Content-Length": String(jpeg.length),
+      },
+      body: new Uint8Array(jpeg),
+      signal: AbortSignal.timeout(60_000),
+    },
+  );
+  if (!res.ok) {
+    const err = await googleError(res, "thumbnail upload");
+    if (err.message.includes("permissions to upload and set custom video thumbnails")) {
+      throw new Error(
+        `${err.message} (re-run \`npm run tiktok -- youtube-setup\` for the youtube.force-ssl scope, and ensure Intermediate features / custom thumbnails are enabled in YouTube Studio)`,
+      );
+    }
+    throw err;
+  }
+  log(`  ✓ cover thumbnail set from ${(input.coverMs / 1000).toFixed(2)}s (${(jpeg.length / 1024).toFixed(0)} KB)`);
+}
+
 /**
  * Upload one clip as a Short.
  * @param input.title - at most 100 characters, no `<` or `>` (youtubeTitle)
  * @param input.description - the caption; its first hashtags show above the title
+ * @param input.coverMs - optional cover frame offset in ms (usually the hint page)
  * @throws with Google's own message when a step is refused
  */
 export async function publishShort(input: {
@@ -124,6 +183,7 @@ export async function publishShort(input: {
   file: string;
   title: string;
   description: string;
+  coverMs?: number | null;
   log?: Log;
 }): Promise<ShortResult> {
   const { config } = input;
@@ -182,6 +242,19 @@ export async function publishShort(input: {
     log(
       `  ! YouTube set it ${privacy}, not ${config.privacy}: an unaudited API project's uploads stay private`,
     );
+  }
+  if (typeof input.coverMs === "number" && Number.isFinite(input.coverMs)) {
+    try {
+      await setShortThumbnail({
+        config,
+        videoId: video.id,
+        file: input.file,
+        coverMs: input.coverMs,
+        log,
+      });
+    } catch (err) {
+      log(`  ! cover thumbnail skipped: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
   return { id: video.id, url: `https://youtube.com/shorts/${video.id}`, privacy };
 }
