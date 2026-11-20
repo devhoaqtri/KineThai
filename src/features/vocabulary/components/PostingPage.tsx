@@ -21,12 +21,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "../vocabulary-export.css";
 
-type Platform = "facebook" | "instagram" | "youtube";
+type Platform = "facebook" | "instagram" | "youtube" | "threads";
 type MusicPlatform = "facebook" | "youtube";
 const PLATFORMS: { id: Platform; label: string }[] = [
   { id: "facebook", label: "Facebook" },
   { id: "youtube", label: "YouTube" },
   { id: "instagram", label: "Instagram" },
+  { id: "threads", label: "Threads" },
 ];
 
 type Track = {
@@ -371,7 +372,7 @@ function PostCard({
         </header>
         <div className="posting-caption">
           <div className="posting-caption-tabs" role="tablist" aria-label="Caption for">
-            {(["all", "facebook", "instagram", "youtube"] as const).map((tab) => (
+            {(["all", "facebook", "instagram", "youtube", "threads"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"

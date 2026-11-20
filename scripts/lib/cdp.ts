@@ -127,8 +127,13 @@ export async function launchChrome(args: readonly string[]): Promise<ChromeSessi
     ],
     { stdio: "ignore" },
   );
+  // A run that dies before close() (a crash, an uncaught error) would otherwise leave this
+  // Chrome running for days, and a pile of them stalled later renders (2026-11-20).
+  const killOnExit = () => chrome.kill();
+  process.once("exit", killOnExit);
 
   const close = async () => {
+    process.off("exit", killOnExit);
     chrome.kill();
     // Chrome keeps writing to its profile for a moment after the signal, and removing the
     // directory out from under it fails with ENOTEMPTY. The work is already written by now,

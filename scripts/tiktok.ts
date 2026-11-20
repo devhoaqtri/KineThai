@@ -80,6 +80,14 @@ import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publi
 import { SOUNDS_DIRS, listSongs, mediaDuration, mixSong, songTitle } from "./lib/music-mix";
 import { OPEN_MUSIC_QUERIES, creditLine, isOpenSong, openSongId, pickOpenTrack, searchOpenTracks } from "./lib/open-music";
 import { loadYouTubeConfig, publishShort, recentShorts, youtubeReady, youtubeSetup } from "./lib/youtube-publish";
+import {
+  loadThreadsConfig,
+  publishThreadsCarousel,
+  recentThreads,
+  refreshThreadsToken,
+  threadsReady,
+  threadsSetup,
+} from "./lib/threads-publish";
 import { renderCarousel } from "./render-carousel";
 import { siteAddress, withScheme } from "../src/features/vocabulary/lib/target-language";
 import {
@@ -897,7 +905,9 @@ function claimTrack(dayNumber: number, platform: PublishPlatform): string | null
 
 /** What a platform still lacks before it can publish, or null when it is connected. */
 function platformReady(platform: PublishPlatform): string | null {
-  return platform === "youtube" ? youtubeReady(loadYouTubeConfig(ROOT)) : metaReady(loadMetaConfig(ROOT), platform);
+  if (platform === "youtube") return youtubeReady(loadYouTubeConfig(ROOT));
+  if (platform === "threads") return threadsReady(loadThreadsConfig(ROOT), loadMetaConfig(ROOT));
+  return metaReady(loadMetaConfig(ROOT), platform);
 }
 
 /**
@@ -908,7 +918,11 @@ function platformReady(platform: PublishPlatform): string | null {
  */
 async function findLive(dayNumber: number, platform: PublishPlatform): Promise<{ id: string; url: string | null } | undefined> {
   const uploads =
-    platform === "youtube" ? await recentShorts(loadYouTubeConfig(ROOT)) : await recentUploads(loadMetaConfig(ROOT), platform);
+    platform === "youtube"
+      ? await recentShorts(loadYouTubeConfig(ROOT))
+      : platform === "threads"
+        ? await recentThreads(loadThreadsConfig(ROOT))
+        : await recentUploads(loadMetaConfig(ROOT), platform);
   return uploads.find((u) => postNumberIn(u.text) === dayNumber);
 }
 
@@ -947,8 +961,8 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
   const day = loadCalendar().days.find((d) => d.day === dayNumber);
   if (!day) throw new Error(`there is no post ${dayNumber}`);
   refuseBelowFloor(day);
-  // Instagram posts the finished pages as a carousel, never the video; Facebook and YouTube the clip.
-  const images = platform === "instagram" ? carouselImages(day) : null;
+  // Instagram and Threads post the finished pages as a carousel; Facebook and YouTube post the clip.
+  const images = platform === "instagram" || platform === "threads" ? carouselImages(day) : null;
   if (!images && !day.clip) throw new Error(`post ${dayNumber} has no clip yet: npm run tiktok -- render --day ${dayNumber}`);
   if (musicHolds(day, platform)) {
     throw new Error(
@@ -958,7 +972,8 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
   const video = images ? null : videoFor(day, platform);
   const meta = { ...loadMetaConfig(ROOT), ...(dryRun ? { dryRun: true } : {}) };
   const youtube = { ...loadYouTubeConfig(ROOT), ...(dryRun ? { dryRun: true } : {}) };
-  const isDry = platform === "youtube" ? youtube.dryRun : meta.dryRun;
+  const threads = { ...loadThreadsConfig(ROOT), ...(dryRun ? { dryRun: true } : {}) };
+  const isDry = platform === "youtube" ? youtube.dryRun : platform === "threads" ? threads.dryRun : meta.dryRun;
   console.log(`\n── ${platform} · post ${day.day} (${day.date} ${day.time ?? ""}) · “${day.word}”${isDry ? " · dry run" : ""}`);
   if (!isDry) {
     const taken = claimTrack(day.day, platform);
@@ -982,10 +997,12 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
     sent = !isDry;
     const result: { id: string; url: string | null; privacy?: string } =
       platform === "youtube"
-        ? await publishShort({ config: youtube, file: video!, title: youtubeTitle(day, WORD_HOOK), description: caption, log })
-        : images
-          ? await publishCarousel({ config: meta, images, caption, log })
-          : await publishReel({ config: meta, platform, file: video!, caption, coverMs: coverMsOf(day), log });
+        ? await publishShort({ config: youtube, file: video!, title: youtubeTitle(day, WORD_HOOK), description: caption, coverMs: coverMsOf(day), log })
+        : platform === "threads"
+          ? await publishThreadsCarousel({ config: threads, metaConfig: meta, images: images!, caption, log })
+          : images
+            ? await publishCarousel({ config: meta, images, caption, log })
+            : await publishReel({ config: meta, platform, file: video!, caption, coverMs: coverMsOf(day), log });
     if (isDry) {
       console.log("✓ dry run: every step would be sent");
       return true;
@@ -1277,6 +1294,24 @@ async function youtubeSetupCommand() {
   console.log("  Check that is the Anh.ChayLá channel before any upload (docs/youtube-publishing.md).");
 }
 
+/** Connect Threads once and keep THREADS_USER_ID + THREADS_ACCESS_TOKEN in .env.local. */
+async function threadsSetupCommand() {
+  if (process.argv.includes("--refresh")) {
+    const { expiresInDays } = await refreshThreadsToken(ROOT);
+    console.log(`✓ Threads token refreshed (~${expiresInDays} days) and saved to .env.local`);
+    return;
+  }
+  const { username, userId, exchanged } = await threadsSetup({
+    root: ROOT,
+    token: flag("token"),
+    code: flag("code"),
+    redirectUri: flag("redirect"),
+  });
+  console.log(
+    `✓ Threads account “@${username}” (${userId}) connected; ${exchanged ? "60-day " : ""}token saved to .env.local`,
+  );
+}
+
 /**
  * Move the post times: `times --burst-times 13:30,20:30,02:30 [--time 19:00]`. Posts that have
  * already gone out keep their recorded times; every other post is re-dated, its rendered clip
@@ -1393,10 +1428,12 @@ async function main() {
       return musicDue();
     case "youtube-setup":
       return youtubeSetupCommand();
+    case "threads-setup":
+      return threadsSetupCommand();
     case "times":
       return times();
     default:
-      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, music, music-due, meta-setup, youtube-setup, times (see the top of scripts/tiktok.ts)");
+      throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, music, music-due, meta-setup, youtube-setup, threads-setup, times (see the top of scripts/tiktok.ts)");
   }
 }
 

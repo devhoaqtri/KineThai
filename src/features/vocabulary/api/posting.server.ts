@@ -34,6 +34,7 @@ import {
   type PublishPlatform,
 } from "../../../../scripts/lib/tiktok-calendar";
 import { loadYouTubeConfig, youtubeReady } from "../../../../scripts/lib/youtube-publish";
+import { loadThreadsConfig, threadsReady } from "../../../../scripts/lib/threads-publish";
 
 const ROOT = resolve(".");
 const CALENDAR_FILE = join(ROOT, "scripts/data/tiktok-calendar.json");
@@ -62,8 +63,11 @@ const platformSchema = z.enum(PUBLISH_PLATFORMS);
 const musicPlatformSchema = z.enum(MUSIC_PLATFORMS);
 
 /** What a platform still lacks before it can publish, or null when it is connected. */
-const platformReady = (platform: PublishPlatform) =>
-  platform === "youtube" ? youtubeReady(loadYouTubeConfig(ROOT)) : metaReady(loadMetaConfig(ROOT), platform);
+const platformReady = (platform: PublishPlatform) => {
+  if (platform === "youtube") return youtubeReady(loadYouTubeConfig(ROOT));
+  if (platform === "threads") return threadsReady(loadThreadsConfig(ROOT), loadMetaConfig(ROOT));
+  return metaReady(loadMetaConfig(ROOT), platform);
+};
 const actionSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("caption"),
