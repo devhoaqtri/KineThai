@@ -25,8 +25,7 @@
  *   carouselSlides, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
  *   PUBLISH_PLATFORMS, PublishPlatform, MUSIC_PLATFORMS, MusicPlatform, youtubeTitle,
- *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn, BARE_CAPTION_PLATFORMS,
- *   bareCaption, postIsDay
+ *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn, bareCaption, postIsDay
  */
 
 /** How many hashtags TikTok keeps in a caption; it silently drops the rest. */
@@ -475,30 +474,20 @@ export function planDays(input: {
 }
 
 /**
- * The post's caption. It never names the word or its meaning: the clip is a guess, and a
- * caption is on screen while it plays (the same rule as a share link's message). It counts
- * words, not days ("Từ số 12/365"): with several posts a day, a day count would repeat.
- * It carries at most MAX_HASHTAGS tags, since TikTok drops any beyond that.
- * @param input.day - the post's number
- * @param input.total - posts in the year
+ * The post's text on every platform: the word's own share link (`/w/<code>`, which opens the
+ * feed on that word and never names it) and the hashtags. Nothing else: no teaser, post count
+ * or call to comment, since the clip already says all of that (admin, 2026-11-20). The link
+ * is also how a live post is recognised (postIsDay). It carries at most MAX_HASHTAGS tags,
+ * since TikTok drops any beyond that.
  * @param input.level - the word's level
- * @param input.hook - the clip's own opening line (WORD_HOOK)
- * @param input.address - the site, for viewers who want more
- * @returns Text to paste into TikTok's caption box
+ * @param input.code - the word's share code
+ * @param input.address - the site
+ * @returns Text for the post's caption or description
  * @pure true
  */
-export function captionFor(input: {
-  day: number;
-  total: number;
-  level: string;
-  hook: string;
-  address: string;
-}): string {
+export function captionFor(input: { level: string; code: string; address: string }): string {
   return [
-    `${input.hook} 🤔 Đoán trước khi đáp án hiện ra!`,
-    `Từ số ${input.day}/${input.total} · trình độ ${input.level}`,
-    "Bình luận đáp án của bạn nhé 👇",
-    `Học thêm mỗi ngày tại ${input.address}`,
+    `Học thêm mỗi ngày tại ${input.address.replace(/\/$/, "")}/w/${input.code}`,
     "",
     // TikTok keeps the first five hashtags of a caption and drops the rest on paste.
     `#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #${input.level.toLowerCase()}`,
@@ -709,12 +698,12 @@ export function soundsDirFor(
 const YOUTUBE_TITLE_MAX = 100;
 
 /**
- * A Short's title: the hook and the post's number, never the word, with #shorts. YouTube
- * refuses `<` and `>` in titles.
+ * A Short's title: the clip's own hook, never the word, with #shorts; no count or level, like
+ * the caption (captionFor). YouTube refuses `<` and `>` in titles.
  * @pure true
  */
-export function youtubeTitle(day: Pick<CalendarDay, "day" | "level">, hook: string): string {
-  const title = `${hook.trim()} 🤔 Từ số ${day.day}/365 · ${day.level} #shorts`.replace(/[<>]/g, "");
+export function youtubeTitle(hook: string): string {
+  const title = `${hook.trim()} #shorts`.replace(/[<>]/g, "");
   return [...title].slice(0, YOUTUBE_TITLE_MAX).join("");
 }
 
@@ -799,8 +788,7 @@ export function pickSong(songs: string[], used: { song: string; day: number }[],
 
 /**
  * The post a caption, description or title belongs to, from its "Từ số N/365", or null.
- * TikTok's and YouTube's text carries it (captionFor, youtubeTitle), as did every post before
- * 2026-11-20; postIsDay also reads the share link that replaced it on BARE_CAPTION_PLATFORMS.
+ * Every post before 2026-11-20 carries it; postIsDay also reads the share link that replaced it.
  * Accents may come back decomposed.
  * @pure true
  */
@@ -813,29 +801,27 @@ export function postNumberIn(text: string | null | undefined): number | null {
 export const MAX_PUBLISH_ATTEMPTS = 3;
 
 /**
- * Platforms whose text is only the word's own link and the tags (bareCaption): the admin
- * wanted no teaser, count or call to comment there (2026-11-20). TikTok and YouTube keep
- * the full caption.
- */
-export const BARE_CAPTION_PLATFORMS = ["facebook", "instagram", "threads"] as const;
-
-/**
- * The calendar caption cut down to its site line, pointed at the word's share link
- * (`/w/<code>`, which opens the feed on that word and never names it), and its hashtags.
- * The link is also how a live post is recognised (postIsDay), since the count is gone.
+ * A calendar caption cut down to what captionFor writes now: the site line, pointed at the
+ * word's share link, and the hashtags. Captions written before 2026-11-20 still carry a teaser,
+ * a count and a call to comment; this drops them. A caption already cut down, or one with no
+ * site line or tags (hand-written), comes back as is.
  * @pure true
  */
 export function bareCaption(caption: string, code: string): string {
   const lines = caption.split("\n").map((line) => line.trim());
   const site = lines.find((line) => /^Học thêm mỗi ngày tại https?:\/\/\S+$/u.test(line.normalize("NFC")));
-  const link = site?.replace(/(https?:\/\/\S+?)\/?$/u, (address) => `${address.replace(/\/$/, "")}/w/${code}`);
+  const link = site?.includes("/w/")
+    ? site
+    : site?.replace(/(https?:\/\/\S+?)\/?$/u, (address) => `${address.replace(/\/$/, "")}/w/${code}`);
   const tags = lines.filter((line) => line.startsWith("#"));
+  // Text with neither is someone's own writing, not a generated caption: never cut it to nothing.
+  if (!link && !tags.length) return caption.trim();
   return [link, link && tags.length ? "" : undefined, ...tags].filter((line) => line !== undefined).join("\n");
 }
 
 /**
- * Whether a live post's text belongs to a post: its "Từ số N/365" (TikTok, YouTube and every
- * post before 2026-11-20) or its share link (bareCaption).
+ * Whether a live post's text belongs to a post: its "Từ số N/365" (every post before
+ * 2026-11-20) or its share link (captionFor).
  * @pure true
  */
 export function postIsDay(text: string | null | undefined, day: Pick<CalendarDay, "day" | "code">): boolean {
@@ -843,11 +829,9 @@ export function postIsDay(text: string | null | undefined, day: Pick<CalendarDay
   return new RegExp(`/w/${day.code}(?![A-Za-z0-9])`).test(text ?? "");
 }
 
-/** The caption a platform posts: its own when set, else the calendar's (cut down on BARE_CAPTION_PLATFORMS). @pure true */
+/** The caption a platform posts: its own when set, else the calendar's (cut down by bareCaption). @pure true */
 export function captionForPlatform(day: CalendarDay, platform: PublishPlatform): string {
-  const own = day.platforms?.[platform]?.caption?.trim();
-  const caption =
-    own || ((BARE_CAPTION_PLATFORMS as readonly string[]).includes(platform) ? bareCaption(day.caption, day.code) : day.caption);
+  const caption = day.platforms?.[platform]?.caption?.trim() || bareCaption(day.caption, day.code);
   const music = day.platforms?.[platform]?.music;
   // A CC BY song's licence asks for its credit wherever the video goes.
   const credit = music?.song && music.credit ? music.credit.trim() : "";

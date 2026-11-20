@@ -239,7 +239,7 @@ function newDay(calendar: Calendar, day: number, word: CandidateWord): CalendarD
     level: word.level,
     topic: word.topic,
     status: "planned",
-    caption: caption(calendar, day, word.level),
+    caption: caption(calendar, word.level, word.shareCode!),
     clip: null,
     durationSec: null,
     renderedAt: null,
@@ -250,12 +250,10 @@ function newDay(calendar: Calendar, day: number, word: CandidateWord): CalendarD
   };
 }
 
-function caption(calendar: Calendar, day: number, level: string): string {
+function caption(calendar: Calendar, level: string, code: string): string {
   return captionFor({
-    day,
-    total: Math.max(CALENDAR_DAYS, calendar.days.length),
     level,
-    hook: WORD_HOOK,
+    code,
     // The full https:// address, so a reader sees a link to type, not a word.
     address: withScheme(siteAddress(calendar.locale)),
   });
@@ -399,7 +397,7 @@ function plan() {
     fill(calendar, loadEligible(), toFill, total);
     // Nothing scheduled or posted is touched: its caption is already in TikTok.
     for (const day of calendar.days) {
-      if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.day, day.level);
+      if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.level, day.code);
     }
     const moved = refileClips(calendar);
     return { calendar, toFill, moved };
@@ -554,7 +552,7 @@ async function render() {
           `; the days before it are saved. Rerun with --day ${day.day} once it is fixed.`,
       );
     }
-    day.caption = caption(calendar, day.day, day.level);
+    day.caption = caption(calendar, day.level, day.code);
     writeFileSync(out.replace(/\.mp4$/, ".txt"), `${day.caption}\n`);
     const rendered = {
       caption: day.caption,
@@ -999,7 +997,7 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
     sent = !isDry;
     const result: { id: string; url: string | null; privacy?: string } =
       platform === "youtube"
-        ? await publishShort({ config: youtube, file: video!, title: youtubeTitle(day, WORD_HOOK), description: caption, coverMs: coverMsOf(day), log })
+        ? await publishShort({ config: youtube, file: video!, title: youtubeTitle(WORD_HOOK), description: caption, coverMs: coverMsOf(day), log })
         : platform === "threads"
           ? await publishThreadsCarousel({ config: threads, metaConfig: meta, images: images!, caption, log })
           : images

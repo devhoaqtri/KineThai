@@ -160,18 +160,12 @@ describe("planDays", () => {
 });
 
 describe("captionFor", () => {
-  it("counts the word and names the level, never the word itself", () => {
-    const caption = captionFor({
-      day: 12,
-      total: 365,
-      level: "A2",
-      hook: "Từ gì mà ...",
-      address: "https://anh.chayla.app",
-    });
-    expect(caption).toContain("Từ số 12/365");
-    expect(caption).not.toContain("Ngày");
-    expect(caption).toContain("#a2");
-    expect(caption).toContain("Học thêm mỗi ngày tại https://anh.chayla.app");
+  it("is the word's link and the tags, with no teaser, count or call to comment", () => {
+    const caption = captionFor({ level: "A2", code: "VSM", address: "https://anh.chayla.app/" });
+    expect(caption).toBe(
+      "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #a2",
+    );
+    expect(caption).not.toMatch(/Từ số|Bình luận|Đoán trước/);
     expect(caption.match(/#\w+/g)?.length).toBeLessThanOrEqual(MAX_HASHTAGS);
   });
 });
@@ -491,11 +485,10 @@ describe("publishing on Facebook and Instagram", () => {
     expect(postsToPublish(cal, at("19:00"), "instagram").map((d) => d.day)).toEqual([1, 2, 3, 4]);
   });
 
-  it("titles a Short with the hook and the post's number, never the word, within 100 characters", () => {
-    const title = youtubeTitle({ day: 8, level: "B1" }, "Từ gì mà ...");
-    expect(title).toBe("Từ gì mà ... 🤔 Từ số 8/365 · B1 #shorts");
-    expect([...youtubeTitle({ day: 8, level: "B1" }, "x".repeat(200))].length).toBe(100);
-    expect(youtubeTitle({ day: 1, level: "C1" }, "<a> hook")).not.toMatch(/[<>]/);
+  it("titles a Short with the hook alone, never the word, within 100 characters", () => {
+    expect(youtubeTitle("Từ gì mà ...")).toBe("Từ gì mà ... #shorts");
+    expect([...youtubeTitle("x".repeat(200))].length).toBe(100);
+    expect(youtubeTitle("<a> hook")).not.toMatch(/[<>]/);
   });
 
   it("gives Facebook and YouTube their own song folders", () => {
@@ -550,15 +543,22 @@ describe("publishing on Facebook and Instagram", () => {
     expect(captionForPlatform(silent, "youtube")).toBe("shared");
   });
 
-  it("posts only the word's link and tags on Facebook, Instagram and Threads", () => {
-    const caption = captionFor({ day: 17, total: 365, level: "B1", hook: "Từ gì mà ...", address: "https://anh.chayla.app" });
-    const day = { ...post(17, "20:30"), caption, code: "VSM" };
-    const bare = "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #b1";
-    for (const platform of ["facebook", "instagram", "threads"] as const) {
-      expect(captionForPlatform(day, platform)).toBe(bare);
+  it("cuts an older caption down to the link and tags on every platform", () => {
+    const old = [
+      "Từ gì mà ... 🤔 Đoán trước khi đáp án hiện ra!",
+      "Từ số 17/365 · trình độ B1",
+      "Bình luận đáp án của bạn nhé 👇",
+      "Học thêm mỗi ngày tại https://anh.chayla.app",
+      "",
+      "#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #b1",
+    ].join("\n");
+    const fresh = captionFor({ level: "B1", code: "VSM", address: "https://anh.chayla.app" });
+    expect(bareCaption(old, "VSM")).toBe(fresh);
+    expect(bareCaption(fresh, "VSM")).toBe(fresh);
+    const day = { ...post(17, "20:30"), caption: old, code: "VSM" };
+    for (const platform of ["facebook", "instagram", "youtube", "threads"] as const) {
+      expect(captionForPlatform(day, platform)).toBe(fresh);
     }
-    expect(captionForPlatform(day, "youtube")).toBe(caption);
-    expect(bareCaption(caption, "VSM")).not.toMatch(/Từ số|Bình luận|Đoán trước/);
   });
 
   it("recognises a live post by its count or by its share link", () => {
