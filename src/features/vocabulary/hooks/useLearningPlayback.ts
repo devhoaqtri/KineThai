@@ -53,6 +53,11 @@ export function useLearningPlayback(options: {
   // the text remounting alongside it, replayed the page). `elapsed` carries the time a page
   // has already been shown across pauses, and is reset only when the page itself changes.
   const elapsed = useRef(0);
+  // Where the page's progress bar starts each time the clock is armed, so the bar always
+  // shows the clock's own time. It used to keep its paused position while the clock was
+  // banked differently, and after the app came back from the background a full bar sat
+  // on a page that still had its whole duration to run: a feed that looked frozen.
+  const [run, setRun] = useState({ id: 0, offset: 0 });
   const pageKey = `${page}:${replay}`;
   const lastPageKey = useRef(pageKey);
   // Remember the previous `playing` state so a resume can be detected inside the
@@ -74,6 +79,17 @@ export function useLearningPlayback(options: {
     // Wait for a buffered next word; retry/reconnect must not strand the reveal.
     if (isLast && !options.loop && !options.canAdvance) return;
     const startedAt = performance.now();
+    // The moment attention went, when it goes while this clock runs. The cleanup runs only
+    // after the render that reacts to it, and by then the page reads as unattended: banking
+    // "nothing, the page is hidden" at that point threw away the whole time the page had
+    // been shown, so a page that had nearly run out started over in full on return.
+    let lostAt: number | null = null;
+    const attention = pageAttention();
+    const unsubscribe = attention.subscribe(() => {
+      if (lostAt === null && !attention.attended()) lostAt = performance.now();
+    });
+    const offset = elapsed.current;
+    setRun((last) => ({ id: last.id + 1, offset }));
     const timer = setTimeout(
       () => {
         // A timer the browser held back (screen dimmed, tab frozen) must not fire a
@@ -89,9 +105,13 @@ export function useLearningPlayback(options: {
     );
     return () => {
       clearTimeout(timer);
+      unsubscribe();
       // Bank at most the page's own length, and nothing for time spent with the page
-      // hidden — otherwise a long pause returns with the clock already spent.
-      const shown = pageAttention().attended() ? performance.now() - startedAt : 0;
+      // hidden — otherwise a long pause returns with the clock already spent. Time shown
+      // before attention went counts; a page found unattended with no recorded moment
+      // (the signal changed without telling) banks nothing, as before.
+      const end = attention.attended() ? performance.now() : lostAt;
+      const shown = end === null ? 0 : Math.max(0, end - startedAt);
       elapsed.current = Math.min(duration, elapsed.current + shown);
     };
   }, [
@@ -144,6 +164,10 @@ export function useLearningPlayback(options: {
     playing,
     duration,
     replay,
+    /** Changes each time the page's clock is armed; key the progress bar on it. */
+    progressRun: run.id,
+    /** How much of the page (ms) the clock had already counted when it was armed. */
+    progressOffset: run.offset,
     previous: () => setPage((current) => Math.max(0, current - 1)),
     next: () => setPage((current) => Math.min(options.count - 1, current + 1)),
     reveal: () => setPage(options.revealPage ?? options.count - 1),
