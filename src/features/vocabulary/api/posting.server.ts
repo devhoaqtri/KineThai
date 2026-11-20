@@ -25,6 +25,8 @@ import {
   MUSIC_PLATFORMS,
   PUBLISH_PLATFORMS,
   dateOfDay,
+  BARE_CAPTION_PLATFORMS,
+  bareCaption,
   mixedClipPath,
   postsToPublish,
   soundsDirFor,
@@ -118,6 +120,8 @@ function listing() {
         status: d.status,
         url: d.url,
         caption: d.caption,
+        // What Facebook, Instagram and Threads post when they have no text of their own.
+        bareCaption: bareCaption(d.caption, d.code),
         hasClip: !!d.clip && existsSync(expandHome(d.clip)),
         mixes: Object.fromEntries(
           MUSIC_PLATFORMS.map((p) => [p, !!d.clip && existsSync(mixedClipPath(expandHome(d.clip), p))]),
@@ -241,7 +245,11 @@ export async function postingResponse(request: Request): Promise<Response> {
       if (action.platform) {
         day.platforms ??= {};
         const track = (day.platforms[action.platform] ??= { status: "pending" });
-        track.caption = action.caption.trim() && action.caption.trim() !== day.caption.trim() ? action.caption : null;
+        // Text equal to the platform's default is no text of its own.
+        const fallback = (BARE_CAPTION_PLATFORMS as readonly string[]).includes(action.platform)
+          ? bareCaption(day.caption, day.code)
+          : day.caption;
+        track.caption = action.caption.trim() && action.caption.trim() !== fallback.trim() ? action.caption : null;
       } else {
         day.caption = action.caption;
       }

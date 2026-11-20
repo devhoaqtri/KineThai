@@ -51,6 +51,8 @@ type Post = {
   status: string;
   url: string | null;
   caption: string;
+  /** What Facebook, Instagram and Threads post without text of their own: link and tags only. */
+  bareCaption: string;
   hasClip: boolean;
   mixes: Record<MusicPlatform, boolean>;
   durationSec: number | null;
@@ -322,7 +324,8 @@ function PostCard({
   // The song and its start, so a remix reloads the player.
   const playingMusic = playing ? post.platforms[playing.id]?.music : null;
   const musicAt = playingMusic ? `${playingMusic.song}:${playingMusic.startSec}` : "";
-  const shown = captionFor === "all" ? post.caption : post.platforms[captionFor]?.caption || post.caption;
+  const platformDefault = captionFor === "youtube" ? post.caption : post.bareCaption;
+  const shown = captionFor === "all" ? post.caption : post.platforms[captionFor]?.caption || platformDefault;
   const [draft, setDraft] = useState(shown);
   useEffect(() => setDraft(shown), [shown]);
   const dirty = draft !== shown;

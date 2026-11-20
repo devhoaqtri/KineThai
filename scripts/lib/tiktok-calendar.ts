@@ -25,7 +25,8 @@
  *   carouselSlides, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
  *   PUBLISH_PLATFORMS, PublishPlatform, MUSIC_PLATFORMS, MusicPlatform, youtubeTitle,
- *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn
+ *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn, BARE_CAPTION_PLATFORMS,
+ *   bareCaption, postIsDay
  */
 
 /** How many hashtags TikTok keeps in a caption; it silently drops the rest. */
@@ -798,8 +799,9 @@ export function pickSong(songs: string[], used: { song: string; day: number }[],
 
 /**
  * The post a caption, description or title belongs to, from its "Từ số N/365", or null.
- * Every platform's text carries it (captionFor, youtubeTitle), so the check before an upload
- * reads it to find a post that is already live. Accents may come back decomposed.
+ * TikTok's and YouTube's text carries it (captionFor, youtubeTitle), as did every post before
+ * 2026-11-20; postIsDay also reads the share link that replaced it on BARE_CAPTION_PLATFORMS.
+ * Accents may come back decomposed.
  * @pure true
  */
 export function postNumberIn(text: string | null | undefined): number | null {
@@ -810,9 +812,42 @@ export function postNumberIn(text: string | null | undefined): number | null {
 /** Tries the scheduled job makes at a failing post before leaving it to the admin. */
 export const MAX_PUBLISH_ATTEMPTS = 3;
 
-/** The caption a platform posts: its own when set, else the calendar's. @pure true */
+/**
+ * Platforms whose text is only the word's own link and the tags (bareCaption): the admin
+ * wanted no teaser, count or call to comment there (2026-11-20). TikTok and YouTube keep
+ * the full caption.
+ */
+export const BARE_CAPTION_PLATFORMS = ["facebook", "instagram", "threads"] as const;
+
+/**
+ * The calendar caption cut down to its site line, pointed at the word's share link
+ * (`/w/<code>`, which opens the feed on that word and never names it), and its hashtags.
+ * The link is also how a live post is recognised (postIsDay), since the count is gone.
+ * @pure true
+ */
+export function bareCaption(caption: string, code: string): string {
+  const lines = caption.split("\n").map((line) => line.trim());
+  const site = lines.find((line) => /^Học thêm mỗi ngày tại https?:\/\/\S+$/u.test(line.normalize("NFC")));
+  const link = site?.replace(/(https?:\/\/\S+?)\/?$/u, (address) => `${address.replace(/\/$/, "")}/w/${code}`);
+  const tags = lines.filter((line) => line.startsWith("#"));
+  return [link, link && tags.length ? "" : undefined, ...tags].filter((line) => line !== undefined).join("\n");
+}
+
+/**
+ * Whether a live post's text belongs to a post: its "Từ số N/365" (TikTok, YouTube and every
+ * post before 2026-11-20) or its share link (bareCaption).
+ * @pure true
+ */
+export function postIsDay(text: string | null | undefined, day: Pick<CalendarDay, "day" | "code">): boolean {
+  if (postNumberIn(text) === day.day) return true;
+  return new RegExp(`/w/${day.code}(?![A-Za-z0-9])`).test(text ?? "");
+}
+
+/** The caption a platform posts: its own when set, else the calendar's (cut down on BARE_CAPTION_PLATFORMS). @pure true */
 export function captionForPlatform(day: CalendarDay, platform: PublishPlatform): string {
-  const caption = day.platforms?.[platform]?.caption?.trim() || day.caption;
+  const own = day.platforms?.[platform]?.caption?.trim();
+  const caption =
+    own || ((BARE_CAPTION_PLATFORMS as readonly string[]).includes(platform) ? bareCaption(day.caption, day.code) : day.caption);
   const music = day.platforms?.[platform]?.music;
   // A CC BY song's licence asks for its credit wherever the video goes.
   const credit = music?.song && music.credit ? music.credit.trim() : "";

@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   LEVEL_ORDERS,
   MAX_HASHTAGS,
+  bareCaption,
   captionFor,
+  postIsDay,
   dateOfDay,
   dayOfDate,
   firstPostOnDate,
@@ -529,7 +531,7 @@ describe("publishing on Facebook and Instagram", () => {
   it("posts a platform's own caption when it has one", () => {
     const day = post(1, "19:00", { platforms: { instagram: { status: "pending", caption: "for instagram" } } });
     expect(captionForPlatform(day, "instagram")).toBe("for instagram");
-    expect(captionForPlatform(day, "facebook")).toBe("shared");
+    expect(captionForPlatform(day, "youtube")).toBe("shared");
   });
 
   it("credits a CC BY song under that platform's text only", () => {
@@ -542,10 +544,30 @@ describe("publishing on Facebook and Instagram", () => {
     };
     const day = post(1, "19:00", { platforms: { youtube: { status: "pending", music } } });
     expect(captionForPlatform(day, "youtube")).toBe("shared\n\n🎵 “Song” by Someone is licensed under CC BY 4.0.");
-    expect(captionForPlatform(day, "facebook")).toBe("shared");
+    expect(captionForPlatform(day, "facebook")).not.toContain("CC BY");
     // No song, no credit, even if one was left behind.
     const silent = post(2, "19:00", { platforms: { youtube: { status: "pending", music: { ...music, song: null } } } });
     expect(captionForPlatform(silent, "youtube")).toBe("shared");
+  });
+
+  it("posts only the word's link and tags on Facebook, Instagram and Threads", () => {
+    const caption = captionFor({ day: 17, total: 365, level: "B1", hook: "Từ gì mà ...", address: "https://anh.chayla.app" });
+    const day = { ...post(17, "20:30"), caption, code: "VSM" };
+    const bare = "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #b1";
+    for (const platform of ["facebook", "instagram", "threads"] as const) {
+      expect(captionForPlatform(day, platform)).toBe(bare);
+    }
+    expect(captionForPlatform(day, "youtube")).toBe(caption);
+    expect(bareCaption(caption, "VSM")).not.toMatch(/Từ số|Bình luận|Đoán trước/);
+  });
+
+  it("recognises a live post by its count or by its share link", () => {
+    const day = { day: 17, code: "VSM" };
+    expect(postIsDay("Từ gì mà ... 🤔\nTừ số 17/365 · trình độ B1", day)).toBe(true);
+    expect(postIsDay("Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#b1", day)).toBe(true);
+    expect(postIsDay("Học thêm mỗi ngày tại https://anh.chayla.app/w/VSMX", day)).toBe(false);
+    expect(postIsDay("Từ số 7/365", day)).toBe(false);
+    expect(postIsDay(undefined, day)).toBe(false);
   });
 
   it("does not call the same post on another platform a repeat", () => {

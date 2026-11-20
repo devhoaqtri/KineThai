@@ -122,7 +122,7 @@ import {
   META_PLATFORMS,
   captionForPlatform,
   postsToPublish,
-  postNumberIn,
+  postIsDay,
   postsAwaitingMusic,
   musicHolds,
   mixedClipPath,
@@ -911,8 +911,8 @@ function platformReady(platform: PublishPlatform): string | null {
 }
 
 /**
- * The upload of a post a platform already has, read from the "Từ số N/365" in its text
- * (postNumberIn), or undefined. Asked before every upload: on 2026-11-18 post 10 went out
+ * The upload of a post a platform already has, read from the "Từ số N/365" or the share link
+ * in its text (postIsDay), or undefined. Asked before every upload: on 2026-11-18 post 10 went out
  * twice on Facebook and YouTube because a run could not tell it was already live.
  * @throws when the platform cannot be asked
  */
@@ -923,7 +923,9 @@ async function findLive(dayNumber: number, platform: PublishPlatform): Promise<{
       : platform === "threads"
         ? await recentThreads(loadThreadsConfig(ROOT))
         : await recentUploads(loadMetaConfig(ROOT), platform);
-  return uploads.find((u) => postNumberIn(u.text) === dayNumber);
+  const day = loadCalendar().days.find((d) => d.day === dayNumber);
+  if (!day) return undefined;
+  return uploads.find((u) => postIsDay(u.text, day));
 }
 
 /** Record a post as live on a platform, on the calendar and on the exported-words list. */
