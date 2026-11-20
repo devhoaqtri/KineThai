@@ -655,6 +655,15 @@ interface PickedSound {
 
 /** The editor's top bar: "Add sound" until a song is on the clip, then the song's title. */
 const isSoundBar = (n: UiNode) => n.id.endsWith(":id/tv_top_text");
+/**
+ * Two song titles as TikTok shows them are the same song: equal once accents are composed and
+ * spaces (no-break ones included) are collapsed. On 2026-11-20 the bar and the sheet both read
+ * “Bring More Food”, an exact compare said otherwise, and the run took the song off.
+ */
+const sameTitle = (a: string, b: string) => {
+  const plain = (text: string) => text.normalize("NFC").replace(/[\s\u00a0\u200b-\u200d\ufeff]+/gu, " ").trim().toLowerCase();
+  return plain(a) === plain(b);
+};
 /** The sound sheet's Search button, by its label or its id. */
 const isSoundSearch = (n: UiNode) => (n.desc === "Search" && n.clickable) || n.id.endsWith(":id/c6r");
 /** Any sign the sound sheet is up: its Search button, its tap-outside area or its tabs. */
@@ -797,7 +806,7 @@ async function addUpbeatSound(): Promise<PickedSound> {
   await takeSoundOff();
   await openSoundSheet();
   const again = await useSearchResult(chosen.query, chosen.row);
-  if (again.title !== chosen.title) {
+  if (!sameTitle(again.title, chosen.title)) {
     await backToEditor();
     throw new Error(`picking again gave “${again.title}”, not “${chosen.title}”`);
   }
@@ -869,7 +878,8 @@ async function finishSoundSheet(title: string): Promise<boolean> {
   }
   // Close the sheet with a tap above it; the editor's bar then names the song.
   tapPoint(540, 500);
-  return !!(await waitForNode((n) => isSoundBar(n) && n.text === title, 10_000));
+  // A busy emulator can take well over 10 s to redraw the editor after the sheet closes.
+  return !!(await waitForNode((n) => isSoundBar(n) && sameTitle(n.text, title), 25_000));
 }
 
 async function prefillPostScreen(file: string) {
