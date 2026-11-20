@@ -190,6 +190,14 @@ export function WordReportPanel({
   const send = useCallback(async () => {
     if (!selected.length || phase === "sending") return;
     setPhase("sending");
+    // Static deployments have no word-report server. Record it on-device and report
+    // success, so the panel closes without a 405 the reader cannot do anything about.
+    if (import.meta.env.VITE_STATIC_BUILD === "1") {
+      rememberReportedWord(wordId);
+      onSent();
+      setPhase("sent");
+      return;
+    }
     try {
       const response = await fetch("/api/public/word-report", {
         method: "POST",

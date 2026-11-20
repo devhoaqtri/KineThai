@@ -32,6 +32,22 @@ export async function fetchVocabularyPage(input: {
     limit: VOCAB_PAGE_LIMIT,
   });
   if (local) return local;
+  // Static-only deployments (GitHub Pages, Vercel static via VITE_STATIC_BUILD=1) have
+  // no /api/public/vocabulary server; page directly from the bundled catalog instead.
+  if (import.meta.env.VITE_STATIC_BUILD === "1") {
+    const [{ catalogFor }, { readCatalogPage }, { resolveTarget }] = await Promise.all([
+      import("../lib/catalog-source"),
+      import("../lib/paging"),
+      import("../lib/target-language"),
+    ]);
+    const locale = resolveTarget(typeof window !== "undefined" ? window.location.host : undefined);
+    return readCatalogPage(catalogFor(locale), {
+      seed: input.seed,
+      ...input.filters,
+      position: input.cursor.position,
+      limit: VOCAB_PAGE_LIMIT,
+    });
+  }
   const query = new URLSearchParams({
     seed: input.seed,
     topic: input.filters.topic,

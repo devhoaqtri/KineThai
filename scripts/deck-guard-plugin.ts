@@ -105,8 +105,9 @@ export function deckGuard(): Plugin {
         );
       }
 
-      // The server build is meant to carry the decks.
-      if (this.environment.name !== "client") return;
+      // The server build is meant to carry the decks; static SPA builds (VITE_STATIC_BUILD=1)
+      // have no /api/public/vocabulary server and page from the bundled catalog directly.
+      if (this.environment.name !== "client" || process.env.VITE_STATIC_BUILD === "1") return;
       const deckLeaks = carried(isDeckModule);
       if (deckLeaks.length) {
         this.error(

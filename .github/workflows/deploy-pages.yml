@@ -1,0 +1,80 @@
+name: deploy-pages
+
+# Builds the app as a static SPA and publishes it to GitHub Pages, so
+# https://devhoaqtri.github.io/KineThai/ loads the word feed (task 5.1).
+#
+# The feed reads its pages from the bundled catalog via a client-side fallback
+# (src/features/vocabulary/api/feed.ts) when the SSR /api route is absent, which
+# is exactly the case on Pages — so the feed works with no server.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# Allow the GITHUB_TOKEN to deploy to Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deployment at a time; let an in-progress run finish, but never
+# cancel a deploy that is already publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+        env:
+          # Emit a pure static SPA (no Nitro server) under the repo sub-path.
+          VITE_STATIC_BUILD: "1"
+          BASE_PATH: /${{ github.event.repository.name }}/
+
+      - name: Assemble publish directory
+        # The client SPA (index.html, .nojekyll, assets/) is emitted to dist/client.
+        # `vite build` also leaves dist/server with an SSR / server-fn bundle for
+        # the /api routes; it is simply not uploaded (path is dist/client), so the
+        # dead server code never reaches Pages — which serves files only and never
+        # runs it, and whose client shell never references it.
+        #
+        # Pages has no rewrite rule, so a copy of the shell becomes 404.html: any
+        # deep link (/KineThai/feed?lang=ja, /KineThai/feed/saved, …) boots the same
+        # shell and the history router resolves the real pathname, query intact.
+        run: |
+          test -f dist/client/index.html || { echo "::error::dist/client/index.html missing"; exit 1; }
+          cp dist/client/index.html dist/client/404.html
+          test -f dist/client/.nojekyll   || { echo "::error::dist/client/.nojekyll missing";   exit 1; }
+          echo "Static shell OK:"; ls dist/client
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/client
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

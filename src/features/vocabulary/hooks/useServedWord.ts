@@ -16,6 +16,32 @@ async function fetchServedWord(
   lookup: WordLookup,
   signal: AbortSignal,
 ): Promise<VocabularyWord | null> {
+  // Static deployments have no /api/public/word server: resolve the code (or showcase
+  // seed) straight from the bundled catalog, so a shared challenge link still opens.
+  if (import.meta.env.VITE_STATIC_BUILD === "1") {
+    const [{ catalogFor }, { resolveTarget }, { isShareCode, normalizeShareCode }] =
+      await Promise.all([
+        import("../lib/catalog-source"),
+        import("../lib/target-language"),
+        import("../lib/share-code"),
+      ]);
+    const locale = resolveTarget(typeof window !== "undefined" ? window.location.host : undefined);
+    const words = catalogFor(locale).words;
+    if ("code" in lookup) {
+      const code = normalizeShareCode(lookup.code);
+      if (!isShareCode(code)) return null;
+      const live = words.find((word) => word.shareCode === code);
+      if (live) return live;
+      const retired = (
+        (await import("../data/share-codes-retired.json")) as {
+          default: Record<string, Record<string, { id: string }>>;
+        }
+      ).default;
+      const retiredId = retired[locale]?.[code]?.id;
+      return retiredId ? (words.find((word) => word.id === retiredId) ?? null) : null;
+    }
+    return words.length ? (words[lookup.seed % words.length] ?? null) : null;
+  }
   const query = new URLSearchParams(
     "code" in lookup ? { code: lookup.code } : { seed: String(lookup.seed % 1_000_000_000) },
   );
