@@ -61,7 +61,7 @@ import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { setEmulatorClipboard } from "./lib/emulator-clipboard";
-import { isUsedSound, loadSoundLedger, recordSoundUse, soundCandidates } from "./lib/tiktok-sounds";
+import { isUnfitSound, isUsedSound, loadSoundLedger, recordSoundUse, soundCandidates } from "./lib/tiktok-sounds";
 
 const TIKTOK_PACKAGES = [
   "com.zhiliaoapp.musically", // TikTok, most regions
@@ -777,11 +777,14 @@ async function addUpbeatSound(): Promise<PickedSound> {
   let chosen: PickedSound | null = null;
   for (const { query, row } of candidates) {
     const track = await useSearchResult(query, row);
-    if (!isUsedSound(ledger, track.title, track.artist)) {
+    const unfit = isUnfitSound(track.title, track.artist);
+    if (!unfit && !isUsedSound(ledger, track.title, track.artist)) {
       chosen = { ...track, query, row };
       break;
     }
-    console.log(`  “${track.title}” (${track.artist}) is already on a draft; next candidate`);
+    console.log(
+      `  “${track.title}” (${track.artist}) ${unfit ? "is no proper song" : "is already on a draft"}; next candidate`,
+    );
     // Picks made on top of a used track did not take (2026-11-16: four in a row still read
     // “Upbeat Funk”), so it comes off the clip before the next one is tried.
     await takeSoundOff();
