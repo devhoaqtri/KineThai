@@ -1,6 +1,7 @@
 /**
  * What a carousel adds to a card: the word's difficulty line under the app's title on
- * every slide, the hook on slide 1, the app's progress bars on every slide, and the handle
+ * every slide but the first, the hook on slide 1 (large and tilted across the top, as the
+ * clip's opening badge, in place of the title), the app's progress bars on every slide, and the handle
  * and the address, as a field to type into a browser, on the closing spelling page.
  *
  * Drawn over the card rather than inside it, so a reader's card never carries any of this.
@@ -74,13 +75,18 @@ export function CarouselChrome({
   const hook = slide.kind === "clue" && slide.hook;
   return (
     <div className="carousel-chrome" style={vars} aria-hidden="true">
-      {slide.kind !== "grammar" && level && (
+      {/* Slide 1's big hook takes the top, title and all: the level line goes with it. */}
+      {slide.kind !== "grammar" && !hook && level && (
         <p className="carousel-level">
           <span>{difficulty.emoji}</span> {difficulty.label}
           <span className="carousel-level-band">· {difficulty.band}</span>
         </p>
       )}
-      {hook && <p className="carousel-hook">{CAROUSEL_HOOK}</p>}
+      {hook && (
+        <p className="carousel-hook">
+          <span>{CAROUSEL_HOOK}</span>
+        </p>
+      )}
       {hook && (
         <p className="carousel-swipe">
           {CAROUSEL_SWIPE_CUE}

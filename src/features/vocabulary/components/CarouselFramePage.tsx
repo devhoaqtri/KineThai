@@ -64,8 +64,12 @@ const FIXED_TEXT = ["Đánh vần lại lần nữa", "Viết lại từng nét"
 const URL_FIELD_FONT = "JetBrains Mono";
 /** Room the difficulty line takes under the brand tag on every clue slide, in layout pixels. */
 const LEVEL_BAND_PX = 18;
-/** Room the hook takes under the brand tag and that line on slide 1, in layout pixels. */
-const HOOK_BAND_PX = 44 + LEVEL_BAND_PX;
+/**
+ * Room the hook takes at the top of slide 1, in layout pixels, where it stands in for the
+ * brand tag and the level line: the tilted card's height (vocabulary-export.css
+ * .carousel-hook, 42px type) and a gap under it.
+ */
+const HOOK_BAND_PX = 118;
 
 function report(phase: SlidePhase, problem?: string) {
   document.body.dataset.slidePhase = phase;
@@ -295,14 +299,15 @@ export function CarouselFramePage() {
     };
   }, [sizeCap, slide, format]);
 
-  const cardLayout = (still: CardStill, safe: SafeInsets) => ({
+  const cardLayout = (still: CardStill, safe: SafeInsets, hook: boolean) => ({
     safe,
     // The band is what keeps text clear of the marker; the running bar itself is hidden.
     showProgress: true,
-    showBrand: search.brand !== false,
+    // Slide 1's hook covers the top in the title's place (CarouselChrome).
+    showBrand: search.brand !== false && !hook,
     still,
   });
-  const card = (still: CardStill, safe: SafeInsets) =>
+  const card = (still: CardStill, safe: SafeInsets, hook = false) =>
     entry && (
       <VocabularyCard
         entry={entry}
@@ -312,7 +317,7 @@ export function CarouselFramePage() {
         matching={0}
         canAdvance={false}
         onAdvance={() => undefined}
-        exportLayout={cardLayout(still, safe)}
+        exportLayout={cardLayout(still, safe, hook)}
       />
     );
   const box = { width: layout.width, height: layout.height } as CSSProperties;
@@ -346,6 +351,7 @@ export function CarouselFramePage() {
                 {card(
                   stillFor(slide, index, format, cjkFont, sizeCap ?? undefined),
                   safeFor(slide, format),
+                  slide.kind === "clue" && slide.hook,
                 )}
               </Fragment>
               {slide.kind === "grammar" && word && (

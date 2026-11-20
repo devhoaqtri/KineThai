@@ -318,19 +318,34 @@
   white-space: nowrap;
   opacity: 0.8;
 }
+/* Slide 1's hook: the clip's opening badge (.vocab-showcase-hook-card, aurora look) at the
+   clip's own size, tilted the same 5 degrees, across the top in place of the title, so it
+   still reads on a phone's small grid. It keeps inside the grid thumbnail's margins
+   (--safe-*, gridSafe on this slide); HOOK_BAND_PX in CarouselFramePage keeps the clue
+   below it. Static: a slide is a still. */
 .carousel-hook {
   position: absolute;
-  top: calc(var(--safe-top) + 58px);
-  left: calc(var(--safe-left) + 4%);
+  top: calc(var(--safe-top) + 14px);
+  left: 50%;
   margin: 0;
-  padding: 7px 14px 8px;
-  border-radius: 999px;
-  background: var(--vocab-accent);
-  color: var(--vocab-button-ink);
-  font-size: 18px;
+  padding: 0.55em 0.95em;
+  border-radius: 0.7em;
+  font-size: 42px;
   font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.01em;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: #ffffff;
+  background: linear-gradient(135deg, #312e81 0%, #6d28d9 46%, #db2777 100%);
+  box-shadow:
+    0 18px 44px #6d28d98c,
+    0 0 0 1px #ffffff30 inset,
+    0 2px 0 #ffffff45 inset;
+  translate: -50% 0;
+  rotate: -5deg;
+}
+.carousel-hook > span {
+  text-shadow: 0 2px 14px #0007;
 }
 .carousel-swipe {
   position: absolute;
