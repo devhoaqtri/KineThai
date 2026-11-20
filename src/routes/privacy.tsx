@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PrivacyPage } from "@/features/vocabulary/components/PrivacyPage";
-import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
+import { resolveRouteLocale } from "@/features/vocabulary/api/site-locale.functions";
 import { sitePageHead } from "@/features/vocabulary/lib/target-language";
 
 // The privacy policy, rendered in full on the server: Google's reviewers and crawlers read it
 // as plain HTML (the YouTube publishing app links to it, docs/youtube-publishing.md). Static
 // copy; the brand follows the visited address, so the loader's locale rides along.
 export const Route = createFileRoute("/privacy")({
-  loader: async () => ({ locale: await getSiteLocale() }),
+  loader: async () => ({ locale: await resolveRouteLocale() }),
   head: ({ loaderData }) =>
     sitePageHead(
       loaderData?.locale,

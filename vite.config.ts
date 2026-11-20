@@ -8,6 +8,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
+import { deckGuard } from "./scripts/deck-guard-plugin";
 
 // `true` only for the static Pages build. Set by the deploy workflow.
 const staticBuild = process.env.VITE_STATIC_BUILD === "1";
@@ -19,6 +20,7 @@ const basePath = process.env.BASE_PATH || "/";
 
 export default defineConfig({
   plugins: [
+    deckGuard(),
     tailwindcss(),
     // Resolves the `@/*` → `./src/*` alias declared in tsconfig.json.
     tsConfigPaths({ projects: ["./tsconfig.json"] }),
@@ -40,16 +42,11 @@ export default defineConfig({
       },
       ...(staticBuild
         ? {
-            // Emit a single prerendered SPA shell. The shell is written to
-            // `index.html` in the client output dir; every other path is served
-            // the same shell by a 404.html copy of it (made by the deploy
-            // workflow), so history routing resolves deep links as-is.
-            // NOTE: outputPath is "/index" (no extension) — the prerenderer
-            // appends ".html" to the SPA shell path, so "/index" → index.html.
-            spa: {
-              enabled: true,
-              prerender: { enabled: true, outputPath: "/index" },
-            },
+            // Emit the SPA shell directly (no prerender crawl): Pages/Vercel serve
+            // the same shell for every path, and the history router resolves the
+            // real pathname client-side. Prerender is omitted because the crawler
+            // crashes on the CI's Node version.
+            spa: { enabled: true },
           }
         : // SSR/self-hosted build: use our error-wrapping server entry.
           { server: { entry: "server" } }),

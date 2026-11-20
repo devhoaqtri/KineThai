@@ -729,6 +729,7 @@ let fetchInFlight: Promise<void> | null = null;
  * Safe to call multiple times — only one request is in-flight at a time.
  */
 export async function refreshRemoteTracks(): Promise<void> {
+  if (import.meta.env.VITE_STATIC_BUILD === "1") return;
   if (remoteTracks) return; // already loaded
   if (fetchInFlight) return fetchInFlight;
   // DB tracks are the main feed's primary tier; the Chinese feed plays its authored

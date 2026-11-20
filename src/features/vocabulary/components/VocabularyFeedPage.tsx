@@ -323,6 +323,7 @@ export function VocabularyFeedPage({
   const { data: activeWording } = useQuery({
     queryKey: ["vocab-active-wording"],
     queryFn: getActiveVocabWording,
+    enabled: import.meta.env.VITE_STATIC_BUILD !== "1",
     staleTime: 60_000, // Cache for 1 minute
   });
   const recordLevel = levelProgress.record;

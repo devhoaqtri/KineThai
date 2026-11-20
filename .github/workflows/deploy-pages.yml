@@ -38,11 +38,7 @@ jobs:
         run: npm ci
 
       - name: Build static site
-        run: npm run build
-        env:
-          # Emit a pure static SPA (no Nitro server) under the repo sub-path.
-          VITE_STATIC_BUILD: "1"
-          BASE_PATH: /${{ github.event.repository.name }}/
+        run: npm run build:pages
 
       - name: Assemble publish directory
         # The client SPA (index.html, .nojekyll, assets/) is emitted to dist/client.

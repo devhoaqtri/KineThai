@@ -1,6 +1,6 @@
 import { createFileRoute, lazyRouteComponent, notFound } from "@tanstack/react-router";
 import { z } from "zod";
-import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
+import { resolveRouteLocale } from "@/features/vocabulary/api/site-locale.functions";
 import { STYLE_IDS } from "@/features/vocabulary/lib/schema";
 import { SHOWCASE_CONTRACT } from "@/features/vocabulary/lib/showcase-contract";
 import { BADGE_ROTATION } from "@/features/vocabulary/lib/badge-variants";
@@ -62,7 +62,7 @@ export const Route = createFileRoute("/showcase")({
   beforeLoad: () => {
     if (!import.meta.env.DEV) throw notFound();
   },
-  loader: async () => ({ locale: await getSiteLocale() }),
+  loader: async () => ({ locale: await resolveRouteLocale() }),
   head: () => ({
     meta: [{ name: "robots", content: "noindex, nofollow" }, { title: "Showcase" }],
   }),

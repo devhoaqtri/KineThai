@@ -11,13 +11,13 @@ import { ErrorComponent } from "@/features/shell/components/ErrorComponent";
 import { NotFoundComponent } from "@/features/shell/components/NotFoundComponent";
 import { RootApp, RootShell } from "@/features/shell/components/RootDocument";
 import appCss from "../styles.css?url";
-import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
-import { resolveTarget, siteTitle } from "@/features/vocabulary/lib/target-language";
+import { resolveRouteLocale } from "@/features/vocabulary/api/site-locale.functions";
+import { siteTitle } from "@/features/vocabulary/lib/target-language";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   // The visited address picks the answer language (hoa.* → Chinese, etc.).
   loader: async () => ({
-    locale: typeof window === "undefined" ? await getSiteLocale() : resolveTarget(window.location.host),
+    locale: await resolveRouteLocale(),
   }),
   head: ({ loaderData }) => {
     const title = siteTitle(loaderData?.locale ?? "en");

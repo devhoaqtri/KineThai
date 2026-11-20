@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppInfoPage } from "@/features/vocabulary/components/AppInfoPage";
-import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
+import { resolveRouteLocale } from "@/features/vocabulary/api/site-locale.functions";
 import { sitePageHead } from "@/features/vocabulary/lib/target-language";
 
 // The Settings sheet now drops this content down in place (AppInfoContent); the page stays
@@ -8,7 +8,7 @@ import { sitePageHead } from "@/features/vocabulary/lib/target-language";
 // language follow the visited address, so the loader's locale rides along.
 export const Route = createFileRoute("/feed/about")({
   ssr: "data-only",
-  loader: async () => ({ locale: await getSiteLocale() }),
+  loader: async () => ({ locale: await resolveRouteLocale() }),
   head: ({ loaderData }) =>
     sitePageHead(
       loaderData?.locale,

@@ -1,6 +1,6 @@
 import { createFileRoute, lazyRouteComponent, notFound } from "@tanstack/react-router";
 import { z } from "zod";
-import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
+import { resolveRouteLocale } from "@/features/vocabulary/api/site-locale.functions";
 import { CAROUSEL_FORMATS } from "@/features/vocabulary/lib/carousel-formats";
 import { STYLE_IDS } from "@/features/vocabulary/lib/schema";
 
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/carousel/$code")({
   beforeLoad: () => {
     if (!import.meta.env.DEV) throw notFound();
   },
-  loader: async () => ({ locale: await getSiteLocale() }),
+  loader: async () => ({ locale: await resolveRouteLocale() }),
   head: () => ({
     meta: [{ name: "robots", content: "noindex, nofollow" }, { title: "Carousel slide" }],
   }),

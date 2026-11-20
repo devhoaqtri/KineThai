@@ -78,6 +78,7 @@ export function markReportedOnce(key: string): boolean {
  */
 export function reportVisitorEvent(event: VisitorEventInput): void {
   if (typeof window === "undefined") return;
+  if (import.meta.env.VITE_STATIC_BUILD === "1") return;
   // A browser under automation (a test run, a recorder, a scraper as it comes) is not a
   // visitor: it is not reported at all, so it never reaches a count (lib/bot-signals).
   if (isAutomatedBrowser()) return;
