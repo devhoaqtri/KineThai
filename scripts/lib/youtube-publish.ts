@@ -22,7 +22,7 @@
  * YT_DRY_RUN=1 (or `dryRun`) runs every step but the network.
  *
  * Exports: YouTubeConfig, loadYouTubeConfig, youtubeReady, publishShort, ShortResult, youtubeSetup,
- *   recentShorts
+ *   recentShorts, updateShortText
  * Depends on: Node's fetch, http and crypto; meta-publish's env helpers
  */
 import { spawn, spawnSync } from "node:child_process";
@@ -289,6 +289,40 @@ export async function recentShorts(config: YouTubeConfig): Promise<{ id: string;
     const id = item.snippet?.resourceId?.videoId;
     return id ? [{ id, url: `https://youtube.com/shorts/${id}`, text: `${item.snippet?.title ?? ""}\n${item.snippet?.description ?? ""}` }] : [];
   });
+}
+
+/**
+ * Replace a Short's title and description, keeping the rest of its snippet (YouTube's update
+ * replaces the whole snippet and needs its category). Uses the youtube.force-ssl scope.
+ * @throws when YouTube refuses the lookup or the update
+ */
+export async function updateShortText(input: {
+  config: YouTubeConfig;
+  videoId: string;
+  title: string;
+  description: string;
+}): Promise<void> {
+  if (input.config.dryRun) return;
+  const token = await accessToken(input.config);
+  const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const found = await fetch(`${API}/videos?part=snippet&id=${encodeURIComponent(input.videoId)}`, {
+    headers,
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!found.ok) throw await googleError(found, "video lookup");
+  const snippet = ((await found.json()) as { items?: { snippet?: Record<string, unknown> }[] }).items?.[0]?.snippet;
+  if (!snippet) throw new Error(`YouTube has no video ${input.videoId} on this channel`);
+  const { categoryId, tags, defaultLanguage, defaultAudioLanguage } = snippet;
+  const updated = await fetch(`${API}/videos?part=snippet`, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({
+      id: input.videoId,
+      snippet: { title: input.title, description: input.description, categoryId, tags, defaultLanguage, defaultAudioLanguage },
+    }),
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!updated.ok) throw await googleError(updated, "video update");
 }
 
 const base64url = (bytes: Buffer) => bytes.toString("base64url");

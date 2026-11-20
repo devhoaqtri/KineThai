@@ -24,7 +24,7 @@
  *
  * Exports: MetaConfig, loadMetaConfig, metaReady, publishReel, publishCarousel,
  *   largestImage, MAX_CAROUSEL_ITEMS, exchangeForPageToken, writeEnvLocal, ReelResult,
- *   LiveUpload, recentUploads
+ *   LiveUpload, recentUploads, updateReelDescription
  * Depends on: Node's fetch, FormData and Blob; the clip and the page images on disk
  */
 import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
@@ -348,6 +348,11 @@ export async function deleteHostedImage(config: MetaConfig, photoId: string, log
   await graph(config, "POST", photoId, { method: "delete", access_token: config.pageToken! }, () => {}).catch(
     (error) => log(`  ! could not delete the hosted page photo ${photoId}: ${(error as Error).message}`),
   );
+}
+
+/** Replace a Facebook Reel's description (the video's own text on the Page). */
+export async function updateReelDescription(config: MetaConfig, videoId: string, description: string, log: Log = () => {}): Promise<void> {
+  await graph(config, "POST", videoId, { description, access_token: config.pageToken! }, log);
 }
 
 /** Wait for an Instagram container to be ready to use. */

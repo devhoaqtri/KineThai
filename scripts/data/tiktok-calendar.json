@@ -812,10 +812,13 @@
           "privacy": "public"
         },
         "instagram": {
-          "status": "failed",
-          "at": "2026-11-20T06:36:35.417Z",
-          "error": "Meta GET 18086241587380834: (#4) Application request limit reached",
-          "attempts": 1
+          "status": "posted",
+          "at": "2026-11-20T07:18:12.925Z",
+          "error": null,
+          "attempts": 2,
+          "id": "18160444994634274",
+          "url": "https://www.instagram.com/p/Df9GYdNCed9/",
+          "note": "live although the upload answered: Meta POST 17841441424999220/media_publish: Application request limit reached"
         },
         "threads": {
           "status": "posted",
