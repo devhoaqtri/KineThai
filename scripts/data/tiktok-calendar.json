@@ -927,7 +927,7 @@
       "carousel": "~/KineMedia-tiktok/clips/carousels/anh-chayla-CKE-4x5",
       "platforms": {
         "facebook": {
-          "status": "pending",
+          "status": "posted",
           "music": {
             "song": "openverse:efbf3215-7a1e-47de-b949-149ae2320c04",
             "startSec": 0,
@@ -936,10 +936,15 @@
             "title": "Swinging Around – Daniel Bautista",
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=2126278&format=mp32",
             "credit": "🎵 \"Swinging Around\" by Daniel Bautista is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/2126278"
-          }
+          },
+          "at": "2026-11-20T18:27:30.471Z",
+          "error": null,
+          "attempts": 1,
+          "id": "1199401732596282",
+          "url": "https://www.facebook.com/reel/1199401732596282/"
         },
         "youtube": {
-          "status": "pending",
+          "status": "posted",
           "music": {
             "song": "openverse:efbf3215-7a1e-47de-b949-149ae2320c04",
             "startSec": 0,
@@ -948,7 +953,30 @@
             "title": "Swinging Around – Daniel Bautista",
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=2126278&format=mp32",
             "credit": "🎵 \"Swinging Around\" by Daniel Bautista is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/2126278"
-          }
+          },
+          "at": "2026-11-20T18:29:44.999Z",
+          "error": null,
+          "attempts": 1,
+          "id": "x92la0D3LnY",
+          "url": "https://youtube.com/shorts/x92la0D3LnY",
+          "privacy": "public"
+        },
+        "instagram": {
+          "status": "posted",
+          "at": "2026-11-20T18:29:23.995Z",
+          "error": null,
+          "attempts": 1,
+          "id": "17968053804233866",
+          "url": "https://www.instagram.com/p/Df-TMJFmeJE/",
+          "note": "live although the upload answered: Meta POST 17841441424999220/media_publish: Application request limit reached"
+        },
+        "threads": {
+          "status": "posted",
+          "at": "2026-11-20T18:31:25.461Z",
+          "error": null,
+          "attempts": 1,
+          "id": "18040118228850585",
+          "url": "https://www.threads.com/@anh.chayla/post/Df-Tc1Hn71E"
         }
       },
       "draftedAt": "2026-11-20T08:23:31.231Z"
