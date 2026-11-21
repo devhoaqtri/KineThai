@@ -6,15 +6,21 @@
  */
 
 import { QueryClient } from "@tanstack/react-query";
-import { createRootRouteWithContext } from "@tanstack/react-router";
+import { createRootRouteWithContext, notFound } from "@tanstack/react-router";
 import { ErrorComponent } from "@/features/shell/components/ErrorComponent";
 import { NotFoundComponent } from "@/features/shell/components/NotFoundComponent";
 import { RootApp, RootShell } from "@/features/shell/components/RootDocument";
+import { isAllowedPage } from "@/lib/reader-routes";
 import appCss from "../styles.css?url";
 import { getSiteLocale } from "@/features/vocabulary/api/site-locale.functions";
 import { resolveTarget, sitePageHead } from "@/features/vocabulary/lib/target-language";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  // Only the reader's pages exist (lib/reader-routes): the social network, its Google
+  // sign-in and the creator studio answer 404, on a full load and on in-app navigation.
+  beforeLoad: ({ location }) => {
+    if (!isAllowedPage(location.pathname, import.meta.env.DEV)) throw notFound();
+  },
   // The visited address picks the answer language (hoa.* → Chinese, etc.).
   loader: async () => ({
     locale:

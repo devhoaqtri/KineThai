@@ -6,6 +6,7 @@
  */
 
 import { createServerFn } from "@tanstack/react-start";
+import { accountFeaturesGate } from "@/lib/account-features";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { resolveCanvasBackground } from "@/features/canvas";
 import { z } from "zod";
@@ -17,7 +18,7 @@ const POST_TYPES = ["text", "image", "video", "slideshow", "link"] as const;
  * @returns TanStack server function handle
  */
 export const createPost = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .inputValidator(
     (d: { post_type: string; canvas_html: string; media_urls?: string[]; bg_gradient: string }) =>
       z
@@ -79,7 +80,7 @@ export const createPost = createServerFn({ method: "POST" })
  * @returns TanStack server function handle
  */
 export const toggleLike = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .inputValidator((d: { post_id: string }) => z.object({ post_id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -117,7 +118,7 @@ export const toggleLike = createServerFn({ method: "POST" })
  * @returns TanStack server function handle
  */
 export const addComment = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .inputValidator((d: { post_id: string; chip_id: string }) =>
     z
       .object({

@@ -1782,17 +1782,10 @@ export function FeedControls({
               )}
             </div>
             <nav aria-label="Điều hướng trang" className="vocab-site-links">
-              {/* Community is not open to readers yet; only the button is hidden, the
-                /community route still resolves. Flip COMMUNITY_AVAILABLE to bring it back. */}
+              {/* The social network and its sign-in are switched off at the route level
+                (lib/reader-routes ACCOUNT_FEATURES_ENABLED): /community and /auth answer 404,
+                so neither has a link here. */}
               {COMMUNITY_AVAILABLE && <Link to="/community">Cộng đồng</Link>}
-              {/* Temporarily hidden at request: "Đăng nhập" and "Về với từ vựng" leave the
-                sheet for now — uncomment (both live together) to bring them back. The
-                /auth route and the close behaviour are untouched.
-            <Link to="/auth">Đăng nhập</Link>
-            <button type="button" onClick={close}>
-              Về với từ vựng
-            </button>
-            */}
             </nav>
             {/* Forgetting is the sheet's foot: a strip flush with its bottom edge, never one
               tap — the warning opens inside the strip with cancel and confirm as its two

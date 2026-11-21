@@ -6,6 +6,7 @@
  */
 
 import { createServerFn } from "@tanstack/react-start";
+import { accountFeaturesGate } from "@/lib/account-features";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { VOCAB_ONLY_MODE, isVocabularyPost } from "@/lib/feature-flags";
@@ -16,6 +17,7 @@ import { VOCAB_ONLY_MODE, isVocabularyPost } from "@/lib/feature-flags";
  * @returns TanStack server function handle
  */
 export const search = createServerFn({ method: "GET" })
+  .middleware([accountFeaturesGate])
   .inputValidator((d: { q: string }) => z.object({ q: z.string().max(64) }).parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -43,26 +45,28 @@ export const search = createServerFn({ method: "GET" })
  * Server function: getDiscover.
  * @returns TanStack server function handle
  */
-export const getDiscover = createServerFn({ method: "GET" }).handler(async () => {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const [{ data: posts }, { data: profiles }] = await Promise.all([
-    supabaseAdmin
-      .from("posts")
-      .select("id, author_id, post_type, canvas_html, media_urls, bg_gradient, created_at")
-      .order("created_at", { ascending: false })
-      .limit(80),
-    supabaseAdmin
-      .from("profiles")
-      .select("id, username, display_name, avatar_url, bio")
-      .order("created_at", { ascending: false })
-      .limit(12),
-  ]);
-  let filteredPosts = (posts ?? []) as { id: string; author_id: string; canvas_html: string }[];
-  if (VOCAB_ONLY_MODE) {
-    filteredPosts = filteredPosts.filter((p) => isVocabularyPost(p as never));
-  }
-  return { posts: filteredPosts.slice(0, 36), profiles: profiles ?? [] };
-});
+export const getDiscover = createServerFn({ method: "GET" })
+  .middleware([accountFeaturesGate])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const [{ data: posts }, { data: profiles }] = await Promise.all([
+      supabaseAdmin
+        .from("posts")
+        .select("id, author_id, post_type, canvas_html, media_urls, bg_gradient, created_at")
+        .order("created_at", { ascending: false })
+        .limit(80),
+      supabaseAdmin
+        .from("profiles")
+        .select("id, username, display_name, avatar_url, bio")
+        .order("created_at", { ascending: false })
+        .limit(12),
+    ]);
+    let filteredPosts = (posts ?? []) as { id: string; author_id: string; canvas_html: string }[];
+    if (VOCAB_ONLY_MODE) {
+      filteredPosts = filteredPosts.filter((p) => isVocabularyPost(p as never));
+    }
+    return { posts: filteredPosts.slice(0, 36), profiles: profiles ?? [] };
+  });
 
 // ===== Follow / unfollow =====
 /**
@@ -70,7 +74,7 @@ export const getDiscover = createServerFn({ method: "GET" }).handler(async () =>
  * @returns TanStack server function handle
  */
 export const toggleFollow = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .inputValidator((d: { target_id: string }) => z.object({ target_id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -105,7 +109,7 @@ export const toggleFollow = createServerFn({ method: "POST" })
  * @returns TanStack server function handle
  */
 export const getMe = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     const { data: profile } = await supabase
@@ -153,7 +157,7 @@ export const getMe = createServerFn({ method: "GET" })
  * @returns TanStack server function handle
  */
 export const updateProfile = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .inputValidator((d: { display_name?: string; bio?: string; avatar_url?: string }) =>
     z
       .object({
@@ -176,7 +180,7 @@ export const updateProfile = createServerFn({ method: "POST" })
  * @returns TanStack server function handle
  */
 export const getNotifications = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     const { data: me } = await supabase
