@@ -69,3 +69,20 @@ After the new entry is live, repeat the handoff's empty-cache slow-4G measuremen
 **Rule for next time:** never import from the `@/features/session` barrel outside the session feature; use its leaf modules (`demo-session`, `data-mode`). The first-load guard checks the main script only. A shared chunk the feed loads statically can still carry the client, so check the static closure, not just the entry: after `npx vite build`, the feed's static imports from `index-*.js` and `VocabularyFeedPage-*.js` must not reach the chunk containing `supabase-js`.
 
 **Still to confirm after the next publish:** that new readers download no Supabase chunk at all (expected: about 210 KB raw / 53 KB gzip off the first word's path), and a real Google sign-in on the live site, including the redirect return through `/` → `/feed`.
+
+## Live confirmation, 22 November 2026 (after the reader-only lockdown was published)
+
+**Account client:** a new reader's full visit (10 s after the feed settles) loads 39 scripts and **none is the Supabase SDK**. It is still in the script graph, referenced by the admin and sign-in chunks, but never fetched for a reader.
+
+**Same profile (slow 4G, CPU 4×, empty cache), three runs:**
+
+| | 21 Nov | After Lovable's pass | Now |
+|---|---|---|---|
+| First paint | ~4.6 s | 4.3 s | 3.1 s (3.1–4.0) |
+| First word | 8.7 s | 7.9 s | **6.0 s** (5.2–7.1) |
+| Downloaded before the first word | ~765 KB | 755–838 KB | 701–726 KB |
+| Repeat visit, first word | 1.6–3.5 s | 1.4–1.7 s | 1.5–1.8 s |
+
+**Reader-only lockdown (lib/reader-routes), checked live:** every reader page answers 200; `/auth`, `/community`, `/create`, `/discover`, `/me`, `/settings`, `/about`, `/notifications`, `/edit-profile`, `/u/<name>`, `/p/<id>`, `/store` and the dev tools answer 404. Calling the server functions directly through the site's own client: all 13 social and account functions answer "This feature is not available."; the admin functions refuse without the PIN.
+
+**Not done in code, and worth doing in Lovable Cloud:** turn off new sign-ups and the Google provider in the project's authentication settings, so no account can be created against the database even outside this app.
