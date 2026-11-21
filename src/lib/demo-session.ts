@@ -10,4 +10,4 @@ export {
   getDemoSession,
   isDemoSession,
   startDemoSession,
-} from "@/features/session";
+} from "@/features/session/demo-session";

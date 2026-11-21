@@ -12,7 +12,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { isDemoSession } from "@/features/session";
+import { isDemoSession } from "@/features/session/demo-session";
 import { isDemoAdminEnabled } from "../lib/demo-admin-flag";
 
 /**

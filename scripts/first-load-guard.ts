@@ -10,9 +10,13 @@ export function isDeferredFirstLoadModule(id: string): boolean {
 
 /** Check the actual emitted entry, not source sizes or estimates. */
 export function firstLoadGuard(): Plugin {
+  let production = false;
   return {
     name: "first-load-guard",
     apply: "build",
+    configResolved(config) {
+      production = config.mode === "production";
+    },
     generateBundle(_options, bundle) {
       if (this.environment.name !== "client") return;
       const entry = Object.values(bundle)
@@ -25,7 +29,9 @@ export function firstLoadGuard(): Plugin {
         .map(([id]) => id);
       console.info(`[first-load] ${entry.fileName}: ${Buffer.byteLength(entry.code)} raw bytes, ${gzipBytes} gzip bytes`);
       if (leaks.length) this.error(`Deferred modules reached the first load:\n${leaks.join("\n")}`);
-      if (gzipBytes > FIRST_LOAD_GZIP_LIMIT) {
+      // Development retains local export/lab routes; the handoff's budget is
+      // explicitly for the published reader, not that larger local toolset.
+      if (production && gzipBytes > FIRST_LOAD_GZIP_LIMIT) {
         this.error(`First-load gzip is ${gzipBytes} bytes; limit is ${FIRST_LOAD_GZIP_LIMIT} (165 KB).`);
       }
     },

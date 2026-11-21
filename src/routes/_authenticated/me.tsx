@@ -1,9 +1,11 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { isDemoSession } from "@/features/session/demo-session";
+import { sitePageHead } from "@/features/vocabulary/lib/target-language";
 
 // /me — resolves the signed-in user's username and redirects to /u/$username
 export const Route = createFileRoute("/_authenticated/me")({
   ssr: false,
+  head: () => sitePageHead(undefined, "Your profile", "Your Chay Lá profile and posts."),
   beforeLoad: async () => {
     if (isDemoSession()) {
       const { MOCK_ME_USERNAME } = await import("@/features/demo");

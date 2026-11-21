@@ -6,7 +6,7 @@
  */
 
 import { useMemo } from "react";
-import { isDemoSession } from "@/features/session";
+import { isDemoSession } from "@/features/session/demo-session";
 import { parseAdminRange, type AdminRangePreset } from "../lib/date-range";
 import { isDemoAdminEnabled } from "../lib/demo-admin-flag";
 import type { AdminMode } from "../api/queries";
