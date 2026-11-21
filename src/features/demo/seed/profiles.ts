@@ -5,7 +5,9 @@
  * Depends on: seed/types, features/session DEMO_AUTH_USER_ID
  */
 
-import { DEMO_AUTH_USER_ID } from "@/features/session";
+// The leaf module, never the session barrel: the barrel re-exports the sign-in page, which
+// imports the account client, and seed data must not drag that along (2026-11-22).
+import { DEMO_AUTH_USER_ID } from "@/features/session/demo-session";
 import type { MockProfile } from "./types";
 
 /** @responsibility Stable demo viewer profile id used across seed overlays and mutations. */

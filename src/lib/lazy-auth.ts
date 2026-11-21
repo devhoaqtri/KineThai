@@ -19,12 +19,35 @@ export async function hasStoredAuthSession(): Promise<boolean> {
   }
 }
 
-export const attachLazyAuth = createMiddleware({ type: "function" }).client(
-  async ({ next }) => {
-    if (!(await hasStoredAuthSession())) return next({ headers: {} });
-    const { supabase } = await import("@/integrations/supabase/client");
-    const { data } = await supabase.auth.getSession();
-    const token = data.session?.access_token;
-    return next({ headers: token ? { Authorization: `Bearer ${token}` } : {} });
-  },
-);
+/** What an OAuth return puts in the URL: tokens, a code to exchange, or an error. */
+const AUTH_CALLBACK_PARAMS =
+  /[#?&](access_token|refresh_token|provider_token|code|error|error_description)=/;
+
+/**
+ * Whether this URL is a sign-in coming back (the front page keeps these parameters on its
+ * way to /feed, see routes/index.tsx). The account client must load at once to take them up.
+ * @pure true
+ */
+export function hasAuthCallbackParams(href: string): boolean {
+  return AUTH_CALLBACK_PARAMS.test(href);
+}
+
+/**
+ * Whether a page should load the account client now: a stored session to keep alive, or a
+ * sign-in returning in the URL. A reader who has never signed in gets neither, and never
+ * downloads the client; signing in goes through /auth, which loads it itself.
+ */
+export async function shouldLoadAuthClient(
+  href = globalThis.location?.href ?? "",
+): Promise<boolean> {
+  if (hasAuthCallbackParams(href)) return true;
+  return hasStoredAuthSession();
+}
+
+export const attachLazyAuth = createMiddleware({ type: "function" }).client(async ({ next }) => {
+  if (!(await hasStoredAuthSession())) return next({ headers: {} });
+  const { supabase } = await import("@/integrations/supabase/client");
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  return next({ headers: token ? { Authorization: `Bearer ${token}` } : {} });
+});

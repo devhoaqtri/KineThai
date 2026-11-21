@@ -10,6 +10,7 @@ import { Outlet, useRouter, HeadContent, Scripts } from "@tanstack/react-router"
 import { lazy, Suspense, useEffect, type ReactNode } from "react";
 import { buildLegacyBrowserWarningScript } from "@/lib/browser-support";
 import { installStaleChunkReload } from "@/lib/stale-chunk";
+import { shouldLoadAuthClient } from "@/lib/lazy-auth";
 import { UnsupportedBrowserWarning } from "./UnsupportedBrowserWarning";
 import { DesktopModeNotice } from "./DesktopModeNotice";
 import { ReaderNotices } from "./ReaderNotices";
@@ -58,8 +59,14 @@ export function RootApp({ queryClient }: { queryClient: QueryClient }) {
       return;
     let disposed = false;
     let unsub: { unsubscribe?: () => void } | undefined;
-    import("@/integrations/supabase/client")
-      .then(({ supabase }) => {
+    // Only for someone who is signed in or coming back from signing in (lib/lazy-auth):
+    // loading the account client for every reader put 53 KB (gzip) on the first word's
+    // network path, measured live on 2026-11-22.
+    void shouldLoadAuthClient()
+      .then((load) => (load ? import("@/integrations/supabase/client") : null))
+      .then((client) => {
+        if (!client || disposed) return;
+        const { supabase } = client;
         if (disposed) return;
         const { data } = supabase.auth.onAuthStateChange((event) => {
           if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;

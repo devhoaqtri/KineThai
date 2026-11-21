@@ -14,6 +14,7 @@
 import { useEffect, useState } from "react";
 import { isDemoSession } from "@/features/session/demo-session";
 import { isDemoAdminEnabled } from "../lib/demo-admin-flag";
+import { hasStoredAuthSession } from "@/lib/lazy-auth";
 
 /**
  * Resolve admin status once per mount.
@@ -29,8 +30,9 @@ export function useIsAdmin(): boolean {
       if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) {
         return false;
       }
-      // Imported on demand so the public feed does not bundle the auth client or
-      // the admin server functions for visitors who will never need them.
+      // No stored session, no admin: a reader who never signed in does not download
+      // the auth client or the admin server functions at all (lib/lazy-auth).
+      if (!(await hasStoredAuthSession())) return false;
       const { supabase } = await import("@/integrations/supabase/client");
       const { data } = await supabase.auth.getSession();
       if (!data.session) return false;
