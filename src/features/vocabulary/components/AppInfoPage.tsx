@@ -181,7 +181,7 @@ function PageLinkRow({ link }: { link: InfoPageLink }) {
     );
   }
   return (
-    <Link className="vocab-info-page" to={link.to as "/privacy" | "/terms" | "/store"}>
+    <Link className="vocab-info-page" to={link.to as "/privacy" | "/terms"}>
       {body}
       <ChevronRight size={18} aria-hidden="true" />
     </Link>

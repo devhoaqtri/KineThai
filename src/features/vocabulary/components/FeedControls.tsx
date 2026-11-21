@@ -37,12 +37,7 @@ import {
   difficultyLevels,
   tracksFor,
 } from "../lib/difficulty";
-import {
-  lapsFilled,
-  scopeProgress,
-  tierProgress,
-  type LevelProgress,
-} from "../lib/level-progress";
+import { lapsFilled, scopeProgress, tierProgress, type LevelProgress } from "../lib/level-progress";
 import { levelLadderFor } from "../lib/level-ladder";
 import { activateCustomPack } from "../lib/custom-pack";
 import { useCustomPacks } from "../hooks/useCustomPacks";
@@ -1424,8 +1419,7 @@ export function FeedControls({
   return (
     <header className="vocab-toolbar" ref={toolbar}>
       <div className="vocab-toolbar-row">
-        {/* Far left: the app family, while ECOSYSTEM_MENU_AVAILABLE lets it show.
-            ECOSYSTEM_STORE_AVAILABLE separately gates the store tile inside the panel. */}
+        {/* Far left: the app family, while ECOSYSTEM_MENU_AVAILABLE lets it show. */}
         {ECOSYSTEM_MENU_AVAILABLE && (
           <EcosystemMenu open={ecoOpen} onOpenChange={toggleEco} reducedMotion={reducedMotion} />
         )}
@@ -1747,7 +1741,9 @@ export function FeedControls({
                           : `${label}: ${count} từ. Mở để ôn lại`
                       }
                       aria-disabled={memoryOff || undefined}
-                      onClick={() => (memoryOff ? requestStorageDialog("memory") : openRecall(cell))}
+                      onClick={() =>
+                        memoryOff ? requestStorageDialog("memory") : openRecall(cell)
+                      }
                     >
                       <span className="vocab-memory-label">{label}</span>
                       <span className="vocab-memory-count">{count}</span>

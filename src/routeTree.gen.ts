@@ -21,7 +21,6 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ShowcaseRouteImport } from './routes/showcase'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as StoreRouteImport } from './routes/store'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TiktokLabRouteImport } from './routes/tiktok-lab'
 import { Route as AuthenticatedAboutRouteImport } from './routes/_authenticated/about'
@@ -125,11 +124,6 @@ const ShowcaseRoute = ShowcaseRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StoreRoute = StoreRouteImport.update({
-  id: '/store',
-  path: '/store',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -373,7 +367,6 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/showcase': typeof ShowcaseRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/store': typeof StoreRoute
   '/terms': typeof TermsRoute
   '/tiktok-lab': typeof TiktokLabRoute
   '/about': typeof AuthenticatedAboutRoute
@@ -431,7 +424,6 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/showcase': typeof ShowcaseRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/store': typeof StoreRoute
   '/terms': typeof TermsRoute
   '/tiktok-lab': typeof TiktokLabRoute
   '/about': typeof AuthenticatedAboutRoute
@@ -492,7 +484,6 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/showcase': typeof ShowcaseRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/store': typeof StoreRoute
   '/terms': typeof TermsRoute
   '/tiktok-lab': typeof TiktokLabRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
@@ -553,7 +544,6 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/showcase'
     | '/sitemap.xml'
-    | '/store'
     | '/terms'
     | '/tiktok-lab'
     | '/about'
@@ -611,7 +601,6 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/showcase'
     | '/sitemap.xml'
-    | '/store'
     | '/terms'
     | '/tiktok-lab'
     | '/about'
@@ -671,7 +660,6 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/showcase'
     | '/sitemap.xml'
-    | '/store'
     | '/terms'
     | '/tiktok-lab'
     | '/_authenticated/about'
@@ -732,7 +720,6 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   ShowcaseRoute: typeof ShowcaseRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  StoreRoute: typeof StoreRoute
   TermsRoute: typeof TermsRoute
   TiktokLabRoute: typeof TiktokLabRoute
   CarouselCodeRoute: typeof CarouselCodeRoute
@@ -839,13 +826,6 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/store': {
-      id: '/store'
-      path: '/store'
-      fullPath: '/store'
-      preLoaderRoute: typeof StoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -1248,7 +1228,6 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   ShowcaseRoute: ShowcaseRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  StoreRoute: StoreRoute,
   TermsRoute: TermsRoute,
   TiktokLabRoute: TiktokLabRoute,
   CarouselCodeRoute: CarouselCodeRoute,

@@ -20,7 +20,7 @@ export type InfoPageLink = {
   /** The row's accent, one of the shell's named colours, like the info page's lines. */
   tone: "mint" | "citrus" | "magenta" | "cyber";
   /** An in-app route, or an absolute URL that opens in a new tab. */
-  to: "/privacy" | "/terms" | "/store" | `https://${string}`;
+  to: "/privacy" | "/terms" | `https://${string}`;
 };
 
 export const INFO_PAGE_LINKS: readonly InfoPageLink[] = [
@@ -39,14 +39,6 @@ export const INFO_PAGE_LINKS: readonly InfoPageLink[] = [
     caption: "Cách dùng trang và nội dung",
     tone: "citrus",
     to: "/terms",
-  },
-  {
-    id: "store",
-    emoji: "🛍️",
-    title: "Cửa hàng Chay Lá",
-    caption: "Các app học ngôn ngữ khác",
-    tone: "magenta",
-    to: "/store",
   },
   {
     id: "contact",

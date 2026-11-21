@@ -12,13 +12,7 @@
  */
 
 /** Public pages, in the order a reader meets them. */
-export const SITEMAP_PATHS: readonly string[] = [
-  "/feed",
-  "/feed/about",
-  "/store",
-  "/privacy",
-  "/terms",
-];
+export const SITEMAP_PATHS: readonly string[] = ["/feed", "/feed/about", "/privacy", "/terms"];
 
 /** What crawlers are asked to skip. */
 export const CRAWL_DISALLOW: readonly string[] = [
