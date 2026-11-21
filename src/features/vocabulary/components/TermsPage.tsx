@@ -13,13 +13,11 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { siteTitle, type TargetLocale } from "../lib/target-language";
+import { CONTACT_URL } from "../lib/site-links";
 import "../vocabulary.css";
 
 /** When the terms last changed, as shown on the page. */
 const TERMS_UPDATED = { vi: "21/11/2026", en: "21 November 2026" };
-
-/** The channel's Facebook Page: the public way to reach the owner. */
-const CONTACT_URL = "https://www.facebook.com/1850058198626898";
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -85,7 +83,8 @@ export function TermsPage({ locale = "en" }: { locale?: TargetLocale }) {
             </li>
             <li>
               Đây là bản thử nghiệm. Từ vựng, gợi ý và giải nghĩa do AI soạn rồi được biên tập lại,
-              nên vẫn có thể còn sai sót. Thấy chỗ nào sai, bạn bấm nút 😕 trên thẻ để báo cho chúng tôi.
+              nên vẫn có thể còn sai sót. Thấy chỗ nào sai, bạn bấm nút 😕 trên thẻ để báo cho chúng
+              tôi.
             </li>
             <li>Trang giúp bạn ôn từ, không thay thế giáo viên hay tài liệu chính thức.</li>
           </ul>
@@ -151,7 +150,8 @@ export function TermsPage({ locale = "en" }: { locale?: TargetLocale }) {
               </li>
               <li>
                 This is a beta. The words, clues and meanings are drafted by AI and then edited, so
-                mistakes are still possible. If you spot one, tap the 😕 button on the card to tell us.
+                mistakes are still possible. If you spot one, tap the 😕 button on the card to tell
+                us.
               </li>
               <li>The site helps you practise words; it is not a substitute for a teacher.</li>
             </ul>

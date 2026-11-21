@@ -19,13 +19,11 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { siteTitle, type TargetLocale } from "../lib/target-language";
+import { CONTACT_URL } from "../lib/site-links";
 import "../vocabulary.css";
 
 /** When the policy last changed, as shown on the page. */
 const PRIVACY_UPDATED = { vi: "21/11/2026", en: "21 November 2026" };
-
-/** The channel's Facebook Page: the public way to reach the owner. */
-const CONTACT_URL = "https://www.facebook.com/1850058198626898";
 
 const LINKS = {
   youtubeTerms: "https://www.youtube.com/t/terms",

@@ -10437,24 +10437,91 @@ button.vocab-info-row[aria-expanded="true"] {
   font-size: 14px;
   text-align: center;
 }
-/* Privacy and terms, under the thanks line: quiet, but real tap targets. */
-.vocab-info-legal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--shell-text-mute);
+/* The site's other pages (lib/site-links): rows in the info page's own language, an emoji
+   tile like a section title's, the title over a one-line caption, and an arrow that says
+   where the tap goes (a chevron in the app, an up-right arrow off-site). They arrive with
+   the lines above them and press in like the Settings rows. */
+.vocab-info-pages {
+  margin: 0 -8px;
+  padding: 0;
+  list-style: none;
 }
-.vocab-info-legal a {
-  display: inline-flex;
+.vocab-info-pages li {
+  animation: vocab-info-line-in var(--dur-move) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+.vocab-info-pages li + li {
+  border-top: 1px solid var(--shell-line);
+}
+.vocab-info-page {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
   align-items: center;
-  min-height: 44px;
-  padding: 0 8px;
-  color: var(--shell-text-soft);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  gap: 12px;
+  min-height: 60px;
+  padding: 8px;
+  border-radius: 14px;
+  color: var(--shell-text);
+  text-decoration: none;
+  transition:
+    background-color var(--dur-quick) var(--ease-out),
+    transform var(--dur-move) var(--ease-spring);
+}
+.vocab-info-page:hover {
+  background: color-mix(in srgb, var(--info-tone) 8%, transparent);
+}
+.vocab-info-page:active {
+  transform: scale(0.97);
+  transition-duration: var(--dur-press);
+}
+.vocab-info-page:focus-visible {
+  outline: 2px solid var(--info-tone);
+  outline-offset: 2px;
+}
+.vocab-info-page-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--info-tone) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--info-tone) 30%, transparent);
+  font-size: 19px;
+}
+.vocab-info-page-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.vocab-info-page-text strong {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.vocab-info-page-text small {
+  color: var(--shell-text-mute);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+.vocab-info-page > svg {
+  color: color-mix(in srgb, var(--info-tone) 70%, var(--shell-text-mute));
+  transition: transform var(--dur-move) var(--ease-spring);
+}
+.vocab-info-page:hover > svg {
+  transform: translateX(2px);
+}
+.vocab-info-page[target="_blank"]:hover > svg {
+  transform: translate(2px, -2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vocab-info-pages li {
+    animation: none;
+  }
+  .vocab-info-page,
+  .vocab-info-page > svg {
+    transition: none;
+  }
 }
 @keyframes vocab-info-line-in {
   from {
