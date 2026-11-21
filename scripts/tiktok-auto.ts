@@ -44,6 +44,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { loadMetaConfig, metaReady } from "./lib/meta-publish";
 import { loadYouTubeConfig, youtubeReady } from "./lib/youtube-publish";
+import { loadThreadsConfig, threadsReady } from "./lib/threads-publish";
 import {
   MUSIC_PLATFORMS,
   PUBLISH_PLATFORMS,
@@ -249,9 +250,11 @@ async function draftJob() {
   );
 }
 
-/** Whether a platform is connected: Meta's Page token, or YouTube's refresh token. */
+/** Whether a platform is connected: Meta's Page token, Threads' token, or YouTube's refresh token. */
 function connected(platform: PublishPlatform): boolean {
-  return platform === "youtube" ? !youtubeReady(loadYouTubeConfig(ROOT)) : !metaReady(loadMetaConfig(ROOT), platform);
+  if (platform === "youtube") return !youtubeReady(loadYouTubeConfig(ROOT));
+  if (platform === "threads") return !threadsReady(loadThreadsConfig(ROOT), loadMetaConfig(ROOT));
+  return !metaReady(loadMetaConfig(ROOT), platform);
 }
 
 /** Whether any connected platform has a post due now: the publish job's quiet check. */
