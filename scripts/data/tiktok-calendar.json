@@ -1099,7 +1099,7 @@
           "url": "https://www.facebook.com/reel/945323655178086/"
         },
         "youtube": {
-          "status": "pending",
+          "status": "posted",
           "music": {
             "song": "openverse:8c6f39f2-73fb-4dd8-8979-88584c33d458",
             "startSec": 0,
@@ -1108,14 +1108,33 @@
             "title": "KREATEN -10- Positive or negative – Kreaten",
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=509425&format=mp32",
             "credit": "🎵 \"KREATEN -10- Positive or negative\" by Kreaten is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/509425"
-          }
+          },
+          "at": "2026-11-21T13:32:52.161Z",
+          "firstAt": "2026-11-21T13:32:37.844Z",
+          "error": null,
+          "attempts": 1,
+          "id": "35BRv6j7t0U",
+          "url": "https://youtube.com/shorts/35BRv6j7t0U",
+          "privacy": "public"
         },
         "instagram": {
-          "status": "publishing",
-          "at": "2026-11-21T13:30:52.809Z",
+          "status": "posted",
+          "at": "2026-11-21T13:32:37.829Z",
           "firstAt": "2026-11-21T13:30:52.809Z",
           "error": null,
-          "attempts": 1
+          "attempts": 1,
+          "id": "17888162439512287",
+          "url": "https://www.instagram.com/p/DgAWB6KCV83/",
+          "note": "live although the upload answered: Meta POST 17841441424999220/media_publish: Application request limit reached"
+        },
+        "threads": {
+          "status": "posted",
+          "at": "2026-11-21T13:34:32.567Z",
+          "firstAt": "2026-11-21T13:32:52.183Z",
+          "error": null,
+          "attempts": 1,
+          "id": "18112129589241817",
+          "url": "https://www.threads.com/@anh.chayla/post/DgAWRTVH9XJ"
         }
       },
       "draftedAt": "2026-11-21T06:33:38.696Z"
