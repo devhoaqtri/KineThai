@@ -10437,6 +10437,25 @@ button.vocab-info-row[aria-expanded="true"] {
   font-size: 14px;
   text-align: center;
 }
+/* Privacy and terms, under the thanks line: quiet, but real tap targets. */
+.vocab-info-legal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--shell-text-mute);
+}
+.vocab-info-legal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 8px;
+  color: var(--shell-text-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 @keyframes vocab-info-line-in {
   from {
     opacity: 0;

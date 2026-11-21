@@ -6,8 +6,11 @@
  *
  * Keep it true to the code: storage is the browser's (progress, history, settings, imported
  * packs), word reports keep only a salted one-way digest (reporter-digest.server.ts), visitor
- * telemetry is a random session id with page health and errors (visitor-telemetry.server.ts),
- * hearts and bookmarks are totals only (engagement.server.ts). Change this page when they change.
+ * telemetry is a random id renewed every day with page health and errors (session-tracker.ts,
+ * visitor-telemetry.server.ts), error reports are sent only when the reader chooses to
+ * (lib/error-report), writes carry a few header-based bot flags (lib/bot-signals), the rate
+ * limiter keeps addresses in memory only (lib/rate-limit), readers get no cookies, hearts and
+ * bookmarks are totals only (engagement.server.ts). Change this page when they change.
  *
  * Exports: PrivacyPage
  * Depends on: router Link, lucide icons, target-language (brand), vocabulary.css
@@ -19,7 +22,7 @@ import { siteTitle, type TargetLocale } from "../lib/target-language";
 import "../vocabulary.css";
 
 /** When the policy last changed, as shown on the page. */
-const PRIVACY_UPDATED = { vi: "17/11/2026", en: "17 November 2026" };
+const PRIVACY_UPDATED = { vi: "21/11/2026", en: "21 November 2026" };
 
 /** The channel's Facebook Page: the public way to reach the owner. */
 const CONTACT_URL = "https://www.facebook.com/1850058198626898";
@@ -85,8 +88,18 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
         <Section title="Gửi về máy chủ">
           <ul>
             <li>
-              Số liệu kỹ thuật ẩn danh: một mã phiên ngẫu nhiên, trang có tải được không và lỗi nếu
-              có. Không kèm tên, email hay danh tính.
+              Số liệu kỹ thuật ẩn danh: một mã ngẫu nhiên được đổi mới mỗi ngày, trang có tải được
+              không và lỗi nếu có. Không kèm tên, email hay danh tính, và không nối được các ngày
+              với nhau.
+            </li>
+            <li>
+              Báo cáo lỗi trang, chỉ khi bạn chọn gửi: lỗi gì, trang nào, trình duyệt, kích thước
+              màn hình và loại mạng. Bạn đọc toàn bộ nội dung trước khi bấm gửi.
+            </li>
+            <li>
+              Để chặn công cụ tự động, máy chủ ghi kèm vài dấu hiệu kỹ thuật của yêu cầu (ví dụ
+              trình duyệt có gửi thông tin ngôn ngữ không). Địa chỉ mạng chỉ được giữ trong bộ nhớ
+              máy chủ vài phút để giới hạn tốc độ, không được lưu lại.
             </li>
             <li>Lượt thả tim và lượt lưu: chỉ lưu tổng số của mỗi từ, không lưu ai đã bấm.</li>
             <li>
@@ -98,6 +111,14 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
               địa chỉ IP, trình duyệt) trong thời gian ngắn để vận hành và chống lạm dụng.
             </li>
           </ul>
+        </Section>
+
+        <Section title="Cookie">
+          <p>
+            Trang không đặt cookie cho người học, không chạy quảng cáo và không dùng công cụ theo
+            dõi của bên thứ ba. Bộ nhớ trình duyệt chỉ dùng cho những chức năng bạn đang dùng, như ở
+            mục “Lưu trên máy của bạn”.
+          </p>
         </Section>
 
         <Section title="Đăng nhập">
@@ -160,8 +181,17 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
           <Section title="Sent to the server">
             <ul>
               <li>
-                Anonymous technical data: a random session id, whether pages loaded, and errors. No
-                name, email or identity.
+                Anonymous technical data: a random id renewed every day, whether pages loaded, and
+                errors. No name, email or identity, and days cannot be linked to each other.
+              </li>
+              <li>
+                Error reports, only when you choose to send one: the error, the page, your browser,
+                screen size and network type. You read the whole report before sending it.
+              </li>
+              <li>
+                To keep automated tools out, the server records a few technical signals about each
+                request (for example whether the browser sent a language). Network addresses are
+                held in server memory for a few minutes to limit request rates, and never stored.
               </li>
               <li>Hearts and bookmarks: only each word's totals, never who tapped.</li>
               <li>
@@ -173,6 +203,14 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
                 (such as IP address and browser) to run the service and prevent abuse.
               </li>
             </ul>
+          </Section>
+
+          <Section title="Cookies">
+            <p>
+              The site sets no cookies for learners, shows no ads and uses no third-party trackers.
+              Browser storage is used only for the features you use, as described under “Kept on
+              your device”.
+            </p>
           </Section>
 
           <Section title="Signing in">

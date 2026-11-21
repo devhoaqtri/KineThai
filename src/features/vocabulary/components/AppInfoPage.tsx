@@ -222,6 +222,11 @@ export function AppInfoContent({ locale = "en" }: { locale?: TargetLocale }) {
       ))}
 
       <p className="vocab-info-thanks">💚 Cảm ơn bạn đã học cùng chayLá!</p>
+      <nav className="vocab-info-legal" aria-label="Thông tin pháp lý">
+        <Link to="/privacy">Quyền riêng tư</Link>
+        <span aria-hidden="true">·</span>
+        <Link to="/terms">Điều khoản sử dụng</Link>
+      </nav>
     </div>
   );
 }
