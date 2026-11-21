@@ -22,7 +22,7 @@
  * META_DRY_RUN=1 (or `dryRun`) runs every step but the network: what would be sent is logged,
  * ids come back as `dry-…`, and nothing on either platform changes.
  *
- * Exports: MetaConfig, loadMetaConfig, metaReady, publishReel, publishCarousel,
+ * Exports: MetaConfig, loadMetaConfig, metaReady, publishReel, publishCarousel, setFacebookCover,
  *   largestImage, MAX_CAROUSEL_ITEMS, exchangeForPageToken, writeEnvLocal, ReelResult,
  *   LiveUpload, recentUploads, updateReelDescription
  * Depends on: Node's fetch, FormData and Blob; the clip and the page images on disk
@@ -30,6 +30,7 @@
 import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import type { MetaPlatform } from "./tiktok-calendar";
+import { extractFrameJpeg } from "./cover-frame";
 
 const GRAPH = "https://graph.facebook.com";
 const RUPLOAD = "https://rupload.facebook.com";
@@ -169,7 +170,48 @@ async function poll<T>(ask: () => Promise<T>, done: (value: T) => boolean | Erro
   }
 }
 
-async function publishFacebook(config: MetaConfig, file: string, caption: string, log: Log): Promise<ReelResult> {
+/**
+ * Make a frame of the clip a Facebook video's cover: POST /{video}/thumbnails with the JPEG as
+ * `source` and `is_preferred`. Without it Facebook shows the clip's first frame, an empty
+ * gradient. Returns quietly in a dry run.
+ */
+export async function setFacebookCover(input: {
+  config: MetaConfig;
+  videoId: string;
+  file: string;
+  coverMs: number;
+  log?: Log;
+}): Promise<void> {
+  const log = input.log ?? ((line: string) => console.log(line));
+  const jpeg = extractFrameJpeg(input.file, input.coverMs);
+  const at = `${(input.coverMs / 1000).toFixed(2)}s`;
+  if (input.config.dryRun) {
+    log(`  [dry run] POST ${input.videoId}/thumbnails (${(jpeg.length / 1024).toFixed(0)} KB JPEG @ ${at})`);
+    return;
+  }
+  const form = new FormData();
+  form.append("access_token", input.config.pageToken!);
+  form.append("is_preferred", "true");
+  form.append("source", new Blob([new Uint8Array(jpeg)], { type: "image/jpeg" }), "cover.jpg");
+  const response = await fetch(`${GRAPH}/${input.config.version}/${input.videoId}/thumbnails`, {
+    method: "POST",
+    body: form,
+    signal: AbortSignal.timeout(60_000),
+  });
+  const json = (await response.json().catch(() => ({}))) as { success?: boolean; error?: { message?: string } };
+  if (!response.ok || json.error) {
+    throw new Error(`Meta POST ${input.videoId}/thumbnails: ${json.error?.message ?? `HTTP ${response.status}`}`);
+  }
+  log(`  ✓ cover set from ${at} (${(jpeg.length / 1024).toFixed(0)} KB)`);
+}
+
+async function publishFacebook(
+  config: MetaConfig,
+  file: string,
+  caption: string,
+  coverMs: number | null,
+  log: Log,
+): Promise<ReelResult> {
   const page = config.pageId!;
   const token = config.pageToken!;
   const start = await graph<{ video_id?: string; upload_url?: string }>(
@@ -196,6 +238,12 @@ async function publishFacebook(config: MetaConfig, file: string, caption: string
         : r.status?.video_status === "ready" || r.status?.publishing_phase?.status === "complete",
     10 * 60_000,
   );
+  // The Reel is live by now; a cover that will not set is a warning, never a failed post.
+  if (coverMs !== null) {
+    await setFacebookCover({ config, videoId, file, coverMs, log }).catch((error: unknown) =>
+      log(`  ! cover not set: ${error instanceof Error ? error.message : String(error)}`),
+    );
+  }
   const link = await graph<{ permalink_url?: string }>(
     config, "GET", videoId, { fields: "permalink_url", access_token: token }, log,
   ).catch(() => ({}) as { permalink_url?: string });
@@ -249,7 +297,7 @@ async function publishInstagramReel(
 
 /**
  * Publish one clip as a Reel.
- * @param input.coverMs - Instagram's cover frame, in ms into the clip (Facebook picks its own)
+ * @param input.coverMs - the cover frame, in ms into the clip (Facebook's thumbnail, Instagram's thumb_offset)
  * @throws with Meta's own message when a step is refused or processing fails
  */
 /** A post already on a platform: its id, address and the text it went out with. */
@@ -294,7 +342,7 @@ export async function publishReel(input: {
   if (missing && !input.config.dryRun) throw new Error(missing);
   if (!existsSync(input.file)) throw new Error(`no clip at ${input.file}`);
   return input.platform === "facebook"
-    ? publishFacebook(input.config, input.file, input.caption, log)
+    ? publishFacebook(input.config, input.file, input.caption, input.coverMs ?? null, log)
     : publishInstagramReel(input.config, input.file, input.caption, input.coverMs ?? null, log);
 }
 

@@ -76,7 +76,7 @@ import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
 import { updateJsonFile } from "./lib/locked-file";
 import { findLiveAfterError } from "./lib/live-after-error";
-import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, recentUploads, writeEnvLocal } from "./lib/meta-publish";
+import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, recentUploads, setFacebookCover, writeEnvLocal } from "./lib/meta-publish";
 import { SOUNDS_DIRS, listSongs, mediaDuration, mixSong, songTitle } from "./lib/music-mix";
 import { OPEN_MUSIC_QUERIES, creditLine, isOpenSong, openSongId, pickOpenTrack, searchOpenTracks } from "./lib/open-music";
 import { loadYouTubeConfig, publishShort, recentShorts, youtubeReady, youtubeSetup } from "./lib/youtube-publish";
@@ -1348,6 +1348,40 @@ function times() {
   console.log("\nReinstall the jobs so publishing follows: npx tsx scripts/tiktok-auto.ts install");
 }
 
+/**
+ * Give Reels already on the Facebook Page their cover: `fb-cover <posts> [--dry-run]`. Reels
+ * published before 2026-11-22 went out without one and show the clip's blank first frame.
+ * One at a time, a few seconds apart, to stay clear of Meta's hourly request limit.
+ */
+async function fbCover() {
+  const [spec] = positional;
+  if (!spec) throw new Error("usage: fb-cover <posts> [--dry-run]");
+  const config = { ...loadMetaConfig(ROOT), ...(rest.includes("--dry-run") ? { dryRun: true } : {}) };
+  let failed = 0;
+  for (const n of parseDaySpec(spec)) {
+    const day = loadCalendar().days.find((d) => d.day === n);
+    const track = day?.platforms?.facebook;
+    if (!day || track?.status !== "posted" || !track.id || !day.clip) {
+      console.log(`  post ${n}: not on Facebook, skipped`);
+      continue;
+    }
+    const coverMs = coverMsOf(day);
+    if (coverMs === null) {
+      console.log(`  post ${n}: no hint time for its clip, skipped`);
+      continue;
+    }
+    console.log(`── post ${n} “${day.word}” (${track.id})`);
+    try {
+      await setFacebookCover({ config, videoId: track.id, file: expandHome(day.clip), coverMs });
+    } catch (error) {
+      failed += 1;
+      console.error(`  ✗ ${error instanceof Error ? error.message : String(error)}`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, config.dryRun ? 0 : 4000));
+  }
+  if (failed) process.exitCode = 1;
+}
+
 /** Exchange META_USER_TOKEN for the Page token and Instagram id, into .env.local. */
 async function metaSetup() {
   const result = await exchangeForPageToken(loadMetaConfig(ROOT), flag("page") ?? null);
@@ -1434,6 +1468,8 @@ async function main() {
       return threadsSetupCommand();
     case "times":
       return times();
+    case "fb-cover":
+      return fbCover();
     default:
       throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, music, music-due, meta-setup, youtube-setup, threads-setup, times (see the top of scripts/tiktok.ts)");
   }

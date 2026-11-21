@@ -32,6 +32,7 @@ import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { readEnvFile, writeEnvLocal } from "./meta-publish";
+import { extractFrameJpeg } from "./cover-frame";
 
 const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -115,18 +116,6 @@ async function accessToken(config: YouTubeConfig): Promise<string> {
 
 export type ShortResult = { id: string; url: string; privacy: string };
 
-function extractFrameJpeg(file: string, coverMs: number): Buffer {
-  const sec = Math.max(0, coverMs / 1000).toFixed(3);
-  const run = spawnSync(
-    "ffmpeg",
-    ["-y", "-ss", sec, "-i", file, "-frames:v", "1", "-q:v", "2", "-f", "image2pipe", "-vcodec", "mjpeg", "pipe:1"],
-    { maxBuffer: 10 * 1024 * 1024 },
-  );
-  if (run.status !== 0 || !run.stdout?.length) {
-    throw new Error(`ffmpeg could not extract cover frame at ${sec}s from ${file}`);
-  }
-  return run.stdout;
-}
 
 /**
  * Set a video's custom thumbnail from a frame at `coverMs` ms into `file`.

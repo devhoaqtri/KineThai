@@ -17,6 +17,15 @@ the emulator). Manage everything at **http://localhost:5195/posting** under `npm
 - A failure is retried by the job up to 3 times, then waits on the page with Meta's own message.
 - What went out is recorded in `scripts/data/exported-words.json`, so the word is never planned again.
 
+## Covers
+
+The clips open on an empty gradient (the hook enters a beat later), so a Reel left to Facebook
+shows a blank colour wash as its cover. After a Reel is ready, `publishFacebook` uploads the frame
+at the clip's letter hint (`coverMsOf`, the same moment as TikTok's cover and YouTube's thumbnail;
+`scripts/lib/cover-frame.ts`) to `POST /{video}/thumbnails` with `is_preferred`. A cover that will not
+set is logged as a warning; the post itself has already gone out. Reels published before
+2026-11-22 had none; `npm run tiktok -- fb-cover 6-19` gave them theirs, and reruns are harmless.
+
 ## Songs on Facebook Reels
 
 The clips render silent, and Meta's Reels API takes no music of its own, so a song is mixed into a
