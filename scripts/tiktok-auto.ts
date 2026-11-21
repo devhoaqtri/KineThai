@@ -229,6 +229,9 @@ async function draftJob() {
   const before = new Set(loadCalendar().days.filter((d) => d.status === "drafted").map((d) => d.day));
   const code = await tiktok(["draft-due", "--hours", hours]);
   const drafted = loadCalendar().days.filter((d) => d.status === "drafted" && !before.has(d.day));
+  // The emulator is up: read every TikTok video's views for the hashtag experiment
+  // (hashtag-experiment.ts). Its failure costs one day's reading, never the drafts.
+  if ((await tiktok(["views"])) !== 0) say("! reading TikTok views failed; the hashtag experiment skips today");
   // A clip rendered just now missed the publish run at its own time (it had nothing to send):
   // send what is due before reporting.
   let publishProblem: string | null = null;

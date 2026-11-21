@@ -1130,7 +1130,265 @@ function saveFailureSnapshot(): string | null {
   }
 }
 
+/** What the views reader writes for one video, one JSON line each (tiktok.ts views reads it). */
+type VideoReading = { views: number; age: string; caption: string; tags: string[] };
+
+/**
+ * The grid's view counts on the profile, top-left first: one per posted video. A count spans
+ * its tile's whole width (about a third of the screen), which the header's Following,
+ * Followers and Likes numbers do not.
+ */
+function gridCounts(ui: UiNode[]): UiNode[] {
+  return ui
+    .filter(
+      (n) =>
+        /^[\d.,]+[KM]?$/.test(n.text) &&
+        (n.id.endsWith(":id/tv_play_count") || n.bounds[2] - n.bounds[0] > 250) &&
+        n.bounds[3] < 2200,
+    )
+    .sort((a, b) => a.bounds[1] - b.bounds[1] || a.bounds[0] - b.bounds[0]);
+}
+
+/**
+ * One open video's numbers: "N views", the age label ("· 2d ago"), and the caption, with
+ * "more" tapped first so the hashtags at its end are on screen.
+ */
+/**
+ * The open video's screen, paused first: a playing video keeps uiautomator from going idle,
+ * and one tap in its middle pauses it (only tapped while a dump fails, so a paused video is
+ * never set playing again).
+ */
+async function readPausedVideo(): Promise<UiNode[]> {
+  // A tap lands as pause or play depending on timing, so every other failed dump gets one,
+  // with time between for the pause to take.
+  for (let i = 0; i < 8; i += 1) {
+    const ui = dumpUi();
+    if (!lastDumpFailed) return ui;
+    if (i % 2 === 0) tapPoint(540, 1100);
+    await sleep(1500);
+  }
+  return readScreen(20_000);
+}
+
+async function readOpenVideo(): Promise<VideoReading | null> {
+  let ui = await readPausedVideo();
+  // The caption is TikTok's `desc` view; its text decides only when the id is not there.
+  const captionNode = () =>
+    ui.find((n) => n.id.endsWith(":id/desc")) ?? ui.find((n) => /Từ gì mà|#\S/u.test(n.text.normalize("NFC")));
+  const shown = captionNode();
+  if (shown && /more[\u2060\s]*($|\|)/u.test(shown.text)) {
+    tapNode(shown);
+    await sleep(1200);
+    ui = await readPausedVideo();
+  }
+  const viewsNode = ui.find((n) => /^[\d.,]+[KM]?\s+views?$/i.test(n.text));
+  if (!viewsNode) return null;
+  const n = viewsNode.text.replace(/\s*views?$/i, "");
+  const unit = /[KM]$/i.exec(n)?.[0]?.toUpperCase();
+  const base = Number(n.replace(/[KM,]/gi, ""));
+  const views = Math.round(unit === "K" ? base * 1e3 : unit === "M" ? base * 1e6 : base);
+  const age = ui.find((n) => /^·\s*(\d+\s*[smhdw]\s*ago|\d{1,2}-\d{1,2}(-\d{4})?)$/i.test(n.text))?.text ?? "";
+  const caption = (captionNode()?.text ?? "")
+    .normalize("NFC")
+    .replace(/[\u2060\s]*\|[\u2060\s]*See translation$/u, "")
+    .replace(/[…\u2060\s]*(more|less)[\u2060\s]*$/u, "")
+    .trim();
+  if (!caption && process.env.TIKTOK_VIEWS_DEBUG) console.log(ui.map((n) => `${n.id} ${n.text}`).join("\n"));
+  const tags = caption.match(/#[^\s#…\u2060]+/gu) ?? [];
+  return { views, age: age.replace(/^·\s*/, ""), caption, tags };
+}
+
+/**
+ * Read every posted video's views from the profile, newest first, into `out` as JSON lines:
+ * open the first video, read it, swipe to the next, until the list repeats or `limit` is met.
+ * Reads only; it never taps anything that changes a video.
+ */
+async function readViews(pkg: string, out: string, limit: number) {
+  shell(`am force-stop ${pkg}`);
+  await sleep(800);
+  await readDraftCount(pkg); // opens the profile
+  const first = gridCounts(await readScreen())[0];
+  if (!first) throw new Error("the profile shows no posted videos");
+  console.log(`→ reading up to ${limit} video(s), newest first`);
+  tapPoint(first.cx, first.bounds[1] - 180);
+  await sleep(3000);
+  const readings: VideoReading[] = [];
+  let repeats = 0;
+  while (readings.length < limit && repeats < 2) {
+    const reading = await readOpenVideo();
+    const last = readings.at(-1);
+    if (!reading || (last && last.caption === reading.caption && last.age === reading.age && last.views === reading.views)) {
+      repeats += 1;
+    } else {
+      repeats = 0;
+      readings.push(reading);
+      console.log(`  ${String(reading.views).padStart(6)} views · ${reading.age.padEnd(8)} · ${reading.tags.join(" ")}`);
+    }
+    adb(["shell", "input", "swipe", "540", "1700", "540", "500", "250"]);
+    await sleep(2500);
+  }
+  writeFileSync(out, readings.map((r) => JSON.stringify(r)).join("\n") + (readings.length ? "\n" : ""));
+  shell(`am force-stop ${pkg}`);
+  console.log(`✓ read ${readings.length} video(s)`);
+}
+
+/** One post the retag run edits: how to know its video, and the tag line it gets. */
+type RetagItem = { post: number; mustHave: string[]; mustNot: string[]; tags: string[] };
+type RetagResult = { post: number; before: string; after: string; saved: boolean };
+
+const TAG_LINE_RE = /^(#[^\s#]+\s*)+$/u;
+
+/** The caption with its last hashtag line swapped for `tags`; everything else kept as is. */
+function replaceTagLine(caption: string, tags: string[]): string {
+  const lines = caption.replace(/\s+$/u, "").split("\n");
+  let at = -1;
+  lines.forEach((line, i) => {
+    if (TAG_LINE_RE.test(line.trim())) at = i;
+  });
+  if (at === -1) throw new Error("the caption has no hashtag line to replace");
+  lines[at] = tags.join(" ");
+  return lines.join("\n");
+}
+
+/** Open the open video's Edit post screen: Share, then the action row's "Edit post". */
+async function openEditPost(): Promise<UiNode> {
+  const share = await waitForNode((n) => n.desc.startsWith("Share video"), 8_000);
+  if (!share) throw new Error("the video has no Share button");
+  tapNode(share);
+  for (let i = 0; i < 5; i += 1) {
+    const ui = await readScreen();
+    const edit = ui.find((n) => n.text === "Edit post");
+    if (edit) {
+      tapNode(edit);
+      const field = await waitForNode((n) => n.text.includes("#") && n.bounds[1] < 800 && n.bounds[3] < 1000, 10_000);
+      if (!field) throw new Error("Edit post opened no description field");
+      return field;
+    }
+    // The action row (Analytics, Download, …) scrolls sideways; Edit post sits far right.
+    const row = ui.find((n) => ["Analytics", "Download", "Pin", "Duet", "Cast"].includes(n.text));
+    if (!row) throw new Error("the share sheet has no action row");
+    adb(["shell", "input", "swipe", "900", String(row.cy - 60), "100", String(row.cy - 60), "400"]);
+    await sleep(1200);
+  }
+  throw new Error("the share sheet has no Edit post");
+}
+
+/** Leave Edit post without saving, answering a discard prompt if one comes. */
+async function cancelEditPost() {
+  const cancel = (await readScreen()).find((n) => n.text === "Cancel");
+  if (cancel) tapNode(cancel);
+  else adb(["shell", "input", "keyevent", "4"]);
+  const discard = await waitForNode((n) => /^(Discard|Leave)$/i.test(n.text), 3_000);
+  if (discard) tapNode(discard);
+  await sleep(1500);
+}
+
+/**
+ * Change the hashtag line of posted videos (Edit post), and nothing else in their captions.
+ * Walks the profile's videos newest first; each item's video is the one whose caption holds
+ * all its mustHave strings and none of its mustNot. With --dry-run every edit is pasted and
+ * checked, then cancelled. TikTok allows one edit a day, within 7 days of posting.
+ */
+async function retagVideos(pkg: string, items: RetagItem[], out: string, dryRun: boolean) {
+  shell(`am force-stop ${pkg}`);
+  await sleep(800);
+  await readDraftCount(pkg); // opens the profile
+  const first = gridCounts(await readScreen())[0];
+  if (!first) throw new Error("the profile shows no posted videos");
+  tapPoint(first.cx, first.bounds[1] - 180);
+  await sleep(3000);
+  const left = new Map(items.map((item) => [item.post, item]));
+  const results: RetagResult[] = [];
+  let seen = 0;
+  let lastCaption = "";
+  let repeats = 0;
+  while (left.size && seen < 40 && repeats < 2) {
+    const reading = await readOpenVideo();
+    const caption = reading?.caption ?? "";
+    if (!reading || caption === lastCaption) repeats += 1;
+    else {
+      repeats = 0;
+      seen += 1;
+      lastCaption = caption;
+      const item = [...left.values()].find(
+        (it) => it.mustHave.every((m) => caption.includes(m)) && !it.mustNot.some((m) => caption.includes(m)),
+      );
+      if (item) {
+        left.delete(item.post);
+        const field = await openEditPost();
+        const before = field.text.normalize("NFC");
+        const after = replaceTagLine(before, item.tags);
+        tapNode(field);
+        await sleep(600);
+        await pasteCaption(after);
+        // Back hides the keyboard, but with no keyboard up it leaves Edit post unsaved.
+        if (keyboardShown()) adb(["shell", "input", "keyevent", "4"]);
+        await sleep(800);
+        const held = (await readScreen()).find((n) =>
+          item.tags.every((t) => n.text.toLowerCase().includes(t.toLowerCase())),
+        );
+        if (held && process.env.TIKTOK_VIEWS_DEBUG) console.log(JSON.stringify(held.text));
+        if (!held) {
+          await cancelEditPost();
+          throw new Error(`post ${item.post}: the new hashtags did not stay in the field; nothing saved`);
+        }
+        let saved = false;
+        if (dryRun) await cancelEditPost();
+        else {
+          const save = (await readScreen()).find((n) => n.text === "Save");
+          if (!save) throw new Error(`post ${item.post}: Edit post has no Save button`);
+          tapNode(save);
+          // Save lands back on the video, playing again: read it paused, or the views never show.
+          for (let i = 0; i < 6 && !saved; i += 1) {
+            await sleep(2000);
+            saved = (await readPausedVideo()).some((n) => /^[\d.,]+[KM]?\s+views?$/i.test(n.text));
+          }
+          if (!saved) throw new Error(`post ${item.post}: Save did not return to the video`);
+        }
+        results.push({ post: item.post, before, after, saved });
+        writeFileSync(out, results.map((r) => JSON.stringify(r)).join("\n") + "\n");
+        console.log(`  ${dryRun ? "[dry run] " : "✓ "}post ${item.post}: ${item.tags.join(" ")}`);
+        await sleep(1500);
+        continue; // read the same video again: Save returns to it
+      }
+    }
+    adb(["shell", "input", "swipe", "540", "1700", "540", "500", "250"]);
+    await sleep(2500);
+  }
+  writeFileSync(out, results.map((r) => JSON.stringify(r)).join("\n") + (results.length ? "\n" : ""));
+  shell(`am force-stop ${pkg}`);
+  if (left.size) console.log(`! not found among the videos: post(s) ${[...left.keys()].join(", ")}`);
+  console.log(`✓ ${results.length} video(s) ${dryRun ? "checked (nothing saved)" : "retagged"}`);
+}
+
 async function main() {
+  const viewsOut = flag("views", "");
+  if (viewsOut) {
+    if (!pinAvdDevice()) {
+      if (!has("boot")) throw new Error(`${avd} is not running. Start the emulator, or pass --boot to start it.`);
+      await bootEmulator();
+    }
+    shell("input keyevent KEYCODE_WAKEUP");
+    shell("wm dismiss-keyguard");
+    const tiktok = findTikTok();
+    if (!tiktok) throw new Error("TikTok is not installed on the device.");
+    await readViews(tiktok, resolve(viewsOut), Number(flag("views-limit", "40")));
+    return;
+  }
+  const retagPlan = flag("retag", "");
+  if (retagPlan) {
+    if (!pinAvdDevice()) {
+      if (!has("boot")) throw new Error(`${avd} is not running. Start the emulator, or pass --boot to start it.`);
+      await bootEmulator();
+    }
+    shell("input keyevent KEYCODE_WAKEUP");
+    shell("wm dismiss-keyguard");
+    const tiktok = findTikTok();
+    if (!tiktok) throw new Error("TikTok is not installed on the device.");
+    const items = JSON.parse(readFileSync(resolve(retagPlan), "utf8")) as RetagItem[];
+    await retagVideos(tiktok, items, resolve(flag("retag-out", `${retagPlan}.out`)), has("dry-run"));
+    return;
+  }
   if (!clip) throw new Error("give me a path to an .mp4");
   const file = resolve(clip);
   if (!existsSync(file)) throw new Error(`no such file: ${file}`);
@@ -1280,6 +1538,7 @@ async function main() {
 
 main().catch((error) => {
   console.error(`\n✗ ${error instanceof Error ? error.message : String(error)}`);
+  if (process.env.TIKTOK_VIEWS_DEBUG && error instanceof Error) console.error(error.stack);
   if (attachedDevices().length) {
     const snapshot = saveFailureSnapshot();
     if (snapshot) console.error(`  screen at the failure: ${snapshot}.png (UI tree beside it)`);

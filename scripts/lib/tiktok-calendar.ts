@@ -137,6 +137,14 @@ export type CalendarDay = {
   scheduledAt: string | null;
   /** When it was saved as a TikTok draft in the emulator; absent on days from before drafts. */
   draftedAt?: string | null;
+  /** The hashtags its TikTok draft carried, for the hashtag experiment (hashtag-experiment.ts). */
+  tiktokTags?: string[] | null;
+  /**
+   * The retag test on an already-posted video (tiktok.ts retag): when its hashtag line was
+   * edited, which arm ("retag": new rotation tags; "control": its own tags reordered, so
+   * only the edit itself differs) and the tags it had before.
+   */
+  tiktokRetag?: { at: string; arm: "retag" | "control"; before: string[] } | null;
   postedAt: string | null;
   /** The post's TikTok link, once it is live. */
   url: string | null;
