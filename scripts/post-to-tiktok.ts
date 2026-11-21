@@ -85,7 +85,8 @@ const has = (name: string) => argv.includes(`--${name}`);
 
 const clip = argv.find((a) => !a.startsWith("--") && a.endsWith(".mp4"));
 const avd = flag("avd", "TikTokPoster");
-const serial = flag("serial", "");
+/** The adb target: --serial, else the emulator running `avd` once pinAvdDevice finds it. */
+let serial = flag("serial", "");
 const explicitCode = flag("code", "");
 const explicitCaption = flag("caption", "");
 const locationQuery = flag("location", DEFAULT_LOCATION);
@@ -117,6 +118,30 @@ function attachedDevices(): string[] {
     .slice(1)
     .filter((line) => line.includes("\tdevice"))
     .map((line) => line.split("\t")[0]!);
+}
+
+/**
+ * Point adb at the emulator running this AVD. Another tool can have a second emulator up at
+ * the same time (2026-11-21: a TestDevice started by another session), and then every bare
+ * adb call fails with "more than one device"; asking each emulator its AVD name finds ours.
+ * A lone device that is not an emulator (a phone on USB) is used as before.
+ * @returns Whether a device is pinned
+ */
+function pinAvdDevice(): boolean {
+  if (serial) return true;
+  const devices = attachedDevices();
+  for (const device of devices.filter((d) => d.startsWith("emulator-"))) {
+    const run = spawnSync("adb", ["-s", device, "emu", "avd", "name"], { encoding: "utf8" });
+    if ((run.stdout ?? "").split(/\r?\n/)[0]?.trim() === avd) {
+      serial = device;
+      return true;
+    }
+  }
+  if (devices.length === 1 && !devices[0]!.startsWith("emulator-")) {
+    serial = devices[0]!;
+    return true;
+  }
+  return false;
 }
 
 /** Where the emulator's own output goes; the first place to look when a boot fails. */
@@ -171,7 +196,7 @@ async function bootEmulator() {
       const tail = readFileSync(BOOT_LOG, "utf8").trim().split("\n").slice(-4).join("\n  ");
       throw new Error(`the emulator exited (code ${exited}) before booting:\n  ${tail}`);
     }
-    if (attachedDevices().length && shell("getprop sys.boot_completed") === "1") return;
+    if (pinAvdDevice() && shell("getprop sys.boot_completed") === "1") return;
     await sleep(2000);
   }
   throw new Error(`${avd} did not finish booting in 6 minutes; see ${BOOT_LOG}`);
@@ -1110,12 +1135,13 @@ async function main() {
   const file = resolve(clip);
   if (!existsSync(file)) throw new Error(`no such file: ${file}`);
 
-  if (attachedDevices().length === 0) {
+  if (!pinAvdDevice()) {
     if (!has("boot")) {
-      throw new Error(`no device attached. Start the emulator, or pass --boot to start ${avd}.`);
+      throw new Error(`${avd} is not running. Start the emulator, or pass --boot to start it.`);
     }
     await bootEmulator();
   }
+  console.log(`→ using ${serial} (${avd})`);
 
   // A screen asleep or locked swallows taps, and a dump of it holds nothing to find.
   shell("input keyevent KEYCODE_WAKEUP");
