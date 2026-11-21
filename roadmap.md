@@ -12,7 +12,9 @@
 
 # First-load bundle handoff
 
-- [ ] Defer account tools, social demo data, and toasts from the first load.
-- [ ] Keep error validation server-only and inspect other root validation imports.
-- [ ] Run regression tests, inspect the generated bundle, and verify reader and signed-in flows.
-- [ ] Publish and hand off live re-measurement when verification permits.
+- [x] Defer account tools, social demo data, and toasts from the first load.
+- [x] Keep error validation server-only and inspect other root validation imports.
+- [x] Run all 2,281 tests and verify public playback, member profile, admin access, and signed-in bearer requests.
+- [x] Request publishing and write the live re-measurement handoff.
+- [ ] Confirm the new production entry meets 165 KB gzip and run the deeper deck fingerprint check; waiting for published output (the live check still served the previous entry).
+- [ ] Complete a real Google OAuth round trip on the published site; requires an account holder's Google sign-in.
