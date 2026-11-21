@@ -25,7 +25,7 @@
  *   carouselSlides, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
  *   PUBLISH_PLATFORMS, PublishPlatform, MUSIC_PLATFORMS, MusicPlatform, youtubeTitle,
- *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn, bareCaption, postIsDay
+ *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn, bareCaption, postIsDay, CAPTION_HOOK
  */
 
 /** How many hashtags TikTok keeps in a caption; it silently drops the rest. */
@@ -474,24 +474,35 @@ export function planDays(input: {
 }
 
 /**
- * The post's text on every platform: the word's own share link (`/w/<code>`, which opens the
- * feed on that word and never names it) and the hashtags. Nothing else: no teaser, post count
- * or call to comment, since the clip already says all of that (admin, 2026-11-20). The link
- * is also how a live post is recognised (postIsDay). It carries at most MAX_HASHTAGS tags,
- * since TikTok drops any beyond that.
+ * The clip's own opening question, which every post's text starts with. The same words as
+ * WORD_HOOK (src/features/vocabulary/lib/first-visit), restated so this file stays pure;
+ * tiktok-calendar.test.ts holds the two together.
+ */
+export const CAPTION_HOOK = "Từ gì mà ...";
+
+/**
+ * The post's text on every platform: the hook on a line of its own, the site's address (the
+ * domain only, never a word's own link), and the hashtags. No teaser, post count or call to
+ * comment: the clip already says all of that (admin, 2026-11-20 and 21). It never names the
+ * word. It carries at most MAX_HASHTAGS tags, since TikTok drops any beyond that.
  * @param input.level - the word's level
- * @param input.code - the word's share code
  * @param input.address - the site
  * @returns Text for the post's caption or description
  * @pure true
  */
-export function captionFor(input: { level: string; code: string; address: string }): string {
+export function captionFor(input: { level: string; address: string }): string {
   return [
-    `Học thêm mỗi ngày tại ${input.address.replace(/\/$/, "")}/w/${input.code}`,
+    CAPTION_HOOK,
+    `Học thêm mỗi ngày tại ${siteOnly(input.address)}`,
     "",
     // TikTok keeps the first five hashtags of a caption and drops the rest on paste.
     `#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #${input.level.toLowerCase()}`,
   ].join("\n");
+}
+
+/** An address cut to its scheme and host: `https://anh.chayla.app/w/VSM` → `https://anh.chayla.app`. @pure true */
+function siteOnly(address: string): string {
+  return address.replace(/^(https?:\/\/[^/\s]+).*$/u, "$1");
 }
 
 /** What `status` prints, worked out from the calendar and today's date. */
@@ -719,6 +730,8 @@ export type PlatformPost = {
   id?: string | null;
   url?: string | null;
   at?: string | null;
+  /** When this platform was first sent the post: a live upload must be later (postIsDay). */
+  firstAt?: string | null;
   error?: string | null;
   attempts?: number;
   /** What the platform set the post to, when it is not plainly public (YouTube: `private` until audited). */
@@ -801,37 +814,58 @@ export function postNumberIn(text: string | null | undefined): number | null {
 export const MAX_PUBLISH_ATTEMPTS = 3;
 
 /**
- * A calendar caption cut down to what captionFor writes now: the site line, pointed at the
- * word's share link, and the hashtags. Captions written before 2026-11-20 still carry a teaser,
- * a count and a call to comment; this drops them. A caption already cut down, or one with no
- * site line or tags (hand-written), comes back as is.
+ * A calendar caption in the form captionFor writes now: the hook line, the site line with the
+ * domain only, and the hashtags. Captions written before 2026-11-21 carry a teaser after the
+ * hook, a count, a call to comment or a word's own link; this drops them. A caption already in
+ * this form, or one with no site line or tags (hand-written), comes back as is.
  * @pure true
  */
-export function bareCaption(caption: string, code: string): string {
+export function bareCaption(caption: string): string {
   const lines = caption.split("\n").map((line) => line.trim());
   const site = lines.find((line) => /^Học thêm mỗi ngày tại https?:\/\/\S+$/u.test(line.normalize("NFC")));
-  const link = site?.includes("/w/")
-    ? site
-    : site?.replace(/(https?:\/\/\S+?)\/?$/u, (address) => `${address.replace(/\/$/, "")}/w/${code}`);
   const tags = lines.filter((line) => line.startsWith("#"));
-  // Text with neither is someone's own writing, not a generated caption: never cut it to nothing.
-  if (!link && !tags.length) return caption.trim();
-  return [link, link && tags.length ? "" : undefined, ...tags].filter((line) => line !== undefined).join("\n");
+  // Text with neither is someone's own writing, not a generated caption: never cut it down.
+  if (!site && !tags.length) return caption.trim();
+  const link = site?.replace(/https?:\/\/\S+$/u, (address) => siteOnly(address));
+  return [CAPTION_HOOK, link, tags.length ? "" : undefined, ...tags]
+    .filter((line) => line !== undefined)
+    .join("\n");
 }
 
+/** Text with its spaces folded and accents composed, for comparing a post with its caption. */
+const plainText = (text: string) => text.normalize("NFC").replace(/\s+/gu, " ").trim();
+
+/** How early an upload's own time may read against the claim, for the two clocks' drift. */
+const LIVE_CLOCK_SLACK_MS = 2 * 60_000;
+
 /**
- * Whether a live post's text belongs to a post: its "Từ số N/365" (every post before
- * 2026-11-20) or its share link (captionFor).
+ * Whether a live post belongs to a post. Posts before 2026-11-20 carry "Từ số N/365", those
+ * of 2026-11-20 the word's own link; since 2026-11-21 the text is the same for every post of a
+ * level (captionFor), so one counts only when it carries this post's whole text AND went up
+ * after the first time this post was sent (`since`, the platform track's firstAt), when no
+ * other post was being sent. Without `since` only the markers can match.
+ * @param upload - the live post's text and when it went up (ISO), when the platform says
+ * @param expected - the text this post sends on that platform (captionForPlatform)
+ * @param since - the first send attempt's time (ISO), or null
  * @pure true
  */
-export function postIsDay(text: string | null | undefined, day: Pick<CalendarDay, "day" | "code">): boolean {
+export function postIsDay(
+  upload: { text?: string | null; at?: string | null },
+  day: Pick<CalendarDay, "day" | "code">,
+  expected: string,
+  since: string | null | undefined,
+): boolean {
+  const text = upload.text ?? "";
   if (postNumberIn(text) === day.day) return true;
-  return new RegExp(`/w/${day.code}(?![A-Za-z0-9])`).test(text ?? "");
+  if (new RegExp(`/w/${day.code}(?![A-Za-z0-9])`).test(text)) return true;
+  if (!since || !upload.at || !expected.trim()) return false;
+  if (!plainText(text).includes(plainText(expected))) return false;
+  return Date.parse(upload.at) >= Date.parse(since) - LIVE_CLOCK_SLACK_MS;
 }
 
 /** The caption a platform posts: its own when set, else the calendar's (cut down by bareCaption). @pure true */
 export function captionForPlatform(day: CalendarDay, platform: PublishPlatform): string {
-  const caption = day.platforms?.[platform]?.caption?.trim() || bareCaption(day.caption, day.code);
+  const caption = day.platforms?.[platform]?.caption?.trim() || bareCaption(day.caption);
   const music = day.platforms?.[platform]?.music;
   // A CC BY song's licence asks for its credit wherever the video goes.
   const credit = music?.song && music.credit ? music.credit.trim() : "";

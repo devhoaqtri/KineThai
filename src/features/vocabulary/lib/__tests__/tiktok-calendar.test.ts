@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { WORD_HOOK } from "../first-visit";
 import {
   LEVEL_ORDERS,
   MAX_HASHTAGS,
   bareCaption,
+  CAPTION_HOOK,
   captionFor,
   postIsDay,
   dateOfDay,
@@ -160,13 +162,17 @@ describe("planDays", () => {
 });
 
 describe("captionFor", () => {
-  it("is the word's link and the tags, with no teaser, count or call to comment", () => {
-    const caption = captionFor({ level: "A2", code: "VSM", address: "https://anh.chayla.app/" });
+  it("opens on the hook, then the site's domain and the tags, with no teaser, count or word link", () => {
+    const caption = captionFor({ level: "A2", address: "https://anh.chayla.app/w/VSM" });
     expect(caption).toBe(
-      "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #a2",
+      "Từ gì mà ...\nHọc thêm mỗi ngày tại https://anh.chayla.app\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #a2",
     );
-    expect(caption).not.toMatch(/Từ số|Bình luận|Đoán trước/);
+    expect(caption).not.toMatch(/Từ số|Bình luận|Đoán trước|\/w\//);
     expect(caption.match(/#\w+/g)?.length).toBeLessThanOrEqual(MAX_HASHTAGS);
+  });
+
+  it("opens on the same words as the clip's hook", () => {
+    expect(CAPTION_HOOK).toBe(WORD_HOOK);
   });
 });
 
@@ -543,8 +549,9 @@ describe("publishing on Facebook and Instagram", () => {
     expect(captionForPlatform(silent, "youtube")).toBe("shared");
   });
 
-  it("cuts an older caption down to the link and tags on every platform", () => {
-    const old = [
+  it("brings every older caption to the hook, domain and tags on every platform", () => {
+    const fresh = captionFor({ level: "B1", address: "https://anh.chayla.app" });
+    const teaser = [
       "Từ gì mà ... 🤔 Đoán trước khi đáp án hiện ra!",
       "Từ số 17/365 · trình độ B1",
       "Bình luận đáp án của bạn nhé 👇",
@@ -552,22 +559,32 @@ describe("publishing on Facebook and Instagram", () => {
       "",
       "#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #b1",
     ].join("\n");
-    const fresh = captionFor({ level: "B1", code: "VSM", address: "https://anh.chayla.app" });
-    expect(bareCaption(old, "VSM")).toBe(fresh);
-    expect(bareCaption(fresh, "VSM")).toBe(fresh);
-    const day = { ...post(17, "20:30"), caption: old, code: "VSM" };
+    const wordLink =
+      "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #b1";
+    expect(bareCaption(teaser)).toBe(fresh);
+    expect(bareCaption(wordLink)).toBe(fresh);
+    expect(bareCaption(fresh)).toBe(fresh);
+    const day = { ...post(17, "20:30"), caption: teaser, code: "VSM" };
     for (const platform of ["facebook", "instagram", "youtube", "threads"] as const) {
       expect(captionForPlatform(day, platform)).toBe(fresh);
     }
   });
 
-  it("recognises a live post by its count or by its share link", () => {
+  it("recognises a live post by its old markers, or by its text and a time after it was sent", () => {
     const day = { day: 17, code: "VSM" };
-    expect(postIsDay("Từ gì mà ... 🤔\nTừ số 17/365 · trình độ B1", day)).toBe(true);
-    expect(postIsDay("Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#b1", day)).toBe(true);
-    expect(postIsDay("Học thêm mỗi ngày tại https://anh.chayla.app/w/VSMX", day)).toBe(false);
-    expect(postIsDay("Từ số 7/365", day)).toBe(false);
-    expect(postIsDay(undefined, day)).toBe(false);
+    const text = captionFor({ level: "B1", address: "https://anh.chayla.app" });
+    const since = "2026-11-21T06:30:00Z";
+    expect(postIsDay({ text: "Từ gì mà ... 🤔\nTừ số 17/365 · trình độ B1" }, day, text, null)).toBe(true);
+    expect(postIsDay({ text: "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#b1" }, day, text, null)).toBe(true);
+    expect(postIsDay({ text: "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSMX" }, day, text, null)).toBe(false);
+    expect(postIsDay({ text: "Từ số 7/365" }, day, text, null)).toBe(false);
+    expect(postIsDay({}, day, text, since)).toBe(false);
+    // The same text: this post only when it went up after it was first sent.
+    expect(postIsDay({ text, at: "2026-11-21T06:31:10Z" }, day, text, since)).toBe(true);
+    expect(postIsDay({ text: `Title #shorts\n${text}`, at: "2026-11-21T06:31:10Z" }, day, text, since)).toBe(true);
+    expect(postIsDay({ text, at: "2026-11-21T01:30:00Z" }, day, text, since)).toBe(false);
+    expect(postIsDay({ text, at: "2026-11-21T06:31:10Z" }, day, text, null)).toBe(false);
+    expect(postIsDay({ text: text.replace("#b1", "#b2"), at: "2026-11-21T06:31:10Z" }, day, text, since)).toBe(false);
   });
 
   it("does not call the same post on another platform a repeat", () => {

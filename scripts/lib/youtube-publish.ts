@@ -265,7 +265,9 @@ export async function publishShort(input: {
  * youtube.readonly scope the token was granted. Empty on a dry run.
  * @throws when YouTube cannot be asked: the caller sends nothing rather than risk a second copy
  */
-export async function recentShorts(config: YouTubeConfig): Promise<{ id: string; url: string; text: string }[]> {
+export async function recentShorts(
+  config: YouTubeConfig,
+): Promise<{ id: string; url: string; text: string; at: string | null }[]> {
   if (config.dryRun) return [];
   const token = await accessToken(config);
   const headers = { Authorization: `Bearer ${token}` };
@@ -283,11 +285,22 @@ export async function recentShorts(config: YouTubeConfig): Promise<{ id: string;
   );
   if (!list.ok) throw await googleError(list, "uploads lookup");
   const items = ((await list.json()) as {
-    items?: { snippet?: { title?: string; description?: string; resourceId?: { videoId?: string } } }[];
+    items?: {
+      snippet?: { title?: string; description?: string; publishedAt?: string; resourceId?: { videoId?: string } };
+    }[];
   }).items ?? [];
   return items.flatMap((item) => {
     const id = item.snippet?.resourceId?.videoId;
-    return id ? [{ id, url: `https://youtube.com/shorts/${id}`, text: `${item.snippet?.title ?? ""}\n${item.snippet?.description ?? ""}` }] : [];
+    return id
+      ? [
+          {
+            id,
+            url: `https://youtube.com/shorts/${id}`,
+            text: `${item.snippet?.title ?? ""}\n${item.snippet?.description ?? ""}`,
+            at: item.snippet?.publishedAt ?? null,
+          },
+        ]
+      : [];
   });
 }
 

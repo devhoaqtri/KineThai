@@ -120,7 +120,7 @@ function listing() {
         url: d.url,
         caption: d.caption,
         // What every platform posts when it has no text of its own.
-        bareCaption: bareCaption(d.caption, d.code),
+        bareCaption: bareCaption(d.caption),
         hasClip: !!d.clip && existsSync(expandHome(d.clip)),
         mixes: Object.fromEntries(
           MUSIC_PLATFORMS.map((p) => [p, !!d.clip && existsSync(mixedClipPath(expandHome(d.clip), p))]),
@@ -245,7 +245,7 @@ export async function postingResponse(request: Request): Promise<Response> {
         day.platforms ??= {};
         const track = (day.platforms[action.platform] ??= { status: "pending" });
         // Text equal to the platform's default is no text of its own.
-        const fallback = bareCaption(day.caption, day.code);
+        const fallback = bareCaption(day.caption);
         track.caption = action.caption.trim() && action.caption.trim() !== fallback.trim() ? action.caption : null;
       } else {
         day.caption = action.caption;

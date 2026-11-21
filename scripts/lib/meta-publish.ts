@@ -253,7 +253,8 @@ async function publishInstagramReel(
  * @throws with Meta's own message when a step is refused or processing fails
  */
 /** A post already on a platform: its id, address and the text it went out with. */
-export type LiveUpload = { id: string; url: string | null; text: string };
+/** A live post: its id, address, text, and when it went up (ISO) when the platform says. */
+export type LiveUpload = { id: string; url: string | null; text: string; at?: string | null };
 
 /**
  * The Page's latest Reels (Facebook) or the account's latest posts (Instagram), newest first,
@@ -264,19 +265,20 @@ export type LiveUpload = { id: string; url: string | null; text: string };
 export async function recentUploads(config: MetaConfig, platform: MetaPlatform, log: Log = () => {}): Promise<LiveUpload[]> {
   const token = config.pageToken!;
   if (platform === "facebook") {
-    const page = await graph<{ data?: { id: string; description?: string; permalink_url?: string }[] }>(
-      config, "GET", `${config.pageId}/video_reels`, { fields: "id,description,permalink_url", limit: "50", access_token: token }, log,
+    const page = await graph<{ data?: { id: string; description?: string; permalink_url?: string; created_time?: string }[] }>(
+      config, "GET", `${config.pageId}/video_reels`, { fields: "id,description,permalink_url,created_time", limit: "50", access_token: token }, log,
     );
     return (page.data ?? []).map((r) => ({
       id: r.id,
       url: r.permalink_url ? new URL(r.permalink_url, "https://www.facebook.com").href : null,
       text: r.description ?? "",
+      at: r.created_time ?? null,
     }));
   }
-  const media = await graph<{ data?: { id: string; caption?: string; permalink?: string }[] }>(
-    config, "GET", `${config.igUserId}/media`, { fields: "id,caption,permalink", limit: "50", access_token: token }, log,
+  const media = await graph<{ data?: { id: string; caption?: string; permalink?: string; timestamp?: string }[] }>(
+    config, "GET", `${config.igUserId}/media`, { fields: "id,caption,permalink,timestamp", limit: "50", access_token: token }, log,
   );
-  return (media.data ?? []).map((m) => ({ id: m.id, url: m.permalink ?? null, text: m.caption ?? "" }));
+  return (media.data ?? []).map((m) => ({ id: m.id, url: m.permalink ?? null, text: m.caption ?? "", at: m.timestamp ?? null }));
 }
 
 export async function publishReel(input: {

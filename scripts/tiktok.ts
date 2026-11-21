@@ -239,7 +239,7 @@ function newDay(calendar: Calendar, day: number, word: CandidateWord): CalendarD
     level: word.level,
     topic: word.topic,
     status: "planned",
-    caption: caption(calendar, word.level, word.shareCode!),
+    caption: caption(calendar, word.level),
     clip: null,
     durationSec: null,
     renderedAt: null,
@@ -250,10 +250,9 @@ function newDay(calendar: Calendar, day: number, word: CandidateWord): CalendarD
   };
 }
 
-function caption(calendar: Calendar, level: string, code: string): string {
+function caption(calendar: Calendar, level: string): string {
   return captionFor({
     level,
-    code,
     // The full https:// address, so a reader sees a link to type, not a word.
     address: withScheme(siteAddress(calendar.locale)),
   });
@@ -397,7 +396,7 @@ function plan() {
     fill(calendar, loadEligible(), toFill, total);
     // Nothing scheduled or posted is touched: its caption is already in TikTok.
     for (const day of calendar.days) {
-      if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.level, day.code);
+      if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.level);
     }
     const moved = refileClips(calendar);
     return { calendar, toFill, moved };
@@ -552,7 +551,7 @@ async function render() {
           `; the days before it are saved. Rerun with --day ${day.day} once it is fixed.`,
       );
     }
-    day.caption = caption(calendar, day.level, day.code);
+    day.caption = caption(calendar, day.level);
     writeFileSync(out.replace(/\.mp4$/, ".txt"), `${day.caption}\n`);
     const rendered = {
       caption: day.caption,
@@ -895,6 +894,7 @@ function claimTrack(dayNumber: number, platform: PublishPlatform): string | null
     }
     t.status = "publishing";
     t.at = now();
+    t.firstAt ??= t.at;
     t.error = null;
     t.attempts = (t.attempts ?? 0) + 1;
     return null;
@@ -909,8 +909,8 @@ function platformReady(platform: PublishPlatform): string | null {
 }
 
 /**
- * The upload of a post a platform already has, read from the "Từ số N/365" or the share link
- * in its text (postIsDay), or undefined. Asked before every upload: on 2026-11-18 post 10 went out
+ * The upload of a post a platform already has (postIsDay: its count or word link on older
+ * posts, its whole text and time since), or undefined. Asked before every upload: on 2026-11-18 post 10 went out
  * twice on Facebook and YouTube because a run could not tell it was already live.
  * @throws when the platform cannot be asked
  */
@@ -923,7 +923,9 @@ async function findLive(dayNumber: number, platform: PublishPlatform): Promise<{
         : await recentUploads(loadMetaConfig(ROOT), platform);
   const day = loadCalendar().days.find((d) => d.day === dayNumber);
   if (!day) return undefined;
-  return uploads.find((u) => postIsDay(u.text, day));
+  const track = day.platforms?.[platform];
+  const expected = captionForPlatform(day, platform);
+  return uploads.find((u) => postIsDay(u, day, expected, track?.firstAt ?? track?.at));
 }
 
 /** Record a post as live on a platform, on the calendar and on the exported-words list. */
