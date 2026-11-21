@@ -6,8 +6,7 @@
  */
 
 import type { QueryClient } from "@tanstack/react-query";
-import { resolveDataMode } from "@/features/session";
-import { getMockFeed, getMockPost } from "@/features/demo";
+import { resolveDataMode } from "@/features/session/data-mode";
 import type { SocialFeedData, SocialPostData } from "@/shared/types";
 import { feedQueryOptions, postQueryOptions } from "./queries";
 import { getFeed, getPost } from "./social.functions";
@@ -21,7 +20,7 @@ export async function prefetchFeed(queryClient: QueryClient): Promise<SocialFeed
   const mode = resolveDataMode();
   return queryClient.ensureQueryData(
     feedQueryOptions(mode, () =>
-      mode === "demo" ? Promise.resolve(getMockFeed()) : (getFeed() as Promise<SocialFeedData>),
+      mode === "demo" ? import("@/features/demo").then((demo) => demo.getMockFeed()) : (getFeed() as Promise<SocialFeedData>),
     ),
   );
 }
@@ -40,7 +39,7 @@ export async function prefetchPost(
   return queryClient.ensureQueryData(
     postQueryOptions(mode, postId, () =>
       mode === "demo"
-        ? Promise.resolve(getMockPost(postId))
+        ? import("@/features/demo").then((demo) => demo.getMockPost(postId))
         : (getPost({ data: { post_id: postId } }) as Promise<SocialPostData>),
     ),
   );

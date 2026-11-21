@@ -2,10 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import {
   buildErrorReport,
   diagnoseFailure,
-  errorReportSchema,
   reportLines,
   type ReportEnv,
 } from "../error-report";
+import { errorReportSchema } from "../error-report.schema.server";
 import { LOAD_FAILURE_CASES } from "../load-failure-catalog";
 import { isStaleChunkError, reloadOnceForStaleChunk, RELOAD_GUARD_MS } from "../stale-chunk";
 import { probeLocalStorage } from "../storage-probe";

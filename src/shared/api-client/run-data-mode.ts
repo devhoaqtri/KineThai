@@ -5,7 +5,7 @@
  * Depends on: @/features/session resolveDataMode
  */
 
-import { resolveDataMode, type DataMode } from "@/features/session";
+import { resolveDataMode, type DataMode } from "@/features/session/data-mode";
 
 export type DataModeBranches<T> = {
   /** Work to run when the user is in the offline demo session. */

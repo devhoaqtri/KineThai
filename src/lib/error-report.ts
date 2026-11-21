@@ -6,12 +6,11 @@
  * worth a report. The report holds nothing that names the reader (no account, no history,
  * no stored data); the reader sees every line of it before choosing to send it.
  *
- * Exports: ReportEnv, FailureDiagnosis, ErrorReport, errorReportSchema, diagnoseFailure,
+ * Exports: ReportEnv, FailureDiagnosis, ErrorReport, diagnoseFailure,
  *   buildErrorReport, reportLines, readReportEnv, ERROR_REPORT_LIMITS
- * Depends on: zod, ./stale-chunk, ./storage-probe, ./browser-support
+ * Depends on: ./stale-chunk, ./storage-probe, ./browser-support
  */
 
-import { z } from "zod";
 import { checkCurrentBrowserSupport } from "./browser-support";
 import { isStaleChunkError } from "./stale-chunk";
 import { probeLocalStorage, type StorageState } from "./storage-probe";
@@ -72,31 +71,28 @@ export function diagnoseFailure(error: unknown, env: ReportEnv): FailureDiagnosi
   return { caseId: "render-crash", offerReport: true };
 }
 
-const text = (max: number) => z.string().max(max);
-
 /** The report as sent and as the server accepts it. */
-export const errorReportSchema = z.object({
-  caseId: text(64),
-  errorName: text(ERROR_REPORT_LIMITS.text),
-  message: text(ERROR_REPORT_LIMITS.message),
-  stack: text(ERROR_REPORT_LIMITS.stack),
-  route: text(ERROR_REPORT_LIMITS.text),
-  stage: text(32).nullable(),
-  build: text(ERROR_REPORT_LIMITS.text),
-  userAgent: text(ERROR_REPORT_LIMITS.message),
-  viewport: text(32),
-  dpr: z.number().min(0).max(16),
-  touch: z.boolean(),
-  language: text(32),
-  network: text(32),
-  online: z.boolean(),
-  storage: z.enum(["ok", "blocked", "full"]),
-  translated: z.boolean(),
-  browserIssues: text(ERROR_REPORT_LIMITS.text),
-  secondsSinceLoad: z.number().min(0).max(1e7),
-  note: text(ERROR_REPORT_LIMITS.note),
-});
-export type ErrorReport = z.infer<typeof errorReportSchema>;
+export type ErrorReport = {
+  caseId: string;
+  errorName: string;
+  message: string;
+  stack: string;
+  route: string;
+  stage: string | null;
+  build: string;
+  userAgent: string;
+  viewport: string;
+  dpr: number;
+  touch: boolean;
+  language: string;
+  network: string;
+  online: boolean;
+  storage: StorageState;
+  translated: boolean;
+  browserIssues: string;
+  secondsSinceLoad: number;
+  note: string;
+};
 
 const clip = (value: string, max: number) => (value.length > max ? value.slice(0, max) : value);
 

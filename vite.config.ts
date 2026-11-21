@@ -6,9 +6,10 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { deckGuard } from "./scripts/deck-guard-plugin";
+import { firstLoadGuard } from "./scripts/first-load-guard";
 
 export default defineConfig({
-  vite: { plugins: [deckGuard()] },
+  vite: { plugins: [deckGuard(), firstLoadGuard()] },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this

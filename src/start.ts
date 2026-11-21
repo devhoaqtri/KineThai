@@ -10,7 +10,7 @@ import {
 } from "./lib/bot-gate";
 import { pageGuard } from "./lib/page-guard";
 import { PUBLIC_WRITE_PATHS, classifyWriter, noteBotRefusal } from "./lib/bot-signals";
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
+import { attachLazyAuth } from "./lib/lazy-auth";
 
 /**
  * Rate limiting, applied here rather than inside each handler.
@@ -68,7 +68,7 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
 });
 
 export const startInstance = createStart(() => ({
-  functionMiddleware: [attachSupabaseAuth],
+  functionMiddleware: [attachLazyAuth],
   // Limit first: a refused request must not reach a handler, and the error middleware
   // still wraps it because it is the outer one.
   requestMiddleware: [errorMiddleware, rateLimitMiddleware],

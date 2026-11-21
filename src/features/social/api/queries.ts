@@ -6,8 +6,7 @@
  */
 
 import { queryOptions } from "@tanstack/react-query";
-import type { DataMode } from "@/features/session";
-import { getMockFeed, getMockPost } from "@/features/demo";
+import type { DataMode } from "@/features/session/data-mode";
 import { runDataMode } from "@/shared/api-client";
 import type { SocialFeedData, SocialPostData } from "@/shared/types";
 import { socialKeys } from "./keys";
@@ -29,7 +28,7 @@ function buildFeedQueryOptions(mode: DataMode, fetchLive: () => Promise<SocialFe
   return queryOptions({
     queryKey: socialKeys.feed(mode),
     queryFn: (): Promise<SocialFeedData> =>
-      runDataMode({ demo: () => getMockFeed(), live: fetchLive }, mode),
+      runDataMode({ demo: () => import("@/features/demo").then((demo) => demo.getMockFeed()), live: fetchLive }, mode),
     staleTime: 30_000,
   });
 }
@@ -60,7 +59,7 @@ function buildPostQueryOptions(
   return queryOptions({
     queryKey: socialKeys.post(mode, postId),
     queryFn: (): Promise<SocialPostData> =>
-      runDataMode({ demo: () => getMockPost(postId), live: fetchLive }, mode),
+      runDataMode({ demo: () => import("@/features/demo").then((demo) => demo.getMockPost(postId)), live: fetchLive }, mode),
     staleTime: 30_000,
     retry: false,
   });
