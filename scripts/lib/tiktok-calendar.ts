@@ -165,6 +165,8 @@ export type Calendar = {
   postTime: string;
   /** Several posts a day at the start, then one a day at `postTime`. Absent: one a day. */
   burst?: Burst | null;
+  /** Optional schedule phases starting from later posts (overrides burst/postTime from `fromPost` onwards). */
+  phases?: SchedulePhase[] | null;
   order: LevelOrder;
   seed: number;
   /** Where clips are written; outside the repo, a year is several gigabytes. */
@@ -184,8 +186,17 @@ export type Calendar = {
  */
 export type Burst = { days: number; perDay: number; times: string[] };
 
+/** A schedule phase taking effect from `fromPost` onwards (e.g. 2 days at 3/day, then 2/day). */
+export type SchedulePhase = {
+  fromPost: number;
+  startDate: string;
+  /** Number of days in this phase; omit for the ongoing cadence afterwards. */
+  days?: number;
+  times: string[];
+};
+
 /** What a post's date and time are worked out from. */
-export type PostSchedule = Pick<Calendar, "startDate" | "postTime" | "burst">;
+export type PostSchedule = Pick<Calendar, "startDate" | "postTime" | "burst" | "phases">;
 
 /** The part of a deck word the planner and the caption read. */
 export type CandidateWord = {
@@ -321,6 +332,23 @@ export function burstPosts(schedule: PostSchedule): number {
  * @pure true
  */
 export function slotOfPost(schedule: PostSchedule, post: number): { date: string; time: string } {
+  const phases = schedule.phases;
+  if (phases?.length) {
+    let active: SchedulePhase | null = null;
+    for (const phase of phases) {
+      if (post >= phase.fromPost) active = phase;
+    }
+    if (active) {
+      const index = post - active.fromPost;
+      const perDay = active.times.length;
+      const slot = index % perDay;
+      const nextMorning = slot >= (midnightIndex(active.times) ?? perDay) ? 1 : 0;
+      return {
+        date: dateOfDay(active.startDate, Math.floor(index / perDay) + 1 + nextMorning),
+        time: active.times[slot] ?? schedule.postTime,
+      };
+    }
+  }
   const burst = schedule.burst;
   const opening = burstPosts(schedule);
   if (burst && post <= opening) {
@@ -347,6 +375,29 @@ export function slotOfPost(schedule: PostSchedule, post: number): { date: string
  * @pure true
  */
 export function firstPostOnDate(schedule: PostSchedule, date: string): number {
+  const phases = schedule.phases;
+  if (phases?.length && date >= phases[0]!.startDate) {
+    for (const phase of phases) {
+      const pDay = dayOfDate(phase.startDate, date);
+      const perDay = phase.times.length;
+      const wrap = midnightIndex(phase.times) ?? perDay;
+      if (phase.days !== undefined) {
+        if (wrap < perDay && pDay >= 2 && pDay <= phase.days + 1) {
+          return phase.fromPost + (pDay - 2) * perDay + wrap;
+        }
+        if (pDay >= 1 && pDay <= phase.days) {
+          return phase.fromPost + (pDay - 1) * perDay;
+        }
+      } else {
+        if (wrap < perDay && pDay >= 2) {
+          return phase.fromPost + (pDay - 2) * perDay + wrap;
+        }
+        if (pDay >= 1) {
+          return phase.fromPost + (pDay - 1) * perDay;
+        }
+      }
+    }
+  }
   const day = dayOfDate(schedule.startDate, date);
   const burst = schedule.burst;
   if (day < 1) return day;

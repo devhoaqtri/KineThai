@@ -180,7 +180,12 @@ async function bootEmulator() {
   const sdk = sdkForAvd();
   console.log(`→ booting ${avd} (SDK ${sdk})`);
   const log = openSync(BOOT_LOG, "w");
-  const emulator = spawn(join(sdk, "emulator", "emulator"), ["-avd", avd], {
+  // Always cold-boot without quick-boot snapshots: resumed snapshots regularly freeze offline
+  // after macOS sleep or an unclean shutdown, wedging unattended draft runs.
+  const emulator = spawn(
+    join(sdk, "emulator", "emulator"),
+    ["-avd", avd, "-no-snapshot-load", "-no-snapshot-save"],
+    {
     detached: true,
     stdio: ["ignore", log, log],
     // The emulator finds the system image through these, not through its own path.
@@ -473,6 +478,7 @@ function inferShareCode(mp4Path: string, meta: ClipMeta): string | null {
 }
 
 function buildAutoCaption(shareCode: string | null): string {
+  let levelTag = "";
   if (shareCode) {
     const packsDir = resolve(dirname(new URL(import.meta.url).pathname), "../src/features/vocabulary/data/packs");
     if (existsSync(packsDir)) {
@@ -480,19 +486,12 @@ function buildAutoCaption(shareCode: string | null): string {
         if (!file.endsWith(".json")) continue;
         try {
           const pack = JSON.parse(readFileSync(join(packsDir, file), "utf8")) as {
-            words?: Array<{ shareCode?: string; word?: string }>;
+            words?: Array<{ shareCode?: string; level?: string }>;
           };
           const hit = pack.words?.find((w) => w.shareCode?.toUpperCase() === shareCode);
-          if (hit?.word) {
-            const letters = hit.word.replace(/[^a-zA-Z]/g, "");
-            if (letters.length >= 2) {
-              const first = letters[0]!.toUpperCase();
-              const last = letters[letters.length - 1]!.toUpperCase();
-              return (
-                `Bắt đầu bằng ${first}, kết thúc bằng ${last} (${letters.length} chữ cái) 🤔 Bạn đoán ra từ gì chưa?\n\n` +
-                DEFAULT_HASHTAGS
-              );
-            }
+          if (hit?.level) {
+            levelTag = ` #${hit.level.toLowerCase()}`;
+            break;
           }
         } catch {
           // ignore malformed pack file
@@ -500,7 +499,10 @@ function buildAutoCaption(shareCode: string | null): string {
       }
     }
   }
-  return `Từ tiếng Anh này là gì nhỉ? 🤔 Comment đáp án bên dưới nha!\n\n${DEFAULT_HASHTAGS}`;
+  return (
+    `Từ gì mà ...\nHọc thêm mỗi ngày tại https://anh.chayla.app\n\n` +
+    `#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary${levelTag}`
+  );
 }
 
 /** The emulator's console port, from the adb serial (`emulator-5554` → 5554). */

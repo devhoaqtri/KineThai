@@ -669,9 +669,17 @@ function status() {
   const firstDate = dateOfDay(calendar.startDate, 1);
   const fromDay = Math.max(1, dayOfDate(calendar.startDate, today));
   const daysAhead = (d: CalendarDay | null) => (d ? dayOfDate(firstDate, d.date) - fromDay + 1 : 0);
-  const cadence = calendar.burst
-    ? `${calendar.burst.perDay} a day for the first ${calendar.burst.days} day(s) at ${calendar.burst.times.join(", ")}, then 1 a day at ${calendar.postTime}`
-    : `1 a day at ${calendar.postTime}`;
+  const cadence = calendar.phases?.length
+    ? calendar.phases
+        .map((p) =>
+          p.days !== undefined
+            ? `${p.times.length} a day for ${p.days} day(s) from ${p.startDate} at ${p.times.join(", ")}`
+            : `${p.times.length} a day from ${p.startDate} at ${p.times.join(", ")}`,
+        )
+        .join(", then ")
+    : calendar.burst
+      ? `${calendar.burst.perDay} a day for the first ${calendar.burst.days} day(s) at ${calendar.burst.times.join(", ")}, then 1 a day at ${calendar.postTime}`
+      : `1 a day at ${calendar.postTime}`;
   console.log(`TikTok calendar · ${total} posts from ${calendar.startDate} · ${cadence} (Vietnam time) · order "${calendar.order}"`);
   console.log(
     s.todayDay < 1
