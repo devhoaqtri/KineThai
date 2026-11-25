@@ -922,6 +922,35 @@ export function postIsDay(
   return Date.parse(upload.at) >= Date.parse(since) - LIVE_CLOCK_SLACK_MS;
 }
 
+/**
+ * Whether a live upload is already recorded as another post's on this platform (its id or
+ * link on that post's track). Posts of one level carry the same text since 2026-11-21, so a
+ * post retried long after its first send would otherwise claim a later post's upload: on
+ * 2026-11-25 post 25's Instagram retry took post 28's carousel as its own and was never sent.
+ * @param upload - the live upload's id and link
+ * @param calendar - the calendar, read fresh
+ * @param platform - the platform the upload is on
+ * @param dayNumber - the post looking for its own upload
+ * @pure true
+ */
+export function uploadClaimedElsewhere(
+  upload: { id?: string | null; url?: string | null },
+  calendar: Pick<Calendar, "days">,
+  platform: PublishPlatform,
+  dayNumber: number,
+): boolean {
+  const link = (url: string | null | undefined) => (url ? url.trim().replace(/\/+$/, "").toLowerCase() : "");
+  const id = upload.id?.trim() ?? "";
+  const url = link(upload.url);
+  if (!id && !url) return false;
+  return calendar.days.some((d) => {
+    if (d.day === dayNumber) return false;
+    const track = d.platforms?.[platform];
+    if (!track) return false;
+    return (!!id && track.id?.trim() === id) || (!!url && link(track.url) === url);
+  });
+}
+
 /** The caption a platform posts: its own when set, else the calendar's (cut down by bareCaption). @pure true */
 export function captionForPlatform(day: CalendarDay, platform: PublishPlatform): string {
   const caption = day.platforms?.[platform]?.caption?.trim() || bareCaption(day.caption);

@@ -7,6 +7,7 @@ import {
   CAPTION_HOOK,
   captionFor,
   postIsDay,
+  uploadClaimedElsewhere,
   dateOfDay,
   dayOfDate,
   firstPostOnDate,
@@ -585,6 +586,26 @@ describe("publishing on Facebook and Instagram", () => {
     expect(postIsDay({ text, at: "2026-11-21T01:30:00Z" }, day, text, since)).toBe(false);
     expect(postIsDay({ text, at: "2026-11-21T06:31:10Z" }, day, text, null)).toBe(false);
     expect(postIsDay({ text: text.replace("#b1", "#b2"), at: "2026-11-21T06:31:10Z" }, day, text, since)).toBe(false);
+  });
+
+  it("never takes another post's recorded upload as this one's", () => {
+    // 2026-11-25: posts 25 and 28 are both C1, so their Instagram text is the same.
+    const calendar = {
+      days: [
+        { day: 25, platforms: { instagram: { status: "failed" as const } } },
+        {
+          day: 28,
+          platforms: {
+            instagram: { status: "posted" as const, id: "1801", url: "https://www.instagram.com/p/DgIe8sHGRVv/" },
+          },
+        },
+      ],
+    } as unknown as Parameters<typeof uploadClaimedElsewhere>[1];
+    expect(uploadClaimedElsewhere({ id: "1801", url: null }, calendar, "instagram", 25)).toBe(true);
+    expect(uploadClaimedElsewhere({ id: "x", url: "https://www.instagram.com/p/DgIe8sHGRVv" }, calendar, "instagram", 25)).toBe(true);
+    expect(uploadClaimedElsewhere({ id: "1801", url: null }, calendar, "instagram", 28)).toBe(false);
+    expect(uploadClaimedElsewhere({ id: "1801", url: null }, calendar, "facebook", 25)).toBe(false);
+    expect(uploadClaimedElsewhere({ id: "1999", url: "https://www.instagram.com/p/Other/" }, calendar, "instagram", 25)).toBe(false);
   });
 
   it("does not call the same post on another platform a repeat", () => {

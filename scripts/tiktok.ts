@@ -141,6 +141,7 @@ import {
   bareCaption,
   postsToPublish,
   postIsDay,
+  uploadClaimedElsewhere,
   postsAwaitingMusic,
   musicHolds,
   mixedClipPath,
@@ -954,11 +955,15 @@ async function findLive(dayNumber: number, platform: PublishPlatform): Promise<{
       : platform === "threads"
         ? await recentThreads(loadThreadsConfig(ROOT))
         : await recentUploads(loadMetaConfig(ROOT), platform);
-  const day = loadCalendar().days.find((d) => d.day === dayNumber);
+  const calendar = loadCalendar();
+  const day = calendar.days.find((d) => d.day === dayNumber);
   if (!day) return undefined;
   const track = day.platforms?.[platform];
   const expected = captionForPlatform(day, platform);
-  return uploads.find((u) => postIsDay(u, day, expected, track?.firstAt ?? track?.at));
+  // Another post's recorded upload is never this one's, however alike the text (same level).
+  return uploads.find(
+    (u) => postIsDay(u, day, expected, track?.firstAt ?? track?.at) && !uploadClaimedElsewhere(u, calendar, platform, day.day),
+  );
 }
 
 /** Record a post as live on a platform, on the calendar and on the exported-words list. */
