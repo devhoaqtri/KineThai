@@ -63,20 +63,23 @@
  *   npm run tiktok -- publish 5 [--platform facebook|instagram|all] [--dry-run]
  *   npm run tiktok -- publish-due [--dry-run]
  *   npm run tiktok -- meta-setup [--page <id or name>]
+ *   npm run tiktok -- views [--limit 40]   (read TikTok views in the emulator; hashtag experiment)
+ *   npm run tiktok -- hashtags            (each test hashtag's views so far)
+ *   npm run tiktok -- retag [6-20] [--dry-run]  (edit posted videos' hashtags: even posts new, odd control)
  *   npm run tiktok -- exported [add <code> --where tiktok --ref <link or note> [--at 2026-10-20]]
  *
  * Rendering needs the dev server (`npm run dev`, port 5195), because the showcase route
  * exists only there, and records in real time: about a minute a day.
  */
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { WORD_HOOK } from "../src/features/vocabulary/lib/first-visit";
 import { updateJsonFile } from "./lib/locked-file";
 import { findLiveAfterError } from "./lib/live-after-error";
-import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, recentUploads, writeEnvLocal } from "./lib/meta-publish";
+import { exchangeForPageToken, loadMetaConfig, metaReady, publishCarousel, publishReel, recentUploads, setFacebookCover, writeEnvLocal } from "./lib/meta-publish";
 import { SOUNDS_DIRS, listSongs, mediaDuration, mixSong, songTitle } from "./lib/music-mix";
 import { OPEN_MUSIC_QUERIES, creditLine, isOpenSong, openSongId, pickOpenTrack, searchOpenTracks } from "./lib/open-music";
 import { loadYouTubeConfig, publishShort, recentShorts, youtubeReady, youtubeSetup } from "./lib/youtube-publish";
@@ -89,6 +92,19 @@ import {
   threadsSetup,
 } from "./lib/threads-publish";
 import { renderCarousel } from "./render-carousel";
+import {
+  EXPERIMENT_FIRST_POST,
+  HASHTAG_GROUPS,
+  ROUND_POSTS,
+  VIEWS_AGE_DAYS,
+  experimentTags,
+  rotationTags,
+  hashtagReport,
+  matchSnapshot,
+  parseAgeDays,
+  withExperimentTags,
+  type ViewSnapshot,
+} from "./lib/hashtag-experiment";
 import { siteAddress, withScheme } from "../src/features/vocabulary/lib/target-language";
 import {
   CALENDAR_DAYS,
@@ -121,8 +137,11 @@ import {
   youtubeTitle,
   META_PLATFORMS,
   captionForPlatform,
-  postsToPublish,
   postNumberIn,
+  bareCaption,
+  postsToPublish,
+  postIsDay,
+  uploadClaimedElsewhere,
   postsAwaitingMusic,
   musicHolds,
   mixedClipPath,
@@ -239,7 +258,7 @@ function newDay(calendar: Calendar, day: number, word: CandidateWord): CalendarD
     level: word.level,
     topic: word.topic,
     status: "planned",
-    caption: caption(calendar, day, word.level),
+    caption: caption(calendar, word.level),
     clip: null,
     durationSec: null,
     renderedAt: null,
@@ -250,12 +269,14 @@ function newDay(calendar: Calendar, day: number, word: CandidateWord): CalendarD
   };
 }
 
-function caption(calendar: Calendar, day: number, level: string): string {
+/** The caption TikTok gets: the calendar's, with this post's experiment hashtags (hashtag-experiment). */
+function tiktokCaption(day: CalendarDay): string {
+  return withExperimentTags(bareCaption(day.caption), day.day);
+}
+
+function caption(calendar: Calendar, level: string): string {
   return captionFor({
-    day,
-    total: Math.max(CALENDAR_DAYS, calendar.days.length),
     level,
-    hook: WORD_HOOK,
     // The full https:// address, so a reader sees a link to type, not a word.
     address: withScheme(siteAddress(calendar.locale)),
   });
@@ -399,7 +420,7 @@ function plan() {
     fill(calendar, loadEligible(), toFill, total);
     // Nothing scheduled or posted is touched: its caption is already in TikTok.
     for (const day of calendar.days) {
-      if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.day, day.level);
+      if (day.status === "planned" || day.status === "rendered") day.caption = caption(calendar, day.level);
     }
     const moved = refileClips(calendar);
     return { calendar, toFill, moved };
@@ -448,7 +469,7 @@ function refileClips(calendar: Calendar): number {
       moved += 1;
     }
     const target = expandHome(day.clip);
-    if (existsSync(target)) writeFileSync(target.replace(/\.mp4$/, ".txt"), `${day.caption}\n`);
+    if (existsSync(target)) writeFileSync(target.replace(/\.mp4$/, ".txt"), `${tiktokCaption(day)}\n`);
   }
   return moved;
 }
@@ -554,8 +575,8 @@ async function render() {
           `; the days before it are saved. Rerun with --day ${day.day} once it is fixed.`,
       );
     }
-    day.caption = caption(calendar, day.day, day.level);
-    writeFileSync(out.replace(/\.mp4$/, ".txt"), `${day.caption}\n`);
+    day.caption = caption(calendar, day.level);
+    writeFileSync(out.replace(/\.mp4$/, ".txt"), `${tiktokCaption(day)}\n`);
     const rendered = {
       caption: day.caption,
       status: "rendered" as DayStatus,
@@ -649,9 +670,17 @@ function status() {
   const firstDate = dateOfDay(calendar.startDate, 1);
   const fromDay = Math.max(1, dayOfDate(calendar.startDate, today));
   const daysAhead = (d: CalendarDay | null) => (d ? dayOfDate(firstDate, d.date) - fromDay + 1 : 0);
-  const cadence = calendar.burst
-    ? `${calendar.burst.perDay} a day for the first ${calendar.burst.days} day(s) at ${calendar.burst.times.join(", ")}, then 1 a day at ${calendar.postTime}`
-    : `1 a day at ${calendar.postTime}`;
+  const cadence = calendar.phases?.length
+    ? calendar.phases
+        .map((p) =>
+          p.days !== undefined
+            ? `${p.times.length} a day for ${p.days} day(s) from ${p.startDate} at ${p.times.join(", ")}`
+            : `${p.times.length} a day from ${p.startDate} at ${p.times.join(", ")}`,
+        )
+        .join(", then ")
+    : calendar.burst
+      ? `${calendar.burst.perDay} a day for the first ${calendar.burst.days} day(s) at ${calendar.burst.times.join(", ")}, then 1 a day at ${calendar.postTime}`
+      : `1 a day at ${calendar.postTime}`;
   console.log(`TikTok calendar · ${total} posts from ${calendar.startDate} · ${cadence} (Vietnam time) · order "${calendar.order}"`);
   console.log(
     s.todayDay < 1
@@ -768,8 +797,9 @@ function dayWithClip(): CalendarDay {
 
 function copyCaption(day: CalendarDay) {
   // The emulator shares the Mac's clipboard, so this is pasteable there as well.
-  spawnSync("pbcopy", { input: day.caption });
-  console.log(`${day.caption}\n\n(copied to the clipboard)`);
+  const text = tiktokCaption(day);
+  spawnSync("pbcopy", { input: text });
+  console.log(`${text}\n\n(copied to the clipboard)`);
 }
 
 /**
@@ -808,7 +838,7 @@ function draftDay(day: CalendarDay, pass: string[]): boolean {
         "--day",
         String(day.day),
         "--caption",
-        day.caption,
+        tiktokCaption(day),
         ...pass,
       ],
       { stdio: "inherit", cwd: ROOT },
@@ -825,6 +855,7 @@ function draftDay(day: CalendarDay, pass: string[]): boolean {
     const saved = postOf(calendar, day.day);
     saved.status = "drafted";
     saved.draftedAt = now();
+    saved.tiktokTags = experimentTags(day.day);
   });
   return true;
 }
@@ -897,6 +928,7 @@ function claimTrack(dayNumber: number, platform: PublishPlatform): string | null
     }
     t.status = "publishing";
     t.at = now();
+    t.firstAt ??= t.at;
     t.error = null;
     t.attempts = (t.attempts ?? 0) + 1;
     return null;
@@ -911,8 +943,8 @@ function platformReady(platform: PublishPlatform): string | null {
 }
 
 /**
- * The upload of a post a platform already has, read from the "Từ số N/365" in its text
- * (postNumberIn), or undefined. Asked before every upload: on 2026-11-18 post 10 went out
+ * The upload of a post a platform already has (postIsDay: its count or word link on older
+ * posts, its whole text and time since), or undefined. Asked before every upload: on 2026-11-18 post 10 went out
  * twice on Facebook and YouTube because a run could not tell it was already live.
  * @throws when the platform cannot be asked
  */
@@ -923,7 +955,15 @@ async function findLive(dayNumber: number, platform: PublishPlatform): Promise<{
       : platform === "threads"
         ? await recentThreads(loadThreadsConfig(ROOT))
         : await recentUploads(loadMetaConfig(ROOT), platform);
-  return uploads.find((u) => postNumberIn(u.text) === dayNumber);
+  const calendar = loadCalendar();
+  const day = calendar.days.find((d) => d.day === dayNumber);
+  if (!day) return undefined;
+  const track = day.platforms?.[platform];
+  const expected = captionForPlatform(day, platform);
+  // Another post's recorded upload is never this one's, however alike the text (same level).
+  return uploads.find(
+    (u) => postIsDay(u, day, expected, track?.firstAt ?? track?.at) && !uploadClaimedElsewhere(u, calendar, platform, day.day),
+  );
 }
 
 /** Record a post as live on a platform, on the calendar and on the exported-words list. */
@@ -997,7 +1037,7 @@ async function publishDay(dayNumber: number, platform: PublishPlatform, dryRun: 
     sent = !isDry;
     const result: { id: string; url: string | null; privacy?: string } =
       platform === "youtube"
-        ? await publishShort({ config: youtube, file: video!, title: youtubeTitle(day, WORD_HOOK), description: caption, coverMs: coverMsOf(day), log })
+        ? await publishShort({ config: youtube, file: video!, title: youtubeTitle(WORD_HOOK), description: caption, coverMs: coverMsOf(day), log })
         : platform === "threads"
           ? await publishThreadsCarousel({ config: threads, metaConfig: meta, images: images!, caption, log })
           : images
@@ -1346,6 +1386,40 @@ function times() {
   console.log("\nReinstall the jobs so publishing follows: npx tsx scripts/tiktok-auto.ts install");
 }
 
+/**
+ * Give Reels already on the Facebook Page their cover: `fb-cover <posts> [--dry-run]`. Reels
+ * published before 2026-11-22 went out without one and show the clip's blank first frame.
+ * One at a time, a few seconds apart, to stay clear of Meta's hourly request limit.
+ */
+async function fbCover() {
+  const [spec] = positional;
+  if (!spec) throw new Error("usage: fb-cover <posts> [--dry-run]");
+  const config = { ...loadMetaConfig(ROOT), ...(rest.includes("--dry-run") ? { dryRun: true } : {}) };
+  let failed = 0;
+  for (const n of parseDaySpec(spec)) {
+    const day = loadCalendar().days.find((d) => d.day === n);
+    const track = day?.platforms?.facebook;
+    if (!day || track?.status !== "posted" || !track.id || !day.clip) {
+      console.log(`  post ${n}: not on Facebook, skipped`);
+      continue;
+    }
+    const coverMs = coverMsOf(day);
+    if (coverMs === null) {
+      console.log(`  post ${n}: no hint time for its clip, skipped`);
+      continue;
+    }
+    console.log(`── post ${n} “${day.word}” (${track.id})`);
+    try {
+      await setFacebookCover({ config, videoId: track.id, file: expandHome(day.clip), coverMs });
+    } catch (error) {
+      failed += 1;
+      console.error(`  ✗ ${error instanceof Error ? error.message : String(error)}`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, config.dryRun ? 0 : 4000));
+  }
+  if (failed) process.exitCode = 1;
+}
+
 /** Exchange META_USER_TOKEN for the Page token and Instagram id, into .env.local. */
 async function metaSetup() {
   const result = await exchangeForPageToken(loadMetaConfig(ROOT), flag("page") ?? null);
@@ -1394,6 +1468,196 @@ function exported() {
   console.log(clashes.length ? `\nWould go out twice:\n  ${clashes.join("\n  ")}` : "\nNo calendar day repeats an exported word.");
 }
 
+/** Every TikTok views reading so far, one JSON line each (hashtag-experiment ViewSnapshot). */
+const VIEWS_FILE = join(ROOT, "scripts/data/tiktok-views.ndjson");
+
+function loadViews(): ViewSnapshot[] {
+  if (!existsSync(VIEWS_FILE)) return [];
+  return readFileSync(VIEWS_FILE, "utf8")
+    .split("\n")
+    .filter((line) => line.trim())
+    .map((line) => JSON.parse(line) as ViewSnapshot);
+}
+
+/**
+ * Read every TikTok video's views in the emulator (post-to-tiktok.ts --views), match each to
+ * its post, and add the readings to VIEWS_FILE. A matched post still "drafted" was posted by
+ * hand since: it is marked posted. Needs the emulator (--boot starts it).
+ */
+async function views() {
+  const out = join(ROOT, "logs/tiktok-auto/views-latest.ndjson");
+  mkdirSync(dirname(out), { recursive: true });
+  const read = spawnSync(
+    "npx",
+    ["tsx", join(ROOT, "scripts/post-to-tiktok.ts"), "--views", out, "--boot", "--views-limit", flag("limit") ?? "40"],
+    { stdio: "inherit", cwd: ROOT },
+  );
+  if (read.status !== 0) throw new Error("the views reader failed; see above");
+  const readings = readFileSync(out, "utf8")
+    .split("\n")
+    .filter((line) => line.trim())
+    .map((line) => JSON.parse(line) as { views: number; age: string; caption: string; tags: string[] });
+  const at = new Date().toISOString();
+  const nowPosted: number[] = [];
+  const snapshots = updateCalendar((calendar) => {
+    const list = readings.map((r): ViewSnapshot => {
+      const post = identifyVideo(calendar, r.caption, r.tags);
+      return { at, post, views: r.views, age: r.age, ageDays: parseAgeDays(r.age), tags: r.tags, caption: r.caption };
+    });
+    for (const s of list) {
+      if (s.post === null) continue;
+      const day = postOf(calendar, s.post);
+      if (day.status === "drafted") {
+        day.status = "posted";
+        day.postedAt = now();
+        nowPosted.push(day.day);
+      }
+    }
+    return list;
+  });
+  const lines = snapshots.map((s) => JSON.stringify(s)).join("\n");
+  if (lines) writeFileSync(VIEWS_FILE, (existsSync(VIEWS_FILE) ? readFileSync(VIEWS_FILE, "utf8") : "") + lines + "\n");
+  for (const s of snapshots) {
+    console.log(`  ${s.post === null ? "  ?" : `#${String(s.post).padStart(2)}`}  ${String(s.views).padStart(6)} views · ${s.age}`);
+  }
+  if (nowPosted.length) console.log(`✓ posted on TikTok since the last look: ${nowPosted.join(", ")}`);
+  console.log(`✓ ${snapshots.length} reading(s) added to ${VIEWS_FILE.slice(ROOT.length + 1)}`);
+}
+
+/**
+ * The post a TikTok video belongs to, from its caption: "Từ số N/365" (captions before
+ * 2026-11-21), a word's own /w/<code> link (until the domain-only captions), else its hashtag
+ * set, as recorded when drafted or retagged (tiktokTags), newest post first.
+ */
+function identifyVideo(calendar: Calendar, caption: string, tags: string[]): number | null {
+  const numbered = postNumberIn(caption);
+  if (numbered !== null) return numbered;
+  const code = /\/w\/([A-Za-z0-9]+)/.exec(caption)?.[1];
+  const byCode = code ? calendar.days.find((d) => d.code === code) : undefined;
+  if (byCode) return byCode.day;
+  const known = calendar.days.filter((d) => d.tiktokTags?.length && d.status !== "planned" && d.status !== "rendered");
+  return matchSnapshot(tags, known.map((d) => d.day), (post) => known.find((d) => d.day === post)?.tiktokTags);
+}
+
+/**
+ * The retag test: edit the hashtag line of videos already on TikTok and watch their views.
+ * Even posts get rotation tags from the round's far end (positions 24, 23, … so the next
+ * new posts do not share them); odd posts are the control, edited too but with their own
+ * tags reversed, since an edit alone may get a video shown again. TikTok allows one edit a
+ * day, within 7 days of posting. --dry-run pastes and checks each edit, then cancels it.
+ */
+async function retag() {
+  const spec = positional[0] ?? "6-20";
+  const dryRun = rest.includes("--dry-run");
+  const posts = parseDaySpec(spec);
+  const latest = new Map<number, ViewSnapshot>();
+  for (const s of loadViews()) if (s.post !== null) latest.set(s.post, s);
+  const calendar = loadCalendar();
+  const items: { post: number; mustHave: string[]; mustNot: string[]; tags: string[]; arm: "retag" | "control"; before: string[] }[] = [];
+  let slot = ROUND_POSTS - 1;
+  for (const post of posts) {
+    const day = postOf(calendar, post);
+    const seen = latest.get(post);
+    if (!seen) {
+      console.log(`  post ${post}: no views reading names it; run \`views\` first. Skipped.`);
+      continue;
+    }
+    if (day.tiktokRetag) {
+      console.log(`  post ${post}: already retagged ${day.tiktokRetag.at}. Skipped.`);
+      continue;
+    }
+    const before = seen.tags;
+    const numbered = postNumberIn(seen.caption);
+    const code = /\/w\/([A-Za-z0-9]+)/.exec(seen.caption)?.[1];
+    const mustHave = numbered !== null ? [`Từ số ${numbered}/`] : code ? [`/w/${code}`] : [...before];
+    const mustNot = numbered === null && !code ? ["Từ số", "/w/"] : [];
+    const arm = post % 2 === 0 ? "retag" : "control";
+    const tags = arm === "retag" ? rotationTags(slot--) : [...before].reverse();
+    items.push({ post, mustHave, mustNot, tags, arm, before });
+  }
+  if (!items.length) return console.log("Nothing to retag.");
+  const plan = join(ROOT, "logs/tiktok-auto/retag-plan.json");
+  const out = `${plan}.out`;
+  writeFileSync(plan, JSON.stringify(items, null, 2));
+  rmSync(out, { force: true }); // a result left by an earlier run is not this run's
+  for (const it of items) console.log(`  #${String(it.post).padStart(2)} ${it.arm.padEnd(7)} ${it.tags.join(" ")}`);
+  const run = spawnSync(
+    "npx",
+    ["tsx", join(ROOT, "scripts/post-to-tiktok.ts"), "--retag", plan, "--retag-out", out, "--boot", ...(dryRun ? ["--dry-run"] : [])],
+    { stdio: "inherit", cwd: ROOT },
+  );
+  if (dryRun) return;
+  const done = existsSync(out)
+    ? readFileSync(out, "utf8").split("\n").filter((l) => l.trim()).map((l) => JSON.parse(l) as { post: number; saved: boolean })
+    : [];
+  const at = new Date().toISOString();
+  updateCalendar((cal) => {
+    for (const r of done.filter((d) => d.saved)) {
+      const it = items.find((i) => i.post === r.post);
+      if (!it) continue;
+      const day = postOf(cal, r.post);
+      day.tiktokTags = it.tags;
+      day.tiktokRetag = { at, arm: it.arm, before: it.before };
+    }
+  });
+  console.log(`✓ ${done.filter((d) => d.saved).length} of ${items.length} retagged and recorded`);
+  if (run.status !== 0) throw new Error("the retag run stopped early; see above");
+}
+
+/**
+ * The retag test so far: each edited video's views just before its edit against its latest
+ * reading, and the two arms' typical growth side by side.
+ */
+function retagReport(calendar: Calendar, snapshots: ViewSnapshot[]) {
+  const edited = calendar.days.filter((d) => d.tiktokRetag);
+  if (!edited.length) return;
+  const rows = edited.map((d) => {
+    const own = snapshots.filter((s) => s.post === d.day).sort((a, b) => a.at.localeCompare(b.at));
+    const before = own.filter((s) => s.at <= d.tiktokRetag!.at).at(-1);
+    const last = own.at(-1);
+    const growth = before && last && last.at > d.tiktokRetag!.at ? (last.views + 1) / (before.views + 1) : null;
+    return { day: d, before: before?.views ?? null, last: last?.views ?? null, growth };
+  });
+  console.log(`Retag test (edited ${edited[0]!.tiktokRetag!.at.slice(0, 16).replace("T", " ")} UTC):`);
+  for (const r of rows) {
+    const g = r.growth === null ? "   –" : `${r.growth >= 1 ? "+" : "−"}${Math.abs(Math.round((r.growth - 1) * 100))}%`;
+    console.log(`  #${String(r.day.day).padStart(2)} ${r.day.tiktokRetag!.arm.padEnd(7)} ${String(r.before ?? "–").padStart(5)} → ${String(r.last ?? "–").padEnd(5)} ${g.padStart(6)}  ${r.day.tiktokTags?.join(" ") ?? ""}`);
+  }
+  for (const arm of ["retag", "control"] as const) {
+    const gs = rows.filter((r) => r.day.tiktokRetag!.arm === arm && r.growth !== null).map((r) => Math.log(r.growth!));
+    if (!gs.length) continue;
+    const mean = Math.exp(gs.reduce((a, b) => a + b, 0) / gs.length);
+    console.log(`  ${arm.padEnd(7)}: typical growth ${mean >= 1 ? "+" : "−"}${Math.abs(Math.round((mean - 1) * 100))}% over ${gs.length} video(s)`);
+  }
+  console.log("");
+}
+
+/** What the hashtag experiment has shown so far: each tag's views against the average. */
+function hashtags() {
+  const snapshots = loadViews();
+  const report = hashtagReport(snapshots);
+  const calendar = loadCalendar();
+  retagReport(calendar, snapshots);
+  const started = calendar.days.filter((d) => d.day >= EXPERIMENT_FIRST_POST && d.tiktokTags).length;
+  console.log(
+    `Hashtag experiment: ${started} post(s) drafted with test tags, ${report.measured.length} measured at ${VIEWS_AGE_DAYS} days ` +
+      `(a full round is ${ROUND_POSTS}: every tag 5 times).`,
+  );
+  if (!report.measured.length) {
+    console.log(`No post is ${VIEWS_AGE_DAYS} days old with a reading yet; \`npm run tiktok -- views\` takes one.`);
+    return;
+  }
+  for (const group of HASHTAG_GROUPS) {
+    console.log(`\n${group.name}`);
+    for (const e of report.effects.filter((row) => row.group === group.name)) {
+      const ratio = e.ratio === null ? "     –" : `${e.ratio >= 1 ? "+" : "−"}${Math.abs(Math.round((e.ratio - 1) * 100))}%`.padStart(6);
+      console.log(`  ${e.tag.padEnd(20)} ${ratio}  ${String(e.posts)} post(s)  median ${e.medianViews ?? "–"}`);
+    }
+  }
+  console.log(`\nBest so far: ${report.best.join(" ")}`);
+  if (report.measured.length < ROUND_POSTS) console.log("Too few posts to trust yet: read it once the round is done.");
+}
+
 async function main() {
   switch (command) {
     case "plan":
@@ -1432,6 +1696,14 @@ async function main() {
       return threadsSetupCommand();
     case "times":
       return times();
+    case "fb-cover":
+      return fbCover();
+    case "views":
+      return views();
+    case "hashtags":
+      return hashtags();
+    case "retag":
+      return retag();
     default:
       throw new Error("commands: plan, render, status, mark, swap, caption, handoff, draft-due, exported, publish, publish-due, music, music-due, meta-setup, youtube-setup, threads-setup, times (see the top of scripts/tiktok.ts)");
   }

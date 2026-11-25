@@ -22,7 +22,7 @@
  * YT_DRY_RUN=1 (or `dryRun`) runs every step but the network.
  *
  * Exports: YouTubeConfig, loadYouTubeConfig, youtubeReady, publishShort, ShortResult, youtubeSetup,
- *   recentShorts
+ *   recentShorts, updateShortText
  * Depends on: Node's fetch, http and crypto; meta-publish's env helpers
  */
 import { spawn, spawnSync } from "node:child_process";
@@ -32,6 +32,7 @@ import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { readEnvFile, writeEnvLocal } from "./meta-publish";
+import { extractFrameJpeg } from "./cover-frame";
 
 const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -115,18 +116,6 @@ async function accessToken(config: YouTubeConfig): Promise<string> {
 
 export type ShortResult = { id: string; url: string; privacy: string };
 
-function extractFrameJpeg(file: string, coverMs: number): Buffer {
-  const sec = Math.max(0, coverMs / 1000).toFixed(3);
-  const run = spawnSync(
-    "ffmpeg",
-    ["-y", "-ss", sec, "-i", file, "-frames:v", "1", "-q:v", "2", "-f", "image2pipe", "-vcodec", "mjpeg", "pipe:1"],
-    { maxBuffer: 10 * 1024 * 1024 },
-  );
-  if (run.status !== 0 || !run.stdout?.length) {
-    throw new Error(`ffmpeg could not extract cover frame at ${sec}s from ${file}`);
-  }
-  return run.stdout;
-}
 
 /**
  * Set a video's custom thumbnail from a frame at `coverMs` ms into `file`.
@@ -265,7 +254,9 @@ export async function publishShort(input: {
  * youtube.readonly scope the token was granted. Empty on a dry run.
  * @throws when YouTube cannot be asked: the caller sends nothing rather than risk a second copy
  */
-export async function recentShorts(config: YouTubeConfig): Promise<{ id: string; url: string; text: string }[]> {
+export async function recentShorts(
+  config: YouTubeConfig,
+): Promise<{ id: string; url: string; text: string; at: string | null }[]> {
   if (config.dryRun) return [];
   const token = await accessToken(config);
   const headers = { Authorization: `Bearer ${token}` };
@@ -283,12 +274,57 @@ export async function recentShorts(config: YouTubeConfig): Promise<{ id: string;
   );
   if (!list.ok) throw await googleError(list, "uploads lookup");
   const items = ((await list.json()) as {
-    items?: { snippet?: { title?: string; description?: string; resourceId?: { videoId?: string } } }[];
+    items?: {
+      snippet?: { title?: string; description?: string; publishedAt?: string; resourceId?: { videoId?: string } };
+    }[];
   }).items ?? [];
   return items.flatMap((item) => {
     const id = item.snippet?.resourceId?.videoId;
-    return id ? [{ id, url: `https://youtube.com/shorts/${id}`, text: `${item.snippet?.title ?? ""}\n${item.snippet?.description ?? ""}` }] : [];
+    return id
+      ? [
+          {
+            id,
+            url: `https://youtube.com/shorts/${id}`,
+            text: `${item.snippet?.title ?? ""}\n${item.snippet?.description ?? ""}`,
+            at: item.snippet?.publishedAt ?? null,
+          },
+        ]
+      : [];
   });
+}
+
+/**
+ * Replace a Short's title and description, keeping the rest of its snippet (YouTube's update
+ * replaces the whole snippet and needs its category). Uses the youtube.force-ssl scope.
+ * @throws when YouTube refuses the lookup or the update
+ */
+export async function updateShortText(input: {
+  config: YouTubeConfig;
+  videoId: string;
+  title: string;
+  description: string;
+}): Promise<void> {
+  if (input.config.dryRun) return;
+  const token = await accessToken(input.config);
+  const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const found = await fetch(`${API}/videos?part=snippet&id=${encodeURIComponent(input.videoId)}`, {
+    headers,
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!found.ok) throw await googleError(found, "video lookup");
+  const snippet = ((await found.json()) as { items?: { snippet?: Record<string, unknown> }[] }).items?.[0]?.snippet;
+  if (!snippet) throw new Error(`YouTube has no video ${input.videoId} on this channel`);
+  const { categoryId, tags, defaultLanguage, defaultAudioLanguage } = snippet;
+  const updated = await fetch(`${API}/videos?part=snippet`, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({
+      id: input.videoId,
+      snippet: { title: input.title, description: input.description, categoryId, tags, defaultLanguage, defaultAudioLanguage },
+    }),
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!updated.ok) throw await googleError(updated, "video update");
 }
 
 const base64url = (bytes: Buffer) => bytes.toString("base64url");

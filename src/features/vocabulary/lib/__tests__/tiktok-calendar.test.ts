@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
+import { WORD_HOOK } from "../first-visit";
 import {
   LEVEL_ORDERS,
   MAX_HASHTAGS,
+  bareCaption,
+  CAPTION_HOOK,
   captionFor,
+  postIsDay,
+  uploadClaimedElsewhere,
   dateOfDay,
   dayOfDate,
   firstPostOnDate,
@@ -158,19 +163,17 @@ describe("planDays", () => {
 });
 
 describe("captionFor", () => {
-  it("counts the word and names the level, never the word itself", () => {
-    const caption = captionFor({
-      day: 12,
-      total: 365,
-      level: "A2",
-      hook: "Từ gì mà ...",
-      address: "https://anh.chayla.app",
-    });
-    expect(caption).toContain("Từ số 12/365");
-    expect(caption).not.toContain("Ngày");
-    expect(caption).toContain("#a2");
-    expect(caption).toContain("Học thêm mỗi ngày tại https://anh.chayla.app");
+  it("opens on the hook, then the site's domain and the tags, with no teaser, count or word link", () => {
+    const caption = captionFor({ level: "A2", address: "https://anh.chayla.app/w/VSM" });
+    expect(caption).toBe(
+      "Từ gì mà ...\nHọc thêm mỗi ngày tại https://anh.chayla.app\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #a2",
+    );
+    expect(caption).not.toMatch(/Từ số|Bình luận|Đoán trước|\/w\//);
     expect(caption.match(/#\w+/g)?.length).toBeLessThanOrEqual(MAX_HASHTAGS);
+  });
+
+  it("opens on the same words as the clip's hook", () => {
+    expect(CAPTION_HOOK).toBe(WORD_HOOK);
   });
 });
 
@@ -489,11 +492,10 @@ describe("publishing on Facebook and Instagram", () => {
     expect(postsToPublish(cal, at("19:00"), "instagram").map((d) => d.day)).toEqual([1, 2, 3, 4]);
   });
 
-  it("titles a Short with the hook and the post's number, never the word, within 100 characters", () => {
-    const title = youtubeTitle({ day: 8, level: "B1" }, "Từ gì mà ...");
-    expect(title).toBe("Từ gì mà ... 🤔 Từ số 8/365 · B1 #shorts");
-    expect([...youtubeTitle({ day: 8, level: "B1" }, "x".repeat(200))].length).toBe(100);
-    expect(youtubeTitle({ day: 1, level: "C1" }, "<a> hook")).not.toMatch(/[<>]/);
+  it("titles a Short with the hook alone, never the word, within 100 characters", () => {
+    expect(youtubeTitle("Từ gì mà ...")).toBe("Từ gì mà ... #shorts");
+    expect([...youtubeTitle("x".repeat(200))].length).toBe(100);
+    expect(youtubeTitle("<a> hook")).not.toMatch(/[<>]/);
   });
 
   it("gives Facebook and YouTube their own song folders", () => {
@@ -529,7 +531,7 @@ describe("publishing on Facebook and Instagram", () => {
   it("posts a platform's own caption when it has one", () => {
     const day = post(1, "19:00", { platforms: { instagram: { status: "pending", caption: "for instagram" } } });
     expect(captionForPlatform(day, "instagram")).toBe("for instagram");
-    expect(captionForPlatform(day, "facebook")).toBe("shared");
+    expect(captionForPlatform(day, "youtube")).toBe("shared");
   });
 
   it("credits a CC BY song under that platform's text only", () => {
@@ -542,10 +544,68 @@ describe("publishing on Facebook and Instagram", () => {
     };
     const day = post(1, "19:00", { platforms: { youtube: { status: "pending", music } } });
     expect(captionForPlatform(day, "youtube")).toBe("shared\n\n🎵 “Song” by Someone is licensed under CC BY 4.0.");
-    expect(captionForPlatform(day, "facebook")).toBe("shared");
+    expect(captionForPlatform(day, "facebook")).not.toContain("CC BY");
     // No song, no credit, even if one was left behind.
     const silent = post(2, "19:00", { platforms: { youtube: { status: "pending", music: { ...music, song: null } } } });
     expect(captionForPlatform(silent, "youtube")).toBe("shared");
+  });
+
+  it("brings every older caption to the hook, domain and tags on every platform", () => {
+    const fresh = captionFor({ level: "B1", address: "https://anh.chayla.app" });
+    const teaser = [
+      "Từ gì mà ... 🤔 Đoán trước khi đáp án hiện ra!",
+      "Từ số 17/365 · trình độ B1",
+      "Bình luận đáp án của bạn nhé 👇",
+      "Học thêm mỗi ngày tại https://anh.chayla.app",
+      "",
+      "#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #b1",
+    ].join("\n");
+    const wordLink =
+      "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #b1";
+    expect(bareCaption(teaser)).toBe(fresh);
+    expect(bareCaption(wordLink)).toBe(fresh);
+    expect(bareCaption(fresh)).toBe(fresh);
+    const day = { ...post(17, "20:30"), caption: teaser, code: "VSM" };
+    for (const platform of ["facebook", "instagram", "youtube", "threads"] as const) {
+      expect(captionForPlatform(day, platform)).toBe(fresh);
+    }
+  });
+
+  it("recognises a live post by its old markers, or by its text and a time after it was sent", () => {
+    const day = { day: 17, code: "VSM" };
+    const text = captionFor({ level: "B1", address: "https://anh.chayla.app" });
+    const since = "2026-11-21T06:30:00Z";
+    expect(postIsDay({ text: "Từ gì mà ... 🤔\nTừ số 17/365 · trình độ B1" }, day, text, null)).toBe(true);
+    expect(postIsDay({ text: "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSM\n\n#b1" }, day, text, null)).toBe(true);
+    expect(postIsDay({ text: "Học thêm mỗi ngày tại https://anh.chayla.app/w/VSMX" }, day, text, null)).toBe(false);
+    expect(postIsDay({ text: "Từ số 7/365" }, day, text, null)).toBe(false);
+    expect(postIsDay({}, day, text, since)).toBe(false);
+    // The same text: this post only when it went up after it was first sent.
+    expect(postIsDay({ text, at: "2026-11-21T06:31:10Z" }, day, text, since)).toBe(true);
+    expect(postIsDay({ text: `Title #shorts\n${text}`, at: "2026-11-21T06:31:10Z" }, day, text, since)).toBe(true);
+    expect(postIsDay({ text, at: "2026-11-21T01:30:00Z" }, day, text, since)).toBe(false);
+    expect(postIsDay({ text, at: "2026-11-21T06:31:10Z" }, day, text, null)).toBe(false);
+    expect(postIsDay({ text: text.replace("#b1", "#b2"), at: "2026-11-21T06:31:10Z" }, day, text, since)).toBe(false);
+  });
+
+  it("never takes another post's recorded upload as this one's", () => {
+    // 2026-11-25: posts 25 and 28 are both C1, so their Instagram text is the same.
+    const calendar = {
+      days: [
+        { day: 25, platforms: { instagram: { status: "failed" as const } } },
+        {
+          day: 28,
+          platforms: {
+            instagram: { status: "posted" as const, id: "1801", url: "https://www.instagram.com/p/DgIe8sHGRVv/" },
+          },
+        },
+      ],
+    } as unknown as Parameters<typeof uploadClaimedElsewhere>[1];
+    expect(uploadClaimedElsewhere({ id: "1801", url: null }, calendar, "instagram", 25)).toBe(true);
+    expect(uploadClaimedElsewhere({ id: "x", url: "https://www.instagram.com/p/DgIe8sHGRVv" }, calendar, "instagram", 25)).toBe(true);
+    expect(uploadClaimedElsewhere({ id: "1801", url: null }, calendar, "instagram", 28)).toBe(false);
+    expect(uploadClaimedElsewhere({ id: "1801", url: null }, calendar, "facebook", 25)).toBe(false);
+    expect(uploadClaimedElsewhere({ id: "1999", url: "https://www.instagram.com/p/Other/" }, calendar, "instagram", 25)).toBe(false);
   });
 
   it("does not call the same post on another platform a repeat", () => {

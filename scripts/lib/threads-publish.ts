@@ -264,15 +264,15 @@ export async function recentThreads(config: ThreadsConfig): Promise<LiveUpload[]
   if (config.dryRun) return [];
   const missing = threadsReady(config);
   if (missing) throw new Error(missing);
-  const res = await threadsGraph<{ data?: { id?: string; text?: string; permalink?: string }[] }>(
+  const res = await threadsGraph<{ data?: { id?: string; text?: string; permalink?: string; timestamp?: string }[] }>(
     config,
     "GET",
     `${config.userId}/threads`,
-    { fields: "id,text,permalink", limit: "50", access_token: config.accessToken! },
+    { fields: "id,text,permalink,timestamp", limit: "50", access_token: config.accessToken! },
     () => {},
   );
   return (res.data ?? []).flatMap((item) =>
-    item.id ? [{ id: item.id, url: item.permalink ?? null, text: item.text ?? "" }] : [],
+    item.id ? [{ id: item.id, url: item.permalink ?? null, text: item.text ?? "", at: item.timestamp ?? null }] : [],
   );
 }
 

@@ -6,8 +6,13 @@
  *
  * Keep it true to the code: storage is the browser's (progress, history, settings, imported
  * packs), word reports keep only a salted one-way digest (reporter-digest.server.ts), visitor
- * telemetry is a random session id with page health and errors (visitor-telemetry.server.ts),
- * hearts and bookmarks are totals only (engagement.server.ts). Change this page when they change.
+ * telemetry is a random id renewed every day with page health and errors (session-tracker.ts,
+ * visitor-telemetry.server.ts), error reports are sent only when the reader chooses to
+ * (lib/error-report), writes carry a few header-based bot flags (lib/bot-signals), the rate
+ * limiter keeps addresses in memory only (lib/rate-limit), the hosting adds Lovable's page
+ * events (page views, web vitals, errors; /__l5e/trackevents, checked live 2026-11-21) and
+ * two technical cookies (__cf_bm, __dpl), the app itself sets no cookies, hearts and
+ * bookmarks are totals only (engagement.server.ts). Change this page when they change.
  *
  * Exports: PrivacyPage
  * Depends on: router Link, lucide icons, target-language (brand), vocabulary.css
@@ -16,13 +21,11 @@ import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { siteTitle, type TargetLocale } from "../lib/target-language";
+import { CONTACT_URL } from "../lib/site-links";
 import "../vocabulary.css";
 
 /** When the policy last changed, as shown on the page. */
-const PRIVACY_UPDATED = { vi: "17/11/2026", en: "17 November 2026" };
-
-/** The channel's Facebook Page: the public way to reach the owner. */
-const CONTACT_URL = "https://www.facebook.com/1850058198626898";
+const PRIVACY_UPDATED = { vi: "21/11/2026", en: "21 November 2026" };
 
 const LINKS = {
   youtubeTerms: "https://www.youtube.com/t/terms",
@@ -68,7 +71,7 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
           <p>
             {brand} là trang học từ vựng. Bạn dùng được mà không cần tài khoản. Tiến độ học nằm trên
             máy của bạn; máy chủ chỉ nhận vài số liệu ẩn danh để trang chạy ổn định. Chúng tôi không
-            bán dữ liệu, không chạy quảng cáo và không dùng công cụ theo dõi của bên thứ ba.
+            bán dữ liệu, không chạy quảng cáo và không dùng công cụ theo dõi quảng cáo.
           </p>
         </Section>
 
@@ -85,8 +88,18 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
         <Section title="Gửi về máy chủ">
           <ul>
             <li>
-              Số liệu kỹ thuật ẩn danh: một mã phiên ngẫu nhiên, trang có tải được không và lỗi nếu
-              có. Không kèm tên, email hay danh tính.
+              Số liệu kỹ thuật ẩn danh: một mã ngẫu nhiên được đổi mới mỗi ngày, trang có tải được
+              không và lỗi nếu có. Không kèm tên, email hay danh tính, và không nối được các ngày
+              với nhau.
+            </li>
+            <li>
+              Báo cáo lỗi trang, chỉ khi bạn chọn gửi: lỗi gì, trang nào, trình duyệt, kích thước
+              màn hình và loại mạng. Bạn đọc toàn bộ nội dung trước khi bấm gửi.
+            </li>
+            <li>
+              Để chặn công cụ tự động, máy chủ ghi kèm vài dấu hiệu kỹ thuật của yêu cầu (ví dụ
+              trình duyệt có gửi thông tin ngôn ngữ không). Địa chỉ mạng chỉ được giữ trong bộ nhớ
+              máy chủ vài phút để giới hạn tốc độ, không được lưu lại.
             </li>
             <li>Lượt thả tim và lượt lưu: chỉ lưu tổng số của mỗi từ, không lưu ai đã bấm.</li>
             <li>
@@ -94,10 +107,25 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
               từ, đủ để đếm số người báo mà không thể biết bạn là ai hay bạn đã xem những từ nào.
             </li>
             <li>
+              Nền tảng lưu trữ trang (Lovable) tự ghi nhận lượt xem trang, tốc độ tải và lỗi: đường
+              dẫn trang, các chỉ số kỹ thuật và một mã phiên ngẫu nhiên không lưu trên máy bạn.
+              Không kèm tên hay tài khoản.
+            </li>
+            <li>
               Như mọi trang web, nhà cung cấp hạ tầng có thể ghi nhật ký truy cập kỹ thuật (ví dụ
               địa chỉ IP, trình duyệt) trong thời gian ngắn để vận hành và chống lạm dụng.
             </li>
           </ul>
+        </Section>
+
+        <Section title="Cookie">
+          <p>
+            Trang không dùng cookie quảng cáo hay cookie theo dõi. Hạ tầng của trang đặt hai cookie
+            kỹ thuật ngắn hạn, cần để trang chạy: <code>__cf_bm</code> của Cloudflare (khoảng 30
+            phút, để chặn bot) và <code>__dpl</code> của Lovable (1 ngày, để bạn luôn nhận đúng
+            phiên bản trang). Bộ nhớ trình duyệt chỉ dùng cho những chức năng bạn đang dùng, như ở
+            mục “Lưu trên máy của bạn”.
+          </p>
         </Section>
 
         <Section title="Đăng nhập">
@@ -145,7 +173,7 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
             <p>
               {brand} is a vocabulary learning site you can use without an account. Your learning
               progress stays on your device; the server receives only a little anonymous data to
-              keep the site running. We do not sell data, show ads or use third-party trackers.
+              keep the site running. We do not sell data, show ads or use advertising trackers.
             </p>
           </Section>
 
@@ -160,8 +188,17 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
           <Section title="Sent to the server">
             <ul>
               <li>
-                Anonymous technical data: a random session id, whether pages loaded, and errors. No
-                name, email or identity.
+                Anonymous technical data: a random id renewed every day, whether pages loaded, and
+                errors. No name, email or identity, and days cannot be linked to each other.
+              </li>
+              <li>
+                Error reports, only when you choose to send one: the error, the page, your browser,
+                screen size and network type. You read the whole report before sending it.
+              </li>
+              <li>
+                To keep automated tools out, the server records a few technical signals about each
+                request (for example whether the browser sent a language). Network addresses are
+                held in server memory for a few minutes to limit request rates, and never stored.
               </li>
               <li>Hearts and bookmarks: only each word's totals, never who tapped.</li>
               <li>
@@ -169,10 +206,25 @@ export function PrivacyPage({ locale = "en" }: { locale?: TargetLocale }) {
                 to count distinct reporters without learning who you are or which words you viewed.
               </li>
               <li>
+                The site's hosting platform (Lovable) records page views, load speed and errors: the
+                page path, technical measurements and a random session id that is not kept on your
+                device. No name or account.
+              </li>
+              <li>
                 Like any website, our hosting providers may keep short-lived technical access logs
                 (such as IP address and browser) to run the service and prevent abuse.
               </li>
             </ul>
+          </Section>
+
+          <Section title="Cookies">
+            <p>
+              The site uses no advertising or tracking cookies. Its hosting sets two short-lived
+              technical cookies the site needs to run: Cloudflare's <code>__cf_bm</code> (about 30
+              minutes, to keep bots out) and Lovable's <code>__dpl</code> (1 day, so you always get
+              the right version of the site). Browser storage is used only for the features you use,
+              as described under “Kept on your device”.
+            </p>
           </Section>
 
           <Section title="Signing in">

@@ -51,6 +51,8 @@ type Post = {
   status: string;
   url: string | null;
   caption: string;
+  /** What every platform posts without text of its own: link and tags only. */
+  bareCaption: string;
   hasClip: boolean;
   mixes: Record<MusicPlatform, boolean>;
   durationSec: number | null;
@@ -322,7 +324,7 @@ function PostCard({
   // The song and its start, so a remix reloads the player.
   const playingMusic = playing ? post.platforms[playing.id]?.music : null;
   const musicAt = playingMusic ? `${playingMusic.song}:${playingMusic.startSec}` : "";
-  const shown = captionFor === "all" ? post.caption : post.platforms[captionFor]?.caption || post.caption;
+  const shown = captionFor === "all" ? post.caption : post.platforms[captionFor]?.caption || post.bareCaption;
   const [draft, setDraft] = useState(shown);
   useEffect(() => setDraft(shown), [shown]);
   const dirty = draft !== shown;

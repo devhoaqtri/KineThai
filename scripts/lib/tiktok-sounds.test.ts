@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  isUnfitSound,
   isUsedSound,
   MAX_PICKS,
   ROWS_PER_QUERY,
@@ -63,5 +64,15 @@ describe("isUsedSound", () => {
     const ledger = { used: [use("Upbeat Funk", "FASSounds", "upbeat"), use("Other", "A", "upbeat", false)] };
     expect(isUsedSound(ledger, "Upbeat Funk", "Someone Else")).toBe(false);
     expect(isUsedSound(ledger, "Other", "A")).toBe(false);
+  });
+});
+
+describe("isUnfitSound", () => {
+  it("refuses someone's original sound or a track TikTok cannot name", () => {
+    expect(isUnfitSound("Unknown - original sound", "Unknown")).toBe(true);
+    expect(isUnfitSound("original sound - someone", "someone")).toBe(true);
+    expect(isUnfitSound("âm thanh gốc - ai đó", "ai đó")).toBe(true);
+    expect(isUnfitSound("Energetic Sport Rock", "PocketBeats")).toBe(false);
+    expect(isUnfitSound("Bring More Food", "AlexGuz")).toBe(false);
   });
 });

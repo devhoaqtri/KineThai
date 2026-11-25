@@ -1,6 +1,50 @@
 {
   "version": 1,
   "words": {
+    "vi-album": {
+      "word": "album",
+      "code": "T4V",
+      "level": "B1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 29",
+          "at": "2026-11-23"
+        }
+      ]
+    },
+    "vi-alignment": {
+      "word": "alignment",
+      "code": "MS3",
+      "level": "C1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 22",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "facebook",
+          "ref": "post 22",
+          "at": "2026-11-22"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 22",
+          "at": "2026-11-22"
+        },
+        {
+          "where": "threads",
+          "ref": "post 22",
+          "at": "2026-11-22"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 22",
+          "at": "2026-11-22"
+        }
+      ]
+    },
     "vi-article": {
       "word": "article",
       "code": "2WW",
@@ -30,6 +74,38 @@
         }
       ]
     },
+    "vi-badge": {
+      "word": "badge",
+      "code": "CKE",
+      "level": "B2",
+      "exports": [
+        {
+          "where": "facebook",
+          "ref": "post 18",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 18",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 18",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "threads",
+          "ref": "post 18",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "calendar",
+          "ref": "post 18",
+          "at": "2026-11-20"
+        }
+      ]
+    },
     "vi-bottle": {
       "word": "bottle",
       "code": "TWY",
@@ -44,6 +120,33 @@
           "where": "facebook",
           "ref": "post 5",
           "at": "2026-11-16"
+        }
+      ]
+    },
+    "vi-brick": {
+      "word": "brick",
+      "code": "XXY",
+      "level": "B2",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 27",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 27",
+          "at": "2026-11-24"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 27",
+          "at": "2026-11-24"
+        },
+        {
+          "where": "threads",
+          "ref": "post 27",
+          "at": "2026-11-24"
         }
       ]
     },
@@ -71,6 +174,11 @@
           "where": "youtube",
           "ref": "post 8",
           "at": "2026-11-17"
+        },
+        {
+          "where": "threads",
+          "ref": "post 8",
+          "at": "2026-11-20"
         }
       ]
     },
@@ -83,6 +191,38 @@
           "where": "carousel",
           "ref": "exports/carousel/anh-chayla-ASQ-4x5",
           "at": "2026-10-30"
+        }
+      ]
+    },
+    "vi-confer": {
+      "word": "confer",
+      "code": "W7W",
+      "level": "C1",
+      "exports": [
+        {
+          "where": "facebook",
+          "ref": "post 20",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 20",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 20",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "threads",
+          "ref": "post 20",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "calendar",
+          "ref": "post 20",
+          "at": "2026-11-21"
         }
       ]
     },
@@ -107,6 +247,26 @@
           "where": "calendar",
           "ref": "post 16",
           "at": "2026-11-19"
+        },
+        {
+          "where": "facebook",
+          "ref": "post 16",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 16",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "threads",
+          "ref": "post 16",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 16",
+          "at": "2026-11-20"
         }
       ]
     },
@@ -134,6 +294,11 @@
           "where": "instagram",
           "ref": "post 13",
           "at": "2026-11-19"
+        },
+        {
+          "where": "threads",
+          "ref": "post 13",
+          "at": "2026-11-20"
         }
       ]
     },
@@ -161,6 +326,11 @@
           "where": "instagram",
           "ref": "post 11",
           "at": "2026-11-19"
+        },
+        {
+          "where": "threads",
+          "ref": "post 11",
+          "at": "2026-11-20"
         }
       ]
     },
@@ -188,6 +358,11 @@
           "where": "instagram",
           "ref": "post 15",
           "at": "2026-11-19"
+        },
+        {
+          "where": "threads",
+          "ref": "post 15",
+          "at": "2026-11-20"
         }
       ]
     },
@@ -200,6 +375,38 @@
           "where": "carousel",
           "ref": "exports/carousel/anh-chayla-8DG-4x5",
           "at": "2026-10-30"
+        }
+      ]
+    },
+    "vi-discourse": {
+      "word": "discourse",
+      "code": "HE0",
+      "level": "C1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 25",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "facebook",
+          "ref": "post 25",
+          "at": "2026-11-25"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 25",
+          "at": "2026-11-25"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 25",
+          "at": "2026-11-25"
+        },
+        {
+          "where": "threads",
+          "ref": "post 25",
+          "at": "2026-11-25"
         }
       ]
     },
@@ -239,6 +446,11 @@
           "where": "instagram",
           "ref": "post 12",
           "at": "2026-11-19"
+        },
+        {
+          "where": "threads",
+          "ref": "post 12",
+          "at": "2026-11-20"
         }
       ]
     },
@@ -251,6 +463,23 @@
           "where": "tiktok-lab",
           "ref": "exports/tiktok/9A9-sunrise-latest.mp4",
           "at": "2026-11-15"
+        }
+      ]
+    },
+    "vi-evolve": {
+      "word": "evolve",
+      "code": "587",
+      "level": "B2",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 24",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 24",
+          "at": "2026-11-25"
         }
       ]
     },
@@ -310,6 +539,18 @@
         }
       ]
     },
+    "vi-grocery": {
+      "word": "grocery",
+      "code": "QXQ",
+      "level": "B2",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 30",
+          "at": "2026-11-23"
+        }
+      ]
+    },
     "vi-just": {
       "word": "just",
       "code": "4TW",
@@ -334,6 +575,38 @@
         }
       ]
     },
+    "vi-lesser": {
+      "word": "lesser",
+      "code": "Z8A",
+      "level": "C1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 28",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "facebook",
+          "ref": "post 28",
+          "at": "2026-11-24"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 28",
+          "at": "2026-11-24"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 28",
+          "at": "2026-11-24"
+        },
+        {
+          "where": "threads",
+          "ref": "post 28",
+          "at": "2026-11-24"
+        }
+      ]
+    },
     "vi-mess": {
       "word": "mess",
       "code": "QBC",
@@ -343,6 +616,38 @@
           "where": "carousel",
           "ref": "exports/carousel/anh-chayla-QBC-4x5",
           "at": "2026-10-30"
+        }
+      ]
+    },
+    "vi-particularly": {
+      "word": "particularly",
+      "code": "E17",
+      "level": "B1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 19",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "facebook",
+          "ref": "post 19",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 19",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 19",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "threads",
+          "ref": "post 19",
+          "at": "2026-11-21"
         }
       ]
     },
@@ -399,6 +704,11 @@
           "where": "youtube",
           "ref": "post 14",
           "at": "2026-11-19"
+        },
+        {
+          "where": "threads",
+          "ref": "post 14",
+          "at": "2026-11-20"
         }
       ]
     },
@@ -426,6 +736,43 @@
           "where": "youtube",
           "ref": "post 7",
           "at": "2026-11-17"
+        },
+        {
+          "where": "threads",
+          "ref": "post 7",
+          "at": "2026-11-20"
+        }
+      ]
+    },
+    "vi-rubber": {
+      "word": "rubber",
+      "code": "6W3",
+      "level": "B2",
+      "exports": [
+        {
+          "where": "facebook",
+          "ref": "post 21",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 21",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 21",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "threads",
+          "ref": "post 21",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "calendar",
+          "ref": "post 21",
+          "at": "2026-11-21"
         }
       ]
     },
@@ -453,6 +800,23 @@
           "where": "youtube",
           "ref": "post 10",
           "at": "2026-11-18"
+        },
+        {
+          "where": "threads",
+          "ref": "post 10",
+          "at": "2026-11-20"
+        }
+      ]
+    },
+    "vi-stability": {
+      "word": "stability",
+      "code": "MGF",
+      "level": "C1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 31",
+          "at": "2026-11-24"
         }
       ]
     },
@@ -480,6 +844,11 @@
           "where": "youtube",
           "ref": "post 9",
           "at": "2026-11-17"
+        },
+        {
+          "where": "threads",
+          "ref": "post 9",
+          "at": "2026-11-20"
         }
       ]
     },
@@ -492,6 +861,38 @@
           "where": "calendar",
           "ref": "post 4",
           "at": "2026-11-15"
+        }
+      ]
+    },
+    "vi-switch": {
+      "word": "switch",
+      "code": "MQY",
+      "level": "B1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 23",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "facebook",
+          "ref": "post 23",
+          "at": "2026-11-23"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 23",
+          "at": "2026-11-23"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 23",
+          "at": "2026-11-23"
+        },
+        {
+          "where": "threads",
+          "ref": "post 23",
+          "at": "2026-11-23"
         }
       ]
     },
@@ -528,6 +929,70 @@
           "where": "calendar",
           "ref": "post 6",
           "at": "2026-11-15"
+        }
+      ]
+    },
+    "vi-tongue": {
+      "word": "tongue",
+      "code": "VSM",
+      "level": "B1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 17",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "facebook",
+          "ref": "post 17",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 17",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 17",
+          "at": "2026-11-20"
+        },
+        {
+          "where": "threads",
+          "ref": "post 17",
+          "at": "2026-11-20"
+        }
+      ]
+    },
+    "vi-wing": {
+      "word": "wing",
+      "code": "H8H",
+      "level": "B1",
+      "exports": [
+        {
+          "where": "calendar",
+          "ref": "post 26",
+          "at": "2026-11-21"
+        },
+        {
+          "where": "youtube",
+          "ref": "post 26",
+          "at": "2026-11-24"
+        },
+        {
+          "where": "facebook",
+          "ref": "post 26",
+          "at": "2026-11-24"
+        },
+        {
+          "where": "instagram",
+          "ref": "post 26",
+          "at": "2026-11-24"
+        },
+        {
+          "where": "threads",
+          "ref": "post 26",
+          "at": "2026-11-24"
         }
       ]
     }

@@ -25,7 +25,7 @@
  *   carouselSlides, ExportedWords, ExportRecord,
  *   recordExport, calendarExportRef, exportConflicts, META_PLATFORMS, MetaPlatform,
  *   PUBLISH_PLATFORMS, PublishPlatform, MUSIC_PLATFORMS, MusicPlatform, youtubeTitle,
- *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn
+ *   PlatformPost, postsToPublish, captionForPlatform, postNumberIn, bareCaption, postIsDay, CAPTION_HOOK
  */
 
 /** How many hashtags TikTok keeps in a caption; it silently drops the rest. */
@@ -137,6 +137,14 @@ export type CalendarDay = {
   scheduledAt: string | null;
   /** When it was saved as a TikTok draft in the emulator; absent on days from before drafts. */
   draftedAt?: string | null;
+  /** The hashtags its TikTok draft carried, for the hashtag experiment (hashtag-experiment.ts). */
+  tiktokTags?: string[] | null;
+  /**
+   * The retag test on an already-posted video (tiktok.ts retag): when its hashtag line was
+   * edited, which arm ("retag": new rotation tags; "control": its own tags reordered, so
+   * only the edit itself differs) and the tags it had before.
+   */
+  tiktokRetag?: { at: string; arm: "retag" | "control"; before: string[] } | null;
   postedAt: string | null;
   /** The post's TikTok link, once it is live. */
   url: string | null;
@@ -157,6 +165,8 @@ export type Calendar = {
   postTime: string;
   /** Several posts a day at the start, then one a day at `postTime`. Absent: one a day. */
   burst?: Burst | null;
+  /** Optional schedule phases starting from later posts (overrides burst/postTime from `fromPost` onwards). */
+  phases?: SchedulePhase[] | null;
   order: LevelOrder;
   seed: number;
   /** Where clips are written; outside the repo, a year is several gigabytes. */
@@ -176,8 +186,17 @@ export type Calendar = {
  */
 export type Burst = { days: number; perDay: number; times: string[] };
 
+/** A schedule phase taking effect from `fromPost` onwards (e.g. 2 days at 3/day, then 2/day). */
+export type SchedulePhase = {
+  fromPost: number;
+  startDate: string;
+  /** Number of days in this phase; omit for the ongoing cadence afterwards. */
+  days?: number;
+  times: string[];
+};
+
 /** What a post's date and time are worked out from. */
-export type PostSchedule = Pick<Calendar, "startDate" | "postTime" | "burst">;
+export type PostSchedule = Pick<Calendar, "startDate" | "postTime" | "burst" | "phases">;
 
 /** The part of a deck word the planner and the caption read. */
 export type CandidateWord = {
@@ -313,6 +332,23 @@ export function burstPosts(schedule: PostSchedule): number {
  * @pure true
  */
 export function slotOfPost(schedule: PostSchedule, post: number): { date: string; time: string } {
+  const phases = schedule.phases;
+  if (phases?.length) {
+    let active: SchedulePhase | null = null;
+    for (const phase of phases) {
+      if (post >= phase.fromPost) active = phase;
+    }
+    if (active) {
+      const index = post - active.fromPost;
+      const perDay = active.times.length;
+      const slot = index % perDay;
+      const nextMorning = slot >= (midnightIndex(active.times) ?? perDay) ? 1 : 0;
+      return {
+        date: dateOfDay(active.startDate, Math.floor(index / perDay) + 1 + nextMorning),
+        time: active.times[slot] ?? schedule.postTime,
+      };
+    }
+  }
   const burst = schedule.burst;
   const opening = burstPosts(schedule);
   if (burst && post <= opening) {
@@ -339,6 +375,29 @@ export function slotOfPost(schedule: PostSchedule, post: number): { date: string
  * @pure true
  */
 export function firstPostOnDate(schedule: PostSchedule, date: string): number {
+  const phases = schedule.phases;
+  if (phases?.length && date >= phases[0]!.startDate) {
+    for (const phase of phases) {
+      const pDay = dayOfDate(phase.startDate, date);
+      const perDay = phase.times.length;
+      const wrap = midnightIndex(phase.times) ?? perDay;
+      if (phase.days !== undefined) {
+        if (wrap < perDay && pDay >= 2 && pDay <= phase.days + 1) {
+          return phase.fromPost + (pDay - 2) * perDay + wrap;
+        }
+        if (pDay >= 1 && pDay <= phase.days) {
+          return phase.fromPost + (pDay - 1) * perDay;
+        }
+      } else {
+        if (wrap < perDay && pDay >= 2) {
+          return phase.fromPost + (pDay - 2) * perDay + wrap;
+        }
+        if (pDay >= 1) {
+          return phase.fromPost + (pDay - 1) * perDay;
+        }
+      }
+    }
+  }
   const day = dayOfDate(schedule.startDate, date);
   const burst = schedule.burst;
   if (day < 1) return day;
@@ -474,34 +533,35 @@ export function planDays(input: {
 }
 
 /**
- * The post's caption. It never names the word or its meaning: the clip is a guess, and a
- * caption is on screen while it plays (the same rule as a share link's message). It counts
- * words, not days ("Từ số 12/365"): with several posts a day, a day count would repeat.
- * It carries at most MAX_HASHTAGS tags, since TikTok drops any beyond that.
- * @param input.day - the post's number
- * @param input.total - posts in the year
+ * The clip's own opening question, which every post's text starts with. The same words as
+ * WORD_HOOK (src/features/vocabulary/lib/first-visit), restated so this file stays pure;
+ * tiktok-calendar.test.ts holds the two together.
+ */
+export const CAPTION_HOOK = "Từ gì mà ...";
+
+/**
+ * The post's text on every platform: the hook on a line of its own, the site's address (the
+ * domain only, never a word's own link), and the hashtags. No teaser, post count or call to
+ * comment: the clip already says all of that (admin, 2026-11-20 and 21). It never names the
+ * word. It carries at most MAX_HASHTAGS tags, since TikTok drops any beyond that.
  * @param input.level - the word's level
- * @param input.hook - the clip's own opening line (WORD_HOOK)
- * @param input.address - the site, for viewers who want more
- * @returns Text to paste into TikTok's caption box
+ * @param input.address - the site
+ * @returns Text for the post's caption or description
  * @pure true
  */
-export function captionFor(input: {
-  day: number;
-  total: number;
-  level: string;
-  hook: string;
-  address: string;
-}): string {
+export function captionFor(input: { level: string; address: string }): string {
   return [
-    `${input.hook} 🤔 Đoán trước khi đáp án hiện ra!`,
-    `Từ số ${input.day}/${input.total} · trình độ ${input.level}`,
-    "Bình luận đáp án của bạn nhé 👇",
-    `Học thêm mỗi ngày tại ${input.address}`,
+    CAPTION_HOOK,
+    `Học thêm mỗi ngày tại ${siteOnly(input.address)}`,
     "",
     // TikTok keeps the first five hashtags of a caption and drops the rest on paste.
     `#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary #${input.level.toLowerCase()}`,
   ].join("\n");
+}
+
+/** An address cut to its scheme and host: `https://anh.chayla.app/w/VSM` → `https://anh.chayla.app`. @pure true */
+function siteOnly(address: string): string {
+  return address.replace(/^(https?:\/\/[^/\s]+).*$/u, "$1");
 }
 
 /** What `status` prints, worked out from the calendar and today's date. */
@@ -708,12 +768,12 @@ export function soundsDirFor(
 const YOUTUBE_TITLE_MAX = 100;
 
 /**
- * A Short's title: the hook and the post's number, never the word, with #shorts. YouTube
- * refuses `<` and `>` in titles.
+ * A Short's title: the clip's own hook, never the word, with #shorts; no count or level, like
+ * the caption (captionFor). YouTube refuses `<` and `>` in titles.
  * @pure true
  */
-export function youtubeTitle(day: Pick<CalendarDay, "day" | "level">, hook: string): string {
-  const title = `${hook.trim()} 🤔 Từ số ${day.day}/365 · ${day.level} #shorts`.replace(/[<>]/g, "");
+export function youtubeTitle(hook: string): string {
+  const title = `${hook.trim()} #shorts`.replace(/[<>]/g, "");
   return [...title].slice(0, YOUTUBE_TITLE_MAX).join("");
 }
 
@@ -729,6 +789,8 @@ export type PlatformPost = {
   id?: string | null;
   url?: string | null;
   at?: string | null;
+  /** When this platform was first sent the post: a live upload must be later (postIsDay). */
+  firstAt?: string | null;
   error?: string | null;
   attempts?: number;
   /** What the platform set the post to, when it is not plainly public (YouTube: `private` until audited). */
@@ -798,8 +860,8 @@ export function pickSong(songs: string[], used: { song: string; day: number }[],
 
 /**
  * The post a caption, description or title belongs to, from its "Từ số N/365", or null.
- * Every platform's text carries it (captionFor, youtubeTitle), so the check before an upload
- * reads it to find a post that is already live. Accents may come back decomposed.
+ * Every post before 2026-11-20 carries it; postIsDay also reads the share link that replaced it.
+ * Accents may come back decomposed.
  * @pure true
  */
 export function postNumberIn(text: string | null | undefined): number | null {
@@ -810,9 +872,88 @@ export function postNumberIn(text: string | null | undefined): number | null {
 /** Tries the scheduled job makes at a failing post before leaving it to the admin. */
 export const MAX_PUBLISH_ATTEMPTS = 3;
 
-/** The caption a platform posts: its own when set, else the calendar's. @pure true */
+/**
+ * A calendar caption in the form captionFor writes now: the hook line, the site line with the
+ * domain only, and the hashtags. Captions written before 2026-11-21 carry a teaser after the
+ * hook, a count, a call to comment or a word's own link; this drops them. A caption already in
+ * this form, or one with no site line or tags (hand-written), comes back as is.
+ * @pure true
+ */
+export function bareCaption(caption: string): string {
+  const lines = caption.split("\n").map((line) => line.trim());
+  const site = lines.find((line) => /^Học thêm mỗi ngày tại https?:\/\/\S+$/u.test(line.normalize("NFC")));
+  const tags = lines.filter((line) => line.startsWith("#"));
+  // Text with neither is someone's own writing, not a generated caption: never cut it down.
+  if (!site && !tags.length) return caption.trim();
+  const link = site?.replace(/https?:\/\/\S+$/u, (address) => siteOnly(address));
+  return [CAPTION_HOOK, link, tags.length ? "" : undefined, ...tags]
+    .filter((line) => line !== undefined)
+    .join("\n");
+}
+
+/** Text with its spaces folded and accents composed, for comparing a post with its caption. */
+const plainText = (text: string) => text.normalize("NFC").replace(/\s+/gu, " ").trim();
+
+/** How early an upload's own time may read against the claim, for the two clocks' drift. */
+const LIVE_CLOCK_SLACK_MS = 2 * 60_000;
+
+/**
+ * Whether a live post belongs to a post. Posts before 2026-11-20 carry "Từ số N/365", those
+ * of 2026-11-20 the word's own link; since 2026-11-21 the text is the same for every post of a
+ * level (captionFor), so one counts only when it carries this post's whole text AND went up
+ * after the first time this post was sent (`since`, the platform track's firstAt), when no
+ * other post was being sent. Without `since` only the markers can match.
+ * @param upload - the live post's text and when it went up (ISO), when the platform says
+ * @param expected - the text this post sends on that platform (captionForPlatform)
+ * @param since - the first send attempt's time (ISO), or null
+ * @pure true
+ */
+export function postIsDay(
+  upload: { text?: string | null; at?: string | null },
+  day: Pick<CalendarDay, "day" | "code">,
+  expected: string,
+  since: string | null | undefined,
+): boolean {
+  const text = upload.text ?? "";
+  if (postNumberIn(text) === day.day) return true;
+  if (new RegExp(`/w/${day.code}(?![A-Za-z0-9])`).test(text)) return true;
+  if (!since || !upload.at || !expected.trim()) return false;
+  if (!plainText(text).includes(plainText(expected))) return false;
+  return Date.parse(upload.at) >= Date.parse(since) - LIVE_CLOCK_SLACK_MS;
+}
+
+/**
+ * Whether a live upload is already recorded as another post's on this platform (its id or
+ * link on that post's track). Posts of one level carry the same text since 2026-11-21, so a
+ * post retried long after its first send would otherwise claim a later post's upload: on
+ * 2026-11-25 post 25's Instagram retry took post 28's carousel as its own and was never sent.
+ * @param upload - the live upload's id and link
+ * @param calendar - the calendar, read fresh
+ * @param platform - the platform the upload is on
+ * @param dayNumber - the post looking for its own upload
+ * @pure true
+ */
+export function uploadClaimedElsewhere(
+  upload: { id?: string | null; url?: string | null },
+  calendar: Pick<Calendar, "days">,
+  platform: PublishPlatform,
+  dayNumber: number,
+): boolean {
+  const link = (url: string | null | undefined) => (url ? url.trim().replace(/\/+$/, "").toLowerCase() : "");
+  const id = upload.id?.trim() ?? "";
+  const url = link(upload.url);
+  if (!id && !url) return false;
+  return calendar.days.some((d) => {
+    if (d.day === dayNumber) return false;
+    const track = d.platforms?.[platform];
+    if (!track) return false;
+    return (!!id && track.id?.trim() === id) || (!!url && link(track.url) === url);
+  });
+}
+
+/** The caption a platform posts: its own when set, else the calendar's (cut down by bareCaption). @pure true */
 export function captionForPlatform(day: CalendarDay, platform: PublishPlatform): string {
-  const caption = day.platforms?.[platform]?.caption?.trim() || day.caption;
+  const caption = day.platforms?.[platform]?.caption?.trim() || bareCaption(day.caption);
   const music = day.platforms?.[platform]?.music;
   // A CC BY song's licence asks for its credit wherever the video goes.
   const credit = music?.song && music.credit ? music.credit.trim() : "";

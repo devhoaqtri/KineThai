@@ -84,6 +84,18 @@ const key = (title: string, artist: string) =>
   `${title.normalize("NFC").trim().toLowerCase()}\u0000${artist.normalize("NFC").trim().toLowerCase()}`;
 
 /**
+ * Whether a search result is no song at all: someone's "original sound" (a user's own upload,
+ * of unknown origin and often not music) or a track TikTok cannot name. Post 19 went to a
+ * draft with “Unknown - original sound” by Unknown on 2026-11-20.
+ * @pure true
+ */
+export function isUnfitSound(title: string, artist: string): boolean {
+  const text = `${title} ${artist}`.normalize("NFC").toLowerCase();
+  if (/original sound|âm thanh gốc|son original|sonido original/u.test(text)) return true;
+  return /^unknown\b/u.test(title.trim().toLowerCase()) || artist.trim().toLowerCase() === "unknown";
+}
+
+/**
  * Whether a track already went on a draft (title and artist, case-blind; --no-draft runs
  * do not count).
  * @param ledger - songs used so far

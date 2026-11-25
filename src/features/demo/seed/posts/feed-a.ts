@@ -5,7 +5,7 @@
  * Depends on: seed profiles MOCK_ME_ID, post-media, helpers
  */
 
-import { DEMO_STATUS_PHOTOS } from "@/lib/post-media";
+import { DEMO_STATUS_PHOTOS } from "../photos";
 import { MOCK_ME_ID } from "../profiles";
 import type { MockPost } from "../types";
 import { canvas, DEMO_TRANSITION_GRADIENTS } from "./helpers";

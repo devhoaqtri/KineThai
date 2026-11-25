@@ -10,8 +10,9 @@
 
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, ChevronRight } from "lucide-react";
 import { languageName, siteTitle, type TargetLocale } from "../lib/target-language";
+import { INFO_PAGE_LINKS, type InfoPageLink } from "../lib/site-links";
 import "../vocabulary.css";
 
 /** The highlighted words of a line; the line's tone, else its section's, picks the colour. */
@@ -156,6 +157,37 @@ const SECTIONS: Section[] = [
   },
 ];
 
+/** One row of the pages section: the emoji tile, the title over its caption, an arrow. */
+function PageLinkRow({ link }: { link: InfoPageLink }) {
+  const body = (
+    <>
+      <span className="vocab-info-page-icon" aria-hidden="true">
+        {link.emoji}
+      </span>
+      <span className="vocab-info-page-text">
+        <strong>{link.title}</strong>
+        <small>{link.caption}</small>
+      </span>
+    </>
+  );
+  // Off-site (the Facebook Page) opens in a new tab and says so with its arrow.
+  if (link.to.startsWith("https://")) {
+    return (
+      <a className="vocab-info-page" href={link.to} target="_blank" rel="noreferrer">
+        {body}
+        <ArrowUpRight size={18} aria-hidden="true" />
+        <span className="sr-only">(mở trang mới)</span>
+      </a>
+    );
+  }
+  return (
+    <Link className="vocab-info-page" to={link.to as "/privacy" | "/terms"}>
+      {body}
+      <ChevronRight size={18} aria-hidden="true" />
+    </Link>
+  );
+}
+
 /**
  * The info itself — the app's name, the quick facts, the call for
  * cooperation — without a page around it. The Settings sheet drops it down in place of its
@@ -220,6 +252,22 @@ export function AppInfoContent({ locale = "en" }: { locale?: TargetLocale }) {
           </ul>
         </section>
       ))}
+
+      <nav className="vocab-info-section" data-tone="cyber" aria-labelledby="info-pages">
+        <h2 id="info-pages" className="vocab-info-title">
+          <span className="vocab-info-title-emoji" aria-hidden="true">
+            🧭
+          </span>
+          Trang thông tin
+        </h2>
+        <ul className="vocab-info-pages">
+          {INFO_PAGE_LINKS.map((link) => (
+            <li key={link.id} data-tone={link.tone} style={{ "--i": order++ } as CSSProperties}>
+              <PageLinkRow link={link} />
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <p className="vocab-info-thanks">💚 Cảm ơn bạn đã học cùng chayLá!</p>
     </div>

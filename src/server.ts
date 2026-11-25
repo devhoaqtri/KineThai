@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { httpsRedirect, withSecurityHeaders } from "./lib/https";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -37,22 +38,30 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   });
 }
 
+async function serve(request: Request, env: unknown, ctx: unknown): Promise<Response> {
+  try {
+    const { handleAdminTelemetryRequest } = await import("@/features/admin/api/telemetry.http");
+    const adminResponse = await handleAdminTelemetryRequest(request);
+    if (adminResponse) return adminResponse;
+
+    const handler = await getServerEntry();
+    const response = await handler.fetch(request, env, ctx);
+    return await normalizeCatastrophicSsrResponse(response);
+  } catch (error) {
+    console.error(error);
+    return new Response(renderErrorPage(), {
+      status: 500,
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    try {
-      const { handleAdminTelemetryRequest } = await import("@/features/admin/api/telemetry.http");
-      const adminResponse = await handleAdminTelemetryRequest(request);
-      if (adminResponse) return adminResponse;
-
-      const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
-    } catch (error) {
-      console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
-    }
+    // HTTPS only on public addresses (lib/https): a plain-http request is sent to https,
+    // and every response tells the browser to stay there.
+    const redirect = httpsRedirect(request);
+    if (redirect) return redirect;
+    return withSecurityHeaders(request, await serve(request, env, ctx));
   },
 };

@@ -1,0 +1,15 @@
+{
+  "name": "chayLá",
+  "short_name": "chayLá",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0014",
+  "theme_color": "#0a0014",
+  "icons": [
+    { "src": "/brand/logo-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/brand/logo-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/brand/logo-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/brand/logo-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/brand/logo.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

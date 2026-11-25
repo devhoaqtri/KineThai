@@ -6,6 +6,7 @@
  */
 
 import { createServerFn } from "@tanstack/react-start";
+import { accountFeaturesGate } from "@/lib/account-features";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
@@ -14,7 +15,7 @@ import { z } from "zod";
  * @returns TanStack server function handle
  */
 export const getPost = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .inputValidator((d: { post_id: string }) => z.object({ post_id: z.string().uuid() }).parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

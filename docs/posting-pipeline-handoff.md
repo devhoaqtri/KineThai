@@ -74,6 +74,31 @@ length from `startSec`, faded in/out, levelled to -14 LUFS, written to
 4. The ⬇ icon on a row downloads an **audio-only `.mp4`** (AAC, ~48 kbps) to `~/Downloads`. Move it
    to `~/KineMedia-tiktok/sounds/Title - Artist.m4a` (`.mp4` is accepted too).
 
+## TikTok hashtag experiment (added 2026-11-22)
+
+TikTok keeps 5 hashtags, so each TikTok post carries one tag from each of five groups of five
+(`scripts/lib/hashtag-experiment.ts`, `HASHTAG_GROUPS`): broad learn-English, vocabulary, exams,
+quiz, discovery. From post 22 the set rotates as an orthogonal array: in one round of 25 posts
+every tag goes out 5 times and every pair of tags from two groups exactly once, so each tag's
+effect is its posts' mean log views against the round's. Only TikTok's caption changes
+(`tiktokCaption` in `tiktok.ts`); Facebook, Instagram, YouTube and Threads keep the fixed tags.
+
+- **Views:** the 13:30 draft job runs `npm run tiktok -- views` once the emulator is up. It opens each video on the
+  profile, reads its caption, views and age, and appends to `scripts/data/tiktok-views.ndjson`. A video
+  is matched by "Từ số N/365", else its `/w/<code>` link, else its tag set (`tiktokTags`, written when drafted);
+  a matched post still `drafted` is marked `posted`.
+- **Report:** `npm run tiktok -- hashtags`. Each post is measured at its first reading 3 days old
+  (`VIEWS_AGE_DAYS`). Do not trust it before a full round (25 measured posts, about a month at one a day).
+- **Retag test (2026-11-22):** `npm run tiktok -- retag 6-20` edited the hashtag line of the videos already on
+  TikTok (Edit post; only the tag line changes). Even posts got rotation sets from the round's far end; odd
+  posts are the control, edited with their own tags reversed, because an edit alone may get a video shown
+  again. `hashtags` prints both arms' view growth since the edit. TikTok allows **one edit a day, within 7
+  days of posting**; `--dry-run` pastes and checks, then cancels. Edited: retag 8, 10, 12, 14, 16, 18, 20;
+  control 9, 11, 13, 15, 17, 19. Posts 6 and 7 were already past the window (their Edit post screen says
+  only the location can change, and a paste into the description is ignored).
+- If the emulator shows "Process system isn't responding", restart it (`adb emu kill`, wait until no
+  `qemu-system` process is left, then boot); a second emulator on the same AVD refuses to start.
+
 ## Commands
 
 ```bash
@@ -89,6 +114,9 @@ npm run tiktok -- times --burst-times 13:30,20:30,02:30   # move post times, the
 npm run tiktok -- publish 10 --platform facebook --dry-run
 npm run tiktok -- publish-due --dry-run
 npx tsx scripts/tiktok-auto.ts install        # rewrite + reload the launchd jobs
+npm run tiktok -- views                       # read every TikTok video's views (emulator)
+npm run tiktok -- hashtags                    # the hashtag experiment so far
+npm run tiktok -- retag 6-20 --dry-run        # edit posted videos' hashtags (checks only)
 ```
 
 `/posting` (dev only, `npm run dev`, http://localhost:5195/posting) does the same per post: the clip
@@ -121,7 +149,8 @@ with "With song / As rendered", captions, TikTok link, Facebook/Instagram Publis
 | `scripts/tiktok-auto.ts` | the launchd jobs: render, draft, publish, install, status |
 | `scripts/lib/music-mix.ts` | song library + ffmpeg mix |
 | `scripts/lib/meta-publish.ts` | Graph API: Reel upload, Instagram carousel |
-| `scripts/post-to-tiktok.ts` | drives the emulator to save a TikTok draft |
+| `scripts/post-to-tiktok.ts` | drives the emulator to save a TikTok draft; `--views` reads views, `--retag` edits posted captions |
+| `scripts/lib/hashtag-experiment.ts`, `scripts/data/tiktok-views.ndjson` | the hashtag pool, rotation and report; every views reading |
 | `src/features/vocabulary/components/PostingPage.tsx`, `api/posting.server.ts`, `src/routes/api/dev/posting.ts` | the `/posting` page (dev only; 404 in production) |
 | `~/KineMedia-tiktok/clips/` | clips, `<clip>.facebook.mp4` mixes, `carousels/` |
 | `~/KineMedia-tiktok/sounds/` | the song library |

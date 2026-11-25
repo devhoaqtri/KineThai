@@ -44,6 +44,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { loadMetaConfig, metaReady } from "./lib/meta-publish";
 import { loadYouTubeConfig, youtubeReady } from "./lib/youtube-publish";
+import { loadThreadsConfig, threadsReady } from "./lib/threads-publish";
 import {
   MUSIC_PLATFORMS,
   PUBLISH_PLATFORMS,
@@ -228,6 +229,9 @@ async function draftJob() {
   const before = new Set(loadCalendar().days.filter((d) => d.status === "drafted").map((d) => d.day));
   const code = await tiktok(["draft-due", "--hours", hours]);
   const drafted = loadCalendar().days.filter((d) => d.status === "drafted" && !before.has(d.day));
+  // The emulator is up: read every TikTok video's views for the hashtag experiment
+  // (hashtag-experiment.ts). Its failure costs one day's reading, never the drafts.
+  if ((await tiktok(["views"])) !== 0) say("! reading TikTok views failed; the hashtag experiment skips today");
   // A clip rendered just now missed the publish run at its own time (it had nothing to send):
   // send what is due before reporting.
   let publishProblem: string | null = null;
@@ -249,9 +253,11 @@ async function draftJob() {
   );
 }
 
-/** Whether a platform is connected: Meta's Page token, or YouTube's refresh token. */
+/** Whether a platform is connected: Meta's Page token, Threads' token, or YouTube's refresh token. */
 function connected(platform: PublishPlatform): boolean {
-  return platform === "youtube" ? !youtubeReady(loadYouTubeConfig(ROOT)) : !metaReady(loadMetaConfig(ROOT), platform);
+  if (platform === "youtube") return !youtubeReady(loadYouTubeConfig(ROOT));
+  if (platform === "threads") return !threadsReady(loadThreadsConfig(ROOT), loadMetaConfig(ROOT));
+  return !metaReady(loadMetaConfig(ROOT), platform);
 }
 
 /** Whether any connected platform has a post due now: the publish job's quiet check. */

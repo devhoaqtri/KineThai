@@ -7,14 +7,7 @@
  */
 
 import { queryOptions } from "@tanstack/react-query";
-import type { DataMode } from "@/features/session";
-import {
-  getMockDiscover,
-  getMockMe,
-  getMockNotifications,
-  getMockProfile,
-  searchMock,
-} from "@/features/demo";
+import type { DataMode } from "@/features/session/data-mode";
 import type {
   SocialDiscoverData,
   SocialMeData,
@@ -41,7 +34,7 @@ function buildDiscoverQueryOptions(mode: DataMode, fetchLive: () => Promise<Soci
   return queryOptions({
     queryKey: discoveryKeys.discover(mode),
     queryFn: (): Promise<SocialDiscoverData> =>
-      mode === "demo" ? Promise.resolve(getMockDiscover()) : fetchLive(),
+      mode === "demo" ? import("@/features/demo").then((demo) => demo.getMockDiscover()) : fetchLive(),
     staleTime: 30_000,
   });
 }
@@ -69,7 +62,7 @@ function buildSearchQueryOptions(
   return queryOptions({
     queryKey: discoveryKeys.search(mode, q),
     queryFn: (): Promise<SocialSearchData> =>
-      mode === "demo" ? Promise.resolve(searchMock(q)) : fetchLive(),
+      mode === "demo" ? import("@/features/demo").then((demo) => demo.searchMock(q)) : fetchLive(),
     enabled: q.length > 0,
   });
 }
@@ -94,7 +87,7 @@ function buildNotificationsQueryOptions(
   return queryOptions({
     queryKey: discoveryKeys.notifications(mode),
     queryFn: (): Promise<SocialNotificationsData> =>
-      mode === "demo" ? Promise.resolve(getMockNotifications()) : fetchLive(),
+      mode === "demo" ? import("@/features/demo").then((demo) => demo.getMockNotifications()) : fetchLive(),
     staleTime: 15_000,
   });
 }
@@ -116,7 +109,7 @@ function buildMeQueryOptions(mode: DataMode, fetchLive: () => Promise<SocialMeDa
   return queryOptions({
     queryKey: discoveryKeys.me(mode),
     queryFn: (): Promise<SocialMeData> =>
-      mode === "demo" ? Promise.resolve(getMockMe()) : fetchLive(),
+      mode === "demo" ? import("@/features/demo").then((demo) => demo.getMockMe()) : fetchLive(),
   });
 }
 
@@ -143,6 +136,6 @@ function buildProfileQueryOptions(
   return queryOptions({
     queryKey: discoveryKeys.profile(username, mode),
     queryFn: (): Promise<SocialProfileData> =>
-      mode === "demo" ? Promise.resolve(getMockProfile(username)) : fetchLive(),
+      mode === "demo" ? import("@/features/demo").then((demo) => demo.getMockProfile(username)) : fetchLive(),
   });
 }

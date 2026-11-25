@@ -13,7 +13,8 @@
 
 import { appendFile, mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
-import { errorReportSchema, type ErrorReport } from "@/lib/error-report";
+import type { ErrorReport } from "@/lib/error-report";
+import { errorReportSchema } from "@/lib/error-report.schema.server";
 import { classifyWriter } from "@/lib/bot-signals";
 
 export const READER_ERROR_KIND = "reader_error";

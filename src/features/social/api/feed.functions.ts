@@ -6,6 +6,7 @@
  */
 
 import { createServerFn } from "@tanstack/react-start";
+import { accountFeaturesGate } from "@/lib/account-features";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { VOCAB_ONLY_MODE, isVocabularyPost } from "@/lib/feature-flags";
 
@@ -40,7 +41,7 @@ type FeedComment = {
  * @returns TanStack server function handle
  */
 export const getFeed = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([accountFeaturesGate, requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

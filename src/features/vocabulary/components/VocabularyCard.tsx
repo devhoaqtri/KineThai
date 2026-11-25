@@ -1271,12 +1271,15 @@ export function VocabularyCard({
           <span key={key} data-complete={index < playback.page}>
             {index === playback.page && (
               <i
-                // Keyed on the page alone. `playing` used to be part of the key, which
-                // remounted the bar — refilling it from empty — on every pause and resume;
-                // animation-play-state below is what actually holds it in place.
-                key={playKey}
+                // Keyed on the page and on each arming of its clock, and started at the
+                // clock's own offset (a negative delay), so a resume draws exactly the time
+                // left: the paused fill again, or an empty bar on the answer page, which
+                // starts over after a pause. `playing` alone used to be part of the key,
+                // refilling from empty on every pause; animation-play-state holds it still.
+                key={`${playKey}:${playback.progressRun}`}
                 style={{
                   animationDuration: `${playback.duration}ms`,
+                  animationDelay: `-${playback.progressOffset}ms`,
                   animationPlayState: playback.playing ? "running" : "paused",
                 }}
               />

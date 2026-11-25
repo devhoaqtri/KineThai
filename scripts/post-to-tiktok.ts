@@ -61,7 +61,7 @@ import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { setEmulatorClipboard } from "./lib/emulator-clipboard";
-import { isUsedSound, loadSoundLedger, recordSoundUse, soundCandidates } from "./lib/tiktok-sounds";
+import { isUnfitSound, isUsedSound, loadSoundLedger, recordSoundUse, soundCandidates } from "./lib/tiktok-sounds";
 
 const TIKTOK_PACKAGES = [
   "com.zhiliaoapp.musically", // TikTok, most regions
@@ -85,7 +85,8 @@ const has = (name: string) => argv.includes(`--${name}`);
 
 const clip = argv.find((a) => !a.startsWith("--") && a.endsWith(".mp4"));
 const avd = flag("avd", "TikTokPoster");
-const serial = flag("serial", "");
+/** The adb target: --serial, else the emulator running `avd` once pinAvdDevice finds it. */
+let serial = flag("serial", "");
 const explicitCode = flag("code", "");
 const explicitCaption = flag("caption", "");
 const locationQuery = flag("location", DEFAULT_LOCATION);
@@ -117,6 +118,30 @@ function attachedDevices(): string[] {
     .slice(1)
     .filter((line) => line.includes("\tdevice"))
     .map((line) => line.split("\t")[0]!);
+}
+
+/**
+ * Point adb at the emulator running this AVD. Another tool can have a second emulator up at
+ * the same time (2026-11-21: a TestDevice started by another session), and then every bare
+ * adb call fails with "more than one device"; asking each emulator its AVD name finds ours.
+ * A lone device that is not an emulator (a phone on USB) is used as before.
+ * @returns Whether a device is pinned
+ */
+function pinAvdDevice(): boolean {
+  if (serial) return true;
+  const devices = attachedDevices();
+  for (const device of devices.filter((d) => d.startsWith("emulator-"))) {
+    const run = spawnSync("adb", ["-s", device, "emu", "avd", "name"], { encoding: "utf8" });
+    if ((run.stdout ?? "").split(/\r?\n/)[0]?.trim() === avd) {
+      serial = device;
+      return true;
+    }
+  }
+  if (devices.length === 1 && !devices[0]!.startsWith("emulator-")) {
+    serial = devices[0]!;
+    return true;
+  }
+  return false;
 }
 
 /** Where the emulator's own output goes; the first place to look when a boot fails. */
@@ -155,7 +180,12 @@ async function bootEmulator() {
   const sdk = sdkForAvd();
   console.log(`→ booting ${avd} (SDK ${sdk})`);
   const log = openSync(BOOT_LOG, "w");
-  const emulator = spawn(join(sdk, "emulator", "emulator"), ["-avd", avd], {
+  // Always cold-boot without quick-boot snapshots: resumed snapshots regularly freeze offline
+  // after macOS sleep or an unclean shutdown, wedging unattended draft runs.
+  const emulator = spawn(
+    join(sdk, "emulator", "emulator"),
+    ["-avd", avd, "-no-snapshot-load", "-no-snapshot-save"],
+    {
     detached: true,
     stdio: ["ignore", log, log],
     // The emulator finds the system image through these, not through its own path.
@@ -171,7 +201,7 @@ async function bootEmulator() {
       const tail = readFileSync(BOOT_LOG, "utf8").trim().split("\n").slice(-4).join("\n  ");
       throw new Error(`the emulator exited (code ${exited}) before booting:\n  ${tail}`);
     }
-    if (attachedDevices().length && shell("getprop sys.boot_completed") === "1") return;
+    if (pinAvdDevice() && shell("getprop sys.boot_completed") === "1") return;
     await sleep(2000);
   }
   throw new Error(`${avd} did not finish booting in 6 minutes; see ${BOOT_LOG}`);
@@ -448,6 +478,7 @@ function inferShareCode(mp4Path: string, meta: ClipMeta): string | null {
 }
 
 function buildAutoCaption(shareCode: string | null): string {
+  let levelTag = "";
   if (shareCode) {
     const packsDir = resolve(dirname(new URL(import.meta.url).pathname), "../src/features/vocabulary/data/packs");
     if (existsSync(packsDir)) {
@@ -455,19 +486,12 @@ function buildAutoCaption(shareCode: string | null): string {
         if (!file.endsWith(".json")) continue;
         try {
           const pack = JSON.parse(readFileSync(join(packsDir, file), "utf8")) as {
-            words?: Array<{ shareCode?: string; word?: string }>;
+            words?: Array<{ shareCode?: string; level?: string }>;
           };
           const hit = pack.words?.find((w) => w.shareCode?.toUpperCase() === shareCode);
-          if (hit?.word) {
-            const letters = hit.word.replace(/[^a-zA-Z]/g, "");
-            if (letters.length >= 2) {
-              const first = letters[0]!.toUpperCase();
-              const last = letters[letters.length - 1]!.toUpperCase();
-              return (
-                `Bắt đầu bằng ${first}, kết thúc bằng ${last} (${letters.length} chữ cái) 🤔 Bạn đoán ra từ gì chưa?\n\n` +
-                DEFAULT_HASHTAGS
-              );
-            }
+          if (hit?.level) {
+            levelTag = ` #${hit.level.toLowerCase()}`;
+            break;
           }
         } catch {
           // ignore malformed pack file
@@ -475,7 +499,10 @@ function buildAutoCaption(shareCode: string | null): string {
       }
     }
   }
-  return `Từ tiếng Anh này là gì nhỉ? 🤔 Comment đáp án bên dưới nha!\n\n${DEFAULT_HASHTAGS}`;
+  return (
+    `Từ gì mà ...\nHọc thêm mỗi ngày tại https://anh.chayla.app\n\n` +
+    `#hoctienganh #tuvungtienganh #tienganhmoingay #englishvocabulary${levelTag}`
+  );
 }
 
 /** The emulator's console port, from the adb serial (`emulator-5554` → 5554). */
@@ -655,6 +682,15 @@ interface PickedSound {
 
 /** The editor's top bar: "Add sound" until a song is on the clip, then the song's title. */
 const isSoundBar = (n: UiNode) => n.id.endsWith(":id/tv_top_text");
+/**
+ * Two song titles as TikTok shows them are the same song: equal once accents are composed and
+ * spaces (no-break ones included) are collapsed. On 2026-11-20 the bar and the sheet both read
+ * “Bring More Food”, an exact compare said otherwise, and the run took the song off.
+ */
+const sameTitle = (a: string, b: string) => {
+  const plain = (text: string) => text.normalize("NFC").replace(/[\s\u00a0\u200b-\u200d\ufeff]+/gu, " ").trim().toLowerCase();
+  return plain(a) === plain(b);
+};
 /** The sound sheet's Search button, by its label or its id. */
 const isSoundSearch = (n: UiNode) => (n.desc === "Search" && n.clickable) || n.id.endsWith(":id/c6r");
 /** Any sign the sound sheet is up: its Search button, its tap-outside area or its tabs. */
@@ -768,11 +804,14 @@ async function addUpbeatSound(): Promise<PickedSound> {
   let chosen: PickedSound | null = null;
   for (const { query, row } of candidates) {
     const track = await useSearchResult(query, row);
-    if (!isUsedSound(ledger, track.title, track.artist)) {
+    const unfit = isUnfitSound(track.title, track.artist);
+    if (!unfit && !isUsedSound(ledger, track.title, track.artist)) {
       chosen = { ...track, query, row };
       break;
     }
-    console.log(`  “${track.title}” (${track.artist}) is already on a draft; next candidate`);
+    console.log(
+      `  “${track.title}” (${track.artist}) ${unfit ? "is no proper song" : "is already on a draft"}; next candidate`,
+    );
     // Picks made on top of a used track did not take (2026-11-16: four in a row still read
     // “Upbeat Funk”), so it comes off the clip before the next one is tried.
     await takeSoundOff();
@@ -797,7 +836,7 @@ async function addUpbeatSound(): Promise<PickedSound> {
   await takeSoundOff();
   await openSoundSheet();
   const again = await useSearchResult(chosen.query, chosen.row);
-  if (again.title !== chosen.title) {
+  if (!sameTitle(again.title, chosen.title)) {
     await backToEditor();
     throw new Error(`picking again gave “${again.title}”, not “${chosen.title}”`);
   }
@@ -869,7 +908,8 @@ async function finishSoundSheet(title: string): Promise<boolean> {
   }
   // Close the sheet with a tap above it; the editor's bar then names the song.
   tapPoint(540, 500);
-  return !!(await waitForNode((n) => isSoundBar(n) && n.text === title, 10_000));
+  // A busy emulator can take well over 10 s to redraw the editor after the sheet closes.
+  return !!(await waitForNode((n) => isSoundBar(n) && sameTitle(n.text, title), 25_000));
 }
 
 async function prefillPostScreen(file: string) {
@@ -1092,17 +1132,276 @@ function saveFailureSnapshot(): string | null {
   }
 }
 
+/** What the views reader writes for one video, one JSON line each (tiktok.ts views reads it). */
+type VideoReading = { views: number; age: string; caption: string; tags: string[] };
+
+/**
+ * The grid's view counts on the profile, top-left first: one per posted video. A count spans
+ * its tile's whole width (about a third of the screen), which the header's Following,
+ * Followers and Likes numbers do not.
+ */
+function gridCounts(ui: UiNode[]): UiNode[] {
+  return ui
+    .filter(
+      (n) =>
+        /^[\d.,]+[KM]?$/.test(n.text) &&
+        (n.id.endsWith(":id/tv_play_count") || n.bounds[2] - n.bounds[0] > 250) &&
+        n.bounds[3] < 2200,
+    )
+    .sort((a, b) => a.bounds[1] - b.bounds[1] || a.bounds[0] - b.bounds[0]);
+}
+
+/**
+ * One open video's numbers: "N views", the age label ("· 2d ago"), and the caption, with
+ * "more" tapped first so the hashtags at its end are on screen.
+ */
+/**
+ * The open video's screen, paused first: a playing video keeps uiautomator from going idle,
+ * and one tap in its middle pauses it (only tapped while a dump fails, so a paused video is
+ * never set playing again).
+ */
+async function readPausedVideo(): Promise<UiNode[]> {
+  // A tap lands as pause or play depending on timing, so every other failed dump gets one,
+  // with time between for the pause to take.
+  for (let i = 0; i < 8; i += 1) {
+    const ui = dumpUi();
+    if (!lastDumpFailed) return ui;
+    if (i % 2 === 0) tapPoint(540, 1100);
+    await sleep(1500);
+  }
+  return readScreen(20_000);
+}
+
+async function readOpenVideo(): Promise<VideoReading | null> {
+  let ui = await readPausedVideo();
+  // The caption is TikTok's `desc` view; its text decides only when the id is not there.
+  const captionNode = () =>
+    ui.find((n) => n.id.endsWith(":id/desc")) ?? ui.find((n) => /Từ gì mà|#\S/u.test(n.text.normalize("NFC")));
+  const shown = captionNode();
+  if (shown && /more[\u2060\s]*($|\|)/u.test(shown.text)) {
+    tapNode(shown);
+    await sleep(1200);
+    ui = await readPausedVideo();
+  }
+  const viewsNode = ui.find((n) => /^[\d.,]+[KM]?\s+views?$/i.test(n.text));
+  if (!viewsNode) return null;
+  const n = viewsNode.text.replace(/\s*views?$/i, "");
+  const unit = /[KM]$/i.exec(n)?.[0]?.toUpperCase();
+  const base = Number(n.replace(/[KM,]/gi, ""));
+  const views = Math.round(unit === "K" ? base * 1e3 : unit === "M" ? base * 1e6 : base);
+  const age = ui.find((n) => /^·\s*(\d+\s*[smhdw]\s*ago|\d{1,2}-\d{1,2}(-\d{4})?)$/i.test(n.text))?.text ?? "";
+  const caption = (captionNode()?.text ?? "")
+    .normalize("NFC")
+    .replace(/[\u2060\s]*\|[\u2060\s]*See translation$/u, "")
+    .replace(/[…\u2060\s]*(more|less)[\u2060\s]*$/u, "")
+    .trim();
+  if (!caption && process.env.TIKTOK_VIEWS_DEBUG) console.log(ui.map((n) => `${n.id} ${n.text}`).join("\n"));
+  const tags = caption.match(/#[^\s#…\u2060]+/gu) ?? [];
+  return { views, age: age.replace(/^·\s*/, ""), caption, tags };
+}
+
+/**
+ * Read every posted video's views from the profile, newest first, into `out` as JSON lines:
+ * open the first video, read it, swipe to the next, until the list repeats or `limit` is met.
+ * Reads only; it never taps anything that changes a video.
+ */
+async function readViews(pkg: string, out: string, limit: number) {
+  shell(`am force-stop ${pkg}`);
+  await sleep(800);
+  await readDraftCount(pkg); // opens the profile
+  const first = gridCounts(await readScreen())[0];
+  if (!first) throw new Error("the profile shows no posted videos");
+  console.log(`→ reading up to ${limit} video(s), newest first`);
+  tapPoint(first.cx, first.bounds[1] - 180);
+  await sleep(3000);
+  const readings: VideoReading[] = [];
+  let repeats = 0;
+  while (readings.length < limit && repeats < 2) {
+    const reading = await readOpenVideo();
+    const last = readings.at(-1);
+    if (!reading || (last && last.caption === reading.caption && last.age === reading.age && last.views === reading.views)) {
+      repeats += 1;
+    } else {
+      repeats = 0;
+      readings.push(reading);
+      console.log(`  ${String(reading.views).padStart(6)} views · ${reading.age.padEnd(8)} · ${reading.tags.join(" ")}`);
+    }
+    adb(["shell", "input", "swipe", "540", "1700", "540", "500", "250"]);
+    await sleep(2500);
+  }
+  writeFileSync(out, readings.map((r) => JSON.stringify(r)).join("\n") + (readings.length ? "\n" : ""));
+  shell(`am force-stop ${pkg}`);
+  console.log(`✓ read ${readings.length} video(s)`);
+}
+
+/** One post the retag run edits: how to know its video, and the tag line it gets. */
+type RetagItem = { post: number; mustHave: string[]; mustNot: string[]; tags: string[] };
+type RetagResult = { post: number; before: string; after: string; saved: boolean };
+
+const TAG_LINE_RE = /^(#[^\s#]+\s*)+$/u;
+
+/** The caption with its last hashtag line swapped for `tags`; everything else kept as is. */
+function replaceTagLine(caption: string, tags: string[]): string {
+  const lines = caption.replace(/\s+$/u, "").split("\n");
+  let at = -1;
+  lines.forEach((line, i) => {
+    if (TAG_LINE_RE.test(line.trim())) at = i;
+  });
+  if (at === -1) throw new Error("the caption has no hashtag line to replace");
+  lines[at] = tags.join(" ");
+  return lines.join("\n");
+}
+
+/** Open the open video's Edit post screen: Share, then the action row's "Edit post". */
+async function openEditPost(): Promise<UiNode> {
+  const share = await waitForNode((n) => n.desc.startsWith("Share video"), 8_000);
+  if (!share) throw new Error("the video has no Share button");
+  tapNode(share);
+  for (let i = 0; i < 5; i += 1) {
+    const ui = await readScreen();
+    const edit = ui.find((n) => n.text === "Edit post");
+    if (edit) {
+      tapNode(edit);
+      const field = await waitForNode((n) => n.text.includes("#") && n.bounds[1] < 800 && n.bounds[3] < 1000, 10_000);
+      if (!field) throw new Error("Edit post opened no description field");
+      return field;
+    }
+    // The action row (Analytics, Download, …) scrolls sideways; Edit post sits far right.
+    const row = ui.find((n) => ["Analytics", "Download", "Pin", "Duet", "Cast"].includes(n.text));
+    if (!row) throw new Error("the share sheet has no action row");
+    adb(["shell", "input", "swipe", "900", String(row.cy - 60), "100", String(row.cy - 60), "400"]);
+    await sleep(1200);
+  }
+  throw new Error("the share sheet has no Edit post");
+}
+
+/** Leave Edit post without saving, answering a discard prompt if one comes. */
+async function cancelEditPost() {
+  const cancel = (await readScreen()).find((n) => n.text === "Cancel");
+  if (cancel) tapNode(cancel);
+  else adb(["shell", "input", "keyevent", "4"]);
+  const discard = await waitForNode((n) => /^(Discard|Leave)$/i.test(n.text), 3_000);
+  if (discard) tapNode(discard);
+  await sleep(1500);
+}
+
+/**
+ * Change the hashtag line of posted videos (Edit post), and nothing else in their captions.
+ * Walks the profile's videos newest first; each item's video is the one whose caption holds
+ * all its mustHave strings and none of its mustNot. With --dry-run every edit is pasted and
+ * checked, then cancelled. TikTok allows one edit a day, within 7 days of posting.
+ */
+async function retagVideos(pkg: string, items: RetagItem[], out: string, dryRun: boolean) {
+  shell(`am force-stop ${pkg}`);
+  await sleep(800);
+  await readDraftCount(pkg); // opens the profile
+  const first = gridCounts(await readScreen())[0];
+  if (!first) throw new Error("the profile shows no posted videos");
+  tapPoint(first.cx, first.bounds[1] - 180);
+  await sleep(3000);
+  const left = new Map(items.map((item) => [item.post, item]));
+  const results: RetagResult[] = [];
+  let seen = 0;
+  let lastCaption = "";
+  let repeats = 0;
+  while (left.size && seen < 40 && repeats < 2) {
+    const reading = await readOpenVideo();
+    const caption = reading?.caption ?? "";
+    if (!reading || caption === lastCaption) repeats += 1;
+    else {
+      repeats = 0;
+      seen += 1;
+      lastCaption = caption;
+      const item = [...left.values()].find(
+        (it) => it.mustHave.every((m) => caption.includes(m)) && !it.mustNot.some((m) => caption.includes(m)),
+      );
+      if (item) {
+        left.delete(item.post);
+        const field = await openEditPost();
+        const before = field.text.normalize("NFC");
+        const after = replaceTagLine(before, item.tags);
+        tapNode(field);
+        await sleep(600);
+        await pasteCaption(after);
+        // Back hides the keyboard, but with no keyboard up it leaves Edit post unsaved.
+        if (keyboardShown()) adb(["shell", "input", "keyevent", "4"]);
+        await sleep(800);
+        const held = (await readScreen()).find((n) =>
+          item.tags.every((t) => n.text.toLowerCase().includes(t.toLowerCase())),
+        );
+        if (held && process.env.TIKTOK_VIEWS_DEBUG) console.log(JSON.stringify(held.text));
+        if (!held) {
+          await cancelEditPost();
+          throw new Error(`post ${item.post}: the new hashtags did not stay in the field; nothing saved`);
+        }
+        let saved = false;
+        if (dryRun) await cancelEditPost();
+        else {
+          const save = (await readScreen()).find((n) => n.text === "Save");
+          if (!save) throw new Error(`post ${item.post}: Edit post has no Save button`);
+          tapNode(save);
+          // Save lands back on the video, playing again: read it paused, or the views never show.
+          for (let i = 0; i < 6 && !saved; i += 1) {
+            await sleep(2000);
+            saved = (await readPausedVideo()).some((n) => /^[\d.,]+[KM]?\s+views?$/i.test(n.text));
+          }
+          if (!saved) throw new Error(`post ${item.post}: Save did not return to the video`);
+        }
+        results.push({ post: item.post, before, after, saved });
+        writeFileSync(out, results.map((r) => JSON.stringify(r)).join("\n") + "\n");
+        console.log(`  ${dryRun ? "[dry run] " : "✓ "}post ${item.post}: ${item.tags.join(" ")}`);
+        await sleep(1500);
+        continue; // read the same video again: Save returns to it
+      }
+    }
+    adb(["shell", "input", "swipe", "540", "1700", "540", "500", "250"]);
+    await sleep(2500);
+  }
+  writeFileSync(out, results.map((r) => JSON.stringify(r)).join("\n") + (results.length ? "\n" : ""));
+  shell(`am force-stop ${pkg}`);
+  if (left.size) console.log(`! not found among the videos: post(s) ${[...left.keys()].join(", ")}`);
+  console.log(`✓ ${results.length} video(s) ${dryRun ? "checked (nothing saved)" : "retagged"}`);
+}
+
 async function main() {
+  const viewsOut = flag("views", "");
+  if (viewsOut) {
+    if (!pinAvdDevice()) {
+      if (!has("boot")) throw new Error(`${avd} is not running. Start the emulator, or pass --boot to start it.`);
+      await bootEmulator();
+    }
+    shell("input keyevent KEYCODE_WAKEUP");
+    shell("wm dismiss-keyguard");
+    const tiktok = findTikTok();
+    if (!tiktok) throw new Error("TikTok is not installed on the device.");
+    await readViews(tiktok, resolve(viewsOut), Number(flag("views-limit", "40")));
+    return;
+  }
+  const retagPlan = flag("retag", "");
+  if (retagPlan) {
+    if (!pinAvdDevice()) {
+      if (!has("boot")) throw new Error(`${avd} is not running. Start the emulator, or pass --boot to start it.`);
+      await bootEmulator();
+    }
+    shell("input keyevent KEYCODE_WAKEUP");
+    shell("wm dismiss-keyguard");
+    const tiktok = findTikTok();
+    if (!tiktok) throw new Error("TikTok is not installed on the device.");
+    const items = JSON.parse(readFileSync(resolve(retagPlan), "utf8")) as RetagItem[];
+    await retagVideos(tiktok, items, resolve(flag("retag-out", `${retagPlan}.out`)), has("dry-run"));
+    return;
+  }
   if (!clip) throw new Error("give me a path to an .mp4");
   const file = resolve(clip);
   if (!existsSync(file)) throw new Error(`no such file: ${file}`);
 
-  if (attachedDevices().length === 0) {
+  if (!pinAvdDevice()) {
     if (!has("boot")) {
-      throw new Error(`no device attached. Start the emulator, or pass --boot to start ${avd}.`);
+      throw new Error(`${avd} is not running. Start the emulator, or pass --boot to start it.`);
     }
     await bootEmulator();
   }
+  console.log(`→ using ${serial} (${avd})`);
 
   // A screen asleep or locked swallows taps, and a dump of it holds nothing to find.
   shell("input keyevent KEYCODE_WAKEUP");
@@ -1241,6 +1540,7 @@ async function main() {
 
 main().catch((error) => {
   console.error(`\n✗ ${error instanceof Error ? error.message : String(error)}`);
+  if (process.env.TIKTOK_VIEWS_DEBUG && error instanceof Error) console.error(error.stack);
   if (attachedDevices().length) {
     const snapshot = saveFailureSnapshot();
     if (snapshot) console.error(`  screen at the failure: ${snapshot}.png (UI tree beside it)`);

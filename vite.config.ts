@@ -9,6 +9,7 @@ import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 import { deckGuard } from "./scripts/deck-guard-plugin";
+import { firstLoadGuard } from "./scripts/first-load-guard";
 
 // `true` only for the static Pages build. Set by the deploy workflow.
 const staticBuild = process.env.VITE_STATIC_BUILD === "1";
@@ -21,6 +22,7 @@ const basePath = process.env.BASE_PATH || "/";
 export default defineConfig({
   plugins: [
     deckGuard(),
+    firstLoadGuard(),
     tailwindcss(),
     // Resolves the `@/*` → `./src/*` alias declared in tsconfig.json.
     tsConfigPaths({ projects: ["./tsconfig.json"] }),

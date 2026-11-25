@@ -18,8 +18,10 @@ import { Route as BadgeLabRouteImport } from './routes/badge-lab'
 import { Route as BurstLabRouteImport } from './routes/burst-lab'
 import { Route as PostingRouteImport } from './routes/posting'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ShowcaseRouteImport } from './routes/showcase'
-import { Route as StoreRouteImport } from './routes/store'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TiktokLabRouteImport } from './routes/tiktok-lab'
 import { Route as AuthenticatedAboutRouteImport } from './routes/_authenticated/about'
 import { Route as AuthenticatedCommunityRouteImport } from './routes/_authenticated/community'
@@ -109,14 +111,24 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShowcaseRoute = ShowcaseRouteImport.update({
   id: '/showcase',
   path: '/showcase',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StoreRoute = StoreRouteImport.update({
-  id: '/store',
-  path: '/store',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TiktokLabRoute = TiktokLabRouteImport.update({
@@ -352,8 +364,10 @@ export interface FileRoutesByFullPath {
   '/burst-lab': typeof BurstLabRoute
   '/posting': typeof PostingRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/showcase': typeof ShowcaseRoute
-  '/store': typeof StoreRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/tiktok-lab': typeof TiktokLabRoute
   '/about': typeof AuthenticatedAboutRoute
   '/community': typeof AuthenticatedCommunityRoute
@@ -407,8 +421,10 @@ export interface FileRoutesByTo {
   '/burst-lab': typeof BurstLabRoute
   '/posting': typeof PostingRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/showcase': typeof ShowcaseRoute
-  '/store': typeof StoreRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/tiktok-lab': typeof TiktokLabRoute
   '/about': typeof AuthenticatedAboutRoute
   '/community': typeof AuthenticatedCommunityRoute
@@ -465,8 +481,10 @@ export interface FileRoutesById {
   '/burst-lab': typeof BurstLabRoute
   '/posting': typeof PostingRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/showcase': typeof ShowcaseRoute
-  '/store': typeof StoreRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/tiktok-lab': typeof TiktokLabRoute
   '/_authenticated/about': typeof AuthenticatedAboutRoute
   '/_authenticated/community': typeof AuthenticatedCommunityRoute
@@ -523,8 +541,10 @@ export interface FileRouteTypes {
     | '/burst-lab'
     | '/posting'
     | '/privacy'
+    | '/robots.txt'
     | '/showcase'
-    | '/store'
+    | '/sitemap.xml'
+    | '/terms'
     | '/tiktok-lab'
     | '/about'
     | '/community'
@@ -578,8 +598,10 @@ export interface FileRouteTypes {
     | '/burst-lab'
     | '/posting'
     | '/privacy'
+    | '/robots.txt'
     | '/showcase'
-    | '/store'
+    | '/sitemap.xml'
+    | '/terms'
     | '/tiktok-lab'
     | '/about'
     | '/community'
@@ -635,8 +657,10 @@ export interface FileRouteTypes {
     | '/burst-lab'
     | '/posting'
     | '/privacy'
+    | '/robots.txt'
     | '/showcase'
-    | '/store'
+    | '/sitemap.xml'
+    | '/terms'
     | '/tiktok-lab'
     | '/_authenticated/about'
     | '/_authenticated/community'
@@ -693,8 +717,10 @@ export interface RootRouteChildren {
   BurstLabRoute: typeof BurstLabRoute
   PostingRoute: typeof PostingRoute
   PrivacyRoute: typeof PrivacyRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   ShowcaseRoute: typeof ShowcaseRoute
-  StoreRoute: typeof StoreRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   TiktokLabRoute: typeof TiktokLabRoute
   CarouselCodeRoute: typeof CarouselCodeRoute
   ExportCodeRoute: typeof ExportCodeRoute
@@ -781,6 +807,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/showcase': {
       id: '/showcase'
       path: '/showcase'
@@ -788,11 +821,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShowcaseRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/store': {
-      id: '/store'
-      path: '/store'
-      fullPath: '/store'
-      preLoaderRoute: typeof StoreRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tiktok-lab': {
@@ -1185,8 +1225,10 @@ const rootRouteChildren: RootRouteChildren = {
   BurstLabRoute: BurstLabRoute,
   PostingRoute: PostingRoute,
   PrivacyRoute: PrivacyRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   ShowcaseRoute: ShowcaseRoute,
-  StoreRoute: StoreRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   TiktokLabRoute: TiktokLabRoute,
   CarouselCodeRoute: CarouselCodeRoute,
   ExportCodeRoute: ExportCodeRoute,

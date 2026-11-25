@@ -1,16 +1,21 @@
 /**
  * Anonymous session identity and visitor telemetry reporting.
  *
- * Generates a stable session ID per browser (localStorage) so visitor behavior can
- * be correlated with error events without requiring authentication, and posts events
- * to the public ingest endpoint. The ID travels as `entity_id` with a null
+ * Generates a random ID per browser per UTC day (localStorage) so a day's visitor behavior
+ * can be correlated with its error events without requiring authentication, and posts
+ * events to the public ingest endpoint. The ID travels as `entity_id` with a null
  * `actor_user_id`, letting the admin dashboard answer "which sessions broke and why".
+ *
+ * It is renewed every day on purpose: visitor counts are per day anyway (one session row
+ * per UTC day), and an ID that lived forever would link a reader's days into a history
+ * the site never needs. A day-bound ID cannot, which is also why the site needs no
+ * consent banner for it (see PrivacyPage).
  *
  * Reporting goes over the network rather than through the admin emit path because
  * that path writes with the Supabase service-role key, which cannot be present in a
  * browser.
  *
- * Exports: getSessionId, resetSessionId, reportVisitorEvent, markReportedOnce
+ * Exports: getSessionId, storedIdForDay, resetSessionId, reportVisitorEvent, markReportedOnce
  * Depends: ./client-signals (browser localStorage + fetch/sendBeacon)
  */
 
@@ -27,14 +32,31 @@ export type VisitorEventInput = {
   metadata?: Record<string, string | number | boolean | null>;
 };
 
-/** Return the current session ID, creating one if absent. */
+/** Today's UTC date, which bounds an ID's life. */
+function utcDay(now = new Date()): string {
+  return now.toISOString().slice(0, 10);
+}
+
+/**
+ * Read a stored ID, valid only on the day it was made. An ID stored before IDs were
+ * day-bound (a bare UUID) has no day, so it is replaced.
+ * @pure true
+ */
+export function storedIdForDay(stored: string | null, day: string): string | null {
+  if (!stored) return null;
+  const [id, madeOn] = stored.split("|");
+  return id && madeOn === day ? id : null;
+}
+
+/** Return today's session ID, creating a fresh one on a new UTC day. */
 export function getSessionId(): string {
   if (typeof window === "undefined") return "";
   try {
-    let id = localStorage.getItem(STORAGE_KEY);
+    const day = utcDay();
+    let id = storedIdForDay(localStorage.getItem(STORAGE_KEY), day);
     if (!id) {
       id = crypto.randomUUID();
-      localStorage.setItem(STORAGE_KEY, id);
+      localStorage.setItem(STORAGE_KEY, `${id}|${day}`);
     }
     return id;
   } catch {

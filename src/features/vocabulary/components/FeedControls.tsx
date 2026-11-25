@@ -37,12 +37,7 @@ import {
   difficultyLevels,
   tracksFor,
 } from "../lib/difficulty";
-import {
-  lapsFilled,
-  scopeProgress,
-  tierProgress,
-  type LevelProgress,
-} from "../lib/level-progress";
+import { lapsFilled, scopeProgress, tierProgress, type LevelProgress } from "../lib/level-progress";
 import { levelLadderFor } from "../lib/level-ladder";
 import { activateCustomPack } from "../lib/custom-pack";
 import { useCustomPacks } from "../hooks/useCustomPacks";
@@ -1424,8 +1419,7 @@ export function FeedControls({
   return (
     <header className="vocab-toolbar" ref={toolbar}>
       <div className="vocab-toolbar-row">
-        {/* Far left: the app family, while ECOSYSTEM_MENU_AVAILABLE lets it show.
-            ECOSYSTEM_STORE_AVAILABLE separately gates the store tile inside the panel. */}
+        {/* Far left: the app family, while ECOSYSTEM_MENU_AVAILABLE lets it show. */}
         {ECOSYSTEM_MENU_AVAILABLE && (
           <EcosystemMenu open={ecoOpen} onOpenChange={toggleEco} reducedMotion={reducedMotion} />
         )}
@@ -1747,7 +1741,9 @@ export function FeedControls({
                           : `${label}: ${count} từ. Mở để ôn lại`
                       }
                       aria-disabled={memoryOff || undefined}
-                      onClick={() => (memoryOff ? requestStorageDialog("memory") : openRecall(cell))}
+                      onClick={() =>
+                        memoryOff ? requestStorageDialog("memory") : openRecall(cell)
+                      }
                     >
                       <span className="vocab-memory-label">{label}</span>
                       <span className="vocab-memory-count">{count}</span>
@@ -1786,17 +1782,10 @@ export function FeedControls({
               )}
             </div>
             <nav aria-label="Điều hướng trang" className="vocab-site-links">
-              {/* Community is not open to readers yet; only the button is hidden, the
-                /community route still resolves. Flip COMMUNITY_AVAILABLE to bring it back. */}
+              {/* The social network and its sign-in are switched off at the route level
+                (lib/reader-routes ACCOUNT_FEATURES_ENABLED): /community and /auth answer 404,
+                so neither has a link here. */}
               {COMMUNITY_AVAILABLE && <Link to="/community">Cộng đồng</Link>}
-              {/* Temporarily hidden at request: "Đăng nhập" and "Về với từ vựng" leave the
-                sheet for now — uncomment (both live together) to bring them back. The
-                /auth route and the close behaviour are untouched.
-            <Link to="/auth">Đăng nhập</Link>
-            <button type="button" onClick={close}>
-              Về với từ vựng
-            </button>
-            */}
             </nav>
             {/* Forgetting is the sheet's foot: a strip flush with its bottom edge, never one
               tap — the warning opens inside the strip with cancel and confirm as its two

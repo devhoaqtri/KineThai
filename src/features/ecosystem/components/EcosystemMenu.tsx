@@ -15,8 +15,7 @@
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Store, X } from "lucide-react";
-import { ECOSYSTEM_STORE_AVAILABLE } from "@/lib/feature-flags";
+import { X } from "lucide-react";
 import { usePresence } from "@/hooks/use-presence";
 import { ECOSYSTEM_APPS, type EcosystemApp } from "../data/apps";
 import { isLocaleShown, resolveTarget } from "@/features/vocabulary/lib/target-language";
@@ -154,10 +153,8 @@ export function EcosystemMenu({
   const anchor = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const firstItem = useRef<HTMLLIElement>(null);
-  // The store tile — when the flag lets it show — is still a tile and shares the
-  // last row with whatever apps land beside it. The footer is not: it sits under
-  // the grid, outside the cascade.
-  const total = apps.length + (ECOSYSTEM_STORE_AVAILABLE ? 1 : 0);
+  // The footer is not a tile: it sits under the grid, outside the cascade.
+  const total = apps.length;
   const rowCount = Math.ceil(total / COLUMNS);
   // The grid may only become scrollable once the panel has stopped moving — a
   // scrollbar appearing mid-animation is the artefact this guards against.
@@ -264,33 +261,6 @@ export function EcosystemMenu({
                   onNavigate={close}
                 />
               ))}
-              {/* The store tile is ours rather than a door out to a sibling app,
-                  so it is marked out from the rest — but only while the flag lets
-                  it show. The old Settings fallback tile is gone: the options
-                  sheet has its own permanent corner button on the toolbar, and a
-                  second door to it inside this panel was one door too many. */}
-              {ECOSYSTEM_STORE_AVAILABLE && (
-                <li
-                  className="eco-tile-slot"
-                  style={tileStyle(total - 1, rowCount, presence.closing, "#6d28d9", "#3b1178")}
-                >
-                  <Link
-                    className="eco-tile eco-tile-util"
-                    to="/store"
-                    role="menuitem"
-                    title="Ảnh chụp màn hình và mô tả từng app"
-                    aria-label="Cửa hàng — ảnh chụp màn hình và mô tả từng app"
-                    onClick={close}
-                  >
-                    <span className="eco-tile-clip">
-                      <span className="eco-tile-glyph" aria-hidden="true">
-                        <Store size={19} />
-                      </span>
-                      <span className="eco-tile-name">Cửa hàng</span>
-                    </span>
-                  </Link>
-                </li>
-              )}
             </ul>
             {/* Under a divider rather than as a tile: the family is not done
                 growing, and a row that ends in dead space reads as broken
