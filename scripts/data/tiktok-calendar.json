@@ -1662,10 +1662,10 @@
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=1670563&format=mp32",
             "credit": "🎵 \"Upbeat Lounge Background\" by Soundrider/Dope is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/1670563"
           },
-          "at": "2026-11-23T16:32:26.627Z",
+          "at": "2026-11-25T00:00:00.516Z",
           "firstAt": "2026-11-23T11:45:21.978Z",
-          "error": "fetch failed",
-          "attempts": 2
+          "error": "The operation was aborted due to timeout",
+          "attempts": 3
         },
         "youtube": {
           "status": "failed",
@@ -1678,24 +1678,27 @@
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=1670563&format=mp32",
             "credit": "🎵 \"Upbeat Lounge Background\" by Soundrider/Dope is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/1670563"
           },
-          "at": "2026-11-23T16:32:26.672Z",
+          "at": "2026-11-25T00:17:05.011Z",
           "firstAt": "2026-11-23T14:31:49.608Z",
-          "error": "fetch failed",
-          "attempts": 2
+          "error": "The operation was aborted due to timeout",
+          "attempts": 3
         },
         "instagram": {
           "status": "failed",
-          "at": "2026-11-23T16:32:26.649Z",
+          "at": "2026-11-25T05:23:45.921Z",
           "firstAt": "2026-11-23T13:21:06.809Z",
-          "error": "fetch failed",
-          "attempts": 2
+          "error": "wrongly matched to another post's upload (https://www.instagram.com/p/DgH5vTTCcH9/); reset 2026-11-25",
+          "attempts": 3,
+          "id": null,
+          "url": null,
+          "note": null
         },
         "threads": {
           "status": "failed",
-          "at": "2026-11-23T16:32:26.693Z",
+          "at": "2026-11-25T02:01:10.914Z",
           "firstAt": "2026-11-23T14:47:09.807Z",
-          "error": "fetch failed",
-          "attempts": 2
+          "error": "The operation was aborted due to timeout",
+          "attempts": 3
         }
       },
       "draftedAt": "2026-11-23T18:23:34.126007Z"
@@ -1721,7 +1724,7 @@
       "carousel": "~/KineMedia-tiktok/clips/carousels/anh-chayla-HE0-4x5",
       "platforms": {
         "facebook": {
-          "status": "failed",
+          "status": "posted",
           "music": {
             "song": "openverse:b1a52bbd-358d-4170-be95-62720df4ddf9",
             "startSec": 0,
@@ -1731,13 +1734,15 @@
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=1196255&format=mp32",
             "credit": "🎵 \"Nightfall [happy hardcore]\" by Hardcore Scm is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/1196255"
           },
-          "at": "2026-11-23T16:32:26.638Z",
+          "at": "2026-11-25T05:21:31.597Z",
           "firstAt": "2026-11-23T16:32:26.632Z",
-          "error": "fetch failed",
-          "attempts": 1
+          "error": null,
+          "attempts": 2,
+          "id": "1434090708710023",
+          "url": "https://www.facebook.com/reel/1434090708710023/"
         },
         "youtube": {
-          "status": "failed",
+          "status": "posted",
           "music": {
             "song": "openverse:b1a52bbd-358d-4170-be95-62720df4ddf9",
             "startSec": 0,
@@ -1747,24 +1752,32 @@
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=1196255&format=mp32",
             "credit": "🎵 \"Nightfall [happy hardcore]\" by Hardcore Scm is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/1196255"
           },
-          "at": "2026-11-23T16:32:26.682Z",
+          "at": "2026-11-25T05:21:44.297Z",
           "firstAt": "2026-11-23T16:32:26.676Z",
-          "error": "fetch failed",
-          "attempts": 1
+          "error": null,
+          "attempts": 2,
+          "id": "YI9L6Ln4sNE",
+          "url": "https://youtube.com/shorts/YI9L6Ln4sNE",
+          "privacy": "public"
         },
         "instagram": {
           "status": "failed",
-          "at": "2026-11-23T16:32:26.659Z",
+          "at": "2026-11-25T05:23:45.922Z",
           "firstAt": "2026-11-23T16:32:26.654Z",
-          "error": "fetch failed",
-          "attempts": 1
+          "error": "wrongly matched to another post's upload (https://www.instagram.com/p/DgIe8sHGRVv/); reset 2026-11-25",
+          "attempts": 2,
+          "id": null,
+          "url": null,
+          "note": null
         },
         "threads": {
-          "status": "failed",
-          "at": "2026-11-23T16:32:26.703Z",
+          "status": "posted",
+          "at": "2026-11-25T05:23:25.005Z",
           "firstAt": "2026-11-23T16:32:26.697Z",
-          "error": "fetch failed",
-          "attempts": 1
+          "error": null,
+          "attempts": 2,
+          "id": "17994490352858924",
+          "url": "https://www.threads.com/@anh.chayla/post/DgJxPq7Hy7t"
         }
       },
       "draftedAt": "2026-11-23T18:58:39.014207Z"
@@ -1876,7 +1889,7 @@
       "carousel": "~/KineMedia-tiktok/clips/carousels/anh-chayla-XXY-4x5",
       "platforms": {
         "youtube": {
-          "status": "pending",
+          "status": "posted",
           "music": {
             "song": "openverse:61c6a60c-ae67-49d4-a77e-f362d793ef87",
             "startSec": 0,
@@ -1885,10 +1898,17 @@
             "title": "Maleït Sies - Insomnium (Acoustic) – MaleïtSies",
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=1067397&format=mp32",
             "credit": "🎵 \"Maleït Sies - Insomnium (Acoustic)\" by MaleïtSies is licensed under CC BY 2.5. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.5/es/. Nguồn: https://www.jamendo.com/track/1067397"
-          }
+          },
+          "at": "2026-11-24T11:59:33.912Z",
+          "firstAt": "2026-11-24T11:59:23.942Z",
+          "error": null,
+          "attempts": 1,
+          "id": "FmKESZfgZUw",
+          "url": "https://youtube.com/shorts/FmKESZfgZUw",
+          "privacy": "public"
         },
         "facebook": {
-          "status": "pending",
+          "status": "failed",
           "music": {
             "song": "openverse:61c6a60c-ae67-49d4-a77e-f362d793ef87",
             "startSec": 0,
@@ -1897,7 +1917,30 @@
             "title": "Maleït Sies - Insomnium (Acoustic) – MaleïtSies",
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=1067397&format=mp32",
             "credit": "🎵 \"Maleït Sies - Insomnium (Acoustic)\" by MaleïtSies is licensed under CC BY 2.5. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.5/es/. Nguồn: https://www.jamendo.com/track/1067397"
-          }
+          },
+          "at": "2026-11-24T19:50:09.883Z",
+          "firstAt": "2026-11-24T11:33:09.072Z",
+          "error": "The operation was aborted due to timeout",
+          "attempts": 3
+        },
+        "instagram": {
+          "status": "posted",
+          "at": "2026-11-24T11:59:23.913Z",
+          "firstAt": "2026-11-24T11:57:32.680Z",
+          "error": null,
+          "attempts": 1,
+          "id": "18031420235700264",
+          "url": "https://www.instagram.com/p/DgH5vTTCcH9/",
+          "note": "live although the upload answered: Meta POST 17841441424999220/media_publish: Application request limit reached"
+        },
+        "threads": {
+          "status": "posted",
+          "at": "2026-11-24T17:26:15.777Z",
+          "firstAt": "2026-11-24T11:59:33.934Z",
+          "error": null,
+          "attempts": 2,
+          "id": "17967136809238171",
+          "url": "https://www.threads.com/@anh.chayla/post/DgIfLXJIyUO"
         }
       },
       "draftedAt": "2026-11-24T10:14:21.354Z",
@@ -1930,7 +1973,7 @@
       "carousel": "~/KineMedia-tiktok/clips/carousels/anh-chayla-Z8A-4x5",
       "platforms": {
         "youtube": {
-          "status": "pending",
+          "status": "posted",
           "music": {
             "song": "openverse:7903af31-aa2f-474a-8191-a71b42e239b7",
             "startSec": 0,
@@ -1939,10 +1982,17 @@
             "title": "Song For Being Positively Ambiguous – Ambient Samurai - Ichiro NAKAGAWA",
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=1200145&format=mp32",
             "credit": "🎵 \"Song For Being Positively Ambiguous\" by Ambient Samurai - Ichiro NAKAGAWA is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/1200145"
-          }
+          },
+          "at": "2026-11-24T17:24:44.451Z",
+          "firstAt": "2026-11-24T17:24:30.097Z",
+          "error": null,
+          "attempts": 1,
+          "id": "VarsU15NNKo",
+          "url": "https://youtube.com/shorts/VarsU15NNKo",
+          "privacy": "public"
         },
         "facebook": {
-          "status": "pending",
+          "status": "posted",
           "music": {
             "song": "openverse:7903af31-aa2f-474a-8191-a71b42e239b7",
             "startSec": 0,
@@ -1951,7 +2001,32 @@
             "title": "Song For Being Positively Ambiguous – Ambient Samurai - Ichiro NAKAGAWA",
             "audioUrl": "https://prod-1.storage.jamendo.com/?trackid=1200145&format=mp32",
             "credit": "🎵 \"Song For Being Positively Ambiguous\" by Ambient Samurai - Ichiro NAKAGAWA is licensed under CC BY 3.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/3.0/. Nguồn: https://www.jamendo.com/track/1200145"
-          }
+          },
+          "at": "2026-11-24T17:22:31.588Z",
+          "firstAt": "2026-11-24T17:21:45.733Z",
+          "error": null,
+          "attempts": 1,
+          "id": "1497694755592481",
+          "url": "https://www.facebook.com/reel/1497694755592481/"
+        },
+        "instagram": {
+          "status": "posted",
+          "at": "2026-11-24T17:24:30.075Z",
+          "firstAt": "2026-11-24T17:22:31.628Z",
+          "error": null,
+          "attempts": 1,
+          "id": "18113807741225176",
+          "url": "https://www.instagram.com/p/DgIe8sHGRVv/",
+          "note": "live although the upload answered: Meta POST 17841441424999220/media_publish: Application request limit reached"
+        },
+        "threads": {
+          "status": "posted",
+          "at": "2026-11-24T17:27:48.740Z",
+          "firstAt": "2026-11-24T17:26:15.790Z",
+          "error": null,
+          "attempts": 1,
+          "id": "18348599659283740",
+          "url": "https://www.threads.com/@anh.chayla/post/DgIfWfUo4zF"
         }
       },
       "draftedAt": "2026-11-24T10:19:52.562Z",
